@@ -1,0 +1,25 @@
+<parser-info>
+	<parser token-string="select">
+		<token-info>
+			<token value="as"/>
+			<token value="from"/>
+			<token value="where"/>
+			<token value="("/>
+			<token value=")"/>
+			<token value="+"/>
+			<token value="-"/>
+			<token value="*"/>
+			<token value="/"/>		
+		</token-info>
+	</parser>
+	
+	<parser token-string="from">
+		<token-info>
+			<token value="as"/>
+			<token value="left"/>
+			<token value=right/>
+			<token value="("/>
+			<token value=")"/>
+		</token-info>
+	</parser>
+</parser-info>
