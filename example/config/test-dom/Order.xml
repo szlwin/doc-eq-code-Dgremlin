@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<orm--data-mapping>
+	<data name="order" class="">
+		<property-info>
+			<property name="id" type="int"/>
+			<property name="userId" type="int"/>
+			<property name="count" type="int"/>
+			<property name="totalPrice" type="double"/>
+			<property name="date" type="date"/>
+			<property name="dateTime" type="date"/>
+		</property-info>
+		<table-info>
+			<table name="orderInfo" data-source="data1" key="o_id" key-type="increment">
+				<column name="o_id" ref-property="id"/>
+				<column name="o_userId" ref-property="userId"/>
+				<column name="o_count" ref-property="count"/>
+				<column name="o_totalPrice" ref-property="totalPrice"/>
+				<column name="o_date" ref-property="dateTime" type="timestamp"/>
+			</table>
+			<table name="orderInfo" data-source="data2" key="o_id" key-type="increment">
+				<column name="o_id" ref-property="id"/>
+				<column name="o_userId" ref-property="userId"/>
+				<column name="o_count" ref-property="count"/>
+				<column name="o_totalPrice" ref-property="totalPrice"/>
+				<column name="o_date" ref-property="dateTime" type="timestamp"/>
+			</table>			
+		</table-info>
+	</data>
+</orm--data-mapping>

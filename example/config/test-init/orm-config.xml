@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<orm-config>
+	<orm-datasource-info default="data1">
+		<orm-datasource name="data1" data-source-class="com.mchange.v2.c3p0.ComboPooledDataSource" interface="" type="sql">
+			<name>MySQL</name>
+			<properties>
+				<property name="driverClass" value="com.mysql.jdbc.Driver"/>
+				<property name="jdbcUrl" value="jdbc:mysql://192.168.30.54/orm-test?useUnicode=true&amp;characterEncoding=utf8"/>
+				<property name="user" value="root"/>
+				<property name="password" value="1234"/>
+				<!-- <property name="maxActive" value=""/>
+				<property name="maxWait" value=""/>
+				<property name="maxIdle" value=""/>
+				<property name="validationQuery" value=""/> -->
+			</properties>
+		</orm-datasource>
+		<orm-datasource name="data2" type="sql">
+			<name>MySQL</name>
+			<driver-class>com.mysql.jdbc.Driver</driver-class>
+			<url>jdbc:mysql://192.168.30.54/orm-test-bk?useUnicode=true&amp;characterEncoding=utf8</url>
+			<username>root</username>
+			<password>1234</password>
+		</orm-datasource>		
+	</orm-datasource-info>
+	
+	<orm-data-file-info>
+		<orm-file path="test-dom/"/>
+	</orm-data-file-info>
+	
+	<!-- <orm-relation-file-info>
+		<orm-file path="relation/orm-relation.xml"></orm-file>
+	</orm-relation-file-info> -->
+	
+	<orm-view-file-info>
+		<orm-file path="test-service-view"/>
+	</orm-view-file-info>
+	
+	<orm-rule-file-info>
+		<orm-file path="test-rule"/>
+	</orm-rule-file-info>
+	
+	<orm-connection-info default="con1">
+		<orm-connection name="con1">
+			<data-source-info>
+				<data-source ref="data1"/>
+			</data-source-info>
+		</orm-connection>
+
+		<orm-connection name="con2">
+			<data-source-info>
+				<data-source ref="data2"/>
+			</data-source-info>
+		</orm-connection>
+		
+	</orm-connection-info>
+	
+	<orm-service-info>
+		<orm-file path="test-service"/>
+	</orm-service-info>
+	<!-- <orm-define>
+		<data-vailables>
+			<data-vailable key="dataOne" value="data1"/>
+		</data-vailables>
+	</orm-define>-->
+</orm-config>
