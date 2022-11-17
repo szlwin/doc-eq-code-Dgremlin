@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<orm-connection-info>
+	<orm-dataSource-config>
+		<orm-dataSource name="MySQL" type="sql" >
+			<dataSource>dec.external.datasource.sql.datasource.DBDataSource</dataSource>
+		</orm-dataSource>
+		
+	</orm-dataSource-config>
+	
+	
+	<orm-connection-config>
+		<orm-connection name="MySQL" type="sql">
+			<connection>dec.external.datasource.sql.connection.DataBaseConnection</connection>
+			<convert>dec.external.datasource.sql.mysql.convert.container.MySQLConvertContainer</convert>
+			<executer>dec.external.datasource.sql.mysql.execute.container.MySQLExecuteContainer</executer>
+			<data-convert>dec.external.datasource.sql.mysql.datatype.convert.MySQLDataTypeConvert</data-convert>
+		</orm-connection>
+		
+	</orm-connection-config>
+	
+	
+</orm-connection-info>

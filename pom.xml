@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>doc.eq.code</groupId>
+  <artifactId>doc-eq-code-parent</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <framework.version>1.0</framework.version>
+	</properties>
+
+  <modules>
+        <module>dec-core-context</module>
+		<module>dec-core-datasource</module>
+		<module>dec-context-config-parse-xml</module>
+        <!--<module>dec-doc-eq-code-Dgremlin</module>-->
+		<module>dec-datasource-orm-sql</module>
+		<module>dec-datasource-orm-mysql</module>
+		<module>dec-core-model</module>
+		<module>dec-core-starter</module>
+		<module>dec-expand-declaration</module>
+		<!--<module>dec-demo</module>-->
+   </modules>
+
+    <dependencyManagement>
+        <dependencies>
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-core-context</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-core-model</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-context-config-parse-xml</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+	  		
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-core-datasource</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-datasource-orm-sql</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-datasource-orm-mysql</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+	  		
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-core-starter</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-demo</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+			<dependency>
+			  <groupId>doc.eq.code</groupId>
+	  		  <artifactId>dec-expand-declaration</artifactId>
+	  		  <version>${framework.version}</version>
+	  		</dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+		</plugins>
+		<resources>
+             <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>       
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/test</directory>
+                <excludes> 
+                	<exclude>**/*.*</exclude>  
+                </excludes>
+            </resource>
+        </resources>
+	</build>
+</project>

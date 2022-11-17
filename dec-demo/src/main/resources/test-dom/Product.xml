@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<orm--data-mapping>
+	<data name="product" class=""><!-- 必须是BaseModel的子类或默认为空-->
+		<property-info>
+			<property name="id" type="int"/>
+			<property name="orderId" type="int"/>
+			<property name="name" type="string"/>
+			<property name="count" type="int"/>
+			<property name="price" type="double"/>
+		</property-info>
+		<table-info>
+			<table name="product_info" data-source="data1" key="p_id" key-type="increment"> 
+				<column name="p_id" ref-property="id"/>
+				<column name="p_orderId" ref-property="orderId"/>
+				<column name="p_name" ref-property="name"/>
+				<column name="p_count" ref-property="count"/>
+				<column name="p_price" ref-property="price"/>
+			</table>
+			<table name="product_info" data-source="data2" key="p_id" key-type="increment"> 
+				<column name="p_id" ref-property="id"/>
+				<column name="p_orderId" ref-property="orderId"/>
+				<column name="p_name" ref-property="name"/>
+				<column name="p_count" ref-property="count"/>
+				<column name="p_price" ref-property="price"/>
+			</table>			
+		</table-info>
+	</data>
+</orm--data-mapping>

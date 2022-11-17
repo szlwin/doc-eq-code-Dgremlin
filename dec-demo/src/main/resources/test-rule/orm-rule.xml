@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<orm-rule-mapping>
+	<!-- patten格式   -->
+	<!-- check NESTRING:UU,NENUMBER:6,NOTNULL,NOTEMPTY;LARGEN:5;LETTER:5;ENUMBER:5;ESTRING:TT;NSCALE:{(1,5],(1,6]};DSCALE:{} -->
+	<rule-view-info name="save-Order" view-ref="OrderInfo">
+		
+		<!--<rule name="checkProduct" type="check" property="productList" pattern="GREATER:0"/>-->
+		
+		
+		<!--<rule name="check0" type="check" property="userT.userName" pattern="NOTEQUAL:'test0'"/>-->
+		
+		<rule name="dsl" type="grammer" >
+			<error-info code="C001" message="user error" level="1l"/>
+			<customer-info>
+				<test>122112</test>
+				<test1>222222</test1>
+			</customer-info>
+			<customer-process>
+				<![CDATA[ 
+				#num = if totalPrice>10 then totalPrice*1.1  else totalPrice*1.2
+				totalPrice : totalPrice*#num; 
+				]]>
+			</customer-process>
+		</rule>
+		
+		<rule name="checkName" type="checkPattern" pattern="userT.userName = userT.uname" >
+			<error-info code="C001" message="user error" level="1l"/>
+			<customer-info>
+				<test>122112</test>
+				<test1>222222</test1>
+			</customer-info>
+		</rule>
+		
+		<rule name="insertUser" type="insert" property="userT" />
+		
+		<rule name="checkUser" type="checkDataPattern" property="userT" sql="select a.id as u_id from userT a where a.id = #userT.id" pattern="u_id = userId"/>
+		
+		<rule name="checkUser1" type="checkData" property="userT" pattern="NOTNULL"/>
+		
+		<rule name="check1" type="checkPattern" pattern="userId != 0 and userT.id != 0 and ( productCount > 0 or totalPrice >= 0 ) or ( productCount*(totalPrice+10) > 200 )"/>
+		
+		<!--<rule name="check2" type="checkPattern" pattern="dateTime > '2021-09-14 12:00:00'"/>-->
+		
+		<rule name="checkUerId" type="check" property="userId" pattern="NOTNULL;NOTEQUAL:2"/>
+		
+		<rule name="insertOrder" type="insert" property="OrderInfo" />
+		
+		<rule name="insertProduct" type="insert" property="productList" />
+		<!--<rule name="" type="update" property="user" sql=""/>  -->
+		
+		<!--  <rule name="deleteProduct" type="delete" property="productList"/>-->
+		
+		<rule name="deleteProduct" type="delete" sql="delete p.* from productList p where p.productPrice = 20" />
+		<!--  <rule name="deleteProduct" type="delete" property="productList" />-->
+		<!--<rule name="selectUser" type="get" property="userT" sql="select a.userName as userName from userT a where a.id = #userT.id and a.userName='test'"/>
+		<rule name="selectUser" type="get" property="user"/>
+		<rule name="selectProduct" type="query" property="productList" sql="select p.productPrice as productPrice from productList p where p.productPrice >= 30"/>-->
+	</rule-view-info>
+	
+	<rule-view-info name="get-user" view-ref="OrderInfo">
+	
+		
+		<!-- <rule name="selectUser" type="get" property="userT" sql="select a.userName from userT a where a.id= #userT.id"/> -->
+		<!--<rule name="selectUser" type="get" property="userT"/>-->
+		<rule name="selectUser" type="get" property="userT" sql="select a.userName from userT a where a.id = #userT.id"/>
+		<rule name="selectOrder" type="get" property="OrderInfo"/>
+		<rule name="getProduct" type="query" property="productList" sql="select p.id,p.productPrice from productList p where p.orderId = #id"/>
+		<!-- <rule name="deleteProduct" property="productList" type="delete"/> -->
+		<!--  <rule name="updateUser1" type="update" property="userT" sql="update userT a set a.uname = 'test2' where a.id = #userT.id" />
+		<rule name="updateUser" type="update" property="userT"/>
+		<rule name="updateOrder" type="update" property="OrderInfo"/>
+		<rule name="updateUser" type="update" property="userT"/>
+		<rule name="updateUser1" type="update" property="userT" sql="update userT a set a.uname = 'test2'" />-->
+		
+	</rule-view-info>
+	
+	<rule-view-info name="back-Order" view-ref="OrderInfo">
+		<rule name="insertProduct1" type="insert" property="productList" />
+	</rule-view-info>
+</orm-rule-mapping>
