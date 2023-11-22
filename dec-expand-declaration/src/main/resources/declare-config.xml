@@ -70,6 +70,10 @@
 					produce:$payResultData
 				</process>
 				
+				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="two">
+					produce:order.orderPayResultData
+				</process>
+
 				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="one">
 					produce:order.orderPayResultData
 				</process>

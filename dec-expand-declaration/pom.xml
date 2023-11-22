@@ -21,13 +21,25 @@
 			<groupId>doc.eq.code</groupId>
 			<artifactId>dec-core-model</artifactId>
 		</dependency>
-				
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>5.3.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>5.3.4</version>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
     		<artifactId>logback-core</artifactId>
     		<version>1.2.3</version>
     		<scope>provided</scope>
    		</dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
     		<artifactId>logback-classic</artifactId>

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.conext.desc.data.DataTypeEnum;
+import dec.expand.declare.conext.desc.process.TransactionPolicy;
 import dec.expand.declare.conext.desc.system.SystemDescBuilder;
 import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
@@ -20,20 +21,29 @@ public class TestOrderBusiness {
 		
 		defaultBusinessDeclare.addEntity("111",  new Object());
 		
+
 		SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
 		
 		subscribeOrderData.setProductName("test");
 		
 		subscribeOrderData.setAmount(new BigDecimal(1000));
 		
-		defaultBusinessDeclare.build("order").addEntity("$subscribeOrderData", subscribeOrderData)
-		.data("orderData", "order")
-		.data("$payData")
-		.data("payCmdData", "pay")
-		.data("$payResultData")
-		.data("orderPayResultData", "order")
+		defaultBusinessDeclare.build("order")
+				.addEntity("$subscribeOrderData", subscribeOrderData)
+				.transactionManager(new MockDataSourceManager())
+		.beginTx()
+			.data("orderData", "order")
+				.beginTx(TransactionPolicy.NEW)
+					.data("$payData")
+						.beginTx(TransactionPolicy.NESTED)
+							.data("payCmdData", "pay")
+							.data("$payResultData")
+						.endTx()
+				.endTx()
+				.data("orderPayResultData", "order")
+		 .endTx()
 		.addProduce("$payResultData", storage->{
-			
+
 			PayCmdData payCmdData= (PayCmdData) storage.get("payCmdData");
 			
 			System.out.println("Produce $payResultData");
