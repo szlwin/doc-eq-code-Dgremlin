@@ -107,7 +107,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
                 executeProcess(process, i);
 
-                if (result != null && !result.isSuccess()) {
+                if (result != null && (!result.isSuccess() || result.isStop())) {
                     break;
                 }
             } catch (Exception e) {
@@ -119,6 +119,9 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             log.info("Code:{}, end produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
         }
 
+        if (result.isStop() && this.stopFun != null) {
+            stopFun.execute(this.result);
+        }
         if (result.isSuccess()) {
             if (this.successFun != null) {
                 successFun.execute(this.result);
@@ -130,10 +133,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
             if (result.isException() && this.exceptionFun != null) {
                 this.exceptionFun.execute(this.result);
-            }
-
-            if(this.stopFun != null){
-                stopFun.execute(this.result);
             }
         }
 
@@ -204,7 +203,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         currentTransactionDesc.setTransaction(transactionPolicy);
         currentTransactionDesc.setTransactionGroup(String.valueOf(transactionDescList.size()));
         currentTransactionDesc.setIndex(transactionDescList.size());
-        currentTransactionDesc.setRollBackPolicy(RollBackPolicy.NONE);
+        currentTransactionDesc.setRollBackPolicy(RollBackPolicy.ROLL);
         transactionDescList.add(currentTransactionDesc);
         List<ProcessDesc> processDescList = this.businessDesc.getProcesses();
         if (processDescList == null) {
@@ -282,16 +281,22 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
     @Override
-    public BusinessDeclare addProduce(String name, Function<ExecuteResult, DataStorage> fun) {
-
+    public BusinessDeclare addProduce(String system, String dataName, Function<ExecuteResult, DataStorage> fun) {
         Produce<DataStorage> produce = new Produce<DataStorage>();
-
-        produce.setName(name);
-
+        produce.setName(dataName);
+        produce.setSystem(system);
         produce.setFun(fun);
-
         this.addProduce(produce);
 
+        return this;
+    }
+
+    @Override
+    public BusinessDeclare addProduce(String dataName, Function<ExecuteResult, DataStorage> fun) {
+        Produce<DataStorage> produce = new Produce<DataStorage>();
+        produce.setName(dataName);
+        produce.setFun(fun);
+        this.addProduce(produce);
         return this;
     }
 
@@ -332,7 +337,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             if (transactionDesc.getEnd() > index) {
                 break;
             }
-            //java.lang.System.out.println("group" + transactionDesc.getTransactionGroup() + "end:" + index + ":" + transactionDesc.getEnd());
             if (transactionDesc.getEnd() == index) {
                 dealWithTx(process);
                 txIndex--;
@@ -344,7 +348,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         if (this.result.isSuccess()) {
             this.dataSourceManager.commit();
         } else {
-            if (result.isException() && process.getRollBackPolicy() == RollBackPolicy.ROLL) {
+            if (process.getRollBackPolicy() == RollBackPolicy.ROLL) {
                 this.dataSourceManager.rollBack();
             }
         }
@@ -386,7 +390,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
     private void produceData(DataDesc dataDesc, String dataName, String system) throws Exception {
-
 
         List<DataDepend> dataDepends = null;
 

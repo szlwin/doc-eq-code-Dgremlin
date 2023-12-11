@@ -1,7 +1,5 @@
 package test.business;
 
-import java.math.BigDecimal;
-
 import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.conext.desc.data.DataTypeEnum;
 import dec.expand.declare.conext.desc.process.TransactionPolicy;
@@ -10,192 +8,243 @@ import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
 import dec.expand.declare.utils.ContextUtils;
 
+import java.math.BigDecimal;
+
 public class TestOrderBusiness {
 
-	public static void main(String[] args) {
-		initContext();
+    public static void main(String[] args) {
+        initContext();
 
-		initSystem();
-		
-		DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare();
-		
-		defaultBusinessDeclare.addEntity("111",  new Object());
-		
+        initSystem();
 
-		SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
-		
-		subscribeOrderData.setProductName("test");
-		
-		subscribeOrderData.setAmount(new BigDecimal(1000));
-		
-		defaultBusinessDeclare.build("order")
-				.addEntity("$subscribeOrderData", subscribeOrderData)
-				.transactionManager(new MockDataSourceManager())
-		.beginTx()
-			.data("orderData", "order")
-				.beginTx(TransactionPolicy.NEW)
-					.data("$payData")
-						.beginTx(TransactionPolicy.NESTED)
-							.data("payCmdData", "pay")
-							.data("$payResultData")
-						.endTx()
-				.endTx()
-				.data("orderPayResultData", "order")
-		 .endTx()
-		.addProduce("$payResultData", storage->{
+        subscribeOrder();
 
-			PayCmdData payCmdData= (PayCmdData) storage.get("payCmdData");
-			
-			System.out.println("Produce $payResultData");
-			
-			PayResultData payResultData = new PayResultData();
-			
-			payResultData.setStatus(1);
-			
-			return ExecuteResult.success(payResultData);
-			
-		}).addProduce("$payData", storage->{
-	
-			System.out.println("Produce $payData");
-			
-			SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
-			
-			PayData payData = new PayData();
-			
-			payData.setProductName(subscribeOrderData1.getProductName());
-			
-			payData.setAmount(subscribeOrderData1.getAmount());
-			
-			return ExecuteResult.success(payData);
-			
-		})
-		.execute();
-	}
-	
-	public static void initContext(){
-		//ContextUtils.load(new OrderBusiness());
-		
-		
-		ContextUtils.load(SystemDescBuilder.create()
-				.build("common", "common")
-					.data("$subscribeOrderData", "")
-					.data("$payData", "")
-					.data("$payResultData", "")
-						.getSystem());
-		
-		ContextUtils.load(SystemDescBuilder.create()
-				.build("order", "订单")
-				.data("subscribeOrderData", "订购数据")
-				.data("payResultData", "支付结果数据")
-				.data("orderData", "订单数据")
-					.type(DataTypeEnum.PERSISTENT)
-					.cachePrior(false)
-					.depend("$subscribeOrderData")
-					
-				.data("orderPayResultData", "订单支付状态数据")
-					.type(DataTypeEnum.PERSISTENT)
-					.cachePrior(false)
-					.depend("$payResultData")
-					.depend("orderData")
-					.getSystem());
-		
-		ContextUtils.load(SystemDescBuilder.create()
-				.build("pay", "支付")
-					.data("payCmdData", "支付指令数据")
-						.depend("$payData")
-					.data("payResultData", "支付结果数据")
-						.depend("payCmdData")
-						.type(DataTypeEnum.PERSISTENT)
-						.cachePrior(true)
-						.getSystem());
-		
-		
-		
-		/**.addMapping("saveOrderData", "order", "generateOrder")
-		.addMapping("saveOrderData", "order", "saveOrder")
-		.addMapping("savePay", "order", "generateOrderPayStatus")
-		.addMapping("savePay", "order", "saveOrderPayResutl")
-		.addMapping("operateWithPay", "pay", "generatePayCmd")
-		.addMapping("operateWithPay", "pay", "executePayCmd")
-		.addMapping("operateWithPay", "pay", "savePayCmdResutl")
-		*/
-		
-	}
-	
-	public static void initSystem(){
-		SystemBuilder systemBuilder = SystemBuilder.create()
-			.build("order")
-				.addProduce("orderData", storage->{
-					
-					System.out.println("Produce orderData");
-					Long orderId = (Long) storage.get("orderData-id");
-					
-					if(orderId != null){
-						Order order = new Order();
-						
-						order.setId(orderId);
-						
-						return ExecuteResult.success(order);
-					}else{
-						
-						SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
-						
-						Order order = new Order();
-						
-						order.setId(1l);
-						order.setProductName(subscribeOrderData.getProductName());
-						
-						return ExecuteResult.success(order);
-					}
+    }
 
-				})
-				.addConumer("orderData", storage->{
-					
-					java.lang.System.out.println("Conume orderData");
-					
-					Order order = (Order) storage.get("orderData");
-					
-					java.lang.System.out.println(order.getId());
-					
-					
-					return ExecuteResult.success("orderData-id", order.getId());
-					
-				})
-				.addProduce("orderPayResultData", storage->{
-					
-					System.out.println("Produce orderPayResultData");
-					
-					Order order = (Order) storage.get("orderData");
-					
-					PayResultData payResultData = (PayResultData) storage.get("$payResultData");;
-					
-					return ExecuteResult.success();
-				});
-		
-		
-		SystemBuilder systemPayBuilder = SystemBuilder.create()
-				.build("pay")
-				.addProduce("payCmdData", storage->{
-				
-					System.out.println("Produce payCmdData");
-					
-						PayData payData= (PayData) storage.get("$payData");
-						
-						PayCmdData payCmdData = new PayCmdData();
-						
-						payCmdData.setAmount(payData.getAmount());
-						
-						return ExecuteResult.success(payCmdData);
-						
-					});
-		
-		SystemBuilder systemCommonBuilder = SystemBuilder.create()
-				.build("common");
-		
-		ContextUtils.load(systemCommonBuilder.getSystem());
-		
-		ContextUtils.load(systemBuilder.getSystem());
-		
-		ContextUtils.load(systemPayBuilder.getSystem());
-	}
+    public static void subscribeOrder() {
+        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare();
+
+        SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
+
+        subscribeOrderData.setProductName("test");
+
+        subscribeOrderData.setAmount(new BigDecimal(1000));
+
+        defaultBusinessDeclare.build("subscribeOrder")
+                .addEntity("$subscribeOrderData", subscribeOrderData)
+                .transactionManager(new MockDataSourceManager())
+                .beginTx()
+                .data("subscribeOrderData", "order")
+                .beginTx(TransactionPolicy.NEW)
+                .data("$payData")
+                .beginTx(TransactionPolicy.NESTED)
+                .data("payResultData", "pay")
+                .data("$payResultData")
+                .endTx()
+                .endTx()
+                .data("orderPayResultData", "order")
+                .endTx()
+                .addProduce("$payResultData", storage -> {
+
+                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
+
+                    System.out.println("Produce $payResultData");
+
+                    PayResultData resultData = new PayResultData();
+
+                    resultData.setStatus(1);
+
+                    return ExecuteResult.success(resultData);
+
+                }).addProduce("$payData", storage -> {
+
+                    System.out.println("Produce $payData");
+
+                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
+
+                    PayData payData = new PayData();
+
+                    payData.setProductName(subscribeOrderData1.getProductName());
+
+                    payData.setAmount(subscribeOrderData1.getAmount());
+
+                    return ExecuteResult.success(payData);
+
+                }).execute();
+    }
+
+    public static void cancelOrderData() {
+        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare();
+
+        defaultBusinessDeclare.build("cancelOrder")
+                .addEntity("$cancelOrderData", new Long(1))
+                .transactionManager(new MockDataSourceManager())
+                .beginTx()
+                	.data("order", "cancelOrderData")
+                	.data("$payData")
+                    .data("payResultData", "pay")
+                    .data("$payResultData")
+                	.data("orderPayResultData", "order")
+                .addProduce("order", "cancelOrderData", storage -> {
+                    Long cancelOrderData = (Long) storage.get("$cancelOrderData");
+                    Order order = new Order();
+                    order.setId(cancelOrderData);
+                    return ExecuteResult.success(order);
+                }).addProduce("$payResultData", storage -> {
+
+                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
+
+                    System.out.println("Produce $payResultData");
+
+                    PayResultData resultData = new PayResultData();
+
+                    resultData.setStatus(1);
+
+                    return ExecuteResult.success(resultData);
+
+                }).addProduce("$payData", storage -> {
+
+                    System.out.println("Produce $payData");
+
+                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
+
+                    PayData payData = new PayData();
+
+                    payData.setProductName(subscribeOrderData1.getProductName());
+
+                    payData.setAmount(subscribeOrderData1.getAmount());
+
+                    return ExecuteResult.success(payData);
+
+                })
+                .endTx()
+                .execute();
+    }
+
+    public static void initContext() {
+        //ContextUtils.load(new OrderBusiness());
+
+
+        ContextUtils.load(SystemDescBuilder.create()
+                .build("common", "common")
+                .data("$subscribeOrderData", "")
+                .data("$payData", "")
+                .data("$payResultData", "")
+                .getSystem());
+
+        ContextUtils.load(SystemDescBuilder.create()
+                .build("order", "订单")
+                .data("orderData", "订购订单数据")
+                    .type(DataTypeEnum.PERSISTENT)
+                    .cachePrior(false)
+                .data("subscribeOrderData", "订购订单数据")
+                .data("cancelOrderData", "取消订单数据")
+                    .depend("orderData")
+                .data("orderPayResultData", "订单支付状态数据")
+                    .type(DataTypeEnum.PERSISTENT)
+                    .cachePrior(false)
+                    .depend("$payResultData")
+                    .depend("orderData")
+                .getSystem());
+
+        ContextUtils.load(SystemDescBuilder.create()
+                .build("pay", "支付")
+                .data("payCmdData", "支付指令数据")
+                .depend("$payData")
+                .data("payResultData", "支付结果数据")
+                .depend("payCmdData")
+                .type(DataTypeEnum.PERSISTENT)
+                .cachePrior(true)
+                .getSystem());
+
+
+        /**.addMapping("saveOrderData", "order", "generateOrder")
+         .addMapping("saveOrderData", "order", "saveOrder")
+         .addMapping("savePay", "order", "generateOrderPayStatus")
+         .addMapping("savePay", "order", "saveOrderPayResutl")
+         .addMapping("operateWithPay", "pay", "generatePayCmd")
+         .addMapping("operateWithPay", "pay", "executePayCmd")
+         .addMapping("operateWithPay", "pay", "savePayCmdResutl")
+         */
+
+    }
+
+    public static void initSystem() {
+        SystemBuilder systemBuilder = SystemBuilder.create()
+                .build("order")
+                .addProduce("orderData", storage -> {
+
+                    System.out.println("Produce orderData");
+
+                    Long orderId = (Long) storage.getParam("orderId");
+
+                    Order order = new Order();
+
+                    order.setId(orderId);
+                    order.setProductName("Product");
+
+                    return ExecuteResult.success(order);
+
+
+                })
+                .addProduce("subscribeOrderData", storage -> {
+
+                    System.out.println("Produce subscribeOrderData");
+
+                    SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
+
+                    Order order = new Order();
+
+                    order.setId(1l);
+                    order.setProductName(subscribeOrderData.getProductName());
+
+                    return ExecuteResult.success(order);
+                })
+                .addProduce("cancelOrderData", storage -> {
+                    java.lang.System.out.println("produce cancelOrderData");
+                    Order order = (Order) storage.get("orderData");
+                    java.lang.System.out.println(order.getId());
+                    return ExecuteResult.success(order);
+                })
+                .addProduce("orderPayResultData", storage -> {
+
+                    System.out.println("Produce orderPayResultData");
+
+                    Order order = (Order) storage.get("orderData");
+
+                    PayResultData payResultData = (PayResultData) storage.get("$payResultData");
+
+                    return ExecuteResult.success();
+                });
+
+
+        SystemBuilder systemPayBuilder = SystemBuilder.create()
+                .build("pay")
+                .addProduce("payCmdData", storage -> {
+
+                    System.out.println("Produce payCmdData");
+
+                    PayData payData = (PayData) storage.get("$payData");
+
+                    PayCmdData payCmdData = new PayCmdData();
+
+                    payCmdData.setAmount(payData.getAmount());
+
+                    return ExecuteResult.success(payCmdData);
+
+                }).addProduce("payResultData", storage -> {
+                    System.out.println("Produce payResultData");
+                    PayResultData payResultData = new PayResultData();
+                    return ExecuteResult.success(payResultData);
+                });
+
+        SystemBuilder systemCommonBuilder = SystemBuilder.create()
+                .build("common");
+
+        ContextUtils.load(systemCommonBuilder.getSystem());
+
+        ContextUtils.load(systemBuilder.getSystem());
+
+        ContextUtils.load(systemPayBuilder.getSystem());
+    }
 }

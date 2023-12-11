@@ -30,7 +30,8 @@ public class MockDataSourceManager implements DataSourceManager {
     }
 
     public void rollBack() {
-
+        System.out.println("rollBack group:"+transactionStatusList.get(index).getGroup());
+        index = index - 1;
     }
 
 

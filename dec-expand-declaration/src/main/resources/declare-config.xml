@@ -1,57 +1,64 @@
 <declare-config>
 
 	<systems>
+		<systme name="commodity">
+			<data name="commodityData"/>
+		</systme>
 		<systme name="order">
-		
 			<datas>
-				
-				<data name="orderData" desc="订单数据" type="persistent" isCachePrior="false">
+				<data name="subscribeOrderData" desc="订购订单数据" type="persistent" isCachePrior="false">
 					<depends>
 						<depend data="$subscribeOrderData"/>
 					</depends>
 				</data>
-				
-				
+
+				<data name="cancelOrderData" desc="取消订单数据" type="persistent" isCachePrior="false">
+					<depends>
+						<depend data="$cancelOrderData" condition="statue=1 or statue=2" change="status:3"/>
+						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="statue=1 or statue=2" change="status:3"/>
+					</depends>
+				</data>
+
+				<data name="orderData" desc="订单数据" type="persistent" isCachePrior="false">
+				</data>
+
 				<data name="orderPayResultData" desc="订单支付状态数据"  type="persistent" isCachePrior="false">
 					<depends>
 						<depend data="$payResultData"/>
-						<depend data="orderData" />
+						<depend data="orderData" change="status:2"/>
 					</depends>
 				</data>
 			</datas>
-					
 		</systme>
-		
+
 		<systme name="pay" desc="支付">
-		
 			<datas>
-				
 				<data name="payCmdData" desc="支付指令数据">
 					<depends>
 						<depend data="$payData"/>
 					</depends>
 				</data>
-				
-				
+
 				<data name="payResultData" desc="支付结果数据"  type="persistent" isCachePrior="true">
 					<depends>
 						<depend data="payCmdData"/>
 					</depends>
 				</data>
 			</datas>
-					
 		</systme>
-		
 	</systems>
-	
+
 	<system name="common">
 		<datas>
+			<data name="$cancelOrderData" desc="取消订购操作数据"/>
+			<depend data="$commodityData" desc="商品数据" />
 			<data name="$subscribeOrderData" desc="订购数据"/>
 			<data name="$payData" desc="支付数据"/>
 			<data name="$payResultData" desc="支付数据"/>
+			<data name="$refundOrderData" desc="订单退款数据"/>
 		</datas>
 	</system>
-	
+
 	<businesses>
 		<business name="subscribeOrder" desc="提交订单">
 
@@ -60,7 +67,7 @@
 					<depend data="$subscribeOrderData"/>
 				</depends>
 			</data>
-			
+
 			<processes oExceptionTransaction="roll"><!-- roll,commit,customize -->
 				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="one" oExceptionRollBack="roll">
 					produce:order.orderData
@@ -69,7 +76,7 @@
 				<process onErrorStop="true" oExceptionStop="true" transaction="require">
 					produce:$payResultData
 				</process>
-				
+
 				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="two">
 					produce:order.orderPayResultData
 				</process>

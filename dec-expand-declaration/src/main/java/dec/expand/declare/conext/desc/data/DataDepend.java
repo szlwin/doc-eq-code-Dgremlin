@@ -7,7 +7,9 @@ public class DataDepend {
 	private String express;
 
 	private Integer type;
-	
+
+	private String param;
+
 	public DataDepend(String data, String express){
 		
 		this.data = data;
@@ -31,6 +33,14 @@ public class DataDepend {
 	
 	public Integer getType() {
 		return type;
+	}
+
+	public String getParam() {
+		return param;
+	}
+
+	public void setParam(String param) {
+		this.param = param;
 	}
 
 	private void init(){

@@ -9,7 +9,9 @@ public class Produce<DataStorage> extends Executer<DataStorage> {
 	private boolean isGetAllData;
 	
 	private String[] dataTypes;
-	
+
+	private String system;
+
 	public Produce(){
 		
 	}
@@ -42,5 +44,12 @@ public class Produce<DataStorage> extends Executer<DataStorage> {
 	public void setDataTypes(String[] dataTypes) {
 		this.dataTypes = dataTypes;
 	}
-	
+
+	public String getSystem() {
+		return system;
+	}
+
+	public void setSystem(String system) {
+		this.system = system;
+	}
 }
