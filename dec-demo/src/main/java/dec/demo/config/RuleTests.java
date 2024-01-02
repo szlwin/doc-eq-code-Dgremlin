@@ -17,7 +17,7 @@ public class RuleTests extends DemoLoadTests{
 	public static void main(String args[]) throws Exception{
 		RuleTests ruleTests = new RuleTests();
 		ruleTests.testInit();
-		ruleTests.testOrderRuleFirst();
+		ruleTests.testOrderRule();
 	}
 	//@Test
 	public void testGetRule() throws Exception{

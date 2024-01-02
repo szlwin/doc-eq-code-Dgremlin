@@ -31,15 +31,23 @@ public class SystemDescBuilder {
 		return this;
 	}
 	
-	public SystemDescBuilder data(String name, String desc, String dataMappings[]) {
+	public SystemDescBuilder dataWithRef(String name, String desc, String dataRef) {
 		
-		currentDataDesc = new DataDesc(name, desc, dataMappings);
+		currentDataDesc = new DataDesc(name, desc, dataRef, null);
 		
 		this.addData(currentDataDesc);
 		
 		return this;
 	}
-	
+
+	public SystemDescBuilder dataWithDom(String name, String desc, String dom) {
+
+		currentDataDesc = new DataDesc(name, desc, null, dom);
+
+		this.addData(currentDataDesc);
+
+		return this;
+	}
 	public SystemDescBuilder addData(DataDesc dataDesc) {
 		currentDataDesc = dataDesc;
 		

@@ -7,8 +7,6 @@ import dec.expand.declare.conext.desc.Desc;
 
 public class DataDesc extends Desc{
 
-	//private ContextStorage contextStorage = new ContextStorage(2);
-	
 	private String dataMappings[];
 	
 	private DataTypeEnum type;
@@ -16,24 +14,29 @@ public class DataDesc extends Desc{
 	private boolean isCachePrior;
 	
 	private List<DataDepend> dataDepends;
-	
+
+	private String refData;
+
+	private String refDom;
+
 	public DataDesc(){
 		
 	}
 	
-	public DataDesc(String name, String comment, String dataMappings[]){
-		this(name, comment, dataMappings, DataTypeEnum.CACHE, false);
+	public DataDesc(String name, String comment, String dataRef, String dom){
+		this(name, comment, dataRef, dom, DataTypeEnum.CACHE, false);
 		
 	}
 	
 	public DataDesc(String name, String comment){
-		this(name, comment, null);
+		this(name, comment, null, null);
 	}
 	
-	public DataDesc(String name, String comment, String dataMappings[], DataTypeEnum type, boolean isCachePrior){
+	public DataDesc(String name, String comment, String dataRef, String dom, DataTypeEnum type, boolean isCachePrior){
 		this.setName(name);
 		this.setComment(comment);
-		this.setDataMappings(dataMappings);
+		this.setRefData(dataRef);
+		this.setRefDom(dom);
 		this.setCachePrior(isCachePrior);
 		this.setType(type);
 	}
@@ -73,7 +76,22 @@ public class DataDesc extends Desc{
 	public List<DataDepend> getDataDepends() {
 		return dataDepends;
 	}
-	
+
+	public String getRefData() {
+		return refData;
+	}
+
+	public void setRefData(String refData) {
+		this.refData = refData;
+	}
+
+	public String getRefDom() {
+		return refDom;
+	}
+
+	public void setRefDom(String refDom) {
+		this.refDom = refDom;
+	}
 	
 	/*public void add(ProduceDesc produceDesc){
 		

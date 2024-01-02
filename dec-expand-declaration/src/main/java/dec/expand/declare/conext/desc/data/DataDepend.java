@@ -10,6 +10,12 @@ public class DataDepend {
 
 	private String param;
 
+	private String init;
+
+	private String condition;
+
+	private String change;
+
 	public DataDepend(String data, String express){
 		
 		this.data = data;
@@ -41,6 +47,30 @@ public class DataDepend {
 
 	public void setParam(String param) {
 		this.param = param;
+	}
+
+	public String getInit() {
+		return init;
+	}
+
+	public void setInit(String init) {
+		this.init = init;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public String getChange() {
+		return change;
+	}
+
+	public void setChange(String change) {
+		this.change = change;
 	}
 
 	private void init(){
