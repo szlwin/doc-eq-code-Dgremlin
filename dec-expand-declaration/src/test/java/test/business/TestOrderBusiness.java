@@ -8,16 +8,60 @@ import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
 import dec.expand.declare.utils.ContextUtils;
 
+import java.beans.PropertyDescriptor;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 public class TestOrderBusiness {
 
-    public static void main(String[] args) {
-        initContext();
+    public static void main(String[] args) throws Throwable {
+        Long date = System.currentTimeMillis();
+        Order order = new Order();
+        for(int i=0;i<100000;i++){
+            order.setId(1L);
+        }
+        System.out.println(System.currentTimeMillis()-date);
 
-        initSystem();
+        date = System.currentTimeMillis();
+        for(int i=0;i<100000;i++){
 
-        subscribeOrder();
+            Field f2 = order.getClass().getDeclaredField("id");
+            f2.setAccessible(true);
+            f2.set(order,1l);
+            //PropertyDescriptor descriptor = new PropertyDescriptor("id", order.getClass());
+            //descriptor.getWriteMethod().invoke(order, 1l);
+            //Method m1= order.getClass().getMethod("setId", Long.class);
+            //m1.invoke(order,1l);
+        }
+        System.out.println(System.currentTimeMillis()-date);
+
+        date = System.currentTimeMillis();
+        for(int i=0;i<100000;i++){
+            order.getId();
+        }
+        System.out.println(System.currentTimeMillis()-date);
+
+        date = System.currentTimeMillis();
+        for(int i=0;i<100000;i++){
+            Field f2 = order.getClass().getDeclaredField("id");
+            f2.setAccessible(true);
+            f2.get(order);
+
+            //Method m1= order.getClass().getMethod("getId");
+            //m1.invoke(order);
+        }
+        System.out.println(System.currentTimeMillis()-date);
+
+        //initContext();
+
+        //initSystem();
+
+       //subscribeOrder();
 
     }
 

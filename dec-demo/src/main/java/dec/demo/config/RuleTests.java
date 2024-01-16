@@ -2,6 +2,7 @@ package dec.demo.config;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 
 import dec.core.context.config.exception.DataNotDefineException;
@@ -11,6 +12,7 @@ import dec.core.model.container.ModelContainer;
 import dec.core.model.container.ModelLoader;
 import dec.core.model.container.manager.ContainerManager;
 import dec.core.model.utils.DataUtil;
+import dec.core.model.utils.validater.SimpleValidater;
 
 public class RuleTests extends DemoLoadTests{
 
