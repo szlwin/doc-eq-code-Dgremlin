@@ -87,12 +87,11 @@ public class DemoLoadTests {
     private static DataSource getDataSource1(){
         // 生成数据源配置
         HikariConfig hikariConfig = new HikariConfig();
-        
         // 设置数据库信息
         hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        hikariConfig.setJdbcUrl("jdbc:mysql://121.36.137.151:12306/demo-test?useSSL=false");
+        hikariConfig.setJdbcUrl("jdbc:mysql://47.102.121.18:3306/demo-test");
         hikariConfig.setUsername("root");
-        hikariConfig.setPassword("Dev_guijiu_2020");
+        hikariConfig.setPassword("Came2021!");
         // 设置可以获取tables remarks信息
         //hikariConfig.addDataSourceProperty("useInformationSchema", "true");
         hikariConfig.setMinimumIdle(2);
@@ -107,10 +106,10 @@ public class DemoLoadTests {
         HikariConfig hikariConfig = new HikariConfig();
         
         // 设置数据库信息
-        hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        hikariConfig.setJdbcUrl("jdbc:mysql://121.36.137.151:12306/demo-test1?useSSL=false");
-        hikariConfig.setUsername("root");
-        hikariConfig.setPassword("Dev_guijiu_2020");
+		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		hikariConfig.setJdbcUrl("jdbc:mysql://47.102.121.18:3306/demo-test1");
+		hikariConfig.setUsername("root");
+		hikariConfig.setPassword("Came2021!");
         // 设置可以获取tables remarks信息
         //hikariConfig.addDataSourceProperty("useInformationSchema", "true");
         hikariConfig.setMinimumIdle(2);

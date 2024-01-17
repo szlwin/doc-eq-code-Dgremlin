@@ -1,5 +1,6 @@
 package dec.core.model.execute.rule.grammer;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import dec.core.datasource.execute.exception.ExecuteException;
@@ -18,7 +19,9 @@ public class GrammerExecute extends AbstractRuleExecute{
 		SimpleExprParam simpleExprParam = new SimpleExprParam();
 		
 		simpleExprParam.setParamMap((Map<String, Object>) this.value);
-		
+		if(this.externalParam == null){
+			this.externalParam = new HashMap<>();
+		}
 		simpleExprParam.setExternalMap(this.externalParam);
 		
 		SimpleExprVisitor simpleExprVisitor = new SimpleExprVisitor();

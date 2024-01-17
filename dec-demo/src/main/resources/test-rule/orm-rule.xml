@@ -17,9 +17,9 @@
 				<test1>222222</test1>
 			</customer-info>
 			<customer-process>
-				<![CDATA[ 
-				#num = if totalPrice>10 then totalPrice*1.1  else totalPrice*1.2
-				totalPrice : totalPrice*#num; 
+				<![CDATA[
+					#num : if totalPrice>10 then totalPrice*1.1  else totalPrice*1.2;
+					totalPrice : totalPrice*#num;
 				]]>
 			</customer-process>
 		</rule>
