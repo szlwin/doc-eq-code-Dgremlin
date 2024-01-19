@@ -1,83 +1,153 @@
 package dec.expand.declare.conext.desc.data;
 
+import dec.expand.declare.collections.SimpleList;
+
 public class DataDepend {
 
-	private String data;
-	
-	private String express;
+    private String data;
 
-	private Integer type;
+    private String express;
 
-	private String param;
+    private Integer type;
 
-	private String init;
+    private SimpleList<ValueDesc> param;
 
-	private String condition;
+    private SimpleList<ValueDesc> init;
 
-	private String change;
+    private String condition;
 
-	public DataDepend(String data, String express){
-		
-		this.data = data;
-		
-		this.express = express;
-		
-		init();
-	}
-	
-	public DataDepend(String data){
-		this(data, null);
-	}
-	public String getData() {
-		return data;
-	}
+    private SimpleList<ValueDesc> change;
+
+    private String paramExpress;
+
+    private String initExpress;
+
+    public DataDepend(String data, String express) {
+
+        this.data = data;
+
+        this.express = express;
+
+        init();
+    }
+
+    public DataDepend(String data) {
+        this(data, null);
+    }
+
+    public String getData() {
+        return data;
+    }
 
 
-	public String getExpress() {
-		return express;
-	}
-	
-	public Integer getType() {
-		return type;
-	}
+    public String getExpress() {
+        return express;
+    }
 
-	public String getParam() {
-		return param;
-	}
+    public Integer getType() {
+        return type;
+    }
 
-	public void setParam(String param) {
-		this.param = param;
-	}
+    public SimpleList<ValueDesc> getParam() {
+        return param;
+    }
 
-	public String getInit() {
-		return init;
-	}
+    public void setParam(String param) {
+        this.paramExpress = param;
+        if (this.param == null) {
+            this.param = new SimpleList<>();
+        }
+        String[] statusArray = param.split(",");
+        for (String status : statusArray) {
+            ValueDesc statusDesc = new ValueDesc();
+            String[] statusStr = status.split(":");
+            if (statusStr[1].indexOf(".") > 1) {
+                statusDesc.setProperty(statusStr[1].split("\\."));
+            } else {
+                statusDesc.setProperty(new String[]{statusStr[1]});
+            }
+            statusDesc.setValue(statusStr[0]);
+            statusDesc.setExpress(status);
+            this.param.add(statusDesc);
+        }
+    }
 
-	public void setInit(String init) {
-		this.init = init;
-	}
+    public void setInit(String init) {
+        this.initExpress = init;
+        if (this.init == null) {
+            this.init = new SimpleList<>();
+        }
+        String[] statusArray = init.split(",");
+        for (String status : statusArray) {
+            ValueDesc statusDesc = new ValueDesc();
+            String[] statusStr = status.split(":");
+            if (statusStr[0].indexOf(".") > 0) {
+                statusDesc.setProperty(statusStr[0].split("\\."));
+            } else {
+                statusDesc.setProperty(new String[]{statusStr[0]});
+            }
 
-	public String getCondition() {
-		return condition;
-	}
+            if (statusStr[1].matches("\\d+")) {
+                statusDesc.setValue(Integer.valueOf(statusStr[1]));
+            } else {
+                statusDesc.setValue(statusStr[1]);
+            }
 
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
+            this.init.add(statusDesc);
+        }
+    }
 
-	public String getChange() {
-		return change;
-	}
+    public SimpleList<ValueDesc> getInit() {
+        return init;
+    }
 
-	public void setChange(String change) {
-		this.change = change;
-	}
+    public String getCondition() {
+        return condition;
+    }
 
-	private void init(){
-		if(data.startsWith("$")){
-			type =1;
-		}else{
-			type = 2;
-		}
-	}
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public SimpleList<ValueDesc> getChange() {
+        return change;
+    }
+
+    public String getParamExpress() {
+        return paramExpress;
+    }
+
+    public String getInitExpress() {
+        return initExpress;
+    }
+
+    public void setChange(String change) {
+        if (this.change == null) {
+            this.change = new SimpleList<>();
+        }
+        String[] statusArray = change.split(",");
+        for (String status : statusArray) {
+            ValueDesc statusDesc = new ValueDesc();
+            String[] statusStr = status.split(":");
+            if (statusStr[0].indexOf(".") > 0) {
+                statusDesc.setProperty(statusStr[0].split("\\."));
+            } else {
+                statusDesc.setProperty(new String[]{statusStr[0]});
+            }
+            if (statusStr[1].matches("\\d+")) {
+                statusDesc.setValue(Integer.valueOf(statusStr[1]));
+            } else {
+                statusDesc.setValue(statusStr[1]);
+            }
+            this.change.add(statusDesc);
+        }
+    }
+
+    private void init() {
+        if (data.startsWith("$")) {
+            type = 1;
+        } else {
+            type = 2;
+        }
+    }
 }

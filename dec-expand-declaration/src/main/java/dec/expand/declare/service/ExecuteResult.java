@@ -48,8 +48,12 @@ public class ExecuteResult {
 
     public static ExecuteResult fail(String code, String message, Exception ex) {
 
-        ExecuteResult executeResult = fail(code, message);
-
+        ExecuteResult executeResult = new ExecuteResult();
+        Error error = new Error();
+        error.setCode(code);
+        error.setMessage(message);
+        error.setException(ex);
+        executeResult.setError(error);
         executeResult.getError().setException(ex);
 
         return executeResult;

@@ -1,99 +1,102 @@
 package dec.expand.declare.conext.desc.data;
 
-import java.util.List;
-
 import dec.expand.declare.collections.SimpleList;
 import dec.expand.declare.conext.desc.Desc;
 
-public class DataDesc extends Desc{
+import java.util.List;
 
-	private String dataMappings[];
-	
-	private DataTypeEnum type;
-	
-	private boolean isCachePrior;
-	
-	private List<DataDepend> dataDepends;
+public class DataDesc extends Desc {
 
-	private String refData;
+    private String dataMappings[];
 
-	private String refDom;
+    private DataTypeEnum type;
 
-	public DataDesc(){
-		
-	}
-	
-	public DataDesc(String name, String comment, String dataRef, String dom){
-		this(name, comment, dataRef, dom, DataTypeEnum.CACHE, false);
-		
-	}
-	
-	public DataDesc(String name, String comment){
-		this(name, comment, null, null);
-	}
-	
-	public DataDesc(String name, String comment, String dataRef, String dom, DataTypeEnum type, boolean isCachePrior){
-		this.setName(name);
-		this.setComment(comment);
-		this.setRefData(dataRef);
-		this.setRefDom(dom);
-		this.setCachePrior(isCachePrior);
-		this.setType(type);
-	}
-	
-	public String[] getDataMappings() {
-		return dataMappings;
-	}
+    private boolean isCachePrior;
 
-	public void setDataMappings(String[] dataMappings) {
-		this.dataMappings = dataMappings;
-	}
+    private List<DataDepend> dataDepends;
 
-	public DataTypeEnum getType() {
-		return type;
-	}
+    private String refDom;
 
-	public void setType(DataTypeEnum type) {
-		this.type = type;
-	}
+    private SimpleList<ChangeDesc> changeDescList;
 
-	public boolean isCachePrior() {
-		return isCachePrior;
-	}
+    public DataDesc() {
 
-	public void setCachePrior(boolean isCachePrior) {
-		this.isCachePrior = isCachePrior;
-	}
+    }
 
-	public void addDepend(DataDepend dataDepend){
-		if(dataDepends == null){
-			dataDepends = new SimpleList<DataDepend>();
-		}
-		dataDepends.add(dataDepend);
-		
-	}
+    public DataDesc(String name, String comment, String dom) {
+        this(name, comment, dom, DataTypeEnum.CACHE, false);
 
-	public List<DataDepend> getDataDepends() {
-		return dataDepends;
-	}
+    }
 
-	public String getRefData() {
-		return refData;
-	}
+    public DataDesc(String name, String comment) {
+        this(name, comment, null);
+    }
 
-	public void setRefData(String refData) {
-		this.refData = refData;
-	}
+    public DataDesc(String name, String comment, String dom, DataTypeEnum type, boolean isCachePrior) {
+        this.setName(name);
+        this.setComment(comment);
+        this.setRefDom(dom);
+        this.setCachePrior(isCachePrior);
+        this.setType(type);
+    }
 
-	public String getRefDom() {
-		return refDom;
-	}
+    public String[] getDataMappings() {
+        return dataMappings;
+    }
 
-	public void setRefDom(String refDom) {
-		this.refDom = refDom;
-	}
-	
-	/*public void add(ProduceDesc produceDesc){
+    public void setDataMappings(String[] dataMappings) {
+        this.dataMappings = dataMappings;
+    }
+
+    public DataTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(DataTypeEnum type) {
+        this.type = type;
+    }
+
+    public boolean isCachePrior() {
+        return isCachePrior;
+    }
+
+    public void setCachePrior(boolean isCachePrior) {
+        this.isCachePrior = isCachePrior;
+    }
+
+    public void addDepend(DataDepend dataDepend) {
+        if (dataDepends == null) {
+            dataDepends = new SimpleList<DataDepend>();
+        }
+        dataDepends.add(dataDepend);
+    }
+
+    public List<DataDepend> getDataDepends() {
+        return dataDepends;
+    }
+
+    public String getRefDom() {
+        return refDom;
+    }
+
+    public void setRefDom(String refDom) {
+        this.refDom = refDom;
+    }
+
+    public SimpleList<ChangeDesc> getChangeDescList() {
+        return changeDescList;
+    }
+
+    public void addChange(String name, SimpleList<ValueDesc> changeList) {
+        ChangeDesc changeDesc = new ChangeDesc();
+        changeDesc.setName(name);
+        changeDesc.setValueDescList(changeList);
+        if (changeDescList == null) {
+            changeDescList = new SimpleList<>();
+        }
+        changeDescList.add(changeDesc);
+    }
+    /*public void add(ProduceDesc produceDesc){
 		
 		contextStorage.add(0, produceDesc.getName(), produceDesc);
 		
@@ -128,6 +131,6 @@ public class DataDesc extends Desc{
 	public ConumerDesc getConumer(String name) {
 		return (ConumerDesc) contextStorage.get(1, name);
 	}*/
-	
-	
+
+
 }

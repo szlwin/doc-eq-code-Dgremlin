@@ -17,7 +17,7 @@ public class DataStorage {
 		paramMap.put(key, data);
 	}
 
-	public Object getParma(String key) {
+	public Object getParam(String key) {
 		return paramMap.get(key);
 	}
 
@@ -42,7 +42,4 @@ public class DataStorage {
         return dataMap.containsKey(data);
     }
 
-    public Object getParam(String orderId) {
-        return null;
-    }
 }

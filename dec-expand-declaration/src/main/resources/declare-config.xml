@@ -12,14 +12,14 @@
 					</depends>
 				</data>
 
-				<data name="cancelOrderData" desc="取消订单数据" type="persistent" isCachePrior="false" ref-data="order">
+				<data name="cancelOrderData" desc="取消订单数据" type="persistent" isCachePrior="false">
 					<depends>
 						<depend data="$cancelOrderData"/>
 						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="statue=1 or statue=2" change="status:3"/>
 					</depends>
 				</data>
 
-				<data name="orderData" desc="订单数据" type="persistent" isCachePrior="false" ref-data="order">
+				<data name="orderData" desc="订单数据" type="persistent" isCachePrior="false">
 				</data>
 
 				<data name="orderPayResultData" desc="订单支付状态数据"  type="persistent" isCachePrior="false">
