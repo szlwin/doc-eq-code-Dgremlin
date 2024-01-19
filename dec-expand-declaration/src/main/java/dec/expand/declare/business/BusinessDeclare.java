@@ -51,7 +51,7 @@ public interface BusinessDeclare {
 
     BusinessDeclare data(String data);
 
-    BusinessDeclare data(String data, String system);
+    BusinessDeclare data(String system, String data);
 
     //BusinessDeclare transaction(TransactionPolicy transactionPolicy, RollBackPolicy rollBackPolicy);
 

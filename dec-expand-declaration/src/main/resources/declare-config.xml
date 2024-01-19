@@ -6,15 +6,15 @@
 		</systme>
 		<systme name="order">
 			<datas>
-				<data name="subscribeOrderData" desc="订购订单数据" type="persistent" isCachePrior="false">
+				<data name="subscribeOrderData" desc="订购订单数据" type="persistent" isCachePrior="false" ref-dom="OrderInfo">
 					<depends>
-						<depend data="$subscribeOrderData"/>
+						<depend data="$subscribeOrderData" init="status:1"/>
 					</depends>
 				</data>
 
 				<data name="cancelOrderData" desc="取消订单数据" type="persistent" isCachePrior="false">
 					<depends>
-						<depend data="$cancelOrderData" condition="statue=1 or statue=2" change="status:3"/>
+						<depend data="$cancelOrderData"/>
 						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="statue=1 or statue=2" change="status:3"/>
 					</depends>
 				</data>

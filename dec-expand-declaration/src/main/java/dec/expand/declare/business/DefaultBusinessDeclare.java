@@ -1,16 +1,16 @@
 package dec.expand.declare.business;
 
+import dec.expand.declare.business.exception.ExecuteException;
 import dec.expand.declare.conext.DataStorage;
 import dec.expand.declare.conext.DescContext;
 import dec.expand.declare.conext.desc.business.BusinessDesc;
-import dec.expand.declare.conext.desc.data.DataDepend;
-import dec.expand.declare.conext.desc.data.DataDesc;
-import dec.expand.declare.conext.desc.data.DataTypeEnum;
+import dec.expand.declare.conext.desc.data.*;
 import dec.expand.declare.conext.desc.process.ProcessDesc;
 import dec.expand.declare.conext.desc.process.RollBackPolicy;
 import dec.expand.declare.conext.desc.process.TransactionDesc;
 import dec.expand.declare.conext.desc.process.TransactionPolicy;
 import dec.expand.declare.conext.desc.system.SystemDesc;
+import dec.expand.declare.conext.utils.DataUtils;
 import dec.expand.declare.datasorce.ConnecionDesc;
 import dec.expand.declare.datasorce.DataSourceManager;
 import dec.expand.declare.executer.produce.Produce;
@@ -111,10 +111,15 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                     break;
                 }
             } catch (Exception e) {
+                log.error("Code:{}, produce data occur exception, [{}]-[{}]", code, process.getSystem(), process.getData(), e);
+                if (result == null) {
+                    result = ExecuteResult.fail();
+                }
+
                 Error error = new Error();
                 error.setException(e);
                 result.setError(error);
-                log.error("Code:{}, produce data occur exception, [{}]-[{}]", code, process.getSystem(), process.getData(), e);
+                break;
             }
             log.info("Code:{}, end produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
         }
@@ -168,12 +173,14 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     @Override
     public BusinessDeclare data(String data) {
-        data(data, "this");
+        data("this", data);
         return this;
     }
 
     @Override
-    public BusinessDeclare data(String data, String system) {
+    public BusinessDeclare data(String system, String data) {
+
+        validate(system, data);
 
         currentProcess = new ProcessDesc();
 
@@ -282,6 +289,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     @Override
     public BusinessDeclare addProduce(String system, String dataName, Function<ExecuteResult, DataStorage> fun) {
+        validate(system, dataName);
         Produce<DataStorage> produce = new Produce<DataStorage>();
         produce.setName(dataName);
         produce.setSystem(system);
@@ -383,10 +391,27 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
             produceData(dataDesc, process.getData(), process.getSystem());
 
+            change(systemDesc, dataDesc);
+
             refreshStorage(dataDesc);
         }
 
         endTx(process, index);
+    }
+
+    private void change(SystemDesc systemDesc, DataDesc dataDesc) throws Exception {
+        if (dataDesc.getChangeDescList() != null) {
+            for (ChangeDesc changeDesc : dataDesc.getChangeDescList()) {
+                Object dataObject = dataStorage.get(dataDesc.getName());
+                DataUtils.setValue(dataObject, changeDesc.getValueDescList());
+                this.result = SystemContext.get()
+                        .get(systemDesc.getName()).change(changeDesc.getName(), this.dataStorage);
+                if (!result.isSuccess()) {
+                    log.error(String.format("Change status error,depend:[%]", changeDesc.getName()));
+                    break;
+                }
+            }
+        }
     }
 
     private void produceData(DataDesc dataDesc, String dataName, String system) throws Exception {
@@ -404,6 +429,24 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
                     if (!dataStorage.containsData(data)) {
 
+                        if (dataDepend.getParam() != null) {
+                            for (ValueDesc valueDesc : dataDepend.getParam()) {
+                                Object dataObject = dataStorage.get(valueDesc.getProperty()[0]);
+                                if (dataObject == null) {
+                                    String msg = String.format("Get param error, the [%s] is not exist, depend:[%s], paramConfig:[%s], error express:[%s]",
+                                            valueDesc.getProperty()[0], data, dataDepend.getParamExpress(), valueDesc.getExpress());
+                                    log.error(msg);
+                                    throw new ExecuteException(msg);
+                                }
+                                try {
+                                    dataStorage.addParam((String) valueDesc.getValue(), DataUtils.getValue(dataObject, valueDesc.getProperty(), 1));
+                                } catch (Exception e) {
+                                    log.error(String.format("Get param error, the param value can't get, depend:[%s], paramConfig:[%s], error express:[%s]",
+                                            data, dataDepend.getParamExpress(), valueDesc.getExpress()));
+                                    throw new ExecuteException(e);
+                                }
+                            }
+                        }
                         DataDesc depnedDataDesc = getDataDesc(system, dataDepend);
 
                         log.info("Code:{}, start produce depend data, [{}]-[{}]", code, system, data);
@@ -415,6 +458,23 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                         }
 
                         log.info("Code:{}, end produce depend data,  [{}]-[{}]", code, system, data);
+                    }
+
+                    if (dataDepend.getInit() != null) {
+                        try {
+                            DataUtils.setValue(dataStorage.getDataMap().get(data), dataDepend.getInit());
+                        } catch (Exception e) {
+                            log.error(String.format("Init status error, depend:[%s], initConfig:[%s]",
+                                    data, dataDepend.getInitExpress()));
+                            throw new ExecuteException(e);
+                        }
+                    }
+                    if (dataDepend.getCondition() != null) {
+                        if (!DataUtils.check(dataStorage.getDataMap().get(data), dataDepend.getCondition())) {
+                            String message = String.format("Check [%s]-[%s] condition error, condition:[%s]", system, data, dataDepend.getCondition());
+                            log.error(message);
+                            throw new ExecuteException(message);
+                        }
                     }
                 }
             }
@@ -534,5 +594,24 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         currentProcess.setRollBackPolicy(rollBackPolicy);
 
         currentProcess.setTransactionGroup(transactionGroup);
+    }
+
+    private void validate(String system, String data) {
+        SystemDesc systemDesc = null;
+        if ("this".equals(system)) {
+            systemDesc = DescContext.get().getSystem("common");
+        } else {
+            systemDesc = DescContext.get().getSystem(system);
+        }
+
+        if (systemDesc == null) {
+            log.error("The system is not exist:" + system);
+            throw new ExecuteException("The system is not exist:" + system);
+        }
+        DataDesc dataDesc = systemDesc.getData(data);
+        if (dataDesc == null) {
+            log.error("The data is not exist:" + system + "-" + data);
+            throw new ExecuteException("The data is not exist:" + system + "-" + data);
+        }
     }
 }

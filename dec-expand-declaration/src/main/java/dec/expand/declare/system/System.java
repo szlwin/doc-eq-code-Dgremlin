@@ -1,6 +1,7 @@
 package dec.expand.declare.system;
 
 import dec.expand.declare.conext.DataStorage;
+import dec.expand.declare.executer.change.Change;
 import dec.expand.declare.executer.conume.Conumer;
 import dec.expand.declare.executer.produce.Produce;
 import dec.expand.declare.service.ExecuteResult;
@@ -19,6 +20,8 @@ public class System {
     private Map<String, Conumer<?>> conumerMap;
 
     private Map<String, Produce<DataStorage>> produceMap;
+
+    private Map<String, Change<DataStorage>> changeMap;
 
     public String getName() {
         return name;
@@ -42,6 +45,14 @@ public class System {
         }
 
         produceMap.put(produce.getName(), produce);
+    }
+
+    public void add(Change<DataStorage> change) {
+        if (changeMap == null) {
+            changeMap = new HashMap<>();
+        }
+
+        changeMap.put(change.getName(), change);
     }
 
     public ExecuteResult conume(String data, DataStorage dataStorage) {
@@ -74,6 +85,28 @@ public class System {
         } catch (Exception e) {
 
             log.error("Produce error, data:{}", data, e);
+            executeResult = ExecuteResult.fail(null, null, e);
+        }
+
+
+        return executeResult;
+    }
+
+    public ExecuteResult change(String data, DataStorage dataStorage) {
+
+        ExecuteResult executeResult = null;
+
+        if (!changeMap.containsKey(data)) {
+            throw new RuntimeException("Undifined data change:[" + getName() + "]-" + "[" + data + "]");
+        }
+
+        try {
+
+            executeResult = changeMap.get(data).execute(dataStorage);
+
+        } catch (Exception e) {
+
+            log.error("change error, data:{}", data, e);
             executeResult = ExecuteResult.fail(null, null, e);
         }
 
