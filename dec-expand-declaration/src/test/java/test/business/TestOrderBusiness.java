@@ -1,14 +1,18 @@
 package test.business;
 
 import dec.expand.declare.business.DefaultBusinessDeclare;
+import dec.expand.declare.business.factory.BusinessDeclareFactory;
+import dec.expand.declare.conext.desc.business.BusinessDesc;
 import dec.expand.declare.conext.desc.data.DataTypeEnum;
 import dec.expand.declare.conext.desc.data.ValueDesc;
+import dec.expand.declare.conext.desc.process.ProcessDesc;
 import dec.expand.declare.conext.desc.process.TransactionPolicy;
 import dec.expand.declare.conext.desc.system.SystemDescBuilder;
+import dec.expand.declare.conext.parser.xml.exception.XMLParseException;
 import dec.expand.declare.conext.utils.DataUtils;
 import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
-import dec.expand.declare.utils.ContextUtils;
+import dec.expand.declare.conext.utils.ContextUtils;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -88,9 +92,12 @@ public class TestOrderBusiness {
 
         initSystem();
 
+        //initProcess();
         //subscribeOrder();
 
         cancelOrderData();
+
+        cancelOrderDataByconfig();
     }
 
     public static void subscribeOrder() {
@@ -106,17 +113,17 @@ public class TestOrderBusiness {
                 .addEntity("$subscribeOrderData", subscribeOrderData)
                 .transactionManager(new MockDataSourceManager())
                 .beginTx()
-                .data("order", "subscribeOrderData")
-                .beginTx(TransactionPolicy.NEW)
-                .data("$payData")
-                .beginTx(TransactionPolicy.NESTED)
-                .data("pay", "payResultData")
-                .data("$payResultData")
-                .endTx()
-                .endTx()
-                .data("order", "orderPayResultData")
-                .endTx()
-                .addProduce("$payResultData", storage -> {
+                    .data("order", "subscribeOrderData")
+                        .beginTx(TransactionPolicy.NEW)
+                            .data("$payData")
+                        .       beginTx(TransactionPolicy.NESTED)
+                                    .data("pay", "payResultData")
+                                    .data("$payResultData")
+                                .endTx()
+                        .endTx()
+                        .data("order", "orderPayResultData")
+                        .endTx()
+                        .addProduce("$payResultData", storage -> {
 
                     PayResultData payResultData = (PayResultData) storage.get("payResultData");
 
@@ -199,11 +206,60 @@ public class TestOrderBusiness {
                 .execute();
     }
 
-    public static void initContext() {
+    public static void cancelOrderDataByconfig() {
+        DefaultBusinessDeclare defaultBusinessDeclare = BusinessDeclareFactory
+                .createDefaultBusinessDeclare("cancelOrder");
+
+        SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
+
+        subscribeOrderData.setProductName("test");
+        subscribeOrderData.setOrderId(11l);
+        subscribeOrderData.setAmount(new BigDecimal(1000));
+
+        defaultBusinessDeclare
+                .addEntity("$cancelOrderData", subscribeOrderData)
+                .transactionManager(new MockDataSourceManager())
+
+                .addProduce("order", "cancelOrderData", storage -> {
+                    Long cancelOrderData = (Long) storage.get("$cancelOrderData");
+                    Order order = new Order();
+                    order.setId(cancelOrderData);
+                    return ExecuteResult.success(order);
+                }).addProduce("$payResultData", storage -> {
+
+                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
+
+                    System.out.println("Produce $payResultData");
+
+                    PayResultData resultData = new PayResultData();
+
+                    resultData.setStatus(1);
+
+                    return ExecuteResult.success(resultData);
+
+                }).addProduce("$payData", storage -> {
+
+                    System.out.println("Produce $payData");
+
+                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$cancelOrderData");
+
+                    PayData payData = new PayData();
+
+                    payData.setProductName(subscribeOrderData1.getProductName());
+
+                    payData.setAmount(subscribeOrderData1.getAmount());
+
+                    return ExecuteResult.success(payData);
+
+                })
+                .execute();
+    }
+
+    public static void initContext() throws XMLParseException {
         //ContextUtils.load(new OrderBusiness());
+        ContextUtils.loadConfig(new String[]{"classpath:declare-config.xml"});
 
-
-        ContextUtils.load(SystemDescBuilder.create()
+        /*ContextUtils.load(SystemDescBuilder.create()
                 .build("common", "common")
                 .data("$subscribeOrderData", "")
                 .data("$payData", "")
@@ -237,7 +293,7 @@ public class TestOrderBusiness {
                 .depend("payCmdData")
                 .type(DataTypeEnum.PERSISTENT)
                 .cachePrior(true)
-                .getSystem());
+                .getSystem());*/
 
 
         /**.addMapping("saveOrderData", "order", "generateOrder")
@@ -252,6 +308,7 @@ public class TestOrderBusiness {
     }
 
     public static void initSystem() {
+
         SystemBuilder systemBuilder = SystemBuilder.create()
                 .build("order")
                 .addChange("orderData", storage -> {
@@ -331,5 +388,48 @@ public class TestOrderBusiness {
         ContextUtils.load(systemBuilder.getSystem());
 
         ContextUtils.load(systemPayBuilder.getSystem());
+    }
+
+    public static void initProcess() {
+        /* .data("order", "cancelOrderData")
+                .data("$payData")
+                .data("pay", "payResultData")
+                .data("$payResultData")
+                .data("order", "orderPayResultData")
+               */
+        BusinessDesc businessDesc = new BusinessDesc();
+        businessDesc.setName("cancelOrder");
+
+        ProcessDesc processDesc = new ProcessDesc();
+        processDesc.setSystem("order");
+        processDesc.setData("cancelOrderData");
+        processDesc.setBegin(true);
+        businessDesc.add(processDesc);
+
+        ProcessDesc processDesc1 = new ProcessDesc();
+        processDesc1.setSystem("this");
+        processDesc1.setData("$payData");
+        businessDesc.add(processDesc1);
+
+        ProcessDesc processDesc2 = new ProcessDesc();
+        processDesc2.setSystem("pay");
+        processDesc2.setData("payResultData");
+        businessDesc.add(processDesc2);
+
+        ProcessDesc processDesc3 = new ProcessDesc();
+        processDesc3.setSystem("this");
+        processDesc3.setData("$payResultData");
+        businessDesc.add(processDesc3);
+
+        ProcessDesc processDesc4 = new ProcessDesc();
+        processDesc4.setSystem("order");
+        processDesc4.setData("orderPayResultData");
+        processDesc4.setEnd(true);
+        businessDesc.add(processDesc4);
+
+
+        ContextUtils.load(businessDesc);
+
+
     }
 }

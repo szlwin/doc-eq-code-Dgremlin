@@ -17,7 +17,7 @@ public class BusinessDesc extends Desc{
 	public void add(ProcessDesc process){
 		
 		if(processes == null){
-			processes = new SimpleList<ProcessDesc>();
+			processes = new SimpleList<>();
 		}
 		
 		processes.add(process);

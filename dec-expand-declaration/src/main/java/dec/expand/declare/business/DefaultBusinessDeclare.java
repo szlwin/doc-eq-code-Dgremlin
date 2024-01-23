@@ -235,10 +235,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             currentTransactionDesc.setEnd(processDescList.size() - 1);
 
         if (currentTransactionDesc.getIndex() > 0) {
-            //java.lang.System.out.println("end -c:" + currentTransactionDesc.getTransactionGroup());
             currentTransactionDesc = transactionDescList.get(currentTransactionDesc.getIndex() - 1);
         }
-        //java.lang.System.out.println("end:" + currentTransactionDesc.getTransactionGroup() + ":" + currentTransactionDesc.getEnd());
         return this;
     }
 
@@ -416,25 +414,25 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private void produceData(DataDesc dataDesc, String dataName, String system) throws Exception {
 
-        List<DataDepend> dataDepends = null;
+        List<DataDependDesc> dataDependDescs = null;
 
         if (dataDesc != null) {
 
-            dataDepends = dataDesc.getDataDepends();
+            dataDependDescs = dataDesc.getDataDepends();
 
-            if (dataDepends != null) {
-                for (DataDepend dataDepend : dataDepends) {
+            if (dataDependDescs != null) {
+                for (DataDependDesc dataDependDesc : dataDependDescs) {
 
-                    String data = dataDepend.getData();
+                    String data = dataDependDesc.getData();
 
                     if (!dataStorage.containsData(data)) {
 
-                        if (dataDepend.getParam() != null) {
-                            for (ValueDesc valueDesc : dataDepend.getParam()) {
+                        if (dataDependDesc.getParam() != null) {
+                            for (ValueDesc valueDesc : dataDependDesc.getParam()) {
                                 Object dataObject = dataStorage.get(valueDesc.getProperty()[0]);
                                 if (dataObject == null) {
                                     String msg = String.format("Get param error, the [%s] is not exist, depend:[%s], paramConfig:[%s], error express:[%s]",
-                                            valueDesc.getProperty()[0], data, dataDepend.getParamExpress(), valueDesc.getExpress());
+                                            valueDesc.getProperty()[0], data, dataDependDesc.getParamExpress(), valueDesc.getExpress());
                                     log.error(msg);
                                     throw new ExecuteException(msg);
                                 }
@@ -442,12 +440,12 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                                     dataStorage.addParam((String) valueDesc.getValue(), DataUtils.getValue(dataObject, valueDesc.getProperty(), 1));
                                 } catch (Exception e) {
                                     log.error(String.format("Get param error, the param value can't get, depend:[%s], paramConfig:[%s], error express:[%s]",
-                                            data, dataDepend.getParamExpress(), valueDesc.getExpress()));
+                                            data, dataDependDesc.getParamExpress(), valueDesc.getExpress()));
                                     throw new ExecuteException(e);
                                 }
                             }
                         }
-                        DataDesc depnedDataDesc = getDataDesc(system, dataDepend);
+                        DataDesc depnedDataDesc = getDataDesc(system, dataDependDesc);
 
                         log.info("Code:{}, start produce depend data, [{}]-[{}]", code, system, data);
 
@@ -460,18 +458,18 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                         log.info("Code:{}, end produce depend data,  [{}]-[{}]", code, system, data);
                     }
 
-                    if (dataDepend.getInit() != null) {
+                    if (dataDependDesc.getInit() != null) {
                         try {
-                            DataUtils.setValue(dataStorage.getDataMap().get(data), dataDepend.getInit());
+                            DataUtils.setValue(dataStorage.getDataMap().get(data), dataDependDesc.getInit());
                         } catch (Exception e) {
                             log.error(String.format("Init status error, depend:[%s], initConfig:[%s]",
-                                    data, dataDepend.getInitExpress()));
+                                    data, dataDependDesc.getInitExpress()));
                             throw new ExecuteException(e);
                         }
                     }
-                    if (dataDepend.getCondition() != null) {
-                        if (!DataUtils.check(dataStorage.getDataMap().get(data), dataDepend.getCondition())) {
-                            String message = String.format("Check [%s]-[%s] condition error, condition:[%s]", system, data, dataDepend.getCondition());
+                    if (dataDependDesc.getCondition() != null) {
+                        if (!DataUtils.check(dataStorage.getDataMap().get(data), dataDependDesc.getCondition())) {
+                            String message = String.format("Check [%s]-[%s] condition error, condition:[%s]", system, data, dataDependDesc.getCondition());
                             log.error(message);
                             throw new ExecuteException(message);
                         }
@@ -526,14 +524,14 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
                 if (!result.isSuccess()) {
 
-                    if (dataDepends != null) {
+                    if (dataDependDescs != null) {
 
-                        for (DataDepend dataDepend : dataDepends) {
+                        for (DataDependDesc dataDependDesc : dataDependDescs) {
 
-                            if (dataDepend.getType() == 1)
+                            if (dataDependDesc.getType() == 1)
                                 continue;
 
-                            DataDesc depnedDataDesc = getDataDesc(system, dataDepend.getData());
+                            DataDesc depnedDataDesc = getDataDesc(system, dataDependDesc.getData());
 
                             refreshStorage(depnedDataDesc);
                         }
@@ -544,15 +542,15 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
 
-    private DataDesc getDataDesc(String system, DataDepend dataDepend) {
+    private DataDesc getDataDesc(String system, DataDependDesc dataDependDesc) {
 
 
-        if (dataDepend.getType() == 1) {
+        if (dataDependDesc.getType() == 1) {
 
-            return getDataDesc("common", dataDepend.getData());
+            return getDataDesc("common", dataDependDesc.getData());
         } else {
 
-            return getDataDesc(system, dataDepend.getData());
+            return getDataDesc(system, dataDependDesc.getData());
         }
 
 

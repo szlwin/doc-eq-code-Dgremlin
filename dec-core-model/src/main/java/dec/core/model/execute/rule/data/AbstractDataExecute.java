@@ -16,12 +16,17 @@ import dec.core.common.xml.model.view.RelationInfo;*/
 import dec.core.context.data.BaseData;
 import dec.core.datasource.execute.exception.ExecuteException;
 //import dec.core.context.data.DataUtil;
+import dec.core.model.container.ModelContainer;
 import dec.core.model.execute.rule.common.AbstractRuleExecute;
 //import dec.core.sql.dom.ExecuteParam;
 import dec.core.model.utils.DataUtil;
 import dec.external.datasource.sql.dom.ExecuteParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractDataExecute extends AbstractRuleExecute{
+
+	private final static Logger log = LoggerFactory.getLogger(AbstractDataExecute.class);
 
 	protected String sql;
 	
@@ -222,7 +227,6 @@ public abstract class AbstractDataExecute extends AbstractRuleExecute{
 		execParam.setValue(value);
 		execParam.setCmd(sql);
 		object = this.con.execute(execParam);
-
 		doAfter(object);
 		return true;
 	}

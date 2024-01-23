@@ -1,5 +1,8 @@
 package dec.core.model.container;
 
+import artoria.beans.BeanUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import dec.core.collections.list.SimpleList;
 import dec.core.datasource.connection.DataConnection;
 import dec.core.datasource.connection.exception.ConectionException;
@@ -117,6 +120,12 @@ public class ModelContainer implements Container {
 
         ResultInfo resultInfo = ruleExecute.execute();
 
+        if (resultInfo.isSuccess()) {
+            if (modelLoader.get().getOriginData() != null && modelLoader.get().getValues() != null) {
+                Object obj = JSON.toJavaObject((JSON) modelLoader.get().getValues(), modelLoader.get().getOriginData().getClass());
+                BeanUtils.copy(obj, modelLoader.get().getOriginData());
+            }
+        }
         log.info("End Execute the view rule: {}", modelLoader.getRuleName());
 
         return resultInfo;

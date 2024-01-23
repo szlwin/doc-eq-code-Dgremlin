@@ -3,10 +3,7 @@ package dec.expand.declare.conext.desc.process;
 public class ProcessDesc {
 
 	private String data;
-	
-	private boolean onErrorStop;
-	
-	private boolean onExceptionStop;
+
 	
 	private String transactionGroup;
 	
@@ -15,6 +12,10 @@ public class ProcessDesc {
 	private TransactionPolicy transaction;
 
 	private String system;
+
+	private boolean begin = false;
+
+	private boolean end = false;
 	
 	public String getData() {
 		return data;
@@ -22,22 +23,6 @@ public class ProcessDesc {
 
 	public void setData(String data) {
 		this.data = data;
-	}
-
-	public boolean isOnErrorStop() {
-		return onErrorStop;
-	}
-
-	public void setOnErrorStop(boolean onErrorStop) {
-		this.onErrorStop = onErrorStop;
-	}
-
-	public boolean isOExceptionStop() {
-		return onExceptionStop;
-	}
-
-	public void setOnExceptionStop(boolean oExceptionStop) {
-		this.onExceptionStop = oExceptionStop;
 	}
 
 	public String getTransactionGroup() {
@@ -71,5 +56,20 @@ public class ProcessDesc {
 	public void setSystem(String system) {
 		this.system = system;
 	}
-	
+
+	public boolean isBegin() {
+		return begin;
+	}
+
+	public void setBegin(boolean begin) {
+		this.begin = begin;
+	}
+
+	public boolean isEnd() {
+		return end;
+	}
+
+	public void setEnd(boolean end) {
+		this.end = end;
+	}
 }

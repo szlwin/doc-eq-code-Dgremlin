@@ -24,6 +24,9 @@ public class ContextStorage {
 	
 	
 	public Desc get(int type, String name){
+		if(objecetMaps[type] == null){
+			return null;
+		}
 		return objecetMaps[type].get(name);
 	}
 }

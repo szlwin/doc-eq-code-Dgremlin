@@ -20,6 +20,16 @@
 		    <artifactId>javolution</artifactId>
 		    <version>6.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.83</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kahlkn</groupId>
+			<artifactId>artoria</artifactId>
+			<version>1.0.0.20210823.beta</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

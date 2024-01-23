@@ -1,6 +1,6 @@
 package dec.expand.declare.conext.desc.system;
 
-import dec.expand.declare.conext.desc.data.DataDepend;
+import dec.expand.declare.conext.desc.data.DataDependDesc;
 import dec.expand.declare.conext.desc.data.DataDesc;
 import dec.expand.declare.conext.desc.data.DataTypeEnum;
 
@@ -31,15 +31,6 @@ public class SystemDescBuilder {
         return this;
     }
 
-    public SystemDescBuilder dataWithDom(String name, String desc, String dom) {
-
-        currentDataDesc = new DataDesc(name, desc, dom);
-
-        this.addData(currentDataDesc);
-
-        return this;
-    }
-
     public SystemDescBuilder addData(DataDesc dataDesc) {
         currentDataDesc = dataDesc;
 
@@ -59,13 +50,7 @@ public class SystemDescBuilder {
     }
 
     public SystemDescBuilder depend(String data) {
-        currentDataDesc.addDepend(new DataDepend(data));
-
-        return this;
-    }
-
-    public SystemDescBuilder depend(String data, String express) {
-        currentDataDesc.addDepend(new DataDepend(data, express));
+        currentDataDesc.addDepend(new DataDependDesc(data));
 
         return this;
     }
@@ -92,10 +77,10 @@ public class SystemDescBuilder {
     }
 
     public SystemDescBuilder change(String express) {
-        DataDepend dataDepend = currentDataDesc.getDataDepends().get(
+        DataDependDesc dataDependDesc = currentDataDesc.getDataDepends().get(
                 currentDataDesc.getDataDepends().size() - 1);
-        dataDepend.setChange(express);
-        this.currentDataDesc.addChange(dataDepend.getData(), dataDepend.getChange());
+        dataDependDesc.setChange(express);
+        this.currentDataDesc.addChange(dataDependDesc.getData(), dataDependDesc.getChange());
         return this;
     }
 

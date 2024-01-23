@@ -42,11 +42,7 @@
 			<version>1.0</version>
 		</dependency>
 				
-		<dependency> 
-	        <groupId>com.googlecode.aviator</groupId>
-	        <artifactId>aviator</artifactId>
-	        <version>5.0.0</version>
-		</dependency>
+
 		
 		<dependency>
 		  <groupId>smarter</groupId>
@@ -65,7 +61,7 @@
     		<artifactId>logback-classic</artifactId>
     		<version>1.2.3</version>
     		<scope>provided</scope>
-   		</dependency>		
+   		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

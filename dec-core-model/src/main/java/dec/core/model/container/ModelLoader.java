@@ -1,6 +1,7 @@
 package dec.core.model.container;
 
 import dec.core.context.config.utils.ConfigContextUtil;
+import dec.core.context.data.ModelData;
 import dec.core.model.container.listener.ViewListener;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class ModelLoader {
 
     private String ruleName;
 
-    private Object e;
+    private ModelData e;
 
     private String conName;
 
@@ -34,7 +35,7 @@ public class ModelLoader {
         return this;
     }
 
-    public ModelLoader load(String name, Object e) {
+    public ModelLoader load(String name, ModelData e) {
         load(name, e, ConfigContextUtil.getDefaultCon());
         return this;
     }
@@ -43,11 +44,11 @@ public class ModelLoader {
         return ruleName;
     }
 
-    public Object get() {
+    public ModelData get() {
         return e;
     }
 
-    public ModelLoader load(String name, Object e, String conName) {
+    public ModelLoader load(String name, ModelData e, String conName) {
         this.ruleName = name;
         this.e = e;
         this.conName = conName;

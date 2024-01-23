@@ -13,9 +13,7 @@ public class DataDesc extends Desc {
 
     private boolean isCachePrior;
 
-    private List<DataDepend> dataDepends;
-
-    private String refDom;
+    private List<DataDependDesc> dataDependDescs;
 
     private SimpleList<ChangeDesc> changeDescList;
 
@@ -23,19 +21,15 @@ public class DataDesc extends Desc {
 
     }
 
-    public DataDesc(String name, String comment, String dom) {
-        this(name, comment, dom, DataTypeEnum.CACHE, false);
-
-    }
-
     public DataDesc(String name, String comment) {
-        this(name, comment, null);
+        this(name, comment, DataTypeEnum.CACHE, false);
+
     }
 
-    public DataDesc(String name, String comment, String dom, DataTypeEnum type, boolean isCachePrior) {
+
+    public DataDesc(String name, String comment, DataTypeEnum type, boolean isCachePrior) {
         this.setName(name);
         this.setComment(comment);
-        this.setRefDom(dom);
         this.setCachePrior(isCachePrior);
         this.setType(type);
     }
@@ -64,23 +58,15 @@ public class DataDesc extends Desc {
         this.isCachePrior = isCachePrior;
     }
 
-    public void addDepend(DataDepend dataDepend) {
-        if (dataDepends == null) {
-            dataDepends = new SimpleList<DataDepend>();
+    public void addDepend(DataDependDesc dataDependDesc) {
+        if (dataDependDescs == null) {
+            dataDependDescs = new SimpleList<DataDependDesc>();
         }
-        dataDepends.add(dataDepend);
+        dataDependDescs.add(dataDependDesc);
     }
 
-    public List<DataDepend> getDataDepends() {
-        return dataDepends;
-    }
-
-    public String getRefDom() {
-        return refDom;
-    }
-
-    public void setRefDom(String refDom) {
-        this.refDom = refDom;
+    public List<DataDependDesc> getDataDepends() {
+        return dataDependDescs;
     }
 
     public SimpleList<ChangeDesc> getChangeDescList() {

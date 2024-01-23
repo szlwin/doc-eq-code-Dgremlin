@@ -37,6 +37,10 @@ public class DataUtil {
 	public static ModelData createViewData(String name) throws DataNotDefineException{
 		return ModelDataFactory.getInstance().createData(name);
 	}
+
+	public static ModelData createViewData(String name, Object object) throws DataNotDefineException{
+		return ModelDataFactory.getInstance().createData(name, object);
+	}
 	
 	public static BaseData createBaseData(String name) throws DataNotDefineException{
 		return BaseDataFactory.getInstance().createData(name);

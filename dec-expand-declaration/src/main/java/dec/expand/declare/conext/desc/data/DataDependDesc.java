@@ -2,11 +2,9 @@ package dec.expand.declare.conext.desc.data;
 
 import dec.expand.declare.collections.SimpleList;
 
-public class DataDepend {
+public class DataDependDesc {
 
-    private String data;
-
-    private String express;
+    private final String data;
 
     private Integer type;
 
@@ -22,27 +20,16 @@ public class DataDepend {
 
     private String initExpress;
 
-    public DataDepend(String data, String express) {
-
+    public DataDependDesc(String data) {
         this.data = data;
 
-        this.express = express;
-
         init();
-    }
-
-    public DataDepend(String data) {
-        this(data, null);
     }
 
     public String getData() {
         return data;
     }
 
-
-    public String getExpress() {
-        return express;
-    }
 
     public Integer getType() {
         return type;
