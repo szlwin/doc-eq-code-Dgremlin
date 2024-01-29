@@ -4,6 +4,7 @@ import dec.expand.declare.conext.DescContext;
 import dec.expand.declare.conext.desc.business.BusinessDesc;
 import dec.expand.declare.conext.desc.data.DataDesc;
 import dec.expand.declare.conext.desc.process.ProcessDesc;
+import dec.expand.declare.conext.desc.process.TransactionPolicy;
 import dec.expand.declare.conext.desc.system.SystemDesc;
 import dec.expand.declare.conext.parser.xml.exception.XMLParseException;
 import org.dom4j.Element;
@@ -67,8 +68,18 @@ public class BusinessParser {
                 processDesc.setBegin(Boolean.valueOf(begin));
             }
             if (processDesc.isBegin()) {
+                String transactionPolicy = dataElement.attributeValue("transactionPolicy");
+                if (transactionPolicy == null || "".equals(transactionPolicy)) {
+                    processDesc.setTransaction(TransactionPolicy.REQUIRE);
+                } else {
+                    TransactionPolicy transactionPolicyValue = this.convert(transactionPolicy);
+                    if (transactionPolicyValue == null) {
+                        throw new XMLParseException("The property 'transactionPolicy' for data is error,data:" + processDesc.getData() + ",transactionPolicy:" + transactionPolicy);
+                    }
+                }
                 txCount++;
             }
+
 
             String end = dataElement.attributeValue("end");
             if (end == null || "".equals(end)) {
@@ -77,10 +88,14 @@ public class BusinessParser {
                 processDesc.setEnd(Boolean.valueOf(end));
             }
 
-            if (processDesc.isEnd()) {
-                txCount--;
+            String onlyEnd = dataElement.attributeValue("only-end");
+            if (onlyEnd != null && !"".equals(onlyEnd)) {
+                processDesc.setOnlyEnd(Boolean.valueOf(onlyEnd));
             }
 
+            if (processDesc.isEnd() || processDesc.isOnlyEnd()) {
+                txCount--;
+            }
 
             businessDesc.add(processDesc);
         }
@@ -107,5 +122,19 @@ public class BusinessParser {
             log.error("The data is not exist:" + system + "-" + data);
             throw new XMLParseException("The data is not exist:" + system + "-" + data);
         }
+    }
+
+    private TransactionPolicy convert(String transactionPolicy) {
+        switch (transactionPolicy) {
+            case "NESTED":
+                return TransactionPolicy.NESTED;
+            case "NEW":
+                return TransactionPolicy.NEW;
+            case "NOSUPPORTED":
+                return TransactionPolicy.NOSUPPORTED;
+            case "REQUIRE":
+                return TransactionPolicy.REQUIRE;
+        }
+        return null;
     }
 }

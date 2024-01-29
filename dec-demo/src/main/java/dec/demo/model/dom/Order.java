@@ -1,6 +1,4 @@
-package dec.demo.config.dom;
-
-import dec.demo.config.RuleTests;
+package dec.demo.model.dom;
 
 import java.util.Date;
 import java.util.List;

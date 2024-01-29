@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<orm-rule-mapping>
+	<!-- patten格式   -->
+	<!-- check NESTRING:UU,NENUMBER:6,NOTNULL,NOTEMPTY;LARGEN:5;LETTER:5;ENUMBER:5;ESTRING:TT;NSCALE:{(1,5],(1,6]};DSCALE:{} -->
+	<rule-view-info name="save-Order" view-ref="OrderInfo">
+
+		<!--<rule name="checkUser1" type="check" property="user" pattern="NOTNULL"/>
+
+		<rule name="checkUser" type="checkPattern" pattern="user != null and user.id != null and userId != null" >
+			<error-info code="C001" message="user error" level="1l"/>
+		</rule>-->
+		
+		<rule name="insertOrder" type="insert" property="OrderInfo" />
+
+		<rule name="insertOrderDetail" type="insert" property="orderDetailList" />
+
+		<rule name="insertPayInfo" type="insert" property="payInfo" />
+		<rule name="insertPayDetailList" type="insert" property="payInfo.payDetailList" />
+	</rule-view-info>
+	
+
+</orm-rule-mapping>

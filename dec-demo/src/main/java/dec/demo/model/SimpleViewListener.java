@@ -1,4 +1,4 @@
-package dec.demo.config;
+package dec.demo.model;
 
 import dec.core.model.container.ResultInfo;
 import dec.core.model.container.listener.ViewEvent;

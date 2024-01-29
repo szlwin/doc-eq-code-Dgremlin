@@ -127,8 +127,7 @@ public class DataUtil {
 			data.setValue(pro.getRefProperty(), paramMap.get(pro.getName()));
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public static Object getValueByKey(String key,Object obj){
 		if(obj instanceof Map)
 			return getValueByKey(key,(Map<String,Object>)obj);
@@ -138,8 +137,7 @@ public class DataUtil {
 		
 		return null;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public static Object getValueByKey(String key,Map<String,Object> map){
 		String keyArray[] = key.split("\\.");
 		

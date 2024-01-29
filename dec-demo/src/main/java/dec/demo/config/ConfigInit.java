@@ -12,10 +12,10 @@ public class ConfigInit {
 	}
 	
 	public static void init() throws XMLParseException{
-		ConfigUtil.parseConnectionInfo("classpath:orm-con-config.xml");
+		ConfigUtil.parseConnectionInfo("classpath:model/orm-con-config.xml");
 		
 		
-		ConfigUtil.parseConfigInfo("classpath:orm-config.xml");
+		ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
 		
 	}
 	

@@ -53,6 +53,7 @@ public class DataParser extends AbstarctElementsParser{
 		dataTypeMap.put("date", null);
 		dataTypeMap.put("boolean", null);
 		dataTypeMap.put("char", null);
+		dataTypeMap.put("decimal", null);
 	}
 	
 	
@@ -128,7 +129,6 @@ public class DataParser extends AbstarctElementsParser{
 			DataTable table = new DataTable();
 			table.setName(tableElement.attributeValue(DataTable.NAME));
 			table.setKey(tableElement.attributeValue(DataTable.KEY));
-			
 			String keyType = tableElement.attributeValue(DataTable.KEY_TYPE);
 			
 			if(keyType == null && "".equals(keyType))

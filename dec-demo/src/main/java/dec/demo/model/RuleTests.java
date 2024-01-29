@@ -1,4 +1,4 @@
-package dec.demo.config;
+package dec.demo.model;
 
 import dec.core.context.data.BaseData;
 import dec.core.context.data.ModelData;
@@ -6,14 +6,14 @@ import dec.core.model.container.ModelContainer;
 import dec.core.model.container.ModelLoader;
 import dec.core.model.container.manager.ContainerManager;
 import dec.core.model.utils.DataUtil;
-import dec.demo.config.dom.Order;
-import dec.demo.config.dom.Product;
-import dec.demo.config.dom.User;
+import dec.demo.config.DemoLoadTests;
+import dec.demo.model.dom.Order;
+import dec.demo.model.dom.Product;
+import dec.demo.model.dom.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class RuleTests extends DemoLoadTests {
 

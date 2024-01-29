@@ -22,82 +22,59 @@ public class TestOrderBusiness {
 
     public static void main(String[] args) throws Throwable {
 
-
-        Long date = System.currentTimeMillis();
-        Order order = new Order();
-        OrderOne orderOne = new OrderOne();
-        orderOne.setOrderTwo(new OrderTwo());
-        order.setOrderOne(orderOne);
-        Field field = order.getClass().getDeclaredField("orderOne");
-        field.setAccessible(true);
-        Object orderOneObject = field.get(order);
-        System.out.println(orderOneObject);
-        field = orderOneObject.getClass().getDeclaredField("orderTwo");
-        field.setAccessible(true);
-        Object orderTwoObject = field.get(orderOneObject);
-        field = orderTwoObject.getClass().getDeclaredField("name");
-        field.setAccessible(true);
-        field.set(orderTwoObject, "bbbb");
-        System.out.println(order.getOrderOne().getOrderTwo().getName());
-
-        ValueDesc valueDesc = new ValueDesc();
-        valueDesc.setProperty(new String[]{"orderOne", "orderTwo", "status"});
-        valueDesc.setValue(1);
-        DataUtils.setValue(order, Arrays.asList(valueDesc));
-        System.out.println(order.getOrderOne().getOrderTwo().getStatus());
-
-        valueDesc = new ValueDesc();
-        valueDesc.setProperty(new String[]{"amount"});
-        valueDesc.setValue(BigDecimal.valueOf(100.12));
-        DataUtils.setValue(order, Arrays.asList(valueDesc));
-        System.out.println(order.getAmount());
-
-
-        for (int i = 0; i < 100000; i++) {
-            order.setId(1L);
-        }
-        System.out.println(System.currentTimeMillis() - date);
-
-        date = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-
-            Field f2 = order.getClass().getDeclaredField("id");
-            f2.setAccessible(true);
-            f2.set(order, 1l);
-            //PropertyDescriptor descriptor = new PropertyDescriptor("id", order.getClass());
-            //descriptor.getWriteMethod().invoke(order, 1l);
-            //Method m1= order.getClass().getMethod("setId", Long.class);
-            //m1.invoke(order,1l);
-        }
-        System.out.println(System.currentTimeMillis() - date);
-
-        date = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            order.getId();
-        }
-        System.out.println(System.currentTimeMillis() - date);
-
-        date = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            Field f2 = order.getClass().getDeclaredField("id");
-            f2.setAccessible(true);
-            f2.get(order);
-
-            //Method m1= order.getClass().getMethod("getId");
-            //m1.invoke(order);
-        }
-        System.out.println(System.currentTimeMillis() - date);
-
         initContext();
 
         initSystem();
 
-        //initProcess();
         //subscribeOrder();
 
-        cancelOrderData();
+        subscribeOrderByConfig();
+        //cancelOrderData();
 
         cancelOrderDataByconfig();
+    }
+
+    public static void subscribeOrderByConfig() {
+        System.out.println();
+        DefaultBusinessDeclare defaultBusinessDeclare = BusinessDeclareFactory
+                .createDefaultBusinessDeclare("subscribeOrder");
+
+        SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
+
+        subscribeOrderData.setProductName("test");
+
+        subscribeOrderData.setAmount(new BigDecimal(1000));
+
+        defaultBusinessDeclare
+                .addEntity("$subscribeOrderData", subscribeOrderData)
+                .transactionManager(new MockDataSourceManager())
+                .addProduce("$payResultData", storage -> {
+
+                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
+
+                    System.out.println("Produce $payResultData");
+
+                    PayResultData resultData = new PayResultData();
+
+                    resultData.setStatus(1);
+
+                    return ExecuteResult.success(resultData);
+
+                }).addProduce("$payData", storage -> {
+
+                    System.out.println("Produce $payData");
+
+                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
+
+                    PayData payData = new PayData();
+
+                    payData.setProductName(subscribeOrderData1.getProductName());
+
+                    payData.setAmount(subscribeOrderData1.getAmount());
+
+                    return ExecuteResult.success(payData);
+
+                }).execute();
     }
 
     public static void subscribeOrder() {
@@ -121,8 +98,8 @@ public class TestOrderBusiness {
                                     .data("$payResultData")
                                 .endTx()
                         .endTx()
-                        .data("order", "orderPayResultData")
-                        .endTx()
+                    .data("order", "orderPayResultData")
+                .endTx()
                         .addProduce("$payResultData", storage -> {
 
                     PayResultData payResultData = (PayResultData) storage.get("payResultData");
@@ -388,48 +365,5 @@ public class TestOrderBusiness {
         ContextUtils.load(systemBuilder.getSystem());
 
         ContextUtils.load(systemPayBuilder.getSystem());
-    }
-
-    public static void initProcess() {
-        /* .data("order", "cancelOrderData")
-                .data("$payData")
-                .data("pay", "payResultData")
-                .data("$payResultData")
-                .data("order", "orderPayResultData")
-               */
-        BusinessDesc businessDesc = new BusinessDesc();
-        businessDesc.setName("cancelOrder");
-
-        ProcessDesc processDesc = new ProcessDesc();
-        processDesc.setSystem("order");
-        processDesc.setData("cancelOrderData");
-        processDesc.setBegin(true);
-        businessDesc.add(processDesc);
-
-        ProcessDesc processDesc1 = new ProcessDesc();
-        processDesc1.setSystem("this");
-        processDesc1.setData("$payData");
-        businessDesc.add(processDesc1);
-
-        ProcessDesc processDesc2 = new ProcessDesc();
-        processDesc2.setSystem("pay");
-        processDesc2.setData("payResultData");
-        businessDesc.add(processDesc2);
-
-        ProcessDesc processDesc3 = new ProcessDesc();
-        processDesc3.setSystem("this");
-        processDesc3.setData("$payResultData");
-        businessDesc.add(processDesc3);
-
-        ProcessDesc processDesc4 = new ProcessDesc();
-        processDesc4.setSystem("order");
-        processDesc4.setData("orderPayResultData");
-        processDesc4.setEnd(true);
-        businessDesc.add(processDesc4);
-
-
-        ContextUtils.load(businessDesc);
-
-
     }
 }

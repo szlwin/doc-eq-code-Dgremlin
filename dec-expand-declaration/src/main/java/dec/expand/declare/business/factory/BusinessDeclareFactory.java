@@ -20,6 +20,10 @@ public class BusinessDeclareFactory {
         defaultBusinessDeclare.build(name);
         List<ProcessDesc> processDescList = businessDesc.getProcesses();
         for (ProcessDesc processDesc : processDescList) {
+            if (processDesc.isOnlyEnd()) {
+                defaultBusinessDeclare.endTx();
+                continue;
+            }
             if (processDesc.isBegin()) {
                 defaultBusinessDeclare.beginTx();
             }

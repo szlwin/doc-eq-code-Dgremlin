@@ -1,20 +1,20 @@
 package dec.core.context.config.model.view;
 
-import java.util.Collection;
-import java.util.Map;
-
 import dec.core.context.config.model.relation.Relation;
 import javolution.util.FastMap;
 
+import java.util.Collection;
+import java.util.Map;
+
 public class RelationInfo {
 
-	public static final String RELATION_VIEW = "relation-view";
-	
-	//private Map<String,RelationView> relationView = new HashMap<String,RelationView>();
+    public static final String RELATION_VIEW = "relation-view";
 
-	private Map<String,Relation> relationMapByData = new FastMap<String,Relation>();
-	
-	private Map<String,Relation> relationMapByView = new FastMap<String,Relation>();
+    //private Map<String,RelationView> relationView = new HashMap<String,RelationView>();
+
+    private Map<String, Relation> relationMapByData = new FastMap<String, Relation>();
+
+    private Map<String, Relation> relationMapByView = new FastMap<String, Relation>();
 	/*
 	public RelationView getRelation(String name) {
 		return relationView.get(name);
@@ -55,22 +55,32 @@ public class RelationInfo {
 		}
 		return null;
 	}*/
-	
-	
-	public Relation getRelationByDataName1(String name) {
-		return relationMapByData.get(name);
-	}
-	
-	public Relation getRelationByPropertyName1(String name) {
-		return relationMapByView.get(name);
-	}
-	
-	public void addRelation1(String name,Relation relation) {
-		relationMapByData.put(name,relation);
-		relationMapByView.put(relation.getViewProperty().getName(), relation);
-	}
-	
-	public Collection<Relation> getRelation1(){
-		return relationMapByData.values();
-	}
+
+
+    public Relation getRelationByDataName1(String name) {
+        return relationMapByData.get(name);
+    }
+
+    public Relation getRelationByPropertyName1(String name) {
+        String nameArray[] = name.split("\\.");
+        Relation relation = relationMapByView.get(nameArray[0]);
+
+        for (int i = 1; i < nameArray.length; i++) {
+            relation =  relation.getViewProperty().getViewData().getRelationInfo().getRelationByPropertyName2(nameArray[i]);
+        }
+        return relation;
+    }
+
+    private Relation getRelationByPropertyName2(String name) {
+        return relationMapByView.get(name);
+    }
+
+    public void addRelation1(String name, Relation relation) {
+        relationMapByData.put(name, relation);
+        relationMapByView.put(relation.getViewProperty().getName(), relation);
+    }
+
+    public Collection<Relation> getRelation1() {
+        return relationMapByData.values();
+    }
 }

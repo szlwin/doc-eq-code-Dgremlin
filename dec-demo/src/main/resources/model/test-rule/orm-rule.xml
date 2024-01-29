@@ -38,7 +38,7 @@
 		
 		<rule name="checkUser1" type="checkData" property="userT" pattern="NOTNULL"/>
 		
-		<rule name="check1" type="checkPattern" pattern="userId != 0 and userT.id != 0 and ( productCount > 0 or totalPrice >= 0 ) or ( productCount*(totalPrice+10) > 200 )"/>
+		<!--<rule name="check1" type="checkPattern" pattern="userId != 0 and userT.id != 0 and ( productCount > 0 or totalPrice >= 0 ) or ( productCount*(totalPrice+10) > 200 )"/>-->
 		
 		<!--<rule name="check2" type="checkPattern" pattern="dateTime > '2021-09-14 12:00:00'"/>-->
 		

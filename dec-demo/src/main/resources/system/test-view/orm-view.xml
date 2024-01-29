@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<orm-view-mapping>
+	
+	<view name="OrderInfo" target-main="order"><!-- 必须是BaseModel的子类或默认为空-->
+		<property-info>
+			<property name="id" ref-property="id"/>
+			<property name="userId" ref-property="userId"/>
+			<property name="productCount" ref-property="productCount"/>
+			<property name="totalPrice" ref-property="totalPrice"/>
+			<property name="totalAmount" ref-property="totalAmount"/>
+			<property name="status" ref-property="orderStatus"/>
+			<property name="dateTime" ref-property="createDate"/>
+			<property name="payId" ref-property="payId"/>
+			<property name="user" relation="one-to-one" data="user" key="id" rel-key="userId">
+				<property name="id" ref-property="id"/>
+				<property name="userName" ref-property="name"/>
+				<property name="activeTime" ref-property="activeTime"/>
+				<property name="status" ref-property="status"/>
+			</property>
+			<property name="orderDetailList" relation="one-to-many" data="orderDetail" key="orderId" rel-key="id">
+				<property name="id" ref-property="id"/>
+				<property name="orderId" ref-property="orderId"/>
+				<property name="userId" ref-property="userId" rel-value="user.id"/>
+				<property name="productId" ref-property="productId"/>
+				<property name="productName" ref-property="productName"/>
+				<property name="productAmount" ref-property="productAmount"/>
+				<property name="productPrice" ref-property="productPrice"/>
+				<property name="createDate" ref-property="createDate"/>
+			</property>
+			<property name="payInfo" relation="one-to-one" data="pay" key="orderId" rel-key="id">
+				<property name="id" ref-property="id"/>
+				<property name="userId" ref-property="userId" rel-value="user.id"/>
+				<property name="orderId" ref-property="orderId"/>
+				<property name="totalPrice" ref-property="totalPrice"/>
+				<property name="totalAmount" ref-property="totalAmount"/>
+				<property name="status" ref-property="payStatus"/>
+				<property name="createDate" ref-property="createDate"/>
+				<property name="payDetailList" relation="one-to-many" data="payDetail" key="payId" rel-key="id">
+					<property name="id" ref-property="id"/>
+					<property name="payId" ref-property="payId"/>
+					<property name="productId" ref-property="productId"/>
+					<property name="productName" ref-property="productName"/>
+					<property name="payPrice" ref-property="payPrice"/>
+					<property name="payAmount" ref-property="payAmount"/>
+					<property name="createDate" ref-property="createDate"/>
+				</property>
+			</property>
+		</property-info>
+		
+	</view>
+</orm-view-mapping>

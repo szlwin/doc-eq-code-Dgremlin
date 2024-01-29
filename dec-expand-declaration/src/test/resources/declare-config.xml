@@ -69,9 +69,22 @@
 				<data name="" system="" ref-view="v1" rule-start="" rule-end="" end="true"/>
 			</datas>
 		</business>-->
+
+
+		<business name="subscribeOrder"  >
+			<datas>
+				<data system="order" name="subscribeOrderData"  begin="true"/>
+				<data name="$payData"  begin="true" transactionPolicy="NEW"/>
+				<data system="pay" name="payResultData" begin="true" transactionPolicy="NESTED"/>
+				<data name="$payResultData" end="true"/>
+				<data name="$payData"  only-end="true"/>
+				<data system="order" name="orderPayResultData" end="true"/>
+			</datas>
+		</business>
+
 		<business name="cancelOrder"  >
 			<datas>
-				<data system="order" name="cancelOrderData"  begin="true"/>
+				<data system="order" name="cancelOrderData"  begin="true" transactionPolicy="REQUIRE"/>
 				<data name="$payData"/>
 				<data system="pay" name="payResultData"/>
 				<data name="$payResultData"/>

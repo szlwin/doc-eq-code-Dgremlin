@@ -6,7 +6,7 @@
 			<property name="id" type="int"/>
 			<property name="userId" type="int"/>
 			<property name="count" type="int"/>
-			<property name="totalPrice" type="double"/>
+			<property name="totalPrice" type="decimal"/>
 			<property name="date" type="date"/>
 			<property name="dateTime" type="date"/>
 		</property-info>

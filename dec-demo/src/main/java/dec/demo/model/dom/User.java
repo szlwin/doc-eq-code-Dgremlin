@@ -1,4 +1,4 @@
-package dec.demo.config.dom;
+package dec.demo.model.dom;
 
 public class User {
     private Long id;

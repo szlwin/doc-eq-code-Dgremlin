@@ -34,8 +34,8 @@ public class DemoLoadTests {
 		
 		try {
 			ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
-			ConfigUtil.parseConnectionInfo("classpath:orm-con-config.xml");
-			ConfigUtil.parseConfigInfo("classpath:orm-config.xml");
+			//ConfigUtil.parseConnectionInfo("classpath:orm-con-config.xml");
+			ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
 		} catch (XMLParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
