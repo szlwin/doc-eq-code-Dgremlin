@@ -32,13 +32,10 @@ public class UpdateKeyUtil {
     }
 
     public void update(boolean isMain, String propertyName) {
-        //if (isMain) {
-            updateToOther(isMain, propertyName);
-        //}//else{
-        if(!isMain){
-            updateToMain(propertyName);
-        }
+        updateToOther(isMain, propertyName);
 
+        //if(!isMain){
+        //    updateToMain(propertyName);
         //}
 
     }
@@ -139,7 +136,6 @@ public class UpdateKeyUtil {
         while (it.hasNext()) {
             Relation relation = it.next();
             //Relation relation = relationView.getRef();//Util.getRelation(relationView.getRef());
-            System.out.println(relation.getType());
             if (!relation.getType().equals(ConfigConstanst.RELATION_TYPE_ONE_TO_ONE))
                 continue;
 
