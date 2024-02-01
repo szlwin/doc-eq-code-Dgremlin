@@ -22,8 +22,6 @@ public class ConfigInit {
 
 	public static void main(String args[]) throws Exception{
 		init();
-		TableInfo tableInfo = ConfigManager.getInstance().getConfigInfo().getData("order").getTableInfo();
-		System.out.println(tableInfo);
 	}
 	
 	public static void init() throws Exception {

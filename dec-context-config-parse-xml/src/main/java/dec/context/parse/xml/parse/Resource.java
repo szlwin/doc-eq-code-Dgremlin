@@ -50,8 +50,6 @@ public class Resource {
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
-
-		return null;
 	}
 
 	

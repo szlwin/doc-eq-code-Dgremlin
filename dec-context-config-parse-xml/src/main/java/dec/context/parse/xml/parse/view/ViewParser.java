@@ -138,6 +138,7 @@ public class ViewParser extends AbstarctElementsParser{
 				viewPropertyInfo.addProperty(property);
 				ViewPropertyInfo subViewPropertyInfo = parseViewPropertyInfo(subViewData,protertyElement);
 				subViewData.setViewPropertyInfo(subViewPropertyInfo);
+				subViewData.setParentView(viewData);
 			}else{
 				property.setName(protertyElement.attributeValue(ViewProperty.NAME));
 				

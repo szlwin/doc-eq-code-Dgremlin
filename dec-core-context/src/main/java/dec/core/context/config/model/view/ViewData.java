@@ -26,7 +26,9 @@ public class ViewData extends ConfigBaseData{
 	private ViewPropertyInfo viewPropertyInfo;
 	
 	private RelationInfo relationInfo;
-	
+
+	private ViewData parentView;
+
 	public String getClassName() {
 		return className;
 	}
@@ -51,8 +53,6 @@ public class ViewData extends ConfigBaseData{
 		this.targetMain = targetMain;
 	}
 
-
-
 	public ViewPropertyInfo getViewPropertyInfo() {
 		return viewPropertyInfo;
 	}
@@ -68,6 +68,12 @@ public class ViewData extends ConfigBaseData{
 	public void setRelationInfo(RelationInfo relationInfo) {
 		this.relationInfo = relationInfo;
 	}
-	
-	
+
+	public ViewData getParentView() {
+		return parentView;
+	}
+
+	public void setParentView(ViewData parentView) {
+		this.parentView = parentView;
+	}
 }

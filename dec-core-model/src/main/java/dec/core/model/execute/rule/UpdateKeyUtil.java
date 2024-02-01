@@ -34,7 +34,7 @@ public class UpdateKeyUtil {
     public void update(boolean isMain, String propertyName) {
         updateToOther(isMain, propertyName);
 
-        if(!isMain){
+        if (!isMain) {
             updateToMain(propertyName);
         }
 
@@ -52,7 +52,7 @@ public class UpdateKeyUtil {
         } else {
             ViewData propertyViewData = viewData.getRelationInfo().getRelationByPropertyName1(propertyName).getViewProperty().getViewData();
             relationInfo = propertyViewData.getRelationInfo();
-            if(relationInfo == null){
+            if (relationInfo == null) {
                 return;
             }
             dataInfo = propertyViewData.getTargetMain();
@@ -60,7 +60,7 @@ public class UpdateKeyUtil {
         }
         String idKey = dataInfo.getTableInfo().getTable(dataSourceName).getPropertyKey();
 
-        Object idValue = ((Map<String,Object>)value).get(idKey);
+        Object idValue = ((Map<String, Object>) value).get(idKey);
 
         String proRefName = idKey;// Util.getKeyPropertyName(dataName,dataSourceName);
 
@@ -69,7 +69,7 @@ public class UpdateKeyUtil {
         }
         Collection<Relation> rCollection = relationInfo.getRelation1();
 
-        ((Map<String,Object>)value).put(proRefName, idValue);
+        ((Map<String, Object>) value).put(proRefName, idValue);
 
         Iterator<Relation> it = rCollection.iterator();
 
@@ -78,7 +78,7 @@ public class UpdateKeyUtil {
 
             String objName = relation.getViewProperty().getName();
 
-            Object obj = ((Map<String,Object>)value).get(objName);
+            Object obj = ((Map<String, Object>) value).get(objName);
 
             Map<String, ViewProperty> proMap = relation.getViewProperty().getViewData().getViewPropertyInfo().getProperty();
 
@@ -117,9 +117,11 @@ public class UpdateKeyUtil {
         if (propertyValue instanceof Collection)
             return;
 
-        Data dataInfo = viewData
+        ViewData viewData = this.viewData
                 .getRelationInfo()
-                .getRelationByPropertyName1(propertyName).getViewProperty().getViewData().getTargetMain();
+                .getRelationByPropertyName1(propertyName).getViewProperty().getViewData();
+
+        Data dataInfo = viewData.getTargetMain();
 
         String idKey = dataInfo.getTableInfo()
                 .getTable(dataSourceName)
@@ -127,25 +129,33 @@ public class UpdateKeyUtil {
 
         Object idValue = ((Map<String, Object>) propertyValue).get(idKey);
 
-        RelationInfo relationInfo = viewData.getRelationInfo();
+        RelationInfo relationInfo = viewData.getParentView().getRelationInfo();
 
-        Collection<Relation> rCollection = relationInfo.getRelation1();
+        Relation relation = relationInfo.getRelationByDataName1(dataInfo.getName());
 
-        Iterator<Relation> it = rCollection.iterator();
-
-        while (it.hasNext()) {
-            Relation relation = it.next();
-            //Relation relation = relationView.getRef();//Util.getRelation(relationView.getRef());
-            if (!relation.getType().equals(ConfigConstanst.RELATION_TYPE_ONE_TO_ONE))
-                continue;
-
-            OneRelation oRrelation = (OneRelation) relation;
-
-            if (oRrelation.getOneRef().equals(dataInfo.getName())) {
-                value.put(oRrelation.getOneMainkey(), idValue);
-                break;
-            }
+        Map<String, Object> value = null;
+        int index = propertyName.lastIndexOf("\\.");
+        if (index > 0) {
+            String valuePropertyName = propertyName.substring(0, index);
+            value = (Map<String, Object>) DataUtil.getValueByKey(valuePropertyName, this.value);
+        }else {
+            value = this.value;
         }
+
+        //Iterator<Relation> it = rCollection.iterator();
+        //while (it.hasNext()) {
+        //it.next();
+        //Relation relation = relationView.getRef();//Util.getRelation(relationView.getRef());
+        if (!relation.getType().equals(ConfigConstanst.RELATION_TYPE_ONE_TO_ONE))
+            return;
+
+        OneRelation oRrelation = (OneRelation) relation;
+
+        if (oRrelation.getOneRef().equals(dataInfo.getName())) {
+            value.put(oRrelation.getOneMainkey(), idValue);
+            //break;
+        }
+        // }
 
     }
 

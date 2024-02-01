@@ -190,8 +190,6 @@ public class RuleContainer {
 					ruleViewInfo.getViewData());
 			
 			String propertyName = rule.getProperty();
-
-			System.out.println("update:"+propertyName+":"+isMain);
 			updateKeyUtil.update(isMain, propertyName);
 		}
 		
