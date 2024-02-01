@@ -2,6 +2,7 @@ package dec.external.datasource.sql.execute.container;
 
 import java.util.Map;
 
+import dec.core.datasource.execute.exception.ExecuteException;
 import dec.external.datasource.sql.dom.QueryInfo;
 import dec.external.datasource.sql.execute.SQLExecute;
 
@@ -39,7 +40,7 @@ public class DefaultSqlExecuteContainer extends AbstractSqlExecuteContainer{
 		try {
 			execute = executeMap.get(e.getType()).newInstance();
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			throw new RuntimeException(e1);
 		} 
 		
 		return execute;

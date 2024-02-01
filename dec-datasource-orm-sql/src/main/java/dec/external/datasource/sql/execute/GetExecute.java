@@ -1,7 +1,6 @@
 package dec.external.datasource.sql.execute;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -12,12 +11,9 @@ import dec.core.datasource.execute.exception.ExecuteException;
 import dec.external.datasource.sql.query.SelectQuery;
 import javolution.util.FastTable;
 
-//import com.orm.common.execute.exception.ExecuteException;
-//import com.orm.sql.query.SelectQuery;
-
 public class GetExecute extends AbstractSQLExecute{
 
-	private final static Logger log = LoggerFactory.getLogger(QueryExecute.class);
+	private final static Logger log = LoggerFactory.getLogger(GetExecute.class);
 	
 	public void execute() throws ExecuteException {
 		SelectQuery query = new SelectQuery(con,this.cmd,this.dataInfoCollection);
@@ -38,7 +34,7 @@ public class GetExecute extends AbstractSQLExecute{
 			try {
 				query.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error("Close connection error", e);
 			}
 		}
 		if(dataCollection.size()>1){

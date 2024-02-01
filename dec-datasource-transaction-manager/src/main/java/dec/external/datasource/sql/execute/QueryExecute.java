@@ -48,7 +48,7 @@ public class QueryExecute extends AbstractSQLExecute{
 			try {
 				query.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error("Close connection error", e);
 			}
 		}
 		

@@ -6,6 +6,8 @@ import dec.core.context.config.model.config.ConfigConstanst;
 import dec.core.datasource.execute.exception.ExecuteException;
 import dec.external.datasource.sql.dom.UpdateInfo;
 import dec.external.datasource.sql.query.InsertQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //import com.orm.common.execute.exception.ExecuteException;
 //import com.orm.common.xml.util.Constanst;
@@ -13,6 +15,8 @@ import dec.external.datasource.sql.query.InsertQuery;
 //import com.orm.sql.query.InsertQuery;
 
 public class InsertExecute extends AbstractSQLExecute{
+
+	private final static Logger log = LoggerFactory.getLogger(InsertExecute.class);
 
 	public void execute() throws ExecuteException {
 		//String keyType = null;
@@ -29,7 +33,7 @@ public class InsertExecute extends AbstractSQLExecute{
 			try {
 				query.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				log.error("Close connection error", e);
 			}
 		}
 		

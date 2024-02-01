@@ -13,17 +13,8 @@ import dec.external.datasource.sql.convert.single.SingleUpdateConvert;
 import dec.external.datasource.sql.dom.ConvertParam;
 import dec.external.datasource.sql.mysql.convert.single.SingleInsertConvert;
 import javolution.util.FastMap;
-/*import com.orm.sql.dom.ConvertParam;
-import com.orm.sql.mysql.convert.single.SingleInsertConvert;
-import com.orm.sql.convert.SqlConvert;
-import com.orm.sql.convert.common.UpdateSQLConvert;
-import com.orm.sql.convert.common.QuerySQLConvert;
-import com.orm.sql.convert.container.AbstractSqlConvertContainer;
-import com.orm.sql.convert.orign.OrignSQLConvert;
-import com.orm.sql.convert.single.SingleDeleteConvert;
-import com.orm.sql.convert.single.SingleGetConvert;
-import com.orm.sql.convert.single.SingleUpdateConvert;
-*/
+
+
 public class MySQLConvertContainer extends AbstractSqlConvertContainer{
 
 	private static Map<String,Class<? extends SqlConvert>> convertMap = new FastMap<String,Class<? extends SqlConvert>>();
@@ -65,7 +56,7 @@ public class MySQLConvertContainer extends AbstractSqlConvertContainer{
 		try {
 			convert = convertClass.newInstance();
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			throw new RuntimeException(e1);
 		}
 		convert.setDataSource(e.getDataSource());
 		return convert;

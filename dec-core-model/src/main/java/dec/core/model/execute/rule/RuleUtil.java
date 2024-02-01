@@ -66,7 +66,7 @@ public class RuleUtil {
 		try {
 			ruleExecute = ruleExecuteClass.get(type).newInstance();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} 
 		ruleExecute.setCon(con);
 		ruleExecute.setRuleInfo(ruleInfo);

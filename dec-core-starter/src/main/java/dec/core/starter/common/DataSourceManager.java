@@ -16,7 +16,7 @@ public class DataSourceManager {
 	public static void addDataSource(String name, Object dataSource) throws Exception{
 		
 		dec.core.context.config.model.datasource.DataSource dataSourceModel 
-			=  (dec.core.context.config.model.datasource.DataSource) ConfigContextUtil.getConfigInfo().getDataSource(name);
+			=  ConfigContextUtil.getConfigInfo().getDataSource(name);
 		
 		dec.core.datasource.connection.datasource.DataSource dataSourceContainer;
 		
@@ -35,8 +35,6 @@ public class DataSourceManager {
 			
 			dataSourceModel.setDataSource(dataSourceContainer);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			throw e;
 		} 
 		

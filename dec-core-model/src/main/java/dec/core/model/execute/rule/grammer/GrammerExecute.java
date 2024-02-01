@@ -35,7 +35,6 @@ public class GrammerExecute extends AbstractRuleExecute{
 		try {
 			lexerExecuter.parser("SimpleExpr", this.ruleInfo.getGrammer());
 		} catch (ExecuteInvaildException e) {
-			e.printStackTrace();
 			throw new ExecuteException(e);
 		}
 		

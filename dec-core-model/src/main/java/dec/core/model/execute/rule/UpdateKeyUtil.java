@@ -34,9 +34,9 @@ public class UpdateKeyUtil {
     public void update(boolean isMain, String propertyName) {
         updateToOther(isMain, propertyName);
 
-        //if(!isMain){
-        //    updateToMain(propertyName);
-        //}
+        if(!isMain){
+            updateToMain(propertyName);
+        }
 
     }
 

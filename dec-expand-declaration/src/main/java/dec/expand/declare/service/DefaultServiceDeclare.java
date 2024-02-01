@@ -10,6 +10,7 @@ import dec.core.model.container.ModelLoader;
 import dec.core.model.container.manager.ContainerManager;
 import dec.core.model.execute.rule.exception.ExecuteRuleException;
 import dec.expand.declare.ModelLoaderFun;
+import dec.expand.declare.business.exception.ExecuteException;
 import dec.expand.declare.conext.DataStorage;
 import dec.expand.declare.conext.desc.conumer.ConumerDesc;
 import dec.expand.declare.conext.desc.subscribe.SubscriberDesc;
@@ -273,15 +274,13 @@ public class DefaultServiceDeclare implements ServiceDeclare {
 						try {
 							conumer.execute(data);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							throw new ExecuteException(e);
 						}
 					}else{
 						try {
 							conumer.execute(this.dataStorage);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							throw new ExecuteException(e);
 						}
 					}
 				}

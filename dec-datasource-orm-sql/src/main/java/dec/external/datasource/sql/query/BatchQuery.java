@@ -10,10 +10,6 @@ import dec.external.datasource.sql.dom.SQLDataInfo;
 import dec.external.datasource.sql.utils.SQLUtil;
 import javolution.util.FastTable;
 
-//import com.orm.sql.dom.DataInfo;
-//import com.orm.sql.dom.SQLDataInfo;
-//import com.orm.sql.util.SQLUtil;
-
 public class BatchQuery extends AbstractQuery<int[]> {
 
 	protected List<SQLDataInfo> sqlDataList;

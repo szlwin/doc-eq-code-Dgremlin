@@ -48,11 +48,8 @@ public class Resource {
 				
 			return file.toURI().toURL();
 		} catch (MalformedURLException e) {
-				
-			e.printStackTrace();
-				
+			throw new RuntimeException(e);
 		}
-		
 
 		return null;
 	}

@@ -39,7 +39,7 @@ public class DefaultSqlExecuteContainer extends AbstractSqlExecuteContainer{
 		try {
 			execute = executeMap.get(e.getType()).newInstance();
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			throw new RuntimeException(e1);
 		} 
 		
 		return execute;
