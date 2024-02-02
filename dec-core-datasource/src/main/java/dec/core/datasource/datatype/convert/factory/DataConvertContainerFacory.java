@@ -4,5 +4,5 @@ import dec.core.datasource.datatype.convert.DataConvertContainer;
 
 public interface DataConvertContainerFacory {
 
-	public DataConvertContainer getDataConvertContainer();
+	DataConvertContainer getDataConvertContainer();
 }

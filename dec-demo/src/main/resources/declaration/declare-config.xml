@@ -1,10 +1,12 @@
 <declare-config>
 
 	<systems>
-		<systme name="commodity">
-			<data name="commodityData"/>
-		</systme>
-		<systme name="order">
+		<system name="user">
+			<datas>
+				<data name="userData"/>
+			</datas>
+		</system>
+		<system name="order">
 			<datas>
 				<data name="subscribeOrderData" desc="订购订单数据" type="persistent" isCachePrior="false">
 					<depends>
@@ -29,9 +31,9 @@
 					</depends>
 				</data>
 			</datas>
-		</systme>
+		</system>
 
-		<systme name="pay" desc="支付">
+		<system name="pay" desc="支付">
 			<datas>
 				<data name="payCmdData" desc="支付指令数据">
 					<depends>
@@ -45,12 +47,11 @@
 					</depends>
 				</data>
 			</datas>
-		</systme>
+		</system>
 
 		<system name="common">
 			<datas>
 				<data name="$cancelOrderData" desc="取消订购操作数据"/>
-				<depend data="$commodityData" desc="商品数据" />
 				<data name="$subscribeOrderData" desc="订购数据"/>
 				<data name="$payData" desc="支付数据"/>
 				<data name="$payResultData" desc="支付数据"/>
@@ -61,14 +62,52 @@
 
 
 
-	<processes>
-		<process name="" ref-view="v1:c1,v2:c2" >
-			<data name="" system="" ref-view="v1" rule-start="" rule-end="" begin="true" ref-con=""/>
-			<data name="" system=""/>
-			<data name="" system="" ref-view="v1" rule-start="" rule-end="" end="true"/>
-		</process>
-	</processes>
+	<businesses>
+		<!--<business name="" ref-view="v1:c1,v2:c2" >
+			<datas>
+				<data name="" system="" ref-view="v1" rule-start="" rule-end="" begin="true" ref-rule-dataSource=""/>
+				<data name="" system=""/>
+				<data name="" system="" ref-view="v1" rule-start="" rule-end="" end="true"/>
+			</datas>
+		</business>-->
 
+		<business name="subscribeOrderWithDom" ref-rule="save-User:data1,save-Order:data1">
+			<datas>
+				<data system="user" name="userData"  ref-rule="save-User" begin="true" rule-start="insertUser" rule-end="insertUser"/>
+				<data system="user" name="userData"  only-end="true"/>
+				<data system="order" name="subscribeOrderData"  begin="true" ref-rule="save-Order" rule-start="insertOrder" rule-end="insertOrderDetail"/>
+				<data name="$payData"  begin="true" transactionPolicy="NEW"/>
+				<data system="pay" name="payResultData" begin="true" transactionPolicy="NESTED" ref-rule="save-Order" rule-start="insertPayInfo" rule-end="insertPayDetailList"/>
+				<data name="$payResultData" end="true"/>
+				<data name="$payData"  only-end="true"/>
+				<data system="order" name="orderPayResultData" end="true"/>
+			</datas>
+		</business>
+
+
+		<business name="subscribeOrder"  >
+			<datas>
+				<data system="order" name="subscribeOrderData"  begin="true"/>
+				<data name="$payData"  begin="true" transactionPolicy="NEW"/>
+				<data system="pay" name="payResultData" begin="true" transactionPolicy="NESTED"/>
+				<data name="$payResultData" end="true"/>
+				<data name="$payData"  only-end="true"/>
+				<data system="order" name="orderPayResultData" end="true"/>
+			</datas>
+		</business>
+
+		<business name="cancelOrder"  >
+			<datas>
+				<data system="order" name="cancelOrderData"  begin="true" transactionPolicy="REQUIRE"/>
+				<data name="$payData"/>
+				<data system="pay" name="payResultData"/>
+				<data name="$payResultData"/>
+				<data system="order" name="orderPayResultData" end="true"/>
+			</datas>
+		</business>
+	</businesses>
+
+	<!--
 	<businesses>
 		<business name="subscribeOrder" desc="提交订单">
 
@@ -78,7 +117,7 @@
 				</depends>
 			</data>
 
-			<processes oExceptionTransaction="roll"><!-- roll,commit,customize -->
+			<processes oExceptionTransaction="roll">
 				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="one" oExceptionRollBack="roll">
 					produce:order.orderData
 				</process>
@@ -96,5 +135,5 @@
 				</process>
 			</processes>
 		</business>
-	</businesses>
+	</businesses>-->
 </declare-config>

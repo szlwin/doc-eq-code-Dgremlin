@@ -183,7 +183,7 @@ public class DefaultServiceDeclare implements ServiceDeclare {
 		
 		return this;
 	}
-	
+
 	protected void handleProcess(ExecuteResult executeResult, Exception  ex){
 		
 		if(ex != null){
@@ -324,7 +324,7 @@ public class DefaultServiceDeclare implements ServiceDeclare {
 	}
 	
 	@Override
-	public <T> ServiceDeclare subscribe(String name, Function<ExecuteResult,DataStorage> fun) {
+	public ServiceDeclare subscribe(String name, Function<ExecuteResult,DataStorage> fun) {
 
 		Subscriber<?> subscriber = new Subscriber<>(name, fun);
 		
@@ -397,7 +397,7 @@ public class DefaultServiceDeclare implements ServiceDeclare {
 	}
 
 	@Override
-	public <T> ServiceDeclare subscribe(String name) {
+	public ServiceDeclare subscribe(String name) {
 		Subscriber<?> subscriber = new Subscriber<>(name);
 		
 		this.subscribe(subscriber);

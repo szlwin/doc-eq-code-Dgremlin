@@ -4,5 +4,5 @@ import dec.core.datasource.connection.DataConnection;
 
 public interface DBConectionFacory<K,V> {
 
-	public DataConnection<K,V> getDataConnection();
+	DataConnection<K,V> getDataConnection();
 }

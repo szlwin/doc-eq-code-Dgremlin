@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <orm-view-mapping>
-	
-	<view name="OrderInfo" target-main="order"><!-- 必须是BaseModel的子类或默认为空-->
+
+	<view name="UserInfo" target-main="user">
+		<property-info>
+			<property name="id" ref-property="id"/>
+			<property name="name" ref-property="name"/>
+			<property name="activeTime" ref-property="activeTime"/>
+			<property name="status" ref-property="status"/>
+		</property-info>
+	</view>
+
+	<view name="OrderInfo" target-main="order">
 		<property-info>
 			<property name="id" ref-property="id"/>
 			<property name="userId" ref-property="userId"/>
@@ -47,6 +56,5 @@
 				</property>
 			</property>
 		</property-info>
-		
 	</view>
 </orm-view-mapping>

@@ -75,6 +75,9 @@ public class System {
         ExecuteResult executeResult = null;
 
         if (!produceMap.containsKey(data)) {
+            if(dataStorage.containsData(data)){
+                return ExecuteResult.success();
+            }
             throw new RuntimeException("Undifined data produce:[" + getName() + "]-" + "[" + data + "]");
         }
 

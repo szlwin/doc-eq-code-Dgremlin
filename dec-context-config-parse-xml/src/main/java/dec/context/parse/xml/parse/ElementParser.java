@@ -8,5 +8,5 @@ import dec.context.parse.xml.exception.XMLParseException;
 
 public interface ElementParser<E> {
 
-	public E parse(Element element)throws XMLParseException;;
+	E parse(Element element)throws XMLParseException;;
 }

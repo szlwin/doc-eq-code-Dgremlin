@@ -6,11 +6,11 @@ import dec.core.datasource.connection.exception.ConectionException;
 
 public interface DataSource<E,V> {
 
-	public void setDataSource(E e);
+	void setDataSource(E e);
 	
-	public E getDataSource();
+	E getDataSource();
 	
-	public V getConnection() throws ConectionException;
+	V getConnection() throws ConectionException;
 	
-	public void init(String type,Map<String,String> property) throws ConectionException;
+	void init(String type,Map<String,String> property) throws ConectionException;
 }

@@ -5,11 +5,11 @@ import dec.core.model.execute.rule.exception.ExecuteRuleException;
 
 public interface Container {
 
-	public Container load(ModelLoader modelLoader);
+	Container load(ModelLoader modelLoader);
 	
-	public Container execute() throws ExecuteRuleException;
+	Container execute() throws ExecuteRuleException;
 	
-	public Container addListener(ContainerListener listener);
+	Container addListener(ContainerListener listener);
 	
-	public ResultInfo getResult();
+	ResultInfo getResult();
 }

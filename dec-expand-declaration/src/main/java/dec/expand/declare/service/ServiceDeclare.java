@@ -14,7 +14,7 @@ import dec.expand.declare.fun.Function;
 
 public interface ServiceDeclare {
 
-	public String getName();
+	String getName();
 	
 	/**
 	 * 添加处理数据
@@ -22,49 +22,49 @@ public interface ServiceDeclare {
 	 * @param clz
 	 * @return
 	 */
-	public <T> ServiceDeclare addEntitys(String type, List<T> t);
+	<T> ServiceDeclare addEntitys(String type, List<T> t);
 	
-	public <T> ServiceDeclare addEntity(String type, T t);
+	<T> ServiceDeclare addEntity(String type, T t);
 	
-	public ServiceDeclare load(ModelLoader modelLoader);
+	ServiceDeclare load(ModelLoader modelLoader);
 	
-	public ServiceDeclare load(ModelLoaderFun fun);
+	ServiceDeclare load(ModelLoaderFun fun);
 	
-	public ServiceDeclare declare(ServiceDeclare serviceDeclare);
+	ServiceDeclare declare(ServiceDeclare serviceDeclare);
 	
-	public ServiceDeclare execute();
+	ServiceDeclare execute();
 	
-	public <T> ServiceDeclare subscribe(String name, Function<ExecuteResult, DataStorage> fun);
+	ServiceDeclare subscribe(String name, Function<ExecuteResult, DataStorage> fun);
 	
-	public <T> ServiceDeclare subscribe(String name);
+	ServiceDeclare subscribe(String name);
 	
-	public ServiceDeclare subscribe(String name, String dataTypes[]);
+	ServiceDeclare subscribe(String name, String dataTypes[]);
 	
-	public ServiceDeclare subscribe(Subscriber<?> subscribe);
+	ServiceDeclare subscribe(Subscriber<?> subscribe);
 	
-	public ServiceDeclare subscribe(SubscriberDesc subscriberDesc);
+	ServiceDeclare subscribe(SubscriberDesc subscriberDesc);
 	
-	public ServiceDeclare onSuccess(FinalFun fun);
+	ServiceDeclare onSuccess(FinalFun fun);
 	
-	public ServiceDeclare onError(FinalFun fun);
+	ServiceDeclare onError(FinalFun fun);
 	
-	public ServiceDeclare onException(FinalFun fun);
+	ServiceDeclare onException(FinalFun fun);
 	
-	public ServiceDeclare onErrorWithStop(FinalFun fun);
+	ServiceDeclare onErrorWithStop(FinalFun fun);
 	
-	public ServiceDeclare onExceptionWithStop(FinalFun fun);
+	ServiceDeclare onExceptionWithStop(FinalFun fun);
 	
-	public ServiceDeclare onStop(FinalFun fun);
+	ServiceDeclare onStop(FinalFun fun);
 	
-	public ServiceDeclare onFinsh(FinalFun fun);
+	ServiceDeclare onFinsh(FinalFun fun);
 	
-	public ExecuteResult getExecuteResult();
+	ExecuteResult getExecuteResult();
 	
-	public ServiceDeclare consume(String name, Function<ExecuteResult,DataStorage> fun);
+	ServiceDeclare consume(String name, Function<ExecuteResult,DataStorage> fun);
 	
-	public ServiceDeclare consume(Conumer<?> conumer);
+	ServiceDeclare consume(Conumer<?> conumer);
 	
-	public <T> ServiceDeclare consume(String name, Class<T> clz, Function<ExecuteResult,T> fun);
+	<T> ServiceDeclare consume(String name, Class<T> clz, Function<ExecuteResult,T> fun);
 	
-	public ServiceDeclare consume(ConumerDesc conumerDesc);
+	ServiceDeclare consume(ConumerDesc conumerDesc);
 }

@@ -4,7 +4,7 @@ import dec.core.datasource.execute.exception.ExecuteException;
 
 public interface ExecuteContainer<E,V> {
 
-	public V execute(E e) throws ExecuteException;
+	V execute(E e) throws ExecuteException;
 	
-	public void init();
+	void init();
 }

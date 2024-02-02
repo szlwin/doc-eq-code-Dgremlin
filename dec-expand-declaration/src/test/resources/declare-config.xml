@@ -1,8 +1,10 @@
 <declare-config>
 
 	<systems>
-		<system name="commodity">
-			<data name="commodityData"/>
+		<system name="user">
+			<datas>
+				<data name="userData"/>
+			</datas>
 		</system>
 		<system name="order">
 			<datas>
@@ -69,8 +71,6 @@
 				<data name="" system="" ref-view="v1" rule-start="" rule-end="" end="true"/>
 			</datas>
 		</business>-->
-
-
 		<business name="subscribeOrder"  >
 			<datas>
 				<data system="order" name="subscribeOrderData"  begin="true"/>

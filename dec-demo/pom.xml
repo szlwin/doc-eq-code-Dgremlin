@@ -26,6 +26,11 @@
 		</dependency>
 		<dependency>
 			<groupId>doc.eq.code</groupId>
+			<artifactId>dec-expand-declaration</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>doc.eq.code</groupId>
 			<artifactId>dec-datasource-orm-mysql</artifactId>
 		</dependency>
 		<dependency>

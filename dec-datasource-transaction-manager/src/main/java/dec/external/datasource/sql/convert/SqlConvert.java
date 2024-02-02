@@ -6,6 +6,6 @@ import dec.external.datasource.sql.dom.ConvertParam;
 
 public interface SqlConvert extends DataConvert<ConvertParam ,ConvertInfo>{
 	
-	public ConvertInfo convert(ConvertParam convertParam);
+	ConvertInfo convert(ConvertParam convertParam);
 
 }

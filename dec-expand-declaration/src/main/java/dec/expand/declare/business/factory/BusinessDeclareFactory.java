@@ -16,8 +16,9 @@ public class BusinessDeclareFactory {
             throw new ContextConfigException("The business:" + name + " is not exist!");
         }
 
-        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare();
+        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare(businessDesc.getAllViewRuleDesc() != null);
         defaultBusinessDeclare.build(name);
+
         List<ProcessDesc> processDescList = businessDesc.getProcesses();
         for (ProcessDesc processDesc : processDescList) {
             if (processDesc.isOnlyEnd()) {
@@ -25,9 +26,9 @@ public class BusinessDeclareFactory {
                 continue;
             }
             if (processDesc.isBegin()) {
-                defaultBusinessDeclare.beginTx();
+                defaultBusinessDeclare.beginTx(processDesc.getTransaction());
             }
-            defaultBusinessDeclare.data(processDesc.getSystem(), processDesc.getData());
+            defaultBusinessDeclare.data(processDesc);
             if (processDesc.isEnd()) {
                 defaultBusinessDeclare.endTx();
             }

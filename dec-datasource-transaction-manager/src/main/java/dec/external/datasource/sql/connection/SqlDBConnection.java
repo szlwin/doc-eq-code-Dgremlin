@@ -8,13 +8,13 @@ import dec.core.datasource.connection.DataConnection;
 
 public interface SqlDBConnection<E,V> extends DataConnection<E,V>{
 
-	public Connection getConnection();
+	Connection getConnection();
 	
-	public Savepoint getSavepoint(String name) throws SQLException;
+	Savepoint getSavepoint(String name) throws SQLException;
 	
-	public Savepoint getSavepoint() throws SQLException;
+	Savepoint getSavepoint() throws SQLException;
 	
-	public void rollback(Savepoint savepoint) throws SQLException;
+	void rollback(Savepoint savepoint) throws SQLException;
 	
-	public void releaseSavepoint(Savepoint savepoint)throws SQLException;
+	void releaseSavepoint(Savepoint savepoint)throws SQLException;
 }

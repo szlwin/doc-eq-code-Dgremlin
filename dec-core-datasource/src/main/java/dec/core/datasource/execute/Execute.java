@@ -4,17 +4,17 @@ import dec.core.datasource.execute.exception.ExecuteException;
 
 public interface Execute<E,R,C> {
 
-	public void execute() throws ExecuteException;
+	void execute() throws ExecuteException;
 	
-	public void setConnection(C con);
+	void setConnection(C con);
 	
-	public void setCmd(String cmd);
+	void setCmd(String cmd);
 	
-	public void setValue(E e);
+	void setValue(E e);
 	
-	public void setKeyType(String keyType);
+	void setKeyType(String keyType);
 	
-	public void setKeyValue(Object keyValue);
+	void setKeyValue(Object keyValue);
 	
-	public R getResult();
+	R getResult();
 }

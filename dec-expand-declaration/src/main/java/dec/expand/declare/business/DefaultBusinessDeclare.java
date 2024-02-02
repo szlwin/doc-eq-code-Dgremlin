@@ -65,10 +65,15 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private int txIndex = 0;
 
+    private boolean isRefRule;
     public DefaultBusinessDeclare() {
-        this.code = UUID.randomUUID().toString();
+       this(false);
     }
 
+    public DefaultBusinessDeclare(boolean isRefRule) {
+        this.isRefRule = isRefRule;
+        this.code = UUID.randomUUID().toString();
+    }
     @Override
     public String getName() {
         return name;
@@ -177,6 +182,16 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         return this;
     }
 
+    public BusinessDeclare data(ProcessDesc processDesc) {
+        currentProcess = processDesc;
+
+        this.businessDesc.add(currentProcess);
+
+        this.transaction(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
+                this.currentTransactionDesc.getTransactionGroup());
+        return this;
+    }
+
     @Override
     public BusinessDeclare data(String system, String data) {
 
@@ -192,7 +207,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
         this.transaction(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
                 this.currentTransactionDesc.getTransactionGroup());
-        log.info("Code:{}, prepare produce data, [{}]-[{}]", code, system, data);
+        //log.info("Code:{}, prepare produce data, [{}]-[{}]", code, system, data);
 
         return this;
     }

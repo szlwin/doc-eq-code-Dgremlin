@@ -7,29 +7,29 @@ import dec.core.datasource.execute.exception.ExecuteException;
 
 public interface DataConnection<E,V> {
 
-	public void connect() throws ConectionException;
+	void connect() throws ConectionException;
 	
-	public void commit() throws ConectionException;
+	void commit() throws ConectionException;
 	
-	public void close() throws ConectionException;
+	void close() throws ConectionException;
 	
-	public V execute(E e) throws ExecuteException;
+	V execute(E e) throws ExecuteException;
 	
-	public void rollback() throws ConectionException;
+	void rollback() throws ConectionException;
 	
-	public void setConvertContainer(ConvertContainer<?, ?> convertContainer);
+	void setConvertContainer(ConvertContainer<?, ?> convertContainer);
 	
-	public void setExecuteContainer(ExecuteContainer<?, ?> executeContainer);
+	void setExecuteContainer(ExecuteContainer<?, ?> executeContainer);
 	
-	public String getConName();
+	String getConName();
 	
-	public String getDataSource();
+	String getDataSource();
 	
-	public void setConName(String name);
+	void setConName(String name);
 	
-	public void setDataSource(String dataSource);
+	void setDataSource(String dataSource);
 	
-	public boolean isClosed() throws ConectionException;
+	boolean isClosed() throws ConectionException;
 	
-	public void setAutoCommit(boolean isAuto) throws ConectionException;
+	void setAutoCommit(boolean isAuto) throws ConectionException;
 }

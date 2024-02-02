@@ -132,34 +132,6 @@ public class TranAdvanceContainer {
 		}
 	}
 	
-	public class TaskExecuter extends Thread{
-		private List<TranExecuter> tranExecuterList;
-		private List<ResultInfo> resultInfoList;
-		
-		public TaskExecuter(int size){
-			tranExecuterList = new ArrayList<TranExecuter>(size);
-			resultInfoList = new ArrayList<ResultInfo>(size);
-		}
-
-		public void add(TranExecuter tranExecuter){
-			tranExecuterList.add(tranExecuter);
-		}
-		
-		public void run() {
-			for(int i = 0 ; i < tranExecuterList.size();i++){
-				ResultInfo resultInfo = executeSingle(tranExecuterList.get(i));
-				resultInfoList.add(resultInfo);
-			}
-			//synchronized(conLock){
-			//	count++;
-			//}
-		}
-		
-		public List<ResultInfo> getResultInfoList(){
-			return resultInfoList;
-		}
-	}
-	
 	private void execute(List<TranExecuter> list,int type) throws ConectionException, SQLException{
 		if(list.isEmpty()){
 			return;

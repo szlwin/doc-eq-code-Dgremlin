@@ -7,17 +7,17 @@ import dec.core.model.container.ResultInfo;
 
 public interface Group {
 
-	public List<Group> getGroupList();
+	List<Group> getGroupList();
 	
-	public int getGroupNum();
+	int getGroupNum();
 	
-	public int getTotalRuleNum();
+	int getTotalRuleNum();
 	
-	public List<ResultInfo> getAllResultInfo();
+	List<ResultInfo> getAllResultInfo();
 	
-	public boolean isAllFinish();
+	boolean isAllFinish();
 	
-	public boolean isAllSuccess();
+	boolean isAllSuccess();
 	
 	public void execute();
 	

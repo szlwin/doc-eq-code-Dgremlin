@@ -4,13 +4,13 @@ package dec.core.model.utils.validater;
 public interface IErrorCode {
 
     
-	public long getCode();
+	long getCode();
 	
-	public String getMsg();
+	String getMsg();
 	
-	public ErrorType getType();
+	ErrorType getType();
 	
-	public String getUserMsg();
+	String getUserMsg();
 
-	public void setUserMsg(String userMsg);
+	void setUserMsg(String userMsg);
 }

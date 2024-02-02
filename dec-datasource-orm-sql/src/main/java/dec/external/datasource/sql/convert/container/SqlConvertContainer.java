@@ -14,5 +14,5 @@ public interface SqlConvertContainer extends ConvertContainer<ConvertParam, Conv
 	
 	//public ConvertInfo convert(String sql,Map<String,Object> paramMap);
 	
-	public ConvertInfo convert(ConvertParam e);
+	ConvertInfo convert(ConvertParam e);
 }

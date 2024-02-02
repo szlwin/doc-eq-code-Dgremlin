@@ -4,5 +4,5 @@ import dec.core.model.container.ResultInfo;
 
 public interface ViewListener {
 
-	public ResultInfo notify(ViewEvent event);
+	ResultInfo notify(ViewEvent event);
 }

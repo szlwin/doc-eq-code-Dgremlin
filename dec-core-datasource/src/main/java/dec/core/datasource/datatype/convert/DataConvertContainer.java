@@ -2,11 +2,11 @@ package dec.core.datasource.datatype.convert;
 
 public interface DataConvertContainer {
 	
-	public void init();
+	void init();
 	
-	public Object convert(Object data,String fun,boolean isTo);
+	Object convert(Object data,String fun,boolean isTo);
 	
-	public Object convert(Object data,String fun);
+	Object convert(Object data,String fun);
 	
-	public boolean check(String origType,String targetType);
+	boolean check(String origType,String targetType);
 }

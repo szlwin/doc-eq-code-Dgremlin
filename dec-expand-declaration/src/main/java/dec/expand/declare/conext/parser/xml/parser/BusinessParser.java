@@ -1,7 +1,9 @@
 package dec.expand.declare.conext.parser.xml.parser;
 
+import dec.core.context.config.utils.ConfigContextUtil;
 import dec.expand.declare.conext.DescContext;
 import dec.expand.declare.conext.desc.business.BusinessDesc;
+import dec.expand.declare.conext.desc.business.ViewRuleDesc;
 import dec.expand.declare.conext.desc.data.DataDesc;
 import dec.expand.declare.conext.desc.process.ProcessDesc;
 import dec.expand.declare.conext.desc.process.TransactionPolicy;
@@ -28,9 +30,33 @@ public class BusinessParser {
         businessDesc.setName(name);
         businessDesc.setComment(element.attributeValue("desc"));
 
+        String ruleInfo = element.attributeValue("ref-rule");
+        if (ruleInfo != null && !"".equals(ruleInfo)) {
+            parserRule(businessDesc, ruleInfo);
+        }
         parserData(businessDesc, element.element("datas"));
         log.info("End load business:" + name);
         return businessDesc;
+    }
+
+    private void parserRule(BusinessDesc businessDesc, String rule) throws XMLParseException {
+        String ruleArray[] = rule.split(",");
+        ViewRuleDesc viewRuleDescArray[] = new ViewRuleDesc[ruleArray.length];
+        for (String ruleInfo : ruleArray) {
+            String viewRule[] = ruleInfo.split(":");
+            if (ConfigContextUtil.getConfigInfo().getRuleViewInfo(viewRule[0]) == null) {
+                throw new XMLParseException("The rule is not exist, rule:" + viewRule[0]);
+            }
+
+            if (ConfigContextUtil.getConfigInfo().getDataSource(viewRule[1]) == null) {
+                throw new XMLParseException("The dataSource is not exist, rule:" + viewRule[1]);
+            }
+
+            ViewRuleDesc viewRuleDesc = new ViewRuleDesc();
+            viewRuleDesc.setRuleName(viewRule[0]);
+            viewRuleDesc.setDataSourceName(viewRule[1]);
+            businessDesc.addViewRuleDesc(viewRuleDesc);
+        }
     }
 
     private void parserData(BusinessDesc businessDesc, Element element) throws XMLParseException {
@@ -95,6 +121,34 @@ public class BusinessParser {
 
             if (processDesc.isEnd() || processDesc.isOnlyEnd()) {
                 txCount--;
+            }
+
+            String refRule = dataElement.attributeValue("ref-rule");
+            if (refRule != null && !"".equals(refRule)) {
+
+                if (businessDesc.getViewRuleDesc(refRule) == null) {
+                    throw new XMLParseException("The 'ref-rule' for data is not exist,data:" + processDesc.getData() + ",ref-rule:" + refRule);
+                }
+
+                String refRuleStart = dataElement.attributeValue("ref-rule-start");
+                if (refRuleStart == null || "".equals(refRuleStart)) {
+                    throw new XMLParseException("The 'ref-rule-start' for data is empty,data:" + processDesc.getData());
+                }
+
+                String refRuleEnd = dataElement.attributeValue("ref-rule-end");
+                if (refRuleEnd == null || "".equals(refRuleEnd)) {
+                    throw new XMLParseException("The 'ref-rule-end' for data is empty,data:" + processDesc.getData());
+                }
+                processDesc.setRule(refRule);
+                processDesc.setRuleStart(refRuleStart);
+                processDesc.setRuleEnd(refRuleEnd);
+
+                String refRuleDataSource = dataElement.attributeValue("ref-rule-dataSource");
+                if (refRuleDataSource != null && !"".equals(refRuleDataSource)) {
+                    processDesc.setRuleDataSource(refRuleDataSource);
+                } else {
+                    processDesc.setRuleDataSource(businessDesc.getViewRuleDesc(refRule).getDataSourceName());
+                }
             }
 
             businessDesc.add(processDesc);

@@ -19,6 +19,14 @@ public class ProcessDesc {
 
     private boolean onlyEnd = false;
 
+    private String ruleStart;
+
+    private String rule;
+
+    private String ruleEnd;
+
+    private String ruleDataSource;
+
     public String getData() {
         return data;
     }
@@ -82,4 +90,36 @@ public class ProcessDesc {
 	public void setOnlyEnd(boolean onlyEnd) {
 		this.onlyEnd = onlyEnd;
 	}
+
+    public String getRuleStart() {
+        return ruleStart;
+    }
+
+    public void setRuleStart(String ruleStart) {
+        this.ruleStart = ruleStart;
+    }
+
+    public String getRuleEnd() {
+        return ruleEnd;
+    }
+
+    public void setRuleEnd(String ruleEnd) {
+        this.ruleEnd = ruleEnd;
+    }
+
+    public String getRuleDataSource() {
+        return ruleDataSource;
+    }
+
+    public void setRuleDataSource(String ruleDataSource) {
+        this.ruleDataSource = ruleDataSource;
+    }
+
+    public String getRule() {
+        return rule;
+    }
+
+    public void setRule(String rule) {
+        this.rule = rule;
+    }
 }

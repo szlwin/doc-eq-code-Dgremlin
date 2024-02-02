@@ -8,7 +8,7 @@ import dec.core.datasource.execute.exception.ExecuteException;
 
 public interface Session<E> {
 	
-	public void save(E e) throws ExecuteException;
+	void save(E e) throws ExecuteException;
 	
 	public void update(E e) throws ExecuteException;
 	
