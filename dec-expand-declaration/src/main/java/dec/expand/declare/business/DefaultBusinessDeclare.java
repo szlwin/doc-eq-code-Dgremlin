@@ -381,19 +381,16 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
             produceData(dataDesc, process.getData(), process.getSystem());
 
-            change(systemDesc, dataDesc);
+            this.change(systemDesc, dataDesc);
 
             refreshStorage(dataDesc);
         }
-
-
-
     }
 
     private void change(SystemDesc systemDesc, DataDesc dataDesc) throws Exception {
         if (dataDesc.getChangeDescList() != null) {
             for (ChangeDesc changeDesc : dataDesc.getChangeDescList()) {
-                Object dataObject = dataStorage.get(dataDesc.getName());
+                Object dataObject = dataStorage.get(changeDesc.getName());
                 DataUtils.setValue(dataObject, changeDesc.getValueDescList());
                 this.result = SystemContext.get()
                         .get(systemDesc.getName()).change(changeDesc.getName(), this.dataStorage);
@@ -460,6 +457,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                             throw new ExecuteException(e);
                         }
                     }
+
                     if (dataDependDesc.getCondition() != null) {
                         if (!DataUtils.check(dataStorage.getDataMap().get(data), dataDependDesc.getCondition())) {
                             String message = String.format("Check [%s]-[%s] condition error, condition:[%s]", system, data, dataDependDesc.getCondition());
@@ -467,6 +465,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                             throw new ExecuteException(message);
                         }
                     }
+
                 }
             }
         }

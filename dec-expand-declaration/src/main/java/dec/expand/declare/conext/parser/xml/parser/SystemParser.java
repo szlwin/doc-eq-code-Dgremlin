@@ -91,11 +91,11 @@ public class SystemParser {
             if (data == null || "".equals(data)) {
                 throw new XMLParseException("The property 'data' for data depend can't empty,data:" + dataDesc.getName());
             }
-            System.out.println("init:" + data);
             DataDependDesc dataDependDesc = new DataDependDesc(data);
             String value = dependDescElement.attributeValue("change");
             if (value != null && !"".equals(value)) {
                 dataDependDesc.setChange(value);
+                dataDesc.addChange(dataDependDesc.getData(), dataDependDesc.getChange());
             }
 
             value = dependDescElement.attributeValue("param");
