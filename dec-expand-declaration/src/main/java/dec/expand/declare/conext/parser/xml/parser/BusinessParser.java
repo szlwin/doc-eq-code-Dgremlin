@@ -65,14 +65,51 @@ public class BusinessParser {
         }
         Iterator<?> it = element.elementIterator("data");
         int txCount = 0;
+        int txIndex = 0;
         while (it.hasNext()) {
             Element dataElement = (Element) it.next();
+            ProcessDesc processDesc = new ProcessDesc();
+
+            String begin = dataElement.attributeValue("begin");
+            if (begin != null && !"".equals(begin)) {
+
+                processDesc.setBegin(Boolean.valueOf(begin));
+            }
+
+            if (processDesc.isBegin()) {
+                String transactionPolicy = dataElement.attributeValue("transactionPolicy");
+                if (transactionPolicy == null || "".equals(transactionPolicy)) {
+                    processDesc.setTransaction(TransactionPolicy.REQUIRE);
+                } else {
+                    TransactionPolicy transactionPolicyValue = this.convert(transactionPolicy);
+                    if (transactionPolicyValue == null) {
+                        throw new XMLParseException("The property 'transactionPolicy' for data is error,data:" + processDesc.getData() + ",transactionPolicy:" + transactionPolicy);
+                    }
+                }
+                processDesc.setTransactionGroup(String.valueOf(txIndex));
+
+                txCount++;
+                txIndex++;
+                businessDesc.add(processDesc);
+                continue;
+            }
+
+            String end = dataElement.attributeValue("end");
+            if (end != null && !"".equals(end)) {
+                processDesc.setEnd(Boolean.valueOf(end));
+            }
+
+            if (processDesc.isEnd()) {
+                businessDesc.add(processDesc);
+                txCount--;
+                continue;
+            }
+
             String name = dataElement.attributeValue("name");
             if (name == null || "".equals(name)) {
                 throw new XMLParseException("The property 'name' for data can't empty");
             }
 
-            ProcessDesc processDesc = new ProcessDesc();
             processDesc.setData(name);
             if (name.startsWith("$")) {
                 processDesc.setSystem("this");
@@ -86,42 +123,6 @@ public class BusinessParser {
             }
 
             validate(processDesc.getSystem(), processDesc.getData());
-
-            String begin = dataElement.attributeValue("begin");
-            if (begin == null || "".equals(begin)) {
-                processDesc.setBegin(false);
-            } else {
-                processDesc.setBegin(Boolean.valueOf(begin));
-            }
-            if (processDesc.isBegin()) {
-                String transactionPolicy = dataElement.attributeValue("transactionPolicy");
-                if (transactionPolicy == null || "".equals(transactionPolicy)) {
-                    processDesc.setTransaction(TransactionPolicy.REQUIRE);
-                } else {
-                    TransactionPolicy transactionPolicyValue = this.convert(transactionPolicy);
-                    if (transactionPolicyValue == null) {
-                        throw new XMLParseException("The property 'transactionPolicy' for data is error,data:" + processDesc.getData() + ",transactionPolicy:" + transactionPolicy);
-                    }
-                }
-                txCount++;
-            }
-
-
-            String end = dataElement.attributeValue("end");
-            if (end == null || "".equals(end)) {
-                processDesc.setEnd(false);
-            } else {
-                processDesc.setEnd(Boolean.valueOf(end));
-            }
-
-            String onlyEnd = dataElement.attributeValue("only-end");
-            if (onlyEnd != null && !"".equals(onlyEnd)) {
-                processDesc.setOnlyEnd(Boolean.valueOf(onlyEnd));
-            }
-
-            if (processDesc.isEnd() || processDesc.isOnlyEnd()) {
-                txCount--;
-            }
 
             String refRule = dataElement.attributeValue("ref-rule");
             if (refRule != null && !"".equals(refRule)) {
@@ -153,7 +154,6 @@ public class BusinessParser {
 
             businessDesc.add(processDesc);
         }
-
         if (txCount != 0) {
             throw new XMLParseException("The property 'begin' and 'end' must match,business:" + businessDesc.getName());
         }

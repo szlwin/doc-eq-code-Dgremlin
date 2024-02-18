@@ -3,7 +3,9 @@ package dec.expand.declare.system;
 import dec.expand.declare.conext.DataStorage;
 import dec.expand.declare.executer.change.Change;
 import dec.expand.declare.executer.conume.Conumer;
+import dec.expand.declare.executer.get.GetExecuter;
 import dec.expand.declare.executer.produce.Produce;
+import dec.expand.declare.executer.save.SaveExecuter;
 import dec.expand.declare.service.ExecuteResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +19,13 @@ public class System {
 
     private String name;
 
-    private Map<String, Conumer<?>> conumerMap;
-
     private Map<String, Produce<DataStorage>> produceMap;
 
     private Map<String, Change<DataStorage>> changeMap;
+
+    private Map<String, GetExecuter<DataStorage>> getMap;
+
+    private Map<String, SaveExecuter<DataStorage>> saveMap;
 
     public String getName() {
         return name;
@@ -29,14 +33,6 @@ public class System {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void add(Conumer<?> conumer) {
-        if (conumerMap == null) {
-            conumerMap = new HashMap<>();
-        }
-
-        conumerMap.put(conumer.getName(), conumer);
     }
 
     public void add(Produce<DataStorage> produce) {
@@ -55,14 +51,29 @@ public class System {
         changeMap.put(change.getName(), change);
     }
 
-    public ExecuteResult conume(String data, DataStorage dataStorage) {
+    public ExecuteResult get(String data, DataStorage dataStorage) {
 
-        if (conumerMap != null && conumerMap.containsKey(data)) {
+        if (getMap != null && getMap.containsKey(data)) {
             try {
-                Conumer<?> conumer = conumerMap.get(data);
-                conumer.execute(dataStorage);
+                GetExecuter<?> getExecuter = getMap.get(data);
+                return getExecuter.execute(dataStorage);
             } catch (Exception e) {
-                log.error("Conumer error, data:{}", data, e);
+                log.error("Get error, data:{}", data, e);
+                return ExecuteResult.fail(null, null, e);
+            }
+        }
+
+        return ExecuteResult.success();
+    }
+
+    public ExecuteResult save(String data, DataStorage dataStorage) {
+
+        if (saveMap != null && saveMap.containsKey(data)) {
+            try {
+                SaveExecuter<?> saveExecuter = saveMap.get(data);
+                return saveExecuter.execute(dataStorage);
+            } catch (Exception e) {
+                log.error("Get error, data:{}", data, e);
                 return ExecuteResult.fail(null, null, e);
             }
         }

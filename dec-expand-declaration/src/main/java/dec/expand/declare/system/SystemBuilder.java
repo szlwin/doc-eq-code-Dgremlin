@@ -21,26 +21,6 @@ public class SystemBuilder {
 		return this;
 	}
 	
-	public SystemBuilder addConumer(Conumer<?> conumer) {
-		
-		system.add(conumer);
-		
-		return this;
-	}
-
-	public SystemBuilder addConumer(String name, Function<ExecuteResult, DataStorage> fun) {
-		
-		Conumer<DataStorage> conumer = new Conumer<DataStorage>();
-		
-		conumer.setName(name);
-		
-		conumer.setFun(fun);
-		
-		system.add(conumer);
-		
-		return this;
-	}
-	
 	public SystemBuilder addProduce(Produce<DataStorage> produce){
 		
 		system.add(produce);

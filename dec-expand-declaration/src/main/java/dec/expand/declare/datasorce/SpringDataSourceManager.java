@@ -52,6 +52,8 @@ public class SpringDataSourceManager implements DataSourceManager {
                 return TransactionDefinition.PROPAGATION_NOT_SUPPORTED;
             case REQUIRE:
                 return TransactionDefinition.PROPAGATION_REQUIRED;
+            case SUPPORTED:
+                return TransactionDefinition.PROPAGATION_SUPPORTS;
         }
         return 0;
     }

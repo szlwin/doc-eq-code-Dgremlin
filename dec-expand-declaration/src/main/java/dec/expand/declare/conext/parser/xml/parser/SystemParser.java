@@ -75,7 +75,7 @@ public class SystemParser {
                 dataDesc.setCachePrior(Boolean.valueOf(dataElement.attributeValue("isCachePrior")));
             }
 
-            parserDataDesc(dataDesc, element.element("depends"));
+            parserDataDesc(dataDesc, dataElement.element("depends"));
             systemDesc.addData(dataDesc);
         }
     }
@@ -91,12 +91,27 @@ public class SystemParser {
             if (data == null || "".equals(data)) {
                 throw new XMLParseException("The property 'data' for data depend can't empty,data:" + dataDesc.getName());
             }
+            System.out.println("init:" + data);
             DataDependDesc dataDependDesc = new DataDependDesc(data);
+            String value = dependDescElement.attributeValue("change");
+            if (value != null && !"".equals(value)) {
+                dataDependDesc.setChange(value);
+            }
 
-            dataDependDesc.setChange(dependDescElement.attributeValue("change"));
-            dataDependDesc.setParam(dependDescElement.attributeValue("param"));
-            dataDependDesc.setCondition(dependDescElement.attributeValue("condition"));
-            dataDependDesc.setInit(dependDescElement.attributeValue("init"));
+            value = dependDescElement.attributeValue("param");
+            if (value != null && !"".equals(value)) {
+                dataDependDesc.setParam(value);
+            }
+
+            value = dependDescElement.attributeValue("condition");
+            if (value != null && !"".equals(value)) {
+                dataDependDesc.setCondition(value);
+            }
+
+            value = dependDescElement.attributeValue("init");
+            if (value != null && !"".equals(value)) {
+                dataDependDesc.setInit(value);
+            }
 
             if (dataDependDesc.getInit() != null
                     && dataDependDesc.getChange() != null

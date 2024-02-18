@@ -1,6 +1,5 @@
-package dec.expand.declare.business.factory;
+package dec.expand.declare.business;
 
-import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.conext.DescContext;
 import dec.expand.declare.conext.desc.business.BusinessDesc;
 import dec.expand.declare.conext.desc.process.ProcessDesc;
@@ -21,17 +20,7 @@ public class BusinessDeclareFactory {
 
         List<ProcessDesc> processDescList = businessDesc.getProcesses();
         for (ProcessDesc processDesc : processDescList) {
-            if (processDesc.isOnlyEnd()) {
-                defaultBusinessDeclare.endTx();
-                continue;
-            }
-            if (processDesc.isBegin()) {
-                defaultBusinessDeclare.beginTx(processDesc.getTransaction());
-            }
             defaultBusinessDeclare.data(processDesc);
-            if (processDesc.isEnd()) {
-                defaultBusinessDeclare.endTx();
-            }
         }
         return defaultBusinessDeclare;
     }

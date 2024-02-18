@@ -17,7 +17,7 @@
 				<data name="cancelOrderData" desc="取消订单数据" type="persistent" isCachePrior="false">
 					<depends>
 						<depend data="$cancelOrderData"/>
-						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="statue=1 or statue=2" change="status:3"/>
+						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="status=1 or status=2" change="status:3"/>
 					</depends>
 				</data>
 
@@ -73,22 +73,30 @@
 		</business>-->
 		<business name="subscribeOrder"  >
 			<datas>
-				<data system="order" name="subscribeOrderData"  begin="true"/>
-				<data name="$payData"  begin="true" transactionPolicy="NEW"/>
-				<data system="pay" name="payResultData" begin="true" transactionPolicy="NESTED"/>
-				<data name="$payResultData" end="true"/>
-				<data name="$payData"  only-end="true"/>
-				<data system="order" name="orderPayResultData" end="true"/>
+				<data  begin="true"/>
+					<data system="order" name="subscribeOrderData" />
+						<data  begin="true" transactionPolicy="NEW"/>
+							<data name="$payData"/>
+								<data  begin="true" transactionPolicy="NESTED"/>
+									<data system="pay" name="payResultData" />
+									<data name="$payResultData"/>
+									<data name="$payData"/>
+								<data end="true"/>
+							<data end="true"/>
+					<data system="order" name="orderPayResultData"/>
+				<data end="true"/>
 			</datas>
 		</business>
 
 		<business name="cancelOrder"  >
 			<datas>
-				<data system="order" name="cancelOrderData"  begin="true" transactionPolicy="REQUIRE"/>
-				<data name="$payData"/>
-				<data system="pay" name="payResultData"/>
-				<data name="$payResultData"/>
-				<data system="order" name="orderPayResultData" end="true"/>
+				<data begin="true" transactionPolicy="REQUIRE"/>
+					<data system="order" name="cancelOrderData"/>
+					<data name="$payData"/>
+					<data system="pay" name="payResultData"/>
+					<data name="$payResultData"/>
+					<data system="order" name="orderPayResultData"/>
+				<data end="true"/>
 			</datas>
 		</business>
 	</businesses>

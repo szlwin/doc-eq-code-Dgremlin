@@ -25,13 +25,13 @@ public interface BusinessDeclare {
 
     <T> BusinessDeclare addEntity(String type, T t);
 
-    BusinessDeclare beginTx();
+    //BusinessDeclare beginTx();
 
-    BusinessDeclare beginTx(TransactionPolicy transactionPolicy);
+    //BusinessDeclare beginTx(TransactionPolicy transactionPolicy);
 
-    BusinessDeclare rollback();
+    //BusinessDeclare rollback();
 
-    BusinessDeclare endTx();
+    //BusinessDeclare endTx();
 
     ExecuteResult getExecuteResult();
 
@@ -49,9 +49,9 @@ public interface BusinessDeclare {
 
     BusinessDeclare onFinsh(FinalFun fun);
 
-    BusinessDeclare data(String data);
+    //BusinessDeclare data(String data);
 
-    BusinessDeclare data(String system, String data);
+   // BusinessDeclare data(String system, String data);
 
     //BusinessDeclare transaction(TransactionPolicy transactionPolicy, RollBackPolicy rollBackPolicy);
 

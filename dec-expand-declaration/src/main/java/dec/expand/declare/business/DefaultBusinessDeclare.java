@@ -53,17 +53,11 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private FinalFun stopFun;
 
-    private Set<String> conumeRecordSet = new HashSet<>();
-
     private DataSourceManager dataSourceManager;
 
-    private TransactionDesc currentTransactionDesc;
+    //private TransactionDesc currentTransactionDesc;
 
-    private List<TransactionDesc> transactionDescList;
-
-    private int transactionFlagArray[];
-
-    private int txIndex = 0;
+    //private List<TransactionDesc> transactionDescList;
 
     private boolean isRefRule;
     public DefaultBusinessDeclare() {
@@ -104,10 +98,21 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
         List<ProcessDesc> processes = businessDesc.getProcesses();
 
-        transactionFlagArray = new int[transactionDescList.size()];
+        //transactionFlagArray = new int[transactionDescList.size()];
         for (int i = 0; i < processes.size(); i++) {
             ProcessDesc process = processes.get(i);
             try {
+
+                if(process.isBegin()){
+                    beginTx(process);
+                    continue;
+                }
+
+                if(process.isEnd()){
+                    endTx(process, 0);
+                    continue;
+                }
+
                 log.info("Code:{}, start produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
 
                 executeProcess(process, i);
@@ -176,24 +181,24 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         return this;
     }
 
-    @Override
-    public BusinessDeclare data(String data) {
+
+    protected BusinessDeclare data(String data) {
         data("this", data);
         return this;
     }
 
-    public BusinessDeclare data(ProcessDesc processDesc) {
+    protected BusinessDeclare data(ProcessDesc processDesc) {
         currentProcess = processDesc;
 
         this.businessDesc.add(currentProcess);
 
-        this.transaction(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
-                this.currentTransactionDesc.getTransactionGroup());
+        //(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
+        //        this.currentTransactionDesc.getTransactionGroup());
         return this;
     }
 
-    @Override
-    public BusinessDeclare data(String system, String data) {
+
+    protected BusinessDeclare data(String system, String data) {
 
         validate(system, data);
 
@@ -205,20 +210,14 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
         this.businessDesc.add(currentProcess);
 
-        this.transaction(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
-                this.currentTransactionDesc.getTransactionGroup());
+        //this.transaction(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
+        //        this.currentTransactionDesc.getTransactionGroup());
         //log.info("Code:{}, prepare produce data, [{}]-[{}]", code, system, data);
 
         return this;
     }
 
-    @Override
-    public BusinessDeclare beginTx() {
-        return beginTx(TransactionPolicy.REQUIRE);
-    }
-
-    @Override
-    public BusinessDeclare beginTx(TransactionPolicy transactionPolicy) {
+    /*protected BusinessDeclare beginTx(TransactionPolicy transactionPolicy) {
         if (this.transactionDescList == null)
             transactionDescList = new ArrayList<>();
         this.currentTransactionDesc = new TransactionDesc();
@@ -233,27 +232,26 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         } else {
             currentTransactionDesc.setBegin(processDescList.size());
         }
-        //java.lang.System.out.println("begin:" + currentTransactionDesc.getTransactionGroup());
         return this;
-    }
+    }*/
 
-    @Override
-    public BusinessDeclare rollback() {
-        currentTransactionDesc.setRollBackPolicy(RollBackPolicy.ROLL);
-        return this;
-    }
+    //@Override
+    //public BusinessDeclare rollback() {
+    //    currentTransactionDesc.setRollBackPolicy(RollBackPolicy.ROLL);
+    //    return this;
+    //}
 
-    @Override
-    public BusinessDeclare endTx() {
+
+    /*protected BusinessDeclare endTx() {
         List<ProcessDesc> processDescList = this.businessDesc.getProcesses();
         if (processDescList != null)
-            currentTransactionDesc.setEnd(processDescList.size() - 1);
+            currentTransactionDesc.setEnd(processDescList.size());
 
-        if (currentTransactionDesc.getIndex() > 0) {
-            currentTransactionDesc = transactionDescList.get(currentTransactionDesc.getIndex() - 1);
-        }
+        //if (currentTransactionDesc.getIndex() > 0) {
+       //     currentTransactionDesc = transactionDescList.get(currentTransactionDesc.getIndex() - 1);
+        //}
         return this;
-    }
+    }*/
 
     @Override
     public ExecuteResult getExecuteResult() {
@@ -332,37 +330,18 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
     private void connect(ProcessDesc process) {
-        int index = Integer.valueOf(process.getTransactionGroup());
-        if (transactionFlagArray[index] != 1) {
-            ConnecionDesc connecionDesc = new ConnecionDesc();
-            connecionDesc.setGroup(process.getTransactionGroup());
-            connecionDesc.setTransactionPolicy(process.getTransaction());
-            this.dataSourceManager.connect(connecionDesc);
-            transactionFlagArray[index] = 1;
-            txIndex = index;
-        }
-
+        ConnecionDesc connecionDesc = new ConnecionDesc();
+        connecionDesc.setGroup(process.getTransactionGroup());
+        connecionDesc.setTransactionPolicy(process.getTransaction());
+        this.dataSourceManager.connect(connecionDesc);
     }
 
     private void beginTx(ProcessDesc process) {
-        if (process.getTransaction() != null)
-            connect(process);
+        connect(process);
     }
 
     private void endTx(ProcessDesc process, int index) {
-        if (process.getTransaction() == null) {
-            return;
-        }
-        for (int i = txIndex; i >= 0; i--) {
-            TransactionDesc transactionDesc = this.transactionDescList.get(i);
-            if (transactionDesc.getEnd() > index) {
-                break;
-            }
-            if (transactionDesc.getEnd() == index) {
-                dealWithTx(process);
-                txIndex--;
-            }
-        }
+        dealWithTx(process);
     }
 
     private void dealWithTx(ProcessDesc process) {
@@ -390,8 +369,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         //	dataDesc = systemDesc.getData(process.getData());
         //}
 
-        beginTx(process);
-
         if ("this".equals(process.getSystem())) {
 
             produceData(null, process.getData(), process.getSystem());
@@ -409,7 +386,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             refreshStorage(dataDesc);
         }
 
-        endTx(process, index);
+
+
     }
 
     private void change(SystemDesc systemDesc, DataDesc dataDesc) throws Exception {
@@ -520,7 +498,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                     dataStorage.add(result.getDataType(), result.getData());
                 }
 
-                if (!conumeRecordSet.contains(system + ":" + dataName)) {
+                /*if (!conumeRecordSet.contains(system + ":" + dataName)) {
 
                     try {
 
@@ -535,7 +513,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                         result = ExecuteResult.fail(null, null, e);
 
                     }
-                }
+                }*/
 
                 if (!result.isSuccess()) {
 
@@ -599,7 +577,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
      * type,group,rollBack
      */
     //@Override
-    private void transaction(TransactionPolicy transactionPolicy,
+    /*private void transaction(TransactionPolicy transactionPolicy,
                              RollBackPolicy rollBackPolicy, String transactionGroup) {
 
         currentProcess.setTransaction(transactionPolicy);
@@ -607,7 +585,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         currentProcess.setRollBackPolicy(rollBackPolicy);
 
         currentProcess.setTransactionGroup(transactionGroup);
-    }
+    }*/
 
     private void validate(String system, String data) {
         SystemDesc systemDesc = null;

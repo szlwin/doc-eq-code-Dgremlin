@@ -2,9 +2,7 @@ package dec.demo.declaration;
 
 import dec.demo.system.ConfigInit;
 import dec.expand.declare.business.DefaultBusinessDeclare;
-import dec.expand.declare.business.factory.BusinessDeclareFactory;
-import dec.expand.declare.conext.desc.process.TransactionPolicy;
-import dec.expand.declare.conext.parser.xml.exception.XMLParseException;
+import dec.expand.declare.business.BusinessDeclareFactory;
 import dec.expand.declare.conext.utils.ContextUtils;
 import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
@@ -68,112 +66,6 @@ public class TestOrderBusiness {
                     return ExecuteResult.success(payData);
 
                 }).execute();
-    }
-
-    public static void subscribeOrder() {
-        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare();
-
-        SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
-
-        subscribeOrderData.setProductName("test");
-
-        subscribeOrderData.setAmount(new BigDecimal(1000));
-
-        defaultBusinessDeclare.build("subscribeOrder")
-                .addEntity("$subscribeOrderData", subscribeOrderData)
-                .transactionManager(new MockDataSourceManager())
-                .beginTx()
-                    .data("order", "subscribeOrderData")
-                        .beginTx(TransactionPolicy.NEW)
-                            .data("$payData")
-                        .       beginTx(TransactionPolicy.NESTED)
-                                    .data("pay", "payResultData")
-                                    .data("$payResultData")
-                                .endTx()
-                        .endTx()
-                    .data("order", "orderPayResultData")
-                .endTx()
-                        .addProduce("$payResultData", storage -> {
-
-                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
-
-                    System.out.println("Produce $payResultData");
-
-                    PayResultData resultData = new PayResultData();
-
-                    resultData.setStatus(1);
-
-                    return ExecuteResult.success(resultData);
-
-                }).addProduce("$payData", storage -> {
-
-                    System.out.println("Produce $payData");
-
-                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
-
-                    PayData payData = new PayData();
-
-                    payData.setProductName(subscribeOrderData1.getProductName());
-
-                    payData.setAmount(subscribeOrderData1.getAmount());
-
-                    return ExecuteResult.success(payData);
-
-                }).execute();
-    }
-
-    public static void cancelOrderData() {
-        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare();
-
-        SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
-
-        subscribeOrderData.setProductName("test");
-        subscribeOrderData.setOrderId(11l);
-        subscribeOrderData.setAmount(new BigDecimal(1000));
-
-        defaultBusinessDeclare.build("cancelOrder")
-                .addEntity("$cancelOrderData", subscribeOrderData)
-                .transactionManager(new MockDataSourceManager())
-                .beginTx()
-                .data("order", "cancelOrderData")
-                .data("$payData")
-                .data("pay", "payResultData")
-                .data("$payResultData")
-                .data("order", "orderPayResultData")
-                .addProduce("order", "cancelOrderData", storage -> {
-                    Long cancelOrderData = (Long) storage.get("$cancelOrderData");
-                    Order order = new Order();
-                    order.setId(cancelOrderData);
-                    return ExecuteResult.success(order);
-                }).addProduce("$payResultData", storage -> {
-
-                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
-
-                    System.out.println("Produce $payResultData");
-
-                    PayResultData resultData = new PayResultData();
-
-                    resultData.setStatus(1);
-
-                    return ExecuteResult.success(resultData);
-
-                }).addProduce("$payData", storage -> {
-
-                    System.out.println("Produce $payData");
-
-                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$cancelOrderData");
-
-                    PayData payData = new PayData();
-
-                    payData.setProductName(subscribeOrderData1.getProductName());
-
-                    payData.setAmount(subscribeOrderData1.getAmount());
-
-                    return ExecuteResult.success(payData);
-
-                })
-                .endTx()
-                .execute();
     }
 
     public static void cancelOrderDataByconfig() {
@@ -285,7 +177,7 @@ public class TestOrderBusiness {
                 .addChange("orderData", storage -> {
                     Order order = (Order)storage.get("orderData");
                     System.out.println("change:"+order.getStatus());
-                    return ExecuteResult.success();
+                    return ExecuteResult.success(order);
                 }).addProduce("orderData", storage -> {
 
                     System.out.println("Produce orderData");
