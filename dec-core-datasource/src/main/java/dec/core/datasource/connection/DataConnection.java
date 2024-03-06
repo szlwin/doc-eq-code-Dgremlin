@@ -32,4 +32,13 @@ public interface DataConnection<E,V> {
 	boolean isClosed() throws ConectionException;
 	
 	void setAutoCommit(boolean isAuto) throws ConectionException;
+
+	void setTransactionType(int type);
+
+	int getTransactionType();
+	void setFlag(int flag);
+
+	int getFlag();
+
+
 }

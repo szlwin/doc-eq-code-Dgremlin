@@ -33,6 +33,4 @@ public interface TranExecuter {
 	String getName();
 
 	String getConName();
-
-	long getFlag();
 }

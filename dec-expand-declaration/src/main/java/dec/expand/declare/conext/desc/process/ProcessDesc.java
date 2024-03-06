@@ -1,5 +1,10 @@
 package dec.expand.declare.conext.desc.process;
 
+import dec.expand.declare.collections.SimpleList;
+import dec.expand.declare.conext.desc.data.ValueDesc;
+
+import java.util.List;
+
 public class ProcessDesc {
 
     private String data;
@@ -11,13 +16,13 @@ public class ProcessDesc {
 
     private TransactionPolicy transaction;
 
+    private String dataSource;
+
     private String system;
 
     private boolean begin = false;
 
     private boolean end = false;
-
-    private boolean onlyEnd = false;
 
     private String ruleStart;
 
@@ -26,6 +31,10 @@ public class ProcessDesc {
     private String ruleEnd;
 
     private String ruleDataSource;
+
+    private String ruleReplace;
+
+    private List<PropertyDesc> ruleRefreshList;
 
     public String getData() {
         return data;
@@ -83,14 +92,6 @@ public class ProcessDesc {
         this.end = end;
     }
 
-	public boolean isOnlyEnd() {
-		return onlyEnd;
-	}
-
-	public void setOnlyEnd(boolean onlyEnd) {
-		this.onlyEnd = onlyEnd;
-	}
-
     public String getRuleStart() {
         return ruleStart;
     }
@@ -121,5 +122,49 @@ public class ProcessDesc {
 
     public void setRule(String rule) {
         this.rule = rule;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public String getRuleReplace() {
+        return ruleReplace;
+    }
+
+    public void setRuleReplace(String ruleReplace) {
+        this.ruleReplace = ruleReplace;
+    }
+
+    public List<PropertyDesc> getRuleRefreshList() {
+        return ruleRefreshList;
+    }
+
+    public void setRuleRefresh(String ruleRefresh) {
+        if (this.ruleRefreshList == null) {
+            this.ruleRefreshList = new SimpleList<>();
+        }
+        String[] propertyArray = ruleRefresh.split(",");
+        for (String property : propertyArray) {
+            PropertyDesc propertyDesc = new PropertyDesc();
+            String[] propertyStr = property.split(":");
+            if (propertyStr[0].indexOf(".") > 0) {
+                propertyDesc.setSourceProperty(propertyStr[0].split("\\."));
+            } else {
+                propertyDesc.setSourceProperty(new String[]{propertyStr[0]});
+            }
+
+            if (propertyStr[1].indexOf(".") > 0) {
+                propertyDesc.setTargetProperty(propertyStr[1].split("\\."));
+            } else {
+                propertyDesc.setTargetProperty(new String[]{propertyStr[1]});
+            }
+
+            this.ruleRefreshList.add(propertyDesc);
+        }
     }
 }

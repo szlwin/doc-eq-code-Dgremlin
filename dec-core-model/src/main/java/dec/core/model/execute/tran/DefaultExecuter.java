@@ -25,10 +25,10 @@ public class DefaultExecuter implements TranExecuter {
 
     protected int tranType;
 
-    protected long flag;
+    public DefaultExecuter() {
+    }
 
-    public DefaultExecuter(long paramFalg) {
-        this.flag = paramFalg;
+    public DefaultExecuter(long flag) {
     }
 
     public void load(ModelLoader modelLoader) {
@@ -37,17 +37,10 @@ public class DefaultExecuter implements TranExecuter {
     }
 
     public ResultInfo execute(String startRule, String endRule) throws ExecuteRuleException, ExecuteException {
-
-        log.info("Execute the tran: id = " + flag + ", view rule: " + modelLoader.getRuleName() + " start!");
-
         RuleContainer ruleExecute = new RuleContainer(modelLoader, con);
-
         ruleExecute.setStartRule(startRule);
         ruleExecute.setEndRule(endRule);
         ResultInfo resultInfo = ruleExecute.execute();
-
-        log.info("Execute the tran: id = " + flag + ", view rule: " + modelLoader.getRuleName() + " end!");
-
         return resultInfo;
     }
 
@@ -90,10 +83,6 @@ public class DefaultExecuter implements TranExecuter {
 
     public String getConName() {
         return modelLoader.getConName();
-    }
-
-    public long getFlag() {
-        return flag;
     }
 
 

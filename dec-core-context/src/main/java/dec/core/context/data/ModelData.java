@@ -55,7 +55,7 @@ public class ModelData implements Cloneable, Serializable {
     }
 
     public void setValue(String key, Object value) {
-        String keyArray[] = key.split("//.");
+        String keyArray[] = key.split("\\.");
 
         if (keyArray.length == 1) {
             if (checkContainKey(key))
@@ -66,7 +66,7 @@ public class ModelData implements Cloneable, Serializable {
     }
 
     public void addValue(String key, Object value) {
-        String keyArray[] = key.split("//.");
+        String keyArray[] = key.split("\\.");
 
         if (keyArray.length == 1) {
             if (checkContainKey(key)) {

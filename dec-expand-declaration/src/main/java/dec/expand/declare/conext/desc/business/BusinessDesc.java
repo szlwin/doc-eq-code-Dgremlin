@@ -15,7 +15,6 @@ public class BusinessDesc extends Desc {
 
     private List<ProcessDesc> processes;
 
-
     private Map<String, ViewRuleDesc> viewRuleDescMap;
 
     public void add(ProcessDesc process) {

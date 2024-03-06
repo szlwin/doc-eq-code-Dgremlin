@@ -73,24 +73,26 @@
 
 		<business name="subscribeOrderWithDom" ref-rule="save-User:data1,save-Order:data1">
 			<datas>
-				<data begin="true"/>
-					<data system="user" name="userData"  ref-rule="save-User" ref-rule-start="insertUser" ref-rule-end="insertUser"/>
+				<data begin="true" ref-rule-dataSource="data1"/>
+					<data system="user" name="userData" />
+					<data  ref-rule="save-User" ref-rule-range="insertUser"/>
 				<data end="true"/>
-				<data begin="true"/>
-					<data system="order" name="subscribeOrderData" ref-rule="save-Order" ref-rule-start="insertOrder" ref-rule-end="insertOrderDetail"/>
+				<data begin="true" ref-rule-dataSource="data1"/>
+					<data system="order" name="subscribeOrderData" ref-rule-replace="insertOrder" rel-refresh-data="this:this,orderDetails:orderDetailList"/>
+					<data ref-rule="save-Order"/>
 						<data begin="true" transactionPolicy="NEW"/>
+							<data ref-rule="save-Order" ref-rule-range="insertOrderDetail"/>
 							<data name="$payData"/>
-								<data begin="true" transactionPolicy="NESTED"/>
-									<data system="pay" name="payResultData"  ref-rule="save-Order" ref-rule-start="insertPayInfo" ref-rule-end="insertPayDetailList"/>
-									<data name="$payResultData" />
-								<data end="true"/>
-							<data name="$payData"/>
+							<data begin="true" transactionPolicy="NESTED" ref-rule-dataSource="data1"/>
+								<data system="pay" name="payResultData" rel-refresh-data="this:payInfo,payDetailList:payInfo.payDetailList"/>
+								<data  ref-rule="save-Order" ref-rule-range="insertPayInfo:insertPayDetailList"/>
+								<data name="$payResultData" />
+							<data end="true"/>
 						<data end="true"/>
 					<data system="order" name="orderPayResultData"/>
 				<data end="true"/>
 			</datas>
 		</business>
-
 
 		<business name="subscribeOrder"  >
 			<datas>
@@ -101,7 +103,6 @@
 								<data  begin="true" transactionPolicy="NESTED"/>
 									<data system="pay" name="payResultData" />
 									<data name="$payResultData"/>
-									<data name="$payData"/>
 								<data end="true"/>
 						<data end="true"/>
 					<data system="order" name="orderPayResultData"/>

@@ -22,7 +22,7 @@ public class DataConvert {
 	
 	public void convert(String name,ModelData viewBaseData,BaseData baseData){
 		Map<String,Object> viewMap = viewBaseData.getAllValues();
-		String proArray[] = name.split("//.");
+		String proArray[] = name.split("\\.");
 		
 		if(proArray.length == 1){
 			Object obj = viewMap.get(proArray[0]);

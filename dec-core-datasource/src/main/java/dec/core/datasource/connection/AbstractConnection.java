@@ -16,7 +16,10 @@ public abstract class AbstractConnection<E,V> implements DataConnection<E,V>{
 	protected ConvertContainer sqlConvertContainer;
 
 	protected ExecuteContainer sqlExecuteContainer;
-	
+
+	protected int transactionType;
+
+	protected int flag = 0;
 
 	public void setConvertContainer(ConvertContainer convertContainer) {
 		this.sqlConvertContainer =  convertContainer;
@@ -42,5 +45,23 @@ public abstract class AbstractConnection<E,V> implements DataConnection<E,V>{
 
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	public void setTransactionType(int type){
+		this.transactionType = type;
+	}
+
+	public int getTransactionType(){
+		return this.transactionType;
+	}
+
+	@Override
+	public int getFlag() {
+		return flag;
+	}
+
+	@Override
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 }

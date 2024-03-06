@@ -1,89 +1,89 @@
 package dec.core.collections.list;
 
+import dec.external.datasource.sql.collections.list.SimpleIterator;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import dec.external.datasource.sql.collections.list.SimpleIterator;
-
 public class SimpleList<E> implements List<E> {
 
-	private int size = 0;
-	
-	private transient E[] elementData;
-	
-	private transient int DEFAULT_SIZE = 2;
-	
-	private transient int ARRAY_SIZE = 0;
-	
-	private transient int AUTO_SIZE = 2;
-	
-	public SimpleList(){
-		elementData = (E[])new Object[DEFAULT_SIZE];
-		ARRAY_SIZE = DEFAULT_SIZE;
-	}
-	
-	public SimpleList(int size,int autoSize){
-		elementData = (E[])new Object[size];
-		AUTO_SIZE = autoSize;
-		DEFAULT_SIZE = size;
-	}
-	
-	public int size() {
-		return size;
-	}
+    private int size = 0;
 
-	public boolean isEmpty() {
-		return size == 0;
-	}
+    private transient E[] elementData;
 
-	public boolean contains(Object o) {
-		for(E element : elementData ){
-			if(element == o ){
-				return true;
-			}
-		}
-		return false;
-	}
+    private transient int DEFAULT_SIZE = 2;
 
-	public Iterator<E> iterator() {
-		E[] eData = (E[])new Object[size];
-		System.arraycopy(elementData, 0, eData, 0, size);
-		SimpleIterator<E> simpleIterator = new SimpleIterator<E>(eData);
-		return simpleIterator;
-	}
+    private transient int ARRAY_SIZE = 0;
 
-	public Object[] toArray() {
-		return elementData;
-	}
+    private transient int AUTO_SIZE = 2;
 
-	public <T> T[] toArray(T[] a) {
-		int count = size;
-		if(a.length < size){
-			count = a.length;
-		}
-		System.arraycopy(elementData, 0, a, 0, count);
-		return a;
-	}
+    public SimpleList() {
+        elementData = (E[]) new Object[DEFAULT_SIZE];
+        ARRAY_SIZE = DEFAULT_SIZE;
+    }
 
-	public boolean add(E e) {
-		if(ARRAY_SIZE == size){
-			copy();
-		}
-		elementData[size] = e;
-		size++;
-		return true;
-	}
+    public SimpleList(int size, int autoSize) {
+        elementData = (E[]) new Object[size];
+        AUTO_SIZE = autoSize;
+        DEFAULT_SIZE = size;
+    }
 
-	private void copy(){
-		E[] eData = (E[])new Object[AUTO_SIZE+elementData.length];
-		System.arraycopy(elementData, 0, eData, 0, elementData.length);
-		elementData = eData;
-		ARRAY_SIZE = elementData.length;
-	}
-	
-	public boolean remove(Object o) {
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean contains(Object o) {
+        for (E element : elementData) {
+            if (element == o) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Iterator<E> iterator() {
+        E[] eData = (E[]) new Object[size];
+        System.arraycopy(elementData, 0, eData, 0, size);
+        SimpleIterator<E> simpleIterator = new SimpleIterator<E>(eData);
+        return simpleIterator;
+    }
+
+    public Object[] toArray() {
+        return elementData;
+    }
+
+    public <T> T[] toArray(T[] a) {
+        int count = size;
+        if (a.length < size) {
+            count = a.length;
+        }
+        System.arraycopy(elementData, 0, a, 0, count);
+        return a;
+    }
+
+    public boolean add(E e) {
+        if (ARRAY_SIZE == size) {
+            copy();
+        }
+        elementData[size] = e;
+        size++;
+        return true;
+    }
+
+    private void copy() {
+        E[] eData = (E[]) new Object[AUTO_SIZE + elementData.length];
+        System.arraycopy(elementData, 0, eData, 0, elementData.length);
+        elementData = eData;
+        ARRAY_SIZE = elementData.length;
+    }
+
+    public boolean remove(Object o) {
 		/*if(size == 1){
 			Object element = elementData[0];
 			if(element == o){
@@ -101,75 +101,86 @@ public class SimpleList<E> implements List<E> {
 				}
 			}
 		}*/
-		throw new RuntimeException("Not supported!");
-		//return false;
-	}
-	
-	public boolean containsAll(Collection<?> c) {
-		throw new RuntimeException("Not supported!");
-	}
+        throw new RuntimeException("Not supported!");
+        //return false;
+    }
 
-	public boolean addAll(Collection<? extends E> c) {
-		
-		if(c.size() == 0){
-			return false;
-		}
-		
+    public boolean containsAll(Collection<?> c) {
+        throw new RuntimeException("Not supported!");
+    }
 
-		//System.out.println("addAll:"+c.size()+":"+size);
+    public boolean addAll(Collection<? extends E> c) {
+
+        if (c.size() == 0) {
+            return false;
+        }
+
+
+        //System.out.println("addAll:"+c.size()+":"+size);
         Object[] a = c.toArray();
         int numNew = c.size();
-        
-		E[] eData = (E[])new Object[numNew+size+AUTO_SIZE];
-		if(size !=0){
-			//elementData = Arrays.copyOf(elementData, numNew+size+AUTO_SIZE);
-			System.arraycopy(elementData, 0,eData , 0, size);
-		}
-		
-		
-		System.arraycopy(a, 0, eData, size, numNew);
-		
-		//elementData = Arrays.copyOf(elementData, a.length+elementData.length);
-		
-		elementData= eData;
-		size = size+numNew;
-		ARRAY_SIZE = elementData.length;
-		return false;
-	}
 
-	public boolean addAll(int index, Collection<? extends E> c) {
-		throw new RuntimeException("Not supported!");
-	}
+        E[] eData = (E[]) new Object[numNew + size + AUTO_SIZE];
+        if (size != 0) {
+            //elementData = Arrays.copyOf(elementData, numNew+size+AUTO_SIZE);
+            System.arraycopy(elementData, 0, eData, 0, size);
+        }
 
-	public boolean removeAll(Collection<?> c) {
-		throw new RuntimeException("Not supported!");
-	}
 
-	public boolean retainAll(Collection<?> c) {
-		throw new RuntimeException("Not supported!");
-	}
+        System.arraycopy(a, 0, eData, size, numNew);
 
-	public void clear() {
-		size = 0;
-		elementData = (E[])new Object[DEFAULT_SIZE];
-		ARRAY_SIZE = DEFAULT_SIZE;
-	}
+        //elementData = Arrays.copyOf(elementData, a.length+elementData.length);
 
-	public E get(int index) {
-		return elementData[index];
-	}
+        elementData = eData;
+        size = size + numNew;
+        ARRAY_SIZE = elementData.length;
+        return false;
+    }
 
-	public E set(int index, E element) {
-		elementData[index] = element;
-		return null;
-	}
+    public boolean addAll(int index, Collection<? extends E> c) {
+        throw new RuntimeException("Not supported!");
+    }
 
-	public void add(int index, E element) {
-		throw new RuntimeException("Not supported!");
-	}
+    public boolean removeAll(Collection<?> c) {
+        throw new RuntimeException("Not supported!");
+    }
 
-	public E remove(int index) {
-		//size--;
+    public boolean retainAll(Collection<?> c) {
+        throw new RuntimeException("Not supported!");
+    }
+
+    public void clear() {
+        size = 0;
+        elementData = (E[]) new Object[DEFAULT_SIZE];
+        ARRAY_SIZE = DEFAULT_SIZE;
+    }
+
+    public E get(int index) {
+        return elementData[index];
+    }
+
+    public E set(int index, E element) {
+        elementData[index] = element;
+        return null;
+    }
+
+    public E setLast(E element) {
+        elementData[size() - 1] = element;
+        return null;
+    }
+
+    public E getLast() {
+        if (size == 0)
+			return null;
+		return elementData[size() - 1];
+    }
+
+    public void add(int index, E element) {
+        throw new RuntimeException("Not supported!");
+    }
+
+    public E remove(int index) {
+        //size--;
 
 		/*if(size == 0){
 			clear();
@@ -185,31 +196,29 @@ public class SimpleList<E> implements List<E> {
 			ARRAY_SIZE = elementData.length;
 		}*/
 
-		
-		
-		throw new RuntimeException("Not supported!");
-	}
 
-	public int indexOf(Object o) {
-		throw new RuntimeException("Not supported!");
-	}
+        throw new RuntimeException("Not supported!");
+    }
 
-	public int lastIndexOf(Object o) {
-		throw new RuntimeException("Not supported!");
-	}
+    public int indexOf(Object o) {
+        throw new RuntimeException("Not supported!");
+    }
 
-	public ListIterator<E> listIterator() {
-		throw new RuntimeException("Not supported!");
-	}
+    public int lastIndexOf(Object o) {
+        throw new RuntimeException("Not supported!");
+    }
 
-	public ListIterator<E> listIterator(int index) {
-		throw new RuntimeException("Not supported!");
-	}
+    public ListIterator<E> listIterator() {
+        throw new RuntimeException("Not supported!");
+    }
 
-	public List<E> subList(int fromIndex, int toIndex) {
-		throw new RuntimeException("Not supported!");
-	}
+    public ListIterator<E> listIterator(int index) {
+        throw new RuntimeException("Not supported!");
+    }
 
+    public List<E> subList(int fromIndex, int toIndex) {
+        throw new RuntimeException("Not supported!");
+    }
 
 
 }
