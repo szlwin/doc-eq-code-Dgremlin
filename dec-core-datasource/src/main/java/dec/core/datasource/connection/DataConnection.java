@@ -33,6 +33,8 @@ public interface DataConnection<E,V> {
 	
 	void setAutoCommit(boolean isAuto) throws ConectionException;
 
+	boolean isAutoCommit();
+
 	void setTransactionType(int type);
 
 	int getTransactionType();

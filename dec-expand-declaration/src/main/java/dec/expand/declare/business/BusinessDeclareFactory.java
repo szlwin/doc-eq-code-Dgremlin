@@ -15,7 +15,8 @@ public class BusinessDeclareFactory {
             throw new ContextConfigException("The business:" + name + " is not exist!");
         }
 
-        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare(businessDesc.getAllViewRuleDesc() != null);
+        DefaultBusinessDeclare defaultBusinessDeclare = new DefaultBusinessDeclare(businessDesc.getAllViewRuleDesc() != null
+                && !businessDesc.getAllViewRuleDesc().isEmpty());
         defaultBusinessDeclare.build(name);
 
         List<ProcessDesc> processDescList = businessDesc.getProcesses();

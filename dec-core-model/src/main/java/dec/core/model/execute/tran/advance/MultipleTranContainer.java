@@ -11,10 +11,12 @@ import dec.core.model.execute.rule.exception.ExecuteRuleException;
 import dec.core.model.execute.tran.DefaultExecuter;
 import dec.core.model.execute.tran.TranExecuter;
 import dec.core.model.execute.tran.Transaction;
+import dec.external.datasource.sql.connection.SqlDBConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.sql.Savepoint;
 
 public class MultipleTranContainer {
 
@@ -25,6 +27,10 @@ public class MultipleTranContainer {
     private DataConnection currentDataConnection;
 
     private SimpleList<DataConnection> dataConnectionList;
+
+    private boolean isNested;
+
+    private int conFlag=1;
 
     public void load(ModelLoader modelLoader) {
         this.modelLoader = modelLoader;
@@ -43,7 +49,7 @@ public class MultipleTranContainer {
         }
     }
 
-    public ResultInfo execute(String startRule, String endRule) throws ExecuteRuleException, ExecuteException {
+    public ResultInfo execute(String startRule, String endRule) throws ExecuteRuleException, ExecuteException, SQLException {
 
         log.info("Execute the tran, view rule: " + modelLoader.getRuleName() + " start!");
 
@@ -52,6 +58,10 @@ public class MultipleTranContainer {
         tranExecuter.load(modelLoader);
         tranExecuter.setTranType(currentDataConnection.getTransactionType());
         tranExecuter.setConnection(this.currentDataConnection);
+        if(isNested){
+            this.setSavePoint(tranExecuter);
+            isNested = false;
+        }
         ResultInfo resultInfo = null;
         try {
             resultInfo = tranExecuter.execute(startRule, endRule);
@@ -83,14 +93,6 @@ public class MultipleTranContainer {
         } catch (ConectionException e) {
             log.error("Commit error", e);
             throw e;
-        } finally {
-            try {
-                if (!currentDataConnection.isClosed()) {
-                    currentDataConnection.close();
-                }
-            } catch (ConectionException e) {
-                log.error("Close error", e);
-            }
         }
     }
 
@@ -98,9 +100,7 @@ public class MultipleTranContainer {
         if (dataConnectionList != null) {
             for (DataConnection dataConnection : dataConnectionList) {
                 try {
-                    if (!dataConnection.isClosed()) {
-                        dataConnection.rollback();
-                    }
+                    dataConnection.rollback();
                 } catch (Exception ex) {
                     log.error("Rollback error", ex);
                 }finally {
@@ -114,16 +114,21 @@ public class MultipleTranContainer {
         }
     }
 
-    private DataConnection getDefaultConnection(String conName) throws ConectionException, SQLException {
-        DataConnection con = DataConnectionFactory.getInstance().getConnection(conName);
+    private DataConnection getRequiredConnection(String conName) throws ConectionException, SQLException {
+        DataConnection con = getDefaultConnection(conName);
         con.setAutoCommit(false);
         con.setTransactionType(Transaction.PROPAGATION_REQUIRED);
         return con;
     }
 
+    private DataConnection getDefaultConnection(String conName) throws ConectionException, SQLException {
+        DataConnection con = DataConnectionFactory.getInstance().getConnection(conName);
+        return con;
+    }
+
     private DataConnection getNewConnection(String conName) throws ConectionException, SQLException {
         DataConnection con = getDefaultConnection(conName);
-        //con.setAutoCommit(false);
+        con.setAutoCommit(false);
         con.setTransactionType(Transaction.PROPAGATION_REQUIRES_NEW);
         return con;
     }
@@ -144,7 +149,7 @@ public class MultipleTranContainer {
 
     private DataConnection getNestedConnection(String conName) throws ConectionException, SQLException {
         DataConnection con = getDefaultConnection(conName);
-        //con.setAutoCommit(false);
+        con.setAutoCommit(false);
         con.setTransactionType(Transaction.PROPAGATION_REQUIRED_NESTED);
         return con;
     }
@@ -152,7 +157,7 @@ public class MultipleTranContainer {
     private DataConnection getConnection(String conName, int type) throws ConectionException, SQLException {
         switch (type) {
             case Transaction.PROPAGATION_REQUIRED:
-                return getDefaultConnection(conName);
+                return getRequiredConnection(conName);
             case Transaction.PROPAGATION_REQUIRES_NEW:
                 return getNewConnection(conName);
             case Transaction.PROPAGATION_NOT_SUPPORTED:
@@ -178,14 +183,22 @@ public class MultipleTranContainer {
                     case Transaction.PROPAGATION_REQUIRED:
                     case Transaction.PROPAGATION_REQUIRES_NEW:
                     case Transaction.PROPAGATION_REQUIRED_NESTED:
-                        if (type == Transaction.PROPAGATION_REQUIRED || type == Transaction.PROPAGATION_SUPPORTS) {
+                        if (type == Transaction.PROPAGATION_REQUIRED
+                                || type == Transaction.PROPAGATION_SUPPORTS
+                                || type == Transaction.PROPAGATION_REQUIRED_NESTED) {
                             preDataConnection = dataConnection;
                         }
+                        if (type == Transaction.PROPAGATION_REQUIRED_NESTED)
+                            isNested = true;
                         break;
                     case Transaction.PROPAGATION_NOT_SUPPORTED:
                     case Transaction.PROPAGATION_SUPPORTS:
-                        if (type == Transaction.PROPAGATION_NOT_SUPPORTED || type == Transaction.PROPAGATION_NOT_SUPPORTED) {
+                        if (type == Transaction.PROPAGATION_SUPPORTS) {
                             preDataConnection = dataConnection;
+                        } else if (type == Transaction.PROPAGATION_NOT_SUPPORTED) {
+                            if(!dataConnection.isAutoCommit()){
+                                preDataConnection = dataConnection;
+                            }
                         }
                         break;
                 }
@@ -199,5 +212,15 @@ public class MultipleTranContainer {
             }
         }
         return getConnection(conName, type);
+    }
+
+    private void setSavePoint(TranExecuter tranExecuter) throws SQLException{
+        SqlDBConnection con = (SqlDBConnection) tranExecuter.getConnection();
+        String flag = String.valueOf(conFlag);
+
+        Savepoint savepoint = con.getSavepoint(flag);
+        tranExecuter.setSavepoint(savepoint);
+        tranExecuter.setConnection(con);
+        conFlag++;
     }
 }

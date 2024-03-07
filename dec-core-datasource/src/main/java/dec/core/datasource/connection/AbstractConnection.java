@@ -21,6 +21,8 @@ public abstract class AbstractConnection<E,V> implements DataConnection<E,V>{
 
 	protected int flag = 0;
 
+	protected boolean isAutoCommit;
+
 	public void setConvertContainer(ConvertContainer convertContainer) {
 		this.sqlConvertContainer =  convertContainer;
 		

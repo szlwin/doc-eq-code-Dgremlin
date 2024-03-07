@@ -38,7 +38,7 @@ public class ModelData implements Cloneable, Serializable {
         dataMap.put(key, value);
     }
 
-    protected void setOriginData(Object value) {
+    public void setOriginData(Object value) {
         this.originData = value;
     }
 
