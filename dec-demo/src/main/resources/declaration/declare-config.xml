@@ -75,7 +75,7 @@
 			<datas>
 				<data begin="true" ref-rule-dataSource="data1"/>
 					<data system="user" name="userData" />
-					<data  ref-rule="save-User" ref-rule-range="insertUser"/>
+					<data  ref-rule="save-User" ref-rule-range="insertUser" rel-refresh-data=""/>
 				<data end="true"/>
 				<data begin="true" ref-rule-dataSource="data1"/>
 					<data system="order" name="subscribeOrderData" ref-rule-replace="insertOrder" ref-rule="save-Order" rel-refresh-data="this:this,orderDetails:orderDetailList"/>

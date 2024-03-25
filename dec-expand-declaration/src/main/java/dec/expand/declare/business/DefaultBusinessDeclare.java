@@ -461,11 +461,18 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         Object object = this.dataStorage.get(process.getData());
         for (PropertyDesc propertyDesc : process.getRuleRefreshList()) {
             try {
+
+
                 Object sourceObject = null;
                 if ("this".equals(propertyDesc.getSourceProperty()[0])) {
                     sourceObject = object;
                 } else {
                     sourceObject = DataUtils.getValue(object, propertyDesc.getSourceProperty(), 0);
+                }
+
+                if (isBaseData(sourceObject)) {
+
+                    return;
                 }
 
                 Object targetObject = this.modelLoaderMap.get(process.getRule());
@@ -547,11 +554,20 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     private Set<String> getSourceKey(Object sourceObject) {
         if (sourceObject instanceof Map) {
             return ((Map) sourceObject).keySet();
-        }else if(sourceObject instanceof ModelData){
+        } else if (sourceObject instanceof ModelData) {
             return ((ModelData) sourceObject).getValues().keySet();
         }
         return null;
     }
+
+    private boolean isBaseData(Object value) {
+        if (value instanceof String || value instanceof Number || value instanceof Boolean) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     private boolean validateData(Object value) {
 
