@@ -1,7 +1,6 @@
 package dec.expand.declare.conext.desc.process;
 
 import dec.expand.declare.collections.SimpleList;
-import dec.expand.declare.conext.desc.data.ValueDesc;
 
 import java.util.List;
 
@@ -145,6 +144,9 @@ public class ProcessDesc {
     }
 
     public void setRuleRefresh(String ruleRefresh) {
+        if (ruleRefresh == null) {
+            return;
+        }
         if (this.ruleRefreshList == null) {
             this.ruleRefreshList = new SimpleList<>();
         }

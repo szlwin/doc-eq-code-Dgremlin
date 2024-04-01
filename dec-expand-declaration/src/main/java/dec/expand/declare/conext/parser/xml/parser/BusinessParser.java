@@ -31,10 +31,12 @@ public class BusinessParser {
         businessDesc.setComment(element.attributeValue("desc"));
 
         String ruleInfo = element.attributeValue("ref-rule");
+        boolean isRefDom = false;
         if (ruleInfo != null && !"".equals(ruleInfo)) {
-            parserRule(businessDesc, ruleInfo);
+             parserRule(businessDesc, ruleInfo);
+             isRefDom = true;
         }
-        parserData(businessDesc, element.element("datas"));
+        parserData(businessDesc, element.element("datas"), isRefDom);
         log.info("End load business:" + name);
         return businessDesc;
     }
@@ -59,7 +61,7 @@ public class BusinessParser {
         }
     }
 
-    private void parserData(BusinessDesc businessDesc, Element element) throws XMLParseException {
+    private void parserData(BusinessDesc businessDesc, Element element, boolean isRefDom) throws XMLParseException {
         if (element == null) {
             return;
         }
@@ -87,7 +89,7 @@ public class BusinessParser {
                     }
                 }
                 String dataSource = dataElement.attributeValue("ref-rule-dataSource");
-                if (dataSource == null || "".equals(dataSource)) {
+                if (isRefDom && (dataSource == null || "".equals(dataSource))) {
                     throw new XMLParseException("The property 'dataSource' for data is error, it can't be empty!");
                 }
                 processDesc.setDataSource(dataSource);

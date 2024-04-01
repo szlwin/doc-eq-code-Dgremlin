@@ -86,6 +86,7 @@ public class TestOrderBusiness {
                     Long cancelOrderData = (Long) storage.get("$cancelOrderData");
                     Order order = new Order();
                     order.setId(cancelOrderData);
+                    order.setStatus(1);
                     return ExecuteResult.success(order);
                 }).addProduce("$payResultData", storage -> {
 
@@ -176,6 +177,7 @@ public class TestOrderBusiness {
                 .build("order")
                 .addChange("orderData", storage -> {
                     Order order = (Order)storage.get("orderData");
+                    System.out.println("old:"+storage.getStatus("status"));
                     System.out.println("change:"+order.getStatus());
                     return ExecuteResult.success(order);
                 }).addProduce("orderData", storage -> {

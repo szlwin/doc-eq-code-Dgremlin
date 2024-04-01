@@ -117,7 +117,7 @@ public class DataUtils {
         }
     }
 
-    private static Class<?> getInitClass(List list){
+    private static Class<?> getInitClass(List list) {
 
         Class<?> genericClass = null;
 
@@ -130,6 +130,7 @@ public class DataUtils {
         }
         return genericClass;
     }
+
     private static void copyValueByList(List sourceValues, List targetValues) {
         if (sourceValues.isEmpty()) {
             return;
@@ -347,6 +348,56 @@ public class DataUtils {
                                 tempValueDesc.setProperty(Arrays.copyOfRange(valueDesc.getProperty(), from, valueDesc.getProperty().length));
                                 tempValueDesc.setValue(valueDesc.getValue());
                                 setValue(item, Arrays.asList(tempValueDesc));
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    public static void setValue(Object obj, List<ValueDesc> valueDescList, int start, Map<String, Object> statusMap) throws NoSuchFieldException, IllegalAccessException {
+        if (obj instanceof Collections) {
+            for (ValueDesc valueDesc : valueDescList) {
+                statusMap.put(String.join(".", valueDesc.getProperty()), new ArrayList<>());
+            }
+
+            ((Collection) obj).stream().forEach(item -> {
+                try {
+                    setValue(item, valueDescList, 0, statusMap);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            return;
+        }
+        Object lastObj = obj;
+        Field field = null;
+        for (ValueDesc valueDesc : valueDescList) {
+            String key = String.join(".", valueDesc.getProperty());
+            Object list = statusMap.get(key);
+            for (int i = start; i < valueDesc.getProperty().length; i++) {
+                field = lastObj.getClass().getDeclaredField(valueDesc.getProperty()[i]);
+                field.setAccessible(true);
+                if (i == valueDesc.getProperty().length - 1) {
+                    if (list != null && list instanceof Collection) {
+                        ((Collection) list).add(field.get(lastObj));
+                    } else {
+                        statusMap.put(key, field.get(lastObj));
+                    }
+                    field.set(lastObj, valueDesc.getValue());
+                } else {
+                    lastObj = field.get(lastObj);
+                    if (lastObj instanceof Collections) {
+                        int from = i + 1;
+                        ((Collection) lastObj).stream().forEach(item -> {
+                            try {
+                                //ValueDesc tempValueDesc = new ValueDesc();
+                                //tempValueDesc.setProperty(Arrays.copyOfRange(valueDesc.getProperty(), from, valueDesc.getProperty().length));
+                                //tempValueDesc.setValue(valueDesc.getValue());
+                                setValue(item, Arrays.asList(valueDesc), from, statusMap);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }

@@ -582,22 +582,26 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             multipleTranContainer.load(this.modelLoaderMap.get(process.getRule()));
             multipleTranContainer.execute(process.getRuleStart(), process.getRuleEnd());
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new ExecuteException(ex);
         }
     }
 
     private void change(SystemDesc systemDesc, DataDesc dataDesc) throws Exception {
         if (dataDesc.getChangeDescList() != null) {
+            Map<String, Object> statusMap = new HashMap<>();
+            dataStorage.setStatusMap(statusMap);
             for (ChangeDesc changeDesc : dataDesc.getChangeDescList()) {
                 Object dataObject = dataStorage.get(changeDesc.getName());
-                DataUtils.setValue(dataObject, changeDesc.getValueDescList());
+                DataUtils.setValue(dataObject, changeDesc.getValueDescList(), 0, statusMap);
                 this.result = SystemContext.get()
                         .get(systemDesc.getName()).change(changeDesc.getName(), this.dataStorage);
                 if (!result.isSuccess()) {
                     log.error(String.format("Change status error,depend:[%]", changeDesc.getName()));
-                    break;
+                    throw new ExecuteException(result.getError().getMessage());
                 }
+                this.refreshStorage(systemDesc.getData(changeDesc.getName()));
             }
+            dataStorage.setStatusMap(null);
         }
     }
 
@@ -763,12 +767,9 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
 
     private void refreshStorage(DataDesc dataDesc) {
-
         if (dataDesc != null && dataDesc.getType() == DataTypeEnum.PERSISTENT && !dataDesc.isCachePrior()) {
-
             this.dataStorage.remove(dataDesc.getName());
         }
-
     }
 
     /**

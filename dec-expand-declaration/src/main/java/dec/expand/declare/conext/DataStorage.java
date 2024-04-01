@@ -9,17 +9,19 @@ public class DataStorage {
 
     private Map<String, Object> paramMap = new HashMap<>();
 
+    private Map<String, Object> statusMap = new HashMap<>();
+
     public void remove(String key) {
         dataMap.remove(key);
     }
 
-	public void addParam(String key, Object data) {
-		paramMap.put(key, data);
-	}
+    public void addParam(String key, Object data) {
+        paramMap.put(key, data);
+    }
 
-	public Object getParam(String key) {
-		return paramMap.get(key);
-	}
+    public Object getParam(String key) {
+        return paramMap.get(key);
+    }
 
     public void add(String key, Object data) {
         dataMap.put(key, data);
@@ -33,13 +35,18 @@ public class DataStorage {
         return dataMap;
     }
 
-    public void setDataMap(Map<String, Object> dataMap) {
-        this.dataMap = dataMap;
-    }
-
-
     public boolean containsData(String data) {
         return dataMap.containsKey(data);
     }
 
+    public Object getStatus(String key) {
+        if (statusMap == null) {
+            return null;
+        }
+        return statusMap.get(key);
+    }
+
+    public void setStatusMap(Map<String, Object> statusMap) {
+        this.statusMap = statusMap;
+    }
 }
