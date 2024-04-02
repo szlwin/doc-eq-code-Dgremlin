@@ -8,7 +8,6 @@ public class ProcessDesc {
 
     private String data;
 
-
     private String transactionGroup;
 
     private RollBackPolicy rollBackPolicy;
@@ -34,6 +33,8 @@ public class ProcessDesc {
     private String ruleReplace;
 
     private List<PropertyDesc> ruleRefreshList;
+
+    private boolean isSystemToDom;
 
     public String getData() {
         return data;
@@ -168,5 +169,13 @@ public class ProcessDesc {
 
             this.ruleRefreshList.add(propertyDesc);
         }
+    }
+
+    public boolean isSystemToDom() {
+        return isSystemToDom;
+    }
+
+    public void setSystemToDom(boolean systemToDom) {
+        isSystemToDom = systemToDom;
     }
 }
