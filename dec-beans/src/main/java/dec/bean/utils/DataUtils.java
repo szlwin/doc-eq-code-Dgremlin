@@ -1,63 +1,39 @@
-package dec.expand.declare.conext.utils;
+package dec.bean.utils;
 
 import artoria.reflect.ReflectUtils;
-import dec.core.context.data.ModelData;
-import dec.expand.declare.business.exception.ExecuteException;
-import dec.expand.declare.conext.desc.data.ValueDesc;
-import smarter.common.express.check.PatternCheck;
+import dec.bean.exception.ConvertException;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.implementation.FieldAccessor;
+import net.bytebuddy.matcher.ElementMatchers;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class DataUtils {
 
-    public static boolean check(Object obj, String express) {
-
-        PatternCheck pattenCheck = new PatternCheck();
-        pattenCheck.setCheckValue(obj);
-        pattenCheck.setPattern(express);
-        try {
-            return pattenCheck.check();
-        } catch (Exception ex) {
-            throw new ExecuteException(ex);
-        }
-
-    }
-
-    public static void copy(Object source, String[] sourcePropertyArray, Object target, String[] targetPropertyArray) {
+    public static void copy(Object source, String[] sourcePropertyArray, Object target, String[] targetPropertyArray, String[] argArray) {
         copyFormSource(source, sourcePropertyArray, 0, target, targetPropertyArray, 0);
     }
 
-    private static void copyToTarget(Object source, String sourceProperty, Object target, String[] targetPropertyArray, int targetIndex) {
+    public static void copyToTarget(Object source, String sourceProperty, Object target, String[] targetPropertyArray, int targetIndex) {
         Object targetObject = target;
         for (int i = targetIndex; i < targetPropertyArray.length - 1; i++) {
             Object distObject = getValue(targetObject, targetPropertyArray[i]);
-            if (distObject == null) {
-                if (i == 0) {
-                    distObject = init(target, targetPropertyArray[0]);
-                    setValue(target, targetPropertyArray[0], distObject);
-                } else {
-                    distObject = init(targetObject, targetPropertyArray[i]);
-                    setValue(targetObject, targetPropertyArray[i], distObject);
-                }
+            if (distObject == null && i - 1 >= 0) {
+                Object preTargetObject = getValue(targetObject, targetPropertyArray[i - 1]);
+                distObject = init(preTargetObject, targetPropertyArray[i - 1]);
             }
             targetObject = distObject;
             if (targetObject instanceof Collection) {
                 if (targetIndex == targetPropertyArray.length - 2) {
                     break;
                 } else {
-                    List list = ((List) targetObject);
-                    if (list.isEmpty()) {
-                        getInitClass(list);
+                    Iterator it = ((Collection) targetObject).iterator();
+                    while (it.hasNext()) {
+                        copyToTarget(source, sourceProperty, it.next(), targetPropertyArray, targetIndex);
                     }
-                    for (Object obj : list) {
-                        copyToTarget(source, sourceProperty, obj, targetPropertyArray, i + 1);
-                    }
-
                 }
             }
         }
@@ -67,15 +43,15 @@ public class DataUtils {
     private static Object init(Object obj, String property) {
         try {
             Field field = obj.getClass().getDeclaredField(property);
-            if (Map.class.isAssignableFrom(field.getType())) {
+            if (Map.class.isAssignableFrom(field.getClass())) {
                 return new HashMap<>();
-            } else if (List.class.isAssignableFrom(field.getType())) {
+            } else if (List.class.isAssignableFrom(field.getClass())) {
                 return new ArrayList<>();
             } else {
-                return field.getDeclaringClass().newInstance();
+                return field.getClass().newInstance();
             }
         } catch (Exception ex) {
-            throw new ExecuteException(ex);
+            throw new ConvertException(ex);
         }
     }
 
@@ -105,30 +81,11 @@ public class DataUtils {
             setValue(target, targetProperty, targetValue);
         } else {
             try {
-                Object targetValue = getValue(target, targetProperty);
-                if (targetValue == null) {
-                    targetValue = init(target, targetProperty);
-                }
-                copyObjectData(sourceValue, targetValue);
-                setValue(target, targetProperty, targetValue);
+                copyObjectData(sourceValue, getValue(target, targetProperty));
             } catch (Exception ex) {
-                throw new ExecuteException(ex);
+                throw new ConvertException(ex);
             }
         }
-    }
-
-    private static Class<?> getInitClass(List list) {
-
-        Class<?> genericClass = null;
-
-        Class<?> listClass = list.getClass(); // 获取 List 对象的 Class 对象
-        Type listType = listClass.getGenericSuperclass(); // 获取 List 对象的泛型类型
-        if (listType instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) listType;
-            Type[] typeArgs = parameterizedType.getActualTypeArguments(); // 获取泛型类型的参数列表
-            genericClass = (Class<?>) typeArgs[0]; // 获取第一个泛型类型的具体类
-        }
-        return genericClass;
     }
 
     private static void copyValueByList(List sourceValues, List targetValues) {
@@ -159,18 +116,28 @@ public class DataUtils {
                 try {
                     targetObject = genericClass.newInstance();
                 } catch (Exception ex) {
-                    throw new ExecuteException(ex);
+                    throw new ConvertException(ex);
                 }
             }
             try {
                 copyObjectData(sourceObject, targetObject);
             } catch (Exception ex) {
-                throw new ExecuteException(ex);
+                throw new ConvertException(ex);
             }
         }
     }
 
-    public static void copyObjectData(Object sourceObject, Object targetObject) throws IllegalAccessException, InvocationTargetException {
+    public static void copyObjectData(Object sourceObject, Object targetObject) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+
+        DynamicType.Builder builder =  new ByteBuddy().subclass(sourceObject.getClass());
+        /*Method fieldGetterMethod = new ByteBuddy()
+                .subclass(sourceObject.getClass()).g
+                builder.method(ElementMatchers.named("get" + fieldName))
+                .intercept(FieldAccessor.ofField(fieldName).defineAsProperty())
+                .make()
+                .load(sourceObject.getClass().getClassLoader())
+                .getLoaded()
+                .getMethod("get" + fieldName);*/
 
         PropertyDescriptor[] fromDescriptors = null;
         PropertyDescriptor[] toDescriptors = null;
@@ -178,7 +145,7 @@ public class DataUtils {
             fromDescriptors = ReflectUtils.getPropertyDescriptors(sourceObject.getClass());
 
         }
-        if (!(targetObject instanceof Map) && !(targetObject instanceof ModelData)) {
+        if (!(targetObject instanceof Map)) {
             toDescriptors = ReflectUtils.getPropertyDescriptors(targetObject.getClass());
 
         }
@@ -195,8 +162,19 @@ public class DataUtils {
             for (PropertyDescriptor propertyDescriptor : toDescriptors) {
                 if ((propertyMap != null && propertyMap.containsKey(propertyDescriptor.getName()))
                         || (keys != null && keys.contains(propertyDescriptor.getName()))) {
+
+                    /*Object value = builder.method(ElementMatchers.named(propertyDescriptor.getReadMethod().getName()))
+                            .intercept(FieldAccessor.ofField(propertyDescriptor.getName()))
+                            //.intercept(FieldGetter.)
+                            .make()
+                            .load(sourceObject.getClass().getClassLoader())
+                            .getLoaded()
+                            .getMethod(propertyDescriptor.getReadMethod().getName()).invoke(sourceObject);*/
+                    ;
                     Object value = getValue(sourceObject, propertyDescriptor.getName(), keys, propertyMap);
+
                     if (validateData(value)) {
+                        //setValue(targetObject, propertyDescriptor.getName(), value);
                         propertyDescriptor.getWriteMethod().invoke(targetObject, value);
                     }
                 }
@@ -217,7 +195,7 @@ public class DataUtils {
         }
     }
 
-    private static void copyListValue(List sourceList, String sourceProperty, List targetList, String targetProperty) {
+    public static void copyListValue(List sourceList, String sourceProperty, List targetList, String targetProperty) {
         if (sourceList.isEmpty()) {
             return;
         }
@@ -246,7 +224,7 @@ public class DataUtils {
                     try {
                         targetObj = genericClass.newInstance();
                     } catch (Exception ex) {
-                        throw new ExecuteException(ex);
+                        throw new ConvertException(ex);
                     }
                 }
                 setValue(targetObj, targetProperty, getValue(sourceObj, sourceProperty));
@@ -254,9 +232,9 @@ public class DataUtils {
         }
     }
 
-    private static void copyFormSource(Object source, String[] sourcePropertyArray, int sourceIndex, Object target, String[] targetPropertyArray, int targetIndex) {
+    public static void copyFormSource(Object source, String[] sourcePropertyArray, int sourceIndex, Object target, String[] targetPropertyArray, int targetIndex) {
         Object sourceObject = source;
-        for (int i = sourceIndex; i < sourcePropertyArray.length - 1 && sourcePropertyArray.length > 1; i++) {
+        for (int i = sourceIndex; i < sourcePropertyArray.length - 1; i++) {
             sourceObject = getValue(sourceObject, sourcePropertyArray[i]);
             if (sourceObject == null) {
                 return;
@@ -270,7 +248,7 @@ public class DataUtils {
                 } else {
                     Iterator it = ((Collection) sourceObject).iterator();
                     while (it.hasNext()) {
-                        copyFormSource(it.next(), sourcePropertyArray, i + 1, target, targetPropertyArray, targetIndex);
+                        copyFormSource(it.next(), sourcePropertyArray, sourceIndex, target, targetPropertyArray, targetIndex);
                     }
                 }
             }
@@ -291,7 +269,7 @@ public class DataUtils {
                 }
 
             } catch (Exception e) {
-                throw new ExecuteException(e);
+                throw new ConvertException(e);
             }
         }
         return objData;
@@ -301,15 +279,13 @@ public class DataUtils {
         try {
             if (obj instanceof Map) {
                 ((Map) obj).put(name, value);
-            } else if (obj instanceof ModelData) {
-                ((ModelData) obj).setValue(name, value);
             } else {
                 Field field = obj.getClass().getDeclaredField(name);
                 field.setAccessible(true);
                 field.set(obj, value);
             }
         } catch (Exception ex) {
-            throw new ExecuteException(ex);
+            throw new ConvertException(ex);
         }
     }
 
@@ -318,94 +294,6 @@ public class DataUtils {
             return true;
         }
         return false;
-    }
-
-    public static void setValue(Object obj, List<ValueDesc> valueDescList) throws NoSuchFieldException, IllegalAccessException {
-        if (obj instanceof Collections) {
-            ((Collection) obj).stream().forEach(item -> {
-                try {
-                    setValue(item, valueDescList);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-        Object lastObj = obj;
-        Field field = null;
-        for (ValueDesc valueDesc : valueDescList) {
-            for (int i = 0; i < valueDesc.getProperty().length; i++) {
-                field = lastObj.getClass().getDeclaredField(valueDesc.getProperty()[i]);
-                field.setAccessible(true);
-                if (i == valueDesc.getProperty().length - 1) {
-                    field.set(lastObj, valueDesc.getValue());
-                } else {
-                    lastObj = field.get(lastObj);
-                    if (lastObj instanceof Collections) {
-                        int from = i + 1;
-                        ((Collection) lastObj).stream().forEach(item -> {
-                            try {
-                                ValueDesc tempValueDesc = new ValueDesc();
-                                tempValueDesc.setProperty(Arrays.copyOfRange(valueDesc.getProperty(), from, valueDesc.getProperty().length));
-                                tempValueDesc.setValue(valueDesc.getValue());
-                                setValue(item, Arrays.asList(tempValueDesc));
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    }
-
-    public static void setValue(Object obj, List<ValueDesc> valueDescList, int start, Map<String, Object> statusMap) throws NoSuchFieldException, IllegalAccessException {
-        if (obj instanceof Collections) {
-            for (ValueDesc valueDesc : valueDescList) {
-                statusMap.put(String.join(".", valueDesc.getProperty()), new ArrayList<>());
-            }
-
-            ((Collection) obj).stream().forEach(item -> {
-                try {
-                    setValue(item, valueDescList, 0, statusMap);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            return;
-        }
-        Object lastObj = obj;
-        Field field = null;
-        for (ValueDesc valueDesc : valueDescList) {
-            String key = String.join(".", valueDesc.getProperty());
-            Object list = statusMap.get(key);
-            for (int i = start; i < valueDesc.getProperty().length; i++) {
-                field = lastObj.getClass().getDeclaredField(valueDesc.getProperty()[i]);
-                field.setAccessible(true);
-                if (i == valueDesc.getProperty().length - 1) {
-                    if (list != null && list instanceof Collection) {
-                        ((Collection) list).add(field.get(lastObj));
-                    } else {
-                        statusMap.put(key, field.get(lastObj));
-                    }
-                    field.set(lastObj, valueDesc.getValue());
-                } else {
-                    lastObj = field.get(lastObj);
-                    if (lastObj instanceof Collections) {
-                        int from = i + 1;
-                        ((Collection) lastObj).stream().forEach(item -> {
-                            try {
-                                //ValueDesc tempValueDesc = new ValueDesc();
-                                //tempValueDesc.setProperty(Arrays.copyOfRange(valueDesc.getProperty(), from, valueDesc.getProperty().length));
-                                //tempValueDesc.setValue(valueDesc.getValue());
-                                setValue(item, Arrays.asList(valueDesc), from, statusMap);
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-                    }
-                }
-            }
-        }
     }
 
     public static Object getValue(Object obj, String property) {
@@ -420,7 +308,7 @@ public class DataUtils {
             }
 
         } catch (Exception e) {
-            throw new ExecuteException(e);
+            throw new ConvertException(e);
         }
         return objData;
     }
@@ -443,8 +331,6 @@ public class DataUtils {
     private static Set<String> getSourceKey(Object sourceObject) {
         if (sourceObject instanceof Map) {
             return ((Map) sourceObject).keySet();
-        } else if (sourceObject instanceof ModelData) {
-            return ((ModelData) sourceObject).getValues().keySet();
         }
         return null;
     }

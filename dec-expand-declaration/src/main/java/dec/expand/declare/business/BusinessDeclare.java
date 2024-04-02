@@ -1,5 +1,6 @@
 package dec.expand.declare.business;
 
+import dec.core.context.config.exception.DataNotDefineException;
 import dec.expand.declare.conext.DataStorage;
 import dec.expand.declare.conext.desc.process.TransactionPolicy;
 import dec.expand.declare.datasorce.DataSourceManager;
@@ -65,5 +66,6 @@ public interface BusinessDeclare {
 
     BusinessDeclare transactionManager(DataSourceManager dataSourceManager);
 
+    void setRuleModel(String name,Object obj) throws DataNotDefineException;
 
 }

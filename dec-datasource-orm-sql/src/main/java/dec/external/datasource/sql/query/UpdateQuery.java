@@ -38,7 +38,7 @@ public class UpdateQuery extends AbstractQuery<UpdateInfo> {
             String paramString = SQLUtil.convert(preStatement, paramCollection, log.isDebugEnabled());
 
             if (log.isDebugEnabled()) {
-                log.info("Execute the SQL: {}", sqlString);
+                log.debug("Execute the SQL: {}", sqlString);
 
                 if (paramString != null) {
                     log.debug("SQL Paramer==> {}", paramString);

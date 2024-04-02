@@ -1,13 +1,22 @@
 package dec.expand.declare.business;
 
+import artoria.reflect.ReflectUtils;
+import com.alibaba.fastjson.JSONObject;
+import dec.core.context.config.model.rule.RuleViewInfo;
+import dec.core.context.config.utils.ConfigContextUtil;
+import dec.core.context.data.ModelData;
+import dec.core.model.container.ModelLoader;
+import dec.core.model.execute.tran.Transaction;
+import dec.core.model.execute.tran.advance.MultipleTranContainer;
+import dec.core.model.utils.DataUtil;
 import dec.expand.declare.business.exception.ExecuteException;
 import dec.expand.declare.conext.DataStorage;
 import dec.expand.declare.conext.DescContext;
 import dec.expand.declare.conext.desc.business.BusinessDesc;
 import dec.expand.declare.conext.desc.data.*;
 import dec.expand.declare.conext.desc.process.ProcessDesc;
+import dec.expand.declare.conext.desc.process.PropertyDesc;
 import dec.expand.declare.conext.desc.process.RollBackPolicy;
-import dec.expand.declare.conext.desc.process.TransactionDesc;
 import dec.expand.declare.conext.desc.process.TransactionPolicy;
 import dec.expand.declare.conext.desc.system.SystemDesc;
 import dec.expand.declare.conext.utils.DataUtils;
@@ -23,6 +32,8 @@ import dec.expand.declare.system.SystemContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class DefaultBusinessDeclare implements BusinessDeclare {
@@ -55,19 +66,25 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private DataSourceManager dataSourceManager;
 
+    private Map<String, ModelLoader> modelLoaderMap;
+
+    private MultipleTranContainer multipleTranContainer;
     //private TransactionDesc currentTransactionDesc;
 
     //private List<TransactionDesc> transactionDescList;
 
     private boolean isRefRule;
+
     public DefaultBusinessDeclare() {
-       this(false);
+        this(false);
     }
 
     public DefaultBusinessDeclare(boolean isRefRule) {
         this.isRefRule = isRefRule;
         this.code = UUID.randomUUID().toString();
+        this.multipleTranContainer = new MultipleTranContainer();
     }
+
     @Override
     public String getName() {
         return name;
@@ -103,12 +120,12 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             ProcessDesc process = processes.get(i);
             try {
 
-                if(process.isBegin()){
+                if (process.isBegin()) {
                     beginTx(process);
                     continue;
                 }
 
-                if(process.isEnd()){
+                if (process.isEnd()) {
                     endTx(process, 0);
                     continue;
                 }
@@ -325,6 +342,34 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         return this;
     }
 
+    @Override
+    public void setRuleModel(String name, Object obj) {
+        if (modelLoaderMap == null) {
+            modelLoaderMap = new HashMap<>();
+        }
+
+        if (!modelLoaderMap.containsKey(name)) {
+            ModelLoader modelLoader = new ModelLoader();
+            RuleViewInfo ruleViewInfo = ConfigContextUtil.getConfigInfo().getRuleViewInfo(name);
+            if (obj instanceof ModelData) {
+                modelLoader.load(name, (ModelData) obj);
+            }
+            try {
+                ModelData modelData = DataUtil.createViewData(ruleViewInfo.getViewData().getName());
+                if (obj instanceof Map) {
+                    modelData.getAllValues().putAll((Map<String, Object>) ((Map) obj).values());
+                } else {
+                    modelData.getAllValues().putAll((Map<? extends String, ?>) ((Map<? extends String, ?>) JSONObject.toJSON(obj)).values());
+                }
+                modelData.setOriginData(obj);
+                modelLoader.load(name, modelData);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+            modelLoaderMap.put(name, modelLoader);
+        }
+    }
+
     public String getCode() {
         return code;
     }
@@ -337,11 +382,27 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
     private void beginTx(ProcessDesc process) {
-        connect(process);
+        if (!this.isRefRule) {
+            connect(process);
+        } else {
+            try {
+                multipleTranContainer.begin(process.getDataSource(), getTransactionPolicy(process.getTransaction()));
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     private void endTx(ProcessDesc process, int index) {
-        dealWithTx(process);
+        if (!this.isRefRule) {
+            dealWithTx(process);
+        } else {
+            try {
+                multipleTranContainer.end();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     private void dealWithTx(ProcessDesc process) {
@@ -368,11 +429,14 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
         //	dataDesc = systemDesc.getData(process.getData());
         //}
-
+        if (process.getRule() != null) {
+            executeRule(process);
+        }
         if ("this".equals(process.getSystem())) {
 
             produceData(null, process.getData(), process.getSystem());
 
+            refreshModeldata(process);
         } else {
 
             SystemDesc systemDesc = DescContext.get().getSystem(process.getSystem());
@@ -383,22 +447,161 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
             this.change(systemDesc, dataDesc);
 
+            refreshModeldata(process);
+
             refreshStorage(dataDesc);
+        }
+
+    }
+
+    private void refreshModeldata(ProcessDesc process) {
+        if (process.getRuleRefreshList() == null || process.getRuleRefreshList().isEmpty()) {
+            return;
+        }
+        Object object = this.dataStorage.get(process.getData());
+        for (PropertyDesc propertyDesc : process.getRuleRefreshList()) {
+            try {
+
+
+                Object sourceObject = null;
+                if ("this".equals(propertyDesc.getSourceProperty()[0])) {
+                    sourceObject = object;
+                } else {
+                    sourceObject = DataUtils.getValue(object, propertyDesc.getSourceProperty(), 0);
+                }
+
+                if (isBaseData(sourceObject)) {
+
+                    return;
+                }
+
+                Object targetObject = this.modelLoaderMap.get(process.getRule());
+
+                if (!"this".equals(propertyDesc.getSourceProperty()[0])) {
+                    targetObject = DataUtils.getValue(targetObject, propertyDesc.getTargetProperty(), 0);
+                }
+                convertData(sourceObject, targetObject);
+            } catch (Exception ex) {
+                throw new ExecuteException(ex);
+            }
+
+
+        }
+    }
+
+    private void convertData(Object sourceObject, Object targetObject) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+
+        PropertyDescriptor[] fromDescriptors = null;
+        PropertyDescriptor[] toDescriptors = null;
+        if (!(sourceObject instanceof Map)) {
+            fromDescriptors = ReflectUtils.getPropertyDescriptors(sourceObject.getClass());
+
+        }
+        if (!(targetObject instanceof Map) && !(targetObject instanceof ModelData)) {
+            toDescriptors = ReflectUtils.getPropertyDescriptors(targetObject.getClass());
+
+        }
+
+        Map<String, PropertyDescriptor> propertyMap = null;
+        Set<String> keys = null;
+        if (fromDescriptors != null) {
+            propertyMap = getSourceProperty(fromDescriptors);
+        } else {
+            keys = this.getSourceKey(sourceObject);
+        }
+
+        if (toDescriptors != null) {
+            for (PropertyDescriptor propertyDescriptor : toDescriptors) {
+                if ((propertyMap != null && propertyMap.containsKey(propertyDescriptor.getName()))
+                        || (keys != null && keys.contains(propertyDescriptor.getName()))) {
+                    Object value = getValue(sourceObject, propertyDescriptor.getName(), keys, propertyMap);
+                    if (validateData(value)) {
+                        propertyDescriptor.getWriteMethod().invoke(targetObject, value);
+                    }
+                }
+            }
+        } else {
+            Iterator<String> targetKeys = ((Map<String, ?>) targetObject).keySet().iterator();
+
+            while (targetKeys.hasNext()) {
+                String key = targetKeys.next();
+                if ((propertyMap != null && propertyMap.containsKey(key))
+                        || (keys != null && keys.contains(key))) {
+                    Object value = getValue(sourceObject, key, keys, propertyMap);
+                    if (validateData(value)) {
+                        DataUtils.setValue(targetObject, key, sourceObject);
+                    }
+                }
+            }
+        }
+    }
+
+    private Object getValue(Object sourceObject, String key, Set<String> keySet, Map<String, PropertyDescriptor> propertyDescriptorMap) throws InvocationTargetException, IllegalAccessException {
+        if (keySet != null) {
+            return ((Map<String, ?>) sourceObject).get(key);
+        }
+        return propertyDescriptorMap.get(key).getReadMethod().invoke(sourceObject);
+    }
+
+    private Map<String, PropertyDescriptor> getSourceProperty(PropertyDescriptor[] descriptors) {
+        Map<String, PropertyDescriptor> map = new HashMap<>();
+        for (PropertyDescriptor propertyDescriptor : descriptors) {
+            map.put(propertyDescriptor.getName(), propertyDescriptor);
+        }
+        return map;
+    }
+
+    private Set<String> getSourceKey(Object sourceObject) {
+        if (sourceObject instanceof Map) {
+            return ((Map) sourceObject).keySet();
+        } else if (sourceObject instanceof ModelData) {
+            return ((ModelData) sourceObject).getValues().keySet();
+        }
+        return null;
+    }
+
+    private boolean isBaseData(Object value) {
+        if (value instanceof String || value instanceof Number || value instanceof Boolean) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private boolean validateData(Object value) {
+
+        if (value instanceof String || value instanceof Number || value instanceof Boolean || value instanceof Collections) {
+            return true;
+        }
+        return false;
+    }
+
+    private void executeRule(ProcessDesc process) {
+        try {
+            multipleTranContainer.load(this.modelLoaderMap.get(process.getRule()));
+            multipleTranContainer.execute(process.getRuleStart(), process.getRuleEnd());
+        } catch (Exception ex) {
+            throw new ExecuteException(ex);
         }
     }
 
     private void change(SystemDesc systemDesc, DataDesc dataDesc) throws Exception {
         if (dataDesc.getChangeDescList() != null) {
+            Map<String, Object> statusMap = new HashMap<>();
+            dataStorage.setStatusMap(statusMap);
             for (ChangeDesc changeDesc : dataDesc.getChangeDescList()) {
                 Object dataObject = dataStorage.get(changeDesc.getName());
-                DataUtils.setValue(dataObject, changeDesc.getValueDescList());
+                DataUtils.setValue(dataObject, changeDesc.getValueDescList(), 0, statusMap);
                 this.result = SystemContext.get()
                         .get(systemDesc.getName()).change(changeDesc.getName(), this.dataStorage);
                 if (!result.isSuccess()) {
                     log.error(String.format("Change status error,depend:[%]", changeDesc.getName()));
-                    break;
+                    throw new ExecuteException(result.getError().getMessage());
                 }
+                this.refreshStorage(systemDesc.getData(changeDesc.getName()));
             }
+            dataStorage.setStatusMap(null);
         }
     }
 
@@ -564,12 +767,9 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
 
     private void refreshStorage(DataDesc dataDesc) {
-
         if (dataDesc != null && dataDesc.getType() == DataTypeEnum.PERSISTENT && !dataDesc.isCachePrior()) {
-
             this.dataStorage.remove(dataDesc.getName());
         }
-
     }
 
     /**
@@ -585,7 +785,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
         currentProcess.setTransactionGroup(transactionGroup);
     }*/
-
     private void validate(String system, String data) {
         SystemDesc systemDesc = null;
         if ("this".equals(system)) {
@@ -603,5 +802,21 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             log.error("The data is not exist:" + system + "-" + data);
             throw new ExecuteException("The data is not exist:" + system + "-" + data);
         }
+    }
+
+    private int getTransactionPolicy(TransactionPolicy transactionPolicy) {
+        switch (transactionPolicy) {
+            case REQUIRE:
+                return Transaction.PROPAGATION_REQUIRED;
+            case NEW:
+                return Transaction.PROPAGATION_REQUIRES_NEW;
+            case NESTED:
+                return Transaction.PROPAGATION_REQUIRED_NESTED;
+            case SUPPORTED:
+                return Transaction.PROPAGATION_SUPPORTS;
+            case NOSUPPORTED:
+                return Transaction.PROPAGATION_NOT_SUPPORTED;
+        }
+        return -1;
     }
 }

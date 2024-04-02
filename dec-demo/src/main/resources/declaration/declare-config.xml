@@ -8,13 +8,22 @@
 		</system>
 		<system name="order">
 			<datas>
-				<data name="subscribeOrderData" desc="订购订单数据" type="persistent" isCachePrior="false">
+
+				<data name="subscribeOrderDataSimple" desc="订购订单数据-简单" isCachePrior="false">
+					<depends>
+						<depend data="$subscribeOrderData"/>
+						<depend data="orderData" init="status:1"/>
+						<depend data="orderPayResultData" condition="status=1" change="status:2"/>
+					</depends>
+				</data>
+
+				<data name="subscribeOrderData" desc="订购订单数据" isCachePrior="false">
 					<depends>
 						<depend data="$subscribeOrderData" init="status:1"/>
 					</depends>
 				</data>
 
-				<data name="cancelOrderData" desc="取消订单数据" type="persistent" isCachePrior="false">
+				<data name="cancelOrderData" desc="取消订单数据" isCachePrior="false">
 					<depends>
 						<depend data="$cancelOrderData"/>
 						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="status=1 or status=2" change="status:3"/>
@@ -27,7 +36,7 @@
 				<data name="orderPayResultData" desc="订单支付状态数据"  type="persistent" isCachePrior="false">
 					<depends>
 						<depend data="$payResultData"/>
-						<depend data="orderData" change="status:2"/>
+						<depend data="orderData" condition="status=1"/>
 					</depends>
 				</data>
 			</datas>
@@ -71,16 +80,19 @@
 			</datas>
 		</business>-->
 
-		<business name="subscribeOrderWithDom" ref-rule="save-User:data1,save-Order:data1">
+		<business name="subscribeOrderDataWithSimple"  >
+			<data system="order" name="subscribeOrderDataSimple" />
+		</business>
+
+		<business name="subscribeOrderWithDom" ref-dom="save-User:data1,save-Order:data1">
 			<datas>
 				<data begin="true" ref-rule-dataSource="data1"/>
 					<data system="user" name="userData" />
 					<data  ref-rule="save-User" ref-rule-range="insertUser"/>
 				<data end="true"/>
 				<data begin="true" ref-rule-dataSource="data1"/>
-					<data system="order" name="subscribeOrderData" ref-rule-replace="insertOrder" rel-refresh-data="this:this,orderDetails:orderDetailList"/>
-					<data ref-rule="save-Order"/>
-						<data begin="true" transactionPolicy="NEW"/>
+					<data system="order" name="subscribeOrderData" ref-rule="save-Order" ref-rule-replace="insertOrder" rel-refresh-data="this:this,orderDetails:orderDetailList"/>
+						<data begin="true" transactionPolicy="NEW" ref-rule-dataSource="data1"/>
 							<data ref-rule="save-Order" ref-rule-range="insertOrderDetail"/>
 							<data name="$payData"/>
 							<data begin="true" transactionPolicy="NESTED" ref-rule-dataSource="data1"/>
@@ -100,7 +112,7 @@
 					<data system="order" name="subscribeOrderData" />
 						<data  begin="true" transactionPolicy="NEW"/>
 							<data name="$payData"/>
-								<data  begin="true" transactionPolicy="NESTED"/>
+								<data  begin="true"/>
 									<data system="pay" name="payResultData" />
 									<data name="$payResultData"/>
 								<data end="true"/>

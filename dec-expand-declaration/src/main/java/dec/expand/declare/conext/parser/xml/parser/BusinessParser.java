@@ -30,11 +30,13 @@ public class BusinessParser {
         businessDesc.setName(name);
         businessDesc.setComment(element.attributeValue("desc"));
 
-        String ruleInfo = element.attributeValue("ref-rule");
+        String ruleInfo = element.attributeValue("ref-dom");
+        boolean isRefDom = false;
         if (ruleInfo != null && !"".equals(ruleInfo)) {
             parserRule(businessDesc, ruleInfo);
+            isRefDom = true;
         }
-        parserData(businessDesc, element.element("datas"));
+        parserData(businessDesc, element.element("datas"), isRefDom);
         log.info("End load business:" + name);
         return businessDesc;
     }
@@ -59,20 +61,20 @@ public class BusinessParser {
         }
     }
 
-    private void parserData(BusinessDesc businessDesc, Element element) throws XMLParseException {
+    private void parserData(BusinessDesc businessDesc, Element element, boolean isRefDom) throws XMLParseException {
         if (element == null) {
             return;
         }
         Iterator<?> it = element.elementIterator("data");
         int txCount = 0;
         int txIndex = 0;
+
         while (it.hasNext()) {
             Element dataElement = (Element) it.next();
             ProcessDesc processDesc = new ProcessDesc();
 
             String begin = dataElement.attributeValue("begin");
             if (begin != null && !"".equals(begin)) {
-
                 processDesc.setBegin(Boolean.valueOf(begin));
             }
 
@@ -86,8 +88,9 @@ public class BusinessParser {
                         throw new XMLParseException("The property 'transactionPolicy' for data is error, transactionPolicy:" + transactionPolicy);
                     }
                 }
+
                 String dataSource = dataElement.attributeValue("ref-rule-dataSource");
-                if (dataSource == null || "".equals(dataSource)) {
+                if (isRefDom && (dataSource == null || "".equals(dataSource))) {
                     throw new XMLParseException("The property 'dataSource' for data is error, it can't be empty!");
                 }
                 processDesc.setDataSource(dataSource);
@@ -112,7 +115,7 @@ public class BusinessParser {
             String name = dataElement.attributeValue("name");
 
             processDesc.setData(name);
-            if (name.startsWith("$")) {
+            if (name != null && !"".equals(name) && name.startsWith("$")) {
                 processDesc.setSystem("this");
             } else {
                 String refRule = dataElement.attributeValue("ref-rule");
@@ -137,18 +140,22 @@ public class BusinessParser {
                     throw new XMLParseException("The 'ref-rule' for data is not exist, ref-rule:" + refRule);
                 }
 
-                String refRuleRange = dataElement.attributeValue("ref-rule-range");
-
-                if (refRuleRange == null || "".equals(refRuleRange)) {
-                    throw new XMLParseException("The 'ref-rule-range' is empty");
+                if (processDesc.getData() != null) {
+                    String refRuleReplace = dataElement.attributeValue("ref-rule-replace");
+                    if (refRuleReplace == null || "".equals(refRuleReplace)) {
+                        throw new XMLParseException("The 'ref-rule-replace' is empty for 'ref-rule':" + refRule);
+                    }
+                    processDesc.setRuleReplace(refRuleReplace);
+                } else {
+                    String refRuleRange = dataElement.attributeValue("ref-rule-range");
+                    if (refRuleRange == null || "".equals(refRuleRange)) {
+                        throw new XMLParseException("The 'ref-rule-range' is empty for 'ref-rule':" + refRule);
+                    }
+                    String ruleArray[] = refRuleRange.split(":");
+                    processDesc.setRuleStart(ruleArray[0]);
+                    processDesc.setRuleEnd(ruleArray[ruleArray.length - 1]);
                 }
-                String ruleArray[] = refRuleRange.split(":");
-                processDesc.setRuleStart(ruleArray[0]);
-                processDesc.setRuleEnd(ruleArray[ruleArray.length-1]);
-
             }
-
-            processDesc.setRuleReplace(dataElement.attributeValue("ref-rule-replace"));
             processDesc.setRuleRefresh(dataElement.attributeValue("rel-refresh-data"));
             businessDesc.add(processDesc);
         }
