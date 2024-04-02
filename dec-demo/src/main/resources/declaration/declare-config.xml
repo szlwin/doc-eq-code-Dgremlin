@@ -84,16 +84,15 @@
 			<data system="order" name="subscribeOrderDataSimple" />
 		</business>
 
-		<!--<business name="subscribeOrderWithDom" ref-rule="save-User:data1,save-Order:data1">
+		<business name="subscribeOrderWithDom" ref-dom="save-User:data1,save-Order:data1">
 			<datas>
 				<data begin="true" ref-rule-dataSource="data1"/>
 					<data system="user" name="userData" />
 					<data  ref-rule="save-User" ref-rule-range="insertUser"/>
 				<data end="true"/>
 				<data begin="true" ref-rule-dataSource="data1"/>
-					<data system="order" name="subscribeOrderData" ref-rule-replace="insertOrder" ref-rule="save-Order" rel-refresh-data="this:this,orderDetails:orderDetailList"/>
-					<data ref-rule="save-Order"/>
-						<data begin="true" transactionPolicy="NEW"/>
+					<data system="order" name="subscribeOrderData" ref-rule="save-Order" ref-rule-replace="insertOrder" rel-refresh-data="this:this,orderDetails:orderDetailList"/>
+						<data begin="true" transactionPolicy="NEW" ref-rule-dataSource="data1"/>
 							<data ref-rule="save-Order" ref-rule-range="insertOrderDetail"/>
 							<data name="$payData"/>
 							<data begin="true" transactionPolicy="NESTED" ref-rule-dataSource="data1"/>
@@ -105,7 +104,7 @@
 					<data system="order" name="orderPayResultData"/>
 				<data end="true"/>
 			</datas>
-		</business>-->
+		</business>
 
 		<business name="subscribeOrder"  >
 			<datas>

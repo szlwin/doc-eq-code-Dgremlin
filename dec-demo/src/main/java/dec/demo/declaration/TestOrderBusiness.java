@@ -17,12 +17,9 @@ public class TestOrderBusiness {
 
         initSystem();
 
-        //subscribeOrder();
+        //subscribeOrderByConfig();
 
-        subscribeOrderByConfig();
-        //cancelOrderData();
-
-        cancelOrderDataByconfig();
+        //cancelOrderDataByconfig();
     }
 
     public static void subscribeOrderByConfig() {
