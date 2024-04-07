@@ -5,12 +5,12 @@
 
 其在上层进行数据访问统一抽象，对不同数据源提供统一接口接进行接入。对业务侧完全屏蔽底层数据操作细节，并可对数据操作进行文档化，便于追踪数据流向，便于复杂数据操作的维护与扩展。
 
-[1.项目理念](docs/concept.md)
-[2.项目介绍](docs/info.md)
-[3.整体架构](docs/architecture.md)
-[4.dom配置文件](docs/config.md)
-[5.dom示例](docs/dom-demo.md)
-[6.数据源扩展](docs/dom-datasource.md)
-[7.数据生产与消费](docs/declaration.md)
-[8.数据生产与消费示例](docs/declaration-demo.md)
-[9.dom与declaration联合示例](docs/mix-demo.md)
+[1.项目理念](docs/concept.md)<br>
+[2.项目介绍](docs/info.md)<br>
+[3.整体架构](docs/architecture.md)<br>
+[4.dom配置文件](docs/config.md)<br>
+[5.dom示例](docs/dom-demo.md)<br>
+[6.数据源扩展](docs/dom-datasource.md)<br>
+[7.数据生产与消费](docs/declaration.md)<br>
+[8.数据生产与消费示例](docs/declaration-demo.md)<br>
+[9.dom与declaration联合示例](docs/mix-demo.md)<br>
