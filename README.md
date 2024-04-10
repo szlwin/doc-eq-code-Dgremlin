@@ -6,8 +6,8 @@
 
 [1.项目理念](docs/concept.md)<br>
 [2.项目介绍](docs/info.md)<br>
-[3.整体架构](docs/architecture.md)<br>
-[4.设计文档](docs/design.md)<br>
+[3.dom整体架构](docs/architecture.md)<br>
+[4.dom设计文档](docs/design.md)<br>
 [5.dom示例](docs/dom-demo.md)<br>
 [6.数据源扩展](docs/dom-datasource.md)<br>
 [7.数据生产与消费](docs/declaration.md)<br>

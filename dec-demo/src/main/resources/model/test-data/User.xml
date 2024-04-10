@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <orm--data-mapping>
-	<data name="user" class=""><!-- 必须是BaseModel的子类或默认为空-->
+	<data name="user">
 		<property-info>
 			<property name="id" type="int"/>
 			<property name="uidd" type="string"/>
