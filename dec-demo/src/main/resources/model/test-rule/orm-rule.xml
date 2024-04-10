@@ -25,7 +25,7 @@
 		</rule>
 		
 		<rule name="checkName" type="checkPattern" pattern="userT.userName = userT.uname" >
-			<error-info code="C001" message="user error" level="1l"/>
+			<error-info code="C001" message="user error" level="1"/>
 			<customer-info>
 				<test>122112</test>
 				<test1>222222</test1>

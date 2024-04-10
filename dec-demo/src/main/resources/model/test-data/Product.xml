@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<orm--data-mapping>
+<orm-data-mapping>
 	<data name="product">
 		<property-info>
 			<property name="id" type="int"/>
@@ -26,4 +26,4 @@
 			</table>			
 		</table-info>
 	</data>
-</orm--data-mapping>
+</orm-data-mapping>
