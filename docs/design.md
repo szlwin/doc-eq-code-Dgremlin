@@ -297,3 +297,164 @@ xml文档说明
 <br>
 
 ## 业务视图设计文档
+xml文档说明
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td>无</td>
+    <td>rule-view-info</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>业务视图</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>rule-view-info</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>业务视图名称</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>rule-view-info</td>
+    <td>view-ref</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>关联业务模型</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>rule-view-info</td>
+    <td>rule</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>业务规则</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>rule</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>规则名称</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>rule</td>
+    <td>type</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>规则类型</td>
+    <td>具体参考[3.dom整体架构](docs/architecture.md)</td>
+  </tr>
+  <tr>
+    <td>rule</td>
+    <td>pattern</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>校验表达式</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>rule</td>
+    <td>property</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>对其进行校验的对象或属性，或对进行读写操作的对象</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>rule</td>
+    <td>sql</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>对数据对象所需执行的命令</td>
+    <td>此应改为'cmd'较合适</td>
+  </tr>
+  <tr>
+    <td>rule</td>
+    <td>error-info</td>
+    <td>元素</td>
+    <td>否</td>
+    <td>当前此业务规则执行失败后，所返回的错误信息</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>error-info</td>
+    <td>code</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>错误码</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>error-info</td>
+    <td>message</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>错误信息</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>error-info</td>
+    <td>level</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>错误级别</td>
+    <td></td>
+  </tr>
+</table>
+以下是dec-demo项目中的model/test-rule/orm-rule.xml文件
+```
+<orm-rule-mapping>
+	<rule-view-info name="save-Order" view-ref="OrderInfo">
+		<rule name="dsl" type="grammer" >
+			<error-info code="C001" message="user error" level="1"/>
+			<customer-process>
+				<![CDATA[
+					#num : if totalPrice>10 then totalPrice*1.1  else totalPrice*1.2;
+					totalPrice : totalPrice*#num;
+				]]>
+			</customer-process>
+		</rule>
+
+		<rule name="checkName" type="checkPattern" pattern="userT.userName = userT.uname" >
+			<error-info code="C001" message="user error" level="1"/>
+		</rule>
+		
+		<rule name="insertUser" type="insert" property="userT" />
+		
+		<rule name="checkUser" type="checkDataPattern" property="userT" sql="select a.id as u_id from userT a where a.id = #userT.id" pattern="u_id = userId"/>
+
+		<rule name="checkUser1" type="checkData" property="userT" pattern="NOTNULL"/>
+		
+		<rule name="check1" type="checkPattern" pattern="userId != 0 and userT.id != 0 and ( productCount > 0 or totalPrice >= 0 ) or (productCount*(totalPrice+10) > 200 )"/>
+		
+		<rule name="checkUerId" type="check" property="userId" pattern="NOTNULL;NOTEQUAL:2"/>
+		
+		<rule name="insertOrder" type="insert" property="OrderInfo" />
+		
+		<rule name="insertProduct" type="insert" property="productList" />
+		
+		<rule name="deleteProduct" type="delete" sql="delete p.* from productList p where p.productPrice = 20" />
+	</rule-view-info>
+	
+	<rule-view-info name="get-user" view-ref="OrderInfo">
+		<rule name="selectUser" type="get" property="userT" sql="select a.userName from userT a where a.id = #userT.id"/>
+		<rule name="selectOrder" type="get" property="OrderInfo"/>
+		<rule name="getProduct" type="query" property="productList" sql="select p.id,p.productPrice from productList p where p.orderId = #id"/>
+	</rule-view-info>
+	
+	<rule-view-info name="back-Order" view-ref="OrderInfo">
+		<rule name="insertProduct1" type="insert" property="productList" />
+	</rule-view-info>
+</orm-rule-mapping>
+```
