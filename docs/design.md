@@ -10,6 +10,7 @@ xml文档说明
     <td>父元素</td>
     <td>名称</td>
     <td>类型</td>
+    <td>必填</td>
     <td>说明</td>
     <td>备注</td>
   </tr>
@@ -17,6 +18,7 @@ xml文档说明
     <td>data</td>
     <td>property-info</td>
     <td>元素</td>
+    <td>是</td>
     <td>数据属性信息</td>
     <td></td>
   </tr>
@@ -24,6 +26,7 @@ xml文档说明
     <td>property-info</td>
     <td>property</td>
     <td>元素</td>
+    <td>是</td>
     <td>数据属性</td>
     <td></td>
   </tr>
@@ -31,6 +34,7 @@ xml文档说明
     <td>property</td>
     <td>name</td>
     <td>属性</td>
+    <td>是</td>
     <td>数据属性名称</td>
     <td></td>
   </tr>
@@ -38,6 +42,7 @@ xml文档说明
     <td>property</td>
     <td>type</td>
     <td>属性</td>
+    <td>是</td>
     <td>数据属性类型</td>
     <td></td>
   </tr>
@@ -45,13 +50,15 @@ xml文档说明
     <td>data</td>
     <td>table-info</td>
     <td>元素</td>
+    <td>否</td>
     <td>数据源映射配置信息</td>
-    <td></td>
+    <td>如无对数据源操作，可不必配置</td>
   </tr>
   <tr>
     <td>table-info</td>
     <td>table</td>
     <td>元素</td>
+    <td>是</td>
     <td>数据源映射信息</td>
     <td></td>
   </tr>
@@ -59,6 +66,7 @@ xml文档说明
     <td>table</td>
     <td>name</td>
     <td>属性</td>
+    <td>是</td>
     <td>数据源数据映射名称</td>
     <td>类似表名</td>
   </tr>
@@ -66,6 +74,7 @@ xml文档说明
     <td>table</td>
     <td>data-source</td>
     <td>属性</td>
+    <td>是</td>
     <td>数据源名称</td>
     <td></td>
   </tr>
@@ -73,6 +82,7 @@ xml文档说明
     <td>table</td>
     <td>key</td>
     <td>属性</td>
+    <td>是</td>
     <td>唯一标识</td>
     <td>类似主键</td>
   </tr>
@@ -80,13 +90,15 @@ xml文档说明
     <td>table</td>
     <td>key-type</td>
     <td>属性</td>
-    <td>主键类型</td>
+    <td>是</td>
+    <td>唯一标识类型</td>
     <td>increment: 自增(类似自增长主键)<br>set: 自行设置值 </td>
   </tr>
   <tr>
     <td>table</td>
     <td>column</td>
     <td>元素</td>
+    <td>是</td>
     <td>单字段映射信息</td>
     <td></td>
   </tr>
@@ -94,6 +106,7 @@ xml文档说明
     <td>column</td>
     <td>name</td>
     <td>属性</td>
+    <td>是</td>
     <td>数据源字段名称</td>
     <td>类似表字段名</td>
   </tr>
@@ -101,6 +114,7 @@ xml文档说明
     <td>column</td>
     <td>ref-property</td>
     <td>属性</td>
+    <td>是</td>
     <td>对应数据模型中字段</td>
     <td></td>
   </tr>
@@ -108,6 +122,7 @@ xml文档说明
     <td>column</td>
     <td>type</td>
     <td>属性</td>
+    <td>否</td>
     <td>数据源对应类型</td>
     <td></td>
   </tr>
