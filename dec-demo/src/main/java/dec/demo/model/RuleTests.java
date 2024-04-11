@@ -21,6 +21,7 @@ public class RuleTests extends DemoLoadTests {
         RuleTests ruleTests = new RuleTests();
         ruleTests.testInit();
         ruleTests.testOrderRule();
+        ruleTests.testGetRule();
         ruleTests.testOrderRuleByObj();
     }
 
@@ -28,11 +29,8 @@ public class RuleTests extends DemoLoadTests {
     public void testGetRule() throws Exception {
         ModelData order = DataUtil.createViewData("OrderInfo");
         order.setValue("id", 1);
-        //order.setValue("id", 30);
         BaseData userData = DataUtil.createBaseData("user");
         userData.setValue("id", 11);
-        //userData.setValue("id", 36);
-        //userData.setValue("name", "test3");
         DataUtil.addDataToView(order, userData);
 
         ModelContainer container = ContainerManager.getCurrentModelContainer();
@@ -41,14 +39,11 @@ public class RuleTests extends DemoLoadTests {
 
         container.load(loader);
         container.execute();
-
-        System.out.println(order.getAllValues());
     }
 
     public void testOrderRuleFirst() throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
         String date = format.format(new Date());
-
 
         for (int i = 0; i < 1; i++) {
             testOrderRule();
@@ -57,10 +52,7 @@ public class RuleTests extends DemoLoadTests {
         System.out.println(format.format(new Date()));
     }
 
-    //@Test
     public void testOrderRuleByObj() throws Exception {
-        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        //System.out.println(format.format(new Date()));
 
         Order orderData = new Order();
 
@@ -90,29 +82,22 @@ public class RuleTests extends DemoLoadTests {
         loader1.load("back-Order", order, "con2");
         container.load(loader1).addListener(new SimpleContainerListener());
 
-        //ModelLoader loader2 = new ModelLoader();
-        //loader2.load("save-Order", order,"con3");
-        //container.load(loader2);
-        //System.out.println(format.format(new Date()));
         container.execute();
-
-        System.out.println(orderData.getProductList().get(0).getOrderId());
-        //System.out.println(order.getAllValues());
     }
 
     public void testOrderRule() throws Exception {
-        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        //System.out.println(format.format(new Date()));
 
+        //1.创建业务模型对象
         ModelData order = DataUtil.createViewData("OrderInfo");
 
+        //2.创建数据对象
         BaseData userData = insertUserData();
 
         BaseData productData1 = createProductData("p1", 10, 20);
 
         BaseData productData2 = createProductData("p1", 5, 30);
 
-
+        //3.添加数据到业务模型中
         DataUtil.addDataToView("userT", order, userData);
 
         DataUtil.addDataToView("productList", order, productData1);
@@ -122,10 +107,10 @@ public class RuleTests extends DemoLoadTests {
         order.setValue("productCount", 50);
         order.setValue("totalPrice", 350);
         order.setValue("dateTime", new Date());
-        //System.out.println(format.format(new Date()));
 
-
+        //4.创建执行容器
         ModelContainer container = ContainerManager.getCurrentModelContainer();
+        //5.加载视图及业务模型，并设置数据链接
         ModelLoader loader = new ModelLoader();
         loader.load("save-Order", order, "con1").addListener(new SimpleViewListener());
         container.load(loader);
@@ -134,13 +119,8 @@ public class RuleTests extends DemoLoadTests {
         loader1.load("back-Order", order, "con2");
         container.load(loader1).addListener(new SimpleContainerListener());
 
-        //ModelLoader loader2 = new ModelLoader();
-        //loader2.load("save-Order", order,"con3");
-        //container.load(loader2);
-        //System.out.println(format.format(new Date()));
+        //6.执行
         container.execute();
-
-        //System.out.println(order.getAllValues());
     }
 
 

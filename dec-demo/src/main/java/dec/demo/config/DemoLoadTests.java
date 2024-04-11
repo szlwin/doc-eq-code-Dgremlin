@@ -21,23 +21,23 @@ public class DemoLoadTests {
 	public void testInit() throws Exception{
 
 		try {
+			//1.添加数据源
 			ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
+			//2.加载配置文件
 			ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
 		} catch (XMLParseException e) {
 			e.printStackTrace();
 		}
 
-		DataSourceManager.addDataSource("data1", getDataSource1());
-		
-		DataSourceManager.addDataSource("data2", getDataSource2());
-		
+		//3.添加数据源相关实现
 		DataSourceManager.addConnectionFactory("MySQL", new MySQLDBConnectionFactory());
-		
 		DataSourceManager.addConvertContainerFactory("MySQL", new MySQLConvertContainerFactory());
-		
 		DataSourceManager.addDataConvertContainerFacory("MySQL", new MySQLDataConvertContainerFactory());
-		
 		DataSourceManager.addExecuteContainerFacory("MySQL", new MySQLExecuteContainerFactory());
+
+		//4.添加数据源
+		DataSourceManager.addDataSource("data1", getDataSource1());
+		DataSourceManager.addDataSource("data2", getDataSource2());
 	}
 
 	public BaseData createProductData(String name,int count,double price) throws Exception{
