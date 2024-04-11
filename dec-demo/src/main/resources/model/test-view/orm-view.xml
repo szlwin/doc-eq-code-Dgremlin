@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <orm-view-mapping>
-	
 	<view name="OrderInfo" target-main="order">
 		<property-info>
 			<property name="id" ref-property="id"/>
@@ -23,6 +22,5 @@
 				<property name="productPrice" ref-property="price"/>
 			</property>
 		</property-info>
-		
 	</view>
 </orm-view-mapping>
