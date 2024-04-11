@@ -412,49 +412,50 @@ xml文档说明
     <td></td>
   </tr>
 </table>
+
 以下是dec-demo项目中的model/test-rule/orm-rule.xml文件
 ```
 <orm-rule-mapping>
-	<rule-view-info name="save-Order" view-ref="OrderInfo">
-		<rule name="dsl" type="grammer" >
-			<error-info code="C001" message="user error" level="1"/>
-			<customer-process>
-				<![CDATA[
-					#num : if totalPrice>10 then totalPrice*1.1  else totalPrice*1.2;
-					totalPrice : totalPrice*#num;
-				]]>
-			</customer-process>
-		</rule>
+  <rule-view-info name="save-Order" view-ref="OrderInfo">
+    <rule name="dsl" type="grammer" >
+      <error-info code="C001" message="user error" level="1"/>
+      <customer-process>
+      <![CDATA[
+         #num : if totalPrice>10 then totalPrice*1.1  else totalPrice*1.2;
+         totalPrice : totalPrice*#num;
+        ]]>
+       </customer-process>
+     </rule>
 
-		<rule name="checkName" type="checkPattern" pattern="userT.userName = userT.uname" >
-			<error-info code="C001" message="user error" level="1"/>
-		</rule>
+     <rule name="checkName" type="checkPattern" pattern="userT.userName = userT.uname" >
+       <error-info code="C001" message="user error" level="1"/>
+     </rule>
 		
-		<rule name="insertUser" type="insert" property="userT" />
+     <rule name="insertUser" type="insert" property="userT" />
 		
-		<rule name="checkUser" type="checkDataPattern" property="userT" sql="select a.id as u_id from userT a where a.id = #userT.id" pattern="u_id = userId"/>
+     <rule name="checkUser" type="checkDataPattern" property="userT" sql="select a.id as u_id from userT a where a.id = #userT.id" pattern="u_id = userId"/>
 
-		<rule name="checkUser1" type="checkData" property="userT" pattern="NOTNULL"/>
+     <rule name="checkUser1" type="checkData" property="userT" pattern="NOTNULL"/>
 		
-		<rule name="check1" type="checkPattern" pattern="userId != 0 and userT.id != 0 and ( productCount > 0 or totalPrice >= 0 ) or (productCount*(totalPrice+10) > 200 )"/>
+     <rule name="check1" type="checkPattern" pattern="userId != 0 and userT.id != 0 and ( productCount > 0 or totalPrice >= 0 ) or (productCount*(totalPrice+10) > 200 )"/>
 		
-		<rule name="checkUerId" type="check" property="userId" pattern="NOTNULL;NOTEQUAL:2"/>
+     <rule name="checkUerId" type="check" property="userId" pattern="NOTNULL;NOTEQUAL:2"/>
 		
-		<rule name="insertOrder" type="insert" property="OrderInfo" />
+     <rule name="insertOrder" type="insert" property="OrderInfo" />
 		
-		<rule name="insertProduct" type="insert" property="productList" />
+     <rule name="insertProduct" type="insert" property="productList" />
 		
-		<rule name="deleteProduct" type="delete" sql="delete p.* from productList p where p.productPrice = 20" />
-	</rule-view-info>
+     <rule name="deleteProduct" type="delete" sql="delete p.* from productList p where p.productPrice = 20" />
+  </rule-view-info>
 	
-	<rule-view-info name="get-user" view-ref="OrderInfo">
-		<rule name="selectUser" type="get" property="userT" sql="select a.userName from userT a where a.id = #userT.id"/>
-		<rule name="selectOrder" type="get" property="OrderInfo"/>
-		<rule name="getProduct" type="query" property="productList" sql="select p.id,p.productPrice from productList p where p.orderId = #id"/>
-	</rule-view-info>
+  <rule-view-info name="get-user" view-ref="OrderInfo">
+    <rule name="selectUser" type="get" property="userT" sql="select a.userName from userT a where a.id = #userT.id"/>
+    <rule name="selectOrder" type="get" property="OrderInfo"/>
+    <rule name="getProduct" type="query" property="productList" sql="select p.id,p.productPrice from productList p where p.orderId = #id"/>
+  </rule-view-info>
 	
-	<rule-view-info name="back-Order" view-ref="OrderInfo">
-		<rule name="insertProduct1" type="insert" property="productList" />
-	</rule-view-info>
+  <rule-view-info name="back-Order" view-ref="OrderInfo">
+    <rule name="insertProduct1" type="insert" property="productList" />
+  </rule-view-info>
 </orm-rule-mapping>
 ```
