@@ -267,28 +267,28 @@ xml文档说明
 以下是dec-demo项目中的model/test-view/orm-view.xml文件
 ```
 <orm-view-mapping>
-	<view name="OrderInfo" target-main="order">
-		<property-info>
-			<property name="id" ref-property="id"/>
-			<property name="userId" ref-property="userId"/>
-			<property name="productCount" ref-property="count"/>
-			<property name="totalPrice" ref-property="totalPrice"/>
-			<property name="dateTime" ref-property="dateTime"/>
-			<property name="userT" relation="one-to-one" data="user" key="id" rel-key="userId">
-				<property name="id" ref-property="id"/>
-				<property name="userName" ref-property="name"/>
-				<property name="uname" ref-property="name"/>
-				<property name="upassword" ref-property="password"/>
-			</property>
-			<property name="productList" relation="one-to-many" data="product" key="orderId" rel-key="id">
-				<property name="id" ref-property="id"/>
-				<property name="orderId" ref-property="orderId"/>
-				<property name="productName" ref-property="name"/>
-				<property name="productCount" ref-property="count"/>
-				<property name="productPrice" ref-property="price"/>
-			</property>
-		</property-info>
-	</view>
+  <view name="OrderInfo" target-main="order">
+    <property-info>
+    <property name="id" ref-property="id"/>
+    <property name="userId" ref-property="userId"/>
+    <property name="productCount" ref-property="count"/>
+    <property name="totalPrice" ref-property="totalPrice"/>
+    <property name="dateTime" ref-property="dateTime"/>
+    <property name="userT" relation="one-to-one" data="user" key="id" rel-key="userId">
+       <property name="id" ref-property="id"/>
+       <property name="userName" ref-property="name"/>
+       <property name="uname" ref-property="name"/>
+       <property name="upassword" ref-property="password"/>
+    </property>
+    <property name="productList" relation="one-to-many" data="product" key="orderId" rel-key="id">
+       <property name="id" ref-property="id"/>
+       <property name="orderId" ref-property="orderId"/>
+       <property name="productName" ref-property="name"/>
+       <property name="productCount" ref-property="count"/>
+       <property name="productPrice" ref-property="price"/>
+     </property>
+   </property-info>
+  </view>
 </orm-view-mapping>
 ```
 以上业务名称为OrderInfo，其主数据为order，其有两个子对象，分别是userT(对应数据对象为user)、productList(对应数据对象为product)。
