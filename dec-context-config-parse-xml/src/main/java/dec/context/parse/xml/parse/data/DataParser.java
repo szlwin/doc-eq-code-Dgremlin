@@ -187,6 +187,7 @@ public class DataParser extends AbstarctElementsParser{
 			
 			column.setType(type);
 			column.setConvertFun(oriType+"_"+type);
+			column.setOriginType(oriType);
 		}
 		return column;
 	}

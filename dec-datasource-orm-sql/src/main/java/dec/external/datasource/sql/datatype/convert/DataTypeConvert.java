@@ -9,29 +9,31 @@ import dec.external.datasource.sql.utils.Util;
 
 public class DataTypeConvert {
 
-	//private static final ThreadLocal<ConvertContainer> typeContainerLocal = new ThreadLocal<ConvertContainer>();
-	
-	public static Object convert(Object data,String fun,String dataSource,boolean isTo){
-		if(data == null)
-			return data;
-		
-		String conName = Util.getDataSourceByName(dataSource).getConName();
-		
-		DataConvertContainer convertContainer = (DataConvertContainer) ConfigContextUtil.getConfigInfo().getConnection(conName)
-				.getConnectionInfo().getDataConvertContainer();
-		//return typeContainerLocal.get()
-		//		.convert(data, fun, isTo);
-		
-		return convertContainer.convert(data, fun, isTo);		
-	}
-	
-	public static Object convert(Object data,String fun,String dataSource){
-		return convert(data,fun,dataSource,true);
-	}
-	
-	//public static void setDataSourceType(String dataSource){
-	//	String type = DataUtil.getConfigInfo().getDataSource(dataSource).getType();
+    //private static final ThreadLocal<ConvertContainer> typeContainerLocal = new ThreadLocal<ConvertContainer>();
 
-	//	typeContainerLocal.set(DataTypeConvertFactory.getConvertContainer(type));
-	//}
+    public static Object convert(Object data, String type, String originType, String dataSource, boolean isTo) {
+        if (data == null)
+            return null;
+
+        String conName = Util.getDataSourceByName(dataSource).getConName();
+
+        DataConvertContainer convertContainer = (DataConvertContainer) ConfigContextUtil.getConfigInfo().getConnection(conName)
+                .getConnectionInfo().getDataConvertContainer();
+
+        if (isTo) {
+            return convertContainer.convertToDataSource(data, type, originType);
+        } else {
+            return convertContainer.convertFromDataSource(data, type, originType);
+        }
+    }
+
+    public static Object convert(Object data, String type, String originType, String dataSource) {
+        return convert(data, type, originType, dataSource, true);
+    }
+
+    //public static void setDataSourceType(String dataSource){
+    //	String type = DataUtil.getConfigInfo().getDataSource(dataSource).getType();
+
+    //	typeContainerLocal.set(DataTypeConvertFactory.getConvertContainer(type));
+    //}
 }

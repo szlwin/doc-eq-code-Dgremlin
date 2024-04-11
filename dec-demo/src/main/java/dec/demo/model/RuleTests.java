@@ -20,7 +20,7 @@ public class RuleTests extends DemoLoadTests {
     public static void main(String args[]) throws Exception {
         RuleTests ruleTests = new RuleTests();
         ruleTests.testInit();
-        //ruleTests.testOrderRule();
+        ruleTests.testOrderRule();
         ruleTests.testOrderRuleByObj();
     }
 

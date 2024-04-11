@@ -176,10 +176,10 @@ public class DataConvert {
 		DataTable dataTable = data.getTableInfo().getTable(dataSource);
 		
 		Column column = dataTable.getColumns().get(key);
-		String convertFun = column.getConvertFun();
+		String originType = column.getOriginType();
 	
-		if(convertFun!=null && !"".equals(convertFun)){
-			value = DataTypeConvert.convert(value, convertFun,dataSource,false);
+		if(originType!=null && !"".equals(originType)){
+			value = DataTypeConvert.convert(value, column.getType(), originType,dataSource,false);
 		}
 		return value;
 	}
