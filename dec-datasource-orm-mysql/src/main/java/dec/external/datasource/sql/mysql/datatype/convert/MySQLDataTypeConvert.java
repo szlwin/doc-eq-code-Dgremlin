@@ -6,9 +6,6 @@ import dec.core.datasource.datatype.convert.DataConvertContainer;
 import javolution.util.FastMap;
 import dec.core.datasource.datatype.convert.DataConvert;
 
-//import com.orm.sql.datatype.convert.ConvertContainer;
-//import com.orm.sql.datatype.convert.DataConvert;
-
 public class MySQLDataTypeConvert implements DataConvertContainer{
 
 	private final static Map<String, DataConvert<?,?>> funMap
@@ -55,8 +52,4 @@ public class MySQLDataTypeConvert implements DataConvertContainer{
 	/*public Object convert(Object data,String fun){
 		return convert(data,fun,true);
 	}*/
-
-	public void init() {
-
-	}
 }
