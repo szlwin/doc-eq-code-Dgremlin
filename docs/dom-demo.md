@@ -37,45 +37,45 @@ orm-config.xml配置文件
 以下配置文件在dec-demo/main/resource/model目录下
 ```
 <orm-config>
-	<!--配置数据源标识及其对应数据源类型-->
-	<orm-datasource-info>
-		<orm-datasource name="data1">
-			<name>MySQL</name>
-		</orm-datasource>
-		<orm-datasource name="data2">
-			<name>MySQL</name>
-		</orm-datasource>		
-	</orm-datasource-info>
+  <!--配置数据源标识及其对应数据源类型-->
+  <orm-datasource-info>
+    <orm-datasource name="data1">
+     <name>MySQL</name>
+    </orm-datasource>
+    <orm-datasource name="data2">
+      <name>MySQL</name>
+    </orm-datasource>		
+  </orm-datasource-info>
 
-	<!--数据设计文档路径-->
-	<orm-data-file-info>
-		<orm-file path="classpath:model/test-data/"/>
-	</orm-data-file-info>
+  <!--数据设计文档路径-->
+  <orm-data-file-info>
+    <orm-file path="classpath:model/test-data/"/>
+  </orm-data-file-info>
 
-	<!--业务模型设计文档路径-->
-	<orm-view-file-info>
-		<orm-file path="classpath:model/test-view"/>
-	</orm-view-file-info>
+  <!--业务模型设计文档路径-->
+  <orm-view-file-info>
+    <orm-file path="classpath:model/test-view"/>
+  </orm-view-file-info>
 
-	<!--业务视图设计文档路径-->
-	<orm-rule-file-info>
-		<orm-file path="classpath:model/test-rule"/>
-	</orm-rule-file-info>
+  <!--业务视图设计文档路径-->
+  <orm-rule-file-info>
+    <orm-file path="classpath:model/test-rule"/>
+  </orm-rule-file-info>
 
-	<!--数据链接与数据源标识对应关系-->
-	<orm-connection-info>
-		<orm-connection name="con1">
-			<data-source-info>
-				<data-source ref="data1"/>
-			</data-source-info>
-		</orm-connection>
+  <!--数据链接与数据源标识对应关系-->
+  <orm-connection-info>
+    <orm-connection name="con1">
+      <data-source-info>
+        <data-source ref="data1"/>
+      </data-source-info>
+    </orm-connection>
 
-		<orm-connection name="con2">
-			<data-source-info>
-				<data-source ref="data2"/>
-			</data-source-info>
-		</orm-connection>
-	</orm-connection-info>
+   <orm-connection name="con2">
+     <data-source-info>
+       <data-source ref="data2"/>
+         </data-source-info>
+       </orm-connection>
+   </orm-connection-info>
 </orm-config>
 ```
 以上文档中需要对'orm-connection-info'做下说明，其在于可对链接具体性质可进一步细化，如两个不同链接来自于同一个数据源，一个用于批量读取，另一个主要用于单个读写。
