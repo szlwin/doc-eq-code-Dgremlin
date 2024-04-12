@@ -6,9 +6,6 @@ import dec.core.datasource.datatype.convert.DataConvertContainer;
 import javolution.util.FastMap;
 import dec.core.datasource.datatype.convert.DataConvert;
 
-//import com.orm.sql.datatype.convert.ConvertContainer;
-//import com.orm.sql.datatype.convert.DataConvert;
-
 public class MySQLDataTypeConvert implements DataConvertContainer{
 
 	private final static Map<String, DataConvert<?,?>> funMap
@@ -26,44 +23,33 @@ public class MySQLDataTypeConvert implements DataConvertContainer{
 		funrMap.put("date_date", new SqlDateToDate());
 		funrMap.put("date_time", new SqlTimeToDate());
 		funrMap.put("date_timestamp", new SqlTimestampToDate());
-		
-		
-		funMap.put("date_time", new DateToSqlTime());
-		funMap.put("date_timestamp", new DateToSqlTimestamp());
-		
-		funrMap.put("date_date", new SqlDateToDate());
-		funrMap.put("date_time", new SqlTimeToDate());
-		funrMap.put("date_timestamp", new SqlTimestampToDate());
+
 	}
-	
-	public Object convert(Object data,String fun,boolean isTo){
+
+	public Object convertToDataSource(Object data,String type, String originType){
+		return convert(data, type, originType, true);
+	}
+
+	public Object convertFromDataSource(Object data,String type, String originType){
+		return convert(data, type, originType, false);
+	}
+
+	private Object convert(Object data,String type, String originType, boolean isTo){
 		if(data == null)
-			return data;
+			return null;
 		DataConvert convert = null;
-		
-		
+
 		if(isTo){
-			convert = funMap.get(fun);
-			//throw new RuntimeException();
+			convert = funMap.get(originType+"_"+type);
 		}else{
-			convert = funrMap.get(fun);
-			//throw new RuntimeException();
+			convert = funrMap.get(originType+"_"+type);
 		}
 		
 		return convert.convert(data);
 		
 	}
 	
-	public Object convert(Object data,String fun){
+	/*public Object convert(Object data,String fun){
 		return convert(data,fun,true);
-	}
-
-	public void init() {
-
-	}
-	
-	public boolean check(String oriType, String targetType) {
-		// TODO Auto-generated method stub
-		return funMap.containsKey(oriType+"_"+targetType);
-	}
+	}*/
 }

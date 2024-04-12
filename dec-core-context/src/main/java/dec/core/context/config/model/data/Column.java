@@ -15,7 +15,9 @@ public class Column {
 	private String convertFun;
 	
 	private String type;
-	
+
+	private String originType;
+
 	public String getName() {
 		return name;
 	}
@@ -47,6 +49,12 @@ public class Column {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	
+
+	public String getOriginType() {
+		return originType;
+	}
+
+	public void setOriginType(String originType) {
+		this.originType = originType;
+	}
 }

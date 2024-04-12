@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <orm-view-mapping>
-	
-	<view name="OrderInfo" class="" target-main="order"><!-- 必须是BaseModel的子类或默认为空-->
+	<view name="OrderInfo" target-main="order">
 		<property-info>
 			<property name="id" ref-property="id"/>
 			<property name="userId" ref-property="userId"/>
@@ -23,6 +22,5 @@
 				<property name="productPrice" ref-property="price"/>
 			</property>
 		</property-info>
-		
 	</view>
 </orm-view-mapping>

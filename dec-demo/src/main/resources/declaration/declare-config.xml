@@ -91,13 +91,13 @@
 					<data  ref-rule="save-User" ref-rule-range="insertUser"/>
 				<data end="true"/>
 				<data begin="true" ref-rule-dataSource="data1"/>
-					<data system="order" name="subscribeOrderData" ref-rule="save-Order" ref-rule-replace="insertOrder" rel-refresh-data="this:this,orderDetails:orderDetailList"/>
+					<data system="order" name="subscribeOrderData" ref-rule="save-Order" ref-rule-replace="insertOrder" system-to-dom="this:this,orderDetails:orderDetailList"/>
 						<data begin="true" transactionPolicy="NEW" ref-rule-dataSource="data1"/>
 							<data ref-rule="save-Order" ref-rule-range="insertOrderDetail"/>
 							<data name="$payData"/>
 							<data begin="true" transactionPolicy="NESTED" ref-rule-dataSource="data1"/>
-								<data system="pay" name="payResultData" rel-refresh-data="this:payInfo,payDetailList:payInfo.payDetailList"/>
-								<data  ref-rule="save-Order" ref-rule-range="insertPayInfo:insertPayDetailList"/>
+								<data system="pay" name="payResultData" system-to-dom="this:payInfo,payDetailList:payInfo.payDetailList"/>
+								<data  ref-rule="save-Order" dom-to-system="insertPayInfo:insertPayDetailList"/>
 								<data name="$payResultData" />
 							<data end="true"/>
 						<data end="true"/>

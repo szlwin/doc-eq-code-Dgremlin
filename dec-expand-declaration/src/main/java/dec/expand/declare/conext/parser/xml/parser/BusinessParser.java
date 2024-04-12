@@ -156,7 +156,19 @@ public class BusinessParser {
                     processDesc.setRuleEnd(ruleArray[ruleArray.length - 1]);
                 }
             }
-            processDesc.setRuleRefresh(dataElement.attributeValue("rel-refresh-data"));
+
+            String refreshData = dataElement.attributeValue("system-to-dom");
+            if(refreshData != null && !"".equals(refreshData)){
+                processDesc.setRuleRefresh(refreshData);
+                processDesc.setSystemToDom(true);
+            }
+
+            refreshData = dataElement.attributeValue("dom-to-system");
+            if(refreshData != null && !"".equals(refreshData)){
+                processDesc.setRuleRefresh(refreshData);
+                processDesc.setSystemToDom(false);
+            }
+
             businessDesc.add(processDesc);
         }
         if (txCount != 0) {

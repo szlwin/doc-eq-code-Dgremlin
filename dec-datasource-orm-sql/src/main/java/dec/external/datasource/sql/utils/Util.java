@@ -102,10 +102,10 @@ public class Util {
 				if(value instanceof NullData)
 					dataInfo.setValue(null);
 			}
-			String convertFun = column.getConvertFun();
+			String originType = column.getOriginType();
 			
-			if(convertFun!=null && !"".equals(convertFun) && dataValue != null){
-				value = DataTypeConvert.convert(dataValue, convertFun,dataSourceName);
+			if(originType!=null && !"".equals(originType) && dataValue != null){
+				value = DataTypeConvert.convert(dataValue, column.getType(), originType, dataSourceName);
 			}else{
 				value = dataValue;
 			}

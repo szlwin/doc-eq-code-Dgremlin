@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<orm--data-mapping>
-	<data name="product" class=""><!-- 必须是BaseModel的子类或默认为空-->
+<orm-data-mapping>
+	<data name="product">
 		<property-info>
 			<property name="id" type="int"/>
 			<property name="orderId" type="int"/>
@@ -26,4 +26,4 @@
 			</table>			
 		</table-info>
 	</data>
-</orm--data-mapping>
+</orm-data-mapping>

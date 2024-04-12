@@ -1,14 +1,11 @@
 package dec.demo.config;
 
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import dec.context.parse.xml.exception.XMLParseException;
-import dec.core.context.config.model.config.Config;
 import dec.core.context.data.BaseData;
 import dec.core.model.utils.DataUtil;
 import dec.core.starter.common.ConfigUtil;
@@ -17,44 +14,30 @@ import dec.external.datasource.sql.mysql.connection.factory.MySQLDBConnectionFac
 import dec.external.datasource.sql.mysql.convert.container.factory.MySQLConvertContainerFactory;
 import dec.external.datasource.sql.mysql.datatype.convert.factory.MySQLDataConvertContainerFactory;
 import dec.external.datasource.sql.mysql.execute.container.factory.MySQLExecuteContainerFactory;
-import santr.common.context.LexerUtil;
-
-
 
 public class DemoLoadTests {
 
 
 	public void testInit() throws Exception{
 
-		
-		
-		//LexerUtil.load("expr", com.example.demo.DemoApplication.class.getClassLoader()
-		//			.getResource("Expr.ls").getPath());
-	
-		
 		try {
+			//1.添加数据源
 			ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
-			//ConfigUtil.parseConnectionInfo("classpath:orm-con-config.xml");
+			//2.加载配置文件
 			ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
 		} catch (XMLParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		//configInfo.add(Config.DATASOURCE_CONFIG, dataSource);
-		
-		DataSourceManager.addDataSource("data1", getDataSource1());
-		
-		DataSourceManager.addDataSource("data2", getDataSource2());
-		
+
+		//3.添加数据源相关实现
 		DataSourceManager.addConnectionFactory("MySQL", new MySQLDBConnectionFactory());
-		
 		DataSourceManager.addConvertContainerFactory("MySQL", new MySQLConvertContainerFactory());
-		
 		DataSourceManager.addDataConvertContainerFacory("MySQL", new MySQLDataConvertContainerFactory());
-		
 		DataSourceManager.addExecuteContainerFacory("MySQL", new MySQLExecuteContainerFactory());
+
+		//4.添加数据源
+		DataSourceManager.addDataSource("data1", getDataSource1());
+		DataSourceManager.addDataSource("data2", getDataSource2());
 	}
 
 	public BaseData createProductData(String name,int count,double price) throws Exception{
@@ -71,16 +54,8 @@ public class DemoLoadTests {
 	public BaseData insertUserData() throws Exception{
 		
 		BaseData userData = DataUtil.createBaseData("user");
-		//userData.setValue("id", 14);
 		userData.setValue("name", "test");
 		userData.setValue("password", "test");
-		
-		//SimpleSession session = SessionFactory.createSimpleSession();
-		//session.begian();
-		//session.save(userData);
-		//session.commit();
-		//session.close();
-		
 		return userData;
 	}
 	
@@ -92,8 +67,6 @@ public class DemoLoadTests {
         hikariConfig.setJdbcUrl("jdbc:mysql://47.102.121.18:3306/demo-test");
         hikariConfig.setUsername("root");
         hikariConfig.setPassword("Came2021!");
-        // 设置可以获取tables remarks信息
-        //hikariConfig.addDataSourceProperty("useInformationSchema", "true");
         hikariConfig.setMinimumIdle(2);
         hikariConfig.setMaximumPoolSize(5);
         DataSource dataSource = new HikariDataSource(hikariConfig);
@@ -110,8 +83,6 @@ public class DemoLoadTests {
 		hikariConfig.setJdbcUrl("jdbc:mysql://47.102.121.18:3306/demo-test1");
 		hikariConfig.setUsername("root");
 		hikariConfig.setPassword("Came2021!");
-        // 设置可以获取tables remarks信息
-        //hikariConfig.addDataSourceProperty("useInformationSchema", "true");
         hikariConfig.setMinimumIdle(2);
         hikariConfig.setMaximumPoolSize(5);
         DataSource dataSource = new HikariDataSource(hikariConfig);

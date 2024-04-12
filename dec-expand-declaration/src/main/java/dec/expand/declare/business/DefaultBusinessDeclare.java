@@ -1,6 +1,5 @@
 package dec.expand.declare.business;
 
-import artoria.reflect.ReflectUtils;
 import com.alibaba.fastjson.JSONObject;
 import dec.core.context.config.model.rule.RuleViewInfo;
 import dec.core.context.config.utils.ConfigContextUtil;
@@ -9,6 +8,7 @@ import dec.core.model.container.ModelLoader;
 import dec.core.model.execute.tran.Transaction;
 import dec.core.model.execute.tran.advance.MultipleTranContainer;
 import dec.core.model.utils.DataUtil;
+import dec.expand.declare.bean.Bean;
 import dec.expand.declare.business.exception.ExecuteException;
 import dec.expand.declare.conext.DataStorage;
 import dec.expand.declare.conext.DescContext;
@@ -32,9 +32,10 @@ import dec.expand.declare.system.SystemContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class DefaultBusinessDeclare implements BusinessDeclare {
 
@@ -69,9 +70,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     private Map<String, ModelLoader> modelLoaderMap;
 
     private MultipleTranContainer multipleTranContainer;
-    //private TransactionDesc currentTransactionDesc;
-
-    //private List<TransactionDesc> transactionDescList;
 
     private boolean isRefRule;
 
@@ -417,18 +415,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private void executeProcess(ProcessDesc process, int index) throws Exception {
 
-        //DataDesc dataDesc = null;
-
-        //if(process.getSystem() == null){
-
-        //	dataDesc = DescContext.get().getData(process.getData());
-
-        //}else{
-
-        //	SystemDesc systemDesc = DescContext.get().getSystem(process.getSystem());
-
-        //	dataDesc = systemDesc.getData(process.getData());
-        //}
         if (process.getRule() != null) {
             executeRule(process);
         }
@@ -462,119 +448,26 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         for (PropertyDesc propertyDesc : process.getRuleRefreshList()) {
             try {
 
-
-                Object sourceObject = null;
+                String[] fromPropertyArray = propertyDesc.getSourceProperty();
                 if ("this".equals(propertyDesc.getSourceProperty()[0])) {
-                    sourceObject = object;
+                    fromPropertyArray = null;
+                }
+
+                String[] toPropertyArray = propertyDesc.getTargetProperty();
+                if ("this".equals(propertyDesc.getSourceProperty()[0])) {
+                    toPropertyArray = null;
+                }
+
+                if (process.isSystemToDom()) {
+                    Bean.get().copy(object, fromPropertyArray, this.modelLoaderMap.get(process.getRule()), toPropertyArray);
                 } else {
-                    sourceObject = DataUtils.getValue(object, propertyDesc.getSourceProperty(), 0);
+                    Bean.get().copy(this.modelLoaderMap.get(process.getRule()), fromPropertyArray, object, toPropertyArray);
                 }
 
-                if (isBaseData(sourceObject)) {
-
-                    return;
-                }
-
-                Object targetObject = this.modelLoaderMap.get(process.getRule());
-
-                if (!"this".equals(propertyDesc.getSourceProperty()[0])) {
-                    targetObject = DataUtils.getValue(targetObject, propertyDesc.getTargetProperty(), 0);
-                }
-                convertData(sourceObject, targetObject);
             } catch (Exception ex) {
                 throw new ExecuteException(ex);
             }
-
-
         }
-    }
-
-    private void convertData(Object sourceObject, Object targetObject) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-
-        PropertyDescriptor[] fromDescriptors = null;
-        PropertyDescriptor[] toDescriptors = null;
-        if (!(sourceObject instanceof Map)) {
-            fromDescriptors = ReflectUtils.getPropertyDescriptors(sourceObject.getClass());
-
-        }
-        if (!(targetObject instanceof Map) && !(targetObject instanceof ModelData)) {
-            toDescriptors = ReflectUtils.getPropertyDescriptors(targetObject.getClass());
-
-        }
-
-        Map<String, PropertyDescriptor> propertyMap = null;
-        Set<String> keys = null;
-        if (fromDescriptors != null) {
-            propertyMap = getSourceProperty(fromDescriptors);
-        } else {
-            keys = this.getSourceKey(sourceObject);
-        }
-
-        if (toDescriptors != null) {
-            for (PropertyDescriptor propertyDescriptor : toDescriptors) {
-                if ((propertyMap != null && propertyMap.containsKey(propertyDescriptor.getName()))
-                        || (keys != null && keys.contains(propertyDescriptor.getName()))) {
-                    Object value = getValue(sourceObject, propertyDescriptor.getName(), keys, propertyMap);
-                    if (validateData(value)) {
-                        propertyDescriptor.getWriteMethod().invoke(targetObject, value);
-                    }
-                }
-            }
-        } else {
-            Iterator<String> targetKeys = ((Map<String, ?>) targetObject).keySet().iterator();
-
-            while (targetKeys.hasNext()) {
-                String key = targetKeys.next();
-                if ((propertyMap != null && propertyMap.containsKey(key))
-                        || (keys != null && keys.contains(key))) {
-                    Object value = getValue(sourceObject, key, keys, propertyMap);
-                    if (validateData(value)) {
-                        DataUtils.setValue(targetObject, key, sourceObject);
-                    }
-                }
-            }
-        }
-    }
-
-    private Object getValue(Object sourceObject, String key, Set<String> keySet, Map<String, PropertyDescriptor> propertyDescriptorMap) throws InvocationTargetException, IllegalAccessException {
-        if (keySet != null) {
-            return ((Map<String, ?>) sourceObject).get(key);
-        }
-        return propertyDescriptorMap.get(key).getReadMethod().invoke(sourceObject);
-    }
-
-    private Map<String, PropertyDescriptor> getSourceProperty(PropertyDescriptor[] descriptors) {
-        Map<String, PropertyDescriptor> map = new HashMap<>();
-        for (PropertyDescriptor propertyDescriptor : descriptors) {
-            map.put(propertyDescriptor.getName(), propertyDescriptor);
-        }
-        return map;
-    }
-
-    private Set<String> getSourceKey(Object sourceObject) {
-        if (sourceObject instanceof Map) {
-            return ((Map) sourceObject).keySet();
-        } else if (sourceObject instanceof ModelData) {
-            return ((ModelData) sourceObject).getValues().keySet();
-        }
-        return null;
-    }
-
-    private boolean isBaseData(Object value) {
-        if (value instanceof String || value instanceof Number || value instanceof Boolean) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    private boolean validateData(Object value) {
-
-        if (value instanceof String || value instanceof Number || value instanceof Boolean || value instanceof Collections) {
-            return true;
-        }
-        return false;
     }
 
     private void executeRule(ProcessDesc process) {
@@ -673,7 +566,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             }
         }
 
-        System executeSystem = null;
+        System executeSystem;
 
         if ("this".equals(system)) {
 
