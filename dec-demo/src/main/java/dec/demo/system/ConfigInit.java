@@ -29,7 +29,7 @@ public class ConfigInit {
 		ConfigUtil.parseConfigInfo("classpath:system/orm-config.xml");
 
 		DataSourceManager.addDataSource("data1", getDataSource());
-
+		DataSourceManager.addDataSource("data2", getDataSource());
 
 		DataSourceManager.addConnectionFactory("MySQL", new MySQLDBConnectionFactory());
 

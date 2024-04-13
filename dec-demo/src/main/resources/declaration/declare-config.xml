@@ -13,7 +13,7 @@
 					<depends>
 						<depend data="$subscribeOrderData"/>
 						<depend data="orderData" init="status:1"/>
-						<depend data="orderPayResultData" condition="status=1" change="status:2"/>
+						<depend data="orderPayResultData"/>
 					</depends>
 				</data>
 
@@ -72,32 +72,25 @@
 
 
 	<businesses>
-		<!--<business name="" ref-view="v1:c1,v2:c2" >
-			<datas>
-				<data name="" system="" ref-view="v1" rule-start="" rule-end="" begin="true" ref-rule-dataSource=""/>
-				<data name="" system=""/>
-				<data name="" system="" ref-view="v1" rule-start="" rule-end="" end="true"/>
-			</datas>
-		</business>-->
 
 		<business name="subscribeOrderDataWithSimple"  >
 			<data system="order" name="subscribeOrderDataSimple" />
 		</business>
 
-		<business name="subscribeOrderWithDom" ref-dom="save-User:data1,save-Order:data1">
+		<business name="subscribeOrderWithDom" ref-dom="save-User:con1,save-Order:con1">
 			<datas>
-				<data begin="true" ref-rule-dataSource="data1"/>
+				<data begin="true" ref-rule-connection="con1"/>
 					<data system="user" name="userData" />
 					<data  ref-rule="save-User" ref-rule-range="insertUser"/>
 				<data end="true"/>
-				<data begin="true" ref-rule-dataSource="data1"/>
+				<data begin="true" ref-rule-connection="con1"/>
 					<data system="order" name="subscribeOrderData" ref-rule="save-Order" ref-rule-replace="insertOrder" system-to-dom="this:this,orderDetails:orderDetailList"/>
-						<data begin="true" transactionPolicy="NEW" ref-rule-dataSource="data1"/>
+						<data begin="true" transactionPolicy="NEW" ref-rule-connection="con1"/>
 							<data ref-rule="save-Order" ref-rule-range="insertOrderDetail"/>
 							<data name="$payData"/>
-							<data begin="true" transactionPolicy="NESTED" ref-rule-dataSource="data1"/>
+							<data begin="true" transactionPolicy="NEW" ref-rule-connection="con1"/>
 								<data system="pay" name="payResultData" system-to-dom="this:payInfo,payDetailList:payInfo.payDetailList"/>
-								<data  ref-rule="save-Order" dom-to-system="insertPayInfo:insertPayDetailList"/>
+								<data ref-rule="save-Order" ref-rule-range="insertPayInfo:insertPayDetailList" dom-to-system="insertPayInfo:insertPayDetailList"/>
 								<data name="$payResultData" />
 							<data end="true"/>
 						<data end="true"/>
@@ -134,34 +127,4 @@
 			</datas>
 		</business>
 	</businesses>
-
-	<!--
-	<businesses>
-		<business name="subscribeOrder" desc="提交订单">
-
-			<data data="$payData" >
-				<depends>
-					<depend data="$subscribeOrderData"/>
-				</depends>
-			</data>
-
-			<processes oExceptionTransaction="roll">
-				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="one" oExceptionRollBack="roll">
-					produce:order.orderData
-				</process>
-
-				<process onErrorStop="true" oExceptionStop="true" transaction="require">
-					produce:$payResultData
-				</process>
-
-				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="two">
-					produce:order.orderPayResultData
-				</process>
-
-				<process onErrorStop="true" oExceptionStop="true" transaction="require-new" transaction-group="one">
-					produce:order.orderPayResultData
-				</process>
-			</processes>
-		</business>
-	</businesses>-->
 </declare-config>

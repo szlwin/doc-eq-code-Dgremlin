@@ -1,0 +1,308 @@
+# 数据生产与消费
+
+此主要解决在开发过程中，解决数据状态的转变在产品、开发、测试沟通中，由于自然语言原因而导致不精确的情况。同时统一规划系统或模块间的数据交互，并能让开发人员编写出高质量可扩展的代码。
+其具体可参考本人的[文档即编码二](https://blog.csdn.net/szlwin/article/details/77141140)与[文档即编码三](https://blog.csdn.net/szlwin/article/details/77922610)
+在开发某功能时中，将其看作是数据的生产。其生产需要源材料，即相应的数据信息，如缺少相关的数据则生产失败，生产完成后保存数据，此数据可作为其它数据生产的源材料。
+在获取源材料数据时，同时对数据进行判断，如需用户激活信息这个源材料，则应存在其相应的用户数据，且status=1。通过这样的方式，便于开发人员之间沟通，同时对于源材料数据的生产可以编写统一编码，避免大量冗余代码。
+相对于dom注重的是业务结果，而此项目关注的是中间数据交互过程，着重关注中间过程。在某些复杂功能中，其中间过程数据交互会非常复杂，其可能涉及分布式、冥等、事务、重试等非功能性问题。
+而以上非功能性的问题与业务无关，与整个技术架构或系统架构有关，故此项目主要偏向技术层面。
+
+系统
+===
+系统为一组数据的划分，如订单系统、支付系统。其系统下的数据对应有生产者及状态监听器。生产者用于生产对应的数据，如数据的状态发生变更，则会通知状态监听器。
+其中有一个'common'系统，所有其它系统共用的数据定义在此系统中。
+
+数据
+===
+为系统中的数据，数据中包含对应的依赖数据，即生产此数据时需要那些源材料
+
+业务
+===
+一个业务中，会制定生产那些系统中的那些数据，同时可制定相应的事务隔离级别。
+
+
+配置文件
+===
+其文件采用xml格式，以下是具体说明：<br>
+系统配置文件<br>
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td>systems</td>
+    <td>system</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>系统</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>system</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>系统名称</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>system</td>
+    <td>datas</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>数据信息</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>datas</td>
+    <td>data</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>数据定义信息</td>
+    <td></td>
+  </tr>
+  <tr>
+   <td>data</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>数据名称</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>desc</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>数据描述</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>isCachePrior</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>是否缓存</td>
+    <td>
+        true:每次重新获取数据，类似从数据库中重新获取<br>
+        false:如数据已从数据库中读取，则直接从缓存中读取<br>
+    </td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>depends</td>
+    <td>元素</td>
+    <td>否</td>
+    <td>依赖数据信息</td>
+    <td>
+    </td>
+  </tr>
+  <tr>
+    <td>depends</td>
+    <td>depend</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>依赖数据</td>
+    <td>
+    </td>
+  </tr>
+  <tr>
+    <td>depend</td>
+    <td>data</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>依赖数据名称</td>
+    <td>
+    </td>
+  </tr>
+  <tr>
+    <td>depend</td>
+    <td>init</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>用于初始化赋值</td>
+    <td>
+    </td>
+  </tr>
+  <tr>
+    <td>depend</td>
+    <td>condition</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>数据判断条件</td>
+    <td>校验数据是否符合条件</td>
+  </tr>
+  <tr>
+    <td>depend</td>
+    <td>change</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>数据状态转换表达式</td>
+    <td>
+    </td>
+  </tr>
+  <tr>
+    <td>depend</td>
+    <td>param</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>参数</td>
+    <td>
+    </td>
+  </tr>
+</table>
+<br>
+<br>
+
+业务配置文件<br>
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>businesses</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>业务信息</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>businesses</td>
+    <td>business</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>业务配置信息</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>business</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>业务名称</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>business</td>
+    <td>ref-dom</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>关联dom的业务视图与数据源，可关联多个</td>
+    <td>如:save-User:data1,save-Order:data1</td>
+  </tr>
+  <tr>
+    <td>business</td>
+    <td>datas</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>数据信息</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>datas</td>
+    <td>data</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>数据配置信息</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>system</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>系统名称</td>
+    <td>如系统为'common'，则不必填写</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>数据名称</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>begin</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>表明开启事务</td>
+    <td>true:开启事务</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>end</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>表明结束事务</td>
+    <td>true:结束事务</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>ref-rule-dataSource</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>对应dom中的数据链接</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>transactionPolicy</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>事务隔离级别，默认为REQUIRE</td>
+    <td>NEW,NOSUPPORTED,REQUIRE,SUPPORTED</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>ref-rule</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>对应dom中的业务视图</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>ref-rule-replac</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>当前数据生产替换dom中的某个规则</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>ref-rule-range</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>执行业务视图中一组规则，用':'分割</td>
+    <td>如'insertPayInfo:insertPayDetailList'表示为从'insertPayInfo'规则开始执行一直到'insertPayDetailList'规则结束</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>system-to-dom</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>将系统中的数据拷贝到dom对象中，用':'分割</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>dom-to-system</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>将dom中的数据拷贝到系统对象中，用':'分割</td>
+    <td></td>
+  </tr>
+</table>
