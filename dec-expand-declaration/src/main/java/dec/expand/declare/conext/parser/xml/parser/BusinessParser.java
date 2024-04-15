@@ -116,7 +116,7 @@ public class BusinessParser {
 
             processDesc.setData(name);
             if (name != null && !"".equals(name) && name.startsWith("$")) {
-                processDesc.setSystem("this");
+                processDesc.setSystem("common");
             } else {
                 String refRule = dataElement.attributeValue("ref-rule");
 

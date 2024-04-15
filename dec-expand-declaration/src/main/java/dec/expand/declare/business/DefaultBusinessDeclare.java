@@ -196,12 +196,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         return this;
     }
 
-
-    protected BusinessDeclare data(String data) {
-        data("this", data);
-        return this;
-    }
-
     protected BusinessDeclare data(ProcessDesc processDesc) {
         currentProcess = processDesc;
 
@@ -212,25 +206,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         return this;
     }
 
-
-    protected BusinessDeclare data(String system, String data) {
-
-        validate(system, data);
-
-        currentProcess = new ProcessDesc();
-
-        currentProcess.setData(data);
-
-        currentProcess.setSystem(system);
-
-        this.businessDesc.add(currentProcess);
-
-        //this.transaction(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
-        //        this.currentTransactionDesc.getTransactionGroup());
-        //log.info("Code:{}, prepare produce data, [{}]-[{}]", code, system, data);
-
-        return this;
-    }
 
     /*protected BusinessDeclare beginTx(TransactionPolicy transactionPolicy) {
         if (this.transactionDescList == null)
@@ -418,26 +393,34 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         if (process.getRule() != null) {
             executeRule(process);
         }
-        if ("this".equals(process.getSystem())) {
-
-            produceData(null, process.getData(), process.getSystem());
-
+        if("common".equals(process.getSystem())){
+            if(currentSystem.containsProduce(process.getData())){
+                produceData(null, process.getData(), "this");
+            }else {
+                produceData(null, process.getData(), "common");
+            }
             refreshModeldata(process);
-        } else {
+        }else {
+            if ("this".equals(process.getSystem())) {
 
-            SystemDesc systemDesc = DescContext.get().getSystem(process.getSystem());
+                produceData(null, process.getData(), process.getSystem());
 
-            DataDesc dataDesc = systemDesc.getData(process.getData());
+                refreshModeldata(process);
+            } else {
 
-            produceData(dataDesc, process.getData(), process.getSystem());
+                SystemDesc systemDesc = DescContext.get().getSystem(process.getSystem());
 
-            this.change(systemDesc, dataDesc);
+                DataDesc dataDesc = systemDesc.getData(process.getData());
 
-            refreshModeldata(process);
+                produceData(dataDesc, process.getData(), process.getSystem());
 
-            refreshStorage(dataDesc);
+                this.change(systemDesc, dataDesc);
+
+                refreshModeldata(process);
+
+                refreshStorage(dataDesc);
+            }
         }
-
     }
 
     private void refreshModeldata(ProcessDesc process) {
@@ -533,9 +516,19 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                         }
                         DataDesc depnedDataDesc = getDataDesc(system, dataDependDesc);
 
-                        log.info("Code:{}, start produce depend data, [{}]-[{}]", code, system, data);
+                        if (dataDependDesc.getType() == 1) {
+                            if(this.currentSystem.containsProduce(data)){
+                                log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "this", data);
+                                produceData(depnedDataDesc, data, "this");
+                            }else {
+                                log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "common", data);
+                                produceData(depnedDataDesc, data, "common");
+                            }
+                        }else {
+                            log.info("Code:{}, start produce depend data, [{}]-[{}]", code, system, data);
+                            produceData(depnedDataDesc, data, system);
+                        }
 
-                        produceData(depnedDataDesc, data, system);
 
                         if (!result.isSuccess()) {
                             return;

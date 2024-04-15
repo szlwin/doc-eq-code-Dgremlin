@@ -21,9 +21,9 @@ public class TestOrderBusiness {
 
         subscribeOrderBySimple();
 
-        //subscribeOrder();
+        subscribeOrder();
 
-        //cancelOrderData();
+        cancelOrderData();
     }
 
     public static void subscribeOrderBySimple() {
@@ -193,6 +193,14 @@ public class TestOrderBusiness {
                     PayResultData payResultData = (PayResultData) storage.get("$payResultData");
 
                     return ExecuteResult.success();
+                }).addProduce("subscribeOrderDataSimple", storage -> {
+                    SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
+                    Order order = new Order();
+
+                    order.setId(1l);
+                    order.setProductName(subscribeOrderData.getProductName());
+
+                    return ExecuteResult.success(subscribeOrderData);
                 });
 
 
