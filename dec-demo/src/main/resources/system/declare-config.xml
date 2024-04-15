@@ -1,6 +1,11 @@
 <declare-config>
 
 	<systems>
+		<system name="user">
+			<datas>
+				<data name="userData"/>
+			</datas>
+		</system>
 		<system name="order">
 			<datas>
 
@@ -68,9 +73,29 @@
 
 	<businesses>
 
-		<business name="subscribeOrderDataWithSimple">
+		<business name="subscribeOrderDataWithSimple"  >
+			<data system="order" name="subscribeOrderDataSimple" />
+		</business>
+
+		<business name="subscribeOrderWithDom" ref-dom="save-User:con1,save-Order:con1">
 			<datas>
-				<data system="order" name="subscribeOrderDataSimple" />
+				<data begin="true" ref-rule-connection="con1"/>
+					<data system="user" name="userData" />
+					<data  ref-rule="save-User" ref-rule-range="insertUser"/>
+				<data end="true"/>
+				<data begin="true" ref-rule-connection="con1"/>
+					<data system="order" name="subscribeOrderData" ref-rule="save-Order" ref-rule-replace="insertOrder" system-to-dom="this:this,orderDetails:orderDetailList"/>
+						<data begin="true" transactionPolicy="NEW" ref-rule-connection="con1"/>
+							<data ref-rule="save-Order" ref-rule-range="insertOrderDetail"/>
+							<data name="$payData"/>
+							<data begin="true" transactionPolicy="NEW" ref-rule-connection="con1"/>
+								<data system="pay" name="payResultData" system-to-dom="this:payInfo,payDetailList:payInfo.payDetailList"/>
+								<data ref-rule="save-Order" ref-rule-range="insertPayInfo:insertPayDetailList" dom-to-system="insertPayInfo:insertPayDetailList"/>
+								<data name="$payResultData" />
+							<data end="true"/>
+						<data end="true"/>
+					<data system="order" name="orderPayResultData"/>
+				<data end="true"/>
 			</datas>
 		</business>
 

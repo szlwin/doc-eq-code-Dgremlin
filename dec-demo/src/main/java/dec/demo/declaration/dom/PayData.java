@@ -1,4 +1,4 @@
-package dec.demo.declaration;
+package dec.demo.declaration.dom;
 
 import java.math.BigDecimal;
 

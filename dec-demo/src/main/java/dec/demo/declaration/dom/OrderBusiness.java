@@ -1,4 +1,4 @@
-package dec.demo.declaration;
+package dec.demo.declaration.dom;
 
 import dec.expand.declare.conext.desc.business.BusinessDesc;
 import dec.expand.declare.conext.desc.data.DataDesc;
