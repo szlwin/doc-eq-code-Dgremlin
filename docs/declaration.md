@@ -195,14 +195,6 @@
   </tr>
   <tr>
     <td>business</td>
-    <td>ref-dom</td>
-    <td>属性</td>
-    <td>否</td>
-    <td>关联dom的业务视图与数据源，可关联多个</td>
-    <td>如:save-User:data1,save-Order:data1</td>
-  </tr>
-  <tr>
-    <td>business</td>
     <td>datas</td>
     <td>元素</td>
     <td>是</td>
@@ -251,19 +243,40 @@
   </tr>
   <tr>
     <td>data</td>
-    <td>ref-rule-dataSource</td>
-    <td>属性</td>
-    <td>否</td>
-    <td>对应dom中的数据链接</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>data</td>
     <td>transactionPolicy</td>
     <td>属性</td>
     <td>否</td>
     <td>事务隔离级别，默认为REQUIRE</td>
     <td>NEW,NOSUPPORTED,REQUIRE,SUPPORTED</td>
+  </tr>
+</table>
+<br>
+<br>
+以下配置信息与dom联合使用时需配置
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td>business</td>
+    <td>ref-dom</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>关联dom的业务视图与数据源，可关联多个</td>
+    <td>如:save-User:data1,save-Order:data1</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>ref-rule-dataSource</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>对应dom中的数据链接</td>
+    <td></td>
   </tr>
   <tr>
     <td>data</td>
@@ -294,7 +307,7 @@
     <td>system-to-dom</td>
     <td>属性</td>
     <td>否</td>
-    <td>将系统中的数据拷贝到dom对象中，用':'分割</td>
+    <td>将系统中的数据拷贝到dom对象中，可拷贝多个对象或数据，用':'分割</td>
     <td></td>
   </tr>
   <tr>
@@ -302,7 +315,7 @@
     <td>dom-to-system</td>
     <td>属性</td>
     <td>否</td>
-    <td>将dom中的数据拷贝到系统对象中，用':'分割</td>
+    <td>将dom中的数据拷贝到系统对象中，可拷贝多个对象或数据，用':'分割</td>
     <td></td>
   </tr>
 </table>
