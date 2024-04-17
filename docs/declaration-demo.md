@@ -10,8 +10,8 @@
 			<datas>
 				<data name="subscribeOrderDataSimple" desc="订购订单数据-简单" isCachePrior="false">
 					<depends>
-						<depend data="$subscribeOrderData"/>
-						<depend data="orderData" init="status:1"/>
+						<depend data="$subscribeOrderData"  init="status:1"/>
+						<depend data="orderData"/>
 						<depend data="orderPayResultData"/>
 					</depends>
 				</data>
@@ -181,6 +181,7 @@ public static void initSystem() {
 ```
 以上代码在dec.demo.declaration.TestOrderBusiness类中，由于代码较长，只展示了order系统与common系统的代码。<br>
 在以上代码中，为order系统中定义的数据提供生产方式，同时加载order系统。对于common系统，由于其为通用系统，其即可在系统中添加数据生产者，或是在业务中添加相应的数据生产者，如同时添加，则以业务中定义添加的生产者有效。<br>
+
 以上代码中addProduce方法的storage参数为数据的存储器，在整个业务中生产的数据，都保存在其中，可通过数据名称获取。<br>
 <br>
 示例1
@@ -230,5 +231,6 @@ public static void initSystem() {
         log.info("subscribeOrderDataWithSimple result:"+defaultBusinessDeclare.getExecuteResult().isSuccess());
     }
 ```
-在以上代码中，为'subscribeOrderDataWithSimple'业务创建了一个对象，并对common中的$payResultData与$payData数据添加了生产者。其addProduce方法的storage参数为数据的存储器，在整个业务中生产的数据，都保存在其中，可通过数据名称获取。
-其业务执行的结果可通过getExecuteResult()方法获取，其中含有业务执行结果的详细信息，后续会详细说明。
+在以上代码中，为'subscribeOrderDataWithSimple'业务创建了一个对象，并对common中的$payResultData与$payData数据添加了生产者。其addProduce方法的storage参数为数据的存储器，在整个业务中生产的数据，都保存在其中，可通过数据名称获取。<br>
+在配置文件中'<depend data="$subscribeOrderData"  init="status:1"/>'，其'init="status:1"'会将第2处代码中传入的参数，自动将status设置为1。其init可设置多个值，如：'init="status:1,price:0"'
+其业务执行的结果可通过getExecuteResult()方法获取，其中含有业务执行结果的详细信息，后续会详细说明。<br>

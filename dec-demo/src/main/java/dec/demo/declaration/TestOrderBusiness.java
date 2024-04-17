@@ -3,8 +3,8 @@ package dec.demo.declaration;
 import dec.demo.declaration.datasource.MockDataSourceManager;
 import dec.demo.declaration.dom.*;
 import dec.demo.system.ConfigInit;
-import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.business.BusinessDeclareFactory;
+import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.conext.utils.ContextUtils;
 import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
@@ -70,7 +70,7 @@ public class TestOrderBusiness {
                     return ExecuteResult.success(payData);
                 }).execute();
 
-        log.info("subscribeOrderDataWithSimple result:"+defaultBusinessDeclare.getExecuteResult().isSuccess());
+        log.info("subscribeOrderDataWithSimple result:" + defaultBusinessDeclare.getExecuteResult().isSuccess());
     }
 
     public static void subscribeOrder() {
@@ -169,14 +169,12 @@ public class TestOrderBusiness {
         SystemBuilder systemBuilder = SystemBuilder.create()
                 .build("order")
                 .addChange("orderData", storage -> {
-                    Order order = (Order)storage.get("orderData");
-
+                    Order order = (Order) storage.get("orderData");
+                    System.out.println(order.getStatus());
                     return ExecuteResult.success(order);
                 }).addProduce("orderData", storage -> {
                     Long orderId = (Long) storage.getParam("orderId");
-
                     Order order = new Order();
-
                     order.setId(orderId);
                     order.setProductName("Product");
                     order.setStatus(1);
@@ -189,7 +187,7 @@ public class TestOrderBusiness {
                     order.setId(1l);
                     order.setProductName(subscribeOrderData.getProductName());
 
-                    return ExecuteResult.success(subscribeOrderData);
+                    return ExecuteResult.success(order);
                 })
                 .addProduce("cancelOrderData", storage -> {
                     Order order = (Order) storage.get("orderData");
