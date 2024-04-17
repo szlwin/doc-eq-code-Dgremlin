@@ -83,6 +83,10 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         this.multipleTranContainer = new MultipleTranContainer();
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String getName() {
         return name;
@@ -148,6 +152,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             }
             log.info("Code:{}, end produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
         }
+
+        result.setCode(code);
 
         if (result.isStop() && this.stopFun != null) {
             stopFun.execute(this.result);
@@ -574,17 +580,9 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         result = executeSystem.produce(dataName, dataStorage);
 
         if (result.isSuccess()) {
-
-
             if (result.getData() != null) {
+                dataStorage.add(dataName, result.getData());
 
-                if (result.getDataType() == null) {
-
-                    dataStorage.add(dataName, result.getData());
-
-                } else {
-                    dataStorage.add(result.getDataType(), result.getData());
-                }
 
                 /*if (!conumeRecordSet.contains(system + ":" + dataName)) {
 

@@ -245,11 +245,7 @@ public class DefaultServiceDeclare implements ServiceDeclare {
 			this.executeResult.setData(this.dataStorage);
 		}else{
 			if(executeResult.getData() != null){
-				if(executeResult.getDataType() != null){
-					dataStorage.add(executeResult.getDataType(), executeResult.getData());
-				}else if(executeResult.getProcessName() != null){
-					dataStorage.add(executeResult.getProcessName(), executeResult.getData());
-				}
+				dataStorage.add(executeResult.getProcessName(), executeResult.getData());
 			}
 			
 			String[] dataTypes = null;

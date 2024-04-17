@@ -1,0 +1,234 @@
+# 数据生产与消费示例
+
+此篇会通过代三个代码实例，说明如何使用，其示例代码及相应的配置文件分别在dec-demo项目中，代码对应的dec.demo.declaration包，配置文件对应resources/declaration/declare-config.xml。
+
+以下为三个示例的配置文件：<br>
+```
+<declare-config>
+	<systems>
+		<system name="order">
+			<datas>
+				<data name="subscribeOrderDataSimple" desc="订购订单数据-简单" isCachePrior="false">
+					<depends>
+						<depend data="$subscribeOrderData"/>
+						<depend data="orderData" init="status:1"/>
+						<depend data="orderPayResultData"/>
+					</depends>
+				</data>
+
+				<data name="subscribeOrderData" desc="订购订单数据" isCachePrior="false">
+					<depends>
+						<depend data="$subscribeOrderData" init="status:1"/>
+					</depends>
+				</data>
+
+				<data name="cancelOrderData" desc="取消订单数据" isCachePrior="false">
+					<depends>
+						<depend data="$cancelOrderData"/>
+						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="status=1 or status=2" change="status:3"/>
+					</depends>
+				</data>
+
+				<data name="orderData" desc="订单数据" type="persistent" isCachePrior="false">
+				</data>
+
+				<data name="orderPayResultData" desc="订单支付状态数据"  type="persistent" isCachePrior="false">
+					<depends>
+						<depend data="$payResultData"/>
+						<depend data="orderData" condition="status=1"/>
+					</depends>
+				</data>
+			</datas>
+		</system>
+
+		<system name="pay" desc="支付">
+			<datas>
+				<data name="payCmdData" desc="支付指令数据">
+					<depends>
+						<depend data="$payData"/>
+					</depends>
+				</data>
+
+				<data name="payResultData" desc="支付结果数据"  type="persistent" isCachePrior="true">
+					<depends>
+						<depend data="payCmdData"/>
+					</depends>
+				</data>
+			</datas>
+		</system>
+
+		<system name="common">
+			<datas>
+				<data name="$cancelOrderData" desc="取消订购操作数据"/>
+				<data name="$subscribeOrderData" desc="订购数据"/>
+				<data name="$payData" desc="支付数据"/>
+				<data name="$payResultData" desc="支付数据"/>
+				<data name="$refundOrderData" desc="订单退款数据"/>
+			</datas>
+		</system>
+	</systems>
+
+	<businesses>
+		<business name="subscribeOrderDataWithSimple">
+			<datas>
+				<data system="order" name="subscribeOrderDataSimple" />
+			</datas>
+		</business>
+
+		<business name="subscribeOrder"  >
+			<datas>
+				<data  begin="true"/>
+					<data system="order" name="subscribeOrderData" />
+						<data  begin="true" transactionPolicy="NEW"/>
+							<data name="$payData"/>
+								<data  begin="true"/>
+									<data system="pay" name="payResultData" />
+									<data name="$payResultData"/>
+								<data end="true"/>
+						<data end="true"/>
+					<data system="order" name="orderPayResultData"/>
+				<data end="true"/>
+			</datas>
+		</business>
+
+		<business name="cancelOrder"  >
+			<datas>
+				<data begin="true" transactionPolicy="REQUIRE"/>
+					<data system="order" name="cancelOrderData"/>
+					<data name="$payData"/>
+					<data system="pay" name="payResultData"/>
+					<data name="$payResultData"/>
+					<data system="order" name="orderPayResultData"/>
+				<data end="true"/>
+			</datas>
+		</business>
+	</businesses>
+</declare-config>
+```
+以上配置文件中，定义了三个系统，分别为order、pay及common，其中common为默认通用系统，其系统中的数据可在多个系统中使用，另在order与pay系统中定义数据及其相应的依赖数据。<br>
+其在配置文件中另定义了三个业务，分别为subscribeOrderDataWithSimple、subscribeOrder、cancelOrder，其subscribeOrder与cancelOrder较复杂，同时涉及两个系统以及事务。下面示例中会详细说明。
+
+加载配置文件
+===
+在使用前，需先加载配置文件，具体代码如下：<br>
+```
+public static void initContext() throws Exception {
+    ConfigInit.init();
+    ContextUtils.loadConfig(new String[]{"classpath:declaration/declare-config.xml"});
+
+}
+```
+以上代码在dec.demo.declaration.TestOrderBusiness类中，以上例子中只加载了一个配置文件，可同时加载多个。<br>
+
+初始化系统
+===
+由于各数据的生产由各数据的系统负责，故需先初始化系统，并为系统内添加数据生产者，具体如下：<br>
+```
+public static void initSystem() {
+    SystemBuilder systemBuilder = SystemBuilder.create()
+            .build("order")
+            .addChange("orderData", storage -> {
+                Order order = (Order)storage.get("orderData");
+
+                return ExecuteResult.success(order);
+            }).addProduce("orderData", storage -> {
+                Long orderId = (Long) storage.getParam("orderId");
+
+                Order order = new Order();
+
+                order.setId(orderId);
+                order.setProductName("Product");
+                order.setStatus(1);
+                return ExecuteResult.success(order);
+            })
+            .addProduce("subscribeOrderData", storage -> {
+                SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
+                Order order = new Order();
+
+                order.setId(1l);
+                order.setProductName(subscribeOrderData.getProductName());
+
+                return ExecuteResult.success(subscribeOrderData);
+            })
+            .addProduce("cancelOrderData", storage -> {
+                Order order = (Order) storage.get("orderData");
+                return ExecuteResult.success(order);
+            })
+            .addProduce("orderPayResultData", storage -> {
+                PayResultData payResultData = (PayResultData) storage.get("$payResultData");
+                OrderPayResultData orderPayResultData = new OrderPayResultData();
+                orderPayResultData.setOrderId(payResultData.getOrderId());
+                orderPayResultData.setStatus(payResultData.getStatus());
+                return ExecuteResult.success(orderPayResultData);
+            }).addProduce("subscribeOrderDataSimple", storage -> {
+                SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
+                Order order = new Order();
+
+                order.setId(1l);
+                order.setProductName(subscribeOrderData.getProductName());
+
+                return ExecuteResult.success(subscribeOrderData);
+            });
+            .......
+            
+        SystemBuilder systemCommonBuilder = SystemBuilder.create()
+                .build("common");
+
+        ContextUtils.load(systemCommonBuilder.getSystem());
+        
+        ContextUtils.load(systemBuilder.getSystem());
+}
+```
+以上代码在dec.demo.declaration.TestOrderBusiness类中，由于代码较长，只展示了order系统与common系统的代码。<br>
+在以上代码中，为order系统中定义的数据提供生产方式，同时加载order系统。对于common系统，由于其为通用系统，其即可在系统中添加数据生产者，或是在业务中添加相应的数据生产者，如同时添加，则以业务中定义添加的生产者有效。<br>
+以上代码中addProduce方法的storage参数为数据的存储器，在整个业务中生产的数据，都保存在其中，可通过数据名称获取。<br>
+<br>
+示例1
+===
+以下为subscribeOrderBySimple业务的示例代码，其模拟订单的订购业务，具体如下：<br>
+```
+    public static void subscribeOrderBySimple() {
+
+        //1.创建业务，可只创建一次
+        DefaultBusinessDeclare defaultBusinessDeclare = BusinessDeclareFactory
+                .createDefaultBusinessDeclare("subscribeOrderDataWithSimple");
+
+        SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
+
+        subscribeOrderData.setProductName("test");
+
+        subscribeOrderData.setAmount(new BigDecimal(1000));
+
+        defaultBusinessDeclare
+                //2.添加参数
+                .addEntity("$subscribeOrderData", subscribeOrderData)
+                //3.添加common系统中$payResultData数据的生产者
+                .addProduce("$payResultData", storage -> {
+
+                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
+
+                    PayResultData resultData = new PayResultData();
+
+                    resultData.setStatus(1);
+
+                    return ExecuteResult.success(resultData);
+                })
+                //4.添加common系统中$payData数据的生产者
+                .addProduce("$payData", storage -> {
+
+                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
+
+                    PayData payData = new PayData();
+
+                    payData.setProductName(subscribeOrderData1.getProductName());
+
+                    payData.setAmount(subscribeOrderData1.getAmount());
+
+                    return ExecuteResult.success(payData);
+                }).execute();
+
+        log.info("subscribeOrderDataWithSimple result:"+defaultBusinessDeclare.getExecuteResult().isSuccess());
+    }
+```
+在以上代码中，为'subscribeOrderDataWithSimple'业务创建了一个对象，并对common中的$payResultData与$payData数据添加了生产者。其addProduce方法的storage参数为数据的存储器，在整个业务中生产的数据，都保存在其中，可通过数据名称获取。
+其业务执行的结果可通过getExecuteResult()方法获取，其中含有业务执行结果的详细信息，后续会详细说明。

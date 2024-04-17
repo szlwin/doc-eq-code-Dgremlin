@@ -8,25 +8,14 @@ public class ExecuteResult {
 
     private String processName;
 
-    private String dataType;
-
     private Object data;
 
     private boolean isStop;
 
+    private String code;
+
     public static ExecuteResult success() {
         return new ExecuteResult();
-    }
-
-    public static ExecuteResult success(String dataType, Object data) {
-
-        ExecuteResult executeResult = new ExecuteResult();
-
-        executeResult.setDataType(dataType);
-
-        executeResult.setData(data);
-
-        return executeResult;
     }
 
     public static ExecuteResult success(Object data) {
@@ -92,14 +81,6 @@ public class ExecuteResult {
         this.processName = processName;
     }
 
-    public String getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
-    }
-
     public Object getData() {
         return data;
     }
@@ -116,4 +97,11 @@ public class ExecuteResult {
         this.isStop = isStop;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

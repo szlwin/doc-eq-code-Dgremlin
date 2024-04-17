@@ -8,10 +8,14 @@ import dec.expand.declare.business.BusinessDeclareFactory;
 import dec.expand.declare.conext.utils.ContextUtils;
 import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
 public class TestOrderBusiness {
+
+    private final static Logger log = LoggerFactory.getLogger(TestOrderBusiness.class);
 
     public static void main(String[] args) throws Throwable {
 
@@ -21,13 +25,14 @@ public class TestOrderBusiness {
 
         subscribeOrderBySimple();
 
-        subscribeOrder();
+        //subscribeOrder();
 
-        cancelOrderData();
+        //cancelOrderData();
     }
 
     public static void subscribeOrderBySimple() {
 
+        //1.创建业务，可只创建一次
         DefaultBusinessDeclare defaultBusinessDeclare = BusinessDeclareFactory
                 .createDefaultBusinessDeclare("subscribeOrderDataWithSimple");
 
@@ -38,8 +43,9 @@ public class TestOrderBusiness {
         subscribeOrderData.setAmount(new BigDecimal(1000));
 
         defaultBusinessDeclare
+                //2.添加参数
                 .addEntity("$subscribeOrderData", subscribeOrderData)
-                .transactionManager(new MockDataSourceManager())
+                //3.添加common系统中$payResultData数据的生产者
                 .addProduce("$payResultData", storage -> {
 
                     PayResultData payResultData = (PayResultData) storage.get("payResultData");
@@ -49,8 +55,9 @@ public class TestOrderBusiness {
                     resultData.setStatus(1);
 
                     return ExecuteResult.success(resultData);
-
-                }).addProduce("$payData", storage -> {
+                })
+                //4.添加common系统中$payData数据的生产者
+                .addProduce("$payData", storage -> {
 
                     SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
 
@@ -61,8 +68,9 @@ public class TestOrderBusiness {
                     payData.setAmount(subscribeOrderData1.getAmount());
 
                     return ExecuteResult.success(payData);
-
                 }).execute();
+
+        log.info("subscribeOrderDataWithSimple result:"+defaultBusinessDeclare.getExecuteResult().isSuccess());
     }
 
     public static void subscribeOrder() {
@@ -162,6 +170,7 @@ public class TestOrderBusiness {
                 .build("order")
                 .addChange("orderData", storage -> {
                     Order order = (Order)storage.get("orderData");
+
                     return ExecuteResult.success(order);
                 }).addProduce("orderData", storage -> {
                     Long orderId = (Long) storage.getParam("orderId");
@@ -187,12 +196,11 @@ public class TestOrderBusiness {
                     return ExecuteResult.success(order);
                 })
                 .addProduce("orderPayResultData", storage -> {
-
-                    Order order = (Order) storage.get("orderData");
-
                     PayResultData payResultData = (PayResultData) storage.get("$payResultData");
-
-                    return ExecuteResult.success();
+                    OrderPayResultData orderPayResultData = new OrderPayResultData();
+                    orderPayResultData.setOrderId(payResultData.getOrderId());
+                    orderPayResultData.setStatus(payResultData.getStatus());
+                    return ExecuteResult.success(orderPayResultData);
                 }).addProduce("subscribeOrderDataSimple", storage -> {
                     SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
                     Order order = new Order();

@@ -3,7 +3,6 @@
 	<systems>
 		<system name="order">
 			<datas>
-
 				<data name="subscribeOrderDataSimple" desc="订购订单数据-简单" isCachePrior="false">
 					<depends>
 						<depend data="$subscribeOrderData"/>
@@ -67,7 +66,6 @@
 
 
 	<businesses>
-
 		<business name="subscribeOrderDataWithSimple">
 			<datas>
 				<data system="order" name="subscribeOrderDataSimple" />
