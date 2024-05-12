@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+	<groupId>doc.eq.code</groupId>
+	<artifactId>doc-eq-code-parent</artifactId>
+	<version>1.0</version>
+   </parent>
+  <artifactId>dec-core-starter</artifactId>
+  <packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>doc.eq.code</groupId>
+			<artifactId>dec-core-context</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>doc.eq.code</groupId>
+			<artifactId>dec-core-model</artifactId>
+		</dependency>
+				
+		<dependency>
+			<groupId>doc.eq.code</groupId>
+			<artifactId>dec-core-datasource</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>doc.eq.code</groupId>
+			<artifactId>dec-context-config-parse-xml</artifactId>
+		</dependency>
+
+				
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+    		<artifactId>logback-core</artifactId>
+    		<version>1.2.3</version>
+    		<scope>provided</scope>
+   		</dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+    		<artifactId>logback-classic</artifactId>
+    		<version>1.2.3</version>
+    		<scope>provided</scope>
+   		</dependency>		
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
