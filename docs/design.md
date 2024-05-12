@@ -1,7 +1,71 @@
 # dom设计文档
-此篇会介绍设计文档格式，目前设计文档主要采用xml格式编写。
+  此篇会介绍设计文档格式，目前设计文档主要采用xml格式编写。其文档可看做是某种"语言"，用于描述业务逻辑及与底层数据的关联。其语言中无具体技术i实现细节，对业务和技术做了上层抽象。<br><br>
+  故此文档可重复使用，可以把优秀的设计保留下来，同时使用相应的引擎根据设计文档进行执行，且其引擎可用不同语言实现（本项目可看作java语言版本的引擎）。这就如同SQL语句，定义了一种标准，而各数据库及各语言有相应的技术实现其标准，但在其标准中未有底层技术实现细节。
 <br>
 <br>
+其设计文档分为：<br>
+1.数据源定义<br>
+2.数据设计<br>
+3.业务设计<br>
+
+## 数据源定义
+我们通过以下配置信息进行说明，以下是dec-demo项目中src/main/resources/model目录下orm-con-config.xml中的配置信息
+```
+<orm-config>
+   <!--配置数据源标识及其对应数据源类型-->
+   <orm-datasource-info>
+	<orm-datasource name="data1">
+          <name>MySQL</name>
+       </orm-datasource>
+       <orm-datasource name="data2">
+	   <name>MySQL</name>
+	</orm-datasource>		
+    </orm-datasource-info>
+    ........
+   <orm-connection-info>
+      <orm-connection name="con1">
+        <data-source-info>
+            <data-source ref="data1"/>
+	</data-source-info>
+      </orm-connection>
+      <orm-connection name="con2">
+	<data-source-info>
+            <data-source ref="data2"/>
+	    </data-source-info>
+       </orm-connection>
+    </orm-connection-info>
+    
+</orm-config>
+```
+在以上配置文件中，"orm-datasource-info"配置了两个数据源，其名称为"data1"和"data2",对应的插件名为"MySQL"(插件需用户根据提供的接口进行实现),而在"orm-connection-info"中配置了两个链接，其对应的数据源分别是"data1"和"data2"。<br>
+在代码中加载MySQL插件：
+```
+public void testInit() throws Exception{
+
+	try {
+ 	  //1.添加数据源
+	  ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
+	  //2.加载配置文件
+	  ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
+	} catch (XMLParseException e) {
+	  e.printStackTrace();
+	}
+
+	//3.添加数据源相关实现
+	DataSourceManager.addConnectionFactory("MySQL", new MySQLDBConnectionFactory());
+	DataSourceManager.addConvertContainerFactory("MySQL", new MySQLConvertContainerFactory());
+	DataSourceManager.addDataConvertContainerFacory("MySQL", new MySQLDataConvertContainerFactory());
+	DataSourceManager.addExecuteContainerFacory("MySQL", new MySQLExecuteContainerFactory());
+
+	//4.添加数据源
+	DataSourceManager.addDataSource("data1", getDataSource1());
+	DataSourceManager.addDataSource("data2", getDataSource2());
+}
+```
+以上代码第1处，注册了MySQL插件的具体实现类(数据源插件的具体实现方式可参考[6.数据源扩展](docs/dom-datasource.md))，其dec.external.datasource.sql.datasource.DBDataSource为本项目已实现的MySQL数据库的插件。而在第4处，添加了data1与data2数据源的具体实现类，其getDataSource1()与getDataSource2()返回的是HikariDataSource类。<br><br>
+其插件"MySQL"最终通过HikariDataSource创建的链接与MySQL数据库进行交互。可能用户会对第4处代码有所疑惑，为何还要为data1及data2额外设置数据源，而不是由插件直接在内部创建出数据源。这是为了便于跨框架共享数据源，如通过此方式可与Spring共享数据源对象，在spring框架中，getDataSource1()与getDataSource2()可返回Spring中的数据源对象，提供给MySQL插件使用。<br><br>
+其"con1"与"con2"在于对同一数据源的读写方式进行区分，如对于mysql数据库，其con1可能是无事务、批量的读写，而con2是有事务、单数据的读写，或是对于Redis,con1对应的是list数据结构，而con2对应的是set数据结构。目前链接只是一个概念，其还未在此项目中实现，后续会完善。<br><br>
+注：以上具体可参考[5.dom示例](docs/dom-demo.md)
 
 ## 数据设计文档
 xml文档说明
@@ -159,7 +223,7 @@ xml文档说明
   </data>
 </orm-data-mapping>
 ```
-以上数据名称为order，其对应两个数据源，并对应两个数据源的表和字段对应关系
+以上数据名称为order，其对应两个数据源，并定义了两个数据源的表和字段对应关系。其order除了对应某个数据库的表，还可对应某个接口的返回值或是某个文档中的数据，故这里描述为"table-info"并不是很合适，且其数据暂不不支持多层级。
 <br>
 <br>
 
@@ -295,9 +359,11 @@ xml文档说明
 其userT的唯一标识对应OrderInfo的userId属性，productList的唯一标识orderId对应OrderInfo的id属性。
 <br>
 <br>
-
+其业务模型中的子对象目前还是和数据对象一一对应，而且实际场景中，可能业务中的一个子对象对应多个数据对象，或是一个数据对象对应一个业务模型中的多个子对象。目前此种一一对应的方式，其业务模型与数据模型存在一定耦合，且无法做到业务模型与数据模型独立设计与使用，此后续会进行完善。
+<br>
+<br>
 ## 业务视图设计文档
-xml文档说明
+业务视图可看作是一个业务模型与一组业务规则的集成，以下为xml文档说明
 <table>
   <tr>
     <td>父元素</td>
@@ -353,7 +419,7 @@ xml文档说明
     <td>属性</td>
     <td>是</td>
     <td>规则类型</td>
-    <td>具体参考[3.dom整体架构](docs/architecture.md)</td>
+    <td>具体参考:3.dom整体架构</td>
   </tr>
   <tr>
     <td>rule</td>
@@ -459,3 +525,22 @@ xml文档说明
   </rule-view-info>
 </orm-rule-mapping>
 ```
+以上配置文件中，定义了一个名为"save-Order"的业务视图，其对应的业务模型为之前配置的OrderInfo，并且定义一组业务规则(即rule元素。<br>
+其业务规则有数据校验、赋值、计算及数据的读写，其主要描述业务的逻辑规则，没有具体的技术细节。在代码中，通过业务容器为视图或是某个业务规则制定链接，起到数据读写作用。<br>
+当然你可以使用业务模型，仅进行一些验证、赋值、计算的逻辑，而数据的读写由额外的代码实现，具体可参考[9.dom与declaration联合示例](docs/mix-demo.md)。<br>
+
+## 总结
+通过这篇对设计文档的说明，希望大家进一步能够理解此设计的理念，即：<br>
+1.统一设计语言，在不同人员中能够快速沟通<br>
+2.设计与实现分离，业务逻辑不依赖底层技术，通过对底层技术进行抽象，如底层技术变动不会影响上层业务设计<br>
+3.业务模型与数据模型隔离，降低相互间耦合<br>
+另外虽然目前本项目中有事务支持，但个人认为随着今后技术的发展，应尽量以无事务的方式进行设计。
+<br><br>
+当然此项目的理念会颠覆现有软件或系统开发的认知，本人会结合一些实际案例进行论证，且项目本身还需要一定程度的完善，如：<br>
+1.数据模型支持多层级<br>
+2.进一步完善链接，可对同一数据源指定不同读写方式<br>
+3.业务模型中与数据对象解耦，其子对象不与数据对象一一对应<br>
+4.提供接口，可让用户自定义业务规则<br>
+5.可基于业务模型进行数据关联查询<br>
+6.设计类似GhSQL或Resutlful的语言，便于系统间进行交互<br>
+
