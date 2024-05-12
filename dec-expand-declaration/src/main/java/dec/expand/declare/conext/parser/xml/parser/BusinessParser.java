@@ -50,8 +50,8 @@ public class BusinessParser {
                 throw new XMLParseException("The rule is not exist, rule:" + viewRule[0]);
             }
 
-            if (ConfigContextUtil.getConfigInfo().getDataSource(viewRule[1]) == null) {
-                throw new XMLParseException("The dataSource is not exist, rule:" + viewRule[1]);
+            if (ConfigContextUtil.getConfigInfo().getConnection(viewRule[1]) == null) {
+                throw new XMLParseException("The connection is not exist, rule:" + viewRule[1]);
             }
 
             ViewRuleDesc viewRuleDesc = new ViewRuleDesc();
@@ -89,7 +89,7 @@ public class BusinessParser {
                     }
                 }
 
-                String dataSource = dataElement.attributeValue("ref-rule-dataSource");
+                String dataSource = dataElement.attributeValue("ref-rule-connection");
                 if (isRefDom && (dataSource == null || "".equals(dataSource))) {
                     throw new XMLParseException("The property 'dataSource' for data is error, it can't be empty!");
                 }
@@ -116,7 +116,7 @@ public class BusinessParser {
 
             processDesc.setData(name);
             if (name != null && !"".equals(name) && name.startsWith("$")) {
-                processDesc.setSystem("this");
+                processDesc.setSystem("common");
             } else {
                 String refRule = dataElement.attributeValue("ref-rule");
 

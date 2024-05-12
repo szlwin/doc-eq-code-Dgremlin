@@ -14,6 +14,8 @@ public class ExecuteResult {
 
     private boolean isStop;
 
+    private String code;
+
     public static ExecuteResult success() {
         return new ExecuteResult();
     }
@@ -116,4 +118,11 @@ public class ExecuteResult {
         this.isStop = isStop;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

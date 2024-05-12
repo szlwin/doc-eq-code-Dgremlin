@@ -39,7 +39,6 @@ public class System {
         if (produceMap == null) {
             produceMap = new HashMap<>();
         }
-
         produceMap.put(produce.getName(), produce);
     }
 
@@ -126,5 +125,9 @@ public class System {
 
 
         return executeResult;
+    }
+
+    public boolean containsProduce(String data){
+       return produceMap.containsKey(data);
     }
 }

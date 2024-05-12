@@ -83,6 +83,10 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         this.multipleTranContainer = new MultipleTranContainer();
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String getName() {
         return name;
@@ -149,6 +153,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             log.info("Code:{}, end produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
         }
 
+        result.setCode(code);
+
         if (result.isStop() && this.stopFun != null) {
             stopFun.execute(this.result);
         }
@@ -191,14 +197,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
     @Override
-    public BusinessDeclare onFinsh(FinalFun fun) {
+    public BusinessDeclare onFinish(FinalFun fun) {
         this.finshFun = fun;
-        return this;
-    }
-
-
-    protected BusinessDeclare data(String data) {
-        data("this", data);
         return this;
     }
 
@@ -212,25 +212,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         return this;
     }
 
-
-    protected BusinessDeclare data(String system, String data) {
-
-        validate(system, data);
-
-        currentProcess = new ProcessDesc();
-
-        currentProcess.setData(data);
-
-        currentProcess.setSystem(system);
-
-        this.businessDesc.add(currentProcess);
-
-        //this.transaction(this.currentTransactionDesc.getTransaction(), this.currentTransactionDesc.getRollBackPolicy(),
-        //        this.currentTransactionDesc.getTransactionGroup());
-        //log.info("Code:{}, prepare produce data, [{}]-[{}]", code, system, data);
-
-        return this;
-    }
 
     /*protected BusinessDeclare beginTx(TransactionPolicy transactionPolicy) {
         if (this.transactionDescList == null)
@@ -418,26 +399,39 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         if (process.getRule() != null) {
             executeRule(process);
         }
-        if ("this".equals(process.getSystem())) {
+        if("common".equals(process.getSystem())){
+            if(currentSystem.containsProduce(process.getData())){
+                produceData(null, process.getData(), "this");
+            }else {
+                produceData(null, process.getData(), "common");
+            }
+            if(result.isSuccess()){
+                refreshModeldata(process);
+            }
 
-            produceData(null, process.getData(), process.getSystem());
+        }else {
+            if ("this".equals(process.getSystem())) {
 
-            refreshModeldata(process);
-        } else {
+                produceData(null, process.getData(), process.getSystem());
 
-            SystemDesc systemDesc = DescContext.get().getSystem(process.getSystem());
+                refreshModeldata(process);
+            } else {
 
-            DataDesc dataDesc = systemDesc.getData(process.getData());
+                SystemDesc systemDesc = DescContext.get().getSystem(process.getSystem());
 
-            produceData(dataDesc, process.getData(), process.getSystem());
+                DataDesc dataDesc = systemDesc.getData(process.getData());
 
-            this.change(systemDesc, dataDesc);
+                produceData(dataDesc, process.getData(), process.getSystem());
 
-            refreshModeldata(process);
+                if(result.isSuccess()){
+                    this.change(systemDesc, dataDesc);
 
-            refreshStorage(dataDesc);
+                    refreshModeldata(process);
+
+                    refreshStorage(dataDesc);
+                }
+            }
         }
-
     }
 
     private void refreshModeldata(ProcessDesc process) {
@@ -533,15 +527,28 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                         }
                         DataDesc depnedDataDesc = getDataDesc(system, dataDependDesc);
 
-                        log.info("Code:{}, start produce depend data, [{}]-[{}]", code, system, data);
+                        String systemName = system;
+                        if (dataDependDesc.getType() == 1) {
+                            if(this.currentSystem.containsProduce(data)){
+                                systemName = "this";
+                                log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "this", data);
+                                produceData(depnedDataDesc, data, "this");
+                            }else {
+                                systemName = "common";
+                                log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "common", data);
+                                produceData(depnedDataDesc, data, "common");
+                            }
+                        }else {
+                            log.info("Code:{}, start produce depend data, [{}]-[{}]", code, system, data);
+                            produceData(depnedDataDesc, data, system);
+                        }
 
-                        produceData(depnedDataDesc, data, system);
 
                         if (!result.isSuccess()) {
                             return;
                         }
 
-                        log.info("Code:{}, end produce depend data,  [{}]-[{}]", code, system, data);
+                        log.info("Code:{}, end produce depend data,  [{}]-[{}]", code, systemName, data);
                     }
 
                     if (dataDependDesc.getInit() != null) {
@@ -581,10 +588,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         result = executeSystem.produce(dataName, dataStorage);
 
         if (result.isSuccess()) {
-
-
             if (result.getData() != null) {
-
                 if (result.getDataType() == null) {
 
                     dataStorage.add(dataName, result.getData());
@@ -592,6 +596,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                 } else {
                     dataStorage.add(result.getDataType(), result.getData());
                 }
+
 
                 /*if (!conumeRecordSet.contains(system + ":" + dataName)) {
 

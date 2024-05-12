@@ -1,15 +1,21 @@
 package dec.demo.declaration;
 
+import dec.demo.declaration.datasource.MockDataSourceManager;
+import dec.demo.declaration.dom.*;
 import dec.demo.system.ConfigInit;
-import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.business.BusinessDeclareFactory;
+import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.conext.utils.ContextUtils;
 import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
 public class TestOrderBusiness {
+
+    private final static Logger log = LoggerFactory.getLogger(TestOrderBusiness.class);
 
     public static void main(String[] args) throws Throwable {
 
@@ -17,13 +23,58 @@ public class TestOrderBusiness {
 
         initSystem();
 
-        //subscribeOrderByConfig();
+        subscribeOrderBySimple();
 
-        //cancelOrderDataByconfig();
+        subscribeOrder();
+
+        cancelOrderData();
     }
 
-    public static void subscribeOrderByConfig() {
-        System.out.println();
+    public static void subscribeOrderBySimple() {
+
+        //1.创建业务，可只创建一次
+        DefaultBusinessDeclare defaultBusinessDeclare = BusinessDeclareFactory
+                .createDefaultBusinessDeclare("subscribeOrderDataWithSimple");
+
+        SubscribeOrderData subscribeOrderData = new SubscribeOrderData();
+
+        subscribeOrderData.setProductName("test");
+
+        subscribeOrderData.setAmount(new BigDecimal(1000));
+
+        defaultBusinessDeclare
+                //2.添加参数
+                .addEntity("$subscribeOrderData", subscribeOrderData)
+                //3.添加common系统中$payResultData数据的生产者
+                .addProduce("$payResultData", storage -> {
+
+                    PayResultData payResultData = (PayResultData) storage.get("payResultData");
+
+                    PayResultData resultData = new PayResultData();
+
+                    resultData.setStatus(1);
+
+                    return ExecuteResult.success(resultData);
+                })
+                //4.添加common系统中$payData数据的生产者
+                .addProduce("$payData", storage -> {
+
+                    SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
+
+                    PayData payData = new PayData();
+
+                    payData.setProductName(subscribeOrderData1.getProductName());
+
+                    payData.setAmount(subscribeOrderData1.getAmount());
+
+                    return ExecuteResult.success(payData);
+                }).execute();
+
+        log.info("subscribeOrderDataWithSimple result:" + defaultBusinessDeclare.getExecuteResult().isSuccess());
+    }
+
+    public static void subscribeOrder() {
+
         DefaultBusinessDeclare defaultBusinessDeclare = BusinessDeclareFactory
                 .createDefaultBusinessDeclare("subscribeOrder");
 
@@ -40,8 +91,6 @@ public class TestOrderBusiness {
 
                     PayResultData payResultData = (PayResultData) storage.get("payResultData");
 
-                    System.out.println("Produce $payResultData");
-
                     PayResultData resultData = new PayResultData();
 
                     resultData.setStatus(1);
@@ -49,8 +98,6 @@ public class TestOrderBusiness {
                     return ExecuteResult.success(resultData);
 
                 }).addProduce("$payData", storage -> {
-
-                    System.out.println("Produce $payData");
 
                     SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$subscribeOrderData");
 
@@ -65,7 +112,7 @@ public class TestOrderBusiness {
                 }).execute();
     }
 
-    public static void cancelOrderDataByconfig() {
+    public static void cancelOrderData() {
         DefaultBusinessDeclare defaultBusinessDeclare = BusinessDeclareFactory
                 .createDefaultBusinessDeclare("cancelOrder");
 
@@ -84,12 +131,10 @@ public class TestOrderBusiness {
                     Order order = new Order();
                     order.setId(cancelOrderData);
                     order.setStatus(1);
-                    return ExecuteResult.success(order);
+                    return ExecuteResult.success();
                 }).addProduce("$payResultData", storage -> {
 
                     PayResultData payResultData = (PayResultData) storage.get("payResultData");
-
-                    System.out.println("Produce $payResultData");
 
                     PayResultData resultData = new PayResultData();
 
@@ -98,8 +143,6 @@ public class TestOrderBusiness {
                     return ExecuteResult.success(resultData);
 
                 }).addProduce("$payData", storage -> {
-
-                    System.out.println("Produce $payData");
 
                     SubscribeOrderData subscribeOrderData1 = (SubscribeOrderData) storage.get("$cancelOrderData");
 
@@ -116,55 +159,8 @@ public class TestOrderBusiness {
     }
 
     public static void initContext() throws Exception {
-        //ContextUtils.load(new OrderBusiness());
         ConfigInit.init();
         ContextUtils.loadConfig(new String[]{"classpath:declaration/declare-config.xml"});
-
-        /*ContextUtils.load(SystemDescBuilder.create()
-                .build("common", "common")
-                .data("$subscribeOrderData", "")
-                .data("$payData", "")
-                .data("$payResultData", "")
-                .getSystem());
-
-        ContextUtils.load(SystemDescBuilder.create()
-                .build("order", "订单")
-                .data("orderData", "订购订单数据")
-                .type(DataTypeEnum.PERSISTENT)
-                .cachePrior(false)
-                .data("subscribeOrderData", "订购订单数据")
-                .depend("$subscribeOrderData").init("status:1")
-                .data("cancelOrderData", "取消订单数据")
-                    .depend("orderData")
-                        .condition("status=1 or status=2")
-                        .param("orderId:$cancelOrderData.orderId")
-                        .change("status:3")
-                .data("orderPayResultData", "订单支付状态数据")
-                .type(DataTypeEnum.PERSISTENT)
-                .cachePrior(false)
-                .depend("$payResultData")
-                .depend("orderData")
-                .getSystem());
-
-        ContextUtils.load(SystemDescBuilder.create()
-                .build("pay", "支付")
-                .data("payCmdData", "支付指令数据")
-                .depend("$payData")
-                .data("payResultData", "支付结果数据")
-                .depend("payCmdData")
-                .type(DataTypeEnum.PERSISTENT)
-                .cachePrior(true)
-                .getSystem());*/
-
-
-        /**.addMapping("saveOrderData", "order", "generateOrder")
-         .addMapping("saveOrderData", "order", "saveOrder")
-         .addMapping("savePay", "order", "generateOrderPayStatus")
-         .addMapping("savePay", "order", "saveOrderPayResutl")
-         .addMapping("operateWithPay", "pay", "generatePayCmd")
-         .addMapping("operateWithPay", "pay", "executePayCmd")
-         .addMapping("operateWithPay", "pay", "savePayCmdResutl")
-         */
 
     }
 
@@ -173,61 +169,60 @@ public class TestOrderBusiness {
         SystemBuilder systemBuilder = SystemBuilder.create()
                 .build("order")
                 .addChange("orderData", storage -> {
-                    Order order = (Order)storage.get("orderData");
-                    System.out.println("old:"+storage.getStatus("status"));
-                    System.out.println("change:"+order.getStatus());
+                    Order order = (Order) storage.get("orderData");
+                    System.out.println(storage.getStatus("status"));
+                    System.out.println(order.getStatus());
                     return ExecuteResult.success(order);
                 }).addProduce("orderData", storage -> {
+                    Long orderId = (Long) storage.get("orderId");
 
-                    System.out.println("Produce orderData");
+                    if (orderId == null) {
+                        orderId = (Long) storage.getParam("orderId");
 
-                    Long orderId = (Long) storage.getParam("orderId");
+                    }
+                    if (orderId == null) {
+                        throw new RuntimeException("orderId is null");
+                    }
 
-                    System.out.println("OrderId:"+orderId);
                     Order order = new Order();
-
                     order.setId(orderId);
                     order.setProductName("Product");
                     order.setStatus(1);
                     return ExecuteResult.success(order);
                 })
                 .addProduce("subscribeOrderData", storage -> {
-
-                    System.out.println("Produce subscribeOrderData");
-
                     SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
-                    System.out.println("subscribeOrderData.getStatus()" + subscribeOrderData.getStatus());
+
+                    Order order = new Order();
+                    order.setId(1l);
+                    order.setProductName(subscribeOrderData.getProductName());
+
+                    return ExecuteResult.success("orderId",order.getId());
+                })
+                .addProduce("cancelOrderData", storage -> {
+                    Order order = (Order) storage.get("orderData");
+                    return ExecuteResult.success(order);
+                })
+                .addProduce("orderPayResultData", storage -> {
+                    PayResultData payResultData = (PayResultData) storage.get("$payResultData");
+                    OrderPayResultData orderPayResultData = new OrderPayResultData();
+                    orderPayResultData.setOrderId(payResultData.getOrderId());
+                    orderPayResultData.setStatus(payResultData.getStatus());
+                    return ExecuteResult.success(orderPayResultData);
+                }).addProduce("subscribeOrderDataSimple", storage -> {
+                    SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
                     Order order = new Order();
 
                     order.setId(1l);
                     order.setProductName(subscribeOrderData.getProductName());
 
-                    return ExecuteResult.success(subscribeOrderData);
-                })
-                .addProduce("cancelOrderData", storage -> {
-                    System.out.println("produce cancelOrderData");
-                    Order order = (Order) storage.get("orderData");
-                    //java.lang.System.out.println(order.getId());
-                    return ExecuteResult.success(order);
-                })
-                .addProduce("orderPayResultData", storage -> {
-
-                    System.out.println("Produce orderPayResultData");
-
-                    Order order = (Order) storage.get("orderData");
-
-                    PayResultData payResultData = (PayResultData) storage.get("$payResultData");
-
-                    return ExecuteResult.success();
+                    return ExecuteResult.success("orderId",order.getId());
                 });
 
 
         SystemBuilder systemPayBuilder = SystemBuilder.create()
                 .build("pay")
                 .addProduce("payCmdData", storage -> {
-
-                    System.out.println("Produce payCmdData");
-
                     PayData payData = (PayData) storage.get("$payData");
 
                     PayCmdData payCmdData = new PayCmdData();
@@ -237,7 +232,6 @@ public class TestOrderBusiness {
                     return ExecuteResult.success(payCmdData);
 
                 }).addProduce("payResultData", storage -> {
-                    System.out.println("Produce payResultData");
                     PayResultData payResultData = new PayResultData();
                     return ExecuteResult.success(payResultData);
                 });

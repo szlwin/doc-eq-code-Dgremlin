@@ -1,6 +1,6 @@
-package dec.demo.declaration;
+package dec.demo.declaration.dom;
 
-public class PayResultData {
+public class OrderPayResultData {
 
 	private Long orderId;
 	

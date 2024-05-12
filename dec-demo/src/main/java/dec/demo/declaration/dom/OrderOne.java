@@ -1,4 +1,4 @@
-package dec.demo.declaration;
+package dec.demo.declaration.dom;
 
 public class OrderOne {
     private OrderTwo orderTwo;

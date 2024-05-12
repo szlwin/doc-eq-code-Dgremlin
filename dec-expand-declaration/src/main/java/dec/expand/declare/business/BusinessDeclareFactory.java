@@ -20,7 +20,18 @@ public class BusinessDeclareFactory {
         defaultBusinessDeclare.build(name);
 
         List<ProcessDesc> processDescList = businessDesc.getProcesses();
+        int currentGroup = 0;
         for (ProcessDesc processDesc : processDescList) {
+
+            if (processDesc.isBegin()) {
+                currentGroup++;
+            }
+            if (currentGroup != 0) {
+                processDesc.setTransactionGroup(String.valueOf(currentGroup));
+            }
+            if (processDesc.isEnd()) {
+                currentGroup--;
+            }
             defaultBusinessDeclare.data(processDesc);
         }
         return defaultBusinessDeclare;
