@@ -417,7 +417,7 @@ xml文档说明
     <td>属性</td>
     <td>是</td>
     <td>规则类型</td>
-    <td>具体参考[3.dom整体架构](docs/architecture.md)</td>
+    <td>具体参考:3.dom整体架构</td>
   </tr>
   <tr>
     <td>rule</td>
