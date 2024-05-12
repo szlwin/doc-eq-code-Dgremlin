@@ -1,0 +1,7 @@
+#totalamount : price*count;
+
+amount : if acmount > 0 acmount*0.95 else acmount*0.8;
+productList : productList[num >0];
+#totalCount,#totalPrice : productList[num>1 && price>1].sum(num,price);
+productList.num,productList.price : productList[num>1 && price>1].compute(num+1,price*1.1);
+error("100","id不能为空") : id != null;
