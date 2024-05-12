@@ -1,8 +1,71 @@
 # dom设计文档
-此篇会介绍设计文档格式，目前设计文档主要采用xml格式编写。其文档可看做是某种"语言"，用于描述业务逻辑及与底层数据的关联。其语言中无具体技术i实现细节，对业务和技术做了上层抽象。<br>
-故此文档可重复使用，可以把优秀的设计保留下来，同时使用相应的引擎根据设计文档进行执行，且其引擎可用不同语言实现（本项目可看作java语言版本的引擎）。这就如同SQL语句，定义了一种标准，而各数据库及各语言有相应的技术实现其标准，但在其标准中未有底层技术实现细节。
+  此篇会介绍设计文档格式，目前设计文档主要采用xml格式编写。其文档可看做是某种"语言"，用于描述业务逻辑及与底层数据的关联。其语言中无具体技术i实现细节，对业务和技术做了上层抽象。<br><br>
+  故此文档可重复使用，可以把优秀的设计保留下来，同时使用相应的引擎根据设计文档进行执行，且其引擎可用不同语言实现（本项目可看作java语言版本的引擎）。这就如同SQL语句，定义了一种标准，而各数据库及各语言有相应的技术实现其标准，但在其标准中未有底层技术实现细节。
 <br>
 <br>
+其设计文档分为：<br>
+1.数据源定义<br>
+2.数据设计<br>
+3.业务设计<br>
+
+## 数据源定义
+我们通过以下配置信息进行说明，以下是dec-demo项目中src/main/resources/model目录下orm-con-config.xml中的配置信息
+```
+<orm-config>
+   <!--配置数据源标识及其对应数据源类型-->
+   <orm-datasource-info>
+	<orm-datasource name="data1">
+          <name>MySQL</name>
+       </orm-datasource>
+       <orm-datasource name="data2">
+	   <name>MySQL</name>
+	</orm-datasource>		
+    </orm-datasource-info>
+    ........
+   <orm-connection-info>
+      <orm-connection name="con1">
+        <data-source-info>
+            <data-source ref="data1"/>
+	</data-source-info>
+      </orm-connection>
+      <orm-connection name="con2">
+	<data-source-info>
+            <data-source ref="data2"/>
+	    </data-source-info>
+       </orm-connection>
+    </orm-connection-info>
+    
+</orm-config>
+```
+在以上配置文件中，"orm-datasource-info"配置了两个数据源，其名称为"data1"和"data2",对应的插件名为"MySQL"(插件需用户根据提供的接口进行实现),而在"orm-connection-info"中配置了两个链接，其对应的数据源分别是"data1"和"data2"。<br>
+在代码中加载MySQL插件：
+```
+public void testInit() throws Exception{
+
+	try {
+ 	  //1.添加数据源
+	  ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
+	  //2.加载配置文件
+	  ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
+	} catch (XMLParseException e) {
+	  e.printStackTrace();
+	}
+
+	//3.添加数据源相关实现
+	DataSourceManager.addConnectionFactory("MySQL", new MySQLDBConnectionFactory());
+	DataSourceManager.addConvertContainerFactory("MySQL", new MySQLConvertContainerFactory());
+	DataSourceManager.addDataConvertContainerFacory("MySQL", new MySQLDataConvertContainerFactory());
+	DataSourceManager.addExecuteContainerFacory("MySQL", new MySQLExecuteContainerFactory());
+
+	//4.添加数据源
+	DataSourceManager.addDataSource("data1", getDataSource1());
+	DataSourceManager.addDataSource("data2", getDataSource2());
+}
+```
+以上代码第1处，注册了MySQL插件的具体实现类(数据源插件的具体实现方式可参考[6.数据源扩展](docs/dom-datasource.md))，其dec.external.datasource.sql.datasource.DBDataSource为本项目已实现的MySQL数据库的插件。而在第4处，添加了data1与data2数据源的具体实现类，其getDataSource1()与getDataSource2()返回的是HikariDataSource类。<br><br>
+其插件"MySQL"最终通过HikariDataSource创建的链接与MySQL数据库进行交互。可能用户会对第4处代码有所疑惑，为何还要为data1及data2额外设置数据源，而不是由插件直接在内部创建出数据源。这是为了便于跨框架共享数据源，如通过此方式可与Spring共享数据源对象，在spring框架中，getDataSource1()与getDataSource2()可返回Spring中的数据源对象，提供给MySQL插件使用。<br><br>
+其"con1"与"con2"在于对同一数据源的读写方式进行区分，如对于mysql数据库，其con1可能是无事务、批量的读写，而con2是有事务、单数据的读写，或是对于Redis,con1对应的是list数据结构，而con2对应的是set数据结构。目前链接只是一个概念，其还未在此项目中实现，后续会完善。<br><br>
+注：以上具体可参考[5.dom示例](docs/dom-demo.md)
 
 ## 数据设计文档
 xml文档说明
