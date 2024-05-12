@@ -48,7 +48,7 @@ public interface BusinessDeclare {
 
     BusinessDeclare onException(FinalFun fun);
 
-    BusinessDeclare onFinsh(FinalFun fun);
+    BusinessDeclare onFinish(FinalFun fun);
 
     //BusinessDeclare data(String data);
 

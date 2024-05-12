@@ -25,9 +25,9 @@ public class TestOrderBusiness {
 
         subscribeOrderBySimple();
 
-        //subscribeOrder();
+        subscribeOrder();
 
-        //cancelOrderData();
+        cancelOrderData();
     }
 
     public static void subscribeOrderBySimple() {
@@ -131,7 +131,7 @@ public class TestOrderBusiness {
                     Order order = new Order();
                     order.setId(cancelOrderData);
                     order.setStatus(1);
-                    return ExecuteResult.success(order);
+                    return ExecuteResult.success();
                 }).addProduce("$payResultData", storage -> {
 
                     PayResultData payResultData = (PayResultData) storage.get("payResultData");
@@ -170,10 +170,20 @@ public class TestOrderBusiness {
                 .build("order")
                 .addChange("orderData", storage -> {
                     Order order = (Order) storage.get("orderData");
+                    System.out.println(storage.getStatus("status"));
                     System.out.println(order.getStatus());
                     return ExecuteResult.success(order);
                 }).addProduce("orderData", storage -> {
-                    Long orderId = (Long) storage.getParam("orderId");
+                    Long orderId = (Long) storage.get("orderId");
+
+                    if (orderId == null) {
+                        orderId = (Long) storage.getParam("orderId");
+
+                    }
+                    if (orderId == null) {
+                        throw new RuntimeException("orderId is null");
+                    }
+
                     Order order = new Order();
                     order.setId(orderId);
                     order.setProductName("Product");
@@ -182,12 +192,12 @@ public class TestOrderBusiness {
                 })
                 .addProduce("subscribeOrderData", storage -> {
                     SubscribeOrderData subscribeOrderData = (SubscribeOrderData) storage.get("$subscribeOrderData");
-                    Order order = new Order();
 
+                    Order order = new Order();
                     order.setId(1l);
                     order.setProductName(subscribeOrderData.getProductName());
 
-                    return ExecuteResult.success(order);
+                    return ExecuteResult.success("orderId",order.getId());
                 })
                 .addProduce("cancelOrderData", storage -> {
                     Order order = (Order) storage.get("orderData");
@@ -206,7 +216,7 @@ public class TestOrderBusiness {
                     order.setId(1l);
                     order.setProductName(subscribeOrderData.getProductName());
 
-                    return ExecuteResult.success(subscribeOrderData);
+                    return ExecuteResult.success("orderId",order.getId());
                 });
 
 

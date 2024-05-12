@@ -57,4 +57,9 @@ public class SpringDataSourceManager implements DataSourceManager {
         }
         return 0;
     }
+
+    public DataSourceTransactionManager getDstManager() {
+        return dstManager;
+    }
+
 }

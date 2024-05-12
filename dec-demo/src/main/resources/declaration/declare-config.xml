@@ -6,7 +6,6 @@
 				<data name="subscribeOrderDataSimple" desc="订购订单数据-简单" isCachePrior="false">
 					<depends>
 						<depend data="$subscribeOrderData" init="status:1"/>
-						<depend data="orderPayResultData"/>
 					</depends>
 				</data>
 
@@ -68,6 +67,7 @@
 		<business name="subscribeOrderDataWithSimple">
 			<datas>
 				<data system="order" name="subscribeOrderDataSimple" />
+				<data system="order" name="orderPayResultData"/>
 			</datas>
 		</business>
 

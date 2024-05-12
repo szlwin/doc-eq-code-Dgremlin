@@ -197,7 +197,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
     @Override
-    public BusinessDeclare onFinsh(FinalFun fun) {
+    public BusinessDeclare onFinish(FinalFun fun) {
         this.finshFun = fun;
         return this;
     }
@@ -405,7 +405,10 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             }else {
                 produceData(null, process.getData(), "common");
             }
-            refreshModeldata(process);
+            if(result.isSuccess()){
+                refreshModeldata(process);
+            }
+
         }else {
             if ("this".equals(process.getSystem())) {
 
@@ -420,11 +423,13 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
                 produceData(dataDesc, process.getData(), process.getSystem());
 
-                this.change(systemDesc, dataDesc);
+                if(result.isSuccess()){
+                    this.change(systemDesc, dataDesc);
 
-                refreshModeldata(process);
+                    refreshModeldata(process);
 
-                refreshStorage(dataDesc);
+                    refreshStorage(dataDesc);
+                }
             }
         }
     }
@@ -522,11 +527,14 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                         }
                         DataDesc depnedDataDesc = getDataDesc(system, dataDependDesc);
 
+                        String systemName = system;
                         if (dataDependDesc.getType() == 1) {
                             if(this.currentSystem.containsProduce(data)){
+                                systemName = "this";
                                 log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "this", data);
                                 produceData(depnedDataDesc, data, "this");
                             }else {
+                                systemName = "common";
                                 log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "common", data);
                                 produceData(depnedDataDesc, data, "common");
                             }
@@ -540,7 +548,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                             return;
                         }
 
-                        log.info("Code:{}, end produce depend data,  [{}]-[{}]", code, system, data);
+                        log.info("Code:{}, end produce depend data,  [{}]-[{}]", code, systemName, data);
                     }
 
                     if (dataDependDesc.getInit() != null) {
@@ -581,7 +589,13 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
         if (result.isSuccess()) {
             if (result.getData() != null) {
-                dataStorage.add(dataName, result.getData());
+                if (result.getDataType() == null) {
+
+                    dataStorage.add(dataName, result.getData());
+
+                } else {
+                    dataStorage.add(result.getDataType(), result.getData());
+                }
 
 
                 /*if (!conumeRecordSet.contains(system + ":" + dataName)) {
