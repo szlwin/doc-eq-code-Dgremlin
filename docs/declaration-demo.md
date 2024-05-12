@@ -6,105 +6,105 @@
 ```
 <declare-config>
 
-	<systems>
-		<system name="order">
-			<datas>
-				<data name="subscribeOrderDataSimple" desc="订购订单数据-简单" isCachePrior="false">
-					<depends>
-						<depend data="$subscribeOrderData" init="status:1"/>
-					</depends>
-				</data>
+<systems>
+  <system name="order">
+     <datas>
+       <data name="subscribeOrderDataSimple" desc="订购订单数据-简单" isCachePrior="false">
+	  <depends>
+             <depend data="$subscribeOrderData" init="status:1"/>
+	  </depends>
+       </data>
 
-				<data name="subscribeOrderData" desc="订购订单数据" isCachePrior="false">
-					<depends>
-						<depend data="$subscribeOrderData" init="status:1"/>
-					</depends>
-				</data>
+	<data name="subscribeOrderData" desc="订购订单数据" isCachePrior="false">
+          <depends>
+             <depend data="$subscribeOrderData" init="status:1"/>
+          </depends>
+	</data>
 
-				<data name="cancelOrderData" desc="取消订单数据" isCachePrior="false">
-					<depends>
-						<depend data="$cancelOrderData"/>
-						<depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="status=1 or status=2" change="status:3"/>
-					</depends>
-				</data>
+	<data name="cancelOrderData" desc="取消订单数据" isCachePrior="false">
+          <depends>
+            <depend data="$cancelOrderData"/>
+            <depend data="orderData" param="orderId:$cancelOrderData.orderId" condition="status=1 or status=2" change="status:3"/>
+          </depends>
+	</data>
 
-				<data name="orderData" desc="订单数据" type="persistent" isCachePrior="false">
-				</data>
+	<data name="orderData" desc="订单数据" type="persistent" isCachePrior="false">
+	</data>
 
-				<data name="orderPayResultData" desc="订单支付状态数据"  type="persistent" isCachePrior="false">
-					<depends>
-						<depend data="$payResultData"/>
-						<depend data="orderData" condition="status=1"/>
-					</depends>
-				</data>
-			</datas>
-		</system>
+	<data name="orderPayResultData" desc="订单支付状态数据"  type="persistent" isCachePrior="false">
+          <depends>
+	    <depend data="$payResultData"/>
+            <depend data="orderData" condition="status=1"/>
+	  </depends>
+	</data>
+     </datas>
+  </system>
 
-		<system name="pay" desc="支付">
-			<datas>
-				<data name="payCmdData" desc="支付指令数据">
-					<depends>
-						<depend data="$payData"/>
-					</depends>
-				</data>
+  <system name="pay" desc="支付">
+     <datas>
+	<data name="payCmdData" desc="支付指令数据">
+	  <depends>
+              <depend data="$payData"/>
+	  </depends>
+	</data>
 
-				<data name="payResultData" desc="支付结果数据"  type="persistent" isCachePrior="true">
-					<depends>
-						<depend data="payCmdData"/>
-					</depends>
-				</data>
-			</datas>
-		</system>
+	<data name="payResultData" desc="支付结果数据"  type="persistent" isCachePrior="true">
+           <depends>
+               <depend data="payCmdData"/>
+           </depends>
+	</data>
+    </datas>
+  </system>
 
-		<system name="common">
-			<datas>
-				<data name="$cancelOrderData" desc="取消订购操作数据"/>
-				<data name="$subscribeOrderData" desc="订购数据"/>
-				<data name="$payData" desc="支付数据"/>
-				<data name="$payResultData" desc="支付数据"/>
-				<data name="$refundOrderData" desc="订单退款数据"/>
-			</datas>
-		</system>
-	</systems>
+  <system name="common">
+     <datas>
+	<data name="$cancelOrderData" desc="取消订购操作数据"/>
+	<data name="$subscribeOrderData" desc="订购数据"/>
+	<data name="$payData" desc="支付数据"/>
+	<data name="$payResultData" desc="支付数据"/>
+	<data name="$refundOrderData" desc="订单退款数据"/>
+     </datas>
+   </system>
+</systems>
 
 
 
-	<businesses>
-		<business name="subscribeOrderDataWithSimple">
-			<datas>
-				<data system="order" name="subscribeOrderDataSimple" />
-				<data system="order" name="orderPayResultData"/>
-			</datas>
-		</business>
+<businesses>
+   <business name="subscribeOrderDataWithSimple">
+	<datas>
+          <data system="order" name="subscribeOrderDataSimple" />
+          <data system="order" name="orderPayResultData"/>
+	</datas>
+   </business>
 
-		<business name="subscribeOrder"  >
-			<datas>
-				<data  begin="true"/>
-					<data system="order" name="subscribeOrderData" />
-						<data  begin="true" transactionPolicy="NEW"/>
-							<data name="$payData"/>
-								<data  begin="true"/>
-									<data system="pay" name="payResultData" />
-									<data name="$payResultData"/>
-								<data end="true"/>
-						<data end="true"/>
-					<data system="order" name="orderPayResultData"/>
-				<data end="true"/>
-			</datas>
-		</business>
+   <business name="subscribeOrder"  >
+	<datas>
+	  <data  begin="true"/>
+            <data system="order" name="subscribeOrderData" />
+              <data  begin="true" transactionPolicy="NEW"/>
+                <data name="$payData"/>
+                  <data  begin="true"/>
+		    <data system="pay" name="payResultData" />
+		    <data name="$payResultData"/>
+                  <data end="true"/>
+               <data end="true"/>
+             <data system="order" name="orderPayResultData"/>
+	  <data end="true"/>
+	</datas>
+  </business>
 
-		<business name="cancelOrder"  >
-			<datas>
-				<data begin="true" transactionPolicy="REQUIRE"/>
-					<data system="order" name="cancelOrderData"/>
-					<data name="$payData"/>
-					<data system="pay" name="payResultData"/>
-					<data name="$payResultData"/>
-					<data system="order" name="orderPayResultData"/>
-				<data end="true"/>
-			</datas>
-		</business>
-	</businesses>
+  <business name="cancelOrder"  >
+	<datas>
+          <data begin="true" transactionPolicy="REQUIRE"/>
+            <data system="order" name="cancelOrderData"/>
+            <data name="$payData"/>
+            <data system="pay" name="payResultData"/>
+            <data name="$payResultData"/>
+            <data system="order" name="orderPayResultData"/>
+           <data end="true"/>
+	</datas>
+  </business>
+  </businesses>
 </declare-config>
 ```
 以上配置文件中，定义了三个系统，分别为order、pay及common，其中common为默认通用系统，其系统中的数据可在多个系统中使用，另在order与pay系统中定义数据及其相应的依赖数据。<br>
