@@ -29,7 +29,7 @@ public void testInit() throws Exception{
 }
 ```
 在以上代码中，在'1'处，添加了一个名为'MySql'的数据源类型，并设置其对应的实现类，如有多个数据源，可添加多个。之后在'2'处加载配置文件，其配置文件中配置了设计文档的具体加载方式及文件所在位置。
-然后在'3'处，对'MySql'这个数据源添加了相关扩展实现(具体可参考[6.数据源扩展](docs/dom-datasource.md))，最后在'4'处为'data1'和'data2'数据源标识添加具体的数据源实现(此处为HikariDataSource)。
+然后在'3'处，对'MySql'这个数据源添加了相关扩展实现(具体可参考[6.数据源扩展](dom-datasource.md))，最后在'4'处为'data1'和'data2'数据源标识添加具体的数据源实现(此处为HikariDataSource)。
 
 
 orm-config.xml配置文件
