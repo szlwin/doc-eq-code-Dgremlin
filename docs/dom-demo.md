@@ -1,6 +1,27 @@
 # dom示例
 
-其dec-demo为整个示例项目,代码及配置文件分别在dec-demo/main/java/model及dec-demo/main/resource/model目录下。
+环境准备
+===
+在项目根目录下执行以下命令，安装依赖包：<br>
+```
+mvn clean install
+```
+
+在自己的项目中添加以下依赖配置信息：<br>
+```
+    <dependency>
+        <groupId>doc.eq.code</groupId>
+        <artifactId>dec-datasource-orm-mysql</artifactId>
+        <version>1.0</version>
+    </dependency>
+    <dependency>
+        <groupId>doc.eq.code</groupId>
+        <artifactId>dec-core-starter</artifactId>
+        <version>1.0</version>
+    </dependency>
+```
+<br>
+做完以上两步可在自己的项目中使用，接下来通过示例详细说明如何使用，其dec-demo为整个示例项目，关于dom的代码及配置文件分别在dec-demo/main/java/model及dec-demo/main/resource/model目录下。
 
 初始化
 ===
