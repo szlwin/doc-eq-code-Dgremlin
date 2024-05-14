@@ -25,6 +25,7 @@ mvn clean install
 
 初始化
 ===
+执行dec-demo/main/resource/model/demo.sql文件中的SQL语句，初始化数据库和表。<br><br>
 在使用前，需添加相关数据信息及其实现，并加载相应设计文档，以下为代码示例：
 ```
 public void testInit() throws Exception{
@@ -50,7 +51,9 @@ public void testInit() throws Exception{
 }
 ```
 在以上代码中，在'1'处，添加了一个名为'MySql'的数据源类型，并设置其对应的实现类，如有多个数据源，可添加多个。之后在'2'处加载配置文件，其配置文件中配置了设计文档的具体加载方式及文件所在位置。
-然后在'3'处，对'MySql'这个数据源添加了相关扩展实现(具体可参考[6.数据源扩展](dom-datasource.md))，最后在'4'处为'data1'和'data2'数据源标识添加具体的数据源实现(此处为HikariDataSource)。
+然后在'3'处，对'MySql'这个数据源添加了相关扩展实现(具体可参考[6.数据源扩展](dom-datasource.md))，最后在'4'处为'data1'和'data2'数据源标识添加具体的数据源实现(此处为HikariDataSource)。<br><br>
+
+注：在getDataSource1()和getDataSource2()方法中，将数据库连接参数修改为用户自己的数据库。<br>
 
 
 orm-config.xml配置文件
