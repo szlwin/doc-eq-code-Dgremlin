@@ -262,6 +262,14 @@ public static void initSystem() {
 在配置文件中'<depend data="$subscribeOrderData"  init="status:1"/>'，其'init="status:1"'会将第2处代码中传入的参数，自动将status设置为1。其init可设置多个值，如：'init="status:1,price:0"'
 其业务执行的结果可通过getExecuteResult()方法获取，其中含有业务执行结果的详细信息，后续会详细说明。<br>
 <br>
+DefaultBusinessDeclare对象还有以下方法：<br>
+setCode:&nbsp;&nbsp;为此次业务执行指定一个编码，便于跟踪和记录，此编码会在日志中出现。如不指定，会随机指定一个。<br>
+onSuccessFun:&nbsp;&nbsp;指定一个回调方法，执行成功时此方法会被执行。<br>
+onErrorFun:&nbsp;&nbsp;指定一个回调方法，当执行出现错误，或有异常此方法会被执行。(参考ExecuteResult.fail方法)<br>
+onExceptionFun:&nbsp;&nbsp;指定一个回调方法，当有异常时此方法会被执行。(参考ExecuteResult.fail方法)<br>
+onFinishFun:&nbsp;&nbsp;指定一个回调方法，无论执行结果如何，此方法总会被执行。<br>
+onStopFun:&nbsp;&nbsp;&nbsp;&nbsp;指定一个回调方法，业务终止时，此方法会被执行。(可通过ExecuteResult.setStop方法，设置业务终止)<br>
+<br>
 
 示例2
 ===

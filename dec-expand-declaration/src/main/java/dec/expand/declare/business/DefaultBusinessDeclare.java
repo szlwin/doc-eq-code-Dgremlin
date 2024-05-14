@@ -43,8 +43,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private DataStorage dataStorage = new DataStorage();
 
-    private String name;
-
     private ProcessDesc currentProcess;
 
     private BusinessDesc businessDesc;
@@ -89,7 +87,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     @Override
     public String getName() {
-        return name;
+        return businessDesc.getName();
     }
 
     @Override
@@ -135,7 +133,6 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                 log.info("Code:{}, start produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
 
                 executeProcess(process, i);
-
                 if (result != null && (!result.isSuccess() || result.isStop())) {
                     break;
                 }
@@ -149,12 +146,17 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                 error.setException(e);
                 result.setError(error);
                 break;
+            }finally {
+                if(result != null){
+                    result.setSystemName(process.getSystem());
+                    result.setDataName(process.getData());
+                }
             }
             log.info("Code:{}, end produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
         }
 
+        result.setDeclareName(this.getName());
         result.setCode(code);
-
         if (result.isStop() && this.stopFun != null) {
             stopFun.execute(this.result);
         }
