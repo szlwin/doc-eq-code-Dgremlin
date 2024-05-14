@@ -8,6 +8,10 @@ public class ExecuteResult {
 
     private String processName;
 
+    private String dataName;
+
+    private String systemName;
+
     private String dataType;
 
     private Object data;
@@ -124,5 +128,21 @@ public class ExecuteResult {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getDataName() {
+        return dataName;
+    }
+
+    public void setDataName(String dataName) {
+        this.dataName = dataName;
+    }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
     }
 }
