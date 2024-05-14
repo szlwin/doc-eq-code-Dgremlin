@@ -159,7 +159,7 @@ public class TestOrderBusiness {
     }
 
     public static void initContext() throws Exception {
-        ConfigInit.init();
+        //ConfigInit.init();
         ContextUtils.loadConfig(new String[]{"classpath:declaration/declare-config.xml"});
 
     }
