@@ -147,8 +147,10 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                 result.setError(error);
                 break;
             }finally {
-                result.setSystemName(process.getSystem());
-                result.setDataName(process.getData());
+                if(result != null){
+                    result.setSystemName(process.getSystem());
+                    result.setDataName(process.getData());
+                }
             }
             log.info("Code:{}, end produce data, [{}]-[{}]", code, process.getSystem(), process.getData());
         }
