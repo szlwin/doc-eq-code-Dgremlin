@@ -151,9 +151,14 @@ public void testOrderRule() throws Exception {
 ```
 loader.addConnectionWithRule("insertOrder", "con2");
 ```
-以上对'save-Order'中的'insertOrder'业务规则，采用'con2'链接进行写操作。
+以上对'save-Order'中的'insertOrder'业务规则，采用'con2'链接进行写操作。<br>
+
+在示例代码中，为容器以及"save-Order"视图分别添加了监听器(SimpleContainerListener与SimpleViewListener)，容器监听器可监听容器的开始和结束事件，而视图监听器可监听业务视图及其业务规则的开始和结束事件。
 
 其它
 ===
-个人认为，在今后的设计或架构中需摒弃事务这一概念，即在设计时从无事务角度进行开发。
-另由于此项目成立较早(实际成立于2012年，2017年上传到gitlab)，还存在一定缺陷，如不支持文档型数据，现只支持行列型数据。
+1.个人认为，在今后的设计或架构中需摒弃事务这一概念，即在设计时从无事务角度进行开发。<br>
+2.其在代码示例中，使用了自定义的数据对象(ModelData与BaseData，其主要基于key-valve结构），而不支持原生对象，是因为：<br>
+a）便于代码复用和移植<br>
+b) 可包含更丰富的信息，如数据之间的关系，主键等信息<br>
+3.另由于此项目成立较早(实际成立于2012年，2017年上传到gitlab)，还存在一定缺陷，如不支持文档型数据，现只支持行列型数据。

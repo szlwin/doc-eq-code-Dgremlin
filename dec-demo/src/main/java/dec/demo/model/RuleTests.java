@@ -22,7 +22,6 @@ public class RuleTests extends DemoLoadTests {
         ruleTests.testInit();
         ruleTests.testOrderRule();
         ruleTests.testGetRule();
-        ruleTests.testOrderRuleByObj();
     }
 
     //@Test
