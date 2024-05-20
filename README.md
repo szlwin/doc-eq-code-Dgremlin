@@ -12,7 +12,9 @@
 [6.数据源扩展](docs/dom-datasource.md)<br>
 [7.数据生产与消费](docs/declaration.md)<br>
 [8.数据生产与消费示例](docs/declaration-demo.md)<br>
-[9.dom与declaration联合示例](docs/mix-demo.md)<br>
+[9.dom与declaration联合示例](docs/mix-demo.md)<br><br>
+
+联系邮箱：szlwin@163.com<br>
 
 注：使用此项目前，需在本地仓库中安装jar包，所需的jar包都在lib目录下，在lib目录下执行以下命令进行安装.<br>
 ```
