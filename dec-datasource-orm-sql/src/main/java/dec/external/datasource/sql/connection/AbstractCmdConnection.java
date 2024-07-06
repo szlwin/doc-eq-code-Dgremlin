@@ -18,10 +18,13 @@ import java.util.Map;
 
 public abstract class AbstractCmdConnection extends AbstractConnection<ExecuteParam, ExecuteInfo> implements SqlDBConnection<ExecuteParam, ExecuteInfo> {
 
+    protected boolean isConnect;
+
     public void connect() throws ConectionException {
         try {
             con = ConnectionFactory.getInstance().getConnection(conName);
             this.setAutoCommit(false);
+            isConnect = true;
         } catch (Exception e) {
             throw new ConectionException(e);
         }
@@ -109,6 +112,11 @@ public abstract class AbstractCmdConnection extends AbstractConnection<ExecutePa
         } catch (SQLException e) {
             throw new ConectionException(e);
         }
+    }
+
+    public boolean isConnect() throws ConectionException {
+
+        return isConnect;
     }
 
     public ExecuteInfo execute(ExecuteParam param) throws ExecuteException {

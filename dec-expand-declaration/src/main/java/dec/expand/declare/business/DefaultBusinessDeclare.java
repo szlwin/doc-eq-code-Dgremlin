@@ -1,5 +1,6 @@
 package dec.expand.declare.business;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import dec.core.context.config.model.rule.RuleViewInfo;
 import dec.core.context.config.utils.ConfigContextUtil;
@@ -71,6 +72,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private boolean isRefRule;
 
+    private ModelData modelData;
+
     public DefaultBusinessDeclare() {
         this(false);
     }
@@ -79,6 +82,14 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         this.isRefRule = isRefRule;
         this.code = UUID.randomUUID().toString();
         this.multipleTranContainer = new MultipleTranContainer();
+    }
+
+    public MultipleTranContainer getMultipleTranContainer() {
+        return multipleTranContainer;
+    }
+
+    public void setMultipleTranContainer(MultipleTranContainer multipleTranContainer) {
+        this.multipleTranContainer = multipleTranContainer;
     }
 
     public void setCode(String code) {
@@ -146,8 +157,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                 error.setException(e);
                 result.setError(error);
                 break;
-            }finally {
-                if(result != null){
+            } finally {
+                if (result != null) {
                     result.setSystemName(process.getSystem());
                     result.setDataName(process.getData());
                 }
@@ -324,7 +335,8 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
     }
 
     @Override
-    public void setRuleModel(String name, Object obj) {
+    public BusinessDeclare setRuleModel(String name, Object obj) {
+        this.modelData = (ModelData) obj;
         if (modelLoaderMap == null) {
             modelLoaderMap = new HashMap<>();
         }
@@ -334,21 +346,23 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
             RuleViewInfo ruleViewInfo = ConfigContextUtil.getConfigInfo().getRuleViewInfo(name);
             if (obj instanceof ModelData) {
                 modelLoader.load(name, (ModelData) obj);
-            }
-            try {
-                ModelData modelData = DataUtil.createViewData(ruleViewInfo.getViewData().getName());
-                if (obj instanceof Map) {
-                    modelData.getAllValues().putAll((Map<String, Object>) ((Map) obj).values());
-                } else {
-                    modelData.getAllValues().putAll((Map<? extends String, ?>) ((Map<? extends String, ?>) JSONObject.toJSON(obj)).values());
+            } else {
+                try {
+                    ModelData modelData = DataUtil.createViewData(ruleViewInfo.getViewData().getName());
+                    if (obj instanceof Map) {
+                        modelData.getAllValues().putAll((Map<String, Object>) ((Map) obj).values());
+                    } else {
+                        modelData.getAllValues().putAll((Map<? extends String, ?>) ((Map<? extends String, ?>) JSONObject.toJSON(obj)).values());
+                    }
+                    modelData.setOriginData(obj);
+                    modelLoader.load(name, modelData);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
                 }
-                modelData.setOriginData(obj);
-                modelLoader.load(name, modelData);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
             }
             modelLoaderMap.put(name, modelLoader);
         }
+        return this;
     }
 
     public String getCode() {
@@ -398,20 +412,23 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
     private void executeProcess(ProcessDesc process, int index) throws Exception {
 
-        if (process.getRule() != null) {
+        if (process.getRule() != null
+                && (process.getRuleReplace() == null || "".equals(process.getRuleReplace()))) {
             executeRule(process);
+            refreshModeldata(process);
+            return;
         }
-        if("common".equals(process.getSystem())){
-            if(currentSystem.containsProduce(process.getData())){
+        if ("common".equals(process.getSystem())) {
+            if (currentSystem.containsProduce(process.getData())) {
                 produceData(null, process.getData(), "this");
-            }else {
+            } else {
                 produceData(null, process.getData(), "common");
             }
-            if(result.isSuccess()){
+            if (result.isSuccess()) {
                 refreshModeldata(process);
             }
 
-        }else {
+        } else {
             if ("this".equals(process.getSystem())) {
 
                 produceData(null, process.getData(), process.getSystem());
@@ -425,7 +442,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
                 produceData(dataDesc, process.getData(), process.getSystem());
 
-                if(result.isSuccess()){
+                if (result.isSuccess()) {
                     this.change(systemDesc, dataDesc);
 
                     refreshModeldata(process);
@@ -440,6 +457,7 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
         if (process.getRuleRefreshList() == null || process.getRuleRefreshList().isEmpty()) {
             return;
         }
+        log.info("refreshModeldata:[{}]-[{}]",process.getSystem(),process.getData());
         Object object = this.dataStorage.get(process.getData());
         for (PropertyDesc propertyDesc : process.getRuleRefreshList()) {
             try {
@@ -450,14 +468,14 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
                 }
 
                 String[] toPropertyArray = propertyDesc.getTargetProperty();
-                if ("this".equals(propertyDesc.getSourceProperty()[0])) {
+                if ("this".equals(propertyDesc.getTargetProperty()[0])) {
                     toPropertyArray = null;
                 }
 
                 if (process.isSystemToDom()) {
-                    Bean.get().copy(object, fromPropertyArray, this.modelLoaderMap.get(process.getRule()), toPropertyArray);
+                    Bean.get().copy(object, fromPropertyArray, modelData.getValues(), toPropertyArray);
                 } else {
-                    Bean.get().copy(this.modelLoaderMap.get(process.getRule()), fromPropertyArray, object, toPropertyArray);
+                    Bean.get().copy(modelData.getAllValues(), fromPropertyArray, object, toPropertyArray);
                 }
 
             } catch (Exception ex) {
@@ -531,16 +549,16 @@ public class DefaultBusinessDeclare implements BusinessDeclare {
 
                         String systemName = system;
                         if (dataDependDesc.getType() == 1) {
-                            if(this.currentSystem.containsProduce(data)){
+                            if (this.currentSystem.containsProduce(data)) {
                                 systemName = "this";
                                 log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "this", data);
                                 produceData(depnedDataDesc, data, "this");
-                            }else {
+                            } else {
                                 systemName = "common";
                                 log.info("Code:{}, start produce depend data, [{}]-[{}]", code, "common", data);
                                 produceData(depnedDataDesc, data, "common");
                             }
-                        }else {
+                        } else {
                             log.info("Code:{}, start produce depend data, [{}]-[{}]", code, system, data);
                             produceData(depnedDataDesc, data, system);
                         }

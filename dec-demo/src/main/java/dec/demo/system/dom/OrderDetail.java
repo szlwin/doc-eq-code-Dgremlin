@@ -4,36 +4,36 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class OrderDetail {
-    private Integer id;
-    private Integer orderId;
-    private Integer userId = 1;
+    private Long id;
+    private Long orderId;
+    private Long userId = 1l;
     private Integer productId =1;
     private String productName = "testP";
     private BigDecimal productAmount = BigDecimal.valueOf(100);
     private BigDecimal productPrice = BigDecimal.valueOf(100);
     private Date createDate = new Date();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

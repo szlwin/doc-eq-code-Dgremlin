@@ -109,8 +109,8 @@ public class RuleContainer {
         List<RuleDefineInfo> ruleList = ruleViewInfo.getRules();
 
         int startIndex = this.startRule == null ? 0 : ruleViewInfo.getRuleIndex(this.startRule);
-		int endIndex = this.endRule == null ? ruleList.size() : ruleViewInfo.getRuleIndex(this.endRule);
-        for (int i = startIndex; i < endIndex; i++) {
+        int endIndex = this.endRule == null ? ruleList.size() : ruleViewInfo.getRuleIndex(this.endRule);
+        for (int i = startIndex; i < endIndex || (this.endRule != null && i == endIndex); i++) {
             RuleDefineInfo ruleDefineInfo = ruleList.get(i);
 
             resultInfo = executeOneRule(ruleDefineInfo);

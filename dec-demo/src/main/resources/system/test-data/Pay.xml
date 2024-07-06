@@ -3,9 +3,9 @@
 <orm--data-mapping>
 	<data name="pay">
 		<property-info>
-			<property name="id" type="int" desc="主键"/>
-			<property name="userId" type="int" desc="用户主键"/>
-			<property name="orderId" type="int" desc="商品主键"/>
+			<property name="id" type="long" desc="主键"/>
+			<property name="userId" type="long" desc="用户主键"/>
+			<property name="orderId" type="long" desc="商品主键"/>
 			<property name="totalPrice" type="decimal" desc="总支付价格"/>
 			<property name="totalAmount" type="decimal" desc="总支付金额"/>
 			<property name="payStatus" type="int" desc="支付状态"/>
@@ -13,9 +13,9 @@
 		</property-info>
 		<table-info>
 			<table name="pay_info" data-source="data1" key="o_id" key-type="increment">
-				<column name="o_id" ref-property="id"/>
-				<column name="o_userId" ref-property="userId"/>
-				<column name="o_orderId" ref-property="orderId"/>
+				<column name="o_id" ref-property="id" type="biginteger"/>
+				<column name="o_userId" ref-property="userId" type="biginteger"/>
+				<column name="o_orderId" ref-property="orderId" type="biginteger"/>
 				<column name="o_totalPrice" ref-property="totalPrice"/>
 				<column name="o_totalAmount" ref-property="totalAmount"/>
 				<column name="o_status" ref-property="payStatus"/>
@@ -26,9 +26,9 @@
 
 	<data name="payDetail">
 		<property-info>
-			<property name="id" type="int" desc="主键"/>
-			<property name="userId" type="int" desc="用户主键"/>
-			<property name="payId" type="int" desc="支付主键"/>
+			<property name="id" type="long" desc="主键" />
+			<property name="userId" type="long" desc="用户主键"/>
+			<property name="payId" type="long" desc="支付主键"/>
 			<property name="createDate" type="date" desc="创建时间"/>
 			<property name="productId" type="int" desc="商品主键"/>
 			<property name="productName" type="int" desc="商品名称"/>
@@ -36,10 +36,10 @@
 			<property name="payAmount" type="decimal" desc="支付金额"/>
 		</property-info>
 		<table-info>
-			<table name="pay_detail_info" data-source="data1" key="o_d_id" key-type="increment">
-				<column name="o_id" ref-property="id"/>
-				<column name="o_payId" ref-property="payId"/>
-				<column name="o_userId" ref-property="userId"/>
+			<table name="pay_detail_info" data-source="data1" key="o_id" key-type="increment">
+				<column name="o_id" ref-property="id" type="biginteger"/>
+				<column name="o_payId" ref-property="payId" type="biginteger"/>
+				<column name="o_userId" ref-property="userId" type="biginteger"/>
 				<column name="o_productId" ref-property="productId"/>
 				<column name="o_productName" ref-property="productName"/>
 				<column name="o_payPrice" ref-property="payPrice"/>

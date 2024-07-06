@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Pay {
-    private Integer id;
-    private Integer userId = 1;
-    private Integer orderId;
+    private Long id;
+    private Long userId = 1l;
+    private Long orderId;
     private BigDecimal totalPrice = BigDecimal.valueOf(100);
     private BigDecimal totalAmount = BigDecimal.valueOf(100);
     private Integer status = 1;
@@ -15,27 +15,27 @@ public class Pay {
 
     private List<PayDetail> payDetailList;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Integer getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 

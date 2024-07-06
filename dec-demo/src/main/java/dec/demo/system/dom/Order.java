@@ -11,7 +11,8 @@ public class Order {
     private BigDecimal totalPrice = BigDecimal.valueOf(100);
     private BigDecimal totalAmount = BigDecimal.valueOf(100);
     private Integer status = 1;
-    private Date dateTime = new Date();
+
+    private Date createDate = new Date();
     private User user = new User();
     private List<OrderDetail> orderDetailList;
     private Pay payInfo = new Pay();
@@ -64,12 +65,12 @@ public class Order {
         this.status = status;
     }
 
-    public Date getDateTime() {
-        return dateTime;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
+    public void setCreateDate(Date dateTime) {
+        this.createDate = dateTime;
     }
 
     public User getUser() {

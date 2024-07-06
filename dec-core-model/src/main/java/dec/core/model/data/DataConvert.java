@@ -20,7 +20,7 @@ import javolution.util.FastMap;
 
 public class DataConvert {
 	
-	public void convert(String name,ModelData viewBaseData,BaseData baseData){
+	public static void convert(String name,ModelData viewBaseData,BaseData baseData){
 		Map<String,Object> viewMap = viewBaseData.getAllValues();
 		String proArray[] = name.split("\\.");
 		
@@ -47,7 +47,7 @@ public class DataConvert {
 		convert(dataMap.get(proArray[proArray.length-2]),dataMap.get(proArray[proArray.length-1]),viewProperty,baseData);
 	}
 	
-	public void convert(Object superObj,Object obj,ViewProperty viewProperty,Map<String,Object> baseData,String dataSource){
+	public static void convert(Object superObj,Object obj,ViewProperty viewProperty,Map<String,Object> baseData,String dataSource){
 		Map<String,ViewProperty> dataMap = viewProperty.getViewData().getViewPropertyInfo().getProperty();
 		Map<String,Object> valueMap = new FastMap<String,Object>();
 		
@@ -85,11 +85,11 @@ public class DataConvert {
 		}
 	}
 	
-	public void convert(Object superObj,Object obj,ViewProperty viewProperty,BaseData baseData){
+	public static void convert(Object superObj,Object obj,ViewProperty viewProperty,BaseData baseData){
 		convert(superObj,obj,viewProperty,baseData.getValues(),null);
 	}
 	
-	public void convert(ModelData viewBaseData,BaseData baseData){
+	public static void convert(ModelData viewBaseData,BaseData baseData){
 		
 		//��ȡView Data������Ϣ
 		//ConfigInfo configInfo = ConfigManager.getInstance().getConfigInfo();
@@ -100,7 +100,7 @@ public class DataConvert {
 		
 		String dataName = baseData.getName();
 		
-		if(viewDataConfig.getTargetMain().equals(dataName)){
+		if(viewDataConfig.getTargetMain().getName().equals(dataName)){
 			refMap = viewDataConfig
 					.getViewPropertyInfo()
 					.getRefMap();
@@ -157,7 +157,7 @@ public class DataConvert {
 	}
 	
 	
-	public void convert(Map<String,Object> viewValue,Data data,Map<String,ViewProperty> viewPropertyMap,Map<String, Object> baseData,String dataSource){
+	public static void convert(Map<String,Object> viewValue,Data data,Map<String,ViewProperty> viewPropertyMap,Map<String, Object> baseData,String dataSource){
 		Iterator<ViewProperty> it = viewPropertyMap.values().iterator();
 		while(it.hasNext()){
 			ViewProperty viewProperty = it.next();
@@ -172,7 +172,7 @@ public class DataConvert {
 		}
 	}
 	
-	public Object convertDataType(Data data,String key,Object value,String dataSource){
+	public static Object convertDataType(Data data,String key,Object value,String dataSource){
 		DataTable dataTable = data.getTableInfo().getTable(dataSource);
 		
 		Column column = dataTable.getColumns().get(key);

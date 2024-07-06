@@ -142,14 +142,14 @@ public class GetExecute extends AbstractDataExecute{
 			Map<String, Object> dataMap =(Map<String, Object>) it.next();
 			//DataUtil.convertDataToBaseData(dataMap, data);
 			
-			DataConvert dataConvert = new DataConvert();
+			//DataConvert dataConvert = new DataConvert();
 			
 			Map<String,Object> value = (Map<String,Object>) this.value;
 			
 			if(isMain){
-				dataConvert.convert(value, viewData.getTargetMain(),viewData.getViewPropertyInfo().getProperty(), dataMap,this.dataSource);
+				DataConvert.convert(value, viewData.getTargetMain(),viewData.getViewPropertyInfo().getProperty(), dataMap,this.dataSource);
 			}else{
-				dataConvert.convert(value, this.propertyValue, viewProperty, dataMap,this.dataSource);
+				DataConvert.convert(value, this.propertyValue, viewProperty, dataMap,this.dataSource);
 			}
 			
 			//DataUtil.convertDataToBaseData(dataMap,(Map<String, Object>) propertyValue);

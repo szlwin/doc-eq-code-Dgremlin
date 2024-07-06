@@ -66,6 +66,6 @@ public interface BusinessDeclare {
 
     BusinessDeclare transactionManager(DataSourceManager dataSourceManager);
 
-    void setRuleModel(String name,Object obj) throws DataNotDefineException;
+    BusinessDeclare setRuleModel(String name,Object obj) throws DataNotDefineException;
 
 }

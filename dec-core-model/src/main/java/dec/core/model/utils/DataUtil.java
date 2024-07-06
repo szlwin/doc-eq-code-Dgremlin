@@ -52,16 +52,16 @@ public class DataUtil {
 	
 	public static void addDataToView(ModelData viewBaseData,BaseData baseData){
 		
-		DataConvert dataConvert = new DataConvert();
+		//DataConvert dataConvert = new DataConvert();
 		
-		dataConvert.convert(viewBaseData, baseData);
+		DataConvert.convert(viewBaseData, baseData);
 	}
 	
 	public static void addDataToView(String name,ModelData viewBaseData,BaseData baseData){
 		
-		DataConvert dataConvert = new DataConvert();
+		//DataConvert dataConvert = new DataConvert();
 		
-		dataConvert.convert(name,viewBaseData, baseData);
+		DataConvert.convert(name,viewBaseData, baseData);
 	}
 	
 	public static void convertDataToBaseData(Map<String,Object> dataMap,Map<String,Object> dataObjValue,Iterator<String> keyIt){

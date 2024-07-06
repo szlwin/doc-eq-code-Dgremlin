@@ -30,7 +30,7 @@ public class MultipleTranContainer {
 
     private boolean isNested;
 
-    private int conFlag=1;
+    private int conFlag = 1;
 
     public void load(ModelLoader modelLoader) {
         this.modelLoader = modelLoader;
@@ -41,8 +41,12 @@ public class MultipleTranContainer {
             dataConnectionList = new SimpleList<>();
         }
         currentDataConnection = this.createConnection(conName, type);
+        if (!currentDataConnection.isConnect()) {
+            currentDataConnection.connect();
+        }
+
         currentDataConnection.setFlag(currentDataConnection.getFlag() + 1);
-        if (dataConnectionList.getLast() == null) {
+        if (dataConnectionList.getLast() == null && dataConnectionList.size() > 0) {
             dataConnectionList.setLast(currentDataConnection);
         } else {
             dataConnectionList.add(currentDataConnection);
@@ -58,7 +62,7 @@ public class MultipleTranContainer {
         tranExecuter.load(modelLoader);
         tranExecuter.setTranType(currentDataConnection.getTransactionType());
         tranExecuter.setConnection(this.currentDataConnection);
-        if(isNested){
+        if (isNested) {
             this.setSavePoint(tranExecuter);
             isNested = false;
         }
@@ -83,7 +87,7 @@ public class MultipleTranContainer {
         if (currentDataConnection.getFlag() == 0) {
             commit();
         }
-        currentDataConnection = dataConnectionList.getLast();
+        currentDataConnection = dataConnectionList.get(dataConnectionList.size()-2);
         dataConnectionList.setLast(null);
     }
 
@@ -103,7 +107,7 @@ public class MultipleTranContainer {
                     dataConnection.rollback();
                 } catch (Exception ex) {
                     log.error("Rollback error", ex);
-                }finally {
+                } finally {
                     try {
                         dataConnection.close();
                     } catch (ConectionException e) {
@@ -196,7 +200,7 @@ public class MultipleTranContainer {
                         if (type == Transaction.PROPAGATION_SUPPORTS) {
                             preDataConnection = dataConnection;
                         } else if (type == Transaction.PROPAGATION_NOT_SUPPORTED) {
-                            if(!dataConnection.isAutoCommit()){
+                            if (!dataConnection.isAutoCommit()) {
                                 preDataConnection = dataConnection;
                             }
                         }
@@ -214,7 +218,7 @@ public class MultipleTranContainer {
         return getConnection(conName, type);
     }
 
-    private void setSavePoint(TranExecuter tranExecuter) throws SQLException{
+    private void setSavePoint(TranExecuter tranExecuter) throws SQLException {
         SqlDBConnection con = (SqlDBConnection) tranExecuter.getConnection();
         String flag = String.valueOf(conFlag);
 

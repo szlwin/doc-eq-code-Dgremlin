@@ -87,6 +87,7 @@ public class BusinessParser {
                     if (transactionPolicyValue == null) {
                         throw new XMLParseException("The property 'transactionPolicy' for data is error, transactionPolicy:" + transactionPolicy);
                     }
+                    processDesc.setTransaction(transactionPolicyValue);
                 }
 
                 String dataSource = dataElement.attributeValue("ref-rule-connection");
@@ -140,31 +141,33 @@ public class BusinessParser {
                     throw new XMLParseException("The 'ref-rule' for data is not exist, ref-rule:" + refRule);
                 }
 
-                if (processDesc.getData() != null) {
+                //if (processDesc.getData() != null) {
                     String refRuleReplace = dataElement.attributeValue("ref-rule-replace");
-                    if (refRuleReplace == null || "".equals(refRuleReplace)) {
-                        throw new XMLParseException("The 'ref-rule-replace' is empty for 'ref-rule':" + refRule);
-                    }
+                    // if (refRuleReplace == null || "".equals(refRuleReplace)) {
+                    //     throw new XMLParseException("The 'ref-rule-replace' is empty for 'ref-rule':" + refRule);
+                    //}
                     processDesc.setRuleReplace(refRuleReplace);
-                } else {
+                //} else {
                     String refRuleRange = dataElement.attributeValue("ref-rule-range");
-                    if (refRuleRange == null || "".equals(refRuleRange)) {
-                        throw new XMLParseException("The 'ref-rule-range' is empty for 'ref-rule':" + refRule);
+                    //if (refRuleRange == null || "".equals(refRuleRange)) {
+                    //    throw new XMLParseException("The 'ref-rule-range' is empty for 'ref-rule':" + refRule);
+                    //}
+                    if (refRuleRange != null && !"".equals(refRuleRange)) {
+                        String ruleArray[] = refRuleRange.split(":");
+                        processDesc.setRuleStart(ruleArray[0]);
+                        processDesc.setRuleEnd(ruleArray[ruleArray.length - 1]);
                     }
-                    String ruleArray[] = refRuleRange.split(":");
-                    processDesc.setRuleStart(ruleArray[0]);
-                    processDesc.setRuleEnd(ruleArray[ruleArray.length - 1]);
-                }
+                //}
             }
 
             String refreshData = dataElement.attributeValue("system-to-dom");
-            if(refreshData != null && !"".equals(refreshData)){
+            if (refreshData != null && !"".equals(refreshData)) {
                 processDesc.setRuleRefresh(refreshData);
                 processDesc.setSystemToDom(true);
             }
 
             refreshData = dataElement.attributeValue("dom-to-system");
-            if(refreshData != null && !"".equals(refreshData)){
+            if (refreshData != null && !"".equals(refreshData)) {
                 processDesc.setRuleRefresh(refreshData);
                 processDesc.setSystemToDom(false);
             }

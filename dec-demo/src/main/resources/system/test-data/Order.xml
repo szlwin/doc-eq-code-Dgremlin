@@ -3,24 +3,23 @@
 <orm--data-mapping>
 	<data name="order">
 		<property-info>
-			<property name="id" type="int" desc="主键"/>
-			<property name="userId" type="int" desc="用户主键"/>
+			<property name="id" type="long" desc="主键"/>
+			<property name="userId" type="long" desc="用户主键"/>
 			<property name="productCount" type="int" desc="商品数量"/>
 			<property name="totalPrice" type="decimal" desc="订单总价格"/>
 			<property name="totalAmount" type="decimal" desc="总支付金额"/>
-			<property name="orderStatus" type="int" desc="订单状态"/>
+			<property name="status" type="int" desc="订单状态"/>
 			<property name="createDate" type="date" desc="创建时间"/>
-			<property name="payId" type="int" desc="支付主键"/>
 		</property-info>
 		<table-info>
 			<table name="order_info" data-source="data1" key="o_id" key-type="increment">
-				<column name="o_id" ref-property="id"/>
-				<column name="o_userId" ref-property="userId"/>
+				<column name="o_id" ref-property="id" type="biginteger"/>
+				<column name="o_userId" ref-property="userId" type="biginteger"/>
 				<column name="o_payId" ref-property="payId"/>
 				<column name="o_count" ref-property="productCount"/>
 				<column name="o_totalPrice" ref-property="totalPrice"/>
 				<column name="o_totalAmount" ref-property="totalAmount"/>
-				<column name="o_status" ref-property="orderStatus"/>
+				<column name="o_status" ref-property="status"/>
 				<column name="o_date" ref-property="createDate" type="timestamp"/>
 			</table>
 		</table-info>
@@ -28,9 +27,9 @@
 
 	<data name="orderDetail">
 		<property-info>
-			<property name="id" type="int" desc="主键"/>
-			<property name="userId" type="int" desc="用户主键"/>
-			<property name="orderId" type="int" desc="订单主键"/>
+			<property name="id" type="long" desc="主键"/>
+			<property name="userId" type="long" desc="用户主键"/>
+			<property name="orderId" type="long" desc="订单主键"/>
 			<property name="productId" type="int" desc="商品主键"/>
 			<property name="productName" type="int" desc="商品名称"/>
 			<property name="productPrice" type="decimal" desc="商品单价"/>
@@ -39,9 +38,9 @@
 		</property-info>
 		<table-info>
 			<table name="order_detail_info" data-source="data1" key="o_d_id" key-type="increment">
-				<column name="o_d_id" ref-property="id"/>
-				<column name="o_orderId" ref-property="orderId"/>
-				<column name="o_userId" ref-property="userId"/>
+				<column name="o_d_id" ref-property="id" type="biginteger"/>
+				<column name="o_orderId" ref-property="orderId" type="biginteger"/>
+				<column name="o_userId" ref-property="userId" type="biginteger"/>
 				<column name="o_productId" ref-property="productId"/>
 				<column name="o_productName" ref-property="productName"/>
 				<column name="o_productPrice" ref-property="productPrice"/>

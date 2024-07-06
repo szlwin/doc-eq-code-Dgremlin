@@ -9,6 +9,7 @@ import dec.core.context.config.model.view.RelationInfo;
 import dec.core.context.config.model.view.ViewData;
 import dec.core.context.config.model.view.ViewProperty;
 import dec.core.context.data.ModelData;
+import dec.core.model.data.DataConvert;
 import dec.core.model.utils.DataUtil;
 
 import java.util.Collection;
@@ -61,6 +62,8 @@ public class UpdateKeyUtil {
         String idKey = dataInfo.getTableInfo().getTable(dataSourceName).getPropertyKey();
 
         Object idValue = ((Map<String, Object>) value).get(idKey);
+        //Object idValue = DataConvert.convertDataType(dataInfo, idKey, ((Map<String, Object>) value).get(idKey), dataSourceName);
+
 
         String proRefName = idKey;// Util.getKeyPropertyName(dataName,dataSourceName);
 
@@ -128,6 +131,7 @@ public class UpdateKeyUtil {
                 .getPropertyKey();
 
         Object idValue = ((Map<String, Object>) propertyValue).get(idKey);
+        //Object idValue = DataConvert.convertDataType(dataInfo, idKey, ((Map<String, Object>) value).get(idKey), dataSourceName);
 
         RelationInfo relationInfo = viewData.getParentView().getRelationInfo();
 
@@ -138,7 +142,7 @@ public class UpdateKeyUtil {
         if (index > 0) {
             String valuePropertyName = propertyName.substring(0, index);
             value = (Map<String, Object>) DataUtil.getValueByKey(valuePropertyName, this.value);
-        }else {
+        } else {
             value = this.value;
         }
 

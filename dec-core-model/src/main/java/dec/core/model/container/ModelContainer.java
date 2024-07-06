@@ -88,7 +88,6 @@ public class ModelContainer implements Container {
 
         } catch (Exception e) {
             isOk = false;
-            log.error("11",e);
             log.error("Execute error,rule:{}", modelLoader.getRuleName(), e);
 
             throw new ExecuteRuleException(e, modelLoader.getRuleName(), modelLoader.getConName());

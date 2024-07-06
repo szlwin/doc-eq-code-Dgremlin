@@ -4,6 +4,7 @@ import java.util.Map;
 
 import dec.core.context.config.model.data.Data;
 import dec.core.context.config.model.relation.Relation;
+import dec.core.model.data.DataConvert;
 import dec.core.model.utils.DataUtil;
 
 /*import dec.core.common.xml.model.data.Data;
@@ -29,7 +30,8 @@ public class InsertExecute extends AbstractDataExecute{
 	@Override
 	protected void doAfter(Object result) {
 		Object keyValue = ((ExecuteInfo)result).getKeyValue();
-		
+
+
 		if(keyValue == null)
 			return;
 
@@ -42,14 +44,14 @@ public class InsertExecute extends AbstractDataExecute{
 		if(isMain){
 			dataName = viewData.getTargetMain().getName();
 		}else{
-			if((value).containsKey(propertyName)){
+			//if((value).containsKey(propertyName)){
 				Relation relationView = viewData.getRelationInfo().getRelationByPropertyName1(propertyName);
 
 				dataName = relationView.getViewProperty().getViewData().getTargetMain().getName();
-			}else{
+			//}else{
 				
-				return;
-			}
+				//return;
+			//}
 		}
 		
 		
@@ -66,11 +68,15 @@ public class InsertExecute extends AbstractDataExecute{
 		
 		
 		Data data = DataUtil.getConfigInfo().getData(dataName);
-		
+
+
+
 		//if(type.equals("insert")){
 		//if(simpleSQLExecute instanceof InsertSQLExecute){
 		String key = data.getTableInfo()
 				.getTable(dataSource).getPropertyKey();//Util.getIdKey(data, dataSource);
+		keyValue = DataConvert.convertDataType(data, key, keyValue, dataSource);
+		((ExecuteInfo)result).setKeyValue(keyValue);
 		((Map<String,Object>)propertyValue).put(key, keyValue);
 		//}
 		

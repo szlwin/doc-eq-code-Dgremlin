@@ -1,6 +1,7 @@
 package dec.external.datasource.sql.query;
 
 import dec.core.context.config.model.config.ConfigConstanst;
+import dec.core.context.config.utils.ConfigContextUtil;
 import dec.core.datasource.dom.DataInfo;
 import dec.external.datasource.sql.dom.UpdateInfo;
 import dec.external.datasource.sql.utils.SQLUtil;
@@ -65,7 +66,7 @@ public class InsertQuery extends AbstractQuery<UpdateInfo> {
             //	log.debug("Row count: "+updateCount);
             //log.debug("Execute the SQL: "+sqlString+" end!");
             //}
-        } catch (SQLException e) {
+        } catch (Exception e) {
             log.error("Execute the SQL: " + sqlString + " Error!", e);
             throw e;
         } finally {

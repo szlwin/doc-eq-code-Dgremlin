@@ -19,10 +19,14 @@ public class MySQLDataTypeConvert implements DataConvertContainer{
 		 
 		funMap.put("date_time", new DateToSqlTime());
 		funMap.put("date_timestamp", new DateToSqlTimestamp());
-		
+		funMap.put("int_biginteger", new IntegerToSqlBigInteger());
+		funMap.put("long_biginteger", new LongToSqlBigInteger());
+
 		funrMap.put("date_date", new SqlDateToDate());
 		funrMap.put("date_time", new SqlTimeToDate());
 		funrMap.put("date_timestamp", new SqlTimestampToDate());
+		funrMap.put("int_biginteger", new SqlBigIntegerToInteger());
+		funrMap.put("long_biginteger", new SqlBigIntegerToLong());
 
 	}
 
@@ -44,7 +48,6 @@ public class MySQLDataTypeConvert implements DataConvertContainer{
 		}else{
 			convert = funrMap.get(originType+"_"+type);
 		}
-		
 		return convert.convert(data);
 		
 	}

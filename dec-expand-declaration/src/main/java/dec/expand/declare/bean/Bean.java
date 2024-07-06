@@ -115,8 +115,8 @@ public class Bean {
                     setValue(object, targetPropertyArray[i], distObject);
                 }
             }
-            if(i == targetPropertyArray.length - 2 && distObject instanceof Collection){
-                this.initTragetClass(null, object, targetPropertyArray[i]);
+            if (i == targetPropertyArray.length - 2 && distObject instanceof Collection) {
+                this.initTargetClass(null, object, targetPropertyArray[i]);
             }
             object = distObject;
         }
@@ -211,6 +211,11 @@ public class Bean {
     private Object init(Object obj, String property) {
 
         try {
+            if (obj instanceof ModelData) {
+                return ((ModelData) obj).getValue(property);
+            } else if (obj instanceof Map) {
+                return ((Map) obj).get(property);
+            }
             Field field = obj.getClass().getDeclaredField(property);
             if (Map.class.isAssignableFrom(field.getType())) {
                 return new HashMap<>();
@@ -224,7 +229,7 @@ public class Bean {
         }
     }
 
-    private void initTragetClass(Object list, Object obj, String property) {
+    private void initTargetClass(Object list, Object obj, String property) {
         if (tragetClass != null) {
             return;
         }
@@ -269,7 +274,7 @@ public class Bean {
             Object targetValue = getValue(target, targetProperty);
             if (targetValue == null) {
                 targetValue = new ArrayList<>();
-                initTragetClass(targetValue, target, targetProperty);
+                initTargetClass(targetValue, target, targetProperty);
             }
             copyValueByList((List) sourceValue, (List) targetValue);
             setValue(target, targetProperty, targetValue);
@@ -280,7 +285,7 @@ public class Bean {
                     targetValue = initTarget(target, targetProperty);
                 }
                 copyObjectData(sourceValue, targetValue);
-                if(targetProperty != null){
+                if (targetProperty != null) {
                     setValue(target, targetProperty, targetValue);
                 }
             } catch (Exception ex) {
@@ -316,7 +321,11 @@ public class Bean {
 
         Class<?> genericClass = null;
         if (targetValues.isEmpty()) {
-            genericClass = this.tragetClass;
+            if (tragetClass == null) {
+                genericClass = Map.class;
+            } else {
+                genericClass = this.tragetClass;
+            }
         }
         for (int i = 0; i < sourceValues.size(); i++) {
             Object sourceObject = sourceValues.get(i);
@@ -344,7 +353,9 @@ public class Bean {
             return obj;
         Object objData = obj;
         try {
-            if (objData instanceof Map) {
+            if (objData instanceof ModelData) {
+                objData = ((ModelData) objData).getValue(property);
+            } else if (objData instanceof Map) {
                 objData = ((Map) objData).get(property);
             } else {
                 Field field = objData.getClass().getDeclaredField(property);
@@ -377,7 +388,8 @@ public class Bean {
     }
 
     private boolean isBaseData(Object value) {
-        if (value == null || value instanceof String || value instanceof Number || value instanceof Boolean || value.getClass() == char.class) {
+        if (value == null || value instanceof String || value instanceof Number || value instanceof Boolean
+                || value.getClass() == char.class || value instanceof Date) {
             return true;
         }
         return false;
@@ -439,6 +451,9 @@ public class Bean {
                 if ((propertyMap != null && propertyMap.containsKey(propertyDescriptor.getName()))
                         || (keys != null && keys.contains(propertyDescriptor.getName()))) {
                     Object value = getValue(sourceObject, propertyDescriptor.getName(), keys, propertyMap);
+                    if (value == null) {
+                        continue;
+                    }
                     if (isBaseData(value)) {
                         propertyDescriptor.getWriteMethod().invoke(targetObject, value);
                     }
@@ -454,6 +469,9 @@ public class Bean {
             while (sourceKeys.hasNext()) {
                 String key = sourceKeys.next();
                 Object value = getValue(sourceObject, key, keys, propertyMap);
+                if (value == null) {
+                    continue;
+                }
                 if (isBaseData(value)) {
                     setValue(targetObject, key, value);
                 }
