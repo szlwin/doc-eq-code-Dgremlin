@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
+import dec.context.parse.xml.parse.directory.DirectoryFileParser;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class CommonParser {
 
 	private final static Logger log = LoggerFactory.getLogger(CommonParser.class);
 	
-	public static int TYPE_SIZE = 5;
+	public static int TYPE_SIZE = 6;
 	
 	public static int START_SIZE = 2;
 	
@@ -39,6 +40,7 @@ public class CommonParser {
 		nodeArray[2] = ConfigInfo.VIEW_FILE_INFO;
 		nodeArray[3] = ConfigInfo.RULE_FILE_INFO;
 		nodeArray[4] = ConfigInfo.SERVICE_FILE_INFO;
+		nodeArray[5] = ConfigInfo.DIRECTORY_FILE_INFO;
 	}
 	
 
@@ -88,6 +90,8 @@ public class CommonParser {
 				return new RuleFileParser();
 			case 4:
 				return new ServiceFileParser();
+			case 5:
+				return new DirectoryFileParser();
 		}
 		
 		return null;

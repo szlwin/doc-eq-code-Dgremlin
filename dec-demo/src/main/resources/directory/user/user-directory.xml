@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<directory-config>
+	<directory name="user" view-ref="UserInfo" is-root="true">
+		<depend-info>
+			<depend name="" view-ref="UserInfo" key-property="" />
+		</depend-info>
+		<subdirectory-info>
+			<subdirectory rel="auth"/>
+		</subdirectory-info>
+	</directory>
+
+	<directory name="auth" view-ref="UserInfo">
+		<subdirectory-info>
+			<subdirectory rel="register" />
+		</subdirectory-info>
+		<action-info>
+			<action name="auth">
+				<rule name="insertAuth" type="insert" property="userAuthInfo"/>
+			</action>
+		</action-info>
+		<change-info>
+			<![CDATA[
+					status:2;
+				]]>
+		</change-info>
+	</directory>
+
+	<directory name="register" view-ref="UserInfo">
+		<subdirectory-info>
+			<subdirectory rel="register-pc" mutual-exclusion="register-wx" any-one="true"/>
+			<subdirectory rel="register-wx" mutual-exclusion="register-pc" any-one="true"/>
+			<subdirectory rel="register-notify"/>
+		</subdirectory-info>
+		<action-info>
+			<action name="email"/>
+			<action name="sms"/>
+		</action-info>
+		<change-info>
+			<![CDATA[
+					status:1;
+				]]>
+		</change-info>
+	</directory>
+
+	<directory name="register-pc" view-ref="UserInfo">
+		<action-info>
+			<action name="register">
+				<rule name="insertUser" type="insert" />
+			</action>
+		</action-info>
+	</directory>
+
+	<directory name="register-wx" view-ref="UserInfo">
+		<action-info>
+			<action name="register">
+				<rule name="insertUser" type="insert" />
+			</action>
+		</action-info>
+	</directory>
+
+	<directory name="register-notify" view-ref="UserInfo">
+		<action-info>
+			<action name="sms-notify"/>
+			<action name="email-notify"/>
+		</action-info>
+	</directory>
+</directory-config>

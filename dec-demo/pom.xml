@@ -65,6 +65,11 @@
 			<artifactId>artoria</artifactId>
 			<version>1.0.0.20210823.beta</version>
 		</dependency>
+		<dependency>
+			<groupId>abego</groupId>
+			<artifactId>abego-core</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
