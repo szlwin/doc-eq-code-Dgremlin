@@ -18,11 +18,13 @@ public interface Config<E extends ConfigBaseData> {
 	
 	int SERVICE = 6;
 	
-	int DATASOURCE_CONFIG = 7;
+	int DATASOURCE_CONFIG = 8;
 	
-	int CONNECTION_CONFIG = 8;
-	
-	int SIZE = 9;
+	int CONNECTION_CONFIG = 9;
+
+	int DIRECTORY_CONFIG = 7;
+
+	int SIZE = 10;
 	
 	@SuppressWarnings("hiding")
 	<E extends ConfigBaseData> void add(E v);

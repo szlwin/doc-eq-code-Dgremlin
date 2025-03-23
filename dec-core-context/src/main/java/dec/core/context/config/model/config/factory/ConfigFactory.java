@@ -7,6 +7,7 @@ import dec.core.context.config.model.connection.config.ConnectionConfig;
 import dec.core.context.config.model.data.config.DataConfig;
 import dec.core.context.config.model.datasource.config.DataSourceConfig;
 import dec.core.context.config.model.datasource.config.DataSourceInfoConfig;
+import dec.core.context.config.model.directory.config.DirectoryConfig;
 import dec.core.context.config.model.relation.config.RelationConfig;
 import dec.core.context.config.model.rule.config.RuleConfig;
 import dec.core.context.config.model.service.config.ServiceConfig;
@@ -24,6 +25,7 @@ public class ConfigFactory {
 		configArray[Config.RULE]       = RuleConfig.getInstance();
 		configArray[Config.VIEWDATA]   = ViewDataConfig.getInstance();
 		configArray[Config.SERVICE]    = ServiceConfig.getInstance();
+		configArray[Config.DIRECTORY_CONFIG]   = DirectoryConfig.getInstance();
 		configArray[Config.CONNECTION_CONFIG]   = ConectionInfoConfig.getInstance();
 		configArray[Config.DATASOURCE_CONFIG]   = DataSourceInfoConfig.getInstance();
 	}
