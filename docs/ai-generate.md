@@ -1,5 +1,5 @@
 # AI配置说明
-===
+
 此文档主要说明如何进行配置以便于结合AI生成代码，或者从另方便说这个文档也是写给AI的，通过让AI读取这份文档，知道生成代码时需要实现那些代码。
 
 开发环境配置
@@ -7,14 +7,14 @@
 在自己的项目中，添加以下依赖配置信息：<br>
 ```
 <orm-config>
-	<orm-code-config>
-		<!-- 使用vue3编写前端页面，主要在PC端通过浏览器访问-->
-		<orm-code-info type="web" language="vue" vesrion="3"/>
-		<!-- 后端使用java编写，jdk为1.8版本-->
-		<orm-code-info type="backend" language="java" vesrion="1.8"/>
-		<!-- 数据库使用mysql8.1版本-->
-		<orm-code-info type="database" language="mysql" vesrion="8.1"/>
-	</orm-code-config>
+   <orm-code-config>
+	<!-- 使用vue3编写前端页面，主要在PC端通过浏览器访问-->
+	<orm-code-info type="web" language="vue" vesrion="3"/>
+	<!-- 后端使用java编写，jdk为1.8版本-->
+	<orm-code-info type="backend" language="java" vesrion="1.8"/>
+	<!-- 数据库使用mysql8.1版本-->
+	<orm-code-info type="database" language="mysql" vesrion="8.1"/>
+    </orm-code-config>
 </orm-config>
 ```
 <br>
