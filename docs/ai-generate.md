@@ -10,16 +10,35 @@
    <orm-code-config>
 	<!-- 使用vue3编写前端页面，主要在PC端通过浏览器访问-->
 	<orm-code-info type="web" language="vue" vesrion="3"/>
-	<!-- 后端使用java编写，jdk为1.8版本-->
-	<orm-code-info type="backend" language="java" vesrion="1.8"/>
-	<!-- 数据库使用mysql8.1版本-->
-	<orm-code-info type="database" language="mysql" vesrion="8.1"/>
+	<!-- 后端服务使用java编写，jdk为1.8版本-->
+	<orm-code-info type="service" language="java" vesrion="1.8"/>
     </orm-code-config>
+    <orm-database-config>
+        <!-- 数据库使用mysql8.1版本-->
+	<orm-code-info type="mysql" vesrion="8.1"/>
+    <orm-database-config>
 </orm-config>
 ```
 <br>
-在以上配置文档中，<orm-code-info>说明了前端、后端分别使用Vue3和Java，而数据库使用mysql8.1,具体元素说明如下：
-(1)web(表示在PC端通过浏览器浏览页面的前端代码)
+在以上配置文档中，<orm-code-info>说明了前端、后端分别使用Vue3和Java，而数据库使用mysql8.1,具体说明如下：
+xml文档说明
+<table>
+  <tr>
+    <td>类型</td>
+    <td>语言</td>
+    <td>版本</td>
+  </tr>
+  <tr>
+    <td>
+     说明使用何种技术，具体如下：
+     web: 主要在PC端通过浏览器访问
+     service: 后端服务，主要以提供http接口的方式给前端页面调用    
+    </td>
+    <td>property-info</td>
+    <td>数据属性信息</td>
+    <td></td>
+  </tr>
+</table>
 
 初始化
 ===
