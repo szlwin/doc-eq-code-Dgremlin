@@ -64,9 +64,9 @@ public class DemoLoadTests {
         HikariConfig hikariConfig = new HikariConfig();
         // 设置数据库信息
         hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        hikariConfig.setJdbcUrl("jdbc:mysql://47.102.121.18:3306/demo-test");
+        hikariConfig.setJdbcUrl("jdbc:mysql://xxx.xxx.xxx.xxx:3306/demo-test");
         hikariConfig.setUsername("root");
-        hikariConfig.setPassword("Came2021!");
+        hikariConfig.setPassword("root");
         hikariConfig.setMinimumIdle(2);
         hikariConfig.setMaximumPoolSize(5);
         DataSource dataSource = new HikariDataSource(hikariConfig);
@@ -80,9 +80,9 @@ public class DemoLoadTests {
         
         // 设置数据库信息
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		hikariConfig.setJdbcUrl("jdbc:mysql://47.102.121.18:3306/demo-test1");
+		hikariConfig.setJdbcUrl("jdbc:mysql://xxx.xxx.xxx.xxx:3306/demo-test1");
 		hikariConfig.setUsername("root");
-		hikariConfig.setPassword("Came2021!");
+		hikariConfig.setPassword("root");
         hikariConfig.setMinimumIdle(2);
         hikariConfig.setMaximumPoolSize(5);
         DataSource dataSource = new HikariDataSource(hikariConfig);
