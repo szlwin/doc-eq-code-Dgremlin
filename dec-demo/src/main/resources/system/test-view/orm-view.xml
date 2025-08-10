@@ -18,9 +18,8 @@
 			<property name="productCount" ref-property="productCount"/>
 			<property name="totalPrice" ref-property="totalPrice"/>
 			<property name="totalAmount" ref-property="totalAmount"/>
-			<property name="status" ref-property="orderStatus"/>
+			<property name="status" ref-property="status"/>
 			<property name="dateTime" ref-property="createDate"/>
-			<property name="payId" ref-property="payId"/>
 			<property name="user" relation="one-to-one" data="user" key="id" rel-key="userId">
 				<property name="id" ref-property="id"/>
 				<property name="userName" ref-property="name"/>
@@ -30,7 +29,7 @@
 			<property name="orderDetailList" relation="one-to-many" data="orderDetail" key="orderId" rel-key="id">
 				<property name="id" ref-property="id"/>
 				<property name="orderId" ref-property="orderId"/>
-				<property name="userId" ref-property="userId" rel-value="user.id"/>
+				<property name="userId" ref-property="userId"/>
 				<property name="productId" ref-property="productId"/>
 				<property name="productName" ref-property="productName"/>
 				<property name="productAmount" ref-property="productAmount"/>
@@ -39,7 +38,7 @@
 			</property>
 			<property name="payInfo" relation="one-to-one" data="pay" key="orderId" rel-key="id">
 				<property name="id" ref-property="id"/>
-				<property name="userId" ref-property="userId" rel-value="user.id"/>
+				<property name="userId" ref-property="userId"/>
 				<property name="orderId" ref-property="orderId"/>
 				<property name="totalPrice" ref-property="totalPrice"/>
 				<property name="totalAmount" ref-property="totalAmount"/>

@@ -3,6 +3,7 @@ package dec.external.datasource.sql.execute;
 import java.sql.SQLException;
 
 import dec.core.context.config.model.config.ConfigConstanst;
+import dec.core.context.config.utils.ConfigContextUtil;
 import dec.core.datasource.execute.exception.ExecuteException;
 import dec.external.datasource.sql.dom.UpdateInfo;
 import dec.external.datasource.sql.query.InsertQuery;

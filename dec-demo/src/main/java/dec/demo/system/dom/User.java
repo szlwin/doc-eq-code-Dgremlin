@@ -3,12 +3,12 @@ package dec.demo.system.dom;
 import java.util.Date;
 
 public class User {
-    private Long id = 1l;
-    private String userName = "test";
+    private Long id;
+    private String name;
 
-    private Date activeTime = new Date();
+    private Date activeTime;
 
-    private Integer status = 1;
+    private Integer status;
 
 
     public Long getId() {
@@ -19,12 +19,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getActiveTime() {

@@ -4,27 +4,27 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class PayDetail {
-    private Integer id;
-    private Integer payId;
+    private Long id;
+    private Long payId;
     private Integer productId = 1;
     private String productName = "testP";
     private BigDecimal payPrice = BigDecimal.valueOf(100);
     private BigDecimal payAmount = BigDecimal.valueOf(100);
     private Date createDate = new Date();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getPayId() {
+    public Long getPayId() {
         return payId;
     }
 
-    public void setPayId(Integer payId) {
+    public void setPayId(Long payId) {
         this.payId = payId;
     }
 
