@@ -96,7 +96,19 @@ columnInfo : column (',' column)*
 ;
 column : '*'
 		 | ID '.*'
-		 |  columnElement 
+		 | ID 'as' ID
+		 | ID '.' ID ('as' ID)?
+		 | ID (ID)?
+		 | '(' selectExpr ')' ('as') ID
+		 | fun
+;
+
+colElementCon : ID ('.' ID)?
+;
+
+columnElement : fun
+	 | '(' selectExpr ')'
+	 | colElementCon ('as' ID)?
 ;
 
 tableInfo : table (',' table)*
@@ -105,10 +117,13 @@ tableInfo : table (',' table)*
 table : tableElement (JOIN_INFO)*
 ;
 
-tableElement : ID (ID)?
-			 | '(' selectExpr ')' ID
+tableElement : ID 'as' ID
+             | ID (ID)?
+             | '(' selectExpr ')' ('as') ID
 ;
-
+tableTailElement :ID
+                 | 'as' ID
+;
 JOIN_INFO : (K_FULL|K_LEFT|K_RIGHT|K_INNER) (K_OUTER)? K_JOIN table K_ON expr
 		 | K_CROSS K_JOIN table
 		 | K_UNION K_JOIN table
@@ -116,7 +131,7 @@ JOIN_INFO : (K_FULL|K_LEFT|K_RIGHT|K_INNER) (K_OUTER)? K_JOIN table K_ON expr
 
 sqlCondition : expr
 ;
-			  
+
 expr : expr ('*'|'/') expr
      | expr ('+'|'-') expr
      | expr ('='|'!='|'>='|'<='|'>'|'<') expr
@@ -165,13 +180,7 @@ likeExpr : K_L expr K_L
 exprElement : expr
 	        |selectExpr
 ;
-colElementCon : ID ('.' ID)?
-;
 
-columnElement : fun
-	 | '(' selectExpr ')'
-	 | colElementCon ('as' ID)?
-;
 
 fun: ID '(' (array)? ')'
 ;

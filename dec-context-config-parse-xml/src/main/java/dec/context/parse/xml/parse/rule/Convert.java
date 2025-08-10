@@ -62,28 +62,109 @@ public class Convert {
 	protected void getTag(String sql){
 		
 		StringTokenizer token = new StringTokenizer(sql," ,()*+-/<>!=[]",false);
-		
+		String startStr = token.nextToken();
+        if(startStr.equalsIgnoreCase("select") || startStr.equalsIgnoreCase("delete")){
+			getTag(token);
+        }else{
+			getTagByUpdate(token);
+			//isHasParam = false;
+			/*while(token.hasMoreElements()){
+				String partSql = token.nextToken();
+				String[] partArray = partSql.split("\\.");
+
+				if(partArray.length > 1){
+					if(!tagMap.containsKey(partArray[0])){
+						TableTag tableTag =  convertStingToTabelTag(partArray[0],sql);
+						if(tableTag != null){
+							tagMap.put(tableTag.getTagName(), tableTag);
+							tagTableMap.put(tableTag.getDataName(), tableTag);
+						}
+					}
+
+				}
+			}*/
+		}
+	}
+
+	private void getTagByUpdate(StringTokenizer token) {
+		String partSql = null;
+		int flag = 1;
+		String dataName;
+		String dataFlag;
 		while(token.hasMoreElements()){
-			String partSql = token.nextToken();
-			String[] partArray = partSql.split("\\.");
-			
-			if(partArray.length > 1){
-				if(!tagMap.containsKey(partArray[0])){
-					TableTag tableTag =  convertStingToTabelTag(partArray[0],sql);
+			partSql = token.nextToken();
+			if(flag==2){
+				if(partSql.equalsIgnoreCase("set")){
+					break;
+				}
+				flag = 1;
+			}
+			if(flag == 1){
+				dataName = partSql;
+				partSql = token.nextToken();
+
+				if(partSql.equalsIgnoreCase("as")){
+					dataFlag = token.nextToken();
+				}else{
+					dataFlag = partSql;
+				}
+
+				if(!tagMap.containsKey(dataFlag)){
+					TableTag tableTag =  convertStingToTabelTag(dataName,dataFlag);
 					if(tableTag != null){
 						tagMap.put(tableTag.getTagName(), tableTag);
 						tagTableMap.put(tableTag.getDataName(), tableTag);
 					}
 				}
-				
+				flag = 2;
+				continue;
 			}
 		}
-		
 	}
-	
-	private TableTag convertStingToTabelTag(String tag,String sql){
+
+	private void getTag(StringTokenizer token){
+		String partSql = null;
+		int flag = 0;
+		String dataName;
+		String dataFlag;
+		while(token.hasMoreElements()){
+			partSql = token.nextToken();
+			if(partSql.equalsIgnoreCase("from")){
+				flag = 1;
+				continue;
+			}
+			if(flag==2){
+				if(partSql.equalsIgnoreCase("where")){
+					break;
+				}
+				flag = 1;
+			}
+			if(flag == 1){
+				dataName = partSql;
+				partSql = token.nextToken();
+
+				if(partSql.equalsIgnoreCase("as")){
+					dataFlag = token.nextToken();
+				}else{
+					dataFlag = partSql;
+				}
+
+				if(!tagMap.containsKey(dataFlag)){
+					TableTag tableTag =  convertStingToTabelTag(dataName,dataFlag);
+					if(tableTag != null){
+						tagMap.put(tableTag.getTagName(), tableTag);
+						tagTableMap.put(tableTag.getDataName(), tableTag);
+					}
+				}
+				flag = 2;
+				continue;
+			}
+		}
+	}
+
+	private TableTag convertStingToTabelTag(String dataName,String tag){
 		
-		char[] sqlChar = sql.toCharArray();
+		/*char[] sqlChar = sql.toCharArray();
 		
 		int index = sql.indexOf(" "+tag+" ") -1;
 		
@@ -93,7 +174,7 @@ public class Convert {
 		if(index < 0)
 			return null;
 		TableTag tableTag = new TableTag();
-		
+
 		tableTag.setTagName(tag);
 
 		StringBuffer strBuffer = new StringBuffer();
@@ -115,10 +196,14 @@ public class Convert {
 			index--;
 		}
 		
-		String propertyName = strBuffer.reverse().toString();
-		String tableName =  getTableName(propertyName);//relationInfo.getRelation(propertyName).getData();
+		String propertyName = strBuffer.reverse().toString();*/
+
+		TableTag tableTag = new TableTag();
+
+		tableTag.setTagName(tag);
+		String tableName =  getTableName(dataName);//relationInfo.getRelation(propertyName).getData();
 		
-		tableTag.setDataName(propertyName);
+		tableTag.setDataName(dataName);
 		tableTag.setTableName(tableName);
 		return tableTag;
 	}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<orm-config>
+	<orm-code-config>
+		<!-- 使用vue3编写前端页面，主要在PC端通过浏览器访问-->
+		<orm-code-info type="web" language="vue" vesrion="3" file-path="/project/web" isCreate="false" >
+			<!--如isCreate为true，则为新建模块-->
+			<module name="order" desc="订单模块" isCreate="true" isFinish="false">
+				<function name="查询订单信息" desc="每个订单可以点击付款按钮进行支付" isCreate="true" isFinish="false" url="" file=""/>
+				<function name="订单付款" desc="采用微信付款" isCreate="true" isFinish="false" url="" file=""/>
+			</module>
+		</orm-code-info>
+		<!-- 后端使用java编写，jdk为1.8版本-->
+		<orm-code-info type="backend" language="java" vesrion="1.8" file-path="/project/web" isCreate="false">
+			<!--如isCreate为true，则为新建模块-->
+			<module name="order" desc="订单模块" isCreate="true" isFinish="false">
+				<function name="查询订单信息" desc="" isCreate="true" isFinish="false" method="" file="" url=""/>
+				<function name="订单付款" desc="采用微信付款" isCreate="true" isFinish="false" method="" file="" url=""/>
+			</module>
+		</orm-code-info>
+	</orm-code-config>
+
+	<orm-database-config>
+		<!-- 数据库使用mysql8.1版本-->
+		<orm-database-info type="mysql" vesrion="8.1"/>
+	</orm-database-config>
+</orm-config>

@@ -11,14 +11,28 @@
 				]]>
 			</customer-process>
 		</rule>
-		
+
+		<!--第一处-->
+		<rule name="ai-demo1" type="ai">
+			<content>
+				检查订单的商品数量是否超过10，如果超过10则报错返回
+			</content>
+		</rule>
+
+		<!--第二处-->
+		<rule name="ai-demo2" type="ai">
+			<content>
+				totalPrice = sum(productList.count*productList.productPrice)
+			</content>
+		</rule>
+
 		<rule name="checkName" type="checkPattern" pattern="userT.userName = userT.uname" >
 			<error-info code="C001" message="user error" level="1"/>
 		</rule>
 		
 		<rule name="insertUser" type="insert" property="userT" />
 		
-		<rule name="checkUser" type="checkDataPattern" property="userT" sql="select a.id as u_id from userT a where a.id = #userT.id" pattern="u_id = userId"/>
+		<rule name="checkUser" type="checkDataPattern" property="userT" sql="select a.id u_id from userT a where a.id = #userT.id" pattern="u_id = userId"/>
 
 		<rule name="checkUser1" type="checkData" property="userT" pattern="NOTNULL"/>
 		
@@ -29,8 +43,9 @@
 		<rule name="insertOrder" type="insert" property="OrderInfo" />
 		
 		<rule name="insertProduct" type="insert" property="productList" />
-		
-		<rule name="deleteProduct" type="delete" sql="delete p.* from productList p where p.productPrice = 20" />
+
+		<rule name="updateProduct" type="update" sql="update productList p,OrderInfo o set p.productPrice=30 where p.productPrice = 20 and o.id=p.orderId" />
+		<rule name="deleteProduct" type="delete" sql="delete p.* from productList p,OrderInfo o where p.productPrice = 20 and o.id=p.orderId" />
 	</rule-view-info>
 	
 	<rule-view-info name="get-user" view-ref="OrderInfo">

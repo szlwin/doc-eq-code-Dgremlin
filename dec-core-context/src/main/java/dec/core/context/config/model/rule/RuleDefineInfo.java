@@ -22,7 +22,9 @@ public class RuleDefineInfo {
 	private CustomerInfo customerInfo;
 	
 	private String grammer;
-	
+
+	private String content;
+
 	public String getType() {
 		return type;
 	}
@@ -70,5 +72,12 @@ public class RuleDefineInfo {
 	public void setGrammer(String grammer) {
 		this.grammer = grammer;
 	}
-	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 }

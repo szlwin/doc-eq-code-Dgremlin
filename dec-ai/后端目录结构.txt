@@ -1,0 +1,19 @@
+/Users/shazhoulin/work/new/code-app/member
+├── member-api/          # 对外提供的API接口
+└── member-provider/     # 服务实现
+    ├── src/main/java/
+    │   └── com/dazong/share/service/member/
+    │       ├── api/     # API实现
+    │       ├── biz/     # 业务逻辑
+    │       │   └── */   # 各业务包名
+    │       │       └── persistence/
+    │       │            └── entities/ #数据库对象实体类
+    │       │            └── mappers/ # MyBatis映射器
+    │       │       └── service/  #业务接口
+    │       │             └── impl  #业务实现类
+    │       │       └── controller/ # REST控制器
+    │       │       └── dto/     # 数据传输对象
+    │       └── App.java # 应用入口
+    └── src/main/resources/
+        ├── application.yml # 应用配置
+        └── mapper/         # MyBatis映射文件

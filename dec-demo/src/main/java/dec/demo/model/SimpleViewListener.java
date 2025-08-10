@@ -14,11 +14,11 @@ public class SimpleViewListener implements ViewListener{
 	public ResultInfo notify(ViewEvent event) {
 		
 		if(event.getType() == ViewEventEnum.VIEW_START){
-			log.info(ViewEventEnum.VIEW_START+":"+event.getViewName());
+			log.info(ViewEventEnum.VIEW_START+":"+event.getRuleName());
 		}
 		
 		if(event.getType() == ViewEventEnum.VIEW_END){
-			log.info(ViewEventEnum.VIEW_END+":"+event.getViewName()+":"+event.getRuleResultInfo().getRuleName());
+			log.info(ViewEventEnum.VIEW_END+":"+event.getRuleName()+":"+event.getRuleResultInfo().getRuleName());
 		}
 		
 		if(event.getType() == ViewEventEnum.RULE_START){

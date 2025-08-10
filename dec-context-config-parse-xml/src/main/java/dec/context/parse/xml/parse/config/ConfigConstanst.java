@@ -36,7 +36,9 @@ public class ConfigConstanst {
 	public static final String RULE_TYPE_EXECUTE_SELECT = "query";
 	
 	public static final String RULE_TYPE_EXECUTE_GRAMMER = "grammer";
-	
+
+	public static final String RULE_TYPE_EXECUTE_AI = "ai";
+
 	public static final String CONTAINER_TYPE_COMMIT = "commit";
 	
 	public static final String CONTAINER_TYPE_SYN = "syn";

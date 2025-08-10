@@ -80,8 +80,8 @@ public class RuleContainer {
 
             viewEvent.setType(ViewEventEnum.VIEW_START);
 
-            viewEvent.setViewName(ruleViewInfo.getName());
-
+            viewEvent.setViewName(modelLoader.getRuleName());
+            viewEvent.setRuleName(ruleViewInfo.getName());
             viewEvent.setModelData((ModelData) modelLoader.get());
 
             return modelLoader.getListener().notify(viewEvent);

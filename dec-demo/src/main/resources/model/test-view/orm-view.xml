@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <orm-view-mapping>
-	<view name="OrderInfo" target-main="order">
+	<view name="OrderInfo" target-main="orderInfo">
 		<property-info>
 			<property name="id" ref-property="id"/>
 			<property name="userId" ref-property="userId"/>

@@ -11,6 +11,7 @@ import dec.core.common.xml.model.rule.RuleDefineInfo;
 import dec.core.common.xml.model.view.ViewData;
 import dec.core.common.xml.util.Constanst;
 import dec.core.connection.DataConnection;*/
+import dec.core.model.execute.rule.ai.AiExecute;
 import dec.core.model.execute.rule.common.CheckDataExecute;
 import dec.core.model.execute.rule.common.CheckDataPatternExecute;
 import dec.core.model.execute.rule.common.CheckExecute;
@@ -39,7 +40,8 @@ public class RuleUtil {
 		ruleExecuteClass.put(ConfigConstanst.RULE_TYPE_EXECUTE_GET, GetExecute.class);
 		ruleExecuteClass.put(ConfigConstanst.RULE_TYPE_EXECUTE_SELECT, SelectExecute.class);
 		ruleExecuteClass.put(ConfigConstanst.RULE_TYPE_EXECUTE_GRAMMER, GrammerExecute.class);
-		
+		ruleExecuteClass.put(ConfigConstanst.RULE_TYPE_EXECUTE_AI, AiExecute.class);
+
 	}
 	
 	public static boolean isQuery(String type){

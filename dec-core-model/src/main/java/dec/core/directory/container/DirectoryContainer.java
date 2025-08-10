@@ -71,10 +71,6 @@ public class DirectoryContainer {
         return this;
     }
 
-    public DirectoryContainer with(String name) {
-        return this;
-    }
-
     public DirectoryContainer withProperty(String[] property) {
         return this;
     }

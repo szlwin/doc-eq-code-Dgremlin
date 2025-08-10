@@ -111,7 +111,9 @@ public class RuleTests extends DemoLoadTests {
         ModelContainer container = ContainerManager.getCurrentModelContainer();
         //5.加载视图及业务模型，并设置数据链接
         ModelLoader loader = new ModelLoader();
-        loader.load("save-Order", order, "con1").addListener(new SimpleViewListener());
+        loader.load("save-Order", order, "con1")
+                .addListener(new SimpleViewListener())
+                .addListener(new SaveOrderAIViewListener());
         container.load(loader);
 
         ModelLoader loader1 = new ModelLoader();

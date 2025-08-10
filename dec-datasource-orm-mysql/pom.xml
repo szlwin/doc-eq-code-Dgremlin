@@ -40,7 +40,12 @@
 		    <groupId>javolution</groupId>
 		    <artifactId>javolution</artifactId>
 		    <version>6.1.0</version>
-		</dependency>  			
+		</dependency>
+		<!--<dependency>
+			<groupId>abego</groupId>
+			<artifactId>abego-core</artifactId>
+			<version>1.0</version>
+		</dependency>-->
 	</dependencies>
 	<build>
 		<plugins>

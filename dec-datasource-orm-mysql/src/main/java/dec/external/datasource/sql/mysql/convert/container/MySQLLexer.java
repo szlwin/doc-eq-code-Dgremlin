@@ -29,8 +29,8 @@ public class MySQLLexer {
 	}
 	public static void main(String args[]) throws ExecuteInvaildException{
 		MySQLLexer mySQLLexer = new MySQLLexer();
-		String sql ="select a.id as u_id from userT a where a.id = #userT.id";
-		
+		String sql ="select a.id u_id from userT a,OrderInfo o where a.id = #userT.id and o.id=a.id";
+		//select a.id u_id from user a,order o where a.id = #userT.id and o.id = a.id
 		//String sql= "select	a.df as aa,ss as df,fun(a.id)  from   c left join (select * from  b) b on c.id=b.id where c  like '%' #asd '%' "
 		//		+ "and aa like '%' aa '%' group by a.sd,sd.dd having sd.dd>1 and df.dd =2 offset 1 limit 1 "
 		//		+ "union all select * from a union all select * from a";

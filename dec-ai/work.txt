@@ -1,0 +1,8 @@
+你现在是一个开发人员，你需要在原有的系统上开发订单相关功能，你需要完成以下任务：
+
+1.读取当前目录下的"/Users/shazhoulin/work/new/code-app/doc-eq-code-Dgremlin/dec-ai/ai.md"文档，理解其文档
+2.读取当前目录下的"/Users/shazhoulin/work/new/code-app/doc-eq-code-Dgremlin/dec-ai/前端目录结构.txt"文档，理解前端代码结构
+3.读取当前目录下的"/Users/shazhoulin/work/new/code-app/doc-eq-code-Dgremlin/dec-ai/后端目录结构.txt"文档，理解后端代码结构
+4.读取当前目录下的"/Users/shazhoulin/work/new/code-app/doc-eq-code-Dgremlin/dec-ai/orm-code-config.xml"文档，理解代码所要开发的具体功能
+5.在"/Users/shazhoulin/work/new/code-app/member"目录下开发后端代码，以及在"/Users/shazhoulin/work/new/code-app/backofficemetalexchange"目录下开发前端代码
+6.在"当前目录下的"/Users/shazhoulin/work/new/code-app/doc-eq-code-Dgremlin/dec-ai"，生成新增的SQL语句

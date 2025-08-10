@@ -53,6 +53,7 @@ public class RuleParser extends AbstarctElementsParser{
 		typeMap.put(ConfigConstanst.RULE_TYPE_EXECUTE_DELETE, null);
 		typeMap.put(ConfigConstanst.RULE_TYPE_EXECUTE_SELECT, null);
 		typeMap.put(ConfigConstanst.RULE_TYPE_EXECUTE_GRAMMER, null);
+		typeMap.put(ConfigConstanst.RULE_TYPE_EXECUTE_AI, null);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -109,7 +110,8 @@ public class RuleParser extends AbstarctElementsParser{
 		}else{
 			ruleDefineInfo = parseRuleExecuteInfo(element,viewData);
 		}
-		
+
+		ruleDefineInfo.setContent(parseAiContenet(element));
 		ruleDefineInfo.setGrammer(parseGrammer(element));
 		
 		ruleDefineInfo.setCustomerInfo(parseCustomerInfo(element));
@@ -122,6 +124,15 @@ public class RuleParser extends AbstarctElementsParser{
 	private String parseGrammer(Element element) {
 		Element customerElement = element.element("customer-process");
 		
+		if(customerElement != null){
+			return customerElement.getTextTrim();
+		}
+		return "";
+	}
+
+	private String parseAiContenet(Element element) {
+		Element customerElement = element.element("content");
+
 		if(customerElement != null){
 			return customerElement.getTextTrim();
 		}

@@ -1,6 +1,7 @@
 package dec.external.datasource.sql.mysql.convert.container;
 
 import dec.core.context.config.model.data.Column;
+import dec.core.context.config.model.view.ViewData;
 import dec.core.context.data.NullData;
 import dec.core.datasource.dom.DataInfo;
 import dec.external.datasource.sql.collections.list.SimpleList;
@@ -131,7 +132,7 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
 		 | ID 'as' ID
 		 | ID '.' ID ('as' ID)?
 		 | ID (ID)?
-		 | '(' selectExpr ')' ('as') ID
+		 | '(' selectExpr ')' ('as')? ID
 		 | fun
      */
     private void executeColumn(RuleContext context) throws ExecuteInvaildException {
@@ -142,10 +143,17 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
                 executeSigleAll(context);
             } else if (parserTreeArray[0].getToken() != null) {
                 //ID
-                this.addValue(parserTreeArray[0].getToken(), context);
+                TreeValue treeValue = getTreeValue(context);
+                TableTag tag = treeValue.getTagTableMap().get(null);
+
+                Map<String, Column> dataInfoMap = Util.convert(tag.getDataName(),
+                        this.getParamer().getDataSource());
+                Object[] valueArray = this.getAllChildValue(context);
+                Column column = dataInfoMap.get(valueArray[0]);
+                this.addValue(column.getName(), context);
             } else {
                 //fun
-                this.getChildValue(parserTreeArray[1], context.getParam());
+                this.getChildValue(parserTreeArray[0], context.getParam());
             }
         } else if (parserTreeArray.length == 2) {
             if (parserTreeArray[1].isToken()) {
@@ -153,18 +161,39 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
                 executeSigleTagAll(context);
             } else {
                 //ID ID
-                this.addValue(parserTreeArray[0].getToken(), context);
-                this.addValue(parserTreeArray[1].getToken(), context);
+                TreeValue treeValue = getTreeValue(context);
+                Object[] valueArray = this.getAllChildValue(context);
+                TableTag tag = treeValue.getTagTableMap().get(valueArray[0]);
+
+                Map<String, Column> dataInfoMap = Util.convert(tag.getDataName(),
+                        this.getParamer().getDataSource());
+
+                Column column = dataInfoMap.get(valueArray[1]);
+
+                this.addValue(valueArray[0] + "." + column.getName(), context);
             }
         } else {
             if (parserTreeArray[1].isToken()) {
                 //ID 'as' ID
                 //ID '.' ID ('as' ID)?
-                for (ParserTree parserTree : parserTreeArray) {
-                    this.addValue(parserTree.getToken(), context);
+                //ID '.' ID ID
+                TreeValue treeValue = getTreeValue(context);
+                Object[] valueArray = this.getAllChildValue(context);
+                TableTag tag = treeValue.getTagTableMap().get(valueArray[0]);
+
+                Map<String, Column> dataInfoMap = Util.convert(tag.getDataName(),
+                        this.getParamer().getDataSource());
+
+                Column column = dataInfoMap.get(valueArray[2]);
+                if (parserTreeArray.length == 5) {
+                    this.addValue(valueArray[0] + "." + column.getName() + " as " + valueArray[4], context);
+                } else if (parserTreeArray.length == 4) {
+                    this.addValue(valueArray[0] + "." + column.getName() + " as " + valueArray[3], context);
+                } else {
+                    this.addValue(valueArray[0] + "." + column.getName(), context);
                 }
             } else {
-                // '(' selectExpr ')' ('as') ID
+                // '(' selectExpr ')' ('as')? ID
                 for (int i = 0; i < parserTreeArray.length; i++) {
                     if (i == 1) {
                         this.getChildValue(parserTreeArray[1], context.getParam());
@@ -177,9 +206,10 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
     }
 
     //ID '.*'
-    private void executeSigleTagAll(RuleContext context) {
+    private void executeSigleTagAll(RuleContext context) throws ExecuteInvaildException {
         TreeValue treeValue = getTreeValue(context);
-        String tag = (String) this.getChildParam(context, 0);
+        //String tag = (String) this.getChildParam(context, 0);
+        String tag = (String)this.getChildValue(context.getAllChild()[0], context.getParam());
         TableTag tableTag = treeValue.getTagTableMap().get(tag);
 
         Map<String, Column> dataInfoMap = Util.convert(tableTag.getDataName(),
@@ -250,11 +280,11 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
             }
         }
     }
-	
+
 	/*private void executeTableInfo(RuleContext context) throws ExecuteInvaildException {
 		executeCommon(context);
 	}
-	
+
 	private void executeTable(RuleContext context) throws ExecuteInvaildException {
 		executeCommon(context);
 	}*/
@@ -267,6 +297,7 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
         } else {
 
             Object[] ObjectValue = this.getAllChildValue(context);
+
             //添加表标记
             Map<String, TableTag> tagTableMap
                     = ((TreeValue) context.getParam()).getTagTableMap();
@@ -278,17 +309,18 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
 
             //添加到SQL语句
             if (ObjectValue.length == 1) {
-                tableTag = convertTableTag((String) ObjectValue[0], null);
+                tableTag = convertTableTag((String)ObjectValue[0], null);
 
                 addValue(tableTag.getTableName(), context);
+                tagTableMap.put(null, tableTag);
             } else {
-                tableTag = convertTableTag((String) ObjectValue[0], (String) ObjectValue[1]);
+                tableTag = convertTableTag((String)ObjectValue[0], (String) ObjectValue[1]);
 
                 addValue(tableTag.getTableName(), context);
                 addValue(tableTag.getTagName(), context);
-            }
 
-            tagTableMap.put(tableTag.getTagName(), tableTag);
+                tagTableMap.put(tableTag.getTagName(), tableTag);
+            }
         }
     }
 

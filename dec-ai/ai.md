@@ -1,0 +1,326 @@
+# AI配置说明
+
+此文档主要说明如何进行配置以便于结合AI生成代码，或者从另方便说这个文档也是写给AI的，通过让AI读取这份文档，知道生成代码时需要实现那些代码。
+
+编码配置
+===
+在自己的项目中，添加以下依赖配置信息：<br>
+```
+<orm-config>
+	<orm-code-config>
+		<!-- 使用vue3编写前端页面，主要在PC端通过浏览器访问-->
+		<orm-code-info type="web" language="vue" vesrion="3" file-path="/project/web" isCreate="false" >
+			<!--如isCreate为true，则为新建模块-->
+			<module name="order" desc="订单模块" isCreate="true" isFinish="false">
+				<function name="查询订单信息" desc="每个订单可以点击付款按钮进行支付" isCreate="true" isFinish="false" url="" file=""/>
+				<function name="订单付款" desc="采用微信付款" isCreate="true" isFinish="false" url="" file=""/>
+			</module>
+		</orm-code-info>
+		<!-- 后端使用java编写，jdk为1.8版本-->
+		<orm-code-info type="backend" language="java" vesrion="1.8" file-path="/project/web" isCreate="false">
+			<!--如isCreate为true，则为新建模块-->
+			<module name="order" desc="订单模块" isCreate="true" isFinish="false">
+				<function name="查询订单信息" desc="" isCreate="true" isFinish="false" file="" url=""/>
+				<function name="订单付款" desc="采用微信付款" isCreate="true" isFinish="false" file="" url=""/>
+			</module>
+		</orm-code-info>
+	</orm-code-config>
+
+	<orm-database-config>
+		<!-- 数据库使用mysql8.1版本-->
+		<orm-database-info type="mysql" vesrion="8.1"/>
+	</orm-database-config>
+</orm-config>
+```
+<br>
+在以上配置文档中，说明了前端、后端分别使用Vue3和Java，而数据库使用mysql8.1，需在原有前端和后端项目中，新开发订单模块。其前端需开发相应的查询和付款页面，而后端需开发相应的接口，其xml文档具体如下说明<>：
+'orm-code-info'元素说明:<br>
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td>orm-code-config</td>
+    <td>orm-code-info</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>AI生成代码说明</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>orm-code-info</td>
+    <td>type</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     说明生成的项目类型
+    </td>
+    <td>
+     web: 前端项目，主要在PC端通过浏览器访问<br>
+     service: 后端服务，主要以提供http接口的方式给前端页面调用    
+    </td>
+  </tr>
+  <tr>
+    <td>orm-code-info</td>
+    <td>language</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     使用何种语言编写
+    </td>
+    <td>
+        如:java,vue,.net,c,c++,go,python等 
+    </td>
+  </tr>
+  <tr>
+    <td>orm-code-info</td>
+    <td>version</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>
+     所使用指定language的版本号
+    </td>
+    <td>
+        如language为vue,version为3,则说明使用vue3版本
+    </td>
+  </tr>
+  <tr>
+    <td>orm-code-info</td>
+    <td>file-path</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     项目所在的目录
+    </td>
+    <td>
+     如项目目录已存在，则在已有目录上进行编码，否则新增项目目录
+    </td>
+  </tr>
+  <tr>
+    <td>orm-code-info</td>
+    <td>isCreate</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     项目是否新增
+    </td>
+    <td>
+        true:新增，false:非新增项目
+    </td>
+  </tr>
+</table>
+
+'module'元素说明:<br>
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td>orm-code-info</td>
+    <td>module</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>
+     需要编写的项目模块
+    </td>
+    <td>
+    </td>
+  </tr>
+  <tr>
+    <td>module</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     模块名称
+    </td>
+    <td>
+    </td>
+  </tr>
+    <td>module</td>
+    <td>isCreate</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     表明此模块为新增模块，还是对原有模块新增功能或对原有功能进行修改
+    </td>
+    <td>
+     true：新增模块，false：模块已存在
+    </td>
+  </tr>
+  </tr>
+    <td>module</td>
+    <td>isFinish</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     表明此模块是否已编写完成，如为true,则此元素下所有'fuction'子元素的功能无需开发
+    </td>
+    <td>
+     true：模块已开发已完成，false：模块未开发完成
+    </td>
+  </tr>
+  <tr>
+    <td>module</td>
+    <td>desc</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>模块的相关描述</td>
+    <td></td>
+  </tr>
+</table>
+
+'function'元素说明:<br>
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td>module</td>
+    <td>function</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>
+     需要编写的功能或者页面
+    </td>
+    <td>
+    </td>
+  </tr>
+  <tr>
+    <td>function</td>
+    <td>name</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     功能名称
+    </td>
+    <td>
+    </td>
+  </tr>
+    <td>function</td>
+    <td>isCreate</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     表明此功能为新增功能，还是对原有功能进行修改
+    </td>
+    <td>
+     true：新增功能，false：原有功能修改
+    </td>
+  </tr>
+  </tr>
+    <td>function</td>
+    <td>isFinish</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     表明此功能是否已编写完成
+    </td>
+    <td>
+     true：功能已开发已完成，false：功能未开发完成
+    </td>
+  </tr>
+  <tr>
+    <td>function</td>
+    <td>desc</td>
+    <td>属性</td>
+    <td>否</td>
+    <td>功能的相关描述</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>function</td>
+    <td>file</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>功能在对应的文件中进行编码开发。此为相对目录，如orm-code-info元素中file-path为/project/web，此属性为order.vue，则文件完整路径为/project/web/order.vue</td>
+    <td>
+      1.此属性有值，如文件不存在，则AI先创建文件，然后AI在指定路径的文件中编写功能。<br>
+      2.此属性无值 则AI创建新的文件，然后AI在指定路径的文件中编写功能，且AI需将新创建的文件路径写入到此属性中。
+    </td>
+  </tr>
+  <tr>
+    <td>function</td>
+    <td>method</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>功能在对应的方法中进行编码开发。</td>
+    <td>
+      1.此属性有值，如方法不存在，则先创建方法，然后AI在指定路径的方法中编写功能。<br>
+      2.此属性无值 则AI创建新的方法，然后AI在指定路径的方法中编写功能，且AI需将新创建的方法名写入到此属性中
+    </td>
+  </tr>
+    <td>function</td>
+    <td>url</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>调用后端接口的url</td>
+    <td>
+      此属性无值 则AI创建新的url，然后AI需将新创建的url写入到此属性中
+    </td>
+  </tr>
+</table>
+
+'orm-database-config'元素说明:<br>
+<table>
+  <tr>
+    <td>父元素</td>
+    <td>名称</td>
+    <td>类型</td>
+    <td>必填</td>
+    <td>说明</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td>orm-database-config</td>
+    <td>orm-database-info</td>
+    <td>元素</td>
+    <td>是</td>
+    <td>
+     AI生成的代码所使用的数据库
+    </td>
+    <td>
+    </td>
+  </tr>
+
+  <tr>
+    <td>orm-database-info</td>
+    <td>type</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     所使用的数据库，myseql,oracle,sqlserver,pg等
+    </td>
+    <td>
+    </td>
+  </tr>
+
+  <tr>
+    <td>orm-database-info</td>
+    <td>version</td>
+    <td>属性</td>
+    <td>是</td>
+    <td>
+     数据库所使用的版本号版本号
+    </td>
+    <td>
+        如type为mysql,version为8,则说明使用mysql8版本
+    </td>
+  </tr>
+
+</table>
