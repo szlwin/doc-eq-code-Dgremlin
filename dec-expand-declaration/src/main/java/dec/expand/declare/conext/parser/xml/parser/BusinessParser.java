@@ -87,6 +87,7 @@ public class BusinessParser {
                     if (transactionPolicyValue == null) {
                         throw new XMLParseException("The property 'transactionPolicy' for data is error, transactionPolicy:" + transactionPolicy);
                     }
+                    processDesc.setTransaction(transactionPolicyValue);
                 }
 
                 String dataSource = dataElement.attributeValue("ref-rule-connection");

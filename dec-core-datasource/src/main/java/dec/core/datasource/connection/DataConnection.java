@@ -30,7 +30,9 @@ public interface DataConnection<E,V> {
 	void setDataSource(String dataSource);
 	
 	boolean isClosed() throws ConectionException;
-	
+
+	boolean isConnect() throws ConectionException;
+
 	void setAutoCommit(boolean isAuto) throws ConectionException;
 
 	boolean isAutoCommit();

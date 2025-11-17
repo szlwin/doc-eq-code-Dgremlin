@@ -121,9 +121,9 @@ public class SelectExecute extends AbstractDataExecute{
 					Map<String,Object> dataMap = (Map<String, Object>) it.next();
 					//Map<String,Object> dataObjValue = new HashMap<String,Object>();
 					
-					DataConvert dataConvert = new DataConvert();
+					//DataConvert dataConvert = new DataConvert();
 					
-					dataConvert.convert(value, dataValue, viewProperty, dataMap,this.dataSource);
+					DataConvert.convert(value, dataValue, viewProperty, dataMap,this.dataSource);
 					/*
 					Iterator<String> keyIt = this.viewData.getViewPropertyInfo()
 							.getProperty().get(propertyName)

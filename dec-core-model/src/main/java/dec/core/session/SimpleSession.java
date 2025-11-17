@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import dec.core.model.data.DataConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ public class SimpleSession extends AbstractSession<BaseData> {
 		
 		if(keyValue != null){
 			String key = e.getData().getTableInfo().getTable(con.getDataSource()).getPropertyKey();
-			
+			keyValue = DataConvert.convertDataType(e.getData(), key, keyValue, dataSourceName);
 			e.setValue(key, keyValue);
 		}
 
