@@ -1,255 +1,234 @@
 package dec.external.datasource.sql.mysql.convert.container;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import dec.core.context.config.model.data.Column;
 import dec.core.context.data.NullData;
+
 import dec.core.datasource.dom.DataInfo;
 import dec.external.datasource.sql.collections.list.SimpleList;
 import dec.external.datasource.sql.dom.ConvertParam;
 import dec.external.datasource.sql.mysql.dom.TableTag;
 import dec.external.datasource.sql.utils.Util;
 import javolution.util.FastMap;
+/*
+import com.orm.common.xml.model.data.Column;
+import com.orm.context.data.DataUtil;
+import com.orm.context.data.NullData;
+import com.orm.sql.dom.ConvertParam;
+import com.orm.sql.dom.DataInfo;
+import com.orm.sql.dom.TableTag;
+import com.orm.sql.util.Util;
+*/
 import santr.parser.exception.ExecuteInvaildException;
 import santr.v4.execute.AbstractVisitor;
 import santr.v4.parser.ParserTree;
 import santr.v4.parser.RuleContext;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+public class MySQLExprVisitor extends AbstractVisitor<ConvertParam>{
 
-public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
+	private List<DataInfo> dataList = null;
 
-    private List<DataInfo> dataList = null;
+	private Map<String,Object> paramMap;
 
-    private Map<String, Object> paramMap;
+	//private StringBuffer sqlBuffer = new StringBuffer();
 
-    //private StringBuffer sqlBuffer = new StringBuffer();
+	boolean isHasParam;
 
-    boolean isHasParam;
+	public void init(){
 
-    public void init() {
+		this.paramMap = (Map<String, Object>) this.getParamer().getData();
 
-        this.paramMap = (Map<String, Object>) this.getParamer().getData();
+		isHasParam = paramMap != null
+				&& !paramMap.isEmpty();
 
-        isHasParam = paramMap != null
-                && !paramMap.isEmpty();
+		if(isHasParam){
+			this.dataList = new SimpleList<DataInfo>();
+		}
+	}
 
-        if (isHasParam) {
-            this.dataList = new SimpleList<DataInfo>();
-        }
-    }
+	public void execute(RuleContext context) throws ExecuteInvaildException {
+		 String name = context.getName();
+		 if(name.equals("sqlExpr")){
+			 executeSqlExpr(context);
+		 }else if(name.equals("selectExpr")){
+			 executeSelectExpr(context);
+		 }
+		 //else if(name.equals("tableInfo")){
+		//	 executeCommon(context);
+		 //}
+		// else if(name.equals("table")){
+		//	 executeCommon(context);
+		// }
+		 else if(name.equals("tableElement")){
+			 executeTableElement(context);
+		 }else if(name.equals("ID")){
+			 executeID(context);
+		 }else if(name.equals("STRINGTEXT")) {
+			 executeString(context);
+		 }
+		 else if(name.equals("INT")){
+			 executeINT(context);
+		 }else if(name.equals("colElementCon")){
+			 executeColElementCon(context);
+		 }
+		 //else if(name.equals("columnInfo")){
+		//	 this.executeCommon(context);
+		// }
+		 else if(name.equals("column")){
+			 this.executeColumn(context);
+		 }else if(name.equals("cparam")){
+			 this.executeCparam(context);
+		 }
 
-    public void execute(RuleContext context) throws ExecuteInvaildException {
-        String name = context.getName();
-        if (name.equals("sqlExpr")) {
-            executeSqlExpr(context);
-        } else if (name.equals("selectExpr")) {
-            executeSelectExpr(context);
-        }
-        //else if(name.equals("tableInfo")){
-        //	 executeCommon(context);
-        //}
-        // else if(name.equals("table")){
-        //	 executeCommon(context);
-        // }
-        else if (name.equals("tableElement")) {
-            executeTableElement(context);
-        } else if (name.equals("ID")) {
-            executeID(context);
-        } else if (name.equals("STRINGTEXT")) {
-            executeString(context);
-        } else if (name.equals("colElementCon")) {
-            executeColElementCon(context);
-        }
-        //else if(name.equals("columnInfo")){
-        //	 this.executeCommon(context);
-        // }
-        else if (name.equals("column")) {
-            this.executeColumn(context);
-        } else if (name.equals("cparam")) {
-            this.executeCparam(context);
-        } else {
-            this.executeCommon(context);
-        }
-    }
+		 else{
+			 this.executeCommon(context);
+		 }
+	}
 
-    public List<DataInfo> getDataList() {
-        return dataList;
-    }
+	public List<DataInfo> getDataList(){
+		return dataList;
+	}
 
-    private void executeCparam(RuleContext context) throws ExecuteInvaildException {
-        Object[] valueArray = this.getAllChildValue(context, context.getParam());
-        boolean isSuccess = false;
-        if (valueArray.length == 2) {
-            isSuccess = replaceParam((String) valueArray[1], null);
-        } else {
-            isSuccess = replaceParam((String) valueArray[1], (String) valueArray[3]);
-        }
+	private void executeINT(RuleContext context) {
+		this.addValue(context.getText(), context);
+	}
 
-        if (!isSuccess) {
-            String error = "";
-            for (Object object : valueArray) {
-                error = error + object;
-            }
-            throw new ExecuteInvaildException("The param:" + error + " is error!");
-        } else {
-            this.addValue("?", context);
-        }
+	private void executeCparam(RuleContext context) throws ExecuteInvaildException {
+		Object[] valueArray = this.getAllChildValue(context, context.getParam());
+		boolean isSuccess = false;
+		if(valueArray.length ==2){
+			isSuccess = replaceParam((String) valueArray[1],null);
+		}else{
+			isSuccess = replaceParam((String)valueArray[1],(String)valueArray[3]);
+		}
 
-    }
+		if(!isSuccess){
+			String error = "";
+			for(Object object:valueArray){
+				error = error+object;
+			}
+			throw new ExecuteInvaildException("The param:"+error+" is error!");
+		}else{
+			this.addValue("?", context);
+		}
 
-    private void executeColElementCon(RuleContext context) throws ExecuteInvaildException {
-        TreeValue treeValue = getTreeValue(context);
-        ParserTree[] parserTreeArray = context.getAllChild();
+	}
 
-        Object[] valueArray = this.getAllChildValue(context);
+	private void executeColElementCon(RuleContext context) throws ExecuteInvaildException {
+		TreeValue treeValue = getTreeValue(context);
+		ParserTree[] parserTreeArray =context.getAllChild();
 
-        // ID ('.' ID)?
-        if (parserTreeArray.length > 1) {
-            TableTag tag = treeValue.getTagTableMap().get(valueArray[0]);
+		Object[] valueArray = this.getAllChildValue(context);
 
-            Map<String, Column> dataInfoMap = Util.convert(tag.getDataName(),
-                    this.getParamer().getDataSource());
+		// ID ('.' ID)?
+		if(parserTreeArray.length>1){
+			TableTag tag = treeValue.getTagTableMap().get(valueArray[0]);
 
-            Column column = dataInfoMap.get(valueArray[2]);
+			Map<String,Column> dataInfoMap = Util.convert(tag.getDataName(),
+					this.getParamer().getDataSource());
 
-            this.addValue(valueArray[0] + "." + column.getName(), context);
-        } else {
-            TableTag tag = treeValue.getTagTableMap().get(null);
+			Column column = dataInfoMap.get(valueArray[2]);
 
-            Map<String, Column> dataInfoMap = Util.convert(tag.getDataName(),
-                    this.getParamer().getDataSource());
+			this.addValue(valueArray[0]+"."+column.getName(), context);
+		}else{
+			TableTag tag = treeValue.getTagTableMap().get(null);
 
-            Column column = dataInfoMap.get(valueArray[0]);
-            this.addValue(column.getName(), context);
-        }
-    }
+			Map<String,Column> dataInfoMap = Util.convert(tag.getDataName(),
+					this.getParamer().getDataSource());
 
-    /*
-    column : '*'
-		 | ID '.*'
-		 | ID 'as' ID
-		 | ID '.' ID ('as' ID)?
-		 | ID (ID)?
-		 | '(' selectExpr ')' ('as') ID
-		 | fun
-     */
-    private void executeColumn(RuleContext context) throws ExecuteInvaildException {
-        ParserTree[] parserTreeArray = context.getAllChild();
-        if (parserTreeArray.length == 1) {
-            if (parserTreeArray[0].isToken()) {
-                //*
-                executeSigleAll(context);
-            } else if (parserTreeArray[0].getToken() != null) {
-                //ID
-                this.addValue(parserTreeArray[0].getToken(), context);
-            } else {
-                //fun
-                this.getChildValue(parserTreeArray[1], context.getParam());
-            }
-        } else if (parserTreeArray.length == 2) {
-            if (parserTreeArray[1].isToken()) {
-                //ID '.*'
-                executeSigleTagAll(context);
-            } else {
-                //ID ID
-                this.addValue(parserTreeArray[0].getToken(), context);
-                this.addValue(parserTreeArray[1].getToken(), context);
-            }
-        } else {
-            if (parserTreeArray[1].isToken()) {
-                //ID 'as' ID
-                //ID '.' ID ('as' ID)?
-                for (ParserTree parserTree : parserTreeArray) {
-                    this.addValue(parserTree.getToken(), context);
-                }
-            } else {
-                // '(' selectExpr ')' ('as') ID
-                for (int i = 0; i < parserTreeArray.length; i++) {
-                    if (i == 1) {
-                        this.getChildValue(parserTreeArray[1], context.getParam());
-                    } else {
-                        this.addValue(parserTreeArray[i].getToken(), context);
-                    }
-                }
-            }
-        }
-    }
+			Column column = dataInfoMap.get(valueArray[0]);
+			this.addValue(column.getName(), context);
+		}
+	}
 
-    //ID '.*'
-    private void executeSigleTagAll(RuleContext context) {
-        TreeValue treeValue = getTreeValue(context);
-        String tag = (String) this.getChildParam(context, 0);
-        TableTag tableTag = treeValue.getTagTableMap().get(tag);
+	private void executeColumn(RuleContext context) throws ExecuteInvaildException {
+		ParserTree[] parserTreeArray =context.getAllChild();
+		if(parserTreeArray.length==1){
+			if(parserTreeArray[0].isToken()){
+				//*
+				executeSigleAll(context);
+			}else{
+				//columnElement
+				parserTreeArray[0].getRuleContext().setParam(context.getParam());
+				executeColumnElement(parserTreeArray[0].getRuleContext());
+			}
+		}else{
+			if(parserTreeArray.length==2){
+				//ID '.*'
+				executeSigleTagAll(context);
+			}
+		}
+	}
 
-        Map<String, Column> dataInfoMap = Util.convert(tableTag.getDataName(),
-                this.getParamer().getDataSource());
+	//ID '.*'
+	private void executeSigleTagAll(RuleContext context) {
+		TreeValue treeValue = getTreeValue(context);
+		String tag = (String) this.getChildParam(context, 0);
+		TableTag tableTag = treeValue.getTagTableMap().get(tag);
 
-        Iterator<Column> it = dataInfoMap.values().iterator();
+		Map<String,Column> dataInfoMap = Util.convert(tableTag.getDataName(),
+				this.getParamer().getDataSource());
 
-        while (it.hasNext()) {
-            Column column = it.next();
-            this.addValue(tag + "." + column.getName(), context);
-            this.addValue("as", context);
-            if (it.hasNext()) {
-                this.addValue(column.getRefproperty() + ",", context);
-            } else {
-                this.addValue(column.getRefproperty(), context);
-            }
-        }
-    }
+		Iterator<Column> it =  dataInfoMap.values().iterator();
 
-    //columnElement
-    private void executeColumnElement(RuleContext context) throws ExecuteInvaildException {
-        if (context.getParserTree().getToken() != null) {
-            this.addValue(context.getParserTree().getToken(), context);
-            return;
-        }
-        ParserTree[] parserTreeArray = context.getAllChild();
+		while(it.hasNext()){
+			Column column = it.next();
+			this.addValue(tag+"."+column.getName(), context);
+			this.addValue("as", context);
+			this.addValue(column.getRefproperty(), context);
+		}
+	}
 
-        if (parserTreeArray[0].isToken()) {
-            //'(' selectExpr ')'
-            this.addValue("(", context);
+	//columnElement
+	private void executeColumnElement(RuleContext context) throws ExecuteInvaildException {
+		ParserTree[] parserTreeArray =  context.getAllChild();
 
-            this.getChildValue(parserTreeArray[1], context.getParam());
+		if(parserTreeArray[0].isToken()){
+			//'(' selectExpr ')'
+			this.addValue("(",context);
 
-            this.addValue(")", context);
+			this.getChildValue(parserTreeArray[1], context.getParam());
 
-        } else {
-            //fun | colElementCon ('as' ID)?
-            Object[] valueArry = this.getAllChildValue(context, context.getParam());
+			this.addValue(")",context);
 
-            //colElementCon 'as' ID
-            if (valueArry.length > 1) {
-                this.addValue(valueArry[1], context);
-                this.addValue(valueArry[2], context);
-            }
-        }
+		}else{
+			//fun | colElementCon ('as' ID)?
+			Object[] valueArry = this.getAllChildValue(context, context.getParam());
 
-    }
+			//colElementCon 'as' ID
+			if(valueArry.length>1){
+				this.addValue(valueArry[1], context);
+				this.addValue(valueArry[2], context);
+			}
+		}
 
-    //*
-    private void executeSigleAll(RuleContext context) {
-        TreeValue treeValue = getTreeValue(context);
+	}
 
-        TableTag tag = treeValue.getTagTableMap().get(null);
+	//*
+	private void executeSigleAll(RuleContext context){
+		TreeValue treeValue = getTreeValue(context);
 
-        Map<String, Column> dataInfoMap = Util.convert(tag.getDataName(),
-                this.getParamer().getDataSource());
+		TableTag tag = treeValue.getTagTableMap().get(null);
 
-        Iterator<Column> it = dataInfoMap.values().iterator();
+		Map<String,Column> dataInfoMap = Util.convert(tag.getDataName(),
+				this.getParamer().getDataSource());
 
-        while (it.hasNext()) {
-            Column column = it.next();
-            this.addValue(column.getName(), context);
-            this.addValue("as", context);
-            if (it.hasNext()) {
-                this.addValue(column.getRefproperty() + ",", context);
-            } else {
-                this.addValue(column.getRefproperty(), context);
-            }
-        }
-    }
+		Iterator<Column> it =  dataInfoMap.values().iterator();
+
+		while(it.hasNext()){
+			Column column = it.next();
+			this.addValue(column.getName(), context);
+			this.addValue("as", context);
+			this.addValue(column.getRefproperty(), context);
+			if(it.hasNext()){
+				this.addValue(",", context);
+			}
+		}
+	}
 	
 	/*private void executeTableInfo(RuleContext context) throws ExecuteInvaildException {
 		executeCommon(context);
@@ -259,180 +238,177 @@ public class MySQLExprVisitor extends AbstractVisitor<ConvertParam> {
 		executeCommon(context);
 	}*/
 
-    private void executeTableElement(RuleContext context) throws ExecuteInvaildException {
-        ParserTree[] parserTreeArray = context.getAllChild();
-        if (parserTreeArray[0].isToken()) {
+	private void executeTableElement(RuleContext context) throws ExecuteInvaildException {
+		ParserTree[] parserTreeArray = context.getAllChild();
+		if(parserTreeArray[0].isToken()){
 
-            //子查询暂不实现
-        } else {
+			//子查询暂不实现
+		}else{
 
-            Object[] ObjectValue = this.getAllChildValue(context);
-            //添加表标记
-            Map<String, TableTag> tagTableMap
-                    = ((TreeValue) context.getParam()).getTagTableMap();
-            if (tagTableMap.containsKey(ObjectValue[0])) {
-                throw new ExecuteInvaildException("The flag is error:" + ObjectValue[0]);
-            }
+			Object[] ObjectValue = this.getAllChildValue(context);
+			//添加表标记
+			Map<String,TableTag> tagTableMap
+				= ((TreeValue)context.getParam()).getTagTableMap();
+			if(tagTableMap.containsKey(ObjectValue[0])){
+				throw new ExecuteInvaildException("The flag is error:"+ObjectValue[0]);
+			}
 
-            TableTag tableTag = null;
+			TableTag tableTag = null;
 
-            //添加到SQL语句
-            if (ObjectValue.length == 1) {
-                tableTag = convertTableTag((String) ObjectValue[0], null);
+			//添加到SQL语句
+			if(ObjectValue.length ==1){
+				tableTag = convertTableTag((String) ObjectValue[0],null);
 
-                addValue(tableTag.getTableName(), context);
-            } else {
-                tableTag = convertTableTag((String) ObjectValue[0], (String) ObjectValue[1]);
+				addValue(tableTag.getTableName(),context);
+			}else{
+				tableTag = convertTableTag((String) ObjectValue[0],(String) ObjectValue[1]);
 
-                addValue(tableTag.getTableName(), context);
-                addValue(tableTag.getTagName(), context);
-            }
+				addValue(tableTag.getTableName(),context);
+				addValue(tableTag.getTagName(),context);
+			}
 
-            tagTableMap.put(tableTag.getTagName(), tableTag);
-        }
-    }
+			tagTableMap.put(tableTag.getTagName(), tableTag);
+		}
+	}
 
 
-    private void executeCommon(RuleContext context) throws ExecuteInvaildException {
-        if (context.getParserTree().getToken() != null) {
-            addValue(context.getParserTree().getToken(), context);
-            return;
-        }
-        ParserTree[] parserTreeArray = context.getAllChild();
-        for (ParserTree parserTree : parserTreeArray) {
-            if (parserTree.isToken()) {
-                addValue(parserTree.getToken(), context);
-            } else {
-                this.getChildValue(parserTree, context.getParam());
-            }
-        }
-    }
+	private void executeCommon(RuleContext context) throws ExecuteInvaildException{
+		ParserTree[] parserTreeArray = context.getAllChild();
+		for(ParserTree parserTree:parserTreeArray){
+			if(parserTree.isToken()){
+				addValue(parserTree.getToken(),context);
+			}else{
+				this.getChildValue(parserTree,context.getParam());
+			}
+		}
+	}
 
-    private void executeSelectExpr(RuleContext context) throws ExecuteInvaildException {
-        TreeValue paramTreeValue = this.getTreeValue(context);
+	private void executeSelectExpr(RuleContext context) throws ExecuteInvaildException{
+		TreeValue paramTreeValue = this.getTreeValue(context);
 
-        TreeValue treeValue = new TreeValue();
+		 TreeValue treeValue= new TreeValue();
 
-        this.getChildValue(context, 3, treeValue);
-        ParserTree[] parserTreeArray = context.getAllChild();
+		 this.getChildValue(context, 3, treeValue);
+		 ParserTree[] parserTreeArray = context.getAllChild();
 
-        TreeValue columnTreeValue = new TreeValue();
-        columnTreeValue.setTagTableMap(treeValue.getTagTableMap());
+		 TreeValue columnTreeValue = new TreeValue();
+		 columnTreeValue.setTagTableMap(treeValue.getTagTableMap());
 
-        //columnInfo
-        this.getChildValue(parserTreeArray[1], columnTreeValue);
+		 //columnInfo
+		 this.getChildValue(parserTreeArray[1], columnTreeValue);
 
-        StringBuffer sqlBuffer = new StringBuffer();
+		 StringBuffer sqlBuffer = new StringBuffer();
 
-        //select
-        sqlBuffer.append(parserTreeArray[0].getToken()).append(" ");
+		 //select
+		 sqlBuffer.append(parserTreeArray[0].getToken()).append(" ");
 
-        //columnInfo
-        sqlBuffer.append(columnTreeValue.getSqlBuffer()).append(" ");
+		 //columnInfo
+		 sqlBuffer.append(columnTreeValue.getSqlBuffer()).append(" ");
 
-        //from
-        sqlBuffer.append(parserTreeArray[2].getToken()).append(" ");
+		 //from
+		 sqlBuffer.append(parserTreeArray[2].getToken()).append(" ");
 
-        //sql合并
-        treeValue.getSqlBuffer().insert(0, sqlBuffer);
+		 //sql合并
+		 treeValue.getSqlBuffer().insert(0, sqlBuffer);
 
-        for (int i = 4; i < parserTreeArray.length; i++) {
-            if (parserTreeArray[i].isToken()) {
-                this.addValue(parserTreeArray[i].getToken(), context);
-            } else {
-                this.getChildValue(parserTreeArray[i], treeValue);
-            }
-        }
-        context.setValue(treeValue.getSqlBuffer());
-        if (paramTreeValue != null) {
-            this.addValue(treeValue.getSqlBuffer(), context);
-        }
-    }
+		 for(int i = 4; i<parserTreeArray.length;i++){
+			 if(parserTreeArray[i].isToken()){
+				 this.addValue(parserTreeArray[i].getToken(),context);
+			 }else{
+				 this.getChildValue(parserTreeArray[i], treeValue);
+			 }
+		 }
+		 context.setValue(treeValue.getSqlBuffer());
+		 if(paramTreeValue !=null){
+			this.addValue(treeValue.getSqlBuffer(), context);
+		 }
+	}
 
-    private void executeSqlExpr(RuleContext context) throws ExecuteInvaildException {
-        Object value = this.getChildValue(context, 0);
-        context.setValue(value);
-    }
+	private void executeSqlExpr(RuleContext context) throws ExecuteInvaildException{
+		Object value = this.getChildValue(context, 0);
+		context.setValue(value);
+	}
 
-    private void executeID(RuleContext context) {
-        //Save the value to this tree.
+    private void executeID(RuleContext context){
+    	//Save the value to this tree.
         context.setValue(context.getText());
     }
 
-    private void executeString(RuleContext context) {
+    private void executeString(RuleContext context){
         //Save the value to this tree.
-        context.setValue("'" + context.getText() + "'");
+		this.addValue("'"+context.getText()+"'", context);
+        //context.setValue("'"+context.getText()+"'");
     }
 
-    private void addValue(Object object, RuleContext context) {
-        TreeValue treeValue = (TreeValue) context.getParam();
-        treeValue.addValue(object);
-        treeValue.addValue(" ");
-    }
+	private void addValue(Object object,RuleContext context){
+		TreeValue treeValue = (TreeValue) context.getParam();
+		treeValue.addValue(object);
+		treeValue.addValue(" ");
+	}
 
-    private TableTag convertTableTag(String dataName, String tagName) {
-        TableTag tableTag = new TableTag();
-        tableTag.setDataName(dataName);
+	private TableTag convertTableTag(String dataName,String tagName){
+		TableTag tableTag = new TableTag();
+		tableTag.setDataName(dataName);
 
-        tableTag.setTableName(Util.getTableName(dataName, this.getParamer().getDataSource()));
+		tableTag.setTableName(Util.getTableName(dataName, this.getParamer().getDataSource()));
 
-        tableTag.setTagName(tagName);
-        return tableTag;
+		tableTag.setTagName(tagName);
+		return tableTag;
 
-    }
+	}
 
-    private TreeValue getTreeValue(RuleContext context) {
-        return (TreeValue) context.getParam();
-    }
+	private TreeValue getTreeValue(RuleContext context){
+		return (TreeValue)context.getParam();
+	}
 
-    private class TreeValue {
-        private StringBuffer sqlBuffer = new StringBuffer();
+	private class TreeValue{
+		private StringBuffer sqlBuffer = new StringBuffer();
 
-        private Map<String, TableTag> tagTableMap = new FastMap<String, TableTag>();
+		private Map<String,TableTag> tagTableMap = new FastMap<String,TableTag>();
 
-        public void addValue(Object object) {
-            sqlBuffer.append(object).append(" ");
-        }
+		public void addValue(Object object){
+			sqlBuffer.append(object).append(" ");
+		}
 
-        public StringBuffer getSqlBuffer() {
-            return sqlBuffer;
-        }
+		public StringBuffer getSqlBuffer() {
+			return sqlBuffer;
+		}
 
-        public Map<String, TableTag> getTagTableMap() {
-            return tagTableMap;
-        }
+		public Map<String, TableTag> getTagTableMap() {
+			return tagTableMap;
+		}
 
-        public void setTagTableMap(Map<String, TableTag> tagTableMap) {
-            this.tagTableMap = tagTableMap;
-        }
+		public void setTagTableMap(Map<String, TableTag> tagTableMap) {
+			this.tagTableMap = tagTableMap;
+		}
 
-    }
+	}
 
-    private boolean replaceParam(String str, String str1) {
-        if (!isHasParam)
-            return false;
+	private boolean replaceParam(String str,String str1){
+		if(!isHasParam)
+			return false;
 
-        Object value = Util.getValueByKey(str, paramMap);
+		Object value = Util.getValueByKey(str, paramMap);
 
-        if (value == null)
-            return false;
+		if(value == null)
+			return false;
 
-        if (str1 != null) {
-            value = ((Map<String, Object>) value).get(str1);
+		if(str1!=null){
+			value = ((Map<String,Object>) value).get(str1);
 
-            if (value == null)
-                return false;
-        }
+			if(value == null)
+				return false;
+		}
 
-        DataInfo dataInfo = new DataInfo();
+		DataInfo dataInfo = new DataInfo();
 
-        if (value instanceof NullData) {
-            dataInfo.setValue(null);
-        } else {
-            dataInfo.setValue(value);
-        }
+		if(value instanceof NullData){
+			dataInfo.setValue(null);
+		}else{
+			dataInfo.setValue(value);
+		}
 
-        this.dataList.add(dataInfo);
-        return true;
-    }
+		this.dataList.add(dataInfo);
+		return true;
+	}
 }

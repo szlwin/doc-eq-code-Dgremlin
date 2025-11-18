@@ -47,9 +47,9 @@ public class ConfigInit {
 		HikariConfig hikariConfig = new HikariConfig();
 		// 设置数据库信息
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		hikariConfig.setJdbcUrl("jdbc:mysql://xxx.xxx.xxx.xxx:3306/demo-test2");
+		hikariConfig.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/demo-test2");
 		hikariConfig.setUsername("root");
-		hikariConfig.setPassword("root");
+		hikariConfig.setPassword("mysqldb");
 		// 设置可以获取tables remarks信息
 		//hikariConfig.addDataSourceProperty("useInformationSchema", "true");
 		hikariConfig.setMinimumIdle(2);

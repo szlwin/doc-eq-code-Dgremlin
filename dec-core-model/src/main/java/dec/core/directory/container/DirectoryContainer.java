@@ -124,11 +124,17 @@ public class DirectoryContainer {
         String condition = getCondition(subObjectSet);
         //directoryInfo.getViewRef()
         String sql = "select * from " + modelData.getViewInfo().getTargetMain().getName() + " where " + condition;
+        sql = sql.trim();
         System.out.println(sql.trim());
+        if(sql.endsWith("and")){
+            sql =  sql.substring(0, sql.length()-3);
+        }
+        System.out.println(sql.trim());
+
         SimpleSession simpleSession = new SimpleSession("con1");
         try {
             simpleSession.begian();
-            Collection<Map<String, Object>> dataList = simpleSession.query(sql.trim(), new HashMap<>());
+            Collection<Map<String, Object>> dataList = simpleSession.query( sql.trim(), new HashMap<>());
             simpleSession.close();
             System.out.println("data:" + dataList);
             findData = new ArrayList<>();
@@ -138,7 +144,7 @@ public class DirectoryContainer {
         }
 
 
-        System.out.println(condition);
+        //System.out.println(condition);
     }
 
     private String getCondition(Set<String> subObjectSet) {
