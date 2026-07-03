@@ -50,12 +50,12 @@ public class YamlRuleFileParser implements FileParser<List<RuleViewInfo>> {
         ruleViewInfo.setName(name);
         ruleViewInfo.setViewData(viewData);
         for (Object item : YamlSupport.list(YamlSupport.first(node, "rules", "rule"), "rules")) {
-            ruleViewInfo.addRule(parseRule(YamlSupport.map(item, "rule")));
+            ruleViewInfo.addRule(parseRule(YamlSupport.map(item, "rule"), viewData));
         }
         return ruleViewInfo;
     }
 
-    private RuleDefineInfo parseRule(Map<String, Object> node) throws YAMLParseException {
+    private RuleDefineInfo parseRule(Map<String, Object> node, ViewData viewData) throws YAMLParseException {
         String type = YamlSupport.requireStr(node, "rule.type", "type");
         RuleDefineInfo rule = createRule(type);
         rule.setName(YamlSupport.requireStr(node, "rule.name", "name"));
@@ -74,12 +74,19 @@ public class YamlRuleFileParser implements FileParser<List<RuleViewInfo>> {
         }
         if (rule instanceof RuleCheckDataPattern) {
             ((RuleCheckDataPattern) rule).setPattern(YamlSupport.str(node, "pattern"));
-            ((RuleCheckDataPattern) rule).setSql(YamlSupport.str(node, "sql", "cmd"));
+            ((RuleCheckDataPattern) rule).setSql(convertSql(YamlSupport.str(node, "sql", "cmd"), viewData));
         }
         if (rule instanceof RuleExecuteInfo) {
-            ((RuleExecuteInfo) rule).setSql(YamlSupport.str(node, "sql", "cmd"));
+            ((RuleExecuteInfo) rule).setSql(convertSql(YamlSupport.str(node, "sql", "cmd"), viewData));
         }
         return rule;
+    }
+
+    private String convertSql(String sql, ViewData viewData) {
+        if (sql == null || "".equals(sql)) {
+            return sql;
+        }
+        return new Convert(sql, viewData).convert();
     }
 
     private RuleDefineInfo createRule(String type) throws YAMLParseException {
