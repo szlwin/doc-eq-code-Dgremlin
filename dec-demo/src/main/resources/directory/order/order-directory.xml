@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <directory-config>
-	<directory name="cancel" view-ref="OrderInfo" is-root="true" desc="已取消">
+	<directory name="cancel" view-ref="OrderInfo" desc="已取消">
 		<depend-info>
 			<depend name="" view-ref="UserInfo" key-property="" />
 		</depend-info>
@@ -78,11 +78,4 @@
 				]]>
 		</change-info>
 	</directory>
-
-	<change-flow view-ref="OrderInfo">
-		<change source="order" target="paying"/>
-		<change source="paying" target="payResult"/>
-		<change source="paySuccess" target="refund"/>
-		<change source="refund" target="cancel"/>
-	</change-flow>
 </directory-config>

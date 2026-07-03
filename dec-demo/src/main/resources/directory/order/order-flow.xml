@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<change-config>
+	<change-flow view-ref="OrderInfo" start-directory="order" end-directory="cancel">
+		<change-step source-directory="order" target-directory="paying"/>
+		<change-step source-directory="paying" target-directory="payResult"/>
+		<change-step source-directory="paySuccess" target-directory="refund"/>
+		<change-step source-directory="refund" target-directory="cancel"/>
+	</change-flow>
+</change-config>

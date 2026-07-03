@@ -28,7 +28,7 @@ public class DirectoryParser extends AbstarctElementsParser {
         directoryInfo.setViewRef(element.attributeValue(DirectoryInfo.VIEW_REF));
         String isRoot = element.attributeValue(DirectoryInfo.IS_ROOT);
         if (isRoot != null) {
-            directoryInfo.setRoot(Boolean.valueOf(isRoot));
+            directoryInfo.setRoot(Boolean.parseBoolean(isRoot));
         }
 
         directoryInfo.setSubDirectories(parseSubDirectory(element.element(DirectoryInfo.SUB_DIRECTORY_INFO)));
@@ -42,7 +42,7 @@ public class DirectoryParser extends AbstarctElementsParser {
         if (element == null) {
             return null;
         }
-        Iterator it = element.elementIterator("subdirectory");
+        Iterator<Element> it = element.elementIterator("subdirectory");
         if (!it.hasNext()) {
             return null;
         }
@@ -58,8 +58,7 @@ public class DirectoryParser extends AbstarctElementsParser {
             }
             String mutualExclusion = subDirectoryElement.attributeValue("mutual-exclusion");
             if (mutualExclusion != null) {
-                Set<String> set = new HashSet<>();
-                set.addAll(Arrays.asList(mutualExclusion.split("\\,")));
+                Set<String> set = new HashSet<>(Arrays.asList(mutualExclusion.split("\\,")));
                 subDirectory.setMutualExclusions(set);
             }
             subDirectoryList.add(subDirectory);
@@ -71,17 +70,21 @@ public class DirectoryParser extends AbstarctElementsParser {
         if (element == null) {
             return null;
         }
-        Iterator it = element.elementIterator("action");
+        Iterator<Element> it = element.elementIterator("action");
         if (!it.hasNext()) {
             return null;
         }
         List<Action> actions = new ArrayList<>();
-        ActionRuleParser actionRuleParser = new ActionRuleParser();
+        //ActionRuleParser actionRuleParser = new ActionRuleParser();
         while (it.hasNext()) {
             Action action = new Action();
             Element actionElement = (Element) it.next();
-            action.setRuleList(actionRuleParser.parse(actionElement, viewName));
+            //action.setRuleList(actionRuleParser.parse(actionElement, viewName));
             action.setName(actionElement.attributeValue("name"));
+            String refRule = actionElement.attributeValue("ref-rule");
+            if (refRule != null && !refRule.isEmpty()){
+                action.setRefRule(actionElement.attributeValue("ref-rule"));
+            }
             actions.add(action);
         }
         return actions;
@@ -93,7 +96,7 @@ public class DirectoryParser extends AbstarctElementsParser {
         }
         ChangeInfo changeInfo = new ChangeInfo();
         String property = element.attributeValue("property");
-        if (property != null && !"".equals(property)) {
+        if (property != null && !property.isEmpty()) {
             changeInfo.setProperty(property.split("\\,"));
         }
         String express = element.getTextTrim();

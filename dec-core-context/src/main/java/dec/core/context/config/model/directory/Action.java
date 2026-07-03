@@ -9,7 +9,8 @@ public class Action extends ConfigBaseData {
 
     private String name;
 
-    private List<RuleDefineInfo> ruleList;
+    private String refRule;
+    //private List<RuleDefineInfo> ruleList;
 
     public String getName() {
         return name;
@@ -19,11 +20,19 @@ public class Action extends ConfigBaseData {
         this.name = name;
     }
 
-    public List<RuleDefineInfo> getRuleList() {
-        return ruleList;
+    public String getRefRule() {
+        return refRule;
     }
 
-    public void setRuleList(List<RuleDefineInfo> ruleList) {
-        this.ruleList = ruleList;
+    public void setRefRule(String refRule) {
+        this.refRule = refRule;
     }
+
+    //public List<RuleDefineInfo> getRuleList() {
+    //    return ruleList;
+    //}
+
+    //public void setRuleList(List<RuleDefineInfo> ruleList) {
+    //    this.ruleList = ruleList;
+    //}
 }
