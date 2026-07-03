@@ -3,7 +3,6 @@ package dec.expand.declare.bean;
 import artoria.reflect.ReflectUtils;
 import dec.core.context.data.ModelData;
 import dec.expand.declare.business.exception.ExecuteException;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -245,8 +244,8 @@ public class Bean {
         if (listType instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) listType;
             Type[] typeArgs = parameterizedType.getActualTypeArguments(); // 获取泛型类型的参数列表
-            if (typeArgs[0] instanceof ParameterizedTypeImpl) {
-                tragetClass = ((ParameterizedTypeImpl) typeArgs[0]).getRawType();
+            if (typeArgs[0] instanceof ParameterizedType) {
+                tragetClass = (Class<?>) ((ParameterizedType) typeArgs[0]).getRawType();
             } else {
                 tragetClass = (Class<?>) typeArgs[0];
             }
