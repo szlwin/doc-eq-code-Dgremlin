@@ -1,6 +1,6 @@
 # 信息树说明
 
-本文说明 `doc-eq-code-Dgremlin` 中信息树的设计目的、核心概念、配置方式和执行语义。
+本文说明 `doc-eq-code-Dgremlin` 中信息树的设计目的、核心概念、XML 格式和执行语义。
 
 本文以以下示例为主要依据：
 
@@ -8,7 +8,7 @@
 dec-demo/src/main/resources/directory/order/order-directory-new.xml
 ```
 
-该示例描述了用户有效性、订单状态、支付结果以及订单支付成功或失败等业务事实。
+该示例描述了用户有效性、订单状态、支付结果，以及订单支付成功或失败等业务事实。
 
 > 本文首先定义设计语言应表达的语义。示例中的部分元素属于目标设计，当前 Java 引擎不一定已经完整实现。
 
@@ -41,8 +41,6 @@ user.effective
 
 ## 2. 信息树在整体模型中的位置
 
-信息树与数据模型、业务模型、目录之间的关系如下：
-
 ```text
 数据模型
     定义数据字段及其与数据源的映射
@@ -57,16 +55,63 @@ user.effective
     根据业务事实进行分类、查询、执行和状态迁移
 ```
 
-各层职责必须保持分离：
+各层职责应保持分离：
 
 - 数据模型不负责定义完整业务含义；
 - 业务模型不负责描述完整业务流程；
 - Information 不负责描述目录路径；
 - Directory 不应直接使用数据库状态值替代 Information。
 
-## 3. Information 的定义
+## 3. XML 文件整体结构
 
-信息树位于 `information-info` 中：
+信息树定义在业务配置文件的 `information-info` 元素中。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<business-config name="order">
+
+    <information-info>
+        <information .../>
+        <information ...>
+            <change-data>...</change-data>
+        </information>
+    </information-info>
+
+    <directory-info>
+        ...
+    </directory-info>
+
+</business-config>
+```
+
+### 3.1 XML 基本要求
+
+| 项目 | 要求 |
+|---|---|
+| XML 版本 | 推荐使用 `1.0` |
+| 字符编码 | 必须使用 `UTF-8` |
+| 根元素 | `business-config` |
+| 信息树容器 | `information-info` |
+| 信息定义元素 | `information` |
+| 大小写 | 元素名、属性名和引用名称均区分大小写 |
+| 命名空间 | 当前示例未定义 XML Namespace |
+| 文本表达式 | 多行或包含 `<`、`>`、`&` 时建议使用 CDATA |
+
+### 3.2 `business-config`
+
+```xml
+<business-config name="order">
+    ...
+</business-config>
+```
+
+| 属性 | 必填 | 说明 |
+|---|---:|---|
+| `name` | 是 | 当前业务配置的唯一名称，例如 `order` |
+
+同一业务配置中可以同时定义信息树和目录。目录通过 `information-ref` 引用信息树中的 Information。
+
+### 3.3 `information-info`
 
 ```xml
 <information-info>
@@ -75,21 +120,39 @@ user.effective
 </information-info>
 ```
 
-一个 `information` 表示一个具有明确、稳定业务含义的事实，例如：
+`information-info` 是 Information 的集合容器。
 
-- `user.activated`：用户已经激活；
-- `user.effective`：用户是有效用户；
-- `order.ordered`：订单数据处于已下单状态；
-- `payment.success`：支付结果表示支付成功；
-- `order.paySuccess`：支付结果成功，并且订单数据已经物化为支付成功状态。
+约束：
 
-Information 的名称应使用稳定的业务语言。一旦业务定义确定，不应修改原有含义；新的业务含义应新增 Information。
+1. 一个 `business-config` 中最多存在一个 `information-info`；
+2. `information-info` 中至少包含一个 `information`；
+3. 同一有效配置域中的 Information 名称必须唯一；
+4. Information 可以引用同一文件或编译上下文中其他文件定义的 Information；
+5. 编译器必须在运行前完成全部引用解析。
 
-## 4. Information 的三种主要类型
+## 4. `information` 元素格式
 
-### 4.1 通过业务规则识别的原子 Information
+### 4.1 属性表
 
-使用 `model-ref` 和 `rule-ref`：
+| 属性 | 必填 | 适用类型 | 说明 |
+|---|---:|---|---|
+| `name` | 是 | 全部 | Information 的唯一业务名称 |
+| `model-ref` | 条件必填 | 原子 Information | 引用识别或物化该信息的业务模型 |
+| `rule-ref` | 条件必填 | 规则型原子 Information | 引用用于识别该信息的业务规则 |
+| `rule-data` | 条件必填 | 数据表达式型原子 Information | 根据业务模型字段识别该信息 |
+| `expression` | 条件必填 | 复合 Information | 使用其他 Information 组合当前信息 |
+
+### 4.2 子元素表
+
+| 子元素 | 数量 | 说明 |
+|---|---:|---|
+| `change-data` | `0..1` | 修改业务模型数据，使原子 Information 成立 |
+
+### 4.3 三种合法定义形态
+
+一个 Information 应选择以下三种定义形态之一。
+
+#### A. 业务规则型原子 Information
 
 ```xml
 <information
@@ -98,19 +161,18 @@ Information 的名称应使用稳定的业务语言。一旦业务定义确定�
         rule-ref="isActivated"/>
 ```
 
-含义如下：
+必须配置：
 
-- `name`：Information 的全局业务名称；
-- `model-ref`：识别该事实所使用的业务模型；
-- `rule-ref`：识别该事实的业务规则。
+- `name`；
+- `model-ref`；
+- `rule-ref`。
 
-`rule-ref` 应仅根据 `model-ref` 指向的业务模型判断当前事实是否成立。
+不得同时配置：
 
-例如 `isActivated` 可以读取 `UserInfo` 中的字段，但不应直接引用其他 Information。Information 之间的组合应由 `expression` 完成。
+- `rule-data`；
+- `expression`。
 
-### 4.2 通过数据表达式识别和物化的原子 Information
-
-使用 `model-ref`、`rule-data` 和可选的 `change-data`：
+#### B. 数据表达式型原子 Information
 
 ```xml
 <information
@@ -132,40 +194,22 @@ Information 的名称应使用稳定的业务语言。一旦业务定义确定�
 </information>
 ```
 
-其中：
+必须配置：
 
-- `rule-data` 用于识别 Information 是否成立；
-- `change-data` 用于将 Information 物化到业务模型数据；
-- 两者只能访问 `model-ref` 指向的业务模型及其数据节点和字段。
+- `name`；
+- `model-ref`；
+- `rule-data`。
 
-本例中：
+可以配置：
 
-```text
-识别 order.ordered：
-    order.status = 1
-    并且所有 orderDetails.status = 1
+- `change-data`。
 
-物化 order.ordered：
-    设置 order.status = 1
-    并设置所有 orderDetails.status = 1
-```
+不得同时配置：
 
-`change-data` 不是必须的。如果一个 Information 只有识别方式而没有 `change-data`，则引擎只能判断它是否成立，不能直接将它自动物化。
+- `rule-ref`；
+- `expression`。
 
-例如：
-
-```xml
-<information
-        name="order.waitPay"
-        model-ref="OrderInfo"
-        rule-ref="isWaitPay"/>
-```
-
-`order.waitPay` 可以被识别，但是否以及如何进入等待支付状态，由其规则实现或其他业务操作负责。
-
-### 4.3 通过其他 Information 组合的复合 Information
-
-使用 `expression`：
+#### C. 复合 Information
 
 ```xml
 <information
@@ -177,61 +221,257 @@ Information 的名称应使用稳定的业务语言。一旦业务定义确定�
         "/>
 ```
 
-复合 Information 的表达式只能引用其他 Information：
+必须配置：
 
-```text
-允许：
-    user.activated and user.certified
+- `name`；
+- `expression`。
 
-不允许：
-    user.status = 1 and user.certified
-```
-
-复合 Information 一般不配置：
+不得配置：
 
 - `model-ref`；
 - `rule-ref`；
 - `rule-data`；
 - `change-data`。
 
-它表示已有业务事实的逻辑组合，而不是直接操作底层数据。
+### 4.4 属性互斥规则
 
-## 5. 识别与物化必须分离
+`rule-ref`、`rule-data` 和 `expression` 是三种不同的识别方式，必须互斥。
 
-Information 包含两个不同方向的能力：
+```text
+合法：只配置 rule-ref
+合法：只配置 rule-data
+合法：只配置 expression
+非法：rule-ref + rule-data
+非法：rule-ref + expression
+非法：rule-data + expression
+```
+
+编译器建议使用以下规则：
+
+```text
+recognizerCount =
+    countNotEmpty(rule-ref, rule-data, expression)
+
+require recognizerCount == 1
+```
+
+## 5. XML 属性详细说明
+
+### 5.1 `name`
+
+```xml
+name="order.payable"
+```
+
+建议采用：
+
+```text
+业务域.业务事实
+```
+
+例如：
+
+```text
+user.activated
+user.effective
+order.ordered
+order.paying
+payment.success
+payment.completed
+```
+
+命名要求：
+
+1. 使用稳定的业务语言；
+2. 表示一个可以判断真假的业务事实；
+3. 不使用数据库字段名或状态值命名；
+4. 原有业务定义不可改变，新定义应新增 Information；
+5. 名称在有效配置域内唯一。
+
+### 5.2 `model-ref`
+
+```xml
+model-ref="OrderInfo"
+```
+
+`model-ref` 引用一个已定义的业务模型。
+
+它决定：
+
+- `rule-ref` 的业务模型上下文；
+- `rule-data` 可以访问的数据节点和字段；
+- `change-data` 可以修改的数据节点和字段。
+
+编译期必须校验：
+
+- 业务模型存在；
+- 表达式中的数据路径属于该模型；
+- 字段名称及类型有效。
+
+### 5.3 `rule-ref`
+
+```xml
+rule-ref="isPaySuccess"
+```
+
+`rule-ref` 引用一个用于识别 Information 的业务规则。
+
+规则要求：
+
+- 在 `model-ref` 指定的业务模型上下文中执行；
+- 返回可解释为真或假的判断结果；
+- 不直接组合其他 Information；
+- 不应在识别过程中产生与判断无关的副作用。
+
+Information 的组合应由 `expression` 完成，而不是隐藏在 `rule-ref` 中。
+
+### 5.4 `rule-data`
+
+```xml
+rule-data="
+    order.status = 3
+    and
+    every(orderDetails, status = 3)
+"
+```
+
+`rule-data` 直接根据业务模型数据判断 Information 是否成立。
+
+允许访问：
+
+```text
+当前 model-ref 业务模型中的数据节点和字段
+```
+
+不允许访问：
+
+```text
+其他 Information 名称
+其他未引入业务模型的数据字段
+实现语言对象或数据库专用对象
+```
+
+例如，以下写法非法：
+
+```xml
+<information
+        name="order.paySuccessStatus"
+        model-ref="OrderInfo"
+        rule-data="payment.success and order.status = 3"/>
+```
+
+原因是 `payment.success` 是 Information，只能出现在 `expression` 中。
+
+### 5.5 `expression`
+
+```xml
+<information
+        name="order.paySuccess"
+        expression="
+            payment.success
+            and
+            order.paySuccessStatus
+        "/>
+```
+
+`expression` 只能引用其他 Information。
+
+推荐支持的逻辑运算包括：
+
+```text
+and
+or
+not
+括号
+```
+
+编译期必须校验：
+
+- 每个引用都存在；
+- 不存在直接或间接循环依赖；
+- 表达式最终返回布尔结果；
+- 不包含业务模型字段访问；
+- 不包含赋值语句。
+
+### 5.6 `change-data`
+
+```xml
+<change-data>
+    <![CDATA[
+        order.status = 3;
+        every(orderDetails, status = 3);
+    ]]>
+</change-data>
+```
+
+`change-data` 用于修改业务模型数据，使当前原子 Information 成立。
+
+规则：
+
+1. 只能出现在配置了 `model-ref` 的原子 Information 中；
+2. 只能访问和修改 `model-ref` 指向的业务模型；
+3. 不能引用其他 Information；
+4. 不能作为复合 Information 的直接物化方式；
+5. 执行后必须重新验证当前 Information；
+6. 验证失败时，当前物化操作应失败。
+
+表达式包含特殊 XML 字符时必须转义，或使用 CDATA。推荐统一使用 CDATA。
+
+不使用 CDATA：
+
+```xml
+<change-data>amount = amount &lt; 0 ? 0 : amount;</change-data>
+```
+
+使用 CDATA：
+
+```xml
+<change-data>
+    <![CDATA[
+        amount = amount < 0 ? 0 : amount;
+    ]]>
+</change-data>
+```
+
+## 6. 识别与物化
+
+Information 同时涉及两个方向：
 
 ```text
 业务模型数据 ──识别──> Information
 Information ──物化──> 业务模型数据
 ```
 
-### 5.1 识别
+### 6.1 识别
 
-识别用于回答：
+识别回答：
 
 ```text
 当前业务事实是否成立？
 ```
 
-识别方式可以是：
+识别方式包括：
 
 - `rule-ref`；
 - `rule-data`；
 - `expression`。
 
-### 5.2 物化
+### 6.2 物化
 
-物化用于回答：
+物化回答：
 
 ```text
 如何修改业务模型数据，使该业务事实成立？
 ```
 
-物化方式为原子 Information 的 `change-data`，或者由具体业务规则完成数据生产和保存。
+物化方式包括：
 
-识别与物化不能混淆。能够识别某个事实，并不表示引擎一定知道如何自动产生该事实。
+- 原子 Information 的 `change-data`；
+- 由 Action 引用的业务规则生产数据并保存。
 
-例如 `payment.hasResult`：
+能够识别某个事实，不表示引擎一定知道如何自动产生该事实。
+
+例如：
 
 ```xml
 <information
@@ -240,33 +480,94 @@ Information ──物化──> 业务模型数据
         rule-ref="hasPayResult"/>
 ```
 
-它只能识别 `OrderInfo` 中是否已经存在 `PayResult`。真正创建 `PayResult` 的操作由目录中的 `receivePayResult` 规则负责。
+它只能识别 `OrderInfo` 中是否存在 `PayResult`。真正创建 `PayResult` 的操作由目录中的 `receivePayResult` Action 负责。
 
-## 6. 示例中的完整信息树
+## 7. 完整 XML 示例
 
-`order-directory-new.xml` 定义了以下 Information。
+以下示例覆盖三种 Information 类型。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<business-config name="order">
+
+    <information-info>
+
+        <!-- 规则型原子 Information -->
+        <information
+                name="user.activated"
+                model-ref="UserInfo"
+                rule-ref="isActivated"/>
+
+        <information
+                name="user.certified"
+                model-ref="UserInfo"
+                rule-ref="isCertified"/>
+
+        <!-- 复合 Information -->
+        <information
+                name="user.effective"
+                expression="
+                    user.activated
+                    and
+                    user.certified
+                "/>
+
+        <!-- 可识别并可物化的原子 Information -->
+        <information
+                name="order.ordered"
+                model-ref="OrderInfo"
+                rule-data="
+                    order.status = 1
+                    and
+                    every(orderDetails, status = 1)
+                ">
+            <change-data>
+                <![CDATA[
+                    order.status = 1;
+                    every(orderDetails, status = 1);
+                ]]>
+            </change-data>
+        </information>
+
+        <information
+                name="order.waitPay"
+                model-ref="OrderInfo"
+                rule-ref="isWaitPay"/>
+
+        <information
+                name="order.payable"
+                expression="
+                    order.ordered
+                    or
+                    order.waitPay
+                "/>
+
+    </information-info>
+
+</business-config>
+```
+
+## 8. 示例中的 Information
 
 | Information | 类型 | 业务含义 | 识别或组成方式 | 可自动物化 |
-|---|---|---|---|---|
+|---|---|---|---|---:|
 | `user.activated` | 原子 | 用户已经激活 | `UserInfo.isActivated` | 否 |
-| `user.certified` | 原子 | 用户已经完成认证 | `UserInfo.isCertified` | 否 |
-| `user.effective` | 复合 | 用户有效 | `user.activated AND user.certified` | 否 |
-| `order.ordered` | 原子 | 订单及明细处于已下单状态 | `rule-data` | 是 |
-| `order.waitPay` | 原子 | 订单处于等待支付状态 | `OrderInfo.isWaitPay` | 否 |
-| `order.payable` | 复合 | 订单可以支付 | `order.ordered OR order.waitPay` | 否 |
-| `order.paying` | 原子 | 订单及明细处于支付中状态 | `rule-data` | 是 |
-| `payment.hasResult` | 原子 | 当前订单已经存在支付结果 | `OrderInfo.hasPayResult` | 否 |
-| `payment.success` | 原子 | PayResult 表示支付成功 | `OrderInfo.isPaySuccess` | 否 |
-| `payment.error` | 原子 | PayResult 表示支付失败 | `OrderInfo.isPayError` | 否 |
-| `payment.completed` | 复合 | 支付结果已经确定 | `payment.success OR payment.error` | 否 |
-| `order.paySuccessStatus` | 原子 | 订单及明细已物化为支付成功状态 | `rule-data` | 是 |
-| `order.paySuccess` | 复合 | 支付结果成功且订单状态已更新 | `payment.success AND order.paySuccessStatus` | 否 |
-| `order.payErrorStatus` | 原子 | 订单及明细已物化为支付失败状态 | `rule-data` | 是 |
-| `order.payError` | 复合 | 支付结果失败且订单状态已更新 | `payment.error AND order.payErrorStatus` | 否 |
+| `user.certified` | 原子 | 用户已经认证 | `UserInfo.isCertified` | 否 |
+| `user.effective` | 复合 | 用户有效 | `activated AND certified` | 否 |
+| `order.ordered` | 原子 | 订单及明细已下单 | `rule-data` | 是 |
+| `order.waitPay` | 原子 | 订单等待支付 | `OrderInfo.isWaitPay` | 否 |
+| `order.payable` | 复合 | 订单可以支付 | `ordered OR waitPay` | 否 |
+| `order.paying` | 原子 | 订单及明细支付中 | `rule-data` | 是 |
+| `payment.hasResult` | 原子 | 已存在支付结果 | `OrderInfo.hasPayResult` | 否 |
+| `payment.success` | 原子 | 支付结果成功 | `OrderInfo.isPaySuccess` | 否 |
+| `payment.error` | 原子 | 支付结果失败 | `OrderInfo.isPayError` | 否 |
+| `payment.completed` | 复合 | 支付结果已确定 | `success OR error` | 否 |
+| `order.paySuccessStatus` | 原子 | 订单状态已物化为成功 | `rule-data` | 是 |
+| `order.paySuccess` | 复合 | 支付结果和订单状态均成功 | `payment.success AND paySuccessStatus` | 否 |
+| `order.payErrorStatus` | 原子 | 订单状态已物化为失败 | `rule-data` | 是 |
+| `order.payError` | 复合 | 支付结果和订单状态均失败 | `payment.error AND payErrorStatus` | 否 |
 
-## 7. 信息依赖关系
-
-示例中的主要信息关系如下：
+## 9. 信息依赖关系
 
 ```text
 user.activated ──┐
@@ -290,334 +591,154 @@ payment.error ──────────┐
 order.payErrorStatus ───┘
 ```
 
-该关系说明了三个层次：
+支付成功和失败各拆分为两层：
 
-1. 原始业务数据由原子 Information 识别；
-2. 原子 Information 可以组合为更稳定的业务概念；
-3. 目录和其他业务只依赖抽象 Information，而不是直接依赖底层状态字段。
+- `payment.success/error` 表示外部支付结果；
+- `order.paySuccessStatus/payErrorStatus` 表示本地订单状态已经完成物化；
+- 两者同时成立，完整的订单支付成功或失败事实才成立。
 
-## 8. 支付成功与失败为什么拆成两层信息
+这种拆分适合异步回调、最终一致性、重试和补偿场景。
 
-支付成功被拆成：
+## 10. XML 编译期校验
 
-```text
-payment.success
-    PayResult 本身表示成功
+加载 XML 后，编译器至少应执行以下校验。
 
-order.paySuccessStatus
-    订单及订单明细已经更新为成功状态
+### 10.1 结构校验
 
-order.paySuccess
-    payment.success
-    AND order.paySuccessStatus
-```
+- 根元素必须为 `business-config`；
+- `information-info` 数量合法；
+- `information` 的必填属性存在；
+- 不允许未知元素和未知属性；
+- `change-data` 最多出现一次；
+- XML 文本和 CDATA 可以正确解析。
 
-这样可以区分：
+### 10.2 定义校验
 
-- 外部支付结果已经返回成功；
-- 本地订单数据已经完成成功状态物化；
-- 两者都完成后，完整的订单支付成功事实才成立。
+- `name` 唯一；
+- `rule-ref`、`rule-data`、`expression` 必须且只能配置一个；
+- 原子 Information 必须配置 `model-ref`；
+- 复合 Information 不得配置 `model-ref` 和 `change-data`；
+- `change-data` 只能用于可物化的原子 Information。
 
-支付失败采用同样结构：
+### 10.3 引用校验
 
-```text
-payment.error
-    PayResult 本身表示失败
+- `model-ref` 指向已存在的业务模型；
+- `rule-ref` 指向已存在且类型兼容的规则；
+- `expression` 中的 Information 全部存在；
+- 目录中的 `information-ref` 全部存在；
+- Information 依赖图不存在循环。
 
-order.payErrorStatus
-    订单及订单明细已经更新为失败状态
+### 10.4 表达式校验
 
-order.payError
-    payment.error
-    AND order.payErrorStatus
-```
+- `rule-data` 只访问对应业务模型；
+- `expression` 只引用 Information；
+- `change-data` 只修改对应业务模型；
+- 字段和数据节点存在；
+- 操作符和字段类型兼容；
+- 判断表达式最终返回布尔值。
 
-这种拆分适合处理跨系统调用、异步回调、最终一致性、重试和补偿等场景。
+## 11. 运行时语义
 
-## 9. Information 的命名原则
-
-建议使用：
-
-```text
-业务域.业务事实
-```
-
-例如：
+建议的运行流程如下：
 
 ```text
-user.activated
-user.effective
-order.ordered
-order.paying
-payment.success
+1. 加载业务模型实例
+2. 按依赖顺序计算原子 Information
+3. 计算复合 Information
+4. Directory 使用计算结果执行依赖判断和分类
+5. 需要物化时执行 change-data 或业务规则
+6. 重新计算受影响的 Information
+7. 验证目标 Information 最终成立
 ```
 
-命名应满足：
-
-1. 使用业务语言，不使用数据库字段名；
-2. 表示一个可判断真假的事实；
-3. 在业务含义不变时保持稳定；
-4. 不把多个不相关含义放入同一个 Information；
-5. 新定义应新增名称，而不是改变旧名称含义。
-
-不推荐：
+当业务模型数据发生变化时，不应无差别重算全部信息。编译器可建立：
 
 ```text
-status1
-checkUser
-orderFlag
-payResultCodeSuccess
+字段 → 原子 Information → 复合 Information → Directory
 ```
 
-推荐：
+依赖索引，只重新计算受影响的节点。
 
-```text
-user.effective
-order.payable
-payment.completed
-```
+## 12. 非法 XML 示例
 
-## 10. 表达式边界
-
-### 10.1 `rule-data`
-
-`rule-data` 只访问业务模型数据：
-
-```text
-order.status = 3
-and every(orderDetails, status = 3)
-```
-
-不允许：
-
-```text
-payment.success
-and order.status = 3
-```
-
-因为 `payment.success` 是 Information 引用，应放入 `expression`。
-
-### 10.2 `expression`
-
-`expression` 只组合 Information：
-
-```text
-payment.success
-and order.paySuccessStatus
-```
-
-不允许直接访问：
-
-- 业务模型字段；
-- 数据表字段；
-- 数据源；
-- Java 对象或方法；
-- 目录节点。
-
-### 10.3 `change-data`
-
-`change-data` 只修改 `model-ref` 指向的业务模型数据，不应：
-
-- 调用外部系统；
-- 创建与当前模型无关的数据；
-- 直接执行目录迁移；
-- 引用其他 Information 作为赋值对象。
-
-复杂操作、外部调用和新数据生产应由业务规则及目录 Action 完成。
-
-## 11. Information 的计算顺序
-
-引擎计算某个 Information 时，可按以下顺序处理：
-
-1. 根据名称找到 Information 定义；
-2. 原子 Information 加载其 `model-ref` 对应业务模型；
-3. 使用 `rule-ref` 或 `rule-data` 执行识别；
-4. 复合 Information 递归计算 `expression` 中引用的信息；
-5. 缓存本次执行范围内的结果；
-6. 检测循环依赖；
-7. 返回 Information 是否成立及其证据。
-
-伪代码如下：
-
-```text
-match(name):
-    info = informationRegistry.get(name)
-
-    if info.expression exists:
-        return evaluateExpression(info.expression, match)
-
-    model = modelContext.get(info.modelRef)
-
-    if info.ruleRef exists:
-        return ruleEngine.match(info.ruleRef, model)
-
-    if info.ruleData exists:
-        return dataExpressionEngine.match(info.ruleData, model)
-
-    fail("Information has no recognition definition")
-```
-
-## 12. Information 的物化顺序
-
-引擎物化原子 Information 时，可按以下顺序处理：
-
-1. 确认 Information 存在 `change-data`；
-2. 加载 `model-ref` 对应业务模型；
-3. 执行 `change-data`；
-4. 保存或提交变化；
-5. 再次执行识别规则；
-6. 只有识别成功，才认为 Information 已完成物化。
-
-伪代码如下：
-
-```text
-materialize(name):
-    info = informationRegistry.get(name)
-
-    require info.modelRef
-    require info.changeData
-
-    model = modelContext.get(info.modelRef)
-    dataExpressionEngine.change(info.changeData, model)
-    modelRepository.save(model)
-
-    require match(name)
-```
-
-复合 Information 不直接物化。如果目录引用复合 Information，目录必须显式指定需要物化的原子 Information。
-
-例如 `success` 目录最终引用 `order.paySuccess`，但实际物化的是：
+### 12.1 同时配置两种识别方式
 
 ```xml
-<change-info information-ref="order.paySuccessStatus"/>
+<information
+        name="order.invalid"
+        model-ref="OrderInfo"
+        rule-ref="checkOrder"
+        rule-data="order.status = 1"/>
 ```
 
-## 13. 与 Directory 的关系
+错误原因：`rule-ref` 与 `rule-data` 互斥。
 
-Information 描述事实，Directory 使用事实。
+### 12.2 复合 Information 直接访问字段
 
-一个目录可以使用 Information 完成三类工作：
+```xml
+<information
+        name="order.invalid"
+        expression="order.status = 1 and payment.success"/>
+```
 
-### 13.1 定义目录含义
+错误原因：`expression` 只能引用 Information。
+
+### 12.3 `rule-data` 引用 Information
+
+```xml
+<information
+        name="order.invalid"
+        model-ref="OrderInfo"
+        rule-data="payment.success and order.status = 3"/>
+```
+
+错误原因：`rule-data` 只能访问业务模型数据。
+
+### 12.4 复合 Information 配置 `change-data`
+
+```xml
+<information
+        name="order.invalid"
+        expression="payment.success and order.paySuccessStatus">
+    <change-data>order.status = 3;</change-data>
+</information>
+```
+
+错误原因：复合 Information 不直接物化业务模型。
+
+## 13. 与目录的关系
+
+Information 定义业务事实，Directory 使用这些事实。
 
 ```xml
 <directory
         name="paying"
-        information-ref="order.paying"/>
+        information-ref="order.paying"
+        model-ref="OrderInfo">
+
+    <dependency-info>
+        <dependency information-ref="order.payable"/>
+        <dependency information-ref="user.effective"/>
+    </dependency-info>
+
+</directory>
 ```
 
-表示属于 `paying` 目录的数据必须满足 `order.paying`。
+这里：
 
-### 13.2 定义进入前提
+- `order.paying` 定义属于 `paying` 目录的最终事实；
+- `order.payable` 和 `user.effective` 定义进入目录的前提；
+- Directory 不重复编写这些事实的底层字段判断。
 
-```xml
-<dependency-info>
-    <dependency information-ref="order.payable"/>
-    <dependency information-ref="user.effective"/>
-</dependency-info>
-```
+## 14. 设计原则
 
-表示进入 `paying` 前，订单必须可支付且用户必须有效。
-
-### 13.3 定义状态物化
-
-```xml
-<change-info information-ref="order.paySuccessStatus"/>
-```
-
-表示进入目录时，应将对应原子 Information 物化到业务模型。
-
-目录不应复制 Information 的内部判断表达式。Information 的业务定义应只有一个来源。
-
-## 14. 与 Action 和 Produce 的关系
-
-Information 主要描述事实，不负责所有数据生产。
-
-例如支付结果由 Action 负责创建：
-
-```xml
-<action
-        name="receivePayResult"
-        ref-rule="receivePayResult">
-    <produce-info>
-        <produce ref="PayResult"/>
-    </produce-info>
-</action>
-```
-
-执行完成后，引擎再通过：
-
-```text
-payment.hasResult
-payment.success
-payment.error
-```
-
-识别产出数据代表的业务事实。
-
-因此完整过程是：
-
-```text
-Action 执行业务规则
-    ↓
-Produce 校验必须产生的数据
-    ↓
-Information 识别产出数据形成的事实
-    ↓
-Directory 根据事实分类或继续执行
-```
-
-## 15. 编译期校验建议
-
-加载信息树时，建议至少执行以下校验：
-
-1. Information 名称全局唯一；
-2. `expression` 引用的 Information 必须存在；
-3. Information 依赖图不能存在循环；
-4. `rule-ref` 引用的规则必须存在；
-5. `model-ref` 引用的业务模型必须存在；
-6. `rule-data` 和 `change-data` 中的数据路径必须属于 `model-ref`；
-7. `rule-data` 不能引用 Information；
-8. `expression` 不能引用业务模型字段；
-9. 复合 Information 不能配置 `change-data`；
-10. 配置 `change-data` 时必须配置 `model-ref`；
-11. 同一个原子 Information 不应同时出现相互冲突的识别方式；
-12. 目录引用的 `information-ref` 必须存在；
-13. `change-info` 应引用可物化的原子 Information；
-14. 用于互斥分类的 Information 应经过互斥性校验。
-
-## 16. 运行期校验建议
-
-运行时建议保留以下证据：
-
-- Information 名称；
-- 使用的业务模型及版本；
-- 使用的规则或表达式；
-- 参与判断的数据摘要；
-- 判断结果；
-- 物化前后的数据变化；
-- 关联的目录和 Action；
-- 执行编码或跟踪 ID。
-
-这些信息可用于：
-
-- 业务问题定位；
-- 自动化测试；
-- 审计；
-- 重试和补偿；
-- 设计文档与实际执行的一致性验证。
-
-## 17. 设计原则总结
-
-信息树应遵循以下原则：
-
-1. 从业务事实出发，而不是从状态字段出发；
-2. Information 的业务定义必须稳定、唯一、无歧义；
-3. 原子 Information 负责识别业务模型数据；
-4. 复合 Information 只组合其他 Information；
-5. 识别与物化必须分离；
-6. `rule-data` 只访问业务模型数据；
-7. `expression` 只引用 Information；
-8. 复杂数据生产由 Action 和业务规则负责；
-9. Directory 只引用 Information，不复制其判断逻辑；
-10. 设计文档应成为业务、开发、测试共同使用的精确语言。
+1. Information 必须使用稳定业务语言；
+2. 原子 Information 负责连接业务事实与业务模型数据；
+3. 复合 Information 只组合其他 Information；
+4. 识别和物化必须分离；
+5. `rule-data` 禁止引用 Information；
+6. Information 的组合只能出现在 `expression`；
+7. 没有 `change-data` 的 Information 只能识别，不能自动物化；
+8. Action 负责实际生产数据，Produce 负责声明结果契约；
+9. Directory 应引用 Information，不应复制底层判断；
+10. XML 必须经过编译校验后才能交由引擎执行。
