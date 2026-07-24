@@ -155,6 +155,10 @@
                 model-ref="OrderInfo"
                 rule-ref="hasPayResult"/>
 
+        <information
+                name="payment.paymentInfo"
+                model-ref="OrderInfo"
+                rule-ref="hasPayMentInfo"/>
 
         <!--
             PayResult表示支付成功。
