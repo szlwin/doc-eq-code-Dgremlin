@@ -1,6 +1,6 @@
 # 信息树说明
 
-本文说明 `doc-eq-code-Dgremlin` 中信息树的设计目的、XML 格式、识别与物化语义，以及目录 Action 产出数据与 Information 的对应关系。
+本文说明 `doc-eq-code-Dgremlin` 中信息树的设计目的、XML 格式、识别与物化语义，以及 Information、RuleView、Directory Action 和 Produce 之间的关系。
 
 本文以以下示例为主要依据：
 
@@ -8,7 +8,7 @@
 dec-demo/src/main/resources/directory/order/order-directory-new.xml
 ```
 
-> 本文优先定义设计语言应表达的目标语义。示例中的部分元素和校验规则，当前 Java 引擎不一定已经完整实现。
+> 本文优先定义设计语言应表达的目标语义。文中标注为“目标能力”的部分，当前 Java 引擎不一定已经完整实现。
 
 ## 1. 信息树解决什么问题
 
@@ -21,7 +21,8 @@ dec-demo/src/main/resources/directory/order/order-directory-new.xml
 3. 多个信息如何组合成更高层业务信息；
 4. 哪些信息可以被系统自动物化；
 5. Action 产生的数据是否作为信息继续参与后续业务；
-6. 当产出数据作为信息使用时，它与哪个 Information 对应。
+6. 当产出数据作为信息使用时，它与哪个 Information 对应；
+7. Information 使用哪个规则视图完成识别。
 
 传统代码通常直接依赖字段和值：
 
@@ -47,8 +48,11 @@ user.effective
 数据模型
     定义字段及其与数据源的映射
         ↓
-业务模型
+业务模型 / Business View
     按业务视角组织数据对象和关系
+        ↓
+RuleView
+    在一个业务视图上组织一组规则
         ↓
 Information
     定义业务模型上成立的业务信息
@@ -56,17 +60,15 @@ Information
 Directory
     根据业务信息进行分类、查询、执行和回退
         ↓
-Action
-    执行业务操作
-        ↓
-Produce
-    声明实际产出数据，并在需要时映射回 Information
+Action / Produce / Change
+    执行业务操作、声明产出并物化状态
 ```
 
 各层职责：
 
 - 数据模型描述数据结构；
 - 业务模型描述业务对象；
+- `rule-view-info` 描述绑定在一个业务视图上的规则集合；
 - Information 描述“什么业务信息成立”；
 - Directory 描述“资源位于哪里、可以去哪里”；
 - Action 描述“进入目录时执行什么”；
@@ -102,9 +104,12 @@ XML 基本要求：
 | 根元素 | `business-config` |
 | 信息树容器 | `information-info` |
 | 信息元素 | `information` |
+| 规则引用属性 | 统一使用 `rule-ref` |
 | 大小写 | 元素名、属性名和引用名称均区分大小写 |
 | 命名空间 | 当前示例未定义 XML Namespace |
 | 未知元素或属性 | 编译器应拒绝，不能静默忽略 |
+
+`ref-rule` 是旧命名，不属于当前目标 XML 规范。Information 和 Action 引用规则视图时均统一使用 `rule-ref`。
 
 ## 4. `information-info`
 
@@ -131,7 +136,7 @@ XML 基本要求：
 |---|---:|---|---|
 | `name` | 是 | 全部 | Information 的唯一业务名称 |
 | `model-ref` | 条件必填 | 原子 Information | 引用识别或物化该信息的业务模型 |
-| `rule-ref` | 条件必填 | 规则型原子 Information | 引用识别该信息的业务规则 |
+| `rule-ref` | 条件必填 | 规则型原子 Information | 引用 `rule-view-info/@name` |
 | `rule-data` | 条件必填 | 数据表达式型原子 Information | 根据业务模型字段识别该信息 |
 | `expression` | 条件必填 | 复合 Information | 使用其他 Information 组合当前信息 |
 
@@ -233,7 +238,111 @@ recognizerCount =
 require recognizerCount == 1
 ```
 
-## 6. Information 的识别与物化
+## 6. `rule-ref` 与 `rule-view-info`
+
+### 6.1 引用目标
+
+Information 和 Action 中的 `rule-ref` 都引用：
+
+```xml
+<rule-view-info name="..." view-ref="...">
+    <rule .../>
+    <rule .../>
+</rule-view-info>
+```
+
+`rule-ref` 引用的是 `rule-view-info/@name`，不是其中某一条 `rule/@name`。
+
+例如：
+
+```xml
+<information
+        name="payment.paymentInfo"
+        model-ref="OrderInfo"
+        rule-ref="hasPaymentInfo"/>
+```
+
+对应：
+
+```xml
+<rule-view-info
+        name="hasPaymentInfo"
+        view-ref="OrderInfo">
+
+    <!-- 用于识别 PaymentInfo 是否存在的规则 -->
+    <rule .../>
+
+</rule-view-info>
+```
+
+引用关系为：
+
+```text
+information/@rule-ref
+    └── rule-view-info/@name
+```
+
+而不是：
+
+```text
+information/@rule-ref
+    └── rule-view-info/rule/@name
+```
+
+### 6.2 `view-ref` 与 `model-ref` 的兼容关系
+
+规则视图通过 `view-ref` 绑定业务视图：
+
+```xml
+<rule-view-info
+        name="hasPaymentInfo"
+        view-ref="OrderInfo">
+    ...
+</rule-view-info>
+```
+
+Information 通过 `model-ref` 声明识别上下文：
+
+```xml
+<information
+        name="payment.paymentInfo"
+        model-ref="OrderInfo"
+        rule-ref="hasPaymentInfo"/>
+```
+
+编译器必须校验：
+
+```text
+information.model-ref
+    compatible with
+rule-view-info.view-ref
+```
+
+本例中两者都是 `OrderInfo`，因此可以在同一业务模型上下文中识别。
+
+### 6.3 Information 场景的规则契约
+
+当 `rule-view-info` 被 Information 引用时，其执行目标是识别 Information 是否成立。
+
+规则视图需要满足以下契约：
+
+1. 可以在 `model-ref/view-ref` 对应的业务数据上执行；
+2. 执行结果可以被解释为该 Information 成立或不成立；
+3. 不应把一个与 Information 无关的规则视图作为识别规则；
+4. 识别过程中产生的副作用应受到限制，避免查询信息时修改业务状态；
+5. 具体布尔结果、错误和证据如何承载，由后续执行接口统一定义。
+
+Information 和 Action 可以引用同一类 `rule-view-info` 配置，但两种引用场景的执行目的不同：
+
+```text
+Information.rule-ref
+    用于识别业务信息
+
+Action.rule-ref
+    用于执行业务操作
+```
+
+## 7. Information 的识别与物化
 
 Information 包含两个不同方向的能力：
 
@@ -242,7 +351,7 @@ Information 包含两个不同方向的能力：
 Information ──物化──> 业务模型数据
 ```
 
-### 6.1 识别
+### 7.1 识别
 
 识别回答：
 
@@ -256,7 +365,7 @@ Information ──物化──> 业务模型数据
 - `rule-data`；
 - `expression`。
 
-### 6.2 物化
+### 7.2 物化
 
 物化回答：
 
@@ -267,7 +376,8 @@ Information ──物化──> 业务模型数据
 物化方式：
 
 - 原子 Information 的 `change-data`；
-- Action 引用的业务规则产生并保存数据。
+- Action 引用的规则视图产生并保存数据；
+- 自定义 Action 实现产生并保存数据。
 
 能识别一个 Information，并不代表引擎一定知道如何自动产生它。
 
@@ -280,11 +390,11 @@ Information ──物化──> 业务模型数据
         rule-ref="hasPayResult"/>
 ```
 
-该 Information 可以识别 `OrderInfo` 中是否存在 `PayResult`，但真正创建 `PayResult` 的操作由目录 Action 完成。
+该 Information 可以通过 `hasPayResult` 规则视图识别 `OrderInfo` 中是否存在 `PayResult`，但真正创建 `PayResult` 的操作由目录 Action 完成。
 
-## 7. Action 产出数据与 Information 的对应关系
+## 8. Action 产出数据与 Information 的对应关系
 
-### 7.1 Produce 的两层语义
+### 8.1 Produce 的两层语义
 
 `produce/@ref` 声明实际产生的数据：
 
@@ -326,7 +436,7 @@ PaymentInfo 在信息树中对应哪个 Information
         rule-ref="hasPaymentInfo"/>
 ```
 
-Produce 因而可以同时具有两层后置条件：
+Produce 因而同时具有两层后置条件：
 
 ```text
 数据后置条件：
@@ -336,7 +446,7 @@ Produce 因而可以同时具有两层后置条件：
     payment.paymentInfo 成立
 ```
 
-### 7.2 `information-ref` 的条件必填规则
+### 8.2 `information-ref` 的条件必填规则
 
 | 产出数据用途 | `information-ref` |
 |---|---:|
@@ -349,8 +459,6 @@ Produce 因而可以同时具有两层后置条件：
 | 用于自动分类或路径选择 | 必填 |
 | 用于判断流程能否继续 | 必填 |
 
-判断原则：
-
 ```text
 producedDataUsedAsInformation == true
     => produce.information-ref 必填
@@ -358,15 +466,15 @@ producedDataUsedAsInformation == true
 
 不是所有 Produce 都必须建立 Information。是否配置 `information-ref`，取决于产出数据是否具有后续业务信息语义。
 
-### 7.3 运行时语义
+### 8.3 运行时语义
 
 带 `information-ref` 的 Produce 应按以下顺序执行：
 
 ```text
-1. 执行 Action 引用的业务规则
+1. 执行 Action
 2. 检查 ref 指定的数据已经产生
 3. 将产出数据放入业务模型或执行上下文
-4. 根据产出后的业务模型重新识别 information-ref
+4. 根据产出后的业务模型执行 information-ref 对应的识别规则
 5. 要求对应 Information 成立
 6. 重新计算依赖该 Information 的复合 Information
 7. 允许后续 Dependency、Directory 或分类继续执行
@@ -374,12 +482,12 @@ producedDataUsedAsInformation == true
 
 失败条件：
 
-- 规则执行成功，但 `ref` 数据不存在：Produce 失败；
+- Action 成功，但 `ref` 数据不存在：Produce 失败；
 - `ref` 数据存在，但 `information-ref` 无法识别为成立：Produce 失败；
 - `information-ref` 不存在或模型上下文不兼容：编译失败；
 - 数据后续作为信息使用却没有配置 `information-ref`：编译或流程校验失败。
 
-### 7.4 PaymentInfo 示例
+### 8.4 PaymentInfo 示例
 
 信息定义：
 
@@ -395,7 +503,7 @@ producedDataUsedAsInformation == true
 ```xml
 <action
         name="startPay"
-        ref-rule="pay">
+        rule-ref="pay">
 
     <produce-info>
         <produce
@@ -406,33 +514,37 @@ producedDataUsedAsInformation == true
 </action>
 ```
 
+规则视图：
+
+```xml
+<rule-view-info
+        name="pay"
+        view-ref="OrderInfo">
+
+    <!-- 发起支付所需的一组规则 -->
+    <rule .../>
+
+</rule-view-info>
+```
+
 含义：
 
 ```text
-pay 规则执行成功后：
-    必须产生 PaymentInfo
-    并且 payment.paymentInfo 必须成立
+startPay 执行 pay 规则视图
+    ↓
+必须产生 PaymentInfo
+    ↓
+重新识别 payment.paymentInfo
+    ↓
+payment.paymentInfo 必须成立
 ```
 
-`PaymentInfo` 后续可以通过 `payment.paymentInfo` 被其他 Information、Dependency 或 Directory 使用，而不应再次直接判断底层数据是否存在。
-
-### 7.5 PayResult 示例
-
-信息定义：
-
-```xml
-<information
-        name="payment.hasResult"
-        model-ref="OrderInfo"
-        rule-ref="hasPayResult"/>
-```
-
-目录 Action：
+### 8.5 PayResult 示例
 
 ```xml
 <action
         name="receivePayResult"
-        ref-rule="receivePayResult">
+        rule-ref="receivePayResult">
 
     <produce-info>
         <produce
@@ -452,7 +564,7 @@ payment.error
 
 再根据两者对 `success/error` 子目录进行自动分类。
 
-### 7.6 仅作为数据使用的 PyaError
+### 8.6 仅作为数据使用的 PyaError
 
 ```xml
 <produce-info>
@@ -468,7 +580,7 @@ payment.error
 
 因此不配置 `information-ref`。
 
-这并不表示 `PyaError` 不能在未来成为信息。如果后续增加：
+如果未来新增：
 
 ```xml
 <information
@@ -485,7 +597,7 @@ payment.error
         information-ref="payment.hasErrorRecord"/>
 ```
 
-## 8. Produce 与 Information 的映射约束
+## 9. Produce 与 Information 的映射约束
 
 `produce/@information-ref` 应满足：
 
@@ -496,7 +608,7 @@ payment.error
 5. Action 完成后必须能够重新识别该 Information；
 6. 不允许为了通过校验而映射到无关 Information；
 7. 一个 Produce 当前只声明一个主要对应 Information；
-8. 更多衍生事实应由其他原子 Information 或 `expression` 推导；
+8. 更多衍生信息应由其他原子 Information 或 `expression` 推导；
 9. 不应直接映射到 Action 单独无法保证成立的复合 Information。
 
 正确示例：
@@ -525,21 +637,21 @@ order.paySuccess
 
 单独产生 PayResult 不能保证订单成功状态已经物化，因此不能直接声明 `order.paySuccess` 已成立。
 
-## 9. 示例中的主要 Information
+## 10. 示例中的主要 Information
 
-| Information | 类型 | 业务含义 | 主要来源 | 可自动物化 |
+| Information | 类型 | 业务含义 | 识别或来源 | 可自动物化 |
 |---|---|---|---|---:|
-| `user.activated` | 原子 | 用户已经激活 | `isActivated` | 否 |
-| `user.certified` | 原子 | 用户已经认证 | `isCertified` | 否 |
+| `user.activated` | 原子 | 用户已经激活 | `rule-ref=isActivated` | 否 |
+| `user.certified` | 原子 | 用户已经认证 | `rule-ref=isCertified` | 否 |
 | `user.effective` | 复合 | 用户有效 | 激活且认证 | 否 |
 | `order.ordered` | 原子 | 订单及明细已下单 | `rule-data` | 是 |
-| `order.waitPay` | 原子 | 订单等待支付 | `isWaitPay` | 否 |
+| `order.waitPay` | 原子 | 订单等待支付 | `rule-ref=isWaitPay` | 否 |
 | `order.payable` | 复合 | 订单可以支付 | 已下单或等待支付 | 否 |
 | `order.paying` | 原子 | 订单及明细支付中 | `rule-data` | 是 |
-| `payment.paymentInfo` | 原子 | PaymentInfo 已产生并可作为信息使用 | `startPay` Produce | 否 |
-| `payment.hasResult` | 原子 | PayResult 已产生 | `receivePayResult` Produce | 否 |
-| `payment.success` | 原子 | PayResult 表示成功 | `isPaySuccess` | 否 |
-| `payment.error` | 原子 | PayResult 表示失败 | `isPayError` | 否 |
+| `payment.paymentInfo` | 原子 | PaymentInfo 已产生并可作为信息使用 | `rule-ref=hasPaymentInfo` | 否 |
+| `payment.hasResult` | 原子 | PayResult 已产生 | `rule-ref=hasPayResult` | 否 |
+| `payment.success` | 原子 | PayResult 表示成功 | `rule-ref=isPaySuccess` | 否 |
+| `payment.error` | 原子 | PayResult 表示失败 | `rule-ref=isPayError` | 否 |
 | `payment.completed` | 复合 | 支付结果已经确定 | 成功或失败 | 否 |
 | `order.paySuccessStatus` | 原子 | 订单状态已物化为成功 | `rule-data` | 是 |
 | `order.paySuccess` | 复合 | 支付结果成功且订单状态已更新 | 结果成功且状态成功 | 否 |
@@ -549,86 +661,91 @@ order.paySuccess
 主要关系：
 
 ```text
-PaymentInfo
-    └── Produce mapping ──> payment.paymentInfo
+rule-view-info(name=pay)
+    └── Action(rule-ref=pay)
+            └── Produce PaymentInfo
+                    └── payment.paymentInfo
+
+rule-view-info(name=hasPaymentInfo)
+    └── Information(rule-ref=hasPaymentInfo)
+            └── payment.paymentInfo
 
 PayResult
     └── Produce mapping ──> payment.hasResult
                                 ├── payment.success
                                 └── payment.error
-
-user.activated ──┐
-                 ├── AND ──> user.effective
-user.certified ──┘
-
-order.ordered ──┐
-                ├── OR ───> order.payable
-order.waitPay ──┘
-
-payment.success ────────┐
-                        ├── AND ──> order.paySuccess
-order.paySuccessStatus ─┘
-
-payment.error ──────────┐
-                        ├── AND ──> order.payError
-order.payErrorStatus ───┘
 ```
 
-## 10. 编译期校验
+## 11. 编译期校验
 
-### 10.1 XML 结构
+### 11.1 XML 结构
 
 - 根元素和容器数量正确；
 - 未知元素、属性被拒绝；
+- `ref-rule` 被视为无效旧属性；
 - 必填和条件必填属性完整；
 - `rule-ref`、`rule-data`、`expression` 互斥；
 - `change-data` 只用于可物化原子 Information。
 
-### 10.2 引用
+### 11.2 RuleView 引用
 
-- `model-ref` 存在；
-- `rule-ref` 存在；
-- `expression` 中的 Information 存在；
-- `produce/@information-ref` 存在；
-- Directory、Dependency、Change 引用的 Information 存在。
+- `rule-ref` 指向的 `rule-view-info` 存在；
+- 不允许把 `rule-ref` 解析为内部 `rule/@name`；
+- `information/@model-ref` 与 `rule-view-info/@view-ref` 兼容；
+- Information 场景的规则视图可以给出可解释的识别结果。
 
-### 10.3 产出映射
+### 11.3 Produce 映射
 
 - 后续作为信息使用的数据必须配置 `information-ref`；
-- 纯记录、日志或返回数据允许不配置；
+- 纯日志、记录或返回数据允许不配置；
 - 映射应指向原子 Information；
 - 数据与 Information 模型上下文兼容；
 - Action 执行后能够验证该 Information；
 - 不允许将单一数据产出直接映射到无法由其独立保证的复合 Information。
 
-### 10.4 依赖图
+### 11.4 依赖图
 
 - Information 不存在循环；
 - 不存在未定义引用；
 - 原子 Information 先于复合 Information 计算；
 - 产出数据写入上下文后，受影响 Information 可以被重新计算。
 
-## 11. 运行时校验
+## 12. 运行时校验
 
 运行时至少应校验：
 
-1. Action 是否成功；
-2. 每个 `produce/@ref` 是否实际产生；
-3. 产出数据是否写入正确业务模型或执行上下文；
-4. 存在 `information-ref` 时，对应 Information 是否成立；
-5. 依赖该 Information 的复合 Information 是否重新计算；
-6. 后续 Directory 和 Dependency 是否使用更新后的信息结果。
+1. Information 对应的规则视图是否成功执行；
+2. 识别结果能否确定 Information 成立或不成立；
+3. Action 是否成功；
+4. 每个 `produce/@ref` 是否实际产生；
+5. 存在 `information-ref` 时，对应 Information 是否成立；
+6. 依赖该 Information 的复合 Information 是否重新计算；
+7. 后续 Directory 和 Dependency 是否使用更新后的信息结果。
 
-## 12. 设计原则
+## 13. 当前实现边界
+
+当前目标 XML 已统一使用 `rule-ref`，但已有 Java 代码仍可能保留 `refRule` 字段或读取 `ref-rule` 的旧逻辑。后续实现时需要同步调整：
+
+```text
+XML: ref-rule  → rule-ref
+Java field: refRule → ruleRef
+parser: attributeValue("ref-rule") → attributeValue("rule-ref")
+```
+
+此外，信息识别规则视图的统一返回契约、证据表达和副作用限制仍需在执行引擎中明确实现。
+
+## 14. 设计原则
 
 1. Information 表示稳定的业务信息；
 2. 新业务定义应新增 Information，不应改变旧定义；
 3. `rule-data` 只能访问业务模型数据；
 4. `expression` 只能组合 Information；
-5. 识别和物化必须分离；
-6. Action 负责执行操作；
-7. Produce 负责声明数据后置条件；
-8. 产出数据作为信息使用时，必须声明 `information-ref`；
-9. 纯数据产出不应被强制包装成 Information；
-10. Produce 映射原子 Information，复合事实由信息树继续推导；
-11. Directory 只引用 Information，不复制底层字段判断。
+5. Information 和 Action 的 `rule-ref` 均引用 `rule-view-info/@name`；
+6. `rule-ref` 不引用内部单条 `rule/@name`；
+7. 识别和物化必须分离；
+8. Action 负责执行操作；
+9. Produce 负责声明数据后置条件；
+10. 产出数据作为信息使用时，必须声明 `information-ref`；
+11. 纯数据产出不应被强制包装成 Information；
+12. Produce 映射原子 Information，复合信息由信息树继续推导；
+13. Directory 只引用 Information，不复制底层字段判断。
