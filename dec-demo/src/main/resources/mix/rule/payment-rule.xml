@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<orm-rule-mapping>
+
+    <!--
+        legacy save-Order 中的支付部分被拆到 payment System。
+        RuleView 仍使用跨模块业务模型 OrderInfo，但只写 payInfo 区域。
+    -->
+    <rule-view-info name="pay" view-ref="OrderInfo">
+
+        <rule
+                name="insertPayInfo"
+                type="insert"
+                property="payInfo"/>
+
+        <rule
+                name="insertPayDetailList"
+                type="insert"
+                property="payInfo.payDetailList"/>
+
+    </rule-view-info>
+
+    <rule-view-info name="hasPaymentInfo" view-ref="OrderInfo">
+        <rule
+                name="checkPaymentInfo"
+                type="checkData"
+                property="payInfo"
+                pattern="NOTNULL"/>
+    </rule-view-info>
+
+    <rule-view-info name="hasPayResult" view-ref="OrderInfo">
+        <rule
+                name="checkPayResult"
+                type="checkPattern"
+                pattern="payInfo.status = 1 or payInfo.status = 2"/>
+    </rule-view-info>
+
+    <rule-view-info name="isPaySuccess" view-ref="OrderInfo">
+        <rule
+                name="checkPaySuccess"
+                type="checkPattern"
+                pattern="payInfo.status = 1"/>
+    </rule-view-info>
+
+    <rule-view-info name="isPayError" view-ref="OrderInfo">
+        <rule
+                name="checkPayError"
+                type="checkPattern"
+                pattern="payInfo.status = 2"/>
+    </rule-view-info>
+
+    <!--
+        PayResult 为 Action 输入或执行上下文数据。
+        此处用目标语义表示把支付结果写回 OrderInfo.payInfo。
+    -->
+    <rule-view-info name="receivePayResult" view-ref="OrderInfo">
+        <rule name="applyPayResult" type="grammer">
+            <customer-process>
+                <![CDATA[
+                    payInfo.status : PayResult.status;
+                    payInfo.resultCode : PayResult.code;
+                    payInfo.resultMessage : PayResult.message;
+                ]]>
+            </customer-process>
+        </rule>
+    </rule-view-info>
+
+    <rule-view-info name="resetPayResult" view-ref="OrderInfo">
+        <rule name="resetPayResult" type="grammer">
+            <customer-process>
+                <![CDATA[
+                    payInfo.status : 0;
+                    payInfo.resultCode : null;
+                    payInfo.resultMessage : null;
+                ]]>
+            </customer-process>
+        </rule>
+    </rule-view-info>
+
+    <rule-view-info name="recordPyaError" view-ref="OrderInfo">
+        <rule name="buildPyaError" type="grammer">
+            <customer-process>
+                <![CDATA[
+                    #PyaError.code : payInfo.resultCode;
+                    #PyaError.message : payInfo.resultMessage;
+                ]]>
+            </customer-process>
+        </rule>
+    </rule-view-info>
+
+</orm-rule-mapping>
