@@ -11,6 +11,14 @@ sh -n mvnw
 scripts/remediation/prove_test_failure_gate.sh  # 在 Maven 可用环境执行
 ```
 
+本地静态验证结果：`P0 static validation passed`；POM XML、Shell 语法、Python 语法与提交范围检查均通过。
+
+## 远端提交
+
+- P0 实现提交：`8cac10732886b9bce81e233ff23a941083d8548c`
+- 分支：`dev_all`
+- 推送方式：GitHub Git Data API 非强制快进更新
+
 ## 待 CI 执行
 
 ```text
