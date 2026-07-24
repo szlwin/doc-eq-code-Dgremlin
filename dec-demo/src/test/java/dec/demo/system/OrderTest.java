@@ -15,8 +15,16 @@ import dec.demo.system.dom.PayDetail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
+@Tag("mysql-it")
 public class OrderTest {
+
+    @Test
+    void legacyOrderScenario() throws Exception {
+        main(new String[0]);
+    }
 
     public static void main(String args[]) throws Exception {
         init();

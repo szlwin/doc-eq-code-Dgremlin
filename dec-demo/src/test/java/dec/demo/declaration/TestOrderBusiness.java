@@ -2,7 +2,6 @@ package dec.demo.declaration;
 
 import dec.demo.declaration.datasource.MockDataSourceManager;
 import dec.demo.declaration.dom.*;
-import dec.demo.system.ConfigInit;
 import dec.expand.declare.business.BusinessDeclareFactory;
 import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.conext.utils.ContextUtils;
@@ -13,8 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import org.junit.jupiter.api.Test;
 
 public class TestOrderBusiness {
+
+    @Test
+    void legacyDeclarationScenario() throws Throwable {
+        main(new String[0]);
+    }
 
     private final static Logger log = LoggerFactory.getLogger(TestOrderBusiness.class);
 

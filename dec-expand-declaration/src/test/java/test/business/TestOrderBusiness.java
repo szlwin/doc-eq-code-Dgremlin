@@ -8,8 +8,14 @@ import dec.expand.declare.system.SystemBuilder;
 import dec.expand.declare.conext.utils.ContextUtils;
 
 import java.math.BigDecimal;
+import org.junit.jupiter.api.Test;
 
 public class TestOrderBusiness {
+
+    @Test
+    void legacyDeclarationWorkflowUsesMockDatasource() throws Throwable {
+        main(new String[0]);
+    }
 
     public static void main(String[] args) throws Throwable {
 

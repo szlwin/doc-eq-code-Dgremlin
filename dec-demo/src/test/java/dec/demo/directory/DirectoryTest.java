@@ -11,8 +11,16 @@ import santr.v4.parser.ExpressParser;
 import santr.view.parser.TreeViewer;
 
 import java.util.List;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
+@Tag("mysql-it")
 public class DirectoryTest {
+    @Test
+    void legacyDirectoryScenario() throws Exception {
+        main(new String[0]);
+    }
+
     public static void main(String args[]) throws Exception {
         init();
         testFind();

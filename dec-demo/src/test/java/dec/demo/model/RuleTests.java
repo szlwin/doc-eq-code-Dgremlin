@@ -14,8 +14,16 @@ import dec.demo.model.dom.User;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
+@Tag("mysql-it")
 public class RuleTests extends DemoLoadTests {
+
+    @Test
+    void legacyRuleScenario() throws Exception {
+        main(new String[0]);
+    }
 
     public static void main(String args[]) throws Exception {
         RuleTests ruleTests = new RuleTests();

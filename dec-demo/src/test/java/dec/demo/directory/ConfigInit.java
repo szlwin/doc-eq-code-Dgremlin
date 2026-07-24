@@ -48,9 +48,9 @@ public class ConfigInit {
 		HikariConfig hikariConfig = new HikariConfig();
 		// 设置数据库信息
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		hikariConfig.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/demo-test2");
-		hikariConfig.setUsername("root");
-		hikariConfig.setPassword("mysqldb");
+		hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo_test"));
+		hikariConfig.setUsername(env("DEC_MYSQL_USER", "root"));
+		hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", ""));
 		// 设置可以获取tables remarks信息
 		//hikariConfig.addDataSourceProperty("useInformationSchema", "true");
 		hikariConfig.setMinimumIdle(2);
@@ -60,4 +60,9 @@ public class ConfigInit {
 		return dataSource;
 	}
 	
+
+    private static String env(String name, String defaultValue) {
+        String value = System.getenv(name);
+        return value == null || value.trim().isEmpty() ? defaultValue : value;
+    }
 }

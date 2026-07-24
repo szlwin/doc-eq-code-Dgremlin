@@ -1,127 +1,140 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>doc.eq.code</groupId>
-  <artifactId>doc-eq-code-parent</artifactId>
-  <version>1.0</version>
-  <packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>doc.eq.code</groupId>
+    <artifactId>doc-eq-code-parent</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>8</maven.compiler.release>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <framework.version>1.0</framework.version>
-	</properties>
+        <maven.version>3.9.16</maven.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+        <maven.failsafe.plugin.version>3.2.5</maven.failsafe.plugin.version>
+        <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
+        <surefire.excludedGroups>mysql-it</surefire.excludedGroups>
+    </properties>
 
-  <modules>
+    <modules>
         <module>dec-core-context</module>
-		<module>dec-core-datasource</module>
-		<module>dec-context-config-parse-xml</module>
-		<module>dec-context-config-parse-yaml</module>
-        <!--<module>dec-doc-eq-code-Dgremlin</module>-->
-		<module>dec-datasource-orm-sql</module>
-		<module>dec-datasource-orm-mysql</module>
-		<module>dec-core-model</module>
-		<module>dec-core-starter</module>
-		<module>dec-expand-declaration</module>
-		<!--<module>dec-demo</module>-->
-   </modules>
+        <module>dec-core-datasource</module>
+        <module>dec-context-config-parse-xml</module>
+        <module>dec-context-config-parse-yaml</module>
+        <module>dec-datasource-orm-sql</module>
+        <module>dec-datasource-orm-mysql</module>
+        <module>dec-core-model</module>
+        <module>dec-core-starter</module>
+        <module>dec-expand-declaration</module>
+        <module>dec-demo</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-core-context</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-core-model</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-context-config-parse-xml</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-context-config-parse-yaml</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-	  		
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-core-datasource</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-datasource-orm-sql</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-datasource-orm-mysql</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-	  		
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-core-starter</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-demo</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
-			<dependency>
-			  <groupId>doc.eq.code</groupId>
-	  		  <artifactId>dec-expand-declaration</artifactId>
-	  		  <version>${framework.version}</version>
-	  		</dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-context</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-model</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-context-config-parse-xml</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-context-config-parse-yaml</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-datasource</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-datasource-orm-sql</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-datasource-orm-mysql</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-starter</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-demo</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-expand-declaration</artifactId><version>${framework.version}</version></dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId>
+                <version>${junit.jupiter.version}</version><scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-    
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-				</configuration>
-			</plugin>
-		</plugins>
-		<resources>
-             <resource>
-                <filtering>true</filtering>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>       
-            <resource>
-                <filtering>true</filtering>
-                <directory>src/test</directory>
-                <excludes> 
-                	<exclude>**/*.*</exclude>  
-                </excludes>
-            </resource>
-        </resources>
-	</build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven.failsafe.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven.enforcer.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId><artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId>
+                <configuration><release>${maven.compiler.release}</release></configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <failIfNoTests>false</failIfNoTests>
+                    <excludedGroups>${surefire.excludedGroups}</excludedGroups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-failsafe-plugin</artifactId>
+                <executions><execution><goals><goal>integration-test</goal><goal>verify</goal></goals></execution></executions>
+                <configuration><skipITs>true</skipITs></configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution><id>enforce-build-toolchain</id><goals><goal>enforce</goal></goals>
+                        <configuration><rules>
+                            <requireMavenVersion><version>[${maven.version},)</version></requireMavenVersion>
+                            <requireJavaVersion><version>[17,)</version></requireJavaVersion>
+                        </rules></configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId><artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution><id>prepare-agent</id><goals><goal>prepare-agent</goal></goals></execution>
+                    <execution><id>report</id><phase>verify</phase><goals><goal>report</goal></goals></execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>mysql-it</id>
+            <properties><surefire.excludedGroups></surefire.excludedGroups></properties>
+            <build><plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration><skipITs>false</skipITs><groups>mysql-it</groups></configuration>
+                </plugin>
+            </plugins></build>
+        </profile>
+    </profiles>
 </project>

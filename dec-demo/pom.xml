@@ -34,21 +34,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>doc.eq.code</groupId>
-			<artifactId>dec-datasource-orm-mysql</artifactId>
-		</dependency>
-		<dependency>
-		  	<groupId>mysql</groupId>
-  			<artifactId>mysql-connector-java</artifactId>
-  			<version>8.0.28</version>
-  		</dependency>
-		<dependency>
-		   <groupId>com.zaxxer</groupId>
-   			<artifactId>HikariCP</artifactId>
-   			<version>4.0.3</version>
-   		</dependency>
-
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.30</version>
@@ -69,24 +54,19 @@
 			<artifactId>artoria</artifactId>
 			<version>1.0.0.20210823.beta</version>
 		</dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>4.0.3</version>
+            <scope>test</scope>
+        </dependency>
+
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+
 </project>
