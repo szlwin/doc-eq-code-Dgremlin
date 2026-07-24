@@ -1,0 +1,5017 @@
+{
+  "schema_version": 1,
+  "target_id": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "evidences": [
+    {
+      "evidence_id": "EVD-000001",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-confirmation-R01.md",
+      "digest": "ac6d126dafb3c6ffc316e241e819a2e7c5844b9eca591283c643813caa9f5aa2",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "RequirementConfirmationAgent",
+      "generated_at": "2026-07-24T12:08:41+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000002",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-confirmation-testability-R01.md",
+      "digest": "01f93b6eb86cc5edc971b53aff6ff25c09ffd9d82839a152c3c8101727aa88d1",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "RequirementConfirmationAgent",
+      "generated_at": "2026-07-24T12:08:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000003",
+      "type": "decision_ref",
+      "ref": "decision_log.md",
+      "digest": "9eb4526b53176b10c3430cb56fb73041947bfc930dd8c5fcb7fc72019fa69aca",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "RequirementConfirmationAgent",
+      "generated_at": "2026-07-24T12:08:43+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000004",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-confirmation-R01.md",
+      "digest": "ac6d126dafb3c6ffc316e241e819a2e7c5844b9eca591283c643813caa9f5aa2",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:10:00+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-001",
+        "RC-REQ-002",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-REQ-005",
+        "ASRT-P1-REQCONF-RA-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000001",
+        "manual_review_assertion_id": "ASRT-P1-REQCONF-RA-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000005",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-confirmation-testability-R01.md",
+      "digest": "01f93b6eb86cc5edc971b53aff6ff25c09ffd9d82839a152c3c8101727aa88d1",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:10:00+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "ASRT-P1-REQCONF-RA-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000002",
+        "manual_review_assertion_id": "ASRT-P1-REQCONF-RA-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000006",
+      "type": "decision_ref",
+      "ref": "decision_log.md",
+      "digest": "9eb4526b53176b10c3430cb56fb73041947bfc930dd8c5fcb7fc72019fa69aca",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:10:00+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-002",
+        "RC-REQ-005",
+        "ASRT-P1-REQCONF-RA-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000003",
+        "manual_review_assertion_id": "ASRT-P1-REQCONF-RA-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000007",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-REQCONF-RA-001-0001.json",
+      "digest": "e5f3d196c82efaf6a6b2989b1de0d990f26d386f5f20f5ecc818825860950b68",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:10:00+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQCONF-RA-001",
+        "AC-P1-COMPILER-001",
+        "requirement_confirmation:RequirementAnalysisAgent",
+        "MRQ-SCOPE",
+        "RC-REQ-001",
+        "RC-REQ-002",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-REQ-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000001",
+          "EVD-000002",
+          "EVD-000003"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000008",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-confirmation-testability-R01.md",
+      "digest": "01f93b6eb86cc5edc971b53aff6ff25c09ffd9d82839a152c3c8101727aa88d1",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:10:01+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "ASRT-P1-REQCONF-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000002",
+        "manual_review_assertion_id": "ASRT-P1-REQCONF-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000009",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-confirmation-R01.md",
+      "digest": "ac6d126dafb3c6ffc316e241e819a2e7c5844b9eca591283c643813caa9f5aa2",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:10:01+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-TEST-001",
+        "ASRT-P1-REQCONF-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000001",
+        "manual_review_assertion_id": "ASRT-P1-REQCONF-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000010",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-REQCONF-TD-001-0001.json",
+      "digest": "35cd4e720f7d9e1517618f9698cdfea7d4fbcf927ac2364c18a7bb07198a1bf9",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "phase": "requirement_confirmation",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:10:01+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQCONF-TD-001",
+        "AC-P1-COMPILER-006",
+        "requirement_confirmation:TestDesignAgent",
+        "MRQ-SCOPE",
+        "MRQ-VERIFY",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000002",
+          "EVD-000001"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000011",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:22:58+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000012",
+      "type": "document_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:22:59+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000013",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/requirement-analysis-concept-model-R02.md",
+      "digest": "1965405e46a8cf51c7071980639e710da2e4077d999be01528a9bba1dcbda915",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:22:59+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000014",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:23:00+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000015",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:23:01+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000016",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:23:01+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000017",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/dependency-impact-R02.yaml",
+      "digest": "f2f186b4b77e24f042fc8a017582933e3db5cb9e6798c8542162c0c18172f039",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:23:02+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000018",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:23:02+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000019",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:23:03+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000020",
+      "type": "schema_ref",
+      "ref": "evidence/snapshots/dependency-impact-R02.yaml",
+      "digest": "f2f186b4b77e24f042fc8a017582933e3db5cb9e6798c8542162c0c18172f039",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:23:04+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000021",
+      "type": "code_ref",
+      "ref": "../../../../../dec-core-context/src/main/java/dec/core/context/config/model/config/factory/ConfigFactory.java",
+      "digest": "f18f302dfdf51c5e9c7811c0976625ea2c93a0b7c7a419733a310a2ac58d22bd",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:24:27+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000022",
+      "type": "config_ref",
+      "ref": "../../../../../pom.xml",
+      "digest": "943d87513a8e56dabf286fb7290576b95d4a007af4ad92f42c4c1713300d292c",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:24:27+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000023",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:24:28+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000024",
+      "type": "plan_ref",
+      "ref": "task_plan.md",
+      "digest": "9cc98d0555f6deaee7280f60ad22bcf0cdc7def7ec6e80fd9c7840f24f3a2646",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "RequirementAnalysisAgent",
+      "generated_at": "2026-07-24T12:24:28+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "digest_rebound_reason": "task_plan evolves between phases; rebound after adding predecessor revision for business_model"
+      }
+    },
+    {
+      "evidence_id": "EVD-000025",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/requirement-analysis-concept-model-R02.md",
+      "digest": "1965405e46a8cf51c7071980639e710da2e4077d999be01528a9bba1dcbda915",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-003",
+        "RC-BM-001",
+        "RC-BM-002",
+        "RC-BM-006",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000013",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000026",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-003",
+        "RC-ANL-004",
+        "RC-BM-002",
+        "RC-BM-006",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000016",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000027",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/dependency-impact-R02.yaml",
+      "digest": "f2f186b4b77e24f042fc8a017582933e3db5cb9e6798c8542162c0c18172f039",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-003",
+        "RC-BM-001",
+        "RC-BM-002",
+        "RC-BM-006",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000017",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000028",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-003",
+        "RC-ANL-004",
+        "RC-BM-002",
+        "RC-BM-006",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000018",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000029",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-001",
+        "RC-ANL-003",
+        "RC-ANL-004",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000011",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000030",
+      "type": "document_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-001",
+        "RC-BM-001",
+        "RC-BFLOW-001",
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000012",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000031",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-001",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000015",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000032",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-REQAN-BM-001-0001.json",
+      "digest": "ebcfcbb42950f3a070fb6930e9b8c479287d3a39fddb398d15a1eb8727986f57",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:27:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-BM-001",
+        "AC-P1-COMPILER-001",
+        "requirement_analysis:BusinessModelAgent",
+        "MRQ-SCOPE",
+        "MRQ-OTHER",
+        "RC-ANL-001",
+        "RC-ANL-003",
+        "RC-ANL-004",
+        "RC-BM-001",
+        "RC-BM-002",
+        "RC-BM-006",
+        "RC-BFLOW-001",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000013",
+          "EVD-000016",
+          "EVD-000017",
+          "EVD-000018",
+          "EVD-000011",
+          "EVD-000012",
+          "EVD-000015"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000033",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-001",
+        "RC-ANL-002",
+        "RC-ANL-004",
+        "RC-ANL-005",
+        "RC-DES-001",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000011",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000034",
+      "type": "document_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-001",
+        "RC-ANL-002",
+        "RC-ANL-005",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000012",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000035",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/requirement-analysis-concept-model-R02.md",
+      "digest": "1965405e46a8cf51c7071980639e710da2e4077d999be01528a9bba1dcbda915",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000013",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000036",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000015",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000037",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-004",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000016",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000038",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/dependency-impact-R02.yaml",
+      "digest": "f2f186b4b77e24f042fc8a017582933e3db5cb9e6798c8542162c0c18172f039",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000017",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000039",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-004",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000018",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000040",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "RC-DES-011",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000019",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000041",
+      "type": "code_ref",
+      "ref": "../../../../../dec-core-context/src/main/java/dec/core/context/config/model/config/factory/ConfigFactory.java",
+      "digest": "f18f302dfdf51c5e9c7811c0976625ea2c93a0b7c7a419733a310a2ac58d22bd",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-011",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000021",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000042",
+      "type": "config_ref",
+      "ref": "../../../../../pom.xml",
+      "digest": "943d87513a8e56dabf286fb7290576b95d4a007af4ad92f42c4c1713300d292c",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-011",
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000022",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000043",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-REQAN-DES-001-0001.json",
+      "digest": "067106eee6dcd99476cdf6c23261766d57957ff83951e2e1404f7e2554dc7ae0",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:27:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-DES-001",
+        "AC-P1-COMPILER-002",
+        "requirement_analysis:DesignAgent",
+        "MRQ-SCOPE",
+        "MRQ-OTHER",
+        "RC-ANL-001",
+        "RC-ANL-002",
+        "RC-ANL-004",
+        "RC-ANL-005",
+        "RC-DES-001",
+        "RC-DES-011",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000011",
+          "EVD-000012",
+          "EVD-000013",
+          "EVD-000015",
+          "EVD-000016",
+          "EVD-000017",
+          "EVD-000018",
+          "EVD-000019",
+          "EVD-000021",
+          "EVD-000022"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000044",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "RC-TEST-005",
+        "RC-TEST-006",
+        "RC-TEST-007",
+        "RC-BFLOW-005",
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000014",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000045",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-001",
+        "RC-ANL-002",
+        "RC-TEST-001",
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000011",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000046",
+      "type": "document_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ANL-001",
+        "RC-ANL-002",
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000012",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000047",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-003",
+        "RC-BFLOW-005",
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000015",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000048",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-007",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000016",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000049",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-007",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000018",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000050",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-005",
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000023",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000051",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-REQAN-TD-001-0001.json",
+      "digest": "c501b5d0d14f286cbe07435b33b87a6e8cbe42cbaac0e694d1d984eddd5a591a",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:27:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-TD-001",
+        "AC-P1-COMPILER-006",
+        "requirement_analysis:TestDesignAgent",
+        "MRQ-SCOPE",
+        "MRQ-VERIFY",
+        "MRQ-OTHER",
+        "RC-ANL-001",
+        "RC-ANL-002",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "RC-TEST-005",
+        "RC-TEST-006",
+        "RC-TEST-007",
+        "RC-BFLOW-003",
+        "RC-BFLOW-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000014",
+          "EVD-000011",
+          "EVD-000012",
+          "EVD-000015",
+          "EVD-000016",
+          "EVD-000018",
+          "EVD-000023"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000052",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/requirement-analysis-concept-model-R02.md",
+      "digest": "1965405e46a8cf51c7071980639e710da2e4077d999be01528a9bba1dcbda915",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:27:55+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-006",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000013",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000053",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/dependency-impact-R02.yaml",
+      "digest": "f2f186b4b77e24f042fc8a017582933e3db5cb9e6798c8542162c0c18172f039",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:27:55+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-006",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000017",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000054",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:27:55+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-003",
+        "RC-IMP-005",
+        "RC-BFLOW-002",
+        "ASRT-P1-REQAN-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000011",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000055",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:27:55+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000016",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000056",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:27:55+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-BFLOW-003",
+        "ASRT-P1-REQAN-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000018",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000057",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-REQAN-IMP-001-0001.json",
+      "digest": "8aa03e7a54a0c15a4d324b3fd7b4f4f054b2acff28fd48c049e2dfb03d287bfe",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:27:56+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-IMP-001",
+        "AC-P1-COMPILER-005",
+        "requirement_analysis:ImpactAnalysisReviewAgent",
+        "MRQ-RISK",
+        "MRQ-OTHER",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-005",
+        "RC-IMP-006",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000013",
+          "EVD-000017",
+          "EVD-000011",
+          "EVD-000016",
+          "EVD-000018"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000058",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:30:22+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000059",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:30:22+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000060",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:30:23+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000061",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:30:23+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000062",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:30:24+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000063",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/dependency-impact-R02.yaml",
+      "digest": "f2f186b4b77e24f042fc8a017582933e3db5cb9e6798c8542162c0c18172f039",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:30:24+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000064",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:30:25+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000065",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000064",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000066",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/requirement-analysis-notes-R02.md",
+      "digest": "e240f317cbfe485ba07b11f1d451f10830416e877741867ac29c05268872a6ea",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000058",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000067",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000061",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000068",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000059",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000069",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000060",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000070",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000062",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000071",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/dependency-impact-R02.yaml",
+      "digest": "f2f186b4b77e24f042fc8a017582933e3db5cb9e6798c8542162c0c18172f039",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:42+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000063",
+        "manual_review_assertion_id": "ASRT-P1-REQAN-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000072",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-REQAN-XMOD-001-0001.json",
+      "digest": "07b9473e995b6db56e5eebf07986cf96fa16fabfdc340f9a334786d669285aac",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:30:43+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-REQAN-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "requirement_analysis:CrossModuleIntegrationReviewAgent",
+        "MRQ-RISK",
+        "MRQ-OTHER",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000064",
+          "EVD-000058",
+          "EVD-000061",
+          "EVD-000059",
+          "EVD-000060",
+          "EVD-000062",
+          "EVD-000063"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000073",
+      "type": "plan_ref",
+      "ref": "task_plan.md",
+      "digest": "9cc98d0555f6deaee7280f60ad22bcf0cdc7def7ec6e80fd9c7840f24f3a2646",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "phase": "requirement_analysis",
+      "generated_by_agent": "ProjectManagerAgent",
+      "generated_at": "2026-07-24T12:32:58+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "TASK-P1-BMODEL-001"
+      ],
+      "status": "REVOKED",
+      "superseded_by": "",
+      "metadata": {
+        "revoked_reason": "duplicate created during plan evidence repair"
+      }
+    },
+    {
+      "evidence_id": "EVD-000074",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:52+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000075",
+      "type": "document_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000076",
+      "type": "schema_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:53+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000077",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000078",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:54+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000079",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:55+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000080",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:55+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000081",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:36:56+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000082",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:39:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000083",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:39:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000084",
+      "type": "code_ref",
+      "ref": "../../../../../dec-core-context/src/main/java/dec/core/context/config/model/config/factory/ConfigFactory.java",
+      "digest": "f18f302dfdf51c5e9c7811c0976625ea2c93a0b7c7a419733a310a2ac58d22bd",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:39:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000085",
+      "type": "config_ref",
+      "ref": "../../../../../pom.xml",
+      "digest": "943d87513a8e56dabf286fb7290576b95d4a007af4ad92f42c4c1713300d292c",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelAgent",
+      "generated_at": "2026-07-24T12:39:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000086",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:40:11+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-001",
+        "RC-REQ-002",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-REQ-005",
+        "RC-ANL-001",
+        "ASRT-P1-BM-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000077",
+        "manual_review_assertion_id": "ASRT-P1-BM-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000087",
+      "type": "document_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:40:11+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-001",
+        "RC-ANL-001",
+        "ASRT-P1-BM-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000075",
+        "manual_review_assertion_id": "ASRT-P1-BM-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000088",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:40:11+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "ASRT-P1-BM-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000081",
+        "manual_review_assertion_id": "ASRT-P1-BM-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000089",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-BM-REQ-001-0001.json",
+      "digest": "dda78393930f839d8cb6579271ac444d9c96b6ade91437bab91d10e75fcbe2bd",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:40:11+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-BM-REQ-001",
+        "AC-P1-COMPILER-001",
+        "business_model:RequirementReviewAgent",
+        "MRQ-INTENT",
+        "MRQ-ACCEPTANCE",
+        "MRQ-CONFLICT",
+        "RC-REQ-001",
+        "RC-REQ-002",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-REQ-005",
+        "RC-ANL-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000077",
+          "EVD-000075",
+          "EVD-000081"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000090",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-001",
+        "RC-BM-002",
+        "RC-BM-003",
+        "RC-BM-004",
+        "RC-BM-005",
+        "RC-BM-006",
+        "RC-BM-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000074",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000091",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-002",
+        "RC-BM-004",
+        "RC-BM-006",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000079",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000092",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-002",
+        "RC-BM-004",
+        "RC-BM-006",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000080",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000093",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-003",
+        "RC-BFLOW-002",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000077",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000094",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-002",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000078",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000095",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-007",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000082",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000096",
+      "type": "document_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-001",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000075",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000097",
+      "type": "schema_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-005",
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000076",
+        "manual_review_assertion_id": "ASRT-P1-BM-BMR-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000098",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-BM-BMR-001-0001.json",
+      "digest": "553577bde6563d7f6a96252f677e383699d749216a97f1b99353bd61bb3b51da",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:40:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-BM-BMR-001",
+        "AC-P1-COMPILER-003",
+        "business_model:BusinessModelReviewAgent",
+        "MRQ-BOUNDARY",
+        "MRQ-INVARIANT",
+        "MRQ-EXCEPTION",
+        "MRQ-TRACE",
+        "MRQ-OTHER",
+        "RC-BM-001",
+        "RC-BM-002",
+        "RC-BM-003",
+        "RC-BM-004",
+        "RC-BM-005",
+        "RC-BM-006",
+        "RC-BM-007",
+        "RC-BFLOW-002",
+        "RC-BFLOW-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000074",
+          "EVD-000079",
+          "EVD-000080",
+          "EVD-000077",
+          "EVD-000078",
+          "EVD-000082",
+          "EVD-000075",
+          "EVD-000076"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000099",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-008",
+        "RC-DES-010",
+        "RC-DES-011",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000082",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000100",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-008",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000079",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000101",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-008",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000080",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000102",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000074",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000103",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000077",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000104",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000078",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000105",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-010",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000081",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000106",
+      "type": "code_ref",
+      "ref": "../../../../../dec-core-context/src/main/java/dec/core/context/config/model/config/factory/ConfigFactory.java",
+      "digest": "f18f302dfdf51c5e9c7811c0976625ea2c93a0b7c7a419733a310a2ac58d22bd",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-011",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000084",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000107",
+      "type": "config_ref",
+      "ref": "../../../../../pom.xml",
+      "digest": "943d87513a8e56dabf286fb7290576b95d4a007af4ad92f42c4c1713300d292c",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-011",
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000085",
+        "manual_review_assertion_id": "ASRT-P1-BM-DES-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000108",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-BM-DES-001-0001.json",
+      "digest": "437084f93379227d92abeca985f3eaa45adf1d02af0bcf8c5d7b283b042b5c52",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "DesignReviewAgent",
+      "generated_at": "2026-07-24T12:40:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-BM-DES-001",
+        "AC-P1-COMPILER-004",
+        "business_model:DesignReviewAgent",
+        "MRQ-SCOPE",
+        "MRQ-OTHER",
+        "RC-DES-001",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-008",
+        "RC-DES-010",
+        "RC-DES-011",
+        "RC-BFLOW-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000082",
+          "EVD-000079",
+          "EVD-000080",
+          "EVD-000074",
+          "EVD-000077",
+          "EVD-000078",
+          "EVD-000081",
+          "EVD-000084",
+          "EVD-000085"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000109",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:40:16+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "RC-TEST-005",
+        "RC-TEST-006",
+        "RC-TEST-007",
+        "ASRT-P1-BM-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000081",
+        "manual_review_assertion_id": "ASRT-P1-BM-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000110",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:40:16+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-001",
+        "ASRT-P1-BM-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000077",
+        "manual_review_assertion_id": "ASRT-P1-BM-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000111",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:40:16+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-007",
+        "ASRT-P1-BM-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000079",
+        "manual_review_assertion_id": "ASRT-P1-BM-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000112",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:40:16+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-007",
+        "ASRT-P1-BM-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000080",
+        "manual_review_assertion_id": "ASRT-P1-BM-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000113",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-BM-TD-001-0001.json",
+      "digest": "bbfaca956ffee2adcaf2849a2e23a628d5e1beb18580f6d8926412886e62c76d",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:40:16+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-BM-TD-001",
+        "AC-P1-COMPILER-006",
+        "business_model:TestDesignAgent",
+        "MRQ-VERIFY",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "RC-TEST-005",
+        "RC-TEST-006",
+        "RC-TEST-007"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000081",
+          "EVD-000077",
+          "EVD-000079",
+          "EVD-000080"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000114",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:40:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-006",
+        "ASRT-P1-BM-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000074",
+        "manual_review_assertion_id": "ASRT-P1-BM-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000115",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:40:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-003",
+        "RC-IMP-005",
+        "ASRT-P1-BM-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000077",
+        "manual_review_assertion_id": "ASRT-P1-BM-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000116",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:40:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "ASRT-P1-BM-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000079",
+        "manual_review_assertion_id": "ASRT-P1-BM-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000117",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:40:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "ASRT-P1-BM-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000080",
+        "manual_review_assertion_id": "ASRT-P1-BM-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000118",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:40:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-004",
+        "RC-IMP-005",
+        "ASRT-P1-BM-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000082",
+        "manual_review_assertion_id": "ASRT-P1-BM-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000119",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/requirement-analysis-test-matrix-R02.md",
+      "digest": "cddb708a8efa46eb862624541f81ca06c1f776c8b7edb8e80dd097dfd8bdf11f",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:40:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-006",
+        "ASRT-P1-BM-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000081",
+        "manual_review_assertion_id": "ASRT-P1-BM-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000120",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-BM-IMP-001-0001.json",
+      "digest": "193d82e4c5ba466c575d117835aa704104cbac078ec3fb20169b4ac45d14bd0a",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:40:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-BM-IMP-001",
+        "AC-P1-COMPILER-005",
+        "business_model:ImpactAnalysisReviewAgent",
+        "MRQ-RISK",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-005",
+        "RC-IMP-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000074",
+          "EVD-000077",
+          "EVD-000079",
+          "EVD-000080",
+          "EVD-000082",
+          "EVD-000081"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000121",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.md",
+      "digest": "6de7895f1e63a4f9892a5d6d9221bf4aceb5e8e441340803f9662e4eb4114f06",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:40:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-007",
+        "RC-BFLOW-003",
+        "ASRT-P1-BM-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000079",
+        "manual_review_assertion_id": "ASRT-P1-BM-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000122",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:40:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-007",
+        "RC-BFLOW-003",
+        "ASRT-P1-BM-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000080",
+        "manual_review_assertion_id": "ASRT-P1-BM-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000123",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/business-model-R01.md",
+      "digest": "9635bb7a45991a11c45b7f0e9d00eb3fe494d6e7dd50793d4d2fa39e04ccd274",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:40:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-001",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000082",
+        "manual_review_assertion_id": "ASRT-P1-BM-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000124",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:40:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-003",
+        "RC-BFLOW-004",
+        "ASRT-P1-BM-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000078",
+        "manual_review_assertion_id": "ASRT-P1-BM-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000125",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-BM-XMOD-001-0001.json",
+      "digest": "90eec50449c1a95689ffd38406e475bf3520a909515d3fd4bad0bb361d457ebe",
+      "revision": "BM-R01@52a58f20cb32",
+      "phase": "business_model",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:40:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-BM-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "business_model:CrossModuleIntegrationReviewAgent",
+        "MRQ-RISK",
+        "MRQ-OTHER",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-003",
+        "RC-BFLOW-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "AGENT_DRAFT",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000079",
+          "EVD-000080",
+          "EVD-000082",
+          "EVD-000078"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000126",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:01+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000127",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:02+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000128",
+      "type": "schema_ref",
+      "ref": "evidence/snapshots/api-contract-R01.md",
+      "digest": "9fe33c83a8cc31d5de817393f7e6950be8b86f6418ef3cded6f1e16e89ee0465",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:03+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000129",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/test-seams-R01.md",
+      "digest": "f900691468e9e14dfc68331ede981a401998c296d2a2db143d24e462b500be21",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:03+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000130",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:04+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000131",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:04+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000132",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:05+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000133",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:05+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000134",
+      "type": "code_ref",
+      "ref": "../../../../../dec-core-context/src/main/java/dec/core/context/config/model/config/factory/ConfigFactory.java",
+      "digest": "f18f302dfdf51c5e9c7811c0976625ea2c93a0b7c7a419733a310a2ac58d22bd",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:06+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000135",
+      "type": "config_ref",
+      "ref": "../../../../../pom.xml",
+      "digest": "943d87513a8e56dabf286fb7290576b95d4a007af4ad92f42c4c1713300d292c",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:07+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000136",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DesignAgent",
+      "generated_at": "2026-07-24T12:47:07+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {}
+    },
+    {
+      "evidence_id": "EVD-000137",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:49:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-002",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-REQ-005",
+        "RC-DES-001",
+        "RC-BFLOW-002",
+        "ASRT-P1-DES-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000131",
+        "manual_review_assertion_id": "ASRT-P1-DES-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000138",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/test-seams-R01.md",
+      "digest": "f900691468e9e14dfc68331ede981a401998c296d2a2db143d24e462b500be21",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:49:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "ASRT-P1-DES-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000129",
+        "manual_review_assertion_id": "ASRT-P1-DES-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000139",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:49:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "RC-BFLOW-002",
+        "ASRT-P1-DES-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000130",
+        "manual_review_assertion_id": "ASRT-P1-DES-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000140",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:49:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "ASRT-P1-DES-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000126",
+        "manual_review_assertion_id": "ASRT-P1-DES-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000141",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:49:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-002",
+        "ASRT-P1-DES-REQ-001",
+        "AC-P1-COMPILER-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000132",
+        "manual_review_assertion_id": "ASRT-P1-DES-REQ-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000142",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-DES-REQ-001-0001.json",
+      "digest": "8b07d4067bdfb0e2545ec3a9bde40b2989eef8fd2e2fa84668889f3e99246b1e",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "RequirementReviewAgent",
+      "generated_at": "2026-07-24T12:49:13+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-DES-REQ-001",
+        "AC-P1-COMPILER-001",
+        "design:RequirementReviewAgent",
+        "MRQ-INTENT",
+        "MRQ-ACCEPTANCE",
+        "MRQ-CONFLICT",
+        "MRQ-DESIGN",
+        "MRQ-OTHER",
+        "RC-REQ-002",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-REQ-005",
+        "RC-DES-001",
+        "RC-BFLOW-002"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "MARKDOWN",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000131",
+          "EVD-000129",
+          "EVD-000130",
+          "EVD-000126",
+          "EVD-000132"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000143",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-001",
+        "RC-BM-003",
+        "RC-BM-004",
+        "RC-BM-005",
+        "RC-BM-006",
+        "RC-DES-001",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000130",
+        "manual_review_assertion_id": "ASRT-P1-DES-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000144",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-001",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000126",
+        "manual_review_assertion_id": "ASRT-P1-DES-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000145",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-004",
+        "RC-BM-006",
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000127",
+        "manual_review_assertion_id": "ASRT-P1-DES-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000146",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-003",
+        "RC-DES-001",
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000131",
+        "manual_review_assertion_id": "ASRT-P1-DES-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000147",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-004",
+        "RC-BM-006",
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000133",
+        "manual_review_assertion_id": "ASRT-P1-DES-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000148",
+      "type": "schema_ref",
+      "ref": "evidence/snapshots/api-contract-R01.md",
+      "digest": "9fe33c83a8cc31d5de817393f7e6950be8b86f6418ef3cded6f1e16e89ee0465",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BM-005",
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000128",
+        "manual_review_assertion_id": "ASRT-P1-DES-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000149",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000132",
+        "manual_review_assertion_id": "ASRT-P1-DES-BM-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000150",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-DES-BM-001-0001.json",
+      "digest": "ef3108ab3eb88fff971559cba151ef1ae0a158eabf5695970ee81cb81659c886",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "BusinessModelReviewAgent",
+      "generated_at": "2026-07-24T12:49:14+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-DES-BM-001",
+        "AC-P1-COMPILER-003",
+        "design:BusinessModelReviewAgent",
+        "MRQ-BOUNDARY",
+        "MRQ-INVARIANT",
+        "MRQ-EXCEPTION",
+        "MRQ-OTHER",
+        "RC-BM-001",
+        "RC-DES-001",
+        "RC-BM-003",
+        "RC-BM-004",
+        "RC-BM-005",
+        "RC-BM-006",
+        "RC-BFLOW-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "MARKDOWN",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000130",
+          "EVD-000126",
+          "EVD-000127",
+          "EVD-000131",
+          "EVD-000133",
+          "EVD-000128",
+          "EVD-000132"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000151",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ARCH-001",
+        "RC-ARCH-002",
+        "RC-ARCH-003",
+        "RC-ARCH-004",
+        "RC-ARCH-005",
+        "RC-ARCH-006",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-007",
+        "RC-DES-008",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000126",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000152",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ARCH-001",
+        "RC-ARCH-002",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-007",
+        "RC-DES-008",
+        "RC-BFLOW-003",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000127",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000153",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ARCH-001",
+        "RC-ARCH-002",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-007",
+        "RC-DES-008",
+        "RC-BFLOW-003",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000133",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000154",
+      "type": "code_ref",
+      "ref": "../../../../../dec-core-context/src/main/java/dec/core/context/config/model/config/factory/ConfigFactory.java",
+      "digest": "f18f302dfdf51c5e9c7811c0976625ea2c93a0b7c7a419733a310a2ac58d22bd",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ARCH-001",
+        "RC-ARCH-002",
+        "RC-ARCH-003",
+        "RC-ARCH-004",
+        "RC-ARCH-005",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000134",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000155",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/test-seams-R01.md",
+      "digest": "f900691468e9e14dfc68331ede981a401998c296d2a2db143d24e462b500be21",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ARCH-004",
+        "RC-ARCH-006",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000129",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000156",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-003",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000132",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000157",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000130",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000158",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ARCH-005",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000131",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000159",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:15+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-ARCH-006",
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000136",
+        "manual_review_assertion_id": "ASRT-P1-DES-ARCH-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000160",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-DES-ARCH-001-0001.json",
+      "digest": "0656fd77b8cb57496eacc63c110e2d1aa186d92b2298c496976bba29443786a8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ArchitectureReviewAgent",
+      "generated_at": "2026-07-24T12:49:16+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-DES-ARCH-001",
+        "AC-P1-COMPILER-004",
+        "design:ArchitectureReviewAgent",
+        "MRQ-BOUNDARY",
+        "MRQ-FLOW",
+        "MRQ-QUALITY",
+        "MRQ-EVOLUTION",
+        "MRQ-OTHER",
+        "RC-ARCH-001",
+        "RC-ARCH-002",
+        "RC-DES-002",
+        "RC-ARCH-003",
+        "RC-ARCH-004",
+        "RC-DES-005",
+        "RC-ARCH-005",
+        "RC-DES-007",
+        "RC-DES-008",
+        "RC-ARCH-006",
+        "RC-BFLOW-003",
+        "RC-BFLOW-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "MARKDOWN",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000126",
+          "EVD-000127",
+          "EVD-000133",
+          "EVD-000134",
+          "EVD-000129",
+          "EVD-000132",
+          "EVD-000130",
+          "EVD-000131",
+          "EVD-000136"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000161",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/test-seams-R01.md",
+      "digest": "f900691468e9e14dfc68331ede981a401998c296d2a2db143d24e462b500be21",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:49:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-010",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "RC-TEST-005",
+        "RC-TEST-006",
+        "RC-TEST-007",
+        "ASRT-P1-DES-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000129",
+        "manual_review_assertion_id": "ASRT-P1-DES-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000162",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:49:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-010",
+        "ASRT-P1-DES-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000126",
+        "manual_review_assertion_id": "ASRT-P1-DES-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000163",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:49:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-007",
+        "ASRT-P1-DES-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000127",
+        "manual_review_assertion_id": "ASRT-P1-DES-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000164",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:49:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-001",
+        "ASRT-P1-DES-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000131",
+        "manual_review_assertion_id": "ASRT-P1-DES-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000165",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:49:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-TEST-007",
+        "ASRT-P1-DES-TD-001",
+        "AC-P1-COMPILER-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000133",
+        "manual_review_assertion_id": "ASRT-P1-DES-TD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000166",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-DES-TD-001-0001.json",
+      "digest": "be62b49d4e7b89a85d9d52aeb8695334628c6742a2181cf628a15a4609d33864",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "TestDesignAgent",
+      "generated_at": "2026-07-24T12:49:17+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-DES-TD-001",
+        "AC-P1-COMPILER-006",
+        "design:TestDesignAgent",
+        "MRQ-SCOPE",
+        "MRQ-VERIFY",
+        "RC-DES-010",
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "RC-TEST-005",
+        "RC-TEST-006",
+        "RC-TEST-007"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "MARKDOWN",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000129",
+          "EVD-000126",
+          "EVD-000127",
+          "EVD-000131",
+          "EVD-000133"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000167",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-002",
+        "RC-DES-003",
+        "RC-DES-004",
+        "RC-DES-005",
+        "RC-DES-006",
+        "RC-DES-007",
+        "RC-DES-008",
+        "RC-DES-009",
+        "RC-DES-010",
+        "RC-DES-011",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000126",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000168",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-007",
+        "RC-DES-008",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000127",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000169",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-002",
+        "RC-DES-005",
+        "RC-DES-007",
+        "RC-DES-008",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000133",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000170",
+      "type": "schema_ref",
+      "ref": "evidence/snapshots/api-contract-R01.md",
+      "digest": "9fe33c83a8cc31d5de817393f7e6950be8b86f6418ef3cded6f1e16e89ee0465",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-003",
+        "RC-DES-004",
+        "RC-DES-006",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000128",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000171",
+      "type": "code_ref",
+      "ref": "../../../../../dec-core-context/src/main/java/dec/core/context/config/model/config/factory/ConfigFactory.java",
+      "digest": "f18f302dfdf51c5e9c7811c0976625ea2c93a0b7c7a419733a310a2ac58d22bd",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-011",
+        "RC-ENG-001",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000134",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000172",
+      "type": "config_ref",
+      "ref": "../../../../../pom.xml",
+      "digest": "943d87513a8e56dabf286fb7290576b95d4a007af4ad92f42c4c1713300d292c",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-011",
+        "RC-ENG-001",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000135",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000173",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/test-seams-R01.md",
+      "digest": "f900691468e9e14dfc68331ede981a401998c296d2a2db143d24e462b500be21",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-010",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000129",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000174",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:18+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-DES-009",
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000136",
+        "manual_review_assertion_id": "ASRT-P1-DES-DEV-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000175",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-DES-DEV-001-0001.json",
+      "digest": "d6e32aea258446c021a2674076d187a10f742d719874a6564a78b4d1c6c4a7be",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "DevelopAgent",
+      "generated_at": "2026-07-24T12:49:19+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-DES-DEV-001",
+        "AC-P1-COMPILER-003",
+        "design:DevelopAgent",
+        "MRQ-SCOPE",
+        "RC-DES-002",
+        "RC-DES-003",
+        "RC-DES-004",
+        "RC-DES-005",
+        "RC-DES-006",
+        "RC-DES-007",
+        "RC-DES-008",
+        "RC-DES-009",
+        "RC-DES-010",
+        "RC-DES-011",
+        "RC-ENG-001"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "MARKDOWN",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000126",
+          "EVD-000127",
+          "EVD-000133",
+          "EVD-000128",
+          "EVD-000134",
+          "EVD-000135",
+          "EVD-000129",
+          "EVD-000136"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000176",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:49:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-006",
+        "ASRT-P1-DES-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000130",
+        "manual_review_assertion_id": "ASRT-P1-DES-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000177",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:49:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-004",
+        "RC-IMP-005",
+        "ASRT-P1-DES-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000126",
+        "manual_review_assertion_id": "ASRT-P1-DES-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000178",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:49:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "ASRT-P1-DES-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000127",
+        "manual_review_assertion_id": "ASRT-P1-DES-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000179",
+      "type": "requirement_ref",
+      "ref": "evidence/snapshots/requirement-analysis-R02.md",
+      "digest": "d38b7f83f22221c7b4de13e4736999ce9567f240705e66650efe25931725efbb",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:49:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-003",
+        "RC-IMP-005",
+        "ASRT-P1-DES-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000131",
+        "manual_review_assertion_id": "ASRT-P1-DES-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000180",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:49:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "ASRT-P1-DES-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000133",
+        "manual_review_assertion_id": "ASRT-P1-DES-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000181",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/test-seams-R01.md",
+      "digest": "f900691468e9e14dfc68331ede981a401998c296d2a2db143d24e462b500be21",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:49:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-IMP-006",
+        "ASRT-P1-DES-IMP-001",
+        "AC-P1-COMPILER-005"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000129",
+        "manual_review_assertion_id": "ASRT-P1-DES-IMP-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000182",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-DES-IMP-001-0001.json",
+      "digest": "ce959c0e346f2b13562b3798a16af72cd671498cfcb70df67e4dee745554a42d",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "ImpactAnalysisReviewAgent",
+      "generated_at": "2026-07-24T12:49:20+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-DES-IMP-001",
+        "AC-P1-COMPILER-005",
+        "design:ImpactAnalysisReviewAgent",
+        "MRQ-RISK",
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-005",
+        "RC-IMP-006"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "MARKDOWN",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000130",
+          "EVD-000126",
+          "EVD-000127",
+          "EVD-000131",
+          "EVD-000133",
+          "EVD-000129"
+        ]
+      }
+    },
+    {
+      "evidence_id": "EVD-000183",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-007",
+        "RC-BFLOW-003",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000127",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000184",
+      "type": "diagram_ref",
+      "ref": "evidence/snapshots/dependency-graph-R02.md",
+      "digest": "4a0fb3cc210057902dccb6beaa160ea05f910e6a2929fac61e32141dca939dc8",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-007",
+        "RC-BFLOW-003",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000133",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000185",
+      "type": "design_ref",
+      "ref": "evidence/snapshots/design-R01.md",
+      "digest": "609100b2d9888d5182ca7a785bfe4c371543f784a612257b5fb897cbc70b0bc0",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-001",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000126",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000186",
+      "type": "flow_ref",
+      "ref": "evidence/snapshots/COMPILER_flow-R02.yaml",
+      "digest": "407047ee2cafccfcd72fd06b803876691a6203e11d6cff16218a1129185568d1",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-003",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000132",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000187",
+      "type": "schema_ref",
+      "ref": "evidence/snapshots/api-contract-R01.md",
+      "digest": "9fe33c83a8cc31d5de817393f7e6950be8b86f6418ef3cded6f1e16e89ee0465",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-002",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000128",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000188",
+      "type": "test_ref",
+      "ref": "evidence/snapshots/test-seams-R01.md",
+      "digest": "f900691468e9e14dfc68331ede981a401998c296d2a2db143d24e462b500be21",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-007",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000129",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000189",
+      "type": "model_ref",
+      "ref": "evidence/snapshots/business-model-R01.yaml",
+      "digest": "961bab773ca8f018633ad154d7fd763c70bbce11478d39de2464d094c33fa58b",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-BFLOW-004",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000130",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000190",
+      "type": "runtime_ref",
+      "ref": "evidence/snapshots/architecture-R01.md",
+      "digest": "f3f22c8561acebd2e2923c3451d57987fc2774c237ca9dec89621ca88de0e2c3",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "P1-COMPILER-F01",
+        "RC-XMOD-006",
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_source_evidence_id": "EVD-000136",
+        "manual_review_assertion_id": "ASRT-P1-DES-XMOD-001"
+      }
+    },
+    {
+      "evidence_id": "EVD-000191",
+      "type": "decision_ref",
+      "ref": "evidence/manual-review/ASRT-P1-DES-XMOD-001-0001.json",
+      "digest": "dd98f1064c24000f9c2aa153b37ab32774e8b549d26d6b2894b18be996ef4e7a",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "phase": "design",
+      "generated_by_agent": "CrossModuleIntegrationReviewAgent",
+      "generated_at": "2026-07-24T12:49:21+00:00",
+      "command_result_ref": "",
+      "command_result_digest": "",
+      "scope_refs": [
+        "ASRT-P1-DES-XMOD-001",
+        "AC-P1-COMPILER-004",
+        "design:CrossModuleIntegrationReviewAgent",
+        "MRQ-RISK",
+        "MRQ-OTHER",
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007",
+        "RC-BFLOW-003",
+        "RC-BFLOW-004"
+      ],
+      "status": "ACTIVE",
+      "superseded_by": "",
+      "metadata": {
+        "manual_review_mode": "MARKDOWN",
+        "manual_review_result": "PASSED",
+        "selected_evidence_ids": [
+          "EVD-000127",
+          "EVD-000133",
+          "EVD-000126",
+          "EVD-000132",
+          "EVD-000128",
+          "EVD-000129",
+          "EVD-000130",
+          "EVD-000136"
+        ]
+      }
+    }
+  ]
+}

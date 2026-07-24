@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P1-DES-TD-001",
+  "acceptance_id": "AC-P1-COMPILER-006",
+  "reviewer": "TestDesignAgent",
+  "confirmed_by": "TestDesignAgent",
+  "confirmation_mode": "MARKDOWN",
+  "drafted_by_agent": "",
+  "review_phase": "design",
+  "review_revision": "DESIGN-R01@a7a6820a381e",
+  "assertion_phase": "design",
+  "assertion_revision": "DESIGN-R01@a7a6820a381e",
+  "result": "PASSED",
+  "conclusion_mode": "GENERATED",
+  "questions": [
+    {
+      "question_id": "MRQ-SCOPE",
+      "criterion_ids": [
+        "RC-DES-010"
+      ],
+      "answer": "YES",
+      "detail": ""
+    },
+    {
+      "question_id": "MRQ-VERIFY",
+      "criterion_ids": [
+        "RC-TEST-001",
+        "RC-TEST-002",
+        "RC-TEST-003",
+        "RC-TEST-004",
+        "RC-TEST-005",
+        "RC-TEST-006",
+        "RC-TEST-007"
+      ],
+      "answer": "YES",
+      "detail": ""
+    }
+  ],
+  "selected_evidence_ids": [
+    "EVD-000129",
+    "EVD-000126",
+    "EVD-000127",
+    "EVD-000131",
+    "EVD-000133"
+  ],
+  "issue_ids": [],
+  "summary": "PASSED：六项合同 Case、Pass 单测、架构测试、安全测试、并发与禁止副作用均有明确接缝和通过标准。",
+  "notes": [],
+  "confirmed_at": "2026-07-24T12:49:17+00:00"
+}

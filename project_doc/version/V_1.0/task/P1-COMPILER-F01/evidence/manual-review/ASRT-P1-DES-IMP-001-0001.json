@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P1-DES-IMP-001",
+  "acceptance_id": "AC-P1-COMPILER-005",
+  "reviewer": "ImpactAnalysisReviewAgent",
+  "confirmed_by": "ImpactAnalysisReviewAgent",
+  "confirmation_mode": "MARKDOWN",
+  "drafted_by_agent": "",
+  "review_phase": "design",
+  "review_revision": "DESIGN-R01@a7a6820a381e",
+  "assertion_phase": "design",
+  "assertion_revision": "DESIGN-R01@a7a6820a381e",
+  "result": "PASSED",
+  "conclusion_mode": "GENERATED",
+  "questions": [
+    {
+      "question_id": "MRQ-RISK",
+      "criterion_ids": [
+        "RC-IMP-001",
+        "RC-IMP-002",
+        "RC-IMP-003",
+        "RC-IMP-004",
+        "RC-IMP-005",
+        "RC-IMP-006"
+      ],
+      "answer": "YES",
+      "detail": ""
+    }
+  ],
+  "selected_evidence_ids": [
+    "EVD-000130",
+    "EVD-000126",
+    "EVD-000127",
+    "EVD-000131",
+    "EVD-000133",
+    "EVD-000129"
+  ],
+  "issue_ids": [],
+  "summary": "PASSED：现有全局 Config、模块依赖、Legacy 兼容、后续 P2～P8 扩展与回退影响均已识别并给出控制。",
+  "notes": [],
+  "confirmed_at": "2026-07-24T12:49:20+00:00"
+}

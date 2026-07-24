@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P1-REQCONF-RA-001",
+  "acceptance_id": "AC-P1-COMPILER-001",
+  "reviewer": "RequirementAnalysisAgent",
+  "confirmed_by": "RequirementAnalysisAgent",
+  "confirmation_mode": "AGENT_DRAFT",
+  "drafted_by_agent": "ProjectManagerAgent",
+  "review_phase": "requirement_confirmation",
+  "review_revision": "REQCONF-R01@ac6d126dafb3",
+  "assertion_phase": "requirement_confirmation",
+  "assertion_revision": "REQCONF-R01@ac6d126dafb3",
+  "result": "PASSED",
+  "conclusion_mode": "GENERATED",
+  "questions": [
+    {
+      "question_id": "MRQ-SCOPE",
+      "criterion_ids": [
+        "RC-REQ-001",
+        "RC-REQ-002",
+        "RC-REQ-003",
+        "RC-REQ-004",
+        "RC-REQ-005"
+      ],
+      "answer": "YES",
+      "detail": "目标、现状、范围内外、约束、失败不发布和关键决策均由 R01 与决策日志闭合。"
+    }
+  ],
+  "selected_evidence_ids": [
+    "EVD-000001",
+    "EVD-000002",
+    "EVD-000003"
+  ],
+  "issue_ids": [],
+  "summary": "需求确认可进入需求分析；未发现阻断歧义。",
+  "notes": [],
+  "confirmed_at": "2026-07-24T12:10:00+00:00"
+}

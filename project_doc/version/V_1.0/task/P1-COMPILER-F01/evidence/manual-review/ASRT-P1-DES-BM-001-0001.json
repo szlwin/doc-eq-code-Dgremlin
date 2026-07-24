@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P1-DES-BM-001",
+  "acceptance_id": "AC-P1-COMPILER-003",
+  "reviewer": "BusinessModelReviewAgent",
+  "confirmed_by": "BusinessModelReviewAgent",
+  "confirmation_mode": "MARKDOWN",
+  "drafted_by_agent": "",
+  "review_phase": "design",
+  "review_revision": "DESIGN-R01@a7a6820a381e",
+  "assertion_phase": "design",
+  "assertion_revision": "DESIGN-R01@a7a6820a381e",
+  "result": "PASSED",
+  "conclusion_mode": "GENERATED",
+  "questions": [
+    {
+      "question_id": "MRQ-BOUNDARY",
+      "criterion_ids": [
+        "RC-BM-001",
+        "RC-DES-001"
+      ],
+      "answer": "YES",
+      "detail": ""
+    },
+    {
+      "question_id": "MRQ-INVARIANT",
+      "criterion_ids": [
+        "RC-BM-003",
+        "RC-BM-004"
+      ],
+      "answer": "YES",
+      "detail": ""
+    },
+    {
+      "question_id": "MRQ-EXCEPTION",
+      "criterion_ids": [
+        "RC-BM-005",
+        "RC-BM-006"
+      ],
+      "answer": "YES",
+      "detail": ""
+    },
+    {
+      "question_id": "MRQ-OTHER",
+      "criterion_ids": [
+        "RC-BFLOW-004"
+      ],
+      "answer": "YES",
+      "detail": ""
+    }
+  ],
+  "selected_evidence_ids": [
+    "EVD-000130",
+    "EVD-000126",
+    "EVD-000127",
+    "EVD-000131",
+    "EVD-000133",
+    "EVD-000128",
+    "EVD-000132"
+  ],
+  "issue_ids": [],
+  "summary": "PASSED：CompilationSession 与 EngineContext 边界、不变量、状态机、错误和只读 Legacy 投影在设计中保持一致。",
+  "notes": [],
+  "confirmed_at": "2026-07-24T12:49:14+00:00"
+}

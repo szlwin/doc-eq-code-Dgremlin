@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P1-DES-DEV-001",
+  "acceptance_id": "AC-P1-COMPILER-003",
+  "reviewer": "DevelopAgent",
+  "confirmed_by": "DevelopAgent",
+  "confirmation_mode": "MARKDOWN",
+  "drafted_by_agent": "",
+  "review_phase": "design",
+  "review_revision": "DESIGN-R01@a7a6820a381e",
+  "assertion_phase": "design",
+  "assertion_revision": "DESIGN-R01@a7a6820a381e",
+  "result": "PASSED",
+  "conclusion_mode": "GENERATED",
+  "questions": [
+    {
+      "question_id": "MRQ-SCOPE",
+      "criterion_ids": [
+        "RC-DES-002",
+        "RC-DES-003",
+        "RC-DES-004",
+        "RC-DES-005",
+        "RC-DES-006",
+        "RC-DES-007",
+        "RC-DES-008",
+        "RC-DES-009",
+        "RC-DES-010",
+        "RC-DES-011",
+        "RC-ENG-001"
+      ],
+      "answer": "YES",
+      "detail": ""
+    }
+  ],
+  "selected_evidence_ids": [
+    "EVD-000126",
+    "EVD-000127",
+    "EVD-000133",
+    "EVD-000128",
+    "EVD-000134",
+    "EVD-000135",
+    "EVD-000129",
+    "EVD-000136"
+  ],
+  "issue_ids": [],
+  "summary": "PASSED：Java 8 API、数据结构、Pass 输入输出、错误契约和 T01～T13 顺序足以直接进入实施计划，未依赖未实现运行时。",
+  "notes": [],
+  "confirmed_at": "2026-07-24T12:49:19+00:00"
+}

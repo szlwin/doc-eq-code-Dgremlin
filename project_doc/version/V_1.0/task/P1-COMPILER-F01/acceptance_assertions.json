@@ -1,0 +1,467 @@
+{
+  "schema_version": 1,
+  "target_id": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "assertions": [
+    {
+      "assertion_id": "ASRT-P1-REQCONF-RA-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "RequirementAnalysisAgent 独立确认 P1 需求目标、范围、可观察验收和关键决策闭合",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-REQCONF-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000007"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-07-24T12:10:00+00:00",
+      "reason": "需求确认可进入需求分析；未发现阻断歧义。"
+    },
+    {
+      "assertion_id": "ASRT-P1-REQCONF-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TestDesignAgent 独立确认 P1 正常、边界、失败和禁止副作用均具备可执行测试方向",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R01@ac6d126dafb3",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-REQCONF-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000010"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-24T12:10:01+00:00",
+      "reason": "需求确认具备后续需求分析与测试设计基础。"
+    },
+    {
+      "assertion_id": "ASRT-P1-REQAN-BM-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "BusinessModelAgent 独立确认需求分析可形成统一语言、领域对象、不变量和状态模型，且未提前实现 P2+ 语义",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000032"
+      ],
+      "verified_by_agent": "BusinessModelAgent",
+      "verified_at": "2026-07-24T12:27:52+00:00",
+      "reason": "PASSED：需求分析已提供统一术语、候选领域对象、七步编译状态流、不变量边界和错误场景，足以进入正式业务建模；未引入 P2+ 运行语义。"
+    },
+    {
+      "assertion_id": "ASRT-P1-REQAN-DES-001",
+      "acceptance_id": "AC-P1-COMPILER-002",
+      "statement": "DesignAgent 独立确认需求边界、编译流程、模块职责与失败语义足以进入架构设计",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000043"
+      ],
+      "verified_by_agent": "DesignAgent",
+      "verified_at": "2026-07-24T12:27:53+00:00",
+      "reason": "PASSED：编译链路、模块职责、失败传播、发布原子性及兼容边界已达到设计输入标准。"
+    },
+    {
+      "assertion_id": "ASRT-P1-REQAN-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TestDesignAgent 独立确认所有验收标准均有正常、边界、失败与禁止副作用测试方向",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000051"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-24T12:27:54+00:00",
+      "reason": "PASSED：六项验收标准均有正常、边界、失败和禁止副作用测试方向，且可形成自动化合同测试。"
+    },
+    {
+      "assertion_id": "ASRT-P1-REQAN-IMP-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "ImpactAnalysisReviewAgent 独立确认模块影响、兼容边界、依赖方向和后续阶段影响已完整识别",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000057"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-07-24T12:27:56+00:00",
+      "reason": "PASSED：影响模块、兼容窗口、依赖方向和 P2～P8 后续影响已完整登记，无未识别的阻断风险。"
+    },
+    {
+      "assertion_id": "ASRT-P1-REQAN-XMOD-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "CrossModuleIntegrationReviewAgent 独立确认跨模块编译链路、失败传播和交付边界可追踪且无循环依赖",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R02@d38b7f83f222",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000072"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-07-24T12:30:43+00:00",
+      "reason": "PASSED：CONTEXT、COMPILER、XML、YAML、STARTER、DEMO 的跨模块交付边界、失败传播、观测和恢复路径可追踪，依赖方向无循环。"
+    },
+    {
+      "assertion_id": "ASRT-P1-BM-REQ-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "RequirementReviewAgent 独立确认业务模型完整覆盖已确认需求且未发生范围漂移",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R01@52a58f20cb32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000089"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-07-24T12:40:11+00:00",
+      "reason": "PASSED：业务模型覆盖六项 AC 与 P1 边界，未引入 P2+ 运行语义。"
+    },
+    {
+      "assertion_id": "ASRT-P1-BM-BMR-001",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "BusinessModelReviewAgent 独立确认统一语言、聚合、不变量、状态、命令事件错误一致",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R01@52a58f20cb32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000098"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-07-24T12:40:13+00:00",
+      "reason": "PASSED：统一语言、聚合、状态机、不变量、服务策略与业务错误形成一致模型。"
+    },
+    {
+      "assertion_id": "ASRT-P1-BM-DES-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "DesignReviewAgent 独立确认业务模型足以支撑模块、一致性、错误恢复与测试接缝设计",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R01@52a58f20cb32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000108"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-07-24T12:40:15+00:00",
+      "reason": "PASSED：模型提供足够的模块边界、一致性、错误恢复和测试接缝设计输入。"
+    },
+    {
+      "assertion_id": "ASRT-P1-BM-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TestDesignAgent 独立确认模型规则、状态、异常与安全边界均可转换为自动化 Case",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R01@52a58f20cb32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000113"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-24T12:40:16+00:00",
+      "reason": "PASSED：业务模型全部规则、状态、异常、安全与跨模块边界可转为自动化 Case。"
+    },
+    {
+      "assertion_id": "ASRT-P1-BM-IMP-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "ImpactAnalysisReviewAgent 独立确认关联生命周期、兼容处置与影响传播完整",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R01@52a58f20cb32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000120"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-07-24T12:40:18+00:00",
+      "reason": "PASSED：关联对象生命周期、兼容处置、旧 Context 保留与影响传播均完整。"
+    },
+    {
+      "assertion_id": "ASRT-P1-BM-XMOD-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "CrossModuleIntegrationReviewAgent 独立确认模型命令、事件、失败恢复与跨模块流程映射一致",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R01@52a58f20cb32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000125"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-07-24T12:40:20+00:00",
+      "reason": "PASSED：跨模块参与者、顺序、失败、不发布、恢复与观测和业务模型一致。"
+    },
+    {
+      "assertion_id": "ASRT-P1-DES-REQ-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "RequirementReviewAgent 独立确认设计完整覆盖需求与验收且未发生范围漂移",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000142"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-07-24T12:49:13+00:00",
+      "reason": "PASSED：设计逐项覆盖 P1 六项验收与 T01～T13，范围外语义明确 deferred，需求语义、失败不发布和兼容约束无漂移。"
+    },
+    {
+      "assertion_id": "ASRT-P1-DES-BM-001",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "BusinessModelReviewAgent 独立确认设计保持聚合、不变量、状态与错误模型一致",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000150"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-07-24T12:49:14+00:00",
+      "reason": "PASSED：CompilationSession 与 EngineContext 边界、不变量、状态机、错误和只读 Legacy 投影在设计中保持一致。"
+    },
+    {
+      "assertion_id": "ASRT-P1-DES-ARCH-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "ArchitectureReviewAgent 独立确认模块依赖、生命周期、扩展点与隔离边界可实施",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000160"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-07-24T12:49:16+00:00",
+      "reason": "PASSED：模块依赖单向、核心生命周期和扩展点明确；安全、确定性、隔离、恢复和演进策略具备可验证控制。"
+    },
+    {
+      "assertion_id": "ASRT-P1-DES-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TestDesignAgent 独立确认设计接缝覆盖正常、边界、失败、安全与禁止副作用",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000166"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-24T12:49:17+00:00",
+      "reason": "PASSED：六项合同 Case、Pass 单测、架构测试、安全测试、并发与禁止副作用均有明确接缝和通过标准。"
+    },
+    {
+      "assertion_id": "ASRT-P1-DES-DEV-001",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "DevelopAgent 独立确认 API、Pass、数据结构和迁移顺序可直接实施且 Java 8 可行",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000175"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-07-24T12:49:19+00:00",
+      "reason": "PASSED：Java 8 API、数据结构、Pass 输入输出、错误契约和 T01～T13 顺序足以直接进入实施计划，未依赖未实现运行时。"
+    },
+    {
+      "assertion_id": "ASRT-P1-DES-IMP-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "ImpactAnalysisReviewAgent 独立确认兼容、模块影响、迁移与后续阶段影响完整",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000182"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-07-24T12:49:20+00:00",
+      "reason": "PASSED：现有全局 Config、模块依赖、Legacy 兼容、后续 P2～P8 扩展与回退影响均已识别并给出控制。"
+    },
+    {
+      "assertion_id": "ASRT-P1-DES-XMOD-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "CrossModuleIntegrationReviewAgent 独立确认跨模块交付、失败传播、观测与恢复路径一致",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R01@a7a6820a381e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000191"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-07-24T12:49:21+00:00",
+      "reason": "PASSED：starter、frontends、compiler、context 与 demo 的交付物、调用顺序、失败传播、观测和旧 Context 保留路径一致且无循环。"
+    }
+  ]
+}

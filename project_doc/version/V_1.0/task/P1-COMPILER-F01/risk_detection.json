@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "target_id": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "input_revision": "",
+  "input_files": [],
+  "input_digest": "",
+  "status": "NOT_SCANNED",
+  "scanned_by_agent": "",
+  "scanned_at": "",
+  "detections": [],
+  "waivers": []
+}

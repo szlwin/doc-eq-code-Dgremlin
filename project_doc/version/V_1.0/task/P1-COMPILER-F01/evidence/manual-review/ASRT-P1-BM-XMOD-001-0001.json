@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P1-BM-XMOD-001",
+  "acceptance_id": "AC-P1-COMPILER-004",
+  "reviewer": "CrossModuleIntegrationReviewAgent",
+  "confirmed_by": "CrossModuleIntegrationReviewAgent",
+  "confirmation_mode": "AGENT_DRAFT",
+  "drafted_by_agent": "ProjectManagerAgent",
+  "review_phase": "business_model",
+  "review_revision": "BM-R01@52a58f20cb32",
+  "assertion_phase": "business_model",
+  "assertion_revision": "BM-R01@52a58f20cb32",
+  "result": "PASSED",
+  "conclusion_mode": "GENERATED",
+  "questions": [
+    {
+      "question_id": "MRQ-RISK",
+      "criterion_ids": [
+        "RC-XMOD-001",
+        "RC-XMOD-002",
+        "RC-XMOD-003",
+        "RC-XMOD-004",
+        "RC-XMOD-005",
+        "RC-XMOD-006",
+        "RC-XMOD-007"
+      ],
+      "answer": "YES",
+      "detail": "frontends、compiler、context、starter、demo 的 owner、顺序、契约、幂等、失败和恢复均映射到状态机与 CMI。"
+    },
+    {
+      "question_id": "MRQ-OTHER",
+      "criterion_ids": [
+        "RC-BFLOW-003",
+        "RC-BFLOW-004"
+      ],
+      "answer": "YES",
+      "detail": "主路径、失败路径、旧 Context 继续可用与重新编译恢复均有 flow/model/design/test/runtime 证据。"
+    }
+  ],
+  "selected_evidence_ids": [
+    "EVD-000079",
+    "EVD-000080",
+    "EVD-000082",
+    "EVD-000078"
+  ],
+  "issue_ids": [],
+  "summary": "PASSED：跨模块参与者、顺序、失败、不发布、恢复与观测和业务模型一致。",
+  "notes": [],
+  "confirmed_at": "2026-07-24T12:40:20+00:00"
+}
