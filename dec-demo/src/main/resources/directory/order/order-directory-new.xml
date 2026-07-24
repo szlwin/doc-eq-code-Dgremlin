@@ -82,37 +82,23 @@
         <!-- 支付数据与支付结果 -->
 
         <!--
-            PaymentInfo 已由发起支付操作产生。
-            startPay 中的 produce 通过 information-ref 与该信息建立对应关系。
+            PaymentInfo 由 startPay 的 pay 规则产生。
+            startPay 中的 produce 通过 information-ref 与该 Information 建立对应关系。
         -->
         <information
-                name="payment.hasPayment"
+                name="payment.paymentInfo"
                 model-ref="OrderInfo"
                 rule-ref="hasPaymentInfo"/>
 
         <!--
-            PayResult 已由接收支付结果操作产生。
-            receivePayResult 中的 produce 通过 information-ref 与该信息建立对应关系。
+            PayResult 由 receivePayResult 规则产生。
+            receivePayResult 中的 produce 通过 information-ref 与该 Information 建立对应关系。
         -->
         <information
                 name="payment.hasResult"
                 model-ref="OrderInfo"
                 rule-ref="hasPayResult"/>
 
-
-        <information
-                name="payment.paymentInfo"
-                model-ref="OrderInfo"
-                rule-ref="hasPayMentInfo"/>
-
-        <!--
-            PayResult表示支付成功。
-
-            rule-ref内部只能根据OrderInfo中的PayResult数据判断，
-            例如：
-
-                payResult.status = SUCCESS
-        -->
         <information
                 name="payment.success"
                 model-ref="OrderInfo"
@@ -249,11 +235,12 @@
 
                         <!--
                             ref 表示实际产生的数据。
-                            information-ref 表示该数据在信息树中对应的原子 Information。
+                            information-ref 表示该数据在信息树中对应的 Information。
+                            PaymentInfo 后续作为信息使用，因此必须配置 information-ref。
                         -->
                         <produce
                                 ref="PaymentInfo"
-                                information-ref="payment.hasPayment"/>
+                                information-ref="payment.paymentInfo"/>
 
                     </produce-info>
 
@@ -348,7 +335,7 @@
                     <produce-info>
 
                         <!--
-                            PyaError 当前仅作为数据结果使用，
+                            PyaError 当前仅作为记录数据使用，
                             未在信息树中定义对应 Information，因此不配置 information-ref。
                         -->
                         <produce ref="PyaError"/>
