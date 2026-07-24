@@ -6,7 +6,7 @@
         legacy system/test-rule/orm-rule.xml 中 save-Order 的订单部分：
         只保存订单主数据和订单明细。
     -->
-    <rule-view-info name="save-Order" view-ref="OrderInfo">
+    <rule-view-info system="order" name="save-Order" view-ref="OrderInfo">
 
         <rule
                 name="insertOrder"
@@ -20,7 +20,7 @@
 
     </rule-view-info>
 
-    <rule-view-info name="isWaitPay" view-ref="OrderInfo">
+    <rule-view-info system="order" name="isWaitPay" view-ref="OrderInfo">
         <rule
                 name="checkWaitPay"
                 type="checkPattern"
@@ -31,7 +31,7 @@
         订单状态本身由 Information.change-data 物化。
         下列 RuleView 用于订单模块在支付结果后的附加业务处理。
     -->
-    <rule-view-info name="confirmPaySuccess" view-ref="OrderInfo">
+    <rule-view-info system="order" name="confirmPaySuccess" view-ref="OrderInfo">
         <rule name="confirmPaySuccess" type="grammer">
             <customer-process>
                 <![CDATA[
@@ -41,7 +41,7 @@
         </rule>
     </rule-view-info>
 
-    <rule-view-info name="confirmPayError" view-ref="OrderInfo">
+    <rule-view-info system="order" name="confirmPayError" view-ref="OrderInfo">
         <rule name="confirmPayError" type="grammer">
             <customer-process>
                 <![CDATA[
