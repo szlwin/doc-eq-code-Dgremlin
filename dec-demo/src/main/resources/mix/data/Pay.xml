@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<orm-data-mapping>
+
+    <data name="pay">
+
+        <property-info>
+            <property name="id" type="int" desc="支付主键"/>
+            <property name="userId" type="int" desc="用户主键"/>
+            <property name="orderId" type="int" desc="订单主键"/>
+            <property name="totalPrice" type="decimal" desc="支付总价"/>
+            <property name="totalAmount" type="decimal" desc="支付总金额"/>
+            <property name="payStatus" type="int" desc="支付状态：0待处理、1成功、2失败"/>
+            <property name="resultCode" type="string" desc="支付结果编码"/>
+            <property name="resultMessage" type="string" desc="支付结果说明"/>
+            <property name="createDate" type="date" desc="创建时间"/>
+        </property-info>
+
+        <table-info>
+            <table
+                    name="pay_info"
+                    data-source="data1"
+                    key="p_id"
+                    key-type="increment">
+
+                <column name="p_id" ref-property="id"/>
+                <column name="p_userId" ref-property="userId"/>
+                <column name="p_orderId" ref-property="orderId"/>
+                <column name="p_totalPrice" ref-property="totalPrice"/>
+                <column name="p_totalAmount" ref-property="totalAmount"/>
+                <column name="p_status" ref-property="payStatus"/>
+                <column name="p_resultCode" ref-property="resultCode"/>
+                <column name="p_resultMessage" ref-property="resultMessage"/>
+                <column name="p_date" ref-property="createDate" type="timestamp"/>
+
+            </table>
+        </table-info>
+
+    </data>
+
+    <data name="payDetail">
+
+        <property-info>
+            <property name="id" type="int" desc="支付明细主键"/>
+            <property name="userId" type="int" desc="用户主键"/>
+            <property name="payId" type="int" desc="支付主键"/>
+            <property name="productId" type="int" desc="商品主键"/>
+            <property name="productName" type="string" desc="商品名称"/>
+            <property name="payPrice" type="decimal" desc="支付价格"/>
+            <property name="payAmount" type="decimal" desc="支付金额"/>
+            <property name="createDate" type="date" desc="创建时间"/>
+        </property-info>
+
+        <table-info>
+            <table
+                    name="pay_detail_info"
+                    data-source="data1"
+                    key="p_d_id"
+                    key-type="increment">
+
+                <column name="p_d_id" ref-property="id"/>
+                <column name="p_payId" ref-property="payId"/>
+                <column name="p_userId" ref-property="userId"/>
+                <column name="p_productId" ref-property="productId"/>
+                <column name="p_productName" ref-property="productName"/>
+                <column name="p_payPrice" ref-property="payPrice"/>
+                <column name="p_payAmount" ref-property="payAmount"/>
+                <column name="p_date" ref-property="createDate" type="timestamp"/>
+
+            </table>
+        </table-info>
+
+    </data>
+
+</orm-data-mapping>
