@@ -8,6 +8,7 @@ import dec.expand.declare.business.DefaultBusinessDeclare;
 import dec.expand.declare.conext.utils.ContextUtils;
 import dec.expand.declare.service.ExecuteResult;
 import dec.expand.declare.system.SystemBuilder;
+import dec.expand.declare.conext.utils.YamlContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,7 +161,8 @@ public class TestOrderBusiness {
 
     public static void initContext() throws Exception {
         //ConfigInit.init();
-        ContextUtils.loadConfig(new String[]{"classpath:declaration/declare-config.xml"});
+        YamlContextUtils.loadConfig(new String[]{"classpath:yaml/declaration/declare-config.yaml"});
+        //ContextUtils.loadConfig(new String[]{"classpath:declaration/declare-config.xml"});
 
     }
 

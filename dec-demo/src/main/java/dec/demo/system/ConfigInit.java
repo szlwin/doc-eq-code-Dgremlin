@@ -4,6 +4,7 @@ package dec.demo.system;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import dec.context.parse.xml.exception.XMLParseException;
+import dec.context.parse.yaml.parse.config.YamlConfigUtil;
 import dec.core.context.config.manager.ConfigManager;
 import dec.core.context.config.model.config.ConfigInfo;
 import dec.core.context.config.model.data.TableInfo;
@@ -26,8 +27,8 @@ public class ConfigInit {
 	
 	public static void init() throws Exception {
 		ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
-		ConfigUtil.parseConfigInfo("classpath:system/orm-config.xml");
-
+		//ConfigUtil.parseConfigInfo("classpath:system/orm-config.xml");
+		YamlConfigUtil.parseConfigInfo("classpath:yaml/system/orm-config.yaml");
 		DataSourceManager.addDataSource("data1", getDataSource());
 		DataSourceManager.addDataSource("data2", getDataSource());
 
@@ -45,9 +46,9 @@ public class ConfigInit {
 		HikariConfig hikariConfig = new HikariConfig();
 		// 设置数据库信息
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		hikariConfig.setJdbcUrl("jdbc:mysql://xxx.xxx.xxx.xxx:3306/demo-test2");
+		hikariConfig.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/demo-test2");
 		hikariConfig.setUsername("root");
-		hikariConfig.setPassword("root");
+		hikariConfig.setPassword("mysqldb");
 		// 设置可以获取tables remarks信息
 		//hikariConfig.addDataSourceProperty("useInformationSchema", "true");
 		hikariConfig.setMinimumIdle(2);

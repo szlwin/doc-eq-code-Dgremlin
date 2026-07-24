@@ -61,7 +61,7 @@ public class YamlRuleFileParser implements FileParser<List<RuleViewInfo>> {
         rule.setName(YamlSupport.requireStr(node, "rule.name", "name"));
         rule.setType(type);
         rule.setProperty(YamlSupport.str(node, "property"));
-        rule.setGrammer(YamlSupport.str(node, "process", "customer-process", "customerProcess", "grammer"));
+        rule.setGrammer(normalizeGrammer(YamlSupport.str(node, "process", "customer-process", "customerProcess", "grammer")));
         rule.setErrorInfo(parseError(YamlSupport.first(node, "error", "error-info", "errorInfo")));
         rule.setCustomerInfo(parseCustomerInfo(YamlSupport.first(node, "customer", "customer-info", "customerInfo")));
 
@@ -87,6 +87,13 @@ public class YamlRuleFileParser implements FileParser<List<RuleViewInfo>> {
             return sql;
         }
         return new Convert(sql, viewData).convert();
+    }
+
+    private String normalizeGrammer(String grammer) {
+        if (grammer == null) {
+            return null;
+        }
+        return grammer.replaceAll("\\s+", " ").trim();
     }
 
     private RuleDefineInfo createRule(String type) throws YAMLParseException {

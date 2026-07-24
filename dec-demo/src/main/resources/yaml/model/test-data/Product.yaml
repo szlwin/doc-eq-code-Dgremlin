@@ -1,0 +1,29 @@
+data:
+  name: product
+  properties:
+    id: int
+    orderId: int
+    name: string
+    count: int
+    price: double
+  tables:
+    - name: product_info
+      dataSource: data1
+      key: p_id
+      keyType: increment
+      columns:
+        p_id: id
+        p_orderId: orderId
+        p_name: name
+        p_count: count
+        p_price: price
+    - name: product_info
+      dataSource: data2
+      key: p_id
+      keyType: increment
+      columns:
+        p_id: id
+        p_orderId: orderId
+        p_name: name
+        p_count: count
+        p_price: price

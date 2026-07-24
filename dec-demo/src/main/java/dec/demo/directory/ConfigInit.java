@@ -4,6 +4,7 @@ package dec.demo.directory;
 import com.alibaba.fastjson.JSON;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import dec.context.parse.yaml.parse.config.YamlConfigUtil;
 import dec.core.context.config.model.directory.DirectoryInfo;
 import dec.core.context.config.utils.ConfigContextUtil;
 import dec.core.starter.common.ConfigUtil;
@@ -24,8 +25,8 @@ public class ConfigInit {
 	
 	public static void init() throws Exception {
 		ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
-		ConfigUtil.parseConfigInfo("classpath:directory/orm-config.xml");
-
+		//ConfigUtil.parseConfigInfo("classpath:directory/orm-config.xml");
+		YamlConfigUtil.parseConfigInfo("classpath:yaml/directory/orm-config.yaml");
 		DataSourceManager.addDataSource("data1", getDataSource());
 		DataSourceManager.addDataSource("data2", getDataSource());
 

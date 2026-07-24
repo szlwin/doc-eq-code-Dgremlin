@@ -4,6 +4,7 @@ import dec.context.parse.yaml.exception.YAMLParseException;
 import dec.context.parse.yaml.parse.FileParser;
 import dec.context.parse.yaml.parse.YamlSupport;
 import dec.context.parse.yaml.parse.data.YamlDataFileParser;
+import dec.context.parse.yaml.parse.directory.YamlDirectoryFileParser;
 import dec.context.parse.yaml.parse.rule.YamlRuleFileParser;
 import dec.context.parse.yaml.parse.view.YamlViewFileParser;
 import dec.core.context.config.manager.ConfigManager;
@@ -13,6 +14,7 @@ import dec.core.context.config.model.connection.Connection;
 import dec.core.context.config.model.connection.ConnectionInfo;
 import dec.core.context.config.model.data.Data;
 import dec.core.context.config.model.datasource.DataSource;
+import dec.core.context.config.model.directory.DirectoryInfo;
 import dec.core.context.config.model.rule.RuleViewInfo;
 import dec.core.context.config.model.view.ViewData;
 import dec.core.context.config.utils.ConfigContextUtil;
@@ -40,6 +42,7 @@ public class YamlConfigFileParser implements FileParser<ConfigInfo> {
         parseDataFiles(configInfo, root);
         parseViewFiles(configInfo, root);
         parseRuleFiles(configInfo, root);
+        parseDirectoryFiles(configInfo, root);
         log.info("------Dec yaml init End------");
         return configInfo;
     }
@@ -136,6 +139,15 @@ public class YamlConfigFileParser implements FileParser<ConfigInfo> {
             List<RuleViewInfo> ruleViewInfoList = new YamlRuleFileParser().parse(path);
             for (RuleViewInfo ruleViewInfo : ruleViewInfoList) {
                 configInfo.addRuleViewInfo(ruleViewInfo);
+            }
+        }
+    }
+
+    private void parseDirectoryFiles(ConfigInfo configInfo, Map<String, Object> root) throws YAMLParseException {
+        for (String path : filePaths(root, ConfigInfo.DIRECTORY_FILE_INFO, "directoryFiles")) {
+            List<DirectoryInfo> directoryList = new YamlDirectoryFileParser().parse(path);
+            for (DirectoryInfo directoryInfo : directoryList) {
+                configInfo.add(Config.DIRECTORY_CONFIG, directoryInfo);
             }
         }
     }

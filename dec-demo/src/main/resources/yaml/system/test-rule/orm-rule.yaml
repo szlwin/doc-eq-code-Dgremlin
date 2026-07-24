@@ -1,0 +1,26 @@
+ruleViews:
+  - name: save-Order
+    viewRef: OrderInfo
+    rules:
+      - name: insertOrder
+        type: insert
+        property: OrderInfo
+
+      - name: insertOrderDetail
+        type: insert
+        property: orderDetailList
+
+      - name: insertPayInfo
+        type: insert
+        property: payInfo
+
+      - name: insertPayDetailList
+        type: insert
+        property: payInfo.payDetailList
+
+  - name: save-User
+    viewRef: UserInfo
+    rules:
+      - name: insertUser
+        type: insert
+        property: UserInfo

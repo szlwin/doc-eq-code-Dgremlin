@@ -1,0 +1,34 @@
+data:
+  name: order
+  properties:
+    id: int
+    userId: int
+    count: int
+    totalPrice: decimal
+    date: date
+    dateTime: date
+  tables:
+    - name: order_info
+      dataSource: data1
+      key: o_id
+      keyType: increment
+      columns:
+        o_id: id
+        o_userId: userId
+        o_count: count
+        o_totalPrice: totalPrice
+        o_date:
+          ref: dateTime
+          type: timestamp
+    - name: order_info
+      dataSource: data2
+      key: o_id
+      keyType: increment
+      columns:
+        o_id: id
+        o_userId: userId
+        o_count: count
+        o_totalPrice: totalPrice
+        o_date:
+          ref: dateTime
+          type: timestamp

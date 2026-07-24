@@ -28,6 +28,10 @@
 			<groupId>doc.eq.code</groupId>
 			<artifactId>dec-expand-declaration</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>doc.eq.code</groupId>
+			<artifactId>dec-context-config-parse-yaml</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>doc.eq.code</groupId>
@@ -64,11 +68,6 @@
 			<groupId>com.github.kahlkn</groupId>
 			<artifactId>artoria</artifactId>
 			<version>1.0.0.20210823.beta</version>
-		</dependency>
-		<dependency>
-			<groupId>abego</groupId>
-			<artifactId>abego-core</artifactId>
-			<version>1.0</version>
 		</dependency>
 	</dependencies>
 	<build>

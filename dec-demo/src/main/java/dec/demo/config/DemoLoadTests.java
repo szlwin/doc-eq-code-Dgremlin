@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import dec.context.parse.xml.exception.XMLParseException;
+import dec.context.parse.yaml.parse.config.YamlConfigUtil;
 import dec.core.context.data.BaseData;
 import dec.core.model.utils.DataUtil;
 import dec.core.starter.common.ConfigUtil;
@@ -24,8 +25,9 @@ public class DemoLoadTests {
 			//1.添加数据源
 			ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
 			//2.加载配置文件
-			ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
-		} catch (XMLParseException e) {
+			//ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
+			YamlConfigUtil.parseConfigInfo("classpath:yaml/model/orm-config.yaml");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

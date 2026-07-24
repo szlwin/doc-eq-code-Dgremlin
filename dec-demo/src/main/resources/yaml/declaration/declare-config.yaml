@@ -1,0 +1,108 @@
+systems:
+  - name: order
+    datas:
+      - name: subscribeOrderDataSimple
+        desc: 订购订单数据-简单
+        isCachePrior: false
+        depends:
+          - data: $subscribeOrderData
+            init: status:1
+
+      - name: subscribeOrderData
+        desc: 订购订单数据
+        isCachePrior: false
+        depends:
+          - data: $subscribeOrderData
+            init: status:1
+
+      - name: cancelOrderData
+        desc: 取消订单数据
+        isCachePrior: false
+        depends:
+          - data: $cancelOrderData
+          - data: orderData
+            param: orderId:$cancelOrderData.orderId
+            condition: status=1 or status=2
+            change: status:3
+
+      - name: orderData
+        desc: 订单数据
+        type: persistent
+        isCachePrior: false
+
+      - name: orderPayResultData
+        desc: 订单支付状态数据
+        type: persistent
+        isCachePrior: false
+        depends:
+          - data: $payResultData
+          - data: orderData
+            condition: status=1
+
+  - name: pay
+    desc: 支付
+    datas:
+      - name: payCmdData
+        desc: 支付指令数据
+        depends:
+          - data: $payData
+
+      - name: payResultData
+        desc: 支付结果数据
+        type: persistent
+        isCachePrior: true
+        depends:
+          - data: payCmdData
+
+  - name: common
+    datas:
+      - name: $cancelOrderData
+        desc: 取消订购操作数据
+      - name: $subscribeOrderData
+        desc: 订购数据
+      - name: $payData
+        desc: 支付数据
+      - name: $payResultData
+        desc: 支付数据
+      - name: $refundOrderData
+        desc: 订单退款数据
+
+businesses:
+  - name: subscribeOrderDataWithSimple
+    datas:
+      - system: order
+        name: subscribeOrderDataSimple
+      - system: order
+        name: orderPayResultData
+
+  - name: subscribeOrder
+    datas:
+      - begin: true
+      - system: order
+        name: subscribeOrderData
+      - begin: true
+        transactionPolicy: NEW
+      - name: $payData
+      - begin: true
+      - system: pay
+        name: payResultData
+      - name: $payResultData
+      - end: true
+      - end: true
+      - system: order
+        name: orderPayResultData
+      - end: true
+
+  - name: cancelOrder
+    datas:
+      - begin: true
+        transactionPolicy: REQUIRE
+      - system: order
+        name: cancelOrderData
+      - name: $payData
+      - system: pay
+        name: payResultData
+      - name: $payResultData
+      - system: order
+        name: orderPayResultData
+      - end: true

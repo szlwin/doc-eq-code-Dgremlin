@@ -1,0 +1,16 @@
+datas:
+  - name: product
+    class: ""
+    properties:
+      id: int
+      name: string
+      price: decimal
+    tables:
+      - name: product_info
+        dataSource: data1
+        key: p_id
+        keyType: increment
+        columns:
+          p_id: id
+          p_name: name
+          price: price

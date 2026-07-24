@@ -1,0 +1,70 @@
+views:
+  - name: UserInfo
+    targetMain: user
+    properties:
+      id: id
+      name: name
+      activeTime: activeTime
+      status: status
+
+  - name: OrderInfo
+    targetMain: order
+    properties:
+      id: id
+      userId: userId
+      productCount: productCount
+      totalPrice: totalPrice
+      totalAmount: totalAmount
+      status: orderStatus
+      dateTime: createDate
+      payId: payId
+      user:
+        relation: one-to-one
+        data: user
+        key: id
+        relKey: userId
+        properties:
+          id: id
+          userName: name
+          activeTime: activeTime
+          status: status
+      orderDetailList:
+        relation: one-to-many
+        data: orderDetail
+        key: orderId
+        relKey: id
+        properties:
+          id: id
+          orderId: orderId
+          userId: userId
+          productId: productId
+          productName: productName
+          productAmount: productAmount
+          productPrice: productPrice
+          createDate: createDate
+      payInfo:
+        relation: one-to-one
+        data: pay
+        key: orderId
+        relKey: id
+        properties:
+          id: id
+          userId: userId
+          orderId: orderId
+          totalPrice: totalPrice
+          totalAmount: totalAmount
+          status: payStatus
+          createDate: createDate
+          payDetailList:
+            relation: one-to-many
+            data: payDetail
+            key: payId
+            relKey: id
+            properties:
+              id: id
+              payId: payId
+              productId: productId
+              productName: productName
+              payPrice: payPrice
+              payAmount: payAmount
+              createDate: createDate
