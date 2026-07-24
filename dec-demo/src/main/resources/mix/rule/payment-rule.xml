@@ -6,7 +6,7 @@
         legacy save-Order 中的支付部分被拆到 payment System。
         RuleView 仍使用跨模块业务模型 OrderInfo，但只写 payInfo 区域。
     -->
-    <rule-view-info name="pay" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="pay" view-ref="OrderInfo">
 
         <rule
                 name="insertPayInfo"
@@ -20,7 +20,7 @@
 
     </rule-view-info>
 
-    <rule-view-info name="hasPaymentInfo" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="hasPaymentInfo" view-ref="OrderInfo">
         <rule
                 name="checkPaymentInfo"
                 type="checkData"
@@ -28,21 +28,21 @@
                 pattern="NOTNULL"/>
     </rule-view-info>
 
-    <rule-view-info name="hasPayResult" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="hasPayResult" view-ref="OrderInfo">
         <rule
                 name="checkPayResult"
                 type="checkPattern"
                 pattern="payInfo.status = 1 or payInfo.status = 2"/>
     </rule-view-info>
 
-    <rule-view-info name="isPaySuccess" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="isPaySuccess" view-ref="OrderInfo">
         <rule
                 name="checkPaySuccess"
                 type="checkPattern"
                 pattern="payInfo.status = 1"/>
     </rule-view-info>
 
-    <rule-view-info name="isPayError" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="isPayError" view-ref="OrderInfo">
         <rule
                 name="checkPayError"
                 type="checkPattern"
@@ -53,7 +53,7 @@
         PayResult 为 Action 输入或执行上下文数据。
         此处用目标语义表示把支付结果写回 OrderInfo.payInfo。
     -->
-    <rule-view-info name="receivePayResult" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="receivePayResult" view-ref="OrderInfo">
         <rule name="applyPayResult" type="grammer">
             <customer-process>
                 <![CDATA[
@@ -65,7 +65,7 @@
         </rule>
     </rule-view-info>
 
-    <rule-view-info name="resetPayResult" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="resetPayResult" view-ref="OrderInfo">
         <rule name="resetPayResult" type="grammer">
             <customer-process>
                 <![CDATA[
@@ -77,7 +77,7 @@
         </rule>
     </rule-view-info>
 
-    <rule-view-info name="recordPyaError" view-ref="OrderInfo">
+    <rule-view-info system="payment" name="recordPyaError" view-ref="OrderInfo">
         <rule name="buildPyaError" type="grammer">
             <customer-process>
                 <![CDATA[
