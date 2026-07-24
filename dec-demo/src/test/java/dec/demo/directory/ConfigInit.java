@@ -50,7 +50,7 @@ public class ConfigInit {
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
 		hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo_test"));
 		hikariConfig.setUsername(env("DEC_MYSQL_USER", "root"));
-		hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", ""));
+		hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", "mysqldb"));
 		// 设置可以获取tables remarks信息
 		//hikariConfig.addDataSourceProperty("useInformationSchema", "true");
 		hikariConfig.setMinimumIdle(2);
