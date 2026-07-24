@@ -211,7 +211,7 @@
                         <action-info>
                             <action
                                     name="resetPayResult"
-                                    ref-rule="resetPayResult"/>
+                                    rule-ref="resetPayResult"/>
                         </action-info>
 
                     </back>
@@ -229,7 +229,7 @@
 
                 <action
                         name="startPay"
-                        ref-rule="pay">
+                        rule-ref="pay">
 
                     <produce-info>
 
@@ -277,7 +277,7 @@
 
                 <action
                         name="receivePayResult"
-                        ref-rule="receivePayResult">
+                        rule-ref="receivePayResult">
 
                     <produce-info>
 
@@ -307,7 +307,7 @@
             <action-info>
                 <action
                         name="confirmPaySuccess"
-                        ref-rule="confirmPaySuccess"/>
+                        rule-ref="confirmPaySuccess"/>
             </action-info>
 
             <change-info
@@ -330,7 +330,7 @@
 
                 <action
                         name="recordPyaError"
-                        ref-rule="recordPyaError">
+                        rule-ref="recordPyaError">
 
                     <produce-info>
 
@@ -343,7 +343,7 @@
                     </produce-info>
 
                 </action>
-
+                <action name="smsNotify"/>
             </action-info>
 
             <change-info
