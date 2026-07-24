@@ -7,7 +7,24 @@
     - Information 通过 system-ref 指定识别或物化能力的归属；
     - Directory Action 通过 system-ref + rule-ref 调用指定 System 的 RuleView；
     - 无 rule-ref 的 Action 由全局自定义 Action 注册表提供；
-    - Produce 映射实际数据与 Information。
+    - Produce 映射实际数据与 Information；
+    - 普通 predecessor 子目录按“子目录 -> 上层目录”执行；
+    - case 子目录表示上层目录的一种业务情况，用于父目录聚合查询和结果分类。
+
+    PayResult 查询约定：
+
+    1. find("PayResult")
+       查询 PayResult 的 case 子目录集合；本例包含 success 和 error。
+       对业务数据执行查询时，只要数据被识别为其中任一 case，就属于 PayResult。
+
+    2. find("PayResult").eq("success")
+       在 PayResult 的 case 子目录集合中按目录名称过滤，只查询 success。
+
+    3. role="predecessor"
+       表示普通向上执行关系，不属于 find("PayResult") 的结果情况集合。
+
+    4. role="case"
+       表示父目录的一种业务情况，属于 find("PayResult") 的默认查询范围。
 -->
 <business-config name="order-payment">
 
@@ -194,18 +211,14 @@
     <directory-info>
 
         <!--
-            订购阶段只调用 order System 的 save-Order。
-            legacy save-Order 中的支付规则已经拆到 payment System 的 pay RuleView。
+            业务从 ordered 开始。
+            ordered 没有普通 predecessor 子目录。
         -->
         <directory
                 name="ordered"
                 information-ref="order.ordered"
                 model-ref="OrderInfo"
                 is-root="true">
-
-            <subdirectory-info>
-                <subdirectory rel="paying"/>
-            </subdirectory-info>
 
             <action-info>
 
@@ -227,8 +240,8 @@
         </directory>
 
         <!--
-            支付阶段使用同一个 OrderInfo，
-            但 payment System 只能写 payInfo 和 payInfo.payDetailList。
+            普通目录向上执行：
+            ordered 是 paying 的 predecessor 子目录，因此执行顺序是 ordered -> paying。
         -->
         <directory
                 name="paying"
@@ -236,20 +249,9 @@
                 model-ref="OrderInfo">
 
             <subdirectory-info>
-
-                <subdirectory rel="PayResult">
-
-                    <back name="returnPaying">
-                        <action-info>
-                            <action
-                                    name="resetPayResult"
-                                    system-ref="payment"
-                                    rule-ref="resetPayResult"/>
-                        </action-info>
-                    </back>
-
-                </subdirectory>
-
+                <subdirectory
+                        rel="ordered"
+                        role="predecessor"/>
             </subdirectory-info>
 
             <dependency-info>
@@ -278,25 +280,48 @@
 
         </directory>
 
-        <!-- 支付结果由 payment System 接收并写回共享 OrderInfo.payInfo。 -->
+        <!--
+            PayResult 是特殊的结果聚合目录：
+
+            - paying 是 predecessor，表示 paying -> PayResult 的普通向上执行关系；
+            - success 和 error 是 case，表示 PayResult 包含的两种结果情况；
+            - find("PayResult") 默认查询 role="case" 的 success 与 error；
+            - find("PayResult").eq("success") 只保留 success；
+            - predecessor 不进入 PayResult 的结果情况查询范围；
+            - success/error 根据各自 information-ref 自动识别，不额外配置 mutual-exclusion。
+        -->
         <directory
                 name="PayResult"
+                type="result"
                 information-ref="payment.hasResult"
                 model-ref="OrderInfo">
 
             <subdirectory-info>
 
                 <subdirectory
+                        rel="paying"
+                        role="predecessor">
+
+                    <back name="returnPaying">
+                        <action-info>
+                            <action
+                                    name="resetPayResult"
+                                    system-ref="payment"
+                                    rule-ref="resetPayResult"/>
+                        </action-info>
+                    </back>
+
+                </subdirectory>
+
+                <subdirectory
                         rel="success"
-                        information-ref="payment.success"
-                        mutual-exclusion="error"
-                        any-one="true"/>
+                        role="case"
+                        information-ref="payment.success"/>
 
                 <subdirectory
                         rel="error"
-                        information-ref="payment.error"
-                        mutual-exclusion="success"
-                        any-one="true"/>
+                        role="case"
+                        information-ref="payment.error"/>
 
             </subdirectory-info>
 
@@ -319,7 +344,10 @@
 
         </directory>
 
-        <!-- 支付成功后由 order System 完成订单侧处理。 -->
+        <!--
+            success 是 PayResult 的 case 子目录。
+            当 payment.success 成立时，执行成功结果处理。
+        -->
         <directory
                 name="success"
                 information-ref="order.paySuccess"
@@ -341,8 +369,8 @@
         </directory>
 
         <!--
-            支付失败先由 payment System 记录错误，
-            再调用全局注册的 smsNotify，最后由 order System 处理订单侧失败结果。
+            error 是 PayResult 的 case 子目录。
+            当 payment.error 成立时，执行失败结果处理。
         -->
         <directory
                 name="error"
