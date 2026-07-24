@@ -7,14 +7,14 @@
         但可在跨模块业务模型 OrderInfo 上读取 user 区域。
     -->
 
-    <rule-view-info name="isActivated" view-ref="OrderInfo">
+    <rule-view-info system="user" name="isActivated" view-ref="OrderInfo">
         <rule
                 name="checkActivated"
                 type="checkPattern"
                 pattern="user.status = 1"/>
     </rule-view-info>
 
-    <rule-view-info name="isCertified" view-ref="OrderInfo">
+    <rule-view-info system="user" name="isCertified" view-ref="OrderInfo">
         <rule
                 name="checkCertified"
                 type="checkPattern"
