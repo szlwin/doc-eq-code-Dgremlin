@@ -1,6 +1,6 @@
 # 目录说明
 
-本文说明 `doc-eq-code-Dgremlin` 中目录的设计目的、核心概念、XML 格式、查询语义和执行语义。
+本文说明 `doc-eq-code-Dgremlin` 中目录的设计目的、XML 格式、查询与执行语义，以及 Action 产出数据与信息树 Information 的对应关系。
 
 本文以以下示例为主要依据：
 
@@ -8,9 +8,7 @@
 dec-demo/src/main/resources/directory/order/order-directory-new.xml
 ```
 
-该示例描述了订单从已下单、支付中、支付结果，到支付成功或支付失败的业务目录结构。
-
-> 本文首先定义设计语言应表达的语义。示例中的部分元素属于目标设计，当前 Java 引擎不一定已经完整实现。
+> 本文优先定义设计语言应表达的目标语义。示例中的部分元素和校验规则，当前 Java 引擎不一定已经完整实现。
 
 ## 1. 目录解决什么问题
 
@@ -20,7 +18,7 @@ dec-demo/src/main/resources/directory/order/order-directory-new.xml
 order.setStatus(2);
 ```
 
-查询时也直接使用状态值：
+查询时直接使用：
 
 ```sql
 select * from order_info where status = 2
@@ -31,18 +29,18 @@ select * from order_info where status = 2
 - 状态值缺少稳定的业务含义；
 - 流程、判断、操作和状态变化分散在代码中；
 - 产品、设计、开发和测试难以使用同一种语言沟通；
-- 状态含义变化后，需要修改大量代码；
 - 很难统一表达路径补齐、回退、分类查询和结果契约。
 
-目录将业务对象看作资源，并使用业务目录描述资源：
+目录将业务对象看作资源，并使用业务目录描述：
 
 - 当前属于什么业务阶段或分类；
 - 可以继续进入哪些目录；
-- 进入目录前需要满足哪些业务事实；
-- 进入时需要执行哪些操作；
-- 操作后必须产生哪些数据；
-- 进入后需要物化什么业务状态；
-- 如何返回上一级目录并执行补偿操作。
+- 进入目录前需要满足哪些 Information；
+- 进入时执行哪些 Action；
+- Action 后必须产生哪些数据；
+- 产出数据对应哪些 Information；
+- 进入后需要物化什么业务事实；
+- 如何沿目录关系返回并执行补偿操作。
 
 调用方可以使用业务语言：
 
@@ -52,7 +50,7 @@ find("PayResult")
 find("ordered").start("ordered").end("success")
 ```
 
-而不必直接依赖 `status = 1、2、3` 等技术细节。
+而不必直接依赖 `status = 1、2、3`。
 
 ## 2. 目录在整体模型中的位置
 
@@ -66,22 +64,25 @@ Information
 Directory
     使用业务事实定义分类、路径和进入条件
         ↓
-Action / Rule
+Action
     执行具体业务操作
         ↓
-Produce / Change
-    校验产出并物化业务状态
+Produce
+    校验数据产出，并映射到 Information
+        ↓
+Change
+    物化目录最终业务状态
 ```
 
 职责划分：
 
-- Information 回答“什么业务事实成立”；
-- Directory 回答“资源位于哪里、可以去哪里”；
-- Dependency 回答“进入前必须满足什么”；
-- Action 回答“进入过程中执行什么”；
-- Produce 回答“执行后必须产生什么”；
-- Change 回答“进入后需要物化什么事实”；
-- Back 回答“如何沿目录关系返回并补偿”。
+- Information：什么业务事实成立；
+- Directory：资源位于哪里、可以去哪里；
+- Dependency：进入前必须满足什么；
+- Action：进入过程中执行什么；
+- Produce：执行后产生什么，以及产出数据对应哪个 Information；
+- Change：进入后物化什么事实；
+- Back：如何沿目录关系返回并补偿。
 
 ## 3. 示例目录结构
 
@@ -95,20 +96,18 @@ ordered
 
 | 目录 | Information | 业务含义 |
 |---|---|---|
-| `ordered` | `order.ordered` | 订单及订单明细处于已下单状态 |
-| `paying` | `order.paying` | 订单及订单明细处于支付中状态 |
+| `ordered` | `order.ordered` | 订单及明细处于已下单状态 |
+| `paying` | `order.paying` | 订单及明细处于支付中状态 |
 | `PayResult` | `payment.hasResult` | 当前订单已经存在支付结果 |
-| `success` | `order.paySuccess` | 支付结果成功且订单状态已经物化为成功 |
-| `error` | `order.payError` | 支付结果失败且订单状态已经物化为失败 |
+| `success` | `order.paySuccess` | 支付成功且订单状态已物化为成功 |
+| `error` | `order.payError` | 支付失败且订单状态已物化为失败 |
 
-这里同时存在两类关系：
+其中：
 
-1. `ordered → paying → PayResult` 表示业务执行路径；
-2. `PayResult → success/error` 表示支付结果的业务分类。
+1. `ordered → paying → PayResult` 是业务执行路径；
+2. `PayResult → success/error` 是支付结果分类。
 
 ## 4. XML 文件整体结构
-
-目录定义在业务配置文件的 `directory-info` 元素中。
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -130,7 +129,7 @@ ordered
 </business-config>
 ```
 
-### 4.1 XML 基本要求
+XML 基本要求：
 
 | 项目 | 要求 |
 |---|---|
@@ -139,14 +138,10 @@ ordered
 | 根元素 | `business-config` |
 | 目录容器 | `directory-info` |
 | 目录元素 | `directory` |
-| 大小写 | 元素、属性和引用名称均区分大小写 |
-| 命名空间 | 当前示例未定义 XML Namespace |
-| 未知元素 | 编译器应拒绝，不能静默忽略 |
-| 未知属性 | 编译器应拒绝，不能静默忽略 |
+| 大小写 | 元素、属性和引用均区分大小写 |
+| 未知元素或属性 | 编译器应拒绝，不能静默忽略 |
 
-### 4.2 推荐子元素顺序
-
-`directory` 内建议使用固定顺序：
+`directory` 内推荐固定顺序：
 
 ```text
 subdirectory-info
@@ -158,20 +153,9 @@ action-info
 change-info
 ```
 
-对应 XML：
+每一部分均可省略，但出现时应保持顺序，便于解析、XSD 校验和人工阅读。
 
-```xml
-<directory ...>
-    <subdirectory-info>...</subdirectory-info>
-    <dependency-info>...</dependency-info>
-    <action-info>...</action-info>
-    <change-info .../>
-</directory>
-```
-
-每个部分都可以省略，但出现时应保持该顺序，便于 XSD 校验、解析器实现和人工阅读。
-
-## 5. `directory-info` 元素
+## 5. `directory-info`
 
 ```xml
 <directory-info>
@@ -184,31 +168,31 @@ change-info
 
 1. 一个 `business-config` 中最多存在一个 `directory-info`；
 2. `directory-info` 中至少包含一个 `directory`；
-3. 同一有效配置域中的目录名称必须唯一；
-4. 每个 `rel`、`information-ref`、`model-ref` 和 `ref-rule` 必须可以解析；
-5. 编译器必须在运行前构建完整目录图。
+3. 目录名称在有效配置域内必须唯一；
+4. 所有目录和 Information 引用必须在编译期解析；
+5. 编译器必须构建完整目录图并校验路径。
 
-## 6. `directory` 元素格式
+## 6. `directory`
 
 ### 6.1 属性表
 
 | 属性 | 必填 | 说明 |
 |---|---:|---|
-| `name` | 是 | 目录的唯一业务名称 |
-| `information-ref` | 是 | 定义属于该目录时必须成立的 Information |
+| `name` | 是 | 目录唯一业务名称 |
+| `information-ref` | 是 | 进入目录完成后必须成立的 Information |
 | `model-ref` | 是 | 目录操作使用的主要业务模型 |
-| `is-root` | 否 | 是否为可独立执行或查询的目录树根节点，默认 `false` |
+| `is-root` | 否 | 是否为目录树根，默认 `false` |
 
 ### 6.2 子元素表
 
 | 子元素 | 数量 | 说明 |
 |---|---:|---|
-| `subdirectory-info` | `0..1` | 定义直接子目录及父子关系 |
-| `dependency-info` | `0..1` | 定义进入目录的前置 Information |
+| `subdirectory-info` | `0..1` | 定义直接子目录、分类和 Back |
+| `dependency-info` | `0..1` | 定义进入前置 Information |
 | `action-info` | `0..1` | 定义进入目录时执行的 Action |
-| `change-info` | `0..1` | 定义进入目录后需要物化的 Information |
+| `change-info` | `0..1` | 定义进入后物化的 Information |
 
-### 6.3 基本示例
+基本示例：
 
 ```xml
 <directory
@@ -224,63 +208,20 @@ change-info
 </directory>
 ```
 
-### 6.4 `name`
-
-```xml
-name="PayResult"
-```
-
-要求：
-
-- 在有效配置域内唯一；
-- 使用稳定业务语言；
-- 不使用数据库状态值命名；
-- 被 `subdirectory/@rel` 和执行、查询 API 引用。
-
-### 6.5 `information-ref`
-
-```xml
-information-ref="order.paying"
-```
-
-它定义该目录对应的最终业务事实。
-
-进入目录完成后，引擎必须验证该 Information 成立。
-
-当目录没有显式 `change-info` 时，可以把目录自身的 `information-ref` 作为默认物化目标，但前提是该 Information 具有 `change-data`。如果该 Information 不可物化，则必须由 Action 产生所需数据。
-
-### 6.6 `model-ref`
-
-```xml
-model-ref="OrderInfo"
-```
-
-它定义目录执行的主要业务模型上下文。
-
-编译期应校验：
-
-- 业务模型存在；
-- 目录引用的 Information 与模型兼容；
-- Action 引用的规则可以在该模型上下文中执行；
-- Change 所物化的 Information 与模型兼容。
-
-### 6.7 `is-root`
-
-```xml
-is-root="true"
-```
-
-规则：
-
-- 一个可独立查询或执行的目录树应有且仅有一个根；
-- 根目录不能拥有父目录；
-- 非根目录必须可从根目录到达；
-- 多棵目录树可以存在，但每棵树都必须有独立根；
-- 如果允许目录被多个父目录引用，应明确它属于图结构，并执行路径歧义校验。
+进入目录完成后，引擎必须验证 `directory/@information-ref` 成立。
 
 ## 7. `subdirectory-info` 与 `subdirectory`
 
-### 7.1 基本格式
+### 7.1 属性表
+
+| 属性 | 必填 | 说明 |
+|---|---:|---|
+| `rel` | 是 | 引用直接子目录 |
+| `information-ref` | 否 | 当前父子关系下的分类条件 |
+| `any-one` | 否 | 同组子目录是否至少命中一个 |
+| `mutual-exclusion` | 否 | 与当前子目录互斥的目录名称 |
+
+执行路径：
 
 ```xml
 <subdirectory-info>
@@ -288,111 +229,48 @@ is-root="true"
 </subdirectory-info>
 ```
 
-### 7.2 `subdirectory` 属性表
+表示：
 
-| 属性 | 必填 | 说明 |
-|---|---:|---|
-| `rel` | 是 | 引用直接子目录名称 |
-| `information-ref` | 否 | 用于该父子关系下的自动分类条件 |
-| `any-one` | 否 | 同组子目录是否至少命中一个，默认 `false` |
-| `mutual-exclusion` | 否 | 显式列出与当前子目录互斥的目录名称 |
+```text
+ordered → paying
+```
 
-### 7.3 执行路径关系
+分类关系：
 
 ```xml
-<directory name="ordered" ...>
-    <subdirectory-info>
-        <subdirectory rel="paying"/>
-    </subdirectory-info>
-</directory>
+<subdirectory-info>
+
+    <subdirectory
+            rel="success"
+            information-ref="payment.success"
+            mutual-exclusion="error"
+            any-one="true"/>
+
+    <subdirectory
+            rel="error"
+            information-ref="payment.error"
+            mutual-exclusion="success"
+            any-one="true"/>
+
+</subdirectory-info>
 ```
 
 表示：
 
-```text
-ordered
-    ↓
-paying
-```
+- `success` 与 `error` 至少命中一个；
+- 两者不能同时命中；
+- `payment.success` 成立时归入 `success`；
+- `payment.error` 成立时归入 `error`。
 
-当目标目录为 `paying`，而资源仅满足 `ordered` 时，引擎可以根据路径执行 `paying`。
-
-### 7.4 业务分类关系
-
-```xml
-<directory name="PayResult" ...>
-    <subdirectory-info>
-        <subdirectory
-                rel="success"
-                information-ref="payment.success"
-                any-one="true"/>
-        <subdirectory
-                rel="error"
-                information-ref="payment.error"
-                any-one="true"/>
-    </subdirectory-info>
-</directory>
-```
-
-表示：
+支付结果分类应满足：
 
 ```text
-PayResult
-    ├── success
-    └── error
+matched.size == 1
 ```
 
-当 `payment.success` 成立时归入 `success`；当 `payment.error` 成立时归入 `error`。
+不能只校验至少命中一个，还必须校验互斥。
 
-### 7.5 `any-one`
-
-`any-one="true"` 表示同组子目录中至少一个必须成立。
-
-```text
-matched = 所有分类 Information 成立的 any-one 子目录
-require matched.size >= 1
-```
-
-对于支付结果场景，业务要求是“必须且只能命中一个”，因此还需要互斥校验：
-
-```text
-require matched.size == 1
-```
-
-### 7.6 `mutual-exclusion`
-
-如果 DSL 显式声明互斥关系，可以写为：
-
-```xml
-<subdirectory
-        rel="success"
-        information-ref="payment.success"
-        any-one="true"
-        mutual-exclusion="error"/>
-
-<subdirectory
-        rel="error"
-        information-ref="payment.error"
-        any-one="true"
-        mutual-exclusion="success"/>
-```
-
-`mutual-exclusion` 可使用逗号分隔多个目录：
-
-```xml
-mutual-exclusion="error,cancelled"
-```
-
-编译器应校验：
-
-- 引用目录存在；
-- 互斥关系位于同一分类范围；
-- 建议互斥声明对称；
-- 运行时互斥目录不能同时成立。
-
-## 8. `dependency-info` 与 `dependency`
-
-### 8.1 XML 格式
+## 8. `dependency-info`
 
 ```xml
 <dependency-info>
@@ -401,13 +279,7 @@ mutual-exclusion="error,cancelled"
 </dependency-info>
 ```
 
-### 8.2 属性表
-
-| 元素 | 属性 | 必填 | 说明 |
-|---|---|---:|---|
-| `dependency` | `information-ref` | 是 | 进入当前目录前必须成立的 Information |
-
-多个 `dependency` 默认使用 AND：
+多个 `dependency` 默认按 AND 处理：
 
 ```text
 order.payable
@@ -415,9 +287,7 @@ AND
 user.effective
 ```
 
-任何一个依赖不成立，当前目录都不能进入。
-
-Dependency 应引用 Information，而不是复制底层字段判断。
+Dependency 必须引用 Information，不能复制底层字段判断。
 
 不推荐：
 
@@ -432,469 +302,394 @@ Dependency 应引用 Information，而不是复制底层字段判断。
 <dependency information-ref="user.effective"/>
 ```
 
-运行时建议在执行 Action 和 Change 之前检查 Dependency。
-
 ## 9. `action-info` 与 `action`
-
-### 9.1 基本格式
 
 ```xml
 <action-info>
+
     <action
             name="startPay"
             ref-rule="pay">
-        <produce-info>
-            <produce ref="PaymentInfo"/>
-        </produce-info>
+        ...
     </action>
+
 </action-info>
 ```
 
-### 9.2 `action` 属性表
+`action` 属性：
 
 | 属性 | 必填 | 说明 |
 |---|---:|---|
-| `name` | 是 | 当前目录内的操作名称 |
-| `ref-rule` | 是 | 引用实际执行的业务规则 |
+| `name` | 是 | 当前目录中的业务操作名称 |
+| `ref-rule` | 是 | 引用实际执行业务规则 |
 
-### 9.3 `action` 子元素表
-
-| 子元素 | 数量 | 说明 |
-|---|---:|---|
-| `produce-info` | `0..1` | 声明 Action 成功后必须产生的数据 |
-
-Action 表达业务操作，不应直接绑定 Java 类、方法名或数据库实现。
-
-同一个 `action-info` 可以包含多个 Action。除非显式定义并行语义，否则应按 XML 文档顺序串行执行。
+同一目录可以有多个 Action。未声明并行语义时，按 XML 顺序串行执行。
 
 示例中的 Action：
 
-| 目录 | Action | `ref-rule` | 作用 |
+| 目录 | Action | 规则 | 作用 |
 |---|---|---|---|
-| `paying` | `startPay` | `pay` | 发起支付并创建 `PaymentInfo` |
-| `PayResult` | `receivePayResult` | `receivePayResult` | 接收支付回调并创建 `PayResult` |
+| `paying` | `startPay` | `pay` | 发起支付并产生 PaymentInfo |
+| `PayResult` | `receivePayResult` | `receivePayResult` | 接收支付结果并产生 PayResult |
 | `success` | `confirmPaySuccess` | `confirmPaySuccess` | 完成支付成功处理 |
-| `error` | `recordPyaError` | `recordPyaError` | 记录支付失败信息 |
+| `error` | `recordPyaError` | `recordPyaError` | 记录支付错误 |
 
 ## 10. `produce-info` 与 `produce`
 
-### 10.1 XML 格式
+### 10.1 基本格式
 
 ```xml
 <produce-info>
     <produce ref="PaymentInfo"/>
-    <produce ref="PaymentDetail"/>
 </produce-info>
 ```
 
+`produce` 表示 Action 成功后必须产生的数据后置条件。
+
 ### 10.2 属性表
 
-| 元素 | 属性 | 必填 | 说明 |
-|---|---|---:|---|
-| `produce` | `ref` | 是 | Action 成功后必须产生的数据或业务对象 |
+| 属性 | 必填 | 说明 |
+|---|---:|---|
+| `ref` | 是 | Action 必须产生的数据、模型节点或结果对象 |
+| `information-ref` | 条件必填 | 该产出数据在信息树中对应的原子 Information |
 
-Produce 是结果契约，不是执行方式。
+### 10.3 为什么需要 `information-ref`
 
-```text
-规则返回成功
-    ≠
-Action 一定成功
-```
-
-只有规则执行成功，并且全部 Produce 契约都满足，Action 才成功。
-
-例如：
+只配置：
 
 ```xml
-<action name="receivePayResult" ref-rule="receivePayResult">
+<produce ref="PaymentInfo"/>
+```
+
+只能表达：
+
+```text
+Action 必须产生 PaymentInfo
+```
+
+不能表达：
+
+```text
+PaymentInfo 在信息树中代表什么业务事实
+```
+
+当 PaymentInfo 后续还要被目录、Dependency、Information 表达式或路径判断使用时，必须建立明确映射：
+
+```xml
+<produce
+        ref="PaymentInfo"
+        information-ref="payment.hasPayment"/>
+```
+
+对应的信息定义：
+
+```xml
+<information
+        name="payment.hasPayment"
+        model-ref="OrderInfo"
+        rule-ref="hasPaymentInfo"/>
+```
+
+含义：
+
+```text
+数据契约：
+    PaymentInfo 必须产生
+
+语义契约：
+    payment.hasPayment 必须成立
+```
+
+### 10.4 条件必填规则
+
+| 产出用途 | `information-ref` |
+|---|---:|
+| 仅作为临时数据 | 可省略 |
+| 仅作为返回结果 | 可省略 |
+| 后续被 Directory 引用 | 必填 |
+| 后续被 Dependency 引用 | 必填 |
+| 后续参与 Information 组合 | 必填 |
+| 用于自动分类或路径选择 | 必填 |
+| 用于判断后续流程是否可执行 | 必填 |
+
+规则：
+
+```text
+producedDataUsedAsInformation == true
+    => information-ref 必填
+```
+
+### 10.5 PaymentInfo 示例
+
+```xml
+<action
+        name="startPay"
+        ref-rule="pay">
+
     <produce-info>
-        <produce ref="PayResult"/>
+        <produce
+                ref="PaymentInfo"
+                information-ref="payment.hasPayment"/>
     </produce-info>
+
 </action>
 ```
 
-表示 `receivePayResult` 成功后，当前业务上下文必须存在新产生或有效更新的 `PayResult`。
+执行语义：
 
-运行时应校验：
+```text
+1. 执行 pay
+2. 验证 PaymentInfo 已产生
+3. 将 PaymentInfo 放入 OrderInfo 或执行上下文
+4. 识别 payment.hasPayment
+5. 要求 payment.hasPayment 成立
+6. 重新计算相关复合 Information
+```
 
-- 产出对象存在；
-- 类型与 `ref` 一致；
-- 需要持久化的产出已经保存；
-- 幂等重试时能够区分“已存在的合法结果”和“本次没有产出”。
+### 10.6 PayResult 示例
+
+```xml
+<action
+        name="receivePayResult"
+        ref-rule="receivePayResult">
+
+    <produce-info>
+        <produce
+                ref="PayResult"
+                information-ref="payment.hasResult"/>
+    </produce-info>
+
+</action>
+```
+
+该映射先确认：
+
+```text
+payment.hasResult
+```
+
+随后引擎根据 PayResult 内容重新识别：
+
+```text
+payment.success
+payment.error
+```
+
+最后自动归类到：
+
+```text
+success
+或
+error
+```
+
+### 10.7 不作为 Information 使用的数据
+
+```xml
+<produce ref="PyaError"/>
+```
+
+如果 `PyaError` 当前只用于错误记录或返回，不参与 Information、Dependency、Directory 或分类，可以省略 `information-ref`。
+
+一旦后续定义：
+
+```xml
+<information
+        name="payment.hasErrorRecord"
+        model-ref="OrderInfo"
+        rule-ref="hasPyaError"/>
+```
+
+则 Produce 必须同步改为：
+
+```xml
+<produce
+        ref="PyaError"
+        information-ref="payment.hasErrorRecord"/>
+```
+
+### 10.8 映射约束
+
+1. `information-ref` 必须存在；
+2. 应引用原子 Information；
+3. Information 的模型上下文必须与 Action 兼容；
+4. 产出数据必须能够被该 Information 的识别规则验证；
+5. 不允许映射到与产出无关的 Information；
+6. 一个 Produce 当前只声明一个主要 Information；
+7. 其他事实通过 Information 识别或 `expression` 推导；
+8. 不应直接映射到 Action 单独无法保证成立的复合 Information。
+
+错误示例：
+
+```xml
+<produce
+        ref="PayResult"
+        information-ref="order.paySuccess"/>
+```
+
+`order.paySuccess` 除支付成功外，还要求订单状态完成物化。单独产生 PayResult 不能保证该复合事实成立。
+
+正确示例：
+
+```xml
+<produce
+        ref="PayResult"
+        information-ref="payment.hasResult"/>
+```
 
 ## 11. `change-info`
 
-### 11.1 显式 XML 格式
+显式物化：
 
 ```xml
-<change-info information-ref="order.paySuccessStatus"/>
+<change-info
+        information-ref="order.paySuccessStatus"/>
 ```
 
-### 11.2 属性表
+表示目录 Action 和 Produce 完成后，物化 `order.paySuccessStatus`。
 
-| 属性 | 必填 | 说明 |
-|---|---:|---|
-| `information-ref` | 是 | 需要物化的原子 Information |
-
-`change-info` 引用的 Information 必须：
-
-- 存在；
-- 是原子 Information；
-- 配置了可执行的 `change-data`；
-- 与当前目录的 `model-ref` 兼容。
-
-### 11.3 默认 Change
-
-当目录没有显式配置 `change-info` 时，可以使用目录自身的 `information-ref` 作为默认物化目标：
+默认物化规则：
 
 ```text
-directory.change-info
-    = directory.information-ref
+如果 directory 没有 change-info：
+    尝试物化 directory/@information-ref
 ```
 
-例如进入 `paying` 时默认物化 `order.paying`。
+但仅当该 Information 具有 `change-data` 时才能自动物化。
 
-但该规则只在 `order.paying` 具有 `change-data` 时有效。
+例如 `PayResult` 的 `payment.hasResult` 没有 `change-data`，必须由 `receivePayResult` Action 产生 PayResult，不能通过默认 Change 创建。
 
-### 11.4 复合 Information 不能直接物化
+## 12. `back`
 
-`success` 目录对应：
-
-```text
-order.paySuccess
-    = payment.success
-      AND order.paySuccessStatus
-```
-
-`order.paySuccess` 是复合 Information，没有 `change-data`，因此必须显式指定：
+Back 定义在父目录指向子目录的关系上：
 
 ```xml
-<change-info information-ref="order.paySuccessStatus"/>
+<subdirectory rel="PayResult">
+
+    <back name="returnPaying">
+
+        <action-info>
+            <action
+                    name="resetPayResult"
+                    ref-rule="resetPayResult"/>
+        </action-info>
+
+    </back>
+
+</subdirectory>
 ```
 
-执行后重新计算 `order.paySuccess`，并验证最终目录 Information 成立。
-
-## 12. `back` 元素
-
-### 12.1 XML 位置
-
-`back` 定义在父目录指向子目录的 `subdirectory` 关系中：
-
-```xml
-<directory name="paying" ...>
-    <subdirectory-info>
-        <subdirectory rel="PayResult">
-            <back name="returnPaying">
-                <action-info>
-                    <action
-                            name="resetPayResult"
-                            ref-rule="resetPayResult"/>
-                </action-info>
-            </back>
-        </subdirectory>
-    </subdirectory-info>
-</directory>
-```
-
-该结构已经明确：
+含义：
 
 ```text
-来源目录 = PayResult
-目标目录 = paying
+PayResult → paying
 ```
 
-因此 `back` 不需要重复配置 `from` 和 `to`。
+执行顺序：
 
-### 12.2 `back` 属性表
+1. 执行 Back Action；
+2. 清理或重置子目录产生的数据；
+3. 物化父目录 Information；
+4. 验证父目录 Information 成立；
+5. 返回父目录。
 
-| 属性 | 必填 | 说明 |
-|---|---:|---|
-| `name` | 是 | 当前父子关系中的回退操作名称 |
+多级 Back 必须逐级执行。
 
-### 12.3 `back` 子元素
-
-建议允许：
-
-| 子元素 | 数量 | 说明 |
-|---|---:|---|
-| `action-info` | `0..1` | 回退前执行清理或补偿动作 |
-| `change-info` | `0..1` | 回退后显式物化父目录状态 |
-
-未配置 `change-info` 时，默认物化父目录的 `information-ref`。
-
-### 12.4 多级 Back
-
-多级回退必须沿相邻父子关系逐级执行。
+例如：
 
 ```text
-C → A
+C → B → A
 ```
 
-如果路径为：
+从 C 返回 A 时：
 
 ```text
-A
-└── B
-    └── C
+先执行 C → B 的 Back
+再执行 B → A 的 Back
 ```
 
-则执行顺序为：
+不能直接跳过中间目录的补偿动作。
+
+## 13. 目录执行语义
+
+进入一个目录时，推荐顺序：
 
 ```text
-1. 执行 C → B 的 back action
-2. 物化并验证 B
-3. 执行 B → A 的 back action
-4. 物化并验证 A
+1. 解析从当前目录到目标目录的路径
+2. 校验 Dependency
+3. 按顺序执行 Action
+4. 校验 Produce 数据存在
+5. 根据 produce/@information-ref 识别产出对应 Information
+6. 重新计算受影响的其他 Information
+7. 执行 Change
+8. 验证目标目录 information-ref
+9. 根据 subdirectory 信息进行自动分类
+10. 记录执行结果
 ```
 
-不能直接跳过中间目录及其补偿逻辑。
-
-## 13. 完整 XML 示例
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<business-config name="order">
-
-    <information-info>
-        <!-- Information 定义见 information-tree.md -->
-    </information-info>
-
-    <directory-info>
-
-        <directory
-                name="ordered"
-                information-ref="order.ordered"
-                model-ref="OrderInfo"
-                is-root="true">
-            <subdirectory-info>
-                <subdirectory rel="paying"/>
-            </subdirectory-info>
-        </directory>
-
-        <directory
-                name="paying"
-                information-ref="order.paying"
-                model-ref="OrderInfo">
-
-            <subdirectory-info>
-                <subdirectory rel="PayResult">
-                    <back name="returnPaying">
-                        <action-info>
-                            <action
-                                    name="resetPayResult"
-                                    ref-rule="resetPayResult"/>
-                        </action-info>
-                    </back>
-                </subdirectory>
-            </subdirectory-info>
-
-            <dependency-info>
-                <dependency information-ref="order.payable"/>
-                <dependency information-ref="user.effective"/>
-            </dependency-info>
-
-            <action-info>
-                <action name="startPay" ref-rule="pay">
-                    <produce-info>
-                        <produce ref="PaymentInfo"/>
-                    </produce-info>
-                </action>
-            </action-info>
-
-        </directory>
-
-        <directory
-                name="PayResult"
-                information-ref="payment.hasResult"
-                model-ref="OrderInfo">
-
-            <subdirectory-info>
-                <subdirectory
-                        rel="success"
-                        information-ref="payment.success"
-                        any-one="true"/>
-                <subdirectory
-                        rel="error"
-                        information-ref="payment.error"
-                        any-one="true"/>
-            </subdirectory-info>
-
-            <action-info>
-                <action
-                        name="receivePayResult"
-                        ref-rule="receivePayResult">
-                    <produce-info>
-                        <produce ref="PayResult"/>
-                    </produce-info>
-                </action>
-            </action-info>
-
-        </directory>
-
-        <directory
-                name="success"
-                information-ref="order.paySuccess"
-                model-ref="OrderInfo">
-
-            <dependency-info>
-                <dependency information-ref="payment.success"/>
-            </dependency-info>
-
-            <action-info>
-                <action
-                        name="confirmPaySuccess"
-                        ref-rule="confirmPaySuccess"/>
-            </action-info>
-
-            <change-info
-                    information-ref="order.paySuccessStatus"/>
-
-        </directory>
-
-        <directory
-                name="error"
-                information-ref="order.payError"
-                model-ref="OrderInfo">
-
-            <dependency-info>
-                <dependency information-ref="payment.error"/>
-            </dependency-info>
-
-            <action-info>
-                <action
-                        name="recordPyaError"
-                        ref-rule="recordPyaError">
-                    <produce-info>
-                        <produce ref="PyaError"/>
-                    </produce-info>
-                </action>
-            </action-info>
-
-            <change-info
-                    information-ref="order.payErrorStatus"/>
-
-        </directory>
-
-    </directory-info>
-
-</business-config>
-```
-
-## 14. XML 编译期校验
-
-### 14.1 结构校验
-
-- 根元素必须为 `business-config`；
-- `directory-info` 数量合法；
-- 子元素顺序符合规范；
-- 元素数量符合 `0..1`、`0..n` 约束；
-- 不允许未知元素和未知属性；
-- 布尔属性只能使用合法布尔值。
-
-### 14.2 目录图校验
-
-- `directory/@name` 唯一；
-- 每个 `subdirectory/@rel` 都存在；
-- 每棵目录树根节点唯一；
-- 非根目录可以从根到达；
-- 不存在非法循环；
-- 多父目录关系不会造成不可解析的执行路径；
-- Back 只能定义在有效父子关系中。
-
-### 14.3 引用校验
-
-- `model-ref` 指向已存在的业务模型；
-- `information-ref` 指向已存在的 Information；
-- `ref-rule` 指向已存在且兼容的业务规则；
-- `produce/@ref` 指向已定义的数据或业务对象；
-- `change-info/@information-ref` 指向可物化原子 Information；
-- `mutual-exclusion` 指向同一分类范围内的目录。
-
-### 14.4 语义校验
-
-- `any-one` 组至少包含两个候选目录；
-- 互斥目录的 Information 不允许同时成立；
-- Directory 最终 Information 可被识别；
-- 默认 Change 的 Information 必须可物化；
-- 复合 Information 必须通过显式 Change 物化其原子组成；
-- Action 的 Produce 契约可以被运行时验证；
-- 多级 Back 存在完整的相邻回退路径。
-
-## 15. 运行时执行语义
-
-建议进入单个目录时按以下顺序执行：
+对于 `paying`：
 
 ```text
-1. 解析当前目录与目标目录之间的路径
-2. 检查当前目录是否已满足，避免重复执行
-3. 计算并验证 Dependency
-4. 按文档顺序执行 Action
-5. 校验每个 Action 的 Produce 契约
-6. 执行显式 Change；没有显式 Change 时执行默认 Change
-7. 重新计算受影响的原子和复合 Information
-8. 验证目标 Directory 的 information-ref 成立
-9. 根据 subdirectory 分类规则归类
-10. 保存执行结果和路径记录
+依赖：
+    order.payable
+    user.effective
+
+Action：
+    startPay
+
+Produce：
+    PaymentInfo
+        ↔ payment.hasPayment
+
+Change：
+    order.paying
+
+最终验证：
+    order.paying
 ```
 
-任何一步失败，当前目录执行失败，后续目录不得继续执行。
-
-## 16. 路径补齐
-
-当调用方直接执行较深目录时，引擎不能绕过中间目录。
+对于 `PayResult`：
 
 ```text
-当前：ordered
-目标：PayResult
+Action：
+    receivePayResult
+
+Produce：
+    PayResult
+        ↔ payment.hasResult
+
+重新识别：
+    payment.success
+    payment.error
+
+自动分类：
+    success XOR error
 ```
 
-执行路径：
+## 14. 查询语义
 
-```text
-ordered
-    → paying
-    → PayResult
-```
-
-其中每一层都必须执行：
-
-```text
-Dependency
-→ Action
-→ Produce 校验
-→ Change
-→ 最终 Information 校验
-```
-
-如果中间目录已经成立，可以根据幂等策略跳过其副作用 Action，但仍需验证状态和产出。
-
-## 17. 查询语义
-
-### 17.1 查询一个目录
-
-```text
-find("success")
-```
-
-查询满足 `success` 目录最终 Information 的数据。
-
-### 17.2 查询父目录覆盖范围
+### 14.1 查询父目录
 
 ```text
 find("PayResult")
 ```
 
-应包含：
+查询范围应覆盖：
 
 ```text
 success
-OR
 error
 ```
 
-但如果 `PayResult` 自身存在可以直接识别且尚未完成分类的数据，是否包含这些数据，应由查询模式明确规定。推荐：父目录查询包含自身及所有后代目录。
+### 14.2 查询单个分类
 
-### 17.3 查询路径范围
+```text
+find("success")
+```
+
+只查询支付成功数据。
+
+### 14.3 查询路径范围
 
 ```text
 find("ordered")
@@ -902,9 +697,9 @@ find("ordered")
     .end("success")
 ```
 
-表示查询指定业务路径范围内覆盖的数据。
+应根据目录路径及其 Information 生成业务查询条件，而不是把目录名称直接替换为固定状态值。
 
-### 17.4 关联业务模型
+### 14.4 关联模型
 
 ```text
 find("ordered")
@@ -913,85 +708,96 @@ find("ordered")
     .end("success")
 ```
 
-`with` 应根据业务模型关系和数据源能力生成关联查询，而不是把目录 DSL 直接拼接为数据库 SQL。
+`with` 表示查询时需要关联其他业务模型。
 
-## 18. 非法 XML 示例
+## 15. 编译期校验
 
-### 18.1 引用不存在的子目录
+### 15.1 XML 结构
 
-```xml
-<subdirectory rel="not-exist"/>
-```
+- 元素顺序正确；
+- 未知元素和属性被拒绝；
+- 必填和条件必填属性完整；
+- 容器数量有效。
 
-错误原因：`not-exist` 未定义。
+### 15.2 目录图
 
-### 18.2 目录缺少最终 Information
+- 根目录存在；
+- 非根目录可以从根到达；
+- 不存在非法环；
+- `rel` 目标存在；
+- 多父目录路径不存在无法消解的歧义。
 
-```xml
-<directory name="paying" model-ref="OrderInfo"/>
-```
+### 15.3 引用
 
-错误原因：无法定义“属于 paying”的业务事实。
+- `information-ref` 存在；
+- `model-ref` 存在；
+- `ref-rule` 存在；
+- Produce 的 `ref` 可以解析；
+- Produce 的 `information-ref` 可以解析。
 
-### 18.3 复合 Information 作为默认 Change
+### 15.4 Produce 映射
 
-```xml
-<directory
-        name="success"
-        information-ref="order.paySuccess"
-        model-ref="OrderInfo"/>
-```
+- 后续作为 Information 使用的数据必须配置映射；
+- 映射指向原子 Information；
+- 数据与 Information 模型上下文兼容；
+- Action 执行后能够验证该 Information；
+- 不允许将单一数据产出直接映射到尚未完整成立的复合事实。
 
-如果没有显式 `change-info`，引擎无法直接物化复合 Information `order.paySuccess`。
+### 15.5 分类
 
-### 18.4 Produce 引用未知对象
+- `any-one` 分组至少命中一个；
+- `mutual-exclusion` 目录不能同时命中；
+- `success/error` 必须且只能命中一个。
 
-```xml
-<produce-info>
-    <produce ref="UnknownData"/>
-</produce-info>
-```
+### 15.6 Back
 
-错误原因：`UnknownData` 未定义。
+- Back 只能定义在有效父子关系上；
+- Back Action 引用有效；
+- 多级回退路径连续；
+- 每一级补偿都必须执行；
+- 回退后的父目录 Information 可被物化和验证。
 
-### 18.5 Back 跳过中间目录
+## 16. 当前实现边界
 
-不应设计允许 `C` 直接返回 `A`，同时跳过已有 `C → B`、`B → A` 回退定义的结构。多级回退必须逐级执行。
+当前目录代码主要实现了旧版 XML 中的部分能力，例如：
 
-## 19. 当前实现边界
+- `name`
+- `view-ref`
+- `is-root`
+- `subdirectory`
+- `action`
+- `change`
+- `any-one`
+- `mutual-exclusion`
+- 部分目录查询
 
-`order-directory-new.xml` 描述的是目标设计语义。当前代码中的旧目录解析器和 `DirectoryContainer` 只实现了部分能力，例如：
+以下属于目标规范，可能尚未完整实现：
 
-- 基本目录与父子关系；
-- `any-one` 和部分互斥配置；
-- Action、Change 的部分解析；
-- 基于目录范围生成查询条件。
+- `information-info`
+- `information-ref`
+- `dependency-info`
+- `produce-info`
+- `produce/@information-ref`
+- `change-info` 引用 Information
+- `back`
+- 路径自动补齐
+- Produce 语义后置条件校验
+- Information 受影响范围重算
+- 自动分类和互斥验证
 
-以下能力需要继续实现或完善：
+因此，解析器、上下文模型和执行引擎后续需要同步支持本说明中的 XML 契约。
 
-- `information-info` 的完整解析和计算；
-- `dependency-info`；
-- `produce-info`；
-- `information-ref` 驱动的默认 Change；
-- `back` 及多级回退；
-- 完整的 `execute` 路径补齐；
-- 分类互斥运行时校验；
-- 编译期引用、图结构和表达式校验；
-- 数据源无关的查询计划。
+## 17. 设计原则
 
-文档描述“应该支持什么”，代码实现应以该语义为目标逐步补齐。
-
-## 20. 设计原则
-
-1. Directory 使用业务名称，不直接暴露状态值；
-2. Directory 必须通过 `information-ref` 定义最终业务事实；
-3. Dependency 只引用 Information；
-4. Action 只引用业务规则，不绑定具体技术实现；
-5. Produce 是 Action 的结果契约；
-6. Change 只物化原子 Information；
-7. 复合 Information 必须通过原子 Information 间接物化；
-8. 路径执行不能绕过中间目录；
-9. Back 必须沿相邻目录逐级执行；
-10. 父目录查询应覆盖其业务分类范围；
-11. XML 必须经过结构、引用、图和语义编译校验；
-12. 当前实现能力与目标设计语义必须明确区分。
+1. Directory 使用业务语言，不使用状态数字命名；
+2. Directory 只引用 Information，不复制字段判断；
+3. Dependency 只描述进入前置事实；
+4. Action 只描述业务操作；
+5. Produce 声明数据后置条件；
+6. 产出数据作为信息使用时，必须声明 `information-ref`；
+7. Produce 映射原子 Information，复合事实由信息树推导；
+8. Change 负责状态物化；
+9. 目标目录 Information 必须在执行结束后成立；
+10. Back 必须逐级执行补偿；
+11. 分类必须同时满足完整性和互斥性；
+12. 设计规范与当前实现能力必须明确区分。

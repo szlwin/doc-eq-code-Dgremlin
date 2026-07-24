@@ -8,43 +8,18 @@
 
     <information-info>
 
-        <!-- ===================================================== -->
-        <!-- 用户信息                                               -->
-        <!-- ===================================================== -->
+        <!-- 用户信息 -->
 
-        <!--
-            用户已经激活。
-
-            model-ref：
-                引用业务模型。
-
-            rule-ref：
-                引用用于识别该信息的业务规则。
-        -->
         <information
                 name="user.activated"
                 model-ref="UserInfo"
                 rule-ref="isActivated"/>
 
-
-        <!--
-            用户已经完成认证。
-        -->
         <information
                 name="user.certified"
                 model-ref="UserInfo"
                 rule-ref="isCertified"/>
 
-
-        <!--
-            有效用户 =
-                已激活
-                AND
-                已认证
-
-            expression只能引用其他Information，
-            不能直接访问业务模型字段。
-        -->
         <information
                 name="user.effective"
                 expression="
@@ -53,22 +28,8 @@
                     user.certified
                 "/>
 
+        <!-- 订单基础信息 -->
 
-        <!-- ===================================================== -->
-        <!-- 订单基础信息                                           -->
-        <!-- ===================================================== -->
-
-        <!--
-            订单数据处于已下单状态。
-
-            rule-data：
-                只能访问OrderInfo中的数据节点和字段，
-                用于识别order.ordered是否成立。
-
-            change-data：
-                只能修改OrderInfo中的数据节点和字段，
-                用于物化order.ordered。
-        -->
         <information
                 name="order.ordered"
                 model-ref="OrderInfo"
@@ -87,28 +48,11 @@
 
         </information>
 
-
-        <!--
-            订单处于等待支付状态。
-
-            当前只有识别规则，没有change-data，
-            因此只能识别，不能由系统自动物化。
-        -->
         <information
                 name="order.waitPay"
                 model-ref="OrderInfo"
                 rule-ref="isWaitPay"/>
 
-
-        <!--
-            订单可支付 =
-                已下单
-                OR
-                等待支付
-
-            复合Information没有model-ref，
-            也没有change-data。
-        -->
         <information
                 name="order.payable"
                 expression="
@@ -117,10 +61,6 @@
                     order.waitPay
                 "/>
 
-
-        <!--
-            订单数据处于支付中状态。
-        -->
         <information
                 name="order.paying"
                 model-ref="OrderInfo"
@@ -139,21 +79,26 @@
 
         </information>
 
-
-        <!-- ===================================================== -->
-        <!-- 支付结果信息                                           -->
-        <!-- ===================================================== -->
+        <!-- 支付数据与支付结果 -->
 
         <!--
-            当前OrderInfo中已经存在PayResult。
+            PaymentInfo 已由发起支付操作产生。
+            startPay 中的 produce 通过 information-ref 与该信息建立对应关系。
+        -->
+        <information
+                name="payment.hasPayment"
+                model-ref="OrderInfo"
+                rule-ref="hasPaymentInfo"/>
 
-            receivePayResult规则负责实际产生PayResult；
-            hasPayResult规则负责识别PayResult是否已经产生。
+        <!--
+            PayResult 已由接收支付结果操作产生。
+            receivePayResult 中的 produce 通过 information-ref 与该信息建立对应关系。
         -->
         <information
                 name="payment.hasResult"
                 model-ref="OrderInfo"
                 rule-ref="hasPayResult"/>
+
 
         <information
                 name="payment.paymentInfo"
@@ -173,27 +118,11 @@
                 model-ref="OrderInfo"
                 rule-ref="isPaySuccess"/>
 
-
-        <!--
-            PayResult表示支付失败。
-
-            rule-ref内部只能根据OrderInfo中的PayResult数据判断，
-            例如：
-
-                payResult.status = ERROR
-        -->
         <information
                 name="payment.error"
                 model-ref="OrderInfo"
                 rule-ref="isPayError"/>
 
-
-        <!--
-            支付结果已经确定 =
-                支付成功
-                OR
-                支付失败
-        -->
         <information
                 name="payment.completed"
                 expression="
@@ -202,17 +131,8 @@
                     payment.error
                 "/>
 
+        <!-- 订单支付成功信息 -->
 
-        <!-- ===================================================== -->
-        <!-- 订单支付成功信息                                       -->
-        <!-- ===================================================== -->
-
-        <!--
-            订单数据已经被物化为支付成功状态。
-
-            rule-data只能访问OrderInfo中的字段，
-            不能出现payment.success等Information引用。
-        -->
         <information
                 name="order.paySuccessStatus"
                 model-ref="OrderInfo"
@@ -231,15 +151,6 @@
 
         </information>
 
-
-        <!--
-            完整的订单支付成功事实 =
-                PayResult表示支付成功
-                AND
-                订单数据已经进入支付成功状态
-
-            Information之间的组合只能出现在expression中。
-        -->
         <information
                 name="order.paySuccess"
                 expression="
@@ -248,17 +159,8 @@
                     order.paySuccessStatus
                 "/>
 
+        <!-- 订单支付失败信息 -->
 
-        <!-- ===================================================== -->
-        <!-- 订单支付失败信息                                       -->
-        <!-- ===================================================== -->
-
-        <!--
-            订单数据已经被物化为支付失败状态。
-
-            rule-data只能访问OrderInfo中的字段，
-            不能出现payment.error等Information引用。
-        -->
         <information
                 name="order.payErrorStatus"
                 model-ref="OrderInfo"
@@ -277,13 +179,6 @@
 
         </information>
 
-
-        <!--
-            完整的订单支付失败事实 =
-                PayResult表示支付失败
-                AND
-                订单数据已经进入支付失败状态
-        -->
         <information
                 name="order.payError"
                 expression="
@@ -294,16 +189,13 @@
 
     </information-info>
 
-
     <!-- ========================================================= -->
     <!-- 目录                                                       -->
     <!-- ========================================================= -->
 
     <directory-info>
 
-        <!-- ===================================================== -->
-        <!-- 已下单目录                                             -->
-        <!-- ===================================================== -->
+        <!-- 已下单 -->
 
         <directory
                 name="ordered"
@@ -311,83 +203,30 @@
                 model-ref="OrderInfo"
                 is-root="true">
 
-            <!--
-                ordered的直接子目录为paying。
-
-                目录层级：
-
-                    ordered
-                    └── paying
-            -->
             <subdirectory-info>
-
                 <subdirectory rel="paying"/>
-
             </subdirectory-info>
-
-
-            <!--
-                当前目录没有显式配置change-info。
-
-                默认规则：
-
-                    directory.change-info
-                        =
-                    directory.information-ref
-
-                因此进入ordered时默认物化：
-
-                    order.ordered
-            -->
 
         </directory>
 
-
-        <!-- ===================================================== -->
-        <!-- 支付中目录                                             -->
-        <!-- ===================================================== -->
+        <!-- 支付中 -->
 
         <directory
                 name="paying"
                 information-ref="order.paying"
                 model-ref="OrderInfo">
 
-            <!--
-                paying的直接子目录为PayResult。
-
-                目录层级：
-
-                    paying
-                    └── PayResult
-            -->
             <subdirectory-info>
 
                 <subdirectory rel="PayResult">
 
-                    <!--
-                        PayResult可以返回paying。
-
-                        因为back定义在paying与PayResult的父子关系上，
-                        所以不需要重复声明来源和目标目录。
-                    -->
                     <back name="returnPaying">
 
                         <action-info>
-
                             <action
                                     name="resetPayResult"
                                     ref-rule="resetPayResult"/>
-
                         </action-info>
-
-                        <!--
-                            back执行后返回当前父目录paying。
-
-                            未显式配置change-info时，
-                            默认物化父目录paying的information-ref：
-
-                                order.paying
-                        -->
 
                     </back>
 
@@ -395,43 +234,26 @@
 
             </subdirectory-info>
 
-
-            <!--
-                进入paying目录必须满足：
-
-                    order.payable
-                    AND
-                    user.effective
-            -->
             <dependency-info>
-
-                <dependency
-                        information-ref="order.payable"/>
-
-                <dependency
-                        information-ref="user.effective"/>
-
+                <dependency information-ref="order.payable"/>
+                <dependency information-ref="user.effective"/>
             </dependency-info>
 
-
-            <!--
-                进入paying时自动发起支付。
-            -->
             <action-info>
 
                 <action
                         name="startPay"
                         ref-rule="pay">
 
-                    <!--
-                        pay规则负责实际创建PaymentInfo。
-
-                        produce-info是结果契约：
-                        pay成功执行后，当前OrderInfo中必须新增PaymentInfo。
-                    -->
                     <produce-info>
 
-                        <produce ref="PaymentInfo"/>
+                        <!--
+                            ref 表示实际产生的数据。
+                            information-ref 表示该数据在信息树中对应的原子 Information。
+                        -->
+                        <produce
+                                ref="PaymentInfo"
+                                information-ref="payment.hasPayment"/>
 
                     </produce-info>
 
@@ -439,94 +261,42 @@
 
             </action-info>
 
-
-            <!--
-                当前目录没有显式change-info，
-                默认物化：
-
-                    order.paying
-            -->
-
         </directory>
 
-
-        <!-- ===================================================== -->
-        <!-- 支付结果目录                                           -->
-        <!-- ===================================================== -->
+        <!-- 支付结果 -->
 
         <directory
                 name="PayResult"
                 information-ref="payment.hasResult"
                 model-ref="OrderInfo">
 
-            <!--
-                PayResult的直接子目录为success和error。
-
-                目录层级：
-
-                    PayResult
-                    ├── success
-                    └── error
-
-                success和error是PayResult的两种业务分类，
-                与register目录下的微信注册和PC注册相同。
-
-                find(PayResult)：
-                    查询success和error两个子目录覆盖的全部数据。
-
-                find(success)：
-                    只查询支付成功数据。
-
-                find(error)：
-                    只查询支付失败数据。
-            -->
             <subdirectory-info>
 
-                <!--
-                    当payment.success成立时，
-                    当前PayResult归入success子目录。
-
-                    mutual-exclusion：
-                        success与error不能同时成立。
-
-                    any-one：
-                        success与error必须至少成立一个。
-                -->
                 <subdirectory
                         rel="success"
                         information-ref="payment.success"
+                        mutual-exclusion="error"
                         any-one="true"/>
-                <!--
-                    当payment.error成立时，
-                    当前PayResult归入error子目录。
-                -->
+
                 <subdirectory
                         rel="error"
                         information-ref="payment.error"
+                        mutual-exclusion="success"
                         any-one="true"/>
 
             </subdirectory-info>
 
-
-            <!--
-                外部支付回调进入PayResult目录后，
-                自动执行receivePayResult。
-            -->
             <action-info>
 
                 <action
                         name="receivePayResult"
                         ref-rule="receivePayResult">
 
-                    <!--
-                        receivePayResult负责实际创建PayResult。
-
-                        produce-info声明：
-                        规则执行成功后必须产生PayResult。
-                    -->
                     <produce-info>
 
-                        <produce ref="PayResult"/>
+                        <produce
+                                ref="PayResult"
+                                information-ref="payment.hasResult"/>
 
                     </produce-info>
 
@@ -534,135 +304,53 @@
 
             </action-info>
 
-
-            <!--
-                payment.hasResult没有change-data。
-
-                因此PayResult不是通过change-info自动产生，
-                而是通过receivePayResult规则实际创建。
-
-                receivePayResult执行并保存后：
-
-                    1. 验证payment.hasResult；
-                    2. 计算payment.success；
-                    3. 计算payment.error；
-                    4. 根据subdirectory-info自动归类；
-                    5. success和error必须且只能命中一个。
-            -->
-
         </directory>
 
-
-        <!-- ===================================================== -->
-        <!-- 支付成功目录                                           -->
-        <!-- ===================================================== -->
+        <!-- 支付成功 -->
 
         <directory
                 name="success"
                 information-ref="order.paySuccess"
                 model-ref="OrderInfo">
 
-            <!--
-                success已经由PayResult中的：
-
-                    <subdirectory rel="success"/>
-
-                声明为PayResult的直接子目录，
-                因此这里不再反向声明PayResult。
-            -->
-
-
-            <!--
-                无论通过PayResult自动归类进入，
-                还是外部尝试直接进入success，
-                payment.success都必须成立。
-            -->
             <dependency-info>
-
-                <dependency
-                        information-ref="payment.success"/>
-
+                <dependency information-ref="payment.success"/>
             </dependency-info>
 
-
-            <!--
-                支付成功后的业务动作。
-            -->
             <action-info>
-
                 <action
                         name="confirmPaySuccess"
                         ref-rule="confirmPaySuccess"/>
-
             </action-info>
 
-
-            <!--
-                success目录的最终信息是复合Information：
-
-                    order.paySuccess
-                        =
-                    payment.success
-                        AND
-                    order.paySuccessStatus
-
-                复合Information没有change-data，
-                因此必须显式指定需要物化的原子Information。
-            -->
             <change-info
                     information-ref="order.paySuccessStatus"/>
 
         </directory>
 
-
-        <!-- ===================================================== -->
-        <!-- 支付失败目录                                           -->
-        <!-- ===================================================== -->
+        <!-- 支付失败 -->
 
         <directory
                 name="error"
                 information-ref="order.payError"
                 model-ref="OrderInfo">
 
-            <!--
-                error已经由PayResult中的：
-
-                    <subdirectory rel="error"/>
-
-                声明为PayResult的直接子目录。
-            -->
-
-
-            <!--
-                无论自动归类还是直接进入，
-                payment.error都必须成立。
-            -->
             <dependency-info>
-
-                <dependency
-                        information-ref="payment.error"/>
-
+                <dependency information-ref="payment.error"/>
             </dependency-info>
 
-
-            <!--
-                支付失败后的业务动作。
-            -->
             <action-info>
 
                 <action
                         name="recordPyaError"
                         ref-rule="recordPyaError">
 
-                    <!--
-                        recordPyaError负责实际新增PyaError。
-
-                        如果PayResult已经包含所有错误信息，
-                        不需要独立的PyaError数据，
-                        则可以删除该produce-info。
-                    -->
                     <produce-info>
 
+                        <!--
+                            PyaError 当前仅作为数据结果使用，
+                            未在信息树中定义对应 Information，因此不配置 information-ref。
+                        -->
                         <produce ref="PyaError"/>
 
                     </produce-info>
@@ -671,19 +359,6 @@
 
             </action-info>
 
-
-            <!--
-                error目录的最终信息是复合Information：
-
-                    order.payError
-                        =
-                    payment.error
-                        AND
-                    order.payErrorStatus
-
-                因此显式物化原子Information：
-                    order.payErrorStatus
-            -->
             <change-info
                     information-ref="order.payErrorStatus"/>
 
