@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    目标设计示例：
+
+    - OrderInfo 是跨 user、order、payment System 的共享业务模型；
+    - Information 通过 system-ref 指定识别或物化能力的归属；
+    - Directory Action 通过 system-ref + rule-ref 调用指定 System 的 RuleView；
+    - 无 rule-ref 的 Action 由全局自定义 Action 注册表提供；
+    - Produce 映射实际数据与 Information；
+    - subdirectory 默认按“子目录 -> 上层目录”执行，不需要额外声明 predecessor；
+    - role="case" 只用于标识上层结果目录包含的一种业务情况。
+
+    PayResult 查询约定：
+
+    1. find("PayResult")
+       查询 PayResult 中 role="case" 的子目录集合；本例包含 success 和 error。
+       paying 虽然也是 PayResult 的子目录，但它是默认的向上执行路径，不是支付结果情况，
+       因此不进入 PayResult 的结果查询集合。
+
+    2. find("PayResult").eq("success")
+       在 PayResult 的 case 子目录集合中按目录名称过滤，只查询 success。
+
+    3. 未配置 role 的 subdirectory
+       使用默认语义：子目录执行完成后向父目录执行。
+
+    4. role="case"
+       表示父目录的一种业务情况，属于父目录的默认结果查询范围。
+-->
+<business-config name="order-payment">
+
+    <!-- ========================================================= -->
+    <!-- 信息树                                                     -->
+    <!-- ========================================================= -->
+
+    <information-info>
+
+        <!-- 用户信息：由 user System 在共享 OrderInfo.user 上识别。 -->
+
+        <information
+                name="user.activated"
+                system-ref="user"
+                model-ref="OrderInfo"
+                rule-ref="isActivated"/>
+
+        <information
+                name="user.certified"
+                system-ref="user"
+                model-ref="OrderInfo"
+                rule-ref="isCertified"/>
+
+        <information
+                name="user.effective"
+                expression="
+                    user.activated
+                    and
+                    user.certified
+                "/>
+
+        <!-- 订单信息：由 order System 负责识别和物化。 -->
+
+        <information
+                name="order.ordered"
+                system-ref="order"
+                model-ref="OrderInfo"
+                rule-data="
+                    status = 1
+                    and
+                    every(orderDetailList, status = 1)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    status : 1;
+                    every(orderDetailList, status : 1);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <information
+                name="order.waitPay"
+                system-ref="order"
+                model-ref="OrderInfo"
+                rule-ref="isWaitPay"/>
+
+        <information
+                name="order.payable"
+                expression="
+                    order.ordered
+                    or
+                    order.waitPay
+                "/>
+
+        <information
+                name="order.paying"
+                system-ref="order"
+                model-ref="OrderInfo"
+                rule-data="
+                    status = 2
+                    and
+                    every(orderDetailList, status = 2)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    status : 2;
+                    every(orderDetailList, status : 2);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <!-- 支付信息：由 payment System 在共享 OrderInfo.payInfo 上识别。 -->
+
+        <information
+                name="payment.paymentInfo"
+                system-ref="payment"
+                model-ref="OrderInfo"
+                rule-ref="hasPaymentInfo"/>
+
+        <information
+                name="payment.hasResult"
+                system-ref="payment"
+                model-ref="OrderInfo"
+                rule-ref="hasPayResult"/>
+
+        <information
+                name="payment.success"
+                system-ref="payment"
+                model-ref="OrderInfo"
+                rule-ref="isPaySuccess"/>
+
+        <information
+                name="payment.error"
+                system-ref="payment"
+                model-ref="OrderInfo"
+                rule-ref="isPayError"/>
+
+        <information
+                name="payment.completed"
+                expression="
+                    payment.success
+                    or
+                    payment.error
+                "/>
+
+        <!-- 支付成功后的订单信息。 -->
+
+        <information
+                name="order.paySuccessStatus"
+                system-ref="order"
+                model-ref="OrderInfo"
+                rule-data="
+                    status = 3
+                    and
+                    every(orderDetailList, status = 3)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    status : 3;
+                    every(orderDetailList, status : 3);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <information
+                name="order.paySuccess"
+                expression="
+                    payment.success
+                    and
+                    order.paySuccessStatus
+                "/>
+
+        <!-- 支付失败后的订单信息。 -->
+
+        <information
+                name="order.payErrorStatus"
+                system-ref="order"
+                model-ref="OrderInfo"
+                rule-data="
+                    status = 4
+                    and
+                    every(orderDetailList, status = 4)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    status : 4;
+                    every(orderDetailList, status : 4);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <information
+                name="order.payError"
+                expression="
+                    payment.error
+                    and
+                    order.payErrorStatus
+                "/>
+
+    </information-info>
+
+    <!-- ========================================================= -->
+    <!-- 目录                                                       -->
+    <!-- ========================================================= -->
+
+    <directory-info>
+
+        <!--
+            业务从 ordered 开始。
+            ordered 没有前置子目录。
+        -->
+        <directory
+                name="ordered"
+                information-ref="order.ordered"
+                model-ref="OrderInfo"
+                is-root="true">
+
+            <action-info>
+
+                <action
+                        name="saveOrder"
+                        system-ref="order"
+                        rule-ref="save-Order">
+
+                    <produce-info>
+                        <produce
+                                ref="OrderInfo"
+                                information-ref="order.ordered"/>
+                    </produce-info>
+
+                </action>
+
+            </action-info>
+
+        </directory>
+
+        <!--
+            ordered 是 paying 的普通子目录。
+            subdirectory 默认向上执行，因此业务顺序是 ordered -> paying。
+            startPay 只属于 paying 这个支付执行过程。
+        -->
+        <directory
+                name="paying"
+                information-ref="order.paying"
+                model-ref="OrderInfo">
+
+            <subdirectory-info>
+                <subdirectory rel="ordered"/>
+            </subdirectory-info>
+
+            <dependency-info>
+                <dependency information-ref="order.payable"/>
+                <dependency information-ref="user.effective"/>
+            </dependency-info>
+
+            <action-info>
+
+                <action
+                        name="startPay"
+                        system-ref="payment"
+                        rule-ref="pay">
+
+                    <produce-info>
+                        <produce
+                                ref="PaymentInfo"
+                                information-ref="payment.paymentInfo"/>
+                    </produce-info>
+
+                </action>
+
+            </action-info>
+
+            <change-info information-ref="order.paying"/>
+
+        </directory>
+
+        <!--
+            PayResult 是特殊的结果聚合目录：
+
+            - paying 是普通子目录，表示 paying -> PayResult 的向上执行路径；
+            - paying 只负责支付执行，此时还不知道支付成功或失败；
+            - PayResult 不包含 startPay 等支付执行操作，只负责接收和保存支付结果；
+            - success 和 error 是 case 子目录，表示 PayResult 包含的两种结果情况；
+            - find("PayResult") 只查询 role="case" 的 success 与 error；
+            - find("PayResult").eq("success") 只查询 success；
+            - success/error 根据各自 information-ref 自动识别，不额外配置 mutual-exclusion。
+        -->
+        <directory
+                name="PayResult"
+                type="result"
+                information-ref="payment.hasResult"
+                model-ref="OrderInfo">
+
+            <subdirectory-info>
+
+                <subdirectory rel="paying">
+
+                    <back name="returnPaying">
+                        <action-info>
+                            <action
+                                    name="resetPayResult"
+                                    system-ref="payment"
+                                    rule-ref="resetPayResult"/>
+                        </action-info>
+                    </back>
+
+                </subdirectory>
+
+                <subdirectory
+                        rel="success"
+                        role="case"
+                        information-ref="payment.success"/>
+
+                <subdirectory
+                        rel="error"
+                        role="case"
+                        information-ref="payment.error"/>
+
+            </subdirectory-info>
+
+            <action-info>
+
+                <action
+                        name="receivePayResult"
+                        system-ref="payment"
+                        rule-ref="receivePayResult">
+
+                    <produce-info>
+                        <produce
+                                ref="PayResult"
+                                information-ref="payment.hasResult"/>
+                    </produce-info>
+
+                </action>
+
+            </action-info>
+
+        </directory>
+
+        <!--
+            success 是 PayResult 的 case 子目录。
+            当 payment.success 成立时，执行成功结果处理。
+        -->
+        <directory
+                name="success"
+                information-ref="order.paySuccess"
+                model-ref="OrderInfo">
+
+            <dependency-info>
+                <dependency information-ref="payment.success"/>
+            </dependency-info>
+
+            <action-info>
+                <action
+                        name="confirmPaySuccess"
+                        system-ref="order"
+                        rule-ref="confirmPaySuccess"/>
+            </action-info>
+
+            <change-info information-ref="order.paySuccessStatus"/>
+
+        </directory>
+
+        <!--
+            error 是 PayResult 的 case 子目录。
+            当 payment.error 成立时，执行失败结果处理。
+        -->
+        <directory
+                name="error"
+                information-ref="order.payError"
+                model-ref="OrderInfo">
+
+            <dependency-info>
+                <dependency information-ref="payment.error"/>
+            </dependency-info>
+
+            <action-info>
+
+                <action
+                        name="recordPyaError"
+                        system-ref="payment"
+                        rule-ref="recordPyaError">
+
+                    <produce-info>
+                        <produce ref="PyaError"/>
+                    </produce-info>
+
+                </action>
+
+                <action name="smsNotify"/>
+
+                <action
+                        name="confirmPayError"
+                        system-ref="order"
+                        rule-ref="confirmPayError"/>
+
+            </action-info>
+
+            <change-info information-ref="order.payErrorStatus"/>
+
+        </directory>
+
+    </directory-info>
+
+</business-config>

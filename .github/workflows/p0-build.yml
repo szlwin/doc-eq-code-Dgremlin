@@ -47,8 +47,8 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: demo_test
+          MYSQL_ROOT_PASSWORD: mysqldb
+          MYSQL_DATABASE: demo-test2
         ports: ['3306:3306']
         options: >-
           --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
@@ -63,6 +63,6 @@ jobs:
       - run: scripts/remediation/bootstrap_legacy_dependencies.sh
       - run: ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
         env:
-          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo_test
+          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
           DEC_MYSQL_USER: root
-          DEC_MYSQL_PASSWORD: root
+          DEC_MYSQL_PASSWORD: mysqldb

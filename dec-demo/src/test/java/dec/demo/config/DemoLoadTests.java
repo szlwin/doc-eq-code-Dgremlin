@@ -29,8 +29,8 @@ public class DemoLoadTests {
 		//1.添加数据源
 		ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
 		//2.加载配置文件
-		//ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
-		YamlConfigUtil.parseConfigInfo("classpath:yaml/model/orm-config.yaml");
+		ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
+		//YamlConfigUtil.parseConfigInfo("classpath:yaml/model/orm-config.yaml");
 
 		//3.添加数据源相关实现
 		DataSourceManager.addConnectionFactory("MySQL", new MySQLDBConnectionFactory());
@@ -67,9 +67,9 @@ public class DemoLoadTests {
         HikariConfig hikariConfig = new HikariConfig();
         // 设置数据库信息
         hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo_test"));
+        hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo-test2"));
         hikariConfig.setUsername(env("DEC_MYSQL_USER", "root"));
-        hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", ""));
+        hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", "mysqldb"));
         hikariConfig.setMinimumIdle(2);
         hikariConfig.setMaximumPoolSize(5);
         DataSource dataSource = new HikariDataSource(hikariConfig);
@@ -83,9 +83,9 @@ public class DemoLoadTests {
         
         // 设置数据库信息
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL_2", env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo_test")));
+		hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL_2", env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo-test2")));
 		hikariConfig.setUsername(env("DEC_MYSQL_USER", "root"));
-		hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", ""));
+		hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", "mysqldb"));
         hikariConfig.setMinimumIdle(2);
         hikariConfig.setMaximumPoolSize(5);
         DataSource dataSource = new HikariDataSource(hikariConfig);

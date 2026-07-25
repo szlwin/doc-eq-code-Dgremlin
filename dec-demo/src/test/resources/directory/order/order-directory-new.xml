@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<business-config name="order">
+
+    <!-- ========================================================= -->
+    <!-- 信息树                                                     -->
+    <!-- ========================================================= -->
+
+    <information-info>
+
+        <!-- 用户信息 -->
+
+        <information
+                name="user.activated"
+                model-ref="UserInfo"
+                rule-ref="isActivated"/>
+
+        <information
+                name="user.certified"
+                model-ref="UserInfo"
+                rule-ref="isCertified"/>
+
+        <information
+                name="user.effective"
+                expression="
+                    user.activated
+                    and
+                    user.certified
+                "/>
+
+        <!-- 订单基础信息 -->
+
+        <information
+                name="order.ordered"
+                model-ref="OrderInfo"
+                rule-data="
+                    order.status = 1
+                    and
+                    every(orderDetails, status = 1)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    order.status = 1;
+                    every(orderDetails, status = 1);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <information
+                name="order.waitPay"
+                model-ref="OrderInfo"
+                rule-ref="isWaitPay"/>
+
+        <information
+                name="order.payable"
+                expression="
+                    order.ordered
+                    or
+                    order.waitPay
+                "/>
+
+        <information
+                name="order.paying"
+                model-ref="OrderInfo"
+                rule-data="
+                    order.status = 2
+                    and
+                    every(orderDetails, status = 2)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    order.status = 2;
+                    every(orderDetails, status = 2);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <!-- 支付数据与支付结果 -->
+
+        <!--
+            PaymentInfo 由 startPay 的 pay 规则产生。
+            startPay 中的 produce 通过 information-ref 与该 Information 建立对应关系。
+        -->
+        <information
+                name="payment.paymentInfo"
+                model-ref="OrderInfo"
+                rule-ref="hasPaymentInfo"/>
+
+        <!--
+            PayResult 由 receivePayResult 规则产生。
+            receivePayResult 中的 produce 通过 information-ref 与该 Information 建立对应关系。
+        -->
+        <information
+                name="payment.hasResult"
+                model-ref="OrderInfo"
+                rule-ref="hasPayResult"/>
+
+        <information
+                name="payment.success"
+                model-ref="OrderInfo"
+                rule-ref="isPaySuccess"/>
+
+        <information
+                name="payment.error"
+                model-ref="OrderInfo"
+                rule-ref="isPayError"/>
+
+        <information
+                name="payment.completed"
+                expression="
+                    payment.success
+                    or
+                    payment.error
+                "/>
+
+        <!-- 订单支付成功信息 -->
+
+        <information
+                name="order.paySuccessStatus"
+                model-ref="OrderInfo"
+                rule-data="
+                    order.status = 3
+                    and
+                    every(orderDetails, status = 3)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    order.status = 3;
+                    every(orderDetails, status = 3);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <information
+                name="order.paySuccess"
+                expression="
+                    payment.success
+                    and
+                    order.paySuccessStatus
+                "/>
+
+        <!-- 订单支付失败信息 -->
+
+        <information
+                name="order.payErrorStatus"
+                model-ref="OrderInfo"
+                rule-data="
+                    order.status = 4
+                    and
+                    every(orderDetails, status = 4)
+                ">
+
+            <change-data>
+                <![CDATA[
+                    order.status = 4;
+                    every(orderDetails, status = 4);
+                ]]>
+            </change-data>
+
+        </information>
+
+        <information
+                name="order.payError"
+                expression="
+                    payment.error
+                    and
+                    order.payErrorStatus
+                "/>
+
+    </information-info>
+
+    <!-- ========================================================= -->
+    <!-- 目录                                                       -->
+    <!-- ========================================================= -->
+
+    <directory-info>
+
+        <!-- 已下单 -->
+
+        <directory
+                name="ordered"
+                information-ref="order.ordered"
+                model-ref="OrderInfo"
+                is-root="true">
+
+            <subdirectory-info>
+                <subdirectory rel="paying"/>
+            </subdirectory-info>
+
+        </directory>
+
+        <!-- 支付中 -->
+
+        <directory
+                name="paying"
+                information-ref="order.paying"
+                model-ref="OrderInfo">
+
+            <subdirectory-info>
+
+                <subdirectory rel="PayResult">
+
+                    <back name="returnPaying">
+
+                        <action-info>
+                            <action
+                                    name="resetPayResult"
+                                    rule-ref="resetPayResult"/>
+                        </action-info>
+
+                    </back>
+
+                </subdirectory>
+
+            </subdirectory-info>
+
+            <dependency-info>
+                <dependency information-ref="order.payable"/>
+                <dependency information-ref="user.effective"/>
+            </dependency-info>
+
+            <action-info>
+
+                <action
+                        name="startPay"
+                        rule-ref="pay">
+
+                    <produce-info>
+
+                        <!--
+                            ref 表示实际产生的数据。
+                            information-ref 表示该数据在信息树中对应的 Information。
+                            PaymentInfo 后续作为信息使用，因此必须配置 information-ref。
+                        -->
+                        <produce
+                                ref="PaymentInfo"
+                                information-ref="payment.paymentInfo"/>
+
+                    </produce-info>
+
+                </action>
+
+            </action-info>
+
+        </directory>
+
+        <!-- 支付结果 -->
+
+        <directory
+                name="PayResult"
+                information-ref="payment.hasResult"
+                model-ref="OrderInfo">
+
+            <subdirectory-info>
+
+                <subdirectory
+                        rel="success"
+                        information-ref="payment.success"
+                        mutual-exclusion="error"
+                        any-one="true"/>
+
+                <subdirectory
+                        rel="error"
+                        information-ref="payment.error"
+                        mutual-exclusion="success"
+                        any-one="true"/>
+
+            </subdirectory-info>
+
+            <action-info>
+
+                <action
+                        name="receivePayResult"
+                        rule-ref="receivePayResult">
+
+                    <produce-info>
+
+                        <produce
+                                ref="PayResult"
+                                information-ref="payment.hasResult"/>
+
+                    </produce-info>
+
+                </action>
+
+            </action-info>
+
+        </directory>
+
+        <!-- 支付成功 -->
+
+        <directory
+                name="success"
+                information-ref="order.paySuccess"
+                model-ref="OrderInfo">
+
+            <dependency-info>
+                <dependency information-ref="payment.success"/>
+            </dependency-info>
+
+            <action-info>
+                <action
+                        name="confirmPaySuccess"
+                        rule-ref="confirmPaySuccess"/>
+            </action-info>
+
+            <change-info
+                    information-ref="order.paySuccessStatus"/>
+
+        </directory>
+
+        <!-- 支付失败 -->
+
+        <directory
+                name="error"
+                information-ref="order.payError"
+                model-ref="OrderInfo">
+
+            <dependency-info>
+                <dependency information-ref="payment.error"/>
+            </dependency-info>
+
+            <action-info>
+
+                <action
+                        name="recordPyaError"
+                        rule-ref="recordPyaError">
+
+                    <produce-info>
+
+                        <!--
+                            PyaError 当前仅作为记录数据使用，
+                            未在信息树中定义对应 Information，因此不配置 information-ref。
+                        -->
+                        <produce ref="PyaError"/>
+
+                    </produce-info>
+
+                </action>
+                <action name="smsNotify"/>
+            </action-info>
+
+            <change-info
+                    information-ref="order.payErrorStatus"/>
+
+        </directory>
+
+    </directory-info>
+
+</business-config>

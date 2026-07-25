@@ -1,0 +1,81 @@
+ruleViews:
+  - name: save-Order
+    viewRef: OrderInfo
+    rules:
+      - name: dsl
+        type: grammer
+        error:
+          code: C001
+          message: user error
+          level: "1"
+        process: |
+          #num : if totalPrice>10 then totalPrice*1.1  else totalPrice*1.2;
+          totalPrice : totalPrice*#num;
+
+      - name: checkName
+        type: checkPattern
+        pattern: userT.userName = userT.uname
+        error:
+          code: C001
+          message: user error
+          level: "1"
+
+      - name: insertUser
+        type: insert
+        property: userT
+
+      - name: checkUser
+        type: checkDataPattern
+        property: userT
+        sql: "select a.id as u_id from userT a where a.id = #userT.id"
+        pattern: u_id = userId
+
+      - name: checkUser1
+        type: checkData
+        property: userT
+        pattern: NOTNULL
+
+      - name: check1
+        type: checkPattern
+        pattern: userId != 0 and userT.id != 0 and ( productCount > 0 or totalPrice >= 0 ) or (productCount*(totalPrice+10) > 200 )
+
+      - name: checkUerId
+        type: check
+        property: userId
+        pattern: NOTNULL;NOTEQUAL:2
+
+      - name: insertOrder
+        type: insert
+        property: OrderInfo
+
+      - name: insertProduct
+        type: insert
+        property: productList
+
+      - name: deleteProduct
+        type: delete
+        sql: delete p.* from productList p where p.productPrice = 20
+
+  - name: get-user
+    viewRef: OrderInfo
+    rules:
+      - name: selectUser
+        type: get
+        property: userT
+        sql: "select a.userName from userT a where a.id = #userT.id"
+
+      - name: selectOrder
+        type: get
+        property: OrderInfo
+
+      - name: getProduct
+        type: query
+        property: productList
+        sql: "select p.id,p.productPrice from productList p where p.orderId = #id"
+
+  - name: back-Order
+    viewRef: OrderInfo
+    rules:
+      - name: insertProduct1
+        type: insert
+        property: productList

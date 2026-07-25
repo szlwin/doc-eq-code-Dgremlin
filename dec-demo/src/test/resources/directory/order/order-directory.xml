@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<directory-config>
+	<directory name="cancel" view-ref="OrderInfo" desc="已取消">
+		<depend-info>
+			<depend name="" view-ref="UserInfo" key-property="" />
+		</depend-info>
+		<action-info>
+			<action name="cancel" ref-rule="cancelOrder" group="group1"/>
+			<action name="sms" ref-rule="sms"  group="group2"/>
+		</action-info>
+		<change-info>
+			<![CDATA[
+					status:6;
+				]]>
+		</change-info>
+	</directory>
+
+	<directory name="order" view-ref="OrderInfo" desc="已订购">
+		<action-info>
+			<action name="order" ref-rule="saveOrder"/>
+		</action-info>
+		<change-info>
+			<![CDATA[
+					status:1;
+				]]>
+		</change-info>
+	</directory>
+
+	<directory name="refund" view-ref="OrderInfo" desc="退款">
+		<action-info>
+			<action name="refundOrder"/>
+		</action-info>
+		<change-info>
+			<![CDATA[
+					status:5;
+				]]>
+		</change-info>
+	</directory>
+
+
+	<directory name="paying" view-ref="OrderInfo" desc="支付中">
+		<change-info>
+			<![CDATA[
+					status:2;
+				]]>
+		</change-info>
+	</directory>
+
+	<directory name="payResult" view-ref="OrderInfo" desc="支付结果">
+		<action-info>
+			<action name="pay" ref-rule="payOrder"/>
+		</action-info>
+		<subdirectory-info>
+			<subdirectory rel="paySuccess" handler="success"/>
+			<subdirectory rel="payError" handler="error"/>
+		</subdirectory-info>
+	</directory>
+
+	<directory name="paySuccess" view-ref="OrderInfo" desc="支付成功">
+		<action-info>
+			<action name="notify"/>
+		</action-info>
+		<change-info>
+			<![CDATA[
+					status:3;
+				]]>
+		</change-info>
+	</directory>
+
+	<directory name="payError" view-ref="OrderInfo" desc="支付失败">
+		<action-info>
+			<action name="alarm"/>
+		</action-info>
+		<change-info>
+			<![CDATA[
+					status:4;
+				]]>
+		</change-info>
+	</directory>
+</directory-config>

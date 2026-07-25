@@ -1,0 +1,22 @@
+datasources:
+  - name: data1
+    type: MySQL
+  - name: data2
+    type: MySQL
+
+dataFiles:
+  - path: classpath:yaml/model/test-data/
+
+viewFiles:
+  - path: classpath:yaml/model/test-view/
+
+ruleFiles:
+  - path: classpath:yaml/model/test-rule/
+
+connections:
+  - name: con1
+    dataSources:
+      - data1
+  - name: con2
+    dataSources:
+      - data2

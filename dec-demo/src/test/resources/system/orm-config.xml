@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<orm-config>
+	<orm-datasource-info default="data1">
+		<orm-datasource name="data1">
+			<name>MySQL</name>
+		</orm-datasource>
+		<orm-datasource name="data2">
+			<name>MySQL</name>
+		</orm-datasource>
+	</orm-datasource-info>
+	
+	<orm-data-file-info>
+		<orm-file path="classpath:system/test-data/"/>
+	</orm-data-file-info>
+	
+	<orm-view-file-info>
+		<orm-file path="classpath:system/test-view"/>
+	</orm-view-file-info>
+
+	<orm-rule-file-info>
+		<orm-file path="classpath:system/test-rule"/>
+	</orm-rule-file-info>
+	
+	<orm-connection-info default="con1">
+		<orm-connection name="con1">
+			<data-source-info>
+				<data-source ref="data1"/>
+			</data-source-info>
+		</orm-connection>
+		<orm-connection name="con2">
+			<data-source-info>
+				<data-source ref="data2"/>
+			</data-source-info>
+		</orm-connection>
+	</orm-connection-info>
+
+	<!-- <orm-service-info>
+		<orm-file path="classpath:system/test-service"/>
+	</orm-service-info>-->
+	<!-- <orm-define>
+		<data-vailables>
+			<data-vailable key="dataOne" value="data1"/>
+		</data-vailables>
+	</orm-define>-->
+</orm-config>

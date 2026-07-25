@@ -1,0 +1,49 @@
+directories:
+  - name: user
+    viewRef: UserInfo
+    isRoot: true
+    subDirectories:
+      - rel: auth
+
+  - name: auth
+    viewRef: UserInfo
+    subDirectories:
+      - rel: register
+    actions:
+      - name: auth
+    change:
+      process: |
+        status:2;
+
+  - name: register
+    viewRef: UserInfo
+    subDirectories:
+      - rel: register-pc
+        mutualExclusion: register-wx
+        anyOne: true
+      - rel: register-wx
+        mutualExclusion: register-pc
+        anyOne: true
+      - rel: register-notify
+    actions:
+      - name: email
+      - name: sms
+    change:
+      process: |
+        status:1;
+
+  - name: register-pc
+    viewRef: UserInfo
+    actions:
+      - name: register
+
+  - name: register-wx
+    viewRef: UserInfo
+    actions:
+      - name: register
+
+  - name: register-notify
+    viewRef: UserInfo
+    actions:
+      - name: sms-notify
+      - name: email-notify

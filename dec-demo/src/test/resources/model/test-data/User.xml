@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<orm-data-mapping>
+	<data name="user">
+		<property-info>
+			<property name="id" type="int"/>
+			<property name="uidd" type="string"/>
+			<property name="uid" type="string"/>
+			<property name="name" type="string"/>
+			<property name="activeTime" type="date"/>
+			<property name="status" type="int"/>
+			<property name="password" type="string"/>
+		</property-info>
+		<table-info>
+			<!-- <table name="userInfo" data-source="data1" key="u_id" key-type="sequence" seq=""> -->
+			<table name="user_info" data-source="data1" key="u_id" key-type="increment">
+				<column name="u_id" ref-property="id"/>
+				<column name="u_name" ref-property="name"/>
+				<column name="u_password" ref-property="password"/>
+			</table>
+			<table name="user_info" data-source="data2" key="u_id" key-type="increment">
+				<column name="u_id" ref-property="id"/>
+				<column name="u_name" ref-property="name"/>
+				<column name="u_password" ref-property="password"/>
+			</table>
+		</table-info>
+	</data>
+</orm-data-mapping>
+

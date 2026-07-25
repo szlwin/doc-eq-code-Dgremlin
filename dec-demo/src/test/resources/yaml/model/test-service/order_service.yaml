@@ -1,0 +1,18 @@
+services:
+  - name: SAVE_ORDER
+    version: "1.0"
+    model: OrderInfo
+    taskInfo:
+      - name: order
+        type: commit
+        tasks:
+          - execute: save-Order
+            con: con1
+      - name: synOrder
+        type: syn
+        depend: order
+        tasks:
+          - execute: save-Order
+            con: con2
+          - execute: save-Order
+            con: con3

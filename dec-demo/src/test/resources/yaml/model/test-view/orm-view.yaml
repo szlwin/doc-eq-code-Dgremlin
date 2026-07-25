@@ -1,0 +1,30 @@
+view:
+  name: OrderInfo
+  targetMain: order
+  properties:
+    id: id
+    userId: userId
+    productCount: count
+    totalPrice: totalPrice
+    dateTime: dateTime
+    userT:
+      relation: one-to-one
+      data: user
+      key: id
+      relKey: userId
+      properties:
+        id: id
+        userName: name
+        uname: name
+        upassword: password
+    productList:
+      relation: one-to-many
+      data: product
+      key: orderId
+      relKey: id
+      properties:
+        id: id
+        orderId: orderId
+        productName: name
+        productCount: count
+        productPrice: price

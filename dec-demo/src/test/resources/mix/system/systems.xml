@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    System 不拥有整个 Business Model。
+    多个 System 可以共同使用 OrderInfo，但只能修改各自声明的模型区域。
+-->
+<systems>
+
+    <system name="user">
+
+        <data-info>
+            <data-ref name="user"/>
+        </data-info>
+
+        <view-info>
+            <view-ref name="UserInfo"/>
+            <view-ref name="OrderInfo"/>
+        </view-info>
+
+        <rule-file-info>
+            <rule-file path="classpath:mix/rule/user-rule.xml"/>
+        </rule-file-info>
+
+        <model-access-info>
+            <model-access model-ref="OrderInfo">
+                <read path="user"/>
+            </model-access>
+        </model-access-info>
+
+    </system>
+
+    <system name="order">
+
+        <data-info>
+            <data-ref name="order"/>
+            <data-ref name="orderDetail"/>
+        </data-info>
+
+        <view-info>
+            <view-ref name="OrderInfo"/>
+        </view-info>
+
+        <rule-file-info>
+            <rule-file path="classpath:mix/rule/order-rule.xml"/>
+        </rule-file-info>
+
+        <model-access-info>
+            <model-access model-ref="OrderInfo">
+                <read path="*"/>
+                <write path="id"/>
+                <write path="userId"/>
+                <write path="productCount"/>
+                <write path="totalPrice"/>
+                <write path="totalAmount"/>
+                <write path="status"/>
+                <write path="dateTime"/>
+                <write path="payId"/>
+                <write path="orderDetailList"/>
+            </model-access>
+        </model-access-info>
+
+    </system>
+
+    <system name="payment">
+
+        <data-info>
+            <data-ref name="pay"/>
+            <data-ref name="payDetail"/>
+        </data-info>
+
+        <view-info>
+            <view-ref name="OrderInfo"/>
+        </view-info>
+
+        <rule-file-info>
+            <rule-file path="classpath:mix/rule/payment-rule.xml"/>
+        </rule-file-info>
+
+        <model-access-info>
+            <model-access model-ref="OrderInfo">
+                <read path="*"/>
+                <write path="payInfo"/>
+                <write path="payInfo.payDetailList"/>
+            </model-access>
+        </model-access-info>
+
+    </system>
+
+</systems>

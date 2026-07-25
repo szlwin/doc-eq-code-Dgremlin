@@ -1,0 +1,8 @@
+dataSourceConfigs:
+  - name: MySQL
+    type: sql
+    dataSource: dec.external.datasource.sql.datasource.DBDataSource
+
+connectionConfigs:
+  - name: MySQL
+    type: sql

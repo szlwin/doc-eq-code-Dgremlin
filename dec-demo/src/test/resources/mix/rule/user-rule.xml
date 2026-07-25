@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<orm-rule-mapping>
+
+    <!--
+        两个 RuleView 都属于 user System，
+        但可在跨模块业务模型 OrderInfo 上读取 user 区域。
+    -->
+
+    <rule-view-info system="user" name="isActivated" view-ref="OrderInfo">
+        <rule
+                name="checkActivated"
+                type="checkPattern"
+                pattern="user.status = 1"/>
+    </rule-view-info>
+
+    <rule-view-info system="user" name="isCertified" view-ref="OrderInfo">
+        <rule
+                name="checkCertified"
+                type="checkPattern"
+                pattern="user.certified = 1"/>
+    </rule-view-info>
+
+</orm-rule-mapping>

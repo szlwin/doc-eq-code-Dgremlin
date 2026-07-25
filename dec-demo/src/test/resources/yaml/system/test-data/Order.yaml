@@ -1,0 +1,54 @@
+datas:
+  - name: order
+    properties:
+      id: int
+      userId: int
+      productCount: int
+      totalPrice: decimal
+      totalAmount: decimal
+      orderStatus: int
+      createDate: date
+      payId: int
+    tables:
+      - name: order_info
+        dataSource: data1
+        key: o_id
+        keyType: increment
+        columns:
+          o_id: id
+          o_userId: userId
+          o_payId: payId
+          o_count: productCount
+          o_totalPrice: totalPrice
+          o_totalAmount: totalAmount
+          o_status: orderStatus
+          o_date:
+            ref: createDate
+            type: timestamp
+
+  - name: orderDetail
+    properties:
+      id: int
+      userId: int
+      orderId: int
+      productId: int
+      productName: int
+      productPrice: decimal
+      productAmount: decimal
+      createDate: date
+    tables:
+      - name: order_detail_info
+        dataSource: data1
+        key: o_d_id
+        keyType: increment
+        columns:
+          o_d_id: id
+          o_orderId: orderId
+          o_userId: userId
+          o_productId: productId
+          o_productName: productName
+          o_productPrice: productPrice
+          o_productAmount: productAmount
+          o_date:
+            ref: createDate
+            type: timestamp

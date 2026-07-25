@@ -25,8 +25,8 @@ public class ConfigInit {
 	
 	public static void init() throws Exception {
 		ConfigUtil.addDataSourceConfig("MySQL", "dec.external.datasource.sql.datasource.DBDataSource");
-		//ConfigUtil.parseConfigInfo("classpath:directory/orm-config.xml");
-		YamlConfigUtil.parseConfigInfo("classpath:yaml/directory/orm-config.yaml");
+		ConfigUtil.parseConfigInfo("classpath:directory/orm-config.xml");
+		//YamlConfigUtil.parseConfigInfo("classpath:yaml/directory/orm-config.yaml");
 		DataSourceManager.addDataSource("data1", getDataSource());
 		DataSourceManager.addDataSource("data2", getDataSource());
 
@@ -48,7 +48,7 @@ public class ConfigInit {
 		HikariConfig hikariConfig = new HikariConfig();
 		// 设置数据库信息
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo_test"));
+		hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo-test2"));
 		hikariConfig.setUsername(env("DEC_MYSQL_USER", "root"));
 		hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", "mysqldb"));
 		// 设置可以获取tables remarks信息

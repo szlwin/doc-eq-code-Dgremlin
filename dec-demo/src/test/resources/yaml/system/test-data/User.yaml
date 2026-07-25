@@ -1,0 +1,19 @@
+datas:
+  - name: user
+    properties:
+      id: int
+      name: string
+      activeTime: date
+      status: int
+    tables:
+      - name: user_info
+        dataSource: data1
+        key: u_id
+        keyType: increment
+        columns:
+          u_id: id
+          u_name: name
+          u_status: status
+          u_activeTime:
+            ref: activeTime
+            type: timestamp

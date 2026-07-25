@@ -1,0 +1,964 @@
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	﻿2026-07-25T12:12:43.0757077Z ##[group]Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0757678Z ^[[36;1m./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify^[[0m
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0804898Z shell: /usr/bin/bash -e {0}
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0805196Z env:
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0805553Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.19-10/x64
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0806147Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.19-10/x64
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0806619Z   MAVEN_ARGS: -ntp
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0806928Z   DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo_test
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0807278Z   DEC_MYSQL_USER: root
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0807526Z   DEC_MYSQL_PASSWORD: root
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:43.0807786Z ##[endgroup]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.3038848Z [INFO] Scanning for projects...
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4029849Z [INFO] ------------------------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4063722Z [INFO] Reactor Build Order:
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4064757Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4065181Z [INFO] doc-eq-code-parent                                                 [pom]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4066302Z [INFO] dec-core-context                                                   [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4082524Z [INFO] dec-core-datasource                                                [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4104252Z [INFO] dec-context-config-parse-xml                                       [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4134051Z [INFO] dec-context-config-parse-yaml                                      [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4163485Z [INFO] dec-datasource-orm-sql                                             [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4189354Z [INFO] dec-datasource-orm-mysql                                           [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4194474Z [INFO] dec-core-model                                                     [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4206733Z [INFO] dec-core-starter                                                   [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4208005Z [INFO] dec-expand-declaration                                             [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4209774Z [INFO] dec-demo                                                           [jar]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4210723Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4211543Z [INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4212729Z [INFO] Building doc-eq-code-parent 1.0                                   [1/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4217069Z [INFO]   from pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.4217984Z [INFO] --------------------------------[ pom ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.5628725Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.5662622Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ doc-eq-code-parent ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.7584791Z [INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.7875234Z [INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.7893802Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.7894822Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ doc-eq-code-parent ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.8925617Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.8953784Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:44.8984094Z [INFO] --- failsafe:3.2.5:integration-test (default) @ doc-eq-code-parent ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:45.1440812Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:45.1664451Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:45.1674127Z [INFO] --- failsafe:3.2.5:verify (default) @ doc-eq-code-parent ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2014042Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2015145Z [INFO] --- jacoco:0.8.12:report (report) @ doc-eq-code-parent ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2056317Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2058587Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2059455Z [INFO] --------------------< doc.eq.code:dec-core-context >--------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2061337Z [INFO] Building dec-core-context 1.0                                     [2/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2062416Z [INFO]   from dec-core-context/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2063492Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2524317Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2525663Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2553586Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2584034Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2588241Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2590286Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.2591078Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.3358332Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/main/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.3373994Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.3397776Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.6115789Z [INFO] Recompiling the module because of changed source code.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:46.6278763Z [INFO] Compiling 66 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2457587Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/main/java/dec/core/context/collections/list/SimpleList.java: Some input files use unchecked or unsafe operations.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2482568Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/main/java/dec/core/context/collections/list/SimpleList.java: Recompile with -Xlint:unchecked for details.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2484370Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2492845Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2510854Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2566681Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2579675Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2595338Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.2614055Z [INFO] Compiling 1 source file with javac [debug release 8] to target/test-classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.3594101Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.3611434Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.4430193Z [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.5098861Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.5099719Z [INFO] -------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.5100548Z [INFO]  T E S T S
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:49.5101306Z [INFO] -------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.5704628Z [INFO] Running dec.core.context.data.BaseDataContractTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.7150730Z [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s -- in dec.core.context.data.BaseDataContractTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.8195321Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.8195813Z [INFO] Results:
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.8196174Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.8196644Z [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.8200635Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.8220222Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:51.8220747Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.0842582Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/dec-core-context-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.1544189Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.1557615Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.1681217Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.1682198Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.1786566Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.1787804Z [INFO] --- jacoco:0.8.12:report (report) @ dec-core-context ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.1820927Z [INFO] Loading execution data file /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.2981179Z [INFO] Analyzed bundle 'dec-core-context' with 64 classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6514534Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6537703Z [INFO] ------------------< doc.eq.code:dec-core-datasource >-------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6544405Z [INFO] Building dec-core-datasource 1.0                                  [3/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6545385Z [INFO]   from dec-core-datasource/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6546229Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6569712Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6573540Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6597968Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6603682Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6632357Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6634714Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6635625Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6637222Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/src/main/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6645621Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6667542Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6679348Z [INFO] Recompiling the module because of changed source code.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.6684175Z [INFO] Compiling 19 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7547582Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7574308Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7583402Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7598061Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7598943Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7599992Z [INFO] No sources to compile
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7600599Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7601328Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7611560Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7627603Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7628349Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7684586Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/target/dec-core-datasource-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7817317Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7818288Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7843327Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7850986Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7852722Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7897766Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7898886Z [INFO] --- jacoco:0.8.12:report (report) @ dec-core-datasource ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7903747Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7904667Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7910022Z [INFO] --------------< doc.eq.code:dec-context-config-parse-xml >--------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7911175Z [INFO] Building dec-context-config-parse-xml 1.0                         [4/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7912235Z [INFO]   from dec-context-config-parse-xml/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.7921818Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8110904Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8124555Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8133779Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8134519Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8137845Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8139188Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8139755Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8149681Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/src/main/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8150979Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8151609Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8214043Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:52.8214905Z [INFO] Compiling 31 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2334891Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2336012Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2355317Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2373985Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2380467Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2385545Z [INFO] No sources to compile
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2386195Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2386940Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2408985Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2414249Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2415057Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2489302Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/context-config-parse-xml.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2614024Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2624598Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2647761Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2660741Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2666232Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2705650Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2707711Z [INFO] --- jacoco:0.8.12:report (report) @ dec-context-config-parse-xml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2724949Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2727853Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2728754Z [INFO] -------------< doc.eq.code:dec-context-config-parse-yaml >--------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2729983Z [INFO] Building dec-context-config-parse-yaml 1.0                        [5/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2731048Z [INFO]   from dec-context-config-parse-yaml/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2732029Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2812493Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2835632Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2838924Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2839864Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2842334Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2845132Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2846063Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2847848Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/src/main/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2849323Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2850218Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2886135Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.2889497Z [INFO] Compiling 12 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5584183Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5585110Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5604525Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5605816Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5606532Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5629023Z [INFO] No sources to compile
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5629766Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5630531Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5663859Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5664972Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5665697Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5697165Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/dec-context-config-parse-yaml-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5772107Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5773284Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5800170Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5813018Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5828356Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5865060Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5865874Z [INFO] --- jacoco:0.8.12:report (report) @ dec-context-config-parse-yaml ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5866976Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5867823Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5868532Z [INFO] -----------------< doc.eq.code:dec-datasource-orm-sql >-----------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5869625Z [INFO] Building dec-datasource-orm-sql 1.0                               [6/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5870562Z [INFO]   from dec-datasource-orm-sql/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5871384Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5949735Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5953670Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5964643Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5965510Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5969200Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5974583Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5975599Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5991763Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/main/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5995099Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.5995904Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.6040857Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.6045279Z [INFO] Compiling 48 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9720982Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/main/java/dec/external/datasource/sql/collections/list/SimpleList.java: Some input files use unchecked or unsafe operations.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9735316Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/main/java/dec/external/datasource/sql/collections/list/SimpleList.java: Recompile with -Xlint:unchecked for details.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9744108Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9744987Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9746790Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9748601Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9749481Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9754516Z [INFO] No sources to compile
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9755189Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9767801Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9806485Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9834018Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9841293Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:53.9911890Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/dec-datasource-orm-sql-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0077877Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0079071Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0094155Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0120414Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0157586Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0158684Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0183961Z [INFO] --- jacoco:0.8.12:report (report) @ dec-datasource-orm-sql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0197447Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0205130Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0206004Z [INFO] ----------------< doc.eq.code:dec-datasource-orm-mysql >----------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0207150Z [INFO] Building dec-datasource-orm-mysql 1.0                             [7/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0208157Z [INFO]   from dec-datasource-orm-mysql/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0209116Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0243446Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0259550Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0260666Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0261554Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0266107Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0268150Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0268973Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0314034Z [INFO] Copying 1 resource from src/main/resources to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0343898Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0374150Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0393524Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.0424277Z [INFO] Compiling 27 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3939543Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/main/java/dec/external/datasource/sql/mysql/convert/container/MySQLExprVisitor.java: Some input files use unchecked or unsafe operations.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3985189Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/main/java/dec/external/datasource/sql/mysql/convert/container/MySQLExprVisitor.java: Recompile with -Xlint:unchecked for details.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3987413Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3988128Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3989670Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3990827Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3991655Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3992614Z [INFO] No sources to compile
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3993613Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.3994406Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4024074Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4026031Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4026890Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4081166Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/dec-datasource-orm-mysql-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4194266Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4201734Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4221983Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4233396Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4234566Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4313901Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4346040Z [INFO] --- jacoco:0.8.12:report (report) @ dec-datasource-orm-mysql ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4354899Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4364029Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4364765Z [INFO] ---------------------< doc.eq.code:dec-core-model >---------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4365774Z [INFO] Building dec-core-model 1.0                                       [8/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4366662Z [INFO]   from dec-core-model/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4367813Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4507731Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4524602Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4525523Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4526232Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4528334Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4536561Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4540511Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4542540Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/src/main/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4544357Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4545039Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4615575Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:54.4619824Z [INFO] Compiling 92 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0414734Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/src/main/java/dec/core/collections/list/SimpleList.java: Some input files use unchecked or unsafe operations.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0425515Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/src/main/java/dec/core/collections/list/SimpleList.java: Recompile with -Xlint:unchecked for details.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0444277Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0445102Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0446719Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0448352Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0449100Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0454785Z [INFO] No sources to compile
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0455389Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0456051Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0481408Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0484162Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0484824Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0585413Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/target/dec-core-model-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0754308Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0782594Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0783853Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0784392Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0785000Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0830291Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0831093Z [INFO] --- jacoco:0.8.12:report (report) @ dec-core-model ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0835415Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0836264Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0836949Z [INFO] --------------------< doc.eq.code:dec-core-starter >--------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0837964Z [INFO] Building dec-core-starter 1.0                                     [9/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0838854Z [INFO]   from dec-core-starter/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0843924Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0921777Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0922954Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0935484Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0947474Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0950733Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0959860Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0960717Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0962350Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/src/main/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0963943Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0964695Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0980087Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.0983506Z [INFO] Compiling 2 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1739274Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1740463Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1767271Z [INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/src/test/resources
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1776030Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1776927Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1787482Z [INFO] No sources to compile
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1788192Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1788912Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1817319Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1821291Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1824961Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1844734Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/dec-core-starter-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1911661Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1912521Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1939719Z [INFO] No tests to run.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1945962Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.1946696Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2002029Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2002917Z [INFO] --- jacoco:0.8.12:report (report) @ dec-core-starter ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2006048Z [INFO] Skipping JaCoCo execution due to missing execution data file.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2006940Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2022065Z [INFO] -----------------< doc.eq.code:dec-expand-declaration >-----------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2023422Z [INFO] Building dec-expand-declaration 1.0                              [10/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2024395Z [INFO]   from dec-expand-declaration/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2025271Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2130568Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2155339Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2177692Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2184469Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2186693Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-expand-declaration/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2188656Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2189482Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2190681Z [INFO] Copying 1 resource from src/main/resources to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2191492Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2192272Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2259007Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.2263334Z [INFO] Compiling 76 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8064694Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-expand-declaration/src/main/java/dec/expand/declare/bean/Bean.java: Some input files use unchecked or unsafe operations.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8095458Z [INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-expand-declaration/src/main/java/dec/expand/declare/bean/Bean.java: Recompile with -Xlint:unchecked for details.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8100428Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8101103Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8102070Z [INFO] Copying 1 resource from src/test/resources to target/test-classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8102688Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8129715Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8130701Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.8144543Z [INFO] Compiling 11 source files with javac [debug release 8] to target/test-classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.9645793Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.9646896Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.9689369Z [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.9784267Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.9785190Z [INFO] -------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.9799637Z [INFO]  T E S T S
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:55.9823894Z [INFO] -------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:56.8407050Z [INFO] Running test.business.TestOrderBusiness
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.2652456Z 12:12:57.151 [main] INFO dec.expand.declare.conext.parser.xml.parser.ContextDescParser -- Start parser the file:classpath:declare-config.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4690697Z 12:12:57.415 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:user
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4724901Z 12:12:57.416 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:user
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4754489Z 12:12:57.416 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:order
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4776989Z 12:12:57.417 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:order
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4794264Z 12:12:57.417 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:pay
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4824418Z 12:12:57.418 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:pay
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4862623Z 12:12:57.418 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:common
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4894319Z 12:12:57.418 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:common
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4896301Z 12:12:57.419 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- Start load business:subscribeOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4924535Z 12:12:57.421 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- End load business:subscribeOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4954359Z 12:12:57.421 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- Start load business:cancelOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4965585Z 12:12:57.421 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- End load business:cancelOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4967771Z 12:12:57.421 [main] INFO dec.expand.declare.conext.parser.xml.parser.ContextDescParser -- end parser the file:declare-config.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4969020Z 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4970181Z 12:12:57.444 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, add entity:$subscribeOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4972503Z 12:12:57.446 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, add produce:$payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4974975Z 12:12:57.447 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, add produce:$payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4976994Z connect group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4978503Z 12:12:57.447 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce data, [order]-[subscribeOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4980240Z Produce subscribeOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4981023Z subscribeOrderData.getStatus()1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4982632Z 12:12:57.450 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce data, [order]-[subscribeOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4984565Z connect group:2
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4986038Z 12:12:57.451 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4987635Z Produce $payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4989074Z 12:12:57.451 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4990711Z connect group:3
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4992188Z 12:12:57.451 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4994886Z 12:12:57.451 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce depend data, [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4996565Z Produce payCmdData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4998065Z 12:12:57.452 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce depend data,  [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.4999732Z Produce payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5001259Z 12:12:57.452 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5004396Z 12:12:57.452 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5006102Z Produce $payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5007622Z 12:12:57.453 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5010092Z 12:12:57.453 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5011704Z Produce $payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5013491Z 12:12:57.453 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5015162Z commit group:3
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5015784Z commit group:2
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5017335Z 12:12:57.453 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5019935Z 12:12:57.453 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, start produce depend data, [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5021644Z Produce orderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5022275Z OrderId:null
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5024117Z 12:12:57.454 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce depend data,  [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5025821Z Produce orderPayResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5026520Z change:2
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5028037Z 12:12:57.454 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:dc1d8959-aefd-4f5e-afb2-8245db0c8b1d, end produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5029715Z commit group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5031061Z 12:12:57.455 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, add entity:$cancelOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5033883Z 12:12:57.455 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, add produce:cancelOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5036100Z 12:12:57.455 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, add produce:$payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5038224Z 12:12:57.456 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, add produce:$payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5039642Z connect group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5041092Z 12:12:57.456 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce data, [order]-[cancelOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5043928Z 12:12:57.456 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce depend data, [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5045647Z Produce orderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5046251Z OrderId:11
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5047796Z 12:12:57.456 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce depend data,  [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5364823Z produce cancelOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5429419Z change:3
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5431247Z 12:12:57.518 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce data, [order]-[cancelOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5434133Z 12:12:57.519 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5437862Z Produce $payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5439300Z 12:12:57.519 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5442065Z 12:12:57.519 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5444794Z 12:12:57.519 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce depend data, [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5446380Z Produce payCmdData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5447760Z 12:12:57.519 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce depend data,  [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5449269Z Produce payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5450649Z 12:12:57.520 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5453400Z 12:12:57.520 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5455088Z Produce $payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5456510Z 12:12:57.520 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5459004Z 12:12:57.520 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5461640Z 12:12:57.520 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, start produce depend data, [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5463557Z Produce orderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5464152Z OrderId:11
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5465490Z 12:12:57.520 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce depend data,  [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5467049Z Produce orderPayResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5468053Z change:2
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5469461Z 12:12:57.521 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:26ffa390-18ff-49e3-b14f-16e69d6f2f5e, end produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5471088Z commit group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5545738Z [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.699 s -- in test.business.TestOrderBusiness
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5966428Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5967155Z [INFO] Results:
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5967607Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5968807Z [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5969424Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.5985273Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6004205Z [INFO] --- jar:3.5.0:jar (default-jar) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6066558Z [INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-expand-declaration/target/dec-expand-declaration-1.0.jar
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6214112Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6244190Z [INFO] --- failsafe:3.2.5:integration-test (default) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6251011Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6274141Z [INFO] --- failsafe:3.2.5:verify (default) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6296211Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6297008Z [INFO] --- jacoco:0.8.12:report (report) @ dec-expand-declaration ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6298618Z [INFO] Loading execution data file /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-expand-declaration/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.6955495Z [INFO] Analyzed bundle 'dec-expand-declaration' with 68 classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8009665Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8010606Z [INFO] ------------------------< doc.eq.code:dec-demo >------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8011668Z [INFO] Building dec-demo 1.0                                            [11/11]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8012511Z [INFO]   from dec-demo/pom.xml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8014303Z [INFO] --------------------------------[ jar ]---------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8214319Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8215548Z [INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-demo ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8225939Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8226737Z [INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-demo ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8228817Z [INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/jacoco.exec
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8253732Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8274816Z [INFO] --- resources:3.4.0:resources (default-resources) @ dec-demo ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8276172Z [INFO] Copying 51 resources from src/main/resources to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8342735Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8343895Z [INFO] --- compiler:3.13.0:compile (default-compile) @ dec-demo ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8385554Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.8399667Z [INFO] Compiling 29 source files with javac [debug release 8] to target/classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.9584436Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.9585758Z [INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-demo ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.9602412Z [INFO] Copying 1 resource from src/test/resources to target/test-classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.9603640Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.9604472Z [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-demo ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.9633637Z [INFO] Recompiling the module because of changed dependency.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:57.9638016Z [INFO] Compiling 9 source files with javac [debug release 8] to target/test-classes
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:58.1730681Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:58.1754860Z [INFO] --- surefire:3.2.5:test (default-test) @ dec-demo ---
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:58.1782146Z [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:58.1872163Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:58.1873821Z [INFO] -------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:58.1874702Z [INFO]  T E S T S
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:58.1875333Z [INFO] -------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.1410917Z [INFO] Running dec.demo.system.OrderTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.2805851Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init Start------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.4796139Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml data source:data1 success!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.4798059Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml data source:data2 success!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.4799862Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml connection:con1 success!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.4801575Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml connection:con2 success!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.4803035Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init End------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:12:59.5798273Z [main] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.5870646Z [main] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.5884595Z [main] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.5885957Z [main] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.8914717Z [main] INFO dec.core.model.container.ModelContainer - Start Execute the view rule: save-Order
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.8944270Z [main] INFO dec.demo.model.SimpleViewListener - VIEW_START:save-Order
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.8964337Z [main] INFO dec.demo.model.SimpleViewListener - RULE_START:save-Order:insertOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9662230Z [main] ERROR dec.external.datasource.sql.query.InsertQuery - Execute the SQL: insert into order_info (o_userId,o_count,o_totalPrice,o_totalAmount,o_status,o_date ) values ( ?,?,?,?,?,?  ) Error!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9754210Z java.sql.SQLSyntaxErrorException: Table 'demo_test.order_info' doesn't exist
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9755407Z 	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9784644Z 	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9787105Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9799332Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1098)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9801098Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1046)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9802841Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1371)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9804681Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1031)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9806308Z 	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9807965Z 	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9809502Z 	at dec.external.datasource.sql.query.InsertQuery.executeSQL(InsertQuery.java:49)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9810862Z 	at dec.external.datasource.sql.execute.InsertExecute.execute(InsertExecute.java:30)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9812570Z 	at dec.external.datasource.sql.execute.container.AbstractSqlExecuteContainer.execute(AbstractSqlExecuteContainer.java:22)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9814847Z 	at dec.external.datasource.sql.execute.container.AbstractSqlExecuteContainer.execute(AbstractSqlExecuteContainer.java:12)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9816800Z 	at dec.external.datasource.sql.connection.AbstractCmdConnection.execute(AbstractCmdConnection.java:146)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9818638Z 	at dec.external.datasource.sql.connection.AbstractCmdConnection.execute(AbstractCmdConnection.java:19)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9820642Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.executeByData(AbstractDataExecute.java:208)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9822276Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.executeByData(AbstractDataExecute.java:110)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9824110Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.execute(AbstractDataExecute.java:80)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9825597Z 	at dec.core.model.execute.rule.RuleContainer.executeOneRule(RuleContainer.java:185)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9839522Z 	at dec.core.model.execute.rule.RuleContainer.executeAllRule(RuleContainer.java:116)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9840871Z 	at dec.core.model.execute.rule.RuleContainer.execute(RuleContainer.java:60)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9842087Z 	at dec.core.model.container.ModelContainer.execute(ModelContainer.java:121)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9843591Z 	at dec.core.model.container.ModelContainer.execute(ModelContainer.java:80)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9845445Z 	at dec.demo.system.OrderTest.saveOrder(OrderTest.java:49)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9846387Z 	at dec.demo.system.OrderTest.main(OrderTest.java:31)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9847365Z 	at dec.demo.system.OrderTest.legacyOrderScenario(OrderTest.java:26)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9848561Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9850015Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9851713Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9853339Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9854654Z 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9856086Z 	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9857875Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9859977Z 	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9861585Z 	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9863466Z 	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9865528Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9867725Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9869748Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9871683Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9874116Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9875974Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9877788Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9879686Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9881641Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9883840Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9885745Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9887860Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9889586Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9891360Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9893309Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9895035Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9896511Z 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9898019Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9899891Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9901663Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9903484Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9904760Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9906505Z 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9908574Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9910218Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9911854Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9913727Z 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9915211Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9916909Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9918540Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9920147Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9921568Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9923467Z 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9925625Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9927232Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9928805Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9930322Z 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9931816Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9933729Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9935430Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9937044Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9939145Z 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9941667Z 	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9943776Z 	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9945616Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9947290Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9948928Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9950539Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9952312Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9954224Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9955628Z 	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9956835Z 	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9958046Z 	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9959307Z 	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9960702Z 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9962289Z 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9964264Z 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9965751Z 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9966575Z 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9967590Z 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9968780Z 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9969817Z [main] ERROR dec.core.model.container.ModelContainer - Execute error,rule:save-Order
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9970778Z dec.core.datasource.execute.exception.ExecuteException: java.sql.SQLSyntaxErrorException: Table 'demo_test.order_info' doesn't exist
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9971746Z 	at dec.external.datasource.sql.execute.InsertExecute.execute(InsertExecute.java:32)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9972705Z 	at dec.external.datasource.sql.execute.container.AbstractSqlExecuteContainer.execute(AbstractSqlExecuteContainer.java:22)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9974167Z 	at dec.external.datasource.sql.execute.container.AbstractSqlExecuteContainer.execute(AbstractSqlExecuteContainer.java:12)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9975209Z 	at dec.external.datasource.sql.connection.AbstractCmdConnection.execute(AbstractCmdConnection.java:146)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9976165Z 	at dec.external.datasource.sql.connection.AbstractCmdConnection.execute(AbstractCmdConnection.java:19)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9977083Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.executeByData(AbstractDataExecute.java:208)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9977972Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.executeByData(AbstractDataExecute.java:110)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9978844Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.execute(AbstractDataExecute.java:80)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9979773Z 	at dec.core.model.execute.rule.RuleContainer.executeOneRule(RuleContainer.java:185)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:01.9980947Z 	at dec.core.model.execute.rule.RuleContainer.executeAllRule(RuleContainer.java:116)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0021648Z 	at dec.core.model.execute.rule.RuleContainer.execute(RuleContainer.java:60)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0022913Z 	at dec.core.model.container.ModelContainer.execute(ModelContainer.java:121)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0024279Z 	at dec.core.model.container.ModelContainer.execute(ModelContainer.java:80)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0025309Z 	at dec.demo.system.OrderTest.saveOrder(OrderTest.java:49)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0026140Z 	at dec.demo.system.OrderTest.main(OrderTest.java:31)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0027029Z 	at dec.demo.system.OrderTest.legacyOrderScenario(OrderTest.java:26)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0028177Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0035607Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0064311Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0066088Z [ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.833 s <<< FAILURE! -- in dec.demo.system.OrderTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0067296Z [ERROR] dec.demo.system.OrderTest.legacyOrderScenario -- Time elapsed: 2.800 s <<< ERROR!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0068897Z dec.core.model.execute.rule.exception.ExecuteRuleException: rule: save-Order, con: con1, error: java.sql.SQLSyntaxErrorException: Table 'demo_test.order_info' doesn't exist
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0070387Z 	at dec.core.model.container.ModelContainer.execute(ModelContainer.java:93)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0071222Z 	at dec.demo.system.OrderTest.saveOrder(OrderTest.java:49)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0071892Z 	at dec.demo.system.OrderTest.main(OrderTest.java:31)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0072673Z 	at dec.demo.system.OrderTest.legacyOrderScenario(OrderTest.java:26)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0073726Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0074787Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0075625Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0077076Z Caused by: dec.core.datasource.execute.exception.ExecuteException: java.sql.SQLSyntaxErrorException: Table 'demo_test.order_info' doesn't exist
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0078737Z 	at dec.external.datasource.sql.execute.InsertExecute.execute(InsertExecute.java:32)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0080305Z 	at dec.external.datasource.sql.execute.container.AbstractSqlExecuteContainer.execute(AbstractSqlExecuteContainer.java:22)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0082207Z 	at dec.external.datasource.sql.execute.container.AbstractSqlExecuteContainer.execute(AbstractSqlExecuteContainer.java:12)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0084251Z 	at dec.external.datasource.sql.connection.AbstractCmdConnection.execute(AbstractCmdConnection.java:146)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0085844Z 	at dec.external.datasource.sql.connection.AbstractCmdConnection.execute(AbstractCmdConnection.java:19)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0087385Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.executeByData(AbstractDataExecute.java:208)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0088900Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.executeByData(AbstractDataExecute.java:110)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0090274Z 	at dec.core.model.execute.rule.data.AbstractDataExecute.execute(AbstractDataExecute.java:80)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0091515Z 	at dec.core.model.execute.rule.RuleContainer.executeOneRule(RuleContainer.java:185)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0092665Z 	at dec.core.model.execute.rule.RuleContainer.executeAllRule(RuleContainer.java:116)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0115561Z 	at dec.core.model.execute.rule.RuleContainer.execute(RuleContainer.java:60)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0116637Z 	at dec.core.model.container.ModelContainer.execute(ModelContainer.java:121)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0117657Z 	at dec.core.model.container.ModelContainer.execute(ModelContainer.java:80)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0118376Z 	... 6 more
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0119033Z Caused by: java.sql.SQLSyntaxErrorException: Table 'demo_test.order_info' doesn't exist
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0120495Z 	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0121826Z 	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0123514Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0124950Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1098)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0126448Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1046)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0127876Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1371)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0129239Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1031)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0130568Z 	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0132042Z 	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0133565Z 	at dec.external.datasource.sql.query.InsertQuery.executeSQL(InsertQuery.java:49)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0134722Z 	at dec.external.datasource.sql.execute.InsertExecute.execute(InsertExecute.java:30)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0135523Z 	... 18 more
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0135726Z 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0135998Z [INFO] Running dec.demo.declaration.TestOrderBusiness
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0136765Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0141821Z 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0143498Z 	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0145234Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0147215Z 	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0148735Z 	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0150329Z 	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0152252Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0154565Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0156504Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0158345Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0160085Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0161793Z 	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0163657Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0165516Z 	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0167002Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0168105Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0169064Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0170261Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0171196Z 	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0172137Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0173059Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0174345Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0175173Z 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0175978Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0176940Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0177861Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0178712Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0179379Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0180331Z 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0181928Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0182895Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0184512Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0186112Z 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0187497Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0188382Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0189230Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0190024Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0190627Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0191511Z 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0192604Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0193897Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0194778Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0195513Z 	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0196507Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0198047Z 	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0201358Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0202859Z 	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0204977Z 	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0207328Z 	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0209159Z 	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0210982Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0212896Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0214923Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0215907Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0217827Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0220231Z 	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0221782Z 	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0222978Z 	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0224452Z 	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0225721Z 	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0227166Z 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0228916Z 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0230878Z 	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0232316Z 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0233776Z 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0234876Z 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0235928Z 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0237025Z Caused by: java.sql.SQLSyntaxErrorException: Table 'demo_test.order_info' doesn't exist
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0238140Z 	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0239463Z 	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0240949Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0242393Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1098)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0244120Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1046)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0245608Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1371)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0246982Z 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1031)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0248353Z 	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0249863Z 	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0251246Z 	at dec.external.datasource.sql.query.InsertQuery.executeSQL(InsertQuery.java:49)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0252413Z 	at dec.external.datasource.sql.execute.InsertExecute.execute(InsertExecute.java:30)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0253510Z 	... 86 more
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0255025Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start parser the yaml file:classpath:yaml/declaration/declare-config.yaml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0855501Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml system:order
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0856560Z 1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0896193Z 3
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0915380Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml system:order
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0940855Z [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.108 s -- in dec.demo.declaration.TestOrderBusiness
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0974288Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml system:pay
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.0975405Z [INFO] Running dec.demo.model.RuleTests
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1004254Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml system:pay
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1064970Z [ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.011 s <<< FAILURE! -- in dec.demo.model.RuleTests
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1066808Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml system:common
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1088176Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml system:common
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1089523Z [ERROR] dec.demo.model.RuleTests.testInit -- Time elapsed: 0.005 s <<< ERROR!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1121832Z dec.context.parse.yaml.exception.YAMLParseException: The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1134557Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml business:subscribeOrderDataWithSimple
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1164657Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml business:subscribeOrderDataWithSimple
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1166758Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parseDataSources(YamlConfigFileParser.java:61)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1168305Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parse(YamlConfigFileParser.java:40)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1178550Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml business:subscribeOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1180148Z 	at dec.context.parse.yaml.parse.config.YamlConfigUtil.parseConfigInfo(YamlConfigUtil.java:12)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1181253Z 	at dec.demo.config.DemoLoadTests.testInit(DemoLoadTests.java:33)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1182097Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1182865Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1184025Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1184506Z 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1185045Z [ERROR] dec.demo.model.RuleTests.legacyRuleScenario -- Time elapsed: 0.003 s <<< ERROR!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1186266Z dec.context.parse.yaml.exception.YAMLParseException: The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1187703Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parseDataSources(YamlConfigFileParser.java:61)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1189238Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parse(YamlConfigFileParser.java:40)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1190647Z 	at dec.context.parse.yaml.parse.config.YamlConfigUtil.parseConfigInfo(YamlConfigUtil.java:12)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1191860Z 	at dec.demo.config.DemoLoadTests.testInit(DemoLoadTests.java:33)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1192660Z 	at dec.demo.model.RuleTests.main(RuleTests.java:30)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1193820Z 	at dec.demo.model.RuleTests.legacyRuleScenario(RuleTests.java:25)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1194688Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1195436Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1196221Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1197068Z 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1197319Z [INFO] Running dec.demo.config.DemoLoadTests
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1198436Z [ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.004 s <<< FAILURE! -- in dec.demo.config.DemoLoadTests
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1234275Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml business:subscribeOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1235703Z [ERROR] dec.demo.config.DemoLoadTests.testInit -- Time elapsed: 0.004 s <<< ERROR!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1244067Z dec.context.parse.yaml.exception.YAMLParseException: The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1245592Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parseDataSources(YamlConfigFileParser.java:61)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1247477Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml business:cancelOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1274285Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml business:cancelOrder
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1275903Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parse(YamlConfigFileParser.java:40)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1304423Z [main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End parser the yaml file:classpath:yaml/declaration/declare-config.yaml
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1305983Z 	at dec.context.parse.yaml.parse.config.YamlConfigUtil.parseConfigInfo(YamlConfigUtil.java:12)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1327522Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, add entity:$subscribeOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1328991Z 	at dec.demo.config.DemoLoadTests.testInit(DemoLoadTests.java:33)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1334442Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, add produce:$payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1361499Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1363884Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, add produce:$payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1384535Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, start produce data, [order]-[subscribeOrderDataSimple]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1386043Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1386884Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1393476Z 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1412592Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, end produce data, [order]-[subscribeOrderDataSimple]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1414357Z [INFO] Running dec.demo.directory.DirectoryTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1454619Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, start produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1456343Z [ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.005 s <<< FAILURE! -- in dec.demo.directory.DirectoryTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1458431Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, start produce depend data, [this]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1484496Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, end produce depend data,  [this]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1486175Z [ERROR] dec.demo.directory.DirectoryTest.legacyDirectoryScenario -- Time elapsed: 0.005 s <<< ERROR!
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1501725Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, start produce depend data, [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1503689Z dec.context.parse.yaml.exception.YAMLParseException: The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1505694Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parseDataSources(YamlConfigFileParser.java:61)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1534246Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, end produce depend data,  [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1537961Z 	at dec.context.parse.yaml.parse.config.YamlConfigFileParser.parse(YamlConfigFileParser.java:40)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1542934Z 	at dec.context.parse.yaml.parse.config.YamlConfigUtil.parseConfigInfo(YamlConfigUtil.java:12)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1544216Z 	at dec.demo.directory.ConfigInit.init(ConfigInit.java:29)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1544896Z 	at dec.demo.directory.DirectoryTest.init(DirectoryTest.java:36)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1545390Z 	at dec.demo.directory.DirectoryTest.main(DirectoryTest.java:25)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1545944Z 	at dec.demo.directory.DirectoryTest.legacyDirectoryScenario(DirectoryTest.java:21)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1546495Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1546944Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1547375Z 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1547632Z 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1547785Z [INFO] Running dec.demo.contract.MixContractTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1548564Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:7112824c-0256-4dd7-ba0d-5a0b952e2ffa, end produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1574000Z [main] INFO dec.demo.declaration.TestOrderBusiness - subscribeOrderDataWithSimple result:true
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1575407Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, add entity:$subscribeOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1576910Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, add produce:$payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1578038Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, add produce:$payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1579454Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1580491Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, start produce data, [order]-[subscribeOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1596233Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, end produce data, [order]-[subscribeOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1597928Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:2
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1599543Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, start produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1601548Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, end produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1604260Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:3
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1605938Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, start produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1608082Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, start produce depend data, [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1610169Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, end produce depend data,  [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1612200Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, end produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1614488Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, start produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1616568Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, end produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1618472Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:3
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1619607Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:2
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1621215Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, start produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1623532Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, start produce depend data, [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1625690Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, end produce depend data,  [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1627815Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:346e9cbc-d37b-4c28-b0d1-031a1556b5c5, end produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1629526Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1631050Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, add entity:$cancelOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1632923Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, add produce:cancelOrderData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1635034Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, add produce:$payResultData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1636880Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, add produce:$payData
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1638328Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1639924Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce data, [order]-[cancelOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1642249Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce depend data, [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1644527Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce depend data,  [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1646601Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce data, [order]-[cancelOrderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1648670Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1650605Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce data, [common]-[$payData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1652626Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1654963Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce depend data, [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1656984Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce depend data,  [pay]-[payCmdData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1658966Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce data, [pay]-[payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1660994Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1663047Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce data, [common]-[$payResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1665695Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1667811Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, start produce depend data, [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1669895Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce depend data,  [order]-[orderData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1671948Z [main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:db8579d9-da87-48db-9c94-1b16135f1bda, end produce data, [order]-[orderPayResultData]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1673906Z [main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1675191Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init Start------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1676580Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init Start------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1677970Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init Start------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.1679330Z [main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init Start------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2044782Z [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s -- in dec.demo.contract.MixContractTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2063702Z [INFO] Running dec.demo.contract.LegacyResourceSnapshotTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2332154Z [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in dec.demo.contract.LegacyResourceSnapshotTest
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2910708Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2911218Z [INFO] Results:
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2911579Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2911905Z [ERROR] Errors: 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2912954Z [ERROR]   DemoLoadTests.testInit:33 » YAMLParse The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2918232Z [ERROR]   DirectoryTest.legacyDirectoryScenario:21->main:25->init:36 » YAMLParse The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2920226Z [ERROR]   RuleTests.legacyRuleScenario:25->main:30->DemoLoadTests.testInit:33 » YAMLParse The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2921801Z [ERROR]   RuleTests>DemoLoadTests.testInit:33 » YAMLParse The data source is existed: data1
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2924197Z [ERROR]   OrderTest.legacyOrderScenario:26->main:31->saveOrder:49 » ExecuteRule rule: save-Order, con: con1, error: java.sql.SQLSyntaxErrorException: Table 'demo_test.order_info' doesn't exist
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2925581Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2926086Z [ERROR] Tests run: 8, Failures: 0, Errors: 5, Skipped: 0
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2926675Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2927216Z [INFO] ------------------------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2928157Z [INFO] Reactor Summary for doc-eq-code-parent 1.0:
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2928696Z [INFO] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2929201Z [INFO] doc-eq-code-parent ................................. SUCCESS [  1.791 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2930024Z [INFO] dec-core-context ................................... SUCCESS [  6.444 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2930860Z [INFO] dec-core-datasource ................................ SUCCESS [  0.141 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2931743Z [INFO] dec-context-config-parse-xml ....................... SUCCESS [  0.481 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2932672Z [INFO] dec-context-config-parse-yaml ...................... SUCCESS [  0.315 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2933929Z [INFO] dec-datasource-orm-sql ............................. SUCCESS [  0.429 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2934904Z [INFO] dec-datasource-orm-mysql ........................... SUCCESS [  0.415 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2935858Z [INFO] dec-core-model ..................................... SUCCESS [  0.653 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2936723Z [INFO] dec-core-starter ................................... SUCCESS [  0.116 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2937640Z [INFO] dec-expand-declaration ............................. SUCCESS [  2.601 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2951108Z [INFO] dec-demo ........................................... FAILURE [  4.492 s]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2952079Z [INFO] ------------------------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2952718Z [INFO] BUILD FAILURE
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2953854Z [INFO] ------------------------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2954498Z [INFO] Total time:  18.012 s
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2954950Z [INFO] Finished at: 2026-07-25T12:13:02Z
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2955568Z [INFO] ------------------------------------------------------------------------
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2957095Z [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.2.5:test (default-test) on project dec-demo: 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2958730Z [ERROR] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2959843Z [ERROR] Please refer to /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports for the individual test results.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2961423Z [ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2962232Z [ERROR] -> [Help 1]
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2962576Z [ERROR] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2963363Z [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2964171Z [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2964565Z [ERROR] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2965044Z [ERROR] For more information about the errors and possible solutions, please read the following articles:
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2965778Z [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2966229Z [ERROR] 
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2966591Z [ERROR] After correcting the problems, you can resume the build with the command
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.2967070Z [ERROR]   mvn <args> -rf :dec-demo
+mysql-it	Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify	2026-07-25T12:13:02.3284305Z ##[error]Process completed with exit code 1.
