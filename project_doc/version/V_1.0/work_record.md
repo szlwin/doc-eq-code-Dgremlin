@@ -525,7 +525,7 @@
 状态：PASSED
 状态变更：P0-T09 REVIEWING → PASSED；P0 REVIEWING → PASSED
 Evidence：docs/remediation/P0/evidence/local-full-20260725T142126Z/
-被验证提交：<TESTED_SHA>
+被验证提交：16f02ac18a5dd384ef9aaf4aeb8d69cd9cb4a584
 验证结果：core_exit=0；mysql_exit=0；start_head=end_head
 下一 Agent：ProjectManagerAgent
 下一事项：处理 P1 Evidence/Review 门禁

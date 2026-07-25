@@ -49,7 +49,7 @@ P1 下一步仅处理：
 ## P0 退出结论
 
 - 状态：PASSED；
-- 被验证提交：`<TESTED_SHA>`；
+- 被验证提交：`16f02ac18a5dd384ef9aaf4aeb8d69cd9cb4a584`；
 - 正式证据：`evidence/local-full-20260725T142126Z/`；
 - 核心验证：PASSED；
 - MySQL 集成验证：PASSED；

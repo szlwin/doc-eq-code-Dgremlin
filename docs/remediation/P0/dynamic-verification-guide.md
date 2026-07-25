@@ -144,7 +144,7 @@ P0 验收方式调整不自动解除 P1 门禁。P1 仍需处理旧 Evidence dig
 最近一次正式本地完整验证已经通过：
 
 - Evidence：`evidence/local-full-20260725T142126Z/`
-- 被验证提交：`<TESTED_SHA>`
+- 被验证提交：`16f02ac18a5dd384ef9aaf4aeb8d69cd9cb4a584`
 - 核心验证：PASSED
 - MySQL 验证：PASSED
 - P0 状态：PASSED

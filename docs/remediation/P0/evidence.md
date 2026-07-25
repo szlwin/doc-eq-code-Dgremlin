@@ -113,7 +113,7 @@ Runner 和临时 MySQL 环境差异未形成正式验收证据，原始日志已
 
 被验证提交：
 
-`<TESTED_SHA>`
+`16f02ac18a5dd384ef9aaf4aeb8d69cd9cb4a584`
 
 执行命令：
 
