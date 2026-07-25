@@ -7,3 +7,5 @@
 5. `DirectoryTest`、`RuleTests`、`OrderTest`、`TestOrderBusiness` 与数据库测试辅助类已迁入 `src/test/java`；数据库场景使用 `mysql-it` 标签隔离。
 
 6. 仓库内已有的 `smarter`/`javolution` JAR 通过受控 bootstrap 脚本安装到 Maven 本地仓库，避免依赖开发机预装的私有 artifact。
+7. P0 正式动态验收以干净工作树上的本地完整验证为准；GitHub Actions 保留为非阻断辅助回归，不再作为 P0 退出条件。
+8. 本地正式验证必须使用显式的测试数据库环境变量，绑定同一 Git commit，并禁止将数据库密码写入 Evidence。

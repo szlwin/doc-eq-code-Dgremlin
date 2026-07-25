@@ -1,5 +1,7 @@
 # P0 验收证据
 
+> 当前正式验收口径：以 `scripts/remediation/run_p0_local_verification.sh` 生成的同一 commit 本地核心与 MySQL Evidence 为准；GitHub Actions 仅作非阻断辅助回归。下文早期“等待 CI”的内容属于历史执行记录。
+
 ## 已执行
 
 ```text
@@ -77,3 +79,22 @@ P0_EVIDENCE_STAMP=20260725T063000Z ./scripts/remediation/run_p0_dynamic_verifica
 - P0 静态验证：PASSED
 
 P0-T02、P0-T03 可以关闭；P0-T09 等待 GitHub Actions 回执。
+
+## 2026-07-25 验收口径调整
+
+由于 GitHub Runner、临时 MySQL Service、网络和镜像差异导致远程验证结果不稳定，P0 正式动态验收调整为：
+
+```text
+scripts/remediation/run_p0_local_verification.sh
+```
+
+正式命令在干净工作树上串行执行核心验证与本地 `mysql-it`，并将两部分 Evidence 绑定到同一 Git commit。数据库密码仅通过环境变量提供，Evidence 只记录密码已设置。
+
+GitHub Actions 及 `verify_p0_github_actions.sh` 继续保留，但仅作为非阻断辅助回归，不再决定 P0 是否退出。本文前述“等待 GitHub Actions 回执”属于历史执行记录，已由本节的新口径取代，不修改原始历史 Evidence。
+
+当前结论：
+
+- P0-T02：PASSED；
+- P0-T03：PASSED；
+- P0-T09：REVIEWING，等待在干净工作树上执行统一的本地完整验证并固化 MySQL Evidence；
+- P1 仍受 P0 本地完整门禁和自身 Evidence/Review 门禁阻断。

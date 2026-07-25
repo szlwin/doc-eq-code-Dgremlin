@@ -1,39 +1,65 @@
 # P0 动态验证执行指南
 
-## 1. 本次容器执行结果
+## 1. 当前正式验收口径
 
-执行时间：2026-07-25 UTC。
+P0 动态验证采用“本地完整验证为正式门禁、GitHub Actions 为非阻断辅助回归”的方式：
 
-环境：
+- 正式退出命令：`scripts/remediation/run_p0_local_verification.sh`；
+- GitHub Actions 不再决定 P0 是否可以退出；
+- 正式证据必须绑定同一 Git commit，并记录分支、JDK、Wrapper Maven、命令和退出码；
+- 数据库密码只允许通过环境变量提供，证据中仅记录 `DEC_MYSQL_PASSWORD=SET`；
+- 正式验证默认要求 Git 工作树干净。
 
-- Java：OpenJDK 21.0.10；
-- 系统 Maven：未安装；
-- Maven Wrapper 缓存：不存在；
-- `curl`、`wget`、`unzip`：存在；
-- `gh`：未安装；
-- 容器 DNS：无法解析 `repo.maven.apache.org` 和 `github.com`。
+本次调整解决的是 GitHub 临时服务容器、网络和仓库镜像差异造成的环境误报。它不表示可以忽略测试，也不允许用 IDE 单独运行一个 Test 类替代 Maven Reactor 验证。
 
-首次执行原配置：
+## 2. 正式本地完整验证
 
-```bash
-./mvnw --version
-```
-
-结果：
-
-```text
-curl: (6) Could not resolve host: repo.maven.apache.org
-exit=6
-```
-
-同时发现原配置使用不存在的 Maven `3.9.16`。已将 `.mvn/wrapper/maven-wrapper.properties` 和根 `pom.xml#maven.version` 统一修正为 Maven `3.9.15`。当前容器仍因 DNS 限制无法下载发行包，因此后续动态 Maven 步骤没有伪造为通过。
-
-## 2. 本地一次性验证
-
-在可访问 Maven Central 的本地环境执行：
+先准备专用测试数据库。不得连接生产数据库，也不得在缺少测试库配置时回退到开发库。
 
 ```bash
 cd /path/to/doc-eq-code-Dgremlin
+
+export DEC_MYSQL_URL='jdbc:mysql://127.0.0.1:3306/demo-test2'
+export DEC_MYSQL_USER='root'
+read -s DEC_MYSQL_PASSWORD
+export DEC_MYSQL_PASSWORD
+
+./scripts/remediation/run_p0_local_verification.sh
+```
+
+该脚本串行执行：
+
+1. 本地核心动态验证；
+2. 本地 MySQL 集成验证；
+3. 校验执行前后 Git HEAD 未变化；
+4. 生成汇总和 SHA-256 校验清单。
+
+正式证据保存到：
+
+```text
+docs/remediation/P0/evidence/local-full-{UTC_TIMESTAMP}/
+```
+
+正式通过标准：
+
+- 执行前 Git 工作树干净；
+- 核心验证返回 `0`；
+- MySQL 集成验证返回 `0`；
+- 故意失败测试的内部 Maven 命令返回非零，但门禁证明脚本返回 `0`；
+- 开始与结束 Git commit SHA 相同。
+
+若只做故障诊断，可显式允许脏工作树：
+
+```bash
+P0_REQUIRE_CLEAN_WORKTREE=0 \
+  ./scripts/remediation/run_p0_local_verification.sh
+```
+
+此类运行不得作为 P0 正式退出证据。
+
+## 3. 本地核心验证
+
+```bash
 ./scripts/remediation/run_p0_dynamic_verification.sh
 ```
 
@@ -45,77 +71,68 @@ cd /path/to/doc-eq-code-Dgremlin
 4. `scripts/remediation/prove_test_failure_gate.sh`；
 5. `python3 scripts/remediation/validate_p0.py`。
 
-每一步都会把命令输出和退出码保存到：
+证据目录：
 
 ```text
 docs/remediation/P0/evidence/dynamic-{UTC_TIMESTAMP}/
 ```
 
-验证通过标准：
-
-- Wrapper 输出 Maven `3.9.15`；
-- `clean verify` 返回 `0`；
-- 故意失败测试的内部 Maven 命令必须返回非零，而 `prove_test_failure_gate.sh` 自身返回 `0`；
-- 静态验证返回 `0`。
-
-## 3. 分步执行命令
-
-```bash
-./mvnw --version
-scripts/remediation/bootstrap_legacy_dependencies.sh
-./mvnw --batch-mode --no-transfer-progress clean verify
-scripts/remediation/prove_test_failure_gate.sh
-python3 scripts/remediation/validate_p0.py
-```
-
-若 `prove_test_failure_gate.sh` 输出：
+已有一次成功证据：
 
 ```text
-P0 failure gate proved: failing test returned status ...
+docs/remediation/P0/evidence/dynamic-20260725T081205Z/
 ```
 
-且脚本退出码为 `0`，表示测试失败确实阻断 Maven 构建。
+该证据已经证明 Wrapper、全 Reactor、失败测试阻断和静态校验通过，但它没有单独完成本地 MySQL 正式验收。
 
-## 4. GitHub Actions core-verify
+## 4. 本地 MySQL 集成验证
 
-前提：本地已安装并授权 GitHub CLI，且上述修改已经提交并推送到 `dev_all`。
+也可单独执行：
+
+```bash
+export DEC_MYSQL_URL='jdbc:mysql://127.0.0.1:3306/demo-test2'
+export DEC_MYSQL_USER='root'
+read -s DEC_MYSQL_PASSWORD
+export DEC_MYSQL_PASSWORD
+
+./scripts/remediation/run_p0_local_mysql_verification.sh
+```
+
+脚本执行：
+
+```text
+./mvnw --batch-mode --no-transfer-progress -Pmysql-it clean verify
+```
+
+证据目录：
+
+```text
+docs/remediation/P0/evidence/local-mysql-{UTC_TIMESTAMP}/
+```
+
+测试数据库必须预先具备当前集成测试所需 schema 和 fixture。数据库存在但表只存在于另一台机器、另一个 schema 或 IDE 使用的不同连接时，不能视为可重复验证。
+
+## 5. GitHub Actions 辅助回归
+
+远程验证保留，但不属于 P0 正式退出条件：
 
 ```bash
 gh auth status
 ./scripts/remediation/verify_p0_github_actions.sh p0-build.yml dev_all
 ```
 
-脚本会：
-
-1. 触发 `workflow_dispatch`；
-2. 等待工作流完成；
-3. 检查 `core-verify` Job 的 conclusion 必须是 `success`；
-4. 保存 run JSON、日志和测试报告 Artifact。
-
-证据目录：
+脚本只生成辅助证据并报告 `core-verify` 和工作流总体结论：
 
 ```text
 docs/remediation/P0/evidence/github-actions/
 ```
 
-也可手工执行：
+GitHub Actions 失败时仍应分析真实代码问题；但因临时 MySQL、网络、镜像或 Runner 差异导致的失败，不再阻断已经由正式本地完整验证证明通过的 P0。
 
-```bash
-gh workflow run p0-build.yml --ref dev_all
-gh run list --workflow p0-build.yml --branch dev_all --limit 5
-gh run watch {RUN_ID} --exit-status
-gh run view {RUN_ID} --json headSha,status,conclusion,url,jobs
-gh run download {RUN_ID} --name surefire-and-jacoco-reports
-```
+## 6. 历史环境限制
 
-## 5. 对 P1 门禁的影响
+2026-07-25 的受限容器无法解析 Maven/GitHub 外网且未安装 `gh`。该历史阻塞记录继续保留，不再代表当前 P0 验收口径。历史 Evidence 不修改、不覆盖；新的本地正式 Evidence 通过新时间戳目录追加。
 
-Maven 版本从不存在的 `3.9.16` 修正为 `3.9.15` 后，根 `pom.xml` 的内容发生真实变化。P1 既有三个阶段分别直接引用旧 POM digest，因此当前 common-develop 2.35 `task-health` 阻断数由 162 增加到 165。
+## 7. 对 P1 门禁的影响
 
-新增的 3 条阻断是：
-
-- `EVD-000022`；
-- `EVD-000085`；
-- `EVD-000135`。
-
-本轮不覆盖旧 digest，也不伪造 Review 通过；这些 Evidence 应在后续 `P1-GATE` 修复中按 supersede / 新 Evidence 流程处理。当前 P1 仍不得进入 `test_design`。
+P0 验收方式调整不自动解除 P1 门禁。P1 仍需处理旧 Evidence digest、Review criterion 和派生状态问题；在 P0 本地完整验证正式通过且 P1 自身门禁通过前，不得进入 `test_design`。

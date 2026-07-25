@@ -2,9 +2,16 @@
 from pathlib import Path
 import xml.etree.ElementTree as ET, re, sys
 root=Path(__file__).resolve().parents[2]; errors=[]
-required=['mvnw','mvnw.cmd','.mvn/wrapper/maven-wrapper.properties','.github/workflows/p0-build.yml','scripts/remediation/bootstrap_legacy_dependencies.sh','project_doc/docs/_plans/mix-framework-technical-remediation-plan.md','project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md','doc/mix-framework-technical-remediation-plan.md','doc/mix-framework-p0-p8-detailed-task-plan.md']
+required=['mvnw','mvnw.cmd','.mvn/wrapper/maven-wrapper.properties','.github/workflows/p0-build.yml','scripts/remediation/bootstrap_legacy_dependencies.sh','scripts/remediation/run_p0_dynamic_verification.sh','scripts/remediation/run_p0_local_mysql_verification.sh','scripts/remediation/run_p0_local_verification.sh','scripts/remediation/verify_p0_github_actions.sh','project_doc/docs/_plans/mix-framework-technical-remediation-plan.md','project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md','doc/mix-framework-technical-remediation-plan.md','doc/mix-framework-p0-p8-detailed-task-plan.md']
 for x in required:
     if not (root/x).exists(): errors.append('missing '+x)
+
+for x in ['scripts/remediation/run_p0_dynamic_verification.sh','scripts/remediation/run_p0_local_mysql_verification.sh','scripts/remediation/run_p0_local_verification.sh','scripts/remediation/verify_p0_github_actions.sh']:
+    p=root/x
+    if p.exists() and not (p.stat().st_mode & 0o111): errors.append('not executable '+x)
+plan=(root/'project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md').read_text(errors='replace')
+if 'run_p0_local_verification.sh' not in plan: errors.append('formal local P0 verification entry missing from plan')
+if 'GitHub Actions 保留为跨环境辅助回归入口，不作为 P0 退出阻断条件' not in plan: errors.append('GitHub Actions auxiliary/non-blocking policy missing from plan')
 for p in [root/'pom.xml',*root.glob('*/pom.xml')]:
     try: ET.parse(p)
     except Exception as e: errors.append(f'invalid XML {p.relative_to(root)}: {e}')

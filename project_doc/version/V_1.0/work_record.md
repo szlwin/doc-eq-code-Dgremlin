@@ -337,6 +337,125 @@
 | 测试与验证 | mvnw exit=6；validate_p0 exit=0；GitHub 验证脚本 exit=2 |
 | 问题与阻塞 | DNS 无法解析 repo.maven.apache.org 和 github.com、系统无 Maven、Wrapper 缓存为空、GitHub CLI 未安装 |
 
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"","blockers":["尚未在干净工作树上执行 run_p0_local_verification.sh 并生成同一 commit 的正式核心与 MySQL Evidence"],"correction_of":"","event_id":"EVENT-P0-LOCAL-VERIFICATION-STRATEGY-20260725","event_type":"P0_VERIFICATION_STRATEGY_ADJUSTED","evidence_ids":[],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"","issue_ids":[],"iteration_id":"","iteration_no":0,"modified_files_summary":["project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md","docs/remediation/P0/dynamic-verification-guide.md","docs/remediation/P0/task-status.md","docs/remediation/P0/evidence.md","docs/remediation/P0/handoff.md","docs/remediation/P0/known-issues.md","docs/remediation/status.md","project_doc/README.md","scripts/remediation/run_p0_dynamic_verification.sh","scripts/remediation/run_p0_local_mysql_verification.sh","scripts/remediation/run_p0_local_verification.sh","scripts/remediation/verify_p0_github_actions.sh"],"next_action":"提交当前调整后，在干净工作树上设置 DEC_MYSQL_* 并执行 scripts/remediation/run_p0_local_verification.sh","next_agent":"ProjectManagerAgent","output_revision":"","phase":"","record_id":"WR-20260725-131538-P0-T09-PARTIAL","render_digest":"7b92edd19d5d28a5f1ee512ac6af0832dba0b4e8b08f9b3a7a4447746f8a17c5","review_result_refs":[],"schema_version":3,"scope":"P0-T02、P0-T03、P0-T06、P0-T09 动态验收口径与执行脚本","source":"用户要求因环境不稳定将 P0 正式验证调整为本地环境","sql_change_summary":"无；本地测试数据库 schema/fixture 由执行环境显式准备","stage_outcome_refs":[],"state_change":"P0: BLOCKED → REVIEWING；P0-T09: BLOCKED → REVIEWING；P0-T02、P0-T03 保持 PASSED","status":"PARTIAL","summary":"将 P0 正式退出门禁调整为干净工作树上的本地核心与 MySQL 统一验证；GitHub Actions 降级为非阻断辅助回归","target_id":"P0-DYNAMIC-CLOSE","task_id":"P0-T09","task_type":"verification","timestamp":"2026-07-25T13:15:38+00:00","validation_summary":"新增脚本均通过 sh -n；scripts/remediation/validate_p0.py 返回 0；正式本地完整 Maven/MySQL 验证待用户环境执行","version":"V_1.0"} -->
+## WR-20260725-131538-P0-T09-PARTIAL
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-25T13:15:38+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | 用户要求因环境不稳定将 P0 正式验证调整为本地环境 |
+| 版本 | V_1.0 |
+| 目标 | P0-DYNAMIC-CLOSE |
+| 范围 | P0-T02、P0-T03、P0-T06、P0-T09 动态验收口径与执行脚本 |
+| 阶段 | 无 / 未登记 |
+| 任务类型 | verification |
+| 事件类型 | P0_VERIFICATION_STRATEGY_ADJUSTED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 将 P0 正式退出门禁调整为干净工作树上的本地核心与 MySQL 统一验证；GitHub Actions 降级为非阻断辅助回归 |
+| 状态 | PARTIAL |
+| 状态变更 | P0: BLOCKED → REVIEWING；P0-T09: BLOCKED → REVIEWING；P0-T02、P0-T03 保持 PASSED |
+| Task | P0-T09 |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | 无 / 未登记 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 提交当前调整后，在干净工作树上设置 DEC_MYSQL_* 并执行 scripts/remediation/run_p0_local_verification.sh |
+
+### 变更摘要
+
+- 将 P0 正式退出门禁调整为干净工作树上的本地核心与 MySQL 统一验证；GitHub Actions 降级为非阻断辅助回归
+
+### 文件变更摘要
+
+- `project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md`
+- `docs/remediation/P0/dynamic-verification-guide.md`
+- `docs/remediation/P0/task-status.md`
+- `docs/remediation/P0/evidence.md`
+- `docs/remediation/P0/handoff.md`
+- `docs/remediation/P0/known-issues.md`
+- `docs/remediation/status.md`
+- `project_doc/README.md`
+- `scripts/remediation/run_p0_dynamic_verification.sh`
+- `scripts/remediation/run_p0_local_mysql_verification.sh`
+- `scripts/remediation/run_p0_local_verification.sh`
+- `scripts/remediation/verify_p0_github_actions.sh`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无；本地测试数据库 schema/fixture 由执行环境显式准备 |
+| 测试与验证 | 新增脚本均通过 sh -n；scripts/remediation/validate_p0.py 返回 0；正式本地完整 Maven/MySQL 验证待用户环境执行 |
+| 问题与阻塞 | 尚未在干净工作树上执行 run_p0_local_verification.sh 并生成同一 commit 的正式核心与 MySQL Evidence |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"","blockers":[],"correction_of":"","event_id":"EVENT-P0-LOCAL-VERIFICATION-STATIC-CONTRACT-20260725","event_type":"P0_VERIFICATION_STATIC_CONTRACT_UPDATED","evidence_ids":[],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"","issue_ids":[],"iteration_id":"","iteration_no":0,"modified_files_summary":["scripts/remediation/validate_p0.py"],"next_action":"在干净工作树上执行 scripts/remediation/run_p0_local_verification.sh","next_agent":"ProjectManagerAgent","output_revision":"","phase":"","record_id":"WR-20260725-131748-P0-T09-PASSED","render_digest":"f0eb0818bb37b9a478b384e4794c81f318b0582fcf513ae5139ed3f008bc6e01","review_result_refs":[],"schema_version":3,"scope":"P0 新增本地验证脚本存在性、执行权限和计划口径静态检查","source":"P0 本地正式验证方案交付前静态契约补强","sql_change_summary":"无","stage_outcome_refs":[],"state_change":"P0-T09 保持 REVIEWING；静态验证契约已补强","status":"PASSED","summary":"将本地核心、MySQL、统一正式验证和 GitHub 辅助脚本纳入 validate_p0.py，并校验计划中的本地主门禁与远程非阻断口径","target_id":"P0-DYNAMIC-CLOSE","task_id":"P0-T09","task_type":"verification","timestamp":"2026-07-25T13:17:48+00:00","validation_summary":"python3 -m py_compile scripts/remediation/validate_p0.py 通过；python3 scripts/remediation/validate_p0.py 返回 0","version":"V_1.0"} -->
+## WR-20260725-131748-P0-T09-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-25T13:17:48+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | P0 本地正式验证方案交付前静态契约补强 |
+| 版本 | V_1.0 |
+| 目标 | P0-DYNAMIC-CLOSE |
+| 范围 | P0 新增本地验证脚本存在性、执行权限和计划口径静态检查 |
+| 阶段 | 无 / 未登记 |
+| 任务类型 | verification |
+| 事件类型 | P0_VERIFICATION_STATIC_CONTRACT_UPDATED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 将本地核心、MySQL、统一正式验证和 GitHub 辅助脚本纳入 validate_p0.py，并校验计划中的本地主门禁与远程非阻断口径 |
+| 状态 | PASSED |
+| 状态变更 | P0-T09 保持 REVIEWING；静态验证契约已补强 |
+| Task | P0-T09 |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | 无 / 未登记 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 在干净工作树上执行 scripts/remediation/run_p0_local_verification.sh |
+
+### 变更摘要
+
+- 将本地核心、MySQL、统一正式验证和 GitHub 辅助脚本纳入 validate_p0.py，并校验计划中的本地主门禁与远程非阻断口径
+
+### 文件变更摘要
+
+- `scripts/remediation/validate_p0.py`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 |
+| 测试与验证 | python3 -m py_compile scripts/remediation/validate_p0.py 通过；python3 scripts/remediation/validate_p0.py 返回 0 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

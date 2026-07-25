@@ -185,10 +185,20 @@ docs/remediation/
 - 措施：在测试资源建立 `mix` fixture；P0 只验证文件完整、XML well-formed、引用文件存在，并为后续实体数量和编译断言留位。
 - 验收：资源损坏测试失败；未支持项明确 pending，不能注释整个测试。
 
-### P0-T09 建立 CI
+### P0-T09 建立可重复自动化验证门禁
 
-- 措施：PR 与 `dev_all` push 执行 Wrapper 构建，上传测试报告；MySQL IT 独立 job。
-- 验收：故意失败测试时 CI 阻断。
+- 措施：
+  - 以 `scripts/remediation/run_p0_local_verification.sh` 作为 P0 唯一正式动态验收入口；
+  - 本地正式验证串行执行 Wrapper、legacy 依赖 bootstrap、全 Reactor `clean verify`、故意失败阻断证明、静态校验和 `mysql-it` profile；
+  - 正式证据必须绑定 Git commit SHA、分支、JDK、Wrapper Maven、数据库连接标识、命令和退出码，且不得记录数据库密码；
+  - 正式运行默认要求 Git 工作树干净；诊断运行可显式设置 `P0_REQUIRE_CLEAN_WORKTREE=0`，但不得作为退出证据；
+  - GitHub Actions 保留为跨环境辅助回归入口，不作为 P0 退出阻断条件；远程临时 MySQL 的环境差异单独治理，不覆盖本地失败，也不伪造为通过。
+- 验收：
+  - `run_p0_local_verification.sh` 返回 `0`；
+  - 核心 `clean verify` 在无 MySQL条件下返回 `0`；
+  - 本地 `-Pmysql-it clean verify` 在指定测试数据库中返回 `0`；
+  - 故意失败测试使内部 Maven 命令返回非零，而门禁证明脚本自身返回 `0`；
+  - 全部正式证据对应同一 Git commit；GitHub Actions 是否成功仅作为辅助信息记录。
 
 ### P0-T10 建立异常和日志基线
 
@@ -201,11 +211,14 @@ docs/remediation/
 
 ## P0 退出门禁
 
-- [ ] Wrapper 和 CI 可重复构建；
+- [ ] Wrapper 和本地核心验证可重复执行；
+- [ ] 本地 MySQL 集成测试可重复执行；
+- [ ] 正式验证证据绑定同一 Git commit 和执行环境，且正式运行前工作树干净；
 - [ ] 测试失败阻断；
 - [ ] 无 MySQL核心测试通过；
 - [ ] `dec-demo` 进入正式构建；
 - [ ] 旧行为快照和 `mix` 骨架存在；
+- [ ] GitHub Actions 作为非阻断辅助回归入口保留；
 - [ ] P1 可依赖稳定基线。
 
 ---

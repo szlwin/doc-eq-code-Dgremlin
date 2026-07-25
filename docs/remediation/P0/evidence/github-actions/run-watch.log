@@ -1,10 +1,21 @@
 Refreshing run status every 3 seconds. Press Ctrl+C to quit.
 
-* dev_all P0 Build Gate · 30158120369
+* dev_all P0 Build Gate · 30158569071
 Triggered via workflow_dispatch less than a minute ago
 
 JOBS
-* core-verify (ID 89678990959)
+* mysql-it (ID 89680003057)
+  ✓ Set up job
+  * Initialize containers
+  * Run actions/checkout@v6
+  * Run actions/setup-java@v5
+  * Bootstrap repository-bundled legacy dependencies
+  * Initialize MySQL schema
+  * Initialize MySQL test data
+  * Verify MySQL schema
+  * Run MySQL integration tests
+  * Stop containers
+* core-verify (ID 89680003070)
   ✓ Set up job
   * Run actions/checkout@v6
   * Run actions/setup-java@v5
@@ -14,21 +25,24 @@ JOBS
   * Prove failing tests block the build
   * Upload test reports
   * Post Run actions/checkout@v6
-* mysql-it (ID 89678990987)
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* dev_all P0 Build Gate · 30158569071
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* mysql-it (ID 89680003057)
   ✓ Set up job
   * Initialize containers
   * Run actions/checkout@v6
   * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+  * Bootstrap repository-bundled legacy dependencies
+  * Initialize MySQL schema
+  * Initialize MySQL test data
+  * Verify MySQL schema
+  * Run MySQL integration tests
   * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch less than a minute ago
-
-JOBS
-* core-verify (ID 89678990959)
+* core-verify (ID 89680003070)
   ✓ Set up job
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
@@ -39,21 +53,24 @@ JOBS
   * Upload test reports
   * Post Run actions/setup-java@v5
   * Post Run actions/checkout@v6
-* mysql-it (ID 89678990987)
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* dev_all P0 Build Gate · 30158569071
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* mysql-it (ID 89680003057)
   ✓ Set up job
   * Initialize containers
   * Run actions/checkout@v6
   * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+  * Bootstrap repository-bundled legacy dependencies
+  * Initialize MySQL schema
+  * Initialize MySQL test data
+  * Verify MySQL schema
+  * Run MySQL integration tests
   * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch less than a minute ago
-
-JOBS
-* core-verify (ID 89678990959)
+* core-verify (ID 89680003070)
   ✓ Set up job
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
@@ -64,21 +81,24 @@ JOBS
   * Upload test reports
   * Post Run actions/setup-java@v5
   * Post Run actions/checkout@v6
-* mysql-it (ID 89678990987)
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* dev_all P0 Build Gate · 30158569071
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* mysql-it (ID 89680003057)
   ✓ Set up job
   * Initialize containers
   * Run actions/checkout@v6
   * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+  * Bootstrap repository-bundled legacy dependencies
+  * Initialize MySQL schema
+  * Initialize MySQL test data
+  * Verify MySQL schema
+  * Run MySQL integration tests
   * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch less than a minute ago
-
-JOBS
-* core-verify (ID 89678990959)
+* core-verify (ID 89680003070)
   ✓ Set up job
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
@@ -89,21 +109,24 @@ JOBS
   * Upload test reports
   * Post Run actions/setup-java@v5
   * Post Run actions/checkout@v6
-* mysql-it (ID 89678990987)
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* dev_all P0 Build Gate · 30158569071
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* mysql-it (ID 89680003057)
   ✓ Set up job
   * Initialize containers
   * Run actions/checkout@v6
   * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+  * Bootstrap repository-bundled legacy dependencies
+  * Initialize MySQL schema
+  * Initialize MySQL test data
+  * Verify MySQL schema
+  * Run MySQL integration tests
   * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch less than a minute ago
-
-JOBS
-* core-verify (ID 89678990959)
+* core-verify (ID 89680003070)
   ✓ Set up job
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
@@ -114,46 +137,54 @@ JOBS
   * Upload test reports
   * Post Run actions/setup-java@v5
   * Post Run actions/checkout@v6
-* mysql-it (ID 89678990987)
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* dev_all P0 Build Gate · 30158569071
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* mysql-it (ID 89680003057)
   ✓ Set up job
   * Initialize containers
   * Run actions/checkout@v6
   * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+  * Bootstrap repository-bundled legacy dependencies
+  * Initialize MySQL schema
+  * Initialize MySQL test data
+  * Verify MySQL schema
+  * Run MySQL integration tests
   * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch less than a minute ago
-
-JOBS
-* core-verify (ID 89678990959)
+* core-verify (ID 89680003070)
   ✓ Set up job
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
   ✓ Verify Maven Wrapper
   ✓ Bootstrap repository-bundled legacy dependencies
-  * Core build and tests
+  ✓ Core build and tests
   * Prove failing tests block the build
   * Upload test reports
   * Post Run actions/setup-java@v5
   * Post Run actions/checkout@v6
-* mysql-it (ID 89678990987)
-  ✓ Set up job
-  * Initialize containers
-  * Run actions/checkout@v6
-  * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
-  * Stop containers
 Refreshing run status every 3 seconds. Press Ctrl+C to quit.
 
-* dev_all P0 Build Gate · 30158120369
+* dev_all P0 Build Gate · 30158569071
 Triggered via workflow_dispatch less than a minute ago
 
 JOBS
-* core-verify (ID 89678990959)
+* mysql-it (ID 89680003057)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ Run actions/checkout@v6
+  ✓ Run actions/setup-java@v5
+  * Bootstrap repository-bundled legacy dependencies
+  * Initialize MySQL schema
+  * Initialize MySQL test data
+  * Verify MySQL schema
+  * Run MySQL integration tests
+  * Post Run actions/setup-java@v5
+  * Post Run actions/checkout@v6
+  * Stop containers
+* core-verify (ID 89680003070)
   ✓ Set up job
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
@@ -161,24 +192,29 @@ JOBS
   ✓ Bootstrap repository-bundled legacy dependencies
   ✓ Core build and tests
   ✓ Prove failing tests block the build
-  * Upload test reports
+  ✓ Upload test reports
   * Post Run actions/setup-java@v5
   * Post Run actions/checkout@v6
-* mysql-it (ID 89678990987)
-  ✓ Set up job
-  * Initialize containers
-  * Run actions/checkout@v6
-  * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
-  * Stop containers
 Refreshing run status every 3 seconds. Press Ctrl+C to quit.
 
-* dev_all P0 Build Gate · 30158120369
+* dev_all P0 Build Gate · 30158569071
 Triggered via workflow_dispatch less than a minute ago
 
 JOBS
-✓ core-verify in 42s (ID 89678990959)
+* mysql-it (ID 89680003057)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ Run actions/checkout@v6
+  ✓ Run actions/setup-java@v5
+  ✓ Bootstrap repository-bundled legacy dependencies
+  X Initialize MySQL schema
+  - Initialize MySQL test data
+  - Verify MySQL schema
+  - Run MySQL integration tests
+  * Post Run actions/setup-java@v5
+  * Post Run actions/checkout@v6
+  * Stop containers
+✓ core-verify in 43s (ID 89680003070)
   ✓ Set up job
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
@@ -190,155 +226,33 @@ JOBS
   ✓ Post Run actions/setup-java@v5
   ✓ Post Run actions/checkout@v6
   ✓ Complete job
-* mysql-it (ID 89678990987)
-  ✓ Set up job
-  * Initialize containers
-  * Run actions/checkout@v6
-  * Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
-  * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
+X dev_all P0 Build Gate · 30158569071
 Triggered via workflow_dispatch less than a minute ago
 
 JOBS
-✓ core-verify in 42s (ID 89678990959)
-  ✓ Set up job
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Verify Maven Wrapper
-  ✓ Bootstrap repository-bundled legacy dependencies
-  ✓ Core build and tests
-  ✓ Prove failing tests block the build
-  ✓ Upload test reports
-  ✓ Post Run actions/setup-java@v5
-  ✓ Post Run actions/checkout@v6
-  ✓ Complete job
-* mysql-it (ID 89678990987)
+X mysql-it in 50s (ID 89680003057)
   ✓ Set up job
   ✓ Initialize containers
   ✓ Run actions/checkout@v6
   ✓ Run actions/setup-java@v5
-  * Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
-  * Post Run actions/setup-java@v5
-  * Post Run actions/checkout@v6
-  * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch about 1 minute ago
-
-JOBS
-✓ core-verify in 42s (ID 89678990959)
-  ✓ Set up job
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Verify Maven Wrapper
   ✓ Bootstrap repository-bundled legacy dependencies
-  ✓ Core build and tests
-  ✓ Prove failing tests block the build
-  ✓ Upload test reports
-  ✓ Post Run actions/setup-java@v5
-  ✓ Post Run actions/checkout@v6
-  ✓ Complete job
-* mysql-it (ID 89678990987)
-  ✓ Set up job
-  ✓ Initialize containers
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
-  * Post Run actions/setup-java@v5
-  * Post Run actions/checkout@v6
-  * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch about 1 minute ago
-
-JOBS
-✓ core-verify in 42s (ID 89678990959)
-  ✓ Set up job
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Verify Maven Wrapper
-  ✓ Bootstrap repository-bundled legacy dependencies
-  ✓ Core build and tests
-  ✓ Prove failing tests block the build
-  ✓ Upload test reports
-  ✓ Post Run actions/setup-java@v5
-  ✓ Post Run actions/checkout@v6
-  ✓ Complete job
-* mysql-it (ID 89678990987)
-  ✓ Set up job
-  ✓ Initialize containers
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  * Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
-  * Post Run actions/setup-java@v5
-  * Post Run actions/checkout@v6
-  * Stop containers
-Refreshing run status every 3 seconds. Press Ctrl+C to quit.
-
-* dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch about 1 minute ago
-
-JOBS
-✓ core-verify in 42s (ID 89678990959)
-  ✓ Set up job
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Verify Maven Wrapper
-  ✓ Bootstrap repository-bundled legacy dependencies
-  ✓ Core build and tests
-  ✓ Prove failing tests block the build
-  ✓ Upload test reports
-  ✓ Post Run actions/setup-java@v5
-  ✓ Post Run actions/checkout@v6
-  ✓ Complete job
-* mysql-it (ID 89678990987)
-  ✓ Set up job
-  ✓ Initialize containers
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  X Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
-  ✓ Post Run actions/setup-java@v5
-  ✓ Post Run actions/checkout@v6
-  * Stop containers
-X dev_all P0 Build Gate · 30158120369
-Triggered via workflow_dispatch about 1 minute ago
-
-JOBS
-✓ core-verify in 42s (ID 89678990959)
-  ✓ Set up job
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Verify Maven Wrapper
-  ✓ Bootstrap repository-bundled legacy dependencies
-  ✓ Core build and tests
-  ✓ Prove failing tests block the build
-  ✓ Upload test reports
-  ✓ Post Run actions/setup-java@v5
-  ✓ Post Run actions/checkout@v6
-  ✓ Complete job
-X mysql-it in 1m9s (ID 89678990987)
-  ✓ Set up job
-  ✓ Initialize containers
-  ✓ Run actions/checkout@v6
-  ✓ Run actions/setup-java@v5
-  ✓ Run scripts/remediation/bootstrap_legacy_dependencies.sh
-  X Run ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+  X Initialize MySQL schema
+  - Initialize MySQL test data
+  - Verify MySQL schema
+  - Run MySQL integration tests
   ✓ Post Run actions/setup-java@v5
   ✓ Post Run actions/checkout@v6
   ✓ Stop containers
   ✓ Complete job
-
-ANNOTATIONS
-X Process completed with exit code 1.
-mysql-it: .github#1354
-
+✓ core-verify in 43s (ID 89680003070)
+  ✓ Set up job
+  ✓ Run actions/checkout@v6
+  ✓ Run actions/setup-java@v5
+  ✓ Verify Maven Wrapper
+  ✓ Bootstrap repository-bundled legacy dependencies
+  ✓ Core build and tests
+  ✓ Prove failing tests block the build
+  ✓ Upload test reports
+  ✓ Post Run actions/setup-java@v5
+  ✓ Post Run actions/checkout@v6
+  ✓ Complete job

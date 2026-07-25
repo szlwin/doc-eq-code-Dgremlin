@@ -48,7 +48,7 @@ python3 /mnt/data/common-develop-current/scripts/ai_context.py resolve \
 
 ## 当前状态
 
-- P0：`BLOCKED`。静态整改已完成，Maven Wrapper、失败测试阻断和 GitHub Actions `core-verify` 仍需动态回执。
+- P0：`REVIEWING`。本地核心动态验证已通过；等待在干净工作树上完成统一的本地核心与 MySQL 正式验证。GitHub Actions 仅作非阻断辅助回归。
 - P1：需求确认、需求分析、业务模型和设计 Revision 已完成；当前门禁阻断，不能进入 `test_design` 或开发。
 - P2—P8：`TODO`。
 - 当前默认 Agent：`ProjectManagerAgent`。
