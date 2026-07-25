@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "kind": "DERIVED_VIEW",
+  "rule": "Derived projections only; legacy canonical records remain authoritative in v2.34.",
+  "sourceInputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
+  "targetId": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "currentPhase": "design",
+  "taskStatus": "READY",
+  "current": {
+    "taskState": "current/task_state.json",
+    "phaseState": "current/phase_state.json",
+    "openIssues": "current/open_issues.json",
+    "handoff": "current/handoff.json"
+  },
+  "indexes": {
+    "evidence": "evidence/evidence_index.json",
+    "reviews": "evidence/reviews/index.jsonl",
+    "traceability": "traceability.md#traceability",
+    "acceptance": "acceptance_assertions.json"
+  },
+  "views": {
+    "design": {
+      "DesignAgent": "views/design/DesignAgent.json",
+      "RequirementReviewAgent": "views/design/RequirementReviewAgent.json",
+      "BusinessModelReviewAgent": "views/design/BusinessModelReviewAgent.json",
+      "ArchitectureReviewAgent": "views/design/ArchitectureReviewAgent.json",
+      "TestDesignAgent": "views/design/TestDesignAgent.json",
+      "DevelopAgent": "views/design/DevelopAgent.json",
+      "ImpactAnalysisReviewAgent": "views/design/ImpactAnalysisReviewAgent.json",
+      "CrossModuleIntegrationReviewAgent": "views/design/CrossModuleIntegrationReviewAgent.json",
+      "ProjectManagerAgent": "views/design/ProjectManagerAgent.json"
+    }
+  },
+  "canonicalSources": [
+    "task_state.md",
+    "task_plan.md",
+    "traceability.md",
+    "task_attempts.md",
+    "stage_outcomes.md",
+    "review_issues.md",
+    "acceptance_assertions.json",
+    "evidence/evidence_index.json",
+    "evidence/reviews/index.jsonl"
+  ]
+}

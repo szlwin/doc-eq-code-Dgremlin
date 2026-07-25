@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "kind": "DERIVED_VIEW",
+  "sourceInputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
+  "targetId": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "phase": "design",
+  "agent": "ArchitectureReviewAgent",
+  "role": "REQUIRED_REVIEWER",
+  "gateStatus": "FAILED",
+  "currentRevision": "DESIGN-R01@a7a6820a381e",
+  "currentArtifactStatus": "PASSED",
+  "predecessorRevisions": [
+    {
+      "phase": "business_model",
+      "revision": "BM-R01@52a58f20cb32",
+      "status": "PASSED"
+    }
+  ],
+  "openIssueIds": [],
+  "activeTaskIds": [],
+  "currentAttemptId": "",
+  "nextAction": "本次范围已完成；用户确认后进入 test_design，当前不实施代码或测试。",
+  "nextAgent": "TestDesignAgent",
+  "reviewProfileIds": [
+    "design:ArchitectureReviewAgent"
+  ],
+  "lazyLoad": {
+    "evidenceBodies": false,
+    "reviewBodies": false,
+    "snapshotBodies": false,
+    "evidenceCommand": "python3 scripts/evidence.py show --task-dir /mnt/data/work_record_v3_work/project/project_doc/version/V_1.0/task/P1-COMPILER-F01 --evidence-id {EVD_ID}",
+    "reviewCommand": "python3 scripts/manual_review.py show --task-dir /mnt/data/work_record_v3_work/project/project_doc/version/V_1.0/task/P1-COMPILER-F01 --review-result-ref {REV_ID}"
+  }
+}

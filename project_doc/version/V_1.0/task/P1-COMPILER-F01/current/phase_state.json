@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "kind": "DERIVED_VIEW",
+  "sourceInputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
+  "phase": "design",
+  "ownerAgent": "DesignAgent",
+  "requiredReviewerAgents": [
+    "RequirementReviewAgent",
+    "BusinessModelReviewAgent",
+    "ArchitectureReviewAgent",
+    "TestDesignAgent",
+    "DevelopAgent"
+  ],
+  "conditionalReviewerAgents": [
+    "CrossModuleIntegrationReviewAgent",
+    "ImpactAnalysisReviewAgent"
+  ],
+  "requiredPredecessors": [
+    "business_model"
+  ],
+  "revision": "DESIGN-R01@a7a6820a381e",
+  "artifactStatus": "PASSED"
+}
