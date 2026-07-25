@@ -25,6 +25,11 @@ public class RuleTests extends DemoLoadTests {
         main(new String[0]);
     }
 
+    @Override
+    public void testInit() throws Exception {
+        super.testInit();
+    }
+
     public static void main(String args[]) throws Exception {
         RuleTests ruleTests = new RuleTests();
         ruleTests.testInit();
