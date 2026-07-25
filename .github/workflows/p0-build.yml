@@ -43,25 +43,82 @@ jobs:
   mysql-it:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+
     services:
       mysql:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: mysqldb
           MYSQL_DATABASE: demo-test2
-        ports: ['3306:3306']
+        ports:
+          - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
-          --health-interval=10s --health-timeout=5s --health-retries=10
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pmysqldb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - uses: actions/checkout@v6
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - run: scripts/remediation/bootstrap_legacy_dependencies.sh
-      - run: ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Initialize MySQL schema
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          test -f dec-demo/src/test/resources/mysql/schema.sql
+
+          docker exec \
+            -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+            -i "$MYSQL_CONTAINER_ID" \
+            mysql \
+            -uroot \
+            --database='demo-test2' \
+            < dec-demo/src/test/resources/mysql/schema.sql
+
+      - name: Initialize MySQL test data
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
+            docker exec \
+              -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+              -i "$MYSQL_CONTAINER_ID" \
+              mysql \
+              -uroot \
+              --database='demo-test2' \
+              < dec-demo/src/test/resources/mysql/data.sql
+          fi
+
+      - name: Verify MySQL schema
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          docker exec \
+            -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+            "$MYSQL_CONTAINER_ID" \
+            mysql \
+            -uroot \
+            --database='demo-test2' \
+            -e "
+              SELECT DATABASE();
+              SHOW TABLES;
+              SHOW TABLES LIKE 'order_info';
+            "
+
+      - name: Run MySQL integration tests
+        run: ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
         env:
           DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
           DEC_MYSQL_USER: root
