@@ -1,0 +1,16 @@
+[01] mvnw-version
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/mvnw --version
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/core/01-mvnw-version.log
+[02] bootstrap-legacy
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/scripts/remediation/bootstrap_legacy_dependencies.sh
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/core/02-bootstrap-legacy.log
+[03] clean-verify
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/mvnw --batch-mode --no-transfer-progress clean verify
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/core/03-clean-verify.log
+[04] failure-gate
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/scripts/remediation/prove_test_failure_gate.sh
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/core/04-failure-gate.log
+[05] static-validation
++ python3 /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/scripts/remediation/validate_p0.py
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/core/05-static-validation.log
+P0 local dynamic verification PASSED. Evidence: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/core

@@ -1,0 +1,6 @@
+[01] mvnw-version
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/mysql/01-mvnw-version.log
+[02] bootstrap-legacy
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/mysql/02-bootstrap-legacy.log
+[03] mysql-it
+exit=1 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T140806Z/mysql/03-mysql-it.log
