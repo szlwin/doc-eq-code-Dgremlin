@@ -61,3 +61,19 @@ P0_EVIDENCE_STAMP=20260725T063000Z ./scripts/remediation/run_p0_dynamic_verifica
 - `docs/remediation/P0/dynamic-verification-guide.md`。
 
 当前不得把 P0-T02、P0-T03 或 P0-T09 标记为 PASSED。根 `pom.xml` 的真实修改使 P1 旧 POM Evidence（EVD-000022、EVD-000085、EVD-000135）失效，当前 P1 `task-health` 阻断数为 165，留待后续 P1-GATE 正式迁移。
+
+## P0 本地动态验证——2026-07-25
+
+证据目录：
+
+`docs/remediation/P0/evidence/dynamic-20260725T081205Z/`
+
+结论：
+
+- Maven Wrapper：PASSED
+- Legacy 依赖安装：PASSED
+- 全 Reactor `clean verify`：PASSED
+- 故意失败测试阻断：PASSED
+- P0 静态验证：PASSED
+
+P0-T02、P0-T03 可以关闭；P0-T09 等待 GitHub Actions 回执。

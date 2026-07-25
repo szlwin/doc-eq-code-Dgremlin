@@ -1,0 +1,10 @@
+[01] mvnw-version
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/dynamic-20260725T081205Z/01-mvnw-version.log
+[02] bootstrap-legacy
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/dynamic-20260725T081205Z/02-bootstrap-legacy.log
+[03] clean-verify
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/dynamic-20260725T081205Z/03-clean-verify.log
+[04] failure-gate
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/dynamic-20260725T081205Z/04-failure-gate.log
+[05] static-validation
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/dynamic-20260725T081205Z/05-static-validation.log

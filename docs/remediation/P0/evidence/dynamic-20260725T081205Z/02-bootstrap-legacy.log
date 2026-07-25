@@ -1,0 +1,65 @@
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/scripts/remediation/bootstrap_legacy_dependencies.sh
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- install:3.1.3:install-file (default-cli) @ doc-eq-code-parent ---
+[INFO] Installing /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/lib/express-check-1.0.jar to /Users/shazhoulin/.m2/repository/smarter/express-check/1.0/express-check-1.0.jar
+[INFO] Installing /var/folders/8g/p_hqsmpj2gqb403k11llbcc00000gn/T/mvninstall6986213463059494649.pom to /Users/shazhoulin/.m2/repository/smarter/express-check/1.0/express-check-1.0.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.088 s
+[INFO] Finished at: 2026-07-25T16:12:07+08:00
+[INFO] ------------------------------------------------------------------------
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- install:3.1.3:install-file (default-cli) @ doc-eq-code-parent ---
+[INFO] Installing /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/lib/easy-check-1.0.jar to /Users/shazhoulin/.m2/repository/smarter/easy-check/1.0/easy-check-1.0.jar
+[INFO] Installing /var/folders/8g/p_hqsmpj2gqb403k11llbcc00000gn/T/mvninstall16447762724195805209.pom to /Users/shazhoulin/.m2/repository/smarter/easy-check/1.0/easy-check-1.0.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.082 s
+[INFO] Finished at: 2026-07-25T16:12:08+08:00
+[INFO] ------------------------------------------------------------------------
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- install:3.1.3:install-file (default-cli) @ doc-eq-code-parent ---
+[INFO] Installing /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/lib/santr-2.0.3.jar to /Users/shazhoulin/.m2/repository/smarter/santr/2.0.3/santr-2.0.3.jar
+[INFO] Installing /var/folders/8g/p_hqsmpj2gqb403k11llbcc00000gn/T/mvninstall18192658393658150949.pom to /Users/shazhoulin/.m2/repository/smarter/santr/2.0.3/santr-2.0.3.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.081 s
+[INFO] Finished at: 2026-07-25T16:12:09+08:00
+[INFO] ------------------------------------------------------------------------
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- install:3.1.3:install-file (default-cli) @ doc-eq-code-parent ---
+[INFO] Installing /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/lib/javolution-6.1.0.jar to /Users/shazhoulin/.m2/repository/javolution/javolution/6.1.0/javolution-6.1.0.jar
+[INFO] Installing /var/folders/8g/p_hqsmpj2gqb403k11llbcc00000gn/T/mvninstall5354845013667940480.pom to /Users/shazhoulin/.m2/repository/javolution/javolution/6.1.0/javolution-6.1.0.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.085 s
+[INFO] Finished at: 2026-07-25T16:12:09+08:00
+[INFO] ------------------------------------------------------------------------
