@@ -36,7 +36,7 @@
 			<property name="payAmount" type="decimal" desc="支付金额"/>
 		</property-info>
 		<table-info>
-			<table name="pay_detail_info" data-source="data1" key="o_d_id" key-type="increment">
+			<table name="pay_detail_info" data-source="data1" key="o_id" key-type="increment">
 				<column name="o_id" ref-property="id"/>
 				<column name="o_payId" ref-property="payId"/>
 				<column name="o_userId" ref-property="userId"/>
