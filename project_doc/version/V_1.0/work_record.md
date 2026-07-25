@@ -456,6 +456,60 @@
 | 测试与验证 | python3 -m py_compile scripts/remediation/validate_p0.py 通过；python3 scripts/remediation/validate_p0.py 返回 0 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"DebugAgent","attempt_id":"","blockers":["当前容器无法下载 Maven 3.9.15，完整 mysql-it 需在用户本地数据库环境验证"],"correction_of":"","event_id":"EVENT-P0-MYSQL-IT-JVM-ISOLATION-20260725","event_type":"MYSQL_IT_JVM_ISOLATION_FIXED","evidence_ids":[],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"","issue_ids":[],"iteration_id":"","iteration_no":0,"modified_files_summary":["pom.xml; scripts/remediation/validate_p0.py; docs/remediation/P0/dynamic-verification-guide.md; docs/remediation/P0/known-issues.md"],"next_action":"在干净工作树和专用 MySQL 测试库上执行 scripts/remediation/run_p0_local_verification.sh","next_agent":"TestAgent","output_revision":"","phase":"","record_id":"WR-20260725-133215-P0-T09-PARTIAL","render_digest":"a356e1c46867d640bced4a215047a9c3f7d9fcd8f2297cdf0699f4b64183c5b4","review_result_refs":[],"schema_version":3,"scope":"mysql-it 遗留测试 JVM 隔离","source":"P0 本地完整验证发现跨测试类单例配置污染","sql_change_summary":"无","stage_outcome_refs":[],"state_change":"P0-T09 保持 REVIEWING；跨测试类静态状态污染已修复，待本地 MySQL 完整验证","status":"PARTIAL","summary":"确认完整 mysql-it 在同一 Surefire JVM 中复用 ConfigFactory 单例，导致后续 DirectoryTest 重复注册 data1；在 mysql-it profile 中为 Surefire/Failsafe 设置 forkCount=1、reuseForks=false，使每个测试类独立 JVM","target_id":"P0-DYNAMIC-CLOSE","task_id":"P0-T09","task_type":"debugging","timestamp":"2026-07-25T13:32:15+00:00","validation_summary":"POM XML 解析、validate_p0.py、Shell 语法和 git diff --check 通过；当前容器无法解析 maven.aliyun.com，未执行 Maven/MySQL 动态回归","version":"V_1.0"} -->
+## WR-20260725-133215-P0-T09-PARTIAL
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-25T13:32:15+00:00 |
+| 执行 Agent | DebugAgent |
+| 命令或来源 | P0 本地完整验证发现跨测试类单例配置污染 |
+| 版本 | V_1.0 |
+| 目标 | P0-DYNAMIC-CLOSE |
+| 范围 | mysql-it 遗留测试 JVM 隔离 |
+| 阶段 | 无 / 未登记 |
+| 任务类型 | debugging |
+| 事件类型 | MYSQL_IT_JVM_ISOLATION_FIXED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 确认完整 mysql-it 在同一 Surefire JVM 中复用 ConfigFactory 单例，导致后续 DirectoryTest 重复注册 data1；在 mysql-it profile 中为 Surefire/Failsafe 设置 forkCount=1、reuseForks=false，使每个测试类独立 JVM |
+| 状态 | PARTIAL |
+| 状态变更 | P0-T09 保持 REVIEWING；跨测试类静态状态污染已修复，待本地 MySQL 完整验证 |
+| Task | P0-T09 |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | 无 / 未登记 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | TestAgent |
+| 后续事项 | 在干净工作树和专用 MySQL 测试库上执行 scripts/remediation/run_p0_local_verification.sh |
+
+### 变更摘要
+
+- 确认完整 mysql-it 在同一 Surefire JVM 中复用 ConfigFactory 单例，导致后续 DirectoryTest 重复注册 data1；在 mysql-it profile 中为 Surefire/Failsafe 设置 forkCount=1、reuseForks=false，使每个测试类独立 JVM
+
+### 文件变更摘要
+
+- `pom.xml; scripts/remediation/validate_p0.py; docs/remediation/P0/dynamic-verification-guide.md; docs/remediation/P0/known-issues.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 |
+| 测试与验证 | POM XML 解析、validate_p0.py、Shell 语法和 git diff --check 通过；当前容器无法解析 maven.aliyun.com，未执行 Maven/MySQL 动态回归 |
+| 问题与阻塞 | 当前容器无法下载 Maven 3.9.15，完整 mysql-it 需在用户本地数据库环境验证 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

@@ -2,6 +2,7 @@
 
 - 部分受限执行容器无法解析外网且没有 Maven/`gh`；当前正式验收改由指定本地环境完成，GitHub Actions 仅作非阻断辅助回归。
 - 本地 MySQL 正式验证依赖专用测试 schema 和 fixture；数据库、表结构或连接配置必须由执行环境明确准备，不得回退生产/开发业务库。
+- 遗留 `mysql-it` 测试会修改进程级单例配置注册表；`mysql-it` profile 已设置 `forkCount=1`、`reuseForks=false`，每个测试类使用独立 JVM，禁止通过放宽重复数据源校验规避状态泄漏。
 - GitHub 临时 MySQL Service 与本机数据库不共享 schema/data；远程 `mysql-it` 的环境可重复性作为后续 CI 环境治理项，不阻断 P0 本地正式退出。
 - `mix` 仅做文件完整性、XML well-formed 和引用存在性验证；目标语义留待 P1-P5。
 - 旧 XML/YAML 快照当前锁定资源摘要，不声明两种格式语义等价；完整等价测试属于 P8。

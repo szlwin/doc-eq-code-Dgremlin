@@ -112,6 +112,8 @@ docs/remediation/P0/evidence/local-mysql-{UTC_TIMESTAMP}/
 
 测试数据库必须预先具备当前集成测试所需 schema 和 fixture。数据库存在但表只存在于另一台机器、另一个 schema 或 IDE 使用的不同连接时，不能视为可重复验证。
 
+`mysql-it` 中的旧测试会加载不同的完整配置集合，而底层配置仓库是 JVM 级单例。为避免 `data1 is existed` 等跨测试类状态污染，Profile 使用 `forkCount=1`、`reuseForks=false` 串行执行，每个测试类启动独立 JVM。单独在 IDE 中运行一个 Test 方法不会覆盖这一完整 Reactor 验收要求。
+
 ## 5. GitHub Actions 辅助回归
 
 远程验证保留，但不属于 P0 正式退出条件：

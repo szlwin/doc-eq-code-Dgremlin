@@ -130,9 +130,24 @@
             <id>mysql-it</id>
             <properties><surefire.excludedGroups></surefire.excludedGroups></properties>
             <build><plugins>
+                <!-- Legacy mysql-it tests mutate process-wide singleton registries.
+                     Execute each test class in a fresh JVM so one fixture cannot
+                     leak data sources, views or connections into the next class. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <forkCount>1</forkCount>
+                        <reuseForks>false</reuseForks>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId><artifactId>maven-failsafe-plugin</artifactId>
-                    <configuration><skipITs>false</skipITs><groups>mysql-it</groups></configuration>
+                    <configuration>
+                        <skipITs>false</skipITs>
+                        <groups>mysql-it</groups>
+                        <forkCount>1</forkCount>
+                        <reuseForks>false</reuseForks>
+                    </configuration>
                 </plugin>
             </plugins></build>
         </profile>

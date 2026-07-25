@@ -20,6 +20,16 @@ if 'testFailureIgnore>true' in text: errors.append('testFailureIgnore=true remai
 if '<module>dec-demo</module>' not in (root/'pom.xml').read_text(): errors.append('dec-demo missing from reactor')
 for x in ['LegacyResourceSnapshotTest.java','MixContractTest.java','BaseDataContractTest.java']:
     if not list(root.glob('**/'+x)): errors.append('missing test '+x)
+
+root_pom=(root/'pom.xml').read_text(errors='replace')
+mysql_profile_match=re.search(r'<profile>\s*<id>mysql-it</id>(.*?)</profile>', root_pom, re.S)
+if not mysql_profile_match:
+    errors.append('mysql-it profile missing')
+else:
+    mysql_profile=mysql_profile_match.group(1)
+    if '<forkCount>1</forkCount>' not in mysql_profile or '<reuseForks>false</reuseForks>' not in mysql_profile:
+        errors.append('mysql-it profile must isolate legacy singleton state with forkCount=1 and reuseForks=false')
+
 if errors:
     print('\n'.join(errors)); sys.exit(1)
 print('P0 static validation passed')
