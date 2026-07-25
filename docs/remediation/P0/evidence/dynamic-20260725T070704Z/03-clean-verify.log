@@ -1,0 +1,54 @@
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/mvnw --batch-mode --no-transfer-progress clean verify
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] doc-eq-code-parent                                                 [pom]
+[INFO] dec-core-context                                                   [jar]
+[INFO] dec-core-datasource                                                [jar]
+[INFO] dec-context-config-parse-xml                                       [jar]
+[INFO] dec-context-config-parse-yaml                                      [jar]
+[INFO] dec-datasource-orm-sql                                             [jar]
+[INFO] dec-datasource-orm-mysql                                           [jar]
+[INFO] dec-core-model                                                     [jar]
+[INFO] dec-core-starter                                                   [jar]
+[INFO] dec-expand-declaration                                             [jar]
+[INFO] dec-demo                                                           [jar]
+[INFO] 
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0                                   [1/11]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ doc-eq-code-parent ---
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ doc-eq-code-parent ---
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for doc-eq-code-parent 1.0:
+[INFO] 
+[INFO] doc-eq-code-parent ................................. FAILURE [ 15.706 s]
+[INFO] dec-core-context ................................... SKIPPED
+[INFO] dec-core-datasource ................................ SKIPPED
+[INFO] dec-context-config-parse-xml ....................... SKIPPED
+[INFO] dec-context-config-parse-yaml ...................... SKIPPED
+[INFO] dec-datasource-orm-sql ............................. SKIPPED
+[INFO] dec-datasource-orm-mysql ........................... SKIPPED
+[INFO] dec-core-model ..................................... SKIPPED
+[INFO] dec-core-starter ................................... SKIPPED
+[INFO] dec-expand-declaration ............................. SKIPPED
+[INFO] dec-demo ........................................... SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.750 s
+[INFO] Finished at: 2026-07-25T15:07:37+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-enforcer-plugin:3.5.0:enforce (enforce-build-toolchain) on project doc-eq-code-parent: Execution enforce-build-toolchain of goal org.apache.maven.plugins:maven-enforcer-plugin:3.5.0:enforce failed: Plugin org.apache.maven.plugins:maven-enforcer-plugin:3.5.0 or one of its dependencies could not be resolved:
+[ERROR] 	Could not transfer artifact org.apache.maven.enforcer:enforcer-rules:jar:3.5.0 from/to central (https://repo.maven.apache.org/maven2): Connect to repo.maven.apache.org:443 [repo.maven.apache.org/198.18.0.212] failed: Read timed out
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginResolutionException
