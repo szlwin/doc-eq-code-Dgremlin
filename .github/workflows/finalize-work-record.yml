@@ -1,0 +1,44 @@
+name: Finalize work record
+
+on:
+  push:
+    branches:
+      - dev_all
+    paths:
+      - .github/work-record-append.md
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Append audited work records
+        shell: python
+        run: |
+          from pathlib import Path
+
+          record = Path("project_doc/version/V_1.0/work_record.md")
+          patch = Path(".github/work-record-append.md")
+          workflow = Path(".github/workflows/finalize-work-record.yml")
+          marker = "<!-- work-record-events-end -->"
+          text = record.read_text(encoding="utf-8")
+          addition = patch.read_text(encoding="utf-8")
+          record_id = "WR-20260725-063325-GOV-T01-GOV-T03-PASSED"
+          if record_id not in text:
+              if marker not in text:
+                  raise SystemExit(f"missing marker: {marker}")
+              record.write_text(text.replace(marker, addition + marker, 1), encoding="utf-8")
+          patch.unlink()
+          workflow.unlink()
+      - name: Commit finalized record
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: finalize governance work record"
+          git push origin HEAD:dev_all

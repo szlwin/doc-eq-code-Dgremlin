@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "validatorVersion": "2.35",
+  "profile": "task-health",
+  "targetId": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "currentPhase": "design",
+  "taskStatus": "READY",
+  "overall": "FAILED",
+  "inputDigest": "c1fbe5a60c5faeed1663206dac279576d40112515b2a56fd863eac43650b35c1",
+  "cacheHit": false,
+  "counts": {
+    "evidence": 62,
+    "reviews": 20,
+    "acceptanceAssertions": 20,
+    "traceability": 6,
+    "openIssues": 0,
+    "criticalIssues": 0
+  },
+  "next": {
+    "allowed": false,
+    "phase": "test_design",
+    "agent": "TestDesignAgent",
+    "blockingCount": 165
+  },
+  "checks": [
+    {
+      "id": "DOCUMENT_LAYOUT",
+      "status": "PASSED",
+      "errorCount": 0
+    },
+    {
+      "id": "TASK_STATE",
+      "status": "PASSED",
+      "errorCount": 0
+    },
+    {
+      "id": "EVIDENCE_INTEGRITY",
+      "status": "FAILED",
+      "errorCount": 6
+    },
+    {
+      "id": "REVIEW_REGISTRY",
+      "status": "PASSED",
+      "errorCount": 0
+    },
+    {
+      "id": "ACCEPTANCE",
+      "status": "FAILED",
+      "errorCount": 20
+    },
+    {
+      "id": "RISK_REPORT",
+      "status": "PASSED",
+      "errorCount": 0
+    },
+    {
+      "id": "TRACEABILITY",
+      "status": "PASSED",
+      "errorCount": 0
+    },
+    {
+      "id": "OPEN_ISSUES",
+      "status": "PASSED",
+      "errorCount": 0
+    },
+    {
+      "id": "LONG_TASK",
+      "status": "FAILED",
+      "errorCount": 631
+    },
+    {
+      "id": "PHASE_GATE",
+      "status": "PASSED",
+      "errorCount": 0
+    }
+  ]
+}

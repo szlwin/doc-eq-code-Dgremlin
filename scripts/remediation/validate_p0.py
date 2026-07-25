@@ -2,7 +2,7 @@
 from pathlib import Path
 import xml.etree.ElementTree as ET, re, sys
 root=Path(__file__).resolve().parents[2]; errors=[]
-required=['mvnw','mvnw.cmd','.mvn/wrapper/maven-wrapper.properties','.github/workflows/p0-build.yml','scripts/remediation/bootstrap_legacy_dependencies.sh','doc/mix-framework-technical-remediation-plan.md','doc/mix-framework-p0-p8-detailed-task-plan.md']
+required=['mvnw','mvnw.cmd','.mvn/wrapper/maven-wrapper.properties','.github/workflows/p0-build.yml','scripts/remediation/bootstrap_legacy_dependencies.sh','project_doc/docs/_plans/mix-framework-technical-remediation-plan.md','project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md','doc/mix-framework-technical-remediation-plan.md','doc/mix-framework-p0-p8-detailed-task-plan.md']
 for x in required:
     if not (root/x).exists(): errors.append('missing '+x)
 for p in [root/'pom.xml',*root.glob('*/pom.xml')]:
