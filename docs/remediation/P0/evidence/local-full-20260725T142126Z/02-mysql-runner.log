@@ -1,0 +1,10 @@
+[01] mvnw-version
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/mvnw --version
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T142126Z/mysql/01-mvnw-version.log
+[02] bootstrap-legacy
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/scripts/remediation/bootstrap_legacy_dependencies.sh
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T142126Z/mysql/02-bootstrap-legacy.log
+[03] mysql-it
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/mvnw --batch-mode --no-transfer-progress -Pmysql-it clean verify
+exit=0 log=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T142126Z/mysql/03-mysql-it.log
+P0 local MySQL verification PASSED. Evidence: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/docs/remediation/P0/evidence/local-full-20260725T142126Z/mysql

@@ -98,3 +98,24 @@ GitHub Actions 及 `verify_p0_github_actions.sh` 继续保留，但仅作为非�
 - P0-T03：PASSED；
 - P0-T09：REVIEWING，等待在干净工作树上执行统一的本地完整验证并固化 MySQL Evidence；
 - P1 仍受 P0 本地完整门禁和自身 Evidence/Review 门禁阻断。
+
+## 已清理的历史执行
+
+2026-07-25 早期本地及 GitHub Actions 环境验证记录因网络、
+Runner 和临时 MySQL 环境差异未形成正式验收证据，原始日志已清理。
+正式验收以后续本地统一验证生成的 Evidence 为准。
+
+## P0 正式本地完整验证——2026-07-25
+
+正式证据目录：
+
+`docs/remediation/P0/evidence/local-full-20260725T142126Z/`
+
+被验证提交：
+
+`<TESTED_SHA>`
+
+执行命令：
+
+```bash
+./scripts/remediation/run_p0_local_verification.sh

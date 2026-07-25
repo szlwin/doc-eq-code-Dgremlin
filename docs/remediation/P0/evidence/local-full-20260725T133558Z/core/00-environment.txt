@@ -1,7 +1,0 @@
-timestamp=2026-07-25T13:35:58Z
-root=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin
-git_head=d599aa4883712050dd6ed32c9e3d1b369eb93114
-git_branch=dev_all
-git_worktree_clean=false
-java=openjdk version "21.0.12" 2026-07-21 LTS
-wrapper_url=https://maven.aliyun.com/repository/central/org/apache/maven/apache-maven/3.9.15/apache-maven-3.9.15-bin.zip

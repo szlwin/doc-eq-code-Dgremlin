@@ -1,0 +1,8 @@
+timestamp=2026-07-25T14:21:26Z
+root=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin
+git_head=16f02ac18a5dd384ef9aaf4aeb8d69cd9cb4a584
+git_branch=dev_all
+git_worktree_clean=true
+DEC_MYSQL_URL=jdbc:mysql://127.0.0.1:3306/demo-test2
+DEC_MYSQL_USER=root
+DEC_MYSQL_PASSWORD=SET

@@ -519,3 +519,13 @@
 - `task_attempts.md` 保存单次执行细节；本文件仅保存版本级摘要与索引。
 - 更正通过新增记录并填写 `correction_of`，不得修改旧记录。
 - `validate-work-record` 会校验隐藏元数据、可读正文摘要和 SHA-256 一致性。
+
+事件类型：P0_FORMAL_LOCAL_VERIFICATION_PASSED
+任务：P0-T09
+状态：PASSED
+状态变更：P0-T09 REVIEWING → PASSED；P0 REVIEWING → PASSED
+Evidence：docs/remediation/P0/evidence/local-full-20260725T142126Z/
+被验证提交：<TESTED_SHA>
+验证结果：core_exit=0；mysql_exit=0；start_head=end_head
+下一 Agent：ProjectManagerAgent
+下一事项：处理 P1 Evidence/Review 门禁

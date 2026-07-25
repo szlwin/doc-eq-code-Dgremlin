@@ -1,5 +1,0 @@
-timestamp=2026-07-25T06:31:06Z
-root=/mnt/data/doc-eq-code-Dgremlin
-git_head=19708bf1df3c7bb626a3d7bf16d3e566f65ba727
-java=openjdk version "21.0.10" 2026-01-20
-wrapper_url=https://maven.aliyun.com/repository/central/org/apache/maven/apache-maven/3.9.15/apache-maven-3.9.15-bin.zip

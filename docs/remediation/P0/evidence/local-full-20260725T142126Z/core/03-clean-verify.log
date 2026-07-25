@@ -1,0 +1,720 @@
++ /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/mvnw --batch-mode --no-transfer-progress clean verify
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] doc-eq-code-parent                                                 [pom]
+[INFO] dec-core-context                                                   [jar]
+[INFO] dec-core-datasource                                                [jar]
+[INFO] dec-context-config-parse-xml                                       [jar]
+[INFO] dec-context-config-parse-yaml                                      [jar]
+[INFO] dec-datasource-orm-sql                                             [jar]
+[INFO] dec-datasource-orm-mysql                                           [jar]
+[INFO] dec-core-model                                                     [jar]
+[INFO] dec-core-starter                                                   [jar]
+[INFO] dec-expand-declaration                                             [jar]
+[INFO] dec-demo                                                           [jar]
+[INFO] 
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0                                   [1/11]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ doc-eq-code-parent ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ doc-eq-code-parent ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ doc-eq-code-parent ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/target/jacoco.exec
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ doc-eq-code-parent ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ doc-eq-code-parent ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ doc-eq-code-parent ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --------------------< doc.eq.code:dec-core-context >--------------------
+[INFO] Building dec-core-context 1.0                                     [2/11]
+[INFO]   from dec-core-context/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-core-context ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-context ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-context ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-context ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-context ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 66 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/src/main/java/dec/core/context/collections/list/SimpleList.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/src/main/java/dec/core/context/collections/list/SimpleList.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-context ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-context ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug release 8] to target/test-classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-context ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running dec.core.context.data.BaseDataContractTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in dec.core.context.data.BaseDataContractTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-context ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/target/dec-core-context-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-context ---
+[INFO] Loading execution data file /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-context/target/jacoco.exec
+[INFO] Analyzed bundle 'dec-core-context' with 64 classes
+[INFO] 
+[INFO] ------------------< doc.eq.code:dec-core-datasource >-------------------
+[INFO] Building dec-core-datasource 1.0                                  [3/11]
+[INFO]   from dec-core-datasource/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-core-datasource ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-datasource/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-datasource ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-datasource ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-datasource/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-datasource ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-datasource/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-datasource ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 19 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-datasource ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-datasource/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-datasource ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-datasource ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-datasource ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-datasource/target/dec-core-datasource-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-datasource ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-datasource ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-datasource ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --------------< doc.eq.code:dec-context-config-parse-xml >--------------
+[INFO] Building dec-context-config-parse-xml 1.0                         [4/11]
+[INFO]   from dec-context-config-parse-xml/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-context-config-parse-xml ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-context-config-parse-xml ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-context-config-parse-xml ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-context-config-parse-xml ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-xml/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-context-config-parse-xml ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 31 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-context-config-parse-xml ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-xml/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-context-config-parse-xml ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-context-config-parse-xml ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-context-config-parse-xml ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/context-config-parse-xml.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-context-config-parse-xml ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-context-config-parse-xml ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-context-config-parse-xml ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] -------------< doc.eq.code:dec-context-config-parse-yaml >--------------
+[INFO] Building dec-context-config-parse-yaml 1.0                        [5/11]
+[INFO]   from dec-context-config-parse-yaml/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-context-config-parse-yaml ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-context-config-parse-yaml ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-context-config-parse-yaml ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-context-config-parse-yaml ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-context-config-parse-yaml ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 12 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-context-config-parse-yaml ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-context-config-parse-yaml ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-context-config-parse-yaml ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-context-config-parse-yaml ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/dec-context-config-parse-yaml-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-context-config-parse-yaml ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-context-config-parse-yaml ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-context-config-parse-yaml ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] -----------------< doc.eq.code:dec-datasource-orm-sql >-----------------
+[INFO] Building dec-datasource-orm-sql 1.0                               [6/11]
+[INFO]   from dec-datasource-orm-sql/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-datasource-orm-sql ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-datasource-orm-sql ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-datasource-orm-sql ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-datasource-orm-sql ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-datasource-orm-sql ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 48 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/main/java/dec/external/datasource/sql/collections/list/SimpleList.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/main/java/dec/external/datasource/sql/collections/list/SimpleList.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-datasource-orm-sql ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-datasource-orm-sql ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-datasource-orm-sql ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-datasource-orm-sql ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/dec-datasource-orm-sql-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-datasource-orm-sql ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-datasource-orm-sql ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-datasource-orm-sql ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] ----------------< doc.eq.code:dec-datasource-orm-mysql >----------------
+[INFO] Building dec-datasource-orm-mysql 1.0                             [7/11]
+[INFO]   from dec-datasource-orm-mysql/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-datasource-orm-mysql ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-datasource-orm-mysql ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-datasource-orm-mysql ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-datasource-orm-mysql ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-datasource-orm-mysql ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 27 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/main/java/dec/external/datasource/sql/mysql/convert/container/MySQLExprVisitor.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/main/java/dec/external/datasource/sql/mysql/convert/container/MySQLExprVisitor.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-datasource-orm-mysql ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-datasource-orm-mysql ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-datasource-orm-mysql ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-datasource-orm-mysql ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/dec-datasource-orm-mysql-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-datasource-orm-mysql ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-datasource-orm-mysql ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-datasource-orm-mysql ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] ---------------------< doc.eq.code:dec-core-model >---------------------
+[INFO] Building dec-core-model 1.0                                       [8/11]
+[INFO]   from dec-core-model/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-core-model ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-model/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-model ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-model ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-model/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-model ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-model/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-model ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 92 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-model/src/main/java/dec/core/collections/list/SimpleList.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-model/src/main/java/dec/core/collections/list/SimpleList.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-model ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-model/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-model ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-model ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-model ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-model/target/dec-core-model-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-model ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-model ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-model ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --------------------< doc.eq.code:dec-core-starter >--------------------
+[INFO] Building dec-core-starter 1.0                                     [9/11]
+[INFO]   from dec-core-starter/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-core-starter ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-starter/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-starter ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-starter ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-starter/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-starter ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-starter/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-starter ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 2 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-starter ---
+[INFO] skip non existing resourceDirectory /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-starter/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-starter ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-starter ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-starter ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-core-starter/target/dec-core-starter-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-starter ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-starter ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-starter ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] -----------------< doc.eq.code:dec-expand-declaration >-----------------
+[INFO] Building dec-expand-declaration 1.0                              [10/11]
+[INFO]   from dec-expand-declaration/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-expand-declaration ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-expand-declaration/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-expand-declaration ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-expand-declaration ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-expand-declaration/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-expand-declaration ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-expand-declaration ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 76 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-expand-declaration/src/main/java/dec/expand/declare/bean/Bean.java: 某些输入文件使用了未经检查或不安全的操作。
+[INFO] /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-expand-declaration/src/main/java/dec/expand/declare/bean/Bean.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-expand-declaration ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-expand-declaration ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug release 8] to target/test-classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-expand-declaration ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running test.business.TestOrderBusiness
+22:21:45.738 [main] INFO dec.expand.declare.conext.parser.xml.parser.ContextDescParser -- Start parser the file:classpath:declare-config.xml
+22:21:45.762 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:user
+22:21:45.762 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:user
+22:21:45.763 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:order
+22:21:45.763 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:order
+22:21:45.764 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:pay
+22:21:45.764 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:pay
+22:21:45.764 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- Start load system:common
+22:21:45.764 [main] INFO dec.expand.declare.conext.parser.xml.parser.SystemParser -- End load system:common
+22:21:45.765 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- Start load business:subscribeOrder
+22:21:45.765 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- End load business:subscribeOrder
+22:21:45.765 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- Start load business:cancelOrder
+22:21:45.765 [main] INFO dec.expand.declare.conext.parser.xml.parser.BusinessParser -- End load business:cancelOrder
+22:21:45.765 [main] INFO dec.expand.declare.conext.parser.xml.parser.ContextDescParser -- end parser the file:declare-config.xml
+
+22:21:45.774 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, add entity:$subscribeOrderData
+22:21:45.775 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, add produce:$payResultData
+22:21:45.775 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, add produce:$payData
+connect group:1
+22:21:45.776 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce data, [order]-[subscribeOrderData]
+Produce subscribeOrderData
+subscribeOrderData.getStatus()1
+22:21:45.777 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce data, [order]-[subscribeOrderData]
+connect group:2
+22:21:45.777 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce data, [common]-[$payData]
+Produce $payData
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce data, [common]-[$payData]
+connect group:3
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce data, [pay]-[payResultData]
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce depend data, [pay]-[payCmdData]
+Produce payCmdData
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce depend data,  [pay]-[payCmdData]
+Produce payResultData
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce data, [pay]-[payResultData]
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce data, [common]-[$payResultData]
+Produce $payResultData
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce data, [common]-[$payResultData]
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce data, [common]-[$payData]
+Produce $payData
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce data, [common]-[$payData]
+commit group:3
+commit group:2
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce data, [order]-[orderPayResultData]
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, start produce depend data, [order]-[orderData]
+Produce orderData
+OrderId:null
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce depend data,  [order]-[orderData]
+Produce orderPayResultData
+change:2
+22:21:45.778 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:d614f3e1-24ae-4200-906e-b006ef3b94a7, end produce data, [order]-[orderPayResultData]
+commit group:1
+22:21:45.779 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, add entity:$cancelOrderData
+22:21:45.779 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, add produce:cancelOrderData
+22:21:45.779 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, add produce:$payResultData
+22:21:45.779 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, add produce:$payData
+connect group:1
+22:21:45.779 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce data, [order]-[cancelOrderData]
+22:21:45.779 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce depend data, [order]-[orderData]
+Produce orderData
+OrderId:11
+22:21:45.779 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce depend data,  [order]-[orderData]
+produce cancelOrderData
+change:3
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce data, [order]-[cancelOrderData]
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce data, [common]-[$payData]
+Produce $payData
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce data, [common]-[$payData]
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce data, [pay]-[payResultData]
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce depend data, [pay]-[payCmdData]
+Produce payCmdData
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce depend data,  [pay]-[payCmdData]
+Produce payResultData
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce data, [pay]-[payResultData]
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce data, [common]-[$payResultData]
+Produce $payResultData
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce data, [common]-[$payResultData]
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce data, [order]-[orderPayResultData]
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, start produce depend data, [order]-[orderData]
+Produce orderData
+OrderId:11
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce depend data,  [order]-[orderData]
+Produce orderPayResultData
+change:2
+22:21:45.799 [main] INFO dec.expand.declare.business.DefaultBusinessDeclare -- Code:da2ffe9b-071c-4c6e-ac55-810edd2e1ea1, end produce data, [order]-[orderPayResultData]
+commit group:1
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.103 s -- in test.business.TestOrderBusiness
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-expand-declaration ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-expand-declaration/target/dec-expand-declaration-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-expand-declaration ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-expand-declaration ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-expand-declaration ---
+[INFO] Loading execution data file /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-expand-declaration/target/jacoco.exec
+[INFO] Analyzed bundle 'dec-expand-declaration' with 68 classes
+[INFO] 
+[INFO] ------------------------< doc.eq.code:dec-demo >------------------------
+[INFO] Building dec-demo 1.0                                            [11/11]
+[INFO]   from dec-demo/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ dec-demo ---
+[INFO] Deleting /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-demo ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-demo ---
+[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-demo ---
+[INFO] Copying 51 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-demo ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 29 source files with javac [debug release 8] to target/classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-demo ---
+[INFO] Copying 53 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-demo ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 9 source files with javac [debug release 8] to target/test-classes
+[WARNING] 源值 8 已过时，将在未来发行版中删除
+[WARNING] 目标值 8 已过时，将在未来发行版中删除
+[WARNING] 要隐藏有关已过时选项的警告, 请使用 -Xlint:-options。
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-demo ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running dec.demo.contract.LegacyResourceSnapshotTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in dec.demo.contract.LegacyResourceSnapshotTest
+[INFO] Running dec.demo.contract.MixContractTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in dec.demo.contract.MixContractTest
+[INFO] Running dec.demo.declaration.TestOrderBusiness
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start parser the yaml file:classpath:yaml/declaration/declare-config.yaml
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml system:order
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml system:order
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml system:pay
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml system:pay
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml system:common
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml system:common
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml business:subscribeOrderDataWithSimple
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml business:subscribeOrderDataWithSimple
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml business:subscribeOrder
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml business:subscribeOrder
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - Start load yaml business:cancelOrder
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End load yaml business:cancelOrder
+[main] INFO dec.expand.declare.conext.parser.yaml.parser.ContextDescYamlParser - End parser the yaml file:classpath:yaml/declaration/declare-config.yaml
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, add entity:$subscribeOrderData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, add produce:$payResultData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, add produce:$payData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, start produce data, [order]-[subscribeOrderDataSimple]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, end produce data, [order]-[subscribeOrderDataSimple]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, start produce data, [order]-[orderPayResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, start produce depend data, [this]-[$payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, end produce depend data,  [this]-[$payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, start produce depend data, [order]-[orderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, end produce depend data,  [order]-[orderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:3d94562f-25ab-4b77-8656-24a62d861790, end produce data, [order]-[orderPayResultData]
+[main] INFO dec.demo.declaration.TestOrderBusiness - subscribeOrderDataWithSimple result:true
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, add entity:$subscribeOrderData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, add produce:$payResultData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, add produce:$payData
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:1
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, start produce data, [order]-[subscribeOrderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, end produce data, [order]-[subscribeOrderData]
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:2
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, start produce data, [common]-[$payData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, end produce data, [common]-[$payData]
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:3
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, start produce data, [pay]-[payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, start produce depend data, [pay]-[payCmdData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, end produce depend data,  [pay]-[payCmdData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, end produce data, [pay]-[payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, start produce data, [common]-[$payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, end produce data, [common]-[$payResultData]
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:3
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:2
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, start produce data, [order]-[orderPayResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, start produce depend data, [order]-[orderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, end produce depend data,  [order]-[orderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:cc8f4d06-0f84-453f-b20b-e5e001f4fdb2, end produce data, [order]-[orderPayResultData]
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:1
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, add entity:$cancelOrderData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, add produce:cancelOrderData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, add produce:$payResultData
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, add produce:$payData
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - connect group:1
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce data, [order]-[cancelOrderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce depend data, [order]-[orderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce depend data,  [order]-[orderData]
+1
+3
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce data, [order]-[cancelOrderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce data, [common]-[$payData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce data, [common]-[$payData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce data, [pay]-[payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce depend data, [pay]-[payCmdData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce depend data,  [pay]-[payCmdData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce data, [pay]-[payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce data, [common]-[$payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce data, [common]-[$payResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce data, [order]-[orderPayResultData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, start produce depend data, [order]-[orderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce depend data,  [order]-[orderData]
+[main] INFO dec.expand.declare.business.DefaultBusinessDeclare - Code:bf594f11-9a3e-4e40-ba1f-827a4b0b30f3, end produce data, [order]-[orderPayResultData]
+[main] INFO dec.demo.declaration.datasource.MockDataSourceManager - commit group:1
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s -- in dec.demo.declaration.TestOrderBusiness
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-demo ---
+[INFO] Building jar: /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/dec-demo-1.0.jar
+[INFO] 
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-demo ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-demo ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ dec-demo ---
+[INFO] Loading execution data file /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/jacoco.exec
+[INFO] Analyzed bundle 'dec-demo' with 29 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for doc-eq-code-parent 1.0:
+[INFO] 
+[INFO] doc-eq-code-parent ................................. SUCCESS [  0.289 s]
+[INFO] dec-core-context ................................... SUCCESS [  6.247 s]
+[INFO] dec-core-datasource ................................ SUCCESS [  0.046 s]
+[INFO] dec-context-config-parse-xml ....................... SUCCESS [  0.125 s]
+[INFO] dec-context-config-parse-yaml ...................... SUCCESS [  0.079 s]
+[INFO] dec-datasource-orm-sql ............................. SUCCESS [  0.102 s]
+[INFO] dec-datasource-orm-mysql ........................... SUCCESS [  0.071 s]
+[INFO] dec-core-model ..................................... SUCCESS [  0.214 s]
+[INFO] dec-core-starter ................................... SUCCESS [  0.036 s]
+[INFO] dec-expand-declaration ............................. SUCCESS [  5.727 s]
+[INFO] dec-demo ........................................... SUCCESS [  5.607 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  18.588 s
+[INFO] Finished at: 2026-07-25T22:21:51+08:00
+[INFO] ------------------------------------------------------------------------

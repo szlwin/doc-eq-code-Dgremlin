@@ -1,5 +1,0 @@
-core_exit=0
-mysql_exit=1
-start_head=d599aa4883712050dd6ed32c9e3d1b369eb93114
-end_head=d599aa4883712050dd6ed32c9e3d1b369eb93114
-result=FAILED

@@ -138,3 +138,17 @@ GitHub Actions 失败时仍应分析真实代码问题；但因临时 MySQL、�
 ## 7. 对 P1 门禁的影响
 
 P0 验收方式调整不自动解除 P1 门禁。P1 仍需处理旧 Evidence digest、Review criterion 和派生状态问题；在 P0 本地完整验证正式通过且 P1 自身门禁通过前，不得进入 `test_design`。
+
+## 正式验证结果
+
+最近一次正式本地完整验证已经通过：
+
+- Evidence：`evidence/local-full-20260725T142126Z/`
+- 被验证提交：`<TESTED_SHA>`
+- 核心验证：PASSED
+- MySQL 验证：PASSED
+- P0 状态：PASSED
+
+除测试类之间使用独立 JVM 外，`RuleTests` 还消除了继承测试方法与
+legacy scenario 对配置初始化的重复调用，避免同一测试类中重复注册
+`data1`。

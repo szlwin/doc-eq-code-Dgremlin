@@ -32,11 +32,26 @@
 - 不得在 P1 前实现 Information、Directory 新状态机或 RuleView 复合 Key。
 - 不得用 IDE 单个 Test 类成功替代 Maven Reactor 与 `mysql-it` profile 验证。
 
-## P1 启动条件
+## P1 交接状态
 
-- `run_p0_local_verification.sh` 在干净工作树上返回 `0`；
-- Wrapper 可重复执行；
-- 核心无 MySQL 构建通过；
-- 本地 MySQL 集成测试通过；
-- 故意失败测试确实使内部 Maven 命令返回非零；
-- P1 自身 Evidence/Review 门禁通过。
+P0 的正式退出条件已经满足。
+
+P1 下一步仅处理：
+
+1. 无效或失效的 Evidence digest；
+2. Review criterion Evidence；
+3. 阻断问题登记；
+4. 派生状态重新生成；
+5. `task-health` 重新验证。
+
+在 P1 自身门禁通过前，不得进入 `test_design` 或开发。
+
+## P0 退出结论
+
+- 状态：PASSED；
+- 被验证提交：`<TESTED_SHA>`；
+- 正式证据：`evidence/local-full-20260725T142126Z/`；
+- 核心验证：PASSED；
+- MySQL 集成验证：PASSED；
+- 故意失败测试阻断：PASSED；
+- GitHub Actions：保留为非阻断辅助回归。
