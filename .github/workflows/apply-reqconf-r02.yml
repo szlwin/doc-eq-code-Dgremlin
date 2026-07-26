@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/reqconf-r02-publish-20260726
+  pull_request:
+    branches:
+      - dev_all
 
 permissions:
   contents: write
