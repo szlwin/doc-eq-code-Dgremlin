@@ -29,16 +29,16 @@ jobs:
           import base64
           import hashlib
 
-          parts = sorted(Path('.github').glob('reqconf-r02-payload.part-*'))
-          if len(parts) != 4:
-              raise SystemExit(f'expected 4 payload parts, found {len(parts)}')
+          parts = sorted(Path('.github').glob('reqconf-r02-xz.part-*'))
+          if len(parts) != 9:
+              raise SystemExit(f'expected 9 payload parts, found {len(parts)}')
           encoded = ''.join(path.read_text(encoding='utf-8').strip() for path in parts)
           payload = base64.b64decode(encoded, validate=True)
           digest = hashlib.sha256(payload).hexdigest()
-          expected = 'f90a8c2c21dcd370f438178785f97126562a4087af95b9623a8c50c776220e32'
+          expected = '005ddbe1d89a4f8fa038dc031583322daba013240829b94d6e649885880c58dc'
           if digest != expected:
               raise SystemExit(f'payload sha256 mismatch: {digest}')
-          Path('/tmp/reqconf-r02-changes.tar.gz').write_bytes(payload)
+          Path('/tmp/reqconf-r02-changes.tar.xz').write_bytes(payload)
           print(f'payload verified: {digest}, bytes={len(payload)}')
           PY
 
@@ -48,7 +48,7 @@ jobs:
           set -euo pipefail
           git fetch origin dev_all
           git checkout -B agent/reqconf-r02-content-20260726 origin/dev_all
-          tar -xzf /tmp/reqconf-r02-changes.tar.gz -C .
+          tar -xJf /tmp/reqconf-r02-changes.tar.xz -C .
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
