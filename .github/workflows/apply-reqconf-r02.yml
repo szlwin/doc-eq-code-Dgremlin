@@ -29,9 +29,9 @@ jobs:
           import base64
           import hashlib
 
-          parts = sorted(Path('.github').glob('reqconf-r02-xz.part-*'))
-          if len(parts) != 9:
-              raise SystemExit(f'expected 9 payload parts, found {len(parts)}')
+          parts = sorted(Path('.github').glob('reqconf-r02-v3.part-*'))
+          if len(parts) != 44:
+              raise SystemExit(f'expected 44 payload parts, found {len(parts)}')
           encoded = ''.join(path.read_text(encoding='utf-8').strip() for path in parts)
           payload = base64.b64decode(encoded, validate=True)
           digest = hashlib.sha256(payload).hexdigest()
