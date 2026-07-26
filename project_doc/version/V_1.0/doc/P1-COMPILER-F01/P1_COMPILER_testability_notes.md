@@ -1,27 +1,44 @@
-# P1 编译骨架可测试性清单
+# P1-COMPILER-F01 可测试性说明
 
-## 成功路径
-- XML 与 YAML 最小 Data/View/Rule fixture 归一化后语义相等。
-- 前向引用在符号注册完成后可解析。
-- 两个独立 EngineContext 同时存在且注册表互不影响。
-- 同一输入重复编译得到相同语义 digest 和诊断顺序。
+> Revision：TEST-SEAM-R02-DRAFT。
 
-## 边界路径
-- 空文档集、空文件、目录多文件确定性排序。
-- 重复 Key、大小写差异、缺失可选位置、未知 schemaVersion。
-- 相同实体名称位于不同强类型命名空间。
-- 源位置缺失时仍保留路径指针并稳定排序。
+## 1. 必须注入的接缝
 
-## 失败路径
-- 未知元素、未知属性、结构错误、未知引用和循环依赖形成 ERROR。
-- 任一 ERROR 时不返回可发布 EngineContext。
-- Legacy Adapter 的写操作被拒绝，不修改旧全局 Config 或新 Context。
-- P2+ 未支持语义不得返回空成功；以明确 deferred/unsupported 诊断表示。
+- `DocumentSourceProvider`：内存、classpath、测试文件系统；
+- `DocumentFrontend`：XML/YAML；
+- `MixSourceResolver`：不直接调用全局 ClassLoader；
+- `CompilerPass`：可单独执行并观察输入输出；
+- `DigestStrategy`：固定版本；
+- `Clock/Timer`：只用于指标，不进入语义摘要。
 
-## 后续 Case 方向
-- CASE-COMPILER-CANONICAL-EQUIVALENCE-001
-- CASE-COMPILER-DUPLICATE-SYMBOL-001
-- CASE-COMPILER-FORWARD-REFERENCE-001
-- CASE-COMPILER-CONTEXT-ISOLATION-001
-- CASE-COMPILER-DIAGNOSTIC-ORDER-001
-- CASE-COMPILER-LEGACY-READONLY-001
+## 2. 实物 fixture 断言
+
+对 `dec-demo/src/main/resources/mix` 固定以下基线：
+
+- 文件数 10；
+- Data 5；View 2；System 3；RuleView 14；BusinessScope 1；
+- Information 16；Directory 5；Action 8；Produce 4；
+- System→Rule 文件边 3；
+- Root→Data/View/System/Business 边各一组。
+
+数量只用于 fixture 回归；新增合法配置时需显式更新基线，不作为生产限制。
+
+## 3. 失败注入
+
+- 删除 `payment-rule.xml`；
+- 重复 `SystemKey(order)`；
+- 将 payment RuleView 的 `system` 改为 order；
+- 将 business action 的 `rule-ref` 改为未知值；
+- 使用 `classpath:../` 路径逃逸；
+- 打乱目录枚举顺序；
+- XML 加入外部实体；
+- YAML 加入类型标签；
+- 尝试修改 Registry 和 CoreConfigProjection。
+
+## 4. 测试分层
+
+1. 纯单测：Key、CanonicalNode、Raw builder、Diagnostic 排序、digest；
+2. Compiler contract：内存 SourceGraph 和 Pass；
+3. Fixture contract：真实 `mix`；
+4. 架构测试：模块依赖和 parser/runtime 隔离；
+5. 退役扫描：目录、POM、dependency tree、ServiceLoader、反射字符串和 artifact。

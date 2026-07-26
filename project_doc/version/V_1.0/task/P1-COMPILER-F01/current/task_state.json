@@ -4,23 +4,25 @@
   "sourceInputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
   "targetId": "P1-COMPILER-F01",
   "version": "V_1.0",
-  "taskStatus": "READY",
-  "currentPhase": "design",
-  "currentRound": "DESIGN-I001",
+  "taskStatus": "BLOCKED",
+  "currentPhase": "requirement_confirmation",
+  "currentRound": "REQCONF-I002",
   "currentAgent": "ProjectManagerAgent",
-  "nextAgent": "TestDesignAgent",
-  "nextAction": "本次范围已完成；用户确认后进入 test_design，当前不实施代码或测试。",
+  "nextAgent": "RequirementConfirmationAgent",
+  "nextAction": "由 RequirementConfirmationAgent 评审实际 mix R02 草案，按顺序重新完成需求确认、分析、业务模型、设计和串行 Review。",
   "activeTaskIds": [],
   "currentAttemptId": "",
-  "openIssueIds": [],
+  "openIssueIds": [
+    "ISSUE-P1-SCOPE-CHANGE-001"
+  ],
   "verification": {
     "schemaVersion": 1,
     "validatorVersion": "2.34",
     "profile": "task-health",
     "targetId": "P1-COMPILER-F01",
     "version": "V_1.0",
-    "currentPhase": "design",
-    "taskStatus": "READY",
+    "currentPhase": "requirement_confirmation",
+    "taskStatus": "BLOCKED",
     "overall": "FAILED",
     "inputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
     "cacheHit": false,
@@ -34,9 +36,9 @@
     },
     "next": {
       "allowed": false,
-      "phase": "test_design",
-      "agent": "TestDesignAgent",
-      "blockingCount": 165
+      "phase": "requirement_confirmation",
+      "agent": "RequirementConfirmationAgent",
+      "blockingCount": 1
     },
     "checks": [
       {

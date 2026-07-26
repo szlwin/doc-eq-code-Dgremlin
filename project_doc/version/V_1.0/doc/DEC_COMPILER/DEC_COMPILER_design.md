@@ -1,159 +1,296 @@
-# DEC_COMPILER P1 详细设计
+# DEC_COMPILER 详细设计
 
-- Revision：`DESIGN-R01@a7a6820a381e`
-- 输入：`REQAN-R02@d38b7f83f222`、`BM-R01@52a58f20cb32`
-- 范围：P1 AST、Registry、Compiler、EngineContext 与只读 Legacy Adapter 骨架
-- 不包含：P2+ System 权限、Information、Directory/Action/Produce、Query、事务运行语义
+> Revision：DESIGN-R02-DRAFT。该设计以用户提供的实际 `mix` 文件为输入事实，仍需 DesignReviewAgent、ArchitectureReviewAgent、TestDesignAgent、ImpactAnalysisReviewAgent 和 CrossModuleIntegrationReviewAgent 串行 Review。
 
 ## 1. 设计目标
 
-把现有“XML/YAML 直接写全局 Config”改为唯一事实链：
+建立一个不依赖旧全局 Config 写入、不会形成第二套 Business runtime、能够完整发现实际 `mix` 源图的编译骨架。
+
+## 2. 包建议
 
 ```text
-DocumentSource[]
-  -> DocumentFrontend(XML/YAML)
-  -> CanonicalDocumentNode
-  -> RawDocumentSet
-  -> Compiler Passes
-  -> CompiledBusiness + immutable Registries
-  -> EngineContext
-  -> optional LegacyConfigView(read-only)
+dec.core.compiler.api
+  DocumentSource, DocumentFrontend, Compiler, CompilationResult
+
+dec.core.compiler.source
+  MixSourceResolver, MixSourceGraph, SourceEdge, SourceManifest
+
+dec.core.compiler.canonical
+  CanonicalDocumentNode, CanonicalScalar, SourceRef
+
+dec.core.compiler.raw
+  RawDefinitionSet, Raw*Definition
+
+dec.core.compiler.symbol
+  DefinitionKey, SymbolTableBuilder, RegistryBuilder
+
+dec.core.compiler.pass
+  CompilerPass, PassContext, PassResult
+
+dec.core.compiler.compiled
+  CompiledModelSet, Compiled*Definition, DeferredDefinition
+
+dec.core.compiler.diagnostic
+  Diagnostic, DiagnosticCode, DiagnosticCollector
+
+dec.core.context
+  EngineContext, Registry, CoreConfigProjection
 ```
 
-设计必须满足：确定性、错误聚合、ERROR 不发布、Context 实例隔离、Java 8 兼容、旧读取渐进迁移。
+## 3. Source API
 
-## 2. 模块职责
+```java
+public interface DocumentSource {
+    String sourceId();
+    DocumentFormat format();
+    byte[] content();
+    SourceOrigin origin();
+}
 
-| 模块 | 设计职责 | 禁止依赖/行为 |
+public interface DocumentSourceProvider {
+    DocumentSource resolve(SourceReference reference, SourceResolutionContext context);
+    List<DocumentSource> resolveFileSet(SourceReference reference, SourceResolutionContext context);
+}
+```
+
+生产代码不得读取固定的 `dec-demo/src/main/resources/mix`。测试通过 classpath Provider 指向该 fixture。
+
+## 4. MixSourceResolver
+
+### 4.1 输入
+
+- root SourceReference；
+- Provider；
+- allowed schemes；
+- max source count/depth；
+- strictness options。
+
+### 4.2 算法
+
+1. 解析 root，并读取 datasource、connection、data/view file set、system-file、business-file；
+2. 标准化所有 SourceReference；
+3. 展开 data/view file set，按 sourceId 排序；
+4. 解析 System 文件的最低限度结构，提取每个 System 的 rule-file；
+5. 解析并加入 Rule 文件；
+6. 去重并检测同一 sourceId 内容冲突；
+7. 形成 `MixSourceGraph` 与稳定 `SourceManifest`；
+8. 所有文档再统一进入 frontend/Raw build。
+
+### 4.3 约束
+
+- 文件发现图允许未来扩展，但 P1 只允许已注册边类型；
+- 未知 file-info 节点在严格模式报错；
+- 路径逃逸、循环引用、超过深度/数量限制报错；
+- 发现阶段只提取文件引用，不注册业务定义。
+
+## 5. CanonicalDocumentNode
+
+字段：
+
+```text
+nodeName
+orderedAttributes
+optionalScalar
+orderedChildren
+sourceRef
+format
+schemaVersion
+```
+
+XML/YAML 差异只保留在 format/sourceRef；业务构建规则不写在 frontend 中。
+
+## 6. RawDefinitionSet
+
+```text
+RawRootConfigDefinition
+RawDataSourceDefinition
+RawConnectionDefinition
+RawDataDefinition
+RawViewDefinition
+RawSystemDefinition
+RawRuleViewDefinition
+RawRuleDefinition
+RawBusinessScopeDefinition
+RawInformationDefinition
+RawDirectoryDefinition
+RawActionDefinition
+RawProduceDefinition
+```
+
+所有 RawDefinition 保存 SourceRef、owner、声明顺序和规范化属性。不得引用 DOM Element 或 SnakeYAML Node。
+
+## 7. Key 与符号注册
+
+```java
+final class RuleViewKey {
+    private final SystemKey system;
+    private final String name;
+}
+
+final class InformationKey {
+    private final BusinessScopeKey scope;
+    private final String name;
+}
+```
+
+注册阶段先注册所有顶层 Key，再注册 owner-scoped 子定义。ActionKey 为 `(DirectoryKey, actionName)`。无名称 Produce 使用 `(ActionKey, sourceOrdinal)`。
+
+## 8. 引用解析
+
+### 8.1 P1 必须解析
+
+- connection→datasource；
+- view→data/子属性结构；
+- system→data、view；
+- system source edge→rule file；
+- ruleView→system、view；
+- business action→system、ruleView；
+- information→system、view/ruleView；
+- directory→information；
+- subdirectory→directory；
+- produce→information（存在时）。
+
+### 8.2 P1 不执行
+
+- ModelAccess 路径权限；
+- Information expression/rule-data/change-data；
+- Rule grammar；
+- Directory 执行、case 查询、back；
+- Action/Produce 调用和事务。
+
+这些内容进入 DeferredDefinitionRegistry。
+
+## 9. DeferredDefinition
+
+```java
+public final class DeferredDefinition {
+    DefinitionKey ownerKey;
+    DeferredKind kind;
+    RequiredStage requiredStage;
+    String reasonCode;
+    SourceRef sourceRef;
+    NormalizedBody body;
+    List<DefinitionKey> resolvedReferences;
+}
+```
+
+requiredStage 使用 P2_SYSTEM、P3_INFORMATION、P4_ACTION_PRODUCE、P5_DIRECTORY、P6_QUERY、P7_RUNTIME。P1 完成时不得出现 `UNKNOWN_STAGE`。
+
+## 10. Compiler Pass
+
+| 顺序 | Pass | 失败行为 |
 |---|---|---|
-| `dec-core-context` | 中立不可变值对象、Key、Diagnostic、Compiled contracts、EngineContext、LegacyConfigView 接口 | 不依赖 DOM4J/SnakeYAML/compiler/sql/mysql/demo；不保存全局 current Context |
-| `dec-core-compiler` | Frontend SPI、Raw AST、Pass、SymbolTableBuilder、RegistryBuilder、digest、CompilationResult | 不依赖 XML/YAML 实现、starter、runtime、SQL/MySQL、demo |
-| `dec-context-config-parse-xml` | 安全 XML frontend、SourceLocation 捕获、Canonical 节点生成 | 不执行业务校验、不写 ConfigFactory/ConfigManager |
-| `dec-context-config-parse-yaml` | 受控 YAML Node frontend、Mark 位置捕获、最小等价路径 | 不允许任意 Java 类型构造，不复制业务校验 |
-| `dec-core-starter` | 发现 source、组合 frontend/compiler/plugin、显式返回 CompilationResult | 不持有静态 Context，不吞编译错误 |
-| `dec-demo` | fixtures、contract tests、legacy regression | 不成为生产模块依赖 |
+| 1 | SourceGraphValidationPass | 源缺失/冲突阻断 |
+| 2 | StructuralValidationPass | 聚合结构错误 |
+| 3 | SymbolRegistrationPass | 重复 Key 聚合 |
+| 4 | ReferenceResolutionPass | 未知/类型不匹配聚合 |
+| 5 | OwnershipValidationPass | RuleView System、Business owner 校验 |
+| 6 | GraphPreparationPass | 构建依赖图，不执行语义 |
+| 7 | DeferredClassificationPass | requiredStage 完整性校验 |
+| 8 | P1SemanticValidationPass | P1 支持实体不变量 |
+| 9 | PublicationPass | 仅无 ERROR 时发布 |
 
-依赖方向：`context <- compiler <- frontends/starter/demo`；frontends 依赖 `compiler + context`，compiler 不反向依赖 frontends。
+## 11. CompiledModelSet
 
-## 3. 核心数据结构
-
-### 3.1 DocumentSource 与 CanonicalDocumentNode
-
-- `DocumentSource`：`sourceId`、`DocumentFormat`、只读内容、`sourceDigest`。
-- `CanonicalDocumentNode`：`nodeType`、有序属性、可选 scalar、有序 children、`SourceRef`、`schemaVersion`。
-- 属性与子节点顺序用于重现原始声明；语义规范化阶段决定哪些顺序参与 digest。
-- XML/YAML 的格式与位置保留在 SourceRef，不参与 semanticDigest。
-
-### 3.2 Raw AST
-
-P1 定义 `RawData`、`RawView`、`RawRuleView`、`RawSystem`、`RawInformation`、`RawDirectory`、`RawAction`、`RawProduce` 和 `RawReference`。Data/View/Rule 完成基础编译；其他声明保存结构和 SourceRef，并由 `DeferredSemanticPolicy` 标记，不进入运行执行。
-
-### 3.3 Key 与 SymbolTable
-
-- `DataKey(name)`、`ViewKey(name)`、`RuleViewKey(system,name)`、`SystemKey(name)`、`InformationKey(business,name)`、`DirectoryKey(business,name)`、`BusinessKey(name)`、`ActionKey(business,directory,name)`。
-- Java 8 使用 `final` 类、构造校验、值相等、稳定 `compareTo`/canonical string。
-- `SymbolTableBuilder` 分类型登记全部声明；重复同 Key 记录首次与重复 SourceRef。
-- 前向引用在符号注册完成后统一解析，不依赖文件人为排序。
-
-## 4. Compiler Pipeline
-
-| 顺序 | Pass | 输入 | 输出 | 可聚合错误 | 终止边界 |
-|---:|---|---|---|---|---|
-| 1 | Parse | DocumentSource | Canonical/Raw candidates | 格式、资源、安全 | 单源不可继续但继续读取独立源 |
-| 2 | StructuralValidation | Raw declarations | validated raw | 未知元素/属性、必填结构 | 严重结构错误阻断该声明后续 |
-| 3 | SymbolRegistration | validated raw | mutable SymbolTableBuilder | 重复 Key | 完成所有可登记符号 |
-| 4 | ReferenceResolution | raw + symbols | resolved refs | unknown/type mismatch | 不把未解析引用带入 compiled |
-| 5 | GraphPreparation | resolved declarations | graph placeholders/indexes | 环、非法边、deferred | P1 不执行 P2+ 图语义 |
-| 6 | SemanticValidation | resolved structures | validated compiled candidates | 不变量、范围越界 | 聚合普通错误 |
-| 7 | Publish | candidates + diagnostics | immutable registries/context | 不可变性与完整性 | 任一 ERROR -> FAILED，无 Context |
-
-每个 pass 实现独立接口，输入输出只使用中立模型；`CompilerPipeline` 固定顺序，不允许插件重排核心 pass。
-
-## 5. Diagnostic 设计
-
-字段：`severity`、稳定 `code`、脱敏 `message`、`SourceRef`、`entityKey`、`passId`、`ordinal`、可选 related locations。
-
-稳定排序键：
-
-```text
-severity rank -> sourceId -> line -> column -> code -> entityKey canonical -> pass order -> ordinal
+```java
+public final class CompiledModelSet {
+    SourceManifest sources;
+    Registry<DataSourceKey, CompiledDataSourceDefinition> dataSources;
+    Registry<ConnectionKey, CompiledConnectionDefinition> connections;
+    Registry<DataKey, CompiledDataDefinition> data;
+    Registry<ViewKey, CompiledViewDefinition> views;
+    Registry<SystemKey, LinkedSystemDefinition> systems;
+    Registry<RuleViewKey, LinkedRuleViewDefinition> ruleViews;
+    Registry<BusinessScopeKey, CompiledBusinessScopeDefinition> businessScopes;
+    Registry<InformationKey, LinkedInformationDefinition> information;
+    Registry<DirectoryKey, LinkedDirectoryDefinition> directories;
+    DeferredDefinitionRegistry deferred;
+    String semanticDigest;
+}
 ```
 
-普通结构/引用错误聚合；不可恢复基础错误仍生成 Diagnostic。禁止 `printStackTrace`、`return null` 或空成功替代错误。
+名称中的 Linked 表示引用已类型化，但后续业务语义尚未执行。
 
-建议 P1 错误码域：
+## 12. EngineContext
 
-- `DEC-SRC-*` 输入源；
-- `DEC-FMT-*` XML/YAML 格式与安全；
-- `DEC-STR-*` 结构；
-- `DEC-SYM-*` 重复符号；
-- `DEC-REF-*` 引用；
-- `DEC-SEM-*` 语义/范围；
-- `DEC-PUB-*` 发布；
-- `DEC-LEG-*` Legacy 写入。
+EngineContext 只通过构造函数接收完整 CompiledModelSet 和版本信息；无 public mutator、无静态 current、无隐式注册。
 
-## 6. Digest 与确定性
+新 Context 构建失败时，starter 不替换当前调用方显式持有的旧 Context。
 
-- `sourceDigest`：按 sourceId 稳定排序后，包含原始内容摘要、格式和 schemaVersion。
-- `semanticDigest`：只对规范化 CompiledBusiness 编码；忽略格式、SourceLocation、Map/线程遍历顺序。
-- digest 输入包含 schemaVersion、compilerVersion、CompilationOptions digest、影响语义的 plugin descriptors。
-- 编码采用显式字段顺序、UTF-8、长度前缀，不使用默认 Java serialization。
+## 13. CoreConfigProjection
 
-## 7. 发布与不可变性
+只覆盖仍被旧核心读取的 Data/View/Rule 基础视图。设计规则：
 
-1. Builder、collector、临时 graph 只存在于一个 CompilationSession。
-2. Publish 前执行 unresolved/parser-node/mutability 检查。
-3. Registry 由防御性复制和不可变集合构造。
-4. `CompilationResult.engineContext` 仅在 diagnostics 无 ERROR 时存在。
-5. 新 Context 不自动替换旧 Context；调用方显式选择使用哪个实例。
-6. P1 不实现 P8 原子热替换，只保证可安全构造并存快照。
+- 由 EngineContext 即时/不可变计算；
+- 不实现旧 register/remove/clear；
+- 写调用抛 `UnsupportedOperationException` 或专用错误；
+- 不包含 SystemDesc、BusinessDesc、Producer、Consumer 或 declaration 类型；
+- 后续调用迁移完成后删除。
 
-## 8. Legacy Config Adapter
+## 14. Diagnostic
 
-- `LegacyConfigView` 由一个 EngineContext 投影；读取语义保持旧 API 所需形状。
-- 所有 `add/register/remove/clear/set` 明确抛 `LegacyWriteUnsupportedException`。
-- 标记 deprecated，并记录删除阶段；新代码禁止从 adapter 注册。
-- 不双写 ConfigFactory/ConfigManager，不把 adapter 作为缓存或事实源。
+建议错误码：
 
-## 9. 安全设计
+```text
+MIX-SRC-001 UNKNOWN_SOURCE_SCHEME
+MIX-SRC-002 SOURCE_NOT_FOUND
+MIX-SRC-003 DUPLICATE_SOURCE_ID
+MIX-SRC-004 PATH_ESCAPE
+MIX-SRC-005 SOURCE_CYCLE
+MIX-STRUCT-001 UNKNOWN_ELEMENT
+MIX-STRUCT-002 MISSING_REQUIRED_ATTRIBUTE
+MIX-SYMBOL-001 DUPLICATE_KEY
+MIX-REF-001 UNKNOWN_REFERENCE
+MIX-REF-002 REFERENCE_TYPE_MISMATCH
+MIX-REF-003 RULE_SYSTEM_MISMATCH
+MIX-DEFER-001 MISSING_REQUIRED_STAGE
+MIX-PUBLISH-001 ERROR_PREVENTS_PUBLICATION
+```
 
-- XML 使用 StAX/SAX 安全配置：禁用 DTD、外部实体、外部 schema 和网络解析；限制递归深度/属性/文本长度。
-- YAML 使用 safe/compose Node 路径，拒绝任意类型标签；限制 alias、深度、节点数和 scalar 长度。
-- SourceLocation/Diagnostic 对敏感 scalar 只显示路径或摘要，不回显值。
-- Frontend 不允许配置触发反射实例化、文件包含、URL 获取或类加载。
+排序键：sourceId、line、column、code、entityKey、pass。
 
-## 10. 并发、幂等与恢复
+## 15. Digest
 
-- 每次 `compile` 新建 Session；所有 Builder/Collector 为实例字段，不使用 static mutable。
-- EngineContext/Registry 可并发读取；用户插件在 P1 只允许不可变 descriptor。
-- 同输入和版本重复编译产生相同 digest/diagnostic order。
-- 编译失败无补偿写操作；调用方继续使用旧 Context，修正输入后创建新 Session 重试。
+- sourceDigest：标准化 sourceId + 原始字节摘要；
+- semanticDigest：规范化 CompiledModelSet + Deferred 元数据，不含 SourceRef 的物理位置；
+- compilerVersion、schemaVersion、optionsDigest 进入 CompilationResult；
+- 使用有序集合和稳定序列化，禁止依赖 HashMap 遍历顺序。
 
-## 11. P1-T01～T13 落地顺序
+## 16. `dec-expand-declaration` 退役
 
-1. T01 模块与架构测试；
-2. T02 Canonical node；
-3. T03 Raw AST；
-4. T04 SourceLocation/Diagnostic；
-5. T05 强类型 Key；
-6. T06 SymbolTable/RegistryBuilder；
-7. T07 Compiled AST/digest；
-8. T08 Pipeline；
-9. T09 EngineContext；
-10. T10 Legacy read-only adapter；
-11. T11 XML frontend；
-12. T12 最小 YAML frontend；
-13. T13 contract/compiler tests。
+P1 第一实施任务：
 
-任何子任务失败均不得以空实现、忽略测试或静默 deferred 代替。
+1. 从根 POM 删除 module；
+2. 删除 dependency/dependencyManagement；
+3. 删除 `dec-expand-declaration/`；
+4. 删除 `dec-demo` 对 artifact 的依赖；
+5. 必要场景仅使用 `mix` fixture 和新 compiler contract 重写；
+6. 扫描 package/import/ServiceLoader/反射字符串/文档/artifact；
+7. 禁止创建任何 Adapter 或复制类。
 
-## 12. 需求追踪
+## 17. 实施顺序
 
-| Trace | 设计实现点 |
-|---|---|
-| TR-P1-COMPILER-001 | DocumentFrontend、Canonical node、Raw AST、digest normalization |
-| TR-P1-COMPILER-002 | Pass、DiagnosticCollector、ERROR publish gate |
-| TR-P1-COMPILER-003 | TypedKey、SymbolTableBuilder、ReferenceResolver、immutable Registry |
-| TR-P1-COMPILER-004 | Compiled AST、digest、CompilationSession、EngineContext |
-| TR-P1-COMPILER-005 | LegacyConfigView 与写入拒绝 |
-| TR-P1-COMPILER-006 | DeferredSemanticPolicy 与 P1 scope guard |
+1. P1-T01 退役临时模块；
+2. P1-T02 建立残留扫描和架构测试；
+3. P1-T03 DocumentSource/SourceRef；
+4. P1-T04 MixSourceGraph；
+5. P1-T05 Canonical frontend contract；
+6. P1-T06 RawDefinitionSet；
+7. P1-T07 Key/SymbolTable；
+8. P1-T08 Diagnostic；
+9. P1-T09 Reference resolution；
+10. P1-T10 Deferred Registry；
+11. P1-T11 CompiledModelSet/EngineContext；
+12. P1-T12 CoreConfigProjection；
+13. P1-T13 XML frontend；
+14. P1-T14 YAML minimal parity；
+15. P1-T15 实际 `mix` contract 与完整门禁。
+
+## 18. 设计禁止事项
+
+- 不得使用 `CompiledBusiness`、`RawDeclaration`、LegacyDeclarationAdapter 作为新设计类型；
+- 不得把 BusinessScope 变为 Maven 模块；
+- 不得硬编码 demo fixture；
+- 不得让 DeferredDefinition 无期限或无 requiredStage；
+- 不得在 parser 中执行注册或业务规则；
+- 不得以复制临时模块代码作为实现捷径。

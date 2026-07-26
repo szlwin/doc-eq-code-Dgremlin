@@ -1,7 +1,52 @@
 # P1-COMPILER-F01 Review 问题台账
 
 ```json review-issues
-[]
+[
+  {
+    "id": "ISSUE-P1-SCOPE-CHANGE-001",
+    "issue_type": "SCOPE_DRIFT",
+    "axis": "ARCHITECTURE",
+    "severity": "P1",
+    "confidence": 10,
+    "status": "OPEN",
+    "phase": "requirement_confirmation",
+    "round": "REQCONF-I002",
+    "artifact_revision": "P1-COMPILER-CR01",
+    "raised_by_agent": "ProjectManagerAgent",
+    "owner_agent": "RequirementConfirmationAgent",
+    "title": "dec-expand-declaration 整体退役导致 P1 需求和设计 Revision 失效",
+    "description": "原 Revision 假设保留/迁移 declaration 边界；新决策要求模块整体删除且无 Adapter。",
+    "impact": "不得进入 test_design；需重新执行需求确认、分析、业务模型、设计及串行 Review。",
+    "motivating_evidence": [
+      "version/V_1.0/doc/P1-COMPILER-CR01/requirement_change.md"
+    ],
+    "question": "新的 P1 设计是否完整覆盖模块删除、mix 场景重写和依赖残留门禁？",
+    "question_to": [
+      "RequirementConfirmationAgent",
+      "RequirementAnalysisAgent",
+      "DesignAgent"
+    ],
+    "responses": [],
+    "recommendation": "从 requirement_confirmation 开启新 iteration。",
+    "affected_artifacts": [
+      "requirement",
+      "requirement_analysis",
+      "business_model",
+      "design",
+      "test_design",
+      "implementation_plan"
+    ],
+    "affected_trace_ids": [
+      "TR-P1-COMPILER-007"
+    ],
+    "decision": "",
+    "resolution_revision": "",
+    "resolution_evidence": "",
+    "verified_by_agent": "",
+    "verified_at": "",
+    "defer_reason": ""
+  }
+]
 ```
 
 ## 当前记录结构

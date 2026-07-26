@@ -5,8 +5,8 @@
   "sourceInputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
   "targetId": "P1-COMPILER-F01",
   "version": "V_1.0",
-  "currentPhase": "design",
-  "taskStatus": "READY",
+  "currentPhase": "requirement_confirmation",
+  "taskStatus": "BLOCKED",
   "current": {
     "taskState": "current/task_state.json",
     "phaseState": "current/phase_state.json",

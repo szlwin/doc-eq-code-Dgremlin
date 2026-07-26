@@ -1,340 +1,406 @@
-# P1-COMPILER-F01 实施任务计划
+# P1-COMPILER-F01 任务计划
+
+> 当前只登记 R02 活动任务；R01 历史保留在 StageOutcome、Review 和 Evidence 中。
 
 ```json task-plan
 [
   {
     "id": "TASK-P1-REQCONF-001",
-    "logical_task_id": "LOGICAL-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION",
+    "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-REQCONF-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-001",
-    "iteration_no": 1,
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002",
+    "iteration_no": 2,
     "supersedes_iteration_id": "",
-    "revision_reason": "首次确认",
-    "title": "确认 P1 编译骨架目标与范围",
-    "objective": "形成无阻塞歧义的需求确认 revision",
+    "revision_reason": "P1-COMPILER-CR01 superseded R01 task",
+    "title": "R01 需求确认任务（历史引用占位，不执行）",
+    "objective": "保留历史 attempt 引用并明确 R01 不再是当前实施依据",
     "phase": "requirement_confirmation",
-    "status": "PASSED",
+    "status": "PENDING",
     "depends_on": [],
-    "owner_agent": "RequirementConfirmationAgent",
-    "reviewer_agents": [
-      "RequirementAnalysisAgent",
-      "TestDesignAgent"
-    ],
+    "owner_agent": "ProjectManagerAgent",
+    "reviewer_agents": [],
     "input_revisions": {},
-    "allowed_files": [
-      "project_doc/version/V_1.0/doc/P1-COMPILER-F01/requirement.md",
-      "project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/decision_log.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/snapshots/requirement-confirmation-R01.md"
-    ],
+    "allowed_files": [],
     "acceptance_trace_ids": [],
     "flow_refs": [],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "P1 目标、范围、范围外和关键决策无阻塞歧义",
-      "完成维度可观察且包含失败和禁止副作用"
+      "R01 historical attempts remain traceable"
     ],
-    "stop_conditions": [
-      "发现与两份整改文档冲突",
-      "P0 基线无法作为设计输入"
-    ],
+    "stop_conditions": [],
     "risk_triggers": [],
-    "attempts": 1,
+    "attempts": 0,
     "max_attempts": 3,
-    "output_revision": "REQCONF-R01@ac6d126dafb3",
-    "validation_evidence_ids": [
-      "EVD-000001",
-      "EVD-000002",
-      "EVD-000003"
-    ]
+    "output_revision": "",
+    "validation_evidence_ids": []
   },
   {
     "id": "TASK-P1-REQAN-001",
-    "logical_task_id": "LOGICAL-P1-COMPILER-F01-REQUIREMENT-ANALYSIS",
+    "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-REQAN-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-001",
-    "iteration_no": 1,
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-002",
+    "iteration_no": 2,
     "supersedes_iteration_id": "",
-    "revision_reason": "首次分析",
-    "title": "分析 P1 功能、规则、异常与追踪",
-    "objective": "形成可设计、可测试的需求分析 revision",
+    "revision_reason": "P1-COMPILER-CR01 superseded R01 task",
+    "title": "R01 需求分析任务（历史引用占位，不执行）",
+    "objective": "保留历史 attempt 引用并明确 R01 不再是当前实施依据",
     "phase": "requirement_analysis",
-    "status": "PASSED",
-    "depends_on": [
-      "TASK-P1-REQCONF-001"
-    ],
-    "owner_agent": "RequirementAnalysisAgent",
-    "reviewer_agents": [
-      "BusinessModelAgent",
-      "DesignAgent",
-      "TestDesignAgent",
-      "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
-    ],
-    "input_revisions": {
-      "requirement_confirmation": "REQCONF-R01@ac6d126dafb3"
-    },
-    "allowed_files": [
-      "project_doc/version/V_1.0/doc/P1-COMPILER-F01/requirement.md",
-      "project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md",
-      "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
-      "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
-      "project_doc/docs/_relations/dependency_impact.yaml",
-      "project_doc/docs/_relations/dependency_graph.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/snapshots/requirement-analysis-R02.md"
-    ],
-    "acceptance_trace_ids": [
-      "TR-P1-COMPILER-001",
-      "TR-P1-COMPILER-002",
-      "TR-P1-COMPILER-003",
-      "TR-P1-COMPILER-004",
-      "TR-P1-COMPILER-005",
-      "TR-P1-COMPILER-006"
-    ],
-    "flow_refs": [
-      "FLOW-CONFIG-COMPILE"
-    ],
-    "flow_step_refs": [
-      "STEP-CONFIG-COMPILE-01",
-      "STEP-CONFIG-COMPILE-02",
-      "STEP-CONFIG-COMPILE-03",
-      "STEP-CONFIG-COMPILE-04",
-      "STEP-CONFIG-COMPILE-05",
-      "STEP-CONFIG-COMPILE-06",
-      "STEP-CONFIG-COMPILE-07"
-    ],
+    "status": "PENDING",
+    "depends_on": [],
+    "owner_agent": "ProjectManagerAgent",
+    "reviewer_agents": [],
+    "input_revisions": {},
+    "allowed_files": [],
+    "acceptance_trace_ids": [],
+    "flow_refs": [],
+    "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "功能、规则、异常、非功能要求和验收标准完整",
-      "跨模块职责与影响映射可追踪到所有 AC"
+      "R01 historical attempts remain traceable"
     ],
-    "stop_conditions": [
-      "出现未决 P1 语义边界",
-      "需求开始锁定具体实现类而非可观察行为"
-    ],
+    "stop_conditions": [],
     "risk_triggers": [],
-    "attempts": 1,
+    "attempts": 0,
     "max_attempts": 3,
-    "output_revision": "REQAN-R02@d38b7f83f222",
-    "validation_evidence_ids": [
-      "EVD-000011",
-      "EVD-000012",
-      "EVD-000013",
-      "EVD-000014",
-      "EVD-000192",
-      "EVD-000193",
-      "EVD-000194",
-      "EVD-000195",
-      "EVD-000012",
-      "EVD-000194"
-    ]
+    "output_revision": "",
+    "validation_evidence_ids": []
   },
   {
     "id": "TASK-P1-BMODEL-001",
-    "logical_task_id": "LOGICAL-P1-COMPILER-F01-BUSINESS-MODEL",
+    "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-BMODEL-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-001",
-    "iteration_no": 1,
+    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-002",
+    "iteration_no": 2,
     "supersedes_iteration_id": "",
-    "revision_reason": "首次建模",
-    "title": "建立编译领域模型与不变量",
-    "objective": "形成支撑设计的统一语言、对象关系、状态与错误模型",
+    "revision_reason": "P1-COMPILER-CR01 superseded R01 task",
+    "title": "R01 业务建模任务（历史引用占位，不执行）",
+    "objective": "保留历史 attempt 引用并明确 R01 不再是当前实施依据",
     "phase": "business_model",
-    "status": "PASSED",
-    "depends_on": [
-      "TASK-P1-REQAN-001"
-    ],
-    "owner_agent": "BusinessModelAgent",
-    "reviewer_agents": [
-      "RequirementReviewAgent",
-      "BusinessModelReviewAgent",
-      "DesignReviewAgent",
-      "TestDesignAgent",
-      "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
-    ],
-    "input_revisions": {
-      "requirement_analysis": "REQAN-R02@d38b7f83f222"
-    },
-    "allowed_files": [
-      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml",
-      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"
-    ],
-    "acceptance_trace_ids": [
-      "TR-P1-COMPILER-001",
-      "TR-P1-COMPILER-002",
-      "TR-P1-COMPILER-003",
-      "TR-P1-COMPILER-004",
-      "TR-P1-COMPILER-005",
-      "TR-P1-COMPILER-006"
-    ],
-    "flow_refs": [
-      "FLOW-CONFIG-COMPILE"
-    ],
-    "flow_step_refs": [
-      "STEP-CONFIG-COMPILE-01",
-      "STEP-CONFIG-COMPILE-02",
-      "STEP-CONFIG-COMPILE-03",
-      "STEP-CONFIG-COMPILE-04",
-      "STEP-CONFIG-COMPILE-05",
-      "STEP-CONFIG-COMPILE-06",
-      "STEP-CONFIG-COMPILE-07"
-    ],
+    "status": "PENDING",
+    "depends_on": [],
+    "owner_agent": "ProjectManagerAgent",
+    "reviewer_agents": [],
+    "input_revisions": {},
+    "allowed_files": [],
+    "acceptance_trace_ids": [],
+    "flow_refs": [],
+    "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "编译领域对象、状态、不变量和错误模型无歧义",
-      "模型覆盖全部适用追踪项且不实现 P2+ 语义"
+      "R01 historical attempts remain traceable"
     ],
-    "stop_conditions": [
-      "模型引入运行时全局单例",
-      "模型将 parser 节点泄漏到 Compiled AST"
-    ],
+    "stop_conditions": [],
     "risk_triggers": [],
-    "attempts": 1,
+    "attempts": 0,
     "max_attempts": 3,
-    "output_revision": "BM-R01@52a58f20cb32",
-    "validation_evidence_ids": [
-      "EVD-000074",
-      "EVD-000075",
-      "EVD-000074",
-      "EVD-000077",
-      "EVD-000196",
-      "EVD-000197",
-      "EVD-000198",
-      "EVD-000081"
-    ]
+    "output_revision": "",
+    "validation_evidence_ids": []
   },
   {
     "id": "TASK-P1-DESIGN-001",
-    "logical_task_id": "LOGICAL-P1-COMPILER-F01-DESIGN",
+    "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-DESIGN-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-001",
-    "iteration_no": 1,
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-002",
+    "iteration_no": 2,
     "supersedes_iteration_id": "",
-    "revision_reason": "首次设计",
-    "title": "设计 AST、Registry、Compiler 与 EngineContext",
-    "objective": "形成可实施、可测试、可演进的 P1 设计 revision",
+    "revision_reason": "P1-COMPILER-CR01 superseded R01 task",
+    "title": "R01 设计任务（历史引用占位，不执行）",
+    "objective": "保留历史 attempt 引用并明确 R01 不再是当前实施依据",
     "phase": "design",
-    "status": "PASSED",
-    "depends_on": [
-      "TASK-P1-BMODEL-001"
+    "status": "PENDING",
+    "depends_on": [],
+    "owner_agent": "ProjectManagerAgent",
+    "reviewer_agents": [],
+    "input_revisions": {},
+    "allowed_files": [],
+    "acceptance_trace_ids": [],
+    "flow_refs": [],
+    "flow_step_refs": [],
+    "validation_commands": [],
+    "expected_results": [
+      "R01 historical attempts remain traceable"
     ],
-    "owner_agent": "DesignAgent",
-    "reviewer_agents": [
-      "RequirementReviewAgent",
-      "BusinessModelReviewAgent",
-      "ArchitectureReviewAgent",
-      "TestDesignAgent",
-      "DevelopAgent",
-      "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
-    ],
+    "stop_conditions": [],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P1-R2-001",
+    "logical_task_id": "LOGICAL-TASK-P1-R2-001",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002",
+    "iteration_no": 2,
+    "supersedes_iteration_id": "",
+    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "title": "重新确认实际 mix 与模块退役范围",
+    "objective": "重新确认实际 mix 与模块退役范围",
+    "phase": "requirement_confirmation",
+    "status": "READY",
+    "depends_on": [],
+    "owner_agent": "RequirementConfirmationAgent",
+    "reviewer_agents": [],
     "input_revisions": {
-      "requirement_analysis": "REQAN-R02@d38b7f83f222",
-      "business_model": "BM-R01@52a58f20cb32"
+      "change_requirement": "P1-COMPILER-CR01",
+      "draft_design": "DESIGN-R02-DRAFT"
     },
-    "allowed_files": [
-      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md",
-      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md",
-      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
-      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md",
-      "project_doc/docs/_relations/dependency_impact.yaml",
-      "project_doc/docs/_relations/dependency_graph.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"
-    ],
+    "allowed_files": [],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-001",
       "TR-P1-COMPILER-002",
       "TR-P1-COMPILER-003",
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
-      "TR-P1-COMPILER-006"
+      "TR-P1-COMPILER-006",
+      "TR-P1-COMPILER-007"
     ],
-    "flow_refs": [
-      "FLOW-CONFIG-COMPILE"
-    ],
-    "flow_step_refs": [
-      "STEP-CONFIG-COMPILE-01",
-      "STEP-CONFIG-COMPILE-02",
-      "STEP-CONFIG-COMPILE-03",
-      "STEP-CONFIG-COMPILE-04",
-      "STEP-CONFIG-COMPILE-05",
-      "STEP-CONFIG-COMPILE-06",
-      "STEP-CONFIG-COMPILE-07"
-    ],
+    "flow_refs": [],
+    "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "模块依赖、类型契约、pipeline、失败发布、兼容和测试接缝可直接实施",
-      "设计覆盖 P1-T01～T13 且未进入 P2+ 语义"
+      "R02 artifacts reviewed and internally consistent"
     ],
     "stop_conditions": [
-      "出现模块循环依赖",
-      "旧 Config 可写或 Context 全局化",
-      "设计依赖 SQL/MySQL/demo"
+      "dec-expand-declaration or second runtime reintroduced"
     ],
     "risk_triggers": [],
-    "attempts": 1,
+    "attempts": 0,
     "max_attempts": 3,
-    "output_revision": "DESIGN-R01@a7a6820a381e",
-    "validation_evidence_ids": [
-      "EVD-000126",
-      "EVD-000127",
-      "EVD-000128",
-      "EVD-000129",
-      "EVD-000130",
-      "EVD-000131",
-      "EVD-000199",
-      "EVD-000200"
-    ]
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P1-R2-002",
+    "logical_task_id": "LOGICAL-TASK-P1-R2-002",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-002",
+    "iteration_no": 2,
+    "supersedes_iteration_id": "",
+    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "title": "重新分析 mix 源图与跨阶段影响",
+    "objective": "重新分析 mix 源图与跨阶段影响",
+    "phase": "requirement_analysis",
+    "status": "WAITING",
+    "depends_on": [
+      "TASK-P1-R2-001"
+    ],
+    "owner_agent": "RequirementAnalysisAgent",
+    "reviewer_agents": [],
+    "input_revisions": {
+      "change_requirement": "P1-COMPILER-CR01",
+      "draft_design": "DESIGN-R02-DRAFT"
+    },
+    "allowed_files": [],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-001",
+      "TR-P1-COMPILER-002",
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006",
+      "TR-P1-COMPILER-007"
+    ],
+    "flow_refs": [],
+    "flow_step_refs": [],
+    "validation_commands": [],
+    "expected_results": [
+      "R02 artifacts reviewed and internally consistent"
+    ],
+    "stop_conditions": [
+      "dec-expand-declaration or second runtime reintroduced"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P1-R2-003",
+    "logical_task_id": "LOGICAL-TASK-P1-R2-003",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-002",
+    "iteration_no": 2,
+    "supersedes_iteration_id": "",
+    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "title": "重建 RawDefinition、CompiledModelSet 与 Deferred 模型",
+    "objective": "重建 RawDefinition、CompiledModelSet 与 Deferred 模型",
+    "phase": "business_model",
+    "status": "WAITING",
+    "depends_on": [
+      "TASK-P1-R2-002"
+    ],
+    "owner_agent": "BusinessModelAgent",
+    "reviewer_agents": [],
+    "input_revisions": {
+      "change_requirement": "P1-COMPILER-CR01",
+      "draft_design": "DESIGN-R02-DRAFT"
+    },
+    "allowed_files": [],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-001",
+      "TR-P1-COMPILER-002",
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006",
+      "TR-P1-COMPILER-007"
+    ],
+    "flow_refs": [],
+    "flow_step_refs": [],
+    "validation_commands": [],
+    "expected_results": [
+      "R02 artifacts reviewed and internally consistent"
+    ],
+    "stop_conditions": [
+      "dec-expand-declaration or second runtime reintroduced"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P1-R2-004",
+    "logical_task_id": "LOGICAL-TASK-P1-R2-004",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-002",
+    "iteration_no": 2,
+    "supersedes_iteration_id": "",
+    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "title": "评审统一源图、Compiler Pipeline 与只读投影设计",
+    "objective": "评审统一源图、Compiler Pipeline 与只读投影设计",
+    "phase": "design",
+    "status": "WAITING",
+    "depends_on": [
+      "TASK-P1-R2-003"
+    ],
+    "owner_agent": "DesignAgent",
+    "reviewer_agents": [],
+    "input_revisions": {
+      "change_requirement": "P1-COMPILER-CR01",
+      "draft_design": "DESIGN-R02-DRAFT"
+    },
+    "allowed_files": [],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-001",
+      "TR-P1-COMPILER-002",
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006",
+      "TR-P1-COMPILER-007"
+    ],
+    "flow_refs": [],
+    "flow_step_refs": [],
+    "validation_commands": [],
+    "expected_results": [
+      "R02 artifacts reviewed and internally consistent"
+    ],
+    "stop_conditions": [
+      "dec-expand-declaration or second runtime reintroduced"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P1-R2-005",
+    "logical_task_id": "LOGICAL-TASK-P1-R2-005",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-002",
+    "iteration_no": 2,
+    "supersedes_iteration_id": "",
+    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "title": "形成七项 AC 的可执行测试设计",
+    "objective": "形成七项 AC 的可执行测试设计",
+    "phase": "test_design",
+    "status": "WAITING",
+    "depends_on": [
+      "TASK-P1-R2-004"
+    ],
+    "owner_agent": "TestDesignAgent",
+    "reviewer_agents": [],
+    "input_revisions": {
+      "change_requirement": "P1-COMPILER-CR01",
+      "draft_design": "DESIGN-R02-DRAFT"
+    },
+    "allowed_files": [],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-001",
+      "TR-P1-COMPILER-002",
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006",
+      "TR-P1-COMPILER-007"
+    ],
+    "flow_refs": [],
+    "flow_step_refs": [],
+    "validation_commands": [],
+    "expected_results": [
+      "R02 artifacts reviewed and internally consistent"
+    ],
+    "stop_conditions": [
+      "dec-expand-declaration or second runtime reintroduced"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P1-R2-006",
+    "logical_task_id": "LOGICAL-TASK-P1-R2-006",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-002",
+    "iteration_no": 2,
+    "supersedes_iteration_id": "",
+    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "title": "形成 P1-T01～T15 实施计划",
+    "objective": "形成 P1-T01～T15 实施计划",
+    "phase": "implementation_plan",
+    "status": "WAITING",
+    "depends_on": [
+      "TASK-P1-R2-005"
+    ],
+    "owner_agent": "ImplementationPlanAgent",
+    "reviewer_agents": [],
+    "input_revisions": {
+      "change_requirement": "P1-COMPILER-CR01",
+      "draft_design": "DESIGN-R02-DRAFT"
+    },
+    "allowed_files": [],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-001",
+      "TR-P1-COMPILER-002",
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006",
+      "TR-P1-COMPILER-007"
+    ],
+    "flow_refs": [],
+    "flow_step_refs": [],
+    "validation_commands": [],
+    "expected_results": [
+      "R02 artifacts reviewed and internally consistent"
+    ],
+    "stop_conditions": [
+      "dec-expand-declaration or second runtime reintroduced"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
   }
 ]
 ```
-
-## 使用说明
-
-字段集合以 `assets/long-task/record-contract.json#records.taskPlanItem` 为准。
-
-每项任务至少包含：
-
-```json
-{
-  "id": "TASK-001",
-  "logical_task_id": "LOGICAL-MOD0001-F01-DEVELOPMENT",
-  "feature_id": "MOD0001-F01",
-  "iteration_id": "ITER-TARGET-DEVELOPMENT-001",
-  "iteration_no": 1,
-  "supersedes_iteration_id": "",
-  "revision_reason": "首次实施",
-  "title": "任务标题",
-  "objective": "可观察交付",
-  "phase": "development",
-  "status": "PENDING",
-  "depends_on": [],
-  "owner_agent": "DevelopAgent",
-  "reviewer_agents": ["SpecComplianceReviewAgent", "EngineeringStandardsReviewAgent"],
-  "input_revisions": {},
-  "allowed_files": [],
-  "acceptance_trace_ids": [],
-  "flow_refs": [],
-  "flow_step_refs": [],
-  "validation_commands": [],
-  "expected_results": [],
-  "stop_conditions": [],
-  "risk_triggers": [],
-  "attempts": 0,
-  "max_attempts": 3,
-  "output_revision": "",
-  "validation_evidence_ids": []
-}
-```
-
-- `depends_on` 不仅必须无环，启动时还要求依赖任务已经 `PASSED/NOT_APPLICABLE`。
-- `max_attempts` 只限制当前 iteration 内的失败重试；正常重做必须由 `reopen-phase` 创建新 iteration。
-- 全流程只允许 `SEQUENTIAL`；任务顺序只通过 `depends_on` 表达，同一时刻最多一个任务处于 `RUNNING`。
-- 涉及结构化业务流程的任务必须填写 `flow_refs` 和 `flow_step_refs`；流程 ID 使用 `FLOW-*`，步骤 ID 使用 `STEP-*`。
-- `expected_results` 仅保留自然语言说明；每一项必须通过 `TASK-ID#expected_results/{index}` 被 Acceptance Assertion 的 `source_refs` 覆盖。
-- `validation_evidence_ids` 保存 Evidence Registry ID；`PASSED` 必须有 `output_revision` 和当前 revision 的 ACTIVE evidence。
-- development 完成后必须生成 `risk_detection.json`，code-review 任务的 `risk_triggers` 覆盖所有未豁免高置信风险。

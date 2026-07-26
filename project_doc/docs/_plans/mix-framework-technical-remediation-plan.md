@@ -1,5 +1,7 @@
 # 基于 `mix` 目标文档的框架技术整改方案
 
+> 2026-07-25 架构决策更新：`dec-expand-declaration` 整体退役；P1—P8 直接以 `mix` 为唯一目标契约，不建立 Adapter。
+
 ## 1. 文档目的
 
 本文以 `dec-demo/src/main/resources/mix` 下的目标配置为唯一目标语义，对当前 `doc-eq-code-Dgremlin` 框架进行全量代码审计，并给出可分阶段实施、可测试、可验收的技术整改方案。
@@ -42,7 +44,7 @@ XML / YAML 文档
 - `dec-datasource-orm-sql`
 - `dec-datasource-orm-mysql`
 - `dec-core-starter`
-- `dec-expand-declaration`
+- `dec-expand-declaration`（仅作为历史临时模块审计，目标架构中整体删除）
 - `dec-demo`
 - `docs`
 
@@ -222,17 +224,19 @@ YAML 维护了一套独立解析实现，字段别名、初始化行为和异常
 
 `DirectoryContainer.execute()` 目前只设置操作类型，没有真正的目录执行实现。
 
-### 4.6 生产与消费模块
+### 4.6 历史临时模块 `dec-expand-declaration`
 
-`dec-expand-declaration` 已有 System、Business、Produce、Conumer、事务策略和流程执行概念，但它与 `dec-core-context / dec-core-model` 是另一套并行元模型和运行时：
+`dec-expand-declaration` 曾用于验证 System、Business、Produce/Consume、事务策略和流程执行想法，但它形成了与 `dec-core-context / dec-core-model` 平行的 Context、parser 和 runtime。
 
-- 使用独立 `ContextStorage`；
-- 使用独立 System / Business 描述；
-- 使用独立 XML / YAML 解析；
-- 通过函数注册生产者；
-- 部分场景再反向调用核心 RuleView。
+该模块不是 System 或核心业务能力的依赖，目标架构决定整体删除：
 
-该模块包含可复用思想，但不能继续作为第二套业务引擎独立演进。
+- 不抽取其代码；
+- 不建立 LegacyAdapter；
+- 不迁移旧 declaration XML/YAML；
+- 不保留独立 artifact；
+- 有价值的业务场景只允许依据 `mix` 重新编写为 `dec-demo` fixture 和端到端测试。
+
+`Business` 在新架构中如继续存在，只是统一 AST/EngineContext 的逻辑作用域，不是独立模块或第二套运行时。
 
 ---
 
@@ -241,7 +245,7 @@ YAML 维护了一套独立解析实现，字段别名、初始化行为和异常
 | `mix` 能力 | 当前状态 | 主要问题 | 目标整改 |
 |---|---|---|---|
 | `system-file-info` | 不支持 | Config 入口无 System 文件类型 | 新增 System parser 与编译模型 |
-| `business-file-info` | 不支持 | 无 BusinessConfig AST | 新增 Business parser 与 compiler |
+| `business-file-info` | 不支持 | 无统一 BusinessScope AST | 在 `dec-core-compiler` 中新增逻辑 BusinessScope parser/compiler，不建立独立项目 |
 | `rule-view-info/@system` | XML 已写、Java 忽略 | Rule 全局同名覆盖 | 使用 `RuleViewKey(system, name)` |
 | `model-access-info` | 不支持 | 无读写路径授权 | 编译期校验 + 运行时写屏障 |
 | Information | 不支持 | 无识别、物化、依赖图 | 新建 InformationEngine |
@@ -270,224 +274,140 @@ YAML 维护了一套独立解析实现，字段别名、初始化行为和异常
 ### 6.1 分层
 
 ```text
-┌──────────────────────────────────────────────────────┐
-│ Document Frontends                                   │
-│ XML Parser / YAML Parser                             │
-└──────────────────────────┬───────────────────────────┘
-                           │ Raw AST
-┌──────────────────────────▼───────────────────────────┐
-│ Business Compiler                                    │
-│ schema validation / symbol resolution / graph build │
-│ access validation / expression compile / diagnostics│
-└──────────────────────────┬───────────────────────────┘
-                           │ CompiledBusiness
-┌──────────────────────────▼───────────────────────────┐
-│ Runtime Engine                                       │
-│ Information / Action / Produce / Directory / Query  │
-│ Transaction / Trace / Custom Action Registry        │
-└──────────────────────────┬───────────────────────────┘
-                           │ QueryPlan / DataCommand
-┌──────────────────────────▼───────────────────────────┐
-│ Datasource Adapters                                  │
-│ SQL common / MySQL / future datasource              │
-└──────────────────────────────────────────────────────┘
+Document Source Providers
+          |
+          v
+MixSourceResolver -> MixSourceGraph
+          |
+          v
+XML/YAML Frontends -> CanonicalDocumentSet
+          |
+          v
+RawDefinitionBuilder -> RawDefinitionSet
+          |
+          v
+Model Compiler
+  structural validation / symbol registration
+  reference resolution / ownership validation
+  graph preparation / deferred classification
+          |
+          v
+CompiledModelSet -> EngineContext
+          |
+          +-> P2～P7 Runtime Engines
+          +-> CoreConfigProjection (read-only, deprecated)
 ```
 
 ### 6.2 核心原则
 
-1. XML/YAML 只负责描述，不直接操纵全局 Config 单例；
-2. 所有格式先转为同一 Raw AST；
-3. 只有编译成功的 `CompiledBusiness` 才能进入运行时；
-4. 编译产物是不可变元数据，不生成大量 Java 类；
-5. 执行器不直接依赖 DOM4J、SnakeYAML 或 XML 节点；
-6. 所有引用使用强类型 Key，不使用模糊字符串全局查找；
-7. Directory 执行、Information 计算和 Query 编译共享同一份语义模型；
-8. System 权限既在编译期验证，也在运行时防御；
-9. 不再维护两套独立业务引擎。
+1. `mix` 是目标配置契约，`dec-demo/src/main/resources/mix` 是 fixture，不是生产硬编码路径；
+2. 根配置直接发现 Data/View/System/Business，System 再间接发现 Rule；
+3. 发现顺序与语义解析顺序分离；
+4. XML/YAML 只负责 Canonical 转换，不写全局 Config；
+5. 只有无 ERROR 的 `CompiledModelSet` 才能发布；
+6. BusinessScope 只是命名空间，不是独立模块或 Engine；
+7. P2～P7 语义使用显式 DeferredDefinitionRegistry；
+8. 所有引用使用强类型 Key；
+9. `dec-expand-declaration` 整体删除，不建立 Adapter。
 
 ---
 
-## 7. 统一业务 AST 与编译模型
+## 7. 统一定义模型与编译产物
 
-### 7.1 建议新增模块
+### 7.1 新模块
 
-新增：
+新增 `dec-core-compiler`，负责 SourceGraph、RawDefinitionSet、Compiler Pass、Diagnostic、digest 和 Publication；不得依赖 SQL、MySQL、demo、frontend 实现或废弃模块。
 
-```text
-dec-core-compiler
-```
-
-职责：
-
-- Raw AST -> CompiledBusiness；
-- 符号表建立；
-- 引用解析；
-- 图构建；
-- 表达式编译；
-- 静态校验；
-- 诊断输出。
-
-解析模块不应依赖执行引擎；运行时也不应依赖 XML/YAML 解析器。
-
-### 7.2 建议新增定义对象
-
-在 `dec-core-context` 中新增：
+### 7.2 RawDefinitionSet
 
 ```text
-config/model/system/
-    SystemDefinition
-    ModelAccessDefinition
-    ModelPathPermission
-
-config/model/business/
-    BusinessDefinition
-    BusinessKey
-
-config/model/information/
-    InformationDefinition
-    InformationKind
-    InformationKey
-    InformationExpression
-    MaterializationDefinition
-
-config/model/directory/
-    DirectoryDefinition
-    DirectoryKey
-    DirectoryType
-    DirectoryEdge
-    EdgeRole
-    DependencyDefinition
-    BackDefinition
-
-config/model/action/
-    ActionDefinition
-    ActionKey
-    ProduceDefinition
-    ProduceKey
-
-config/model/rule/
-    RuleViewKey
-    RuleViewDefinition
+RawRootConfigDefinition
+RawDataSourceDefinition
+RawConnectionDefinition
+RawDataDefinition
+RawViewDefinition
+RawSystemDefinition
+RawRuleViewDefinition
+RawRuleDefinition
+RawBusinessScopeDefinition
+RawInformationDefinition
+RawDirectoryDefinition
+RawActionDefinition
+RawProduceDefinition
 ```
 
-### 7.3 强类型标识
+RawDefinition 保存 SourceRef 和规范化声明，不保存 DOM/SnakeYAML Node。
 
-建议使用：
+### 7.3 强类型 Key
 
-```java
-record RuleViewKey(String system, String name) {}
-record InformationKey(String business, String name) {}
-record DirectoryKey(String business, String name) {}
-record ActionKey(String business, String directory, String name) {}
+```text
+DataSourceKey(name)
+ConnectionKey(name)
+DataKey(name)
+ViewKey(name)
+SystemKey(name)
+RuleViewKey(systemKey,name)
+BusinessScopeKey(name)
+InformationKey(scopeKey,name)
+DirectoryKey(scopeKey,name)
+ActionKey(directoryKey,name)
 ```
 
-项目仍保持 Java 8 时，可先实现为不可变普通类；完成基线升级后再考虑 record。
+### 7.4 CompiledModelSet
 
-### 7.4 Raw AST 与 Compiled AST 分离
+P1 发布：SourceManifest、Data/View 等 Registry、结构化 System/RuleView/BusinessScope、已类型化的 Information/Directory/Action/Produce 外壳、DeferredDefinitionRegistry 和 semanticDigest。
 
-Raw AST 保留：
-
-- 原始字符串；
-- 文件路径；
-- 行列位置；
-- 用户声明顺序。
-
-Compiled AST 保存：
-
-- 已解析对象引用；
-- 拓扑排序后的 Information；
-- Directory 图；
-- 已编译表达式；
-- 模型路径；
-- 权限策略；
-- Query Predicate；
-- Diagnostic 已确认通过的状态。
-
-这样错误信息可以准确指出配置文件位置，同时运行时不再重复字符串查找。
+P1 不把 Information 表达式、ModelAccess 权限、Rule grammar、Directory 状态机、Action/Produce 执行解释为已完成语义。
 
 ---
 
-## 8. 配置加载与编译整改
+## 8. `mix` 配置加载与编译整改
 
-### 8.1 `orm-config` 加载顺序
-
-固定阶段：
+### 8.1 实际源发现图
 
 ```text
-1. Datasource / Connection 声明
-2. Data
-3. View / Business Model
-4. System
-5. System 所属 RuleView
-6. Business + Information + Directory
-7. 自定义 Action 注册完成校验
-8. 全量编译与发布 EngineContext
+mix/orm-config.xml
+  -> mix/data/*.xml
+  -> mix/view/*.xml
+  -> mix/system/systems.xml
+       -> mix/rule/user-rule.xml
+       -> mix/rule/order-rule.xml
+       -> mix/rule/payment-rule.xml
+  -> mix/business/order-business.xml
 ```
 
-System 规则文件必须在 System 已建立后加载，RuleView 的 `system` 必须与所属 System 一致。
+### 8.2 Source Discovery
 
-### 8.2 XML 修改点
+1. 解析 root 的最低限度文件引用；
+2. 标准化并展开 Data/View 文件集合；
+3. 解析 System 文件的最低限度结构，发现 Rule 文件；
+4. 建立有类型 SourceEdge、去重和稳定排序；
+5. 发现完成后统一进入 frontend 和 RawDefinition build。
 
-`dec-context-config-parse-xml` 新增：
+### 8.3 Compiler Pass
 
 ```text
-parse/system/SystemFileParser
-parse/system/SystemParser
-parse/business/BusinessFileParser
-parse/business/BusinessParser
-parse/information/InformationParser
-parse/action/ActionParser
-parse/action/ProduceParser
+source graph validation
+-> structural validation
+-> symbol registration
+-> reference resolution
+-> ownership validation
+-> graph preparation
+-> deferred classification
+-> P1 semantic validation
+-> publish
 ```
 
-修改：
+### 8.4 Frontend 修改点
 
-- `ConfigFileParser`：初始化隔离的加载上下文，不依赖预先设置的全局 ConfigInfo；
-- `CommonParser`：删除 type 数组偏移方式，改为显式 Loader Pipeline；
-- `RuleParser`：读取并校验 `system`；
-- `DirectoryParser`：按新契约重写，不在旧模型上继续补字段；
-- `AbstractFileParser`：补充资源不存在、目录为空、JAR 路径和确定性排序处理；
-- 所有解析器：拒绝未知元素和未知属性。
+- XML：新增 root/System/Business/Rule 的 Canonical builder，禁用 DTD/外部实体；
+- YAML：安全 Node 模式，同一 Canonical/Raw 契约；
+- Parser 不直接调用 ConfigFactory、ConfigManager 或运行时注册表；
+- 未知元素/属性在严格模式形成 Diagnostic。
 
-### 8.3 YAML 修改点
+### 8.5 Diagnostic
 
-YAML 不再直接构造运行时 Config 对象，而应：
-
-```text
-YAML -> CanonicalDocumentNode -> 与 XML 相同的 Raw AST builder
-```
-
-XML 与 YAML 必须共用：
-
-- 字段定义；
-- 条件必填规则；
-- 引用解析；
-- Diagnostic code；
-- 编译器；
-- 运行时模型。
-
-禁止继续在 `Yaml*FileParser` 中复制一套业务规则。
-
-### 8.4 Schema 与 Diagnostic
-
-建议引入稳定诊断编码：
-
-```text
-DEC-CFG-001 unknown element
-DEC-CFG-002 unknown attribute
-DEC-REF-001 unresolved reference
-DEC-INFO-001 invalid information form
-DEC-INFO-002 information cycle
-DEC-SYS-001 model access denied
-DEC-DIR-001 directory cycle
-DEC-DIR-002 unreachable directory
-DEC-DIR-003 ambiguous parent path
-DEC-ACT-001 custom action not registered
-DEC-PROD-001 produce mapping invalid
-DEC-QUERY-001 predicate cannot be compiled
-```
-
-编译失败应一次返回完整错误集合，而不是遇到第一个错误立即停止。
+P1 使用 `MIX-SRC-*`、`MIX-STRUCT-*`、`MIX-SYMBOL-*`、`MIX-REF-*`、`MIX-DEFER-*`、`MIX-PUBLISH-*` 稳定错误码。错误聚合后稳定排序，任何 ERROR 阻止发布。
 
 ---
 
@@ -953,7 +873,7 @@ Rule override
 
 ### 14.2 事务协调
 
-当前 `ModelContainer`、`MultipleTranContainer` 和 `dec-expand-declaration` 事务实现存在重叠。建议抽取统一：
+当前 `ModelContainer`、`MultipleTranContainer` 等核心事务路径存在重叠。`dec-expand-declaration` 不作为抽取来源，建议在核心模块内重新定义统一契约：
 
 ```text
 TransactionCoordinator
@@ -1014,7 +934,7 @@ LOADING -> COMPILING -> VALIDATED -> READY
 
 ### 15.3 版本与缓存
 
-CompiledBusiness 包含：
+CompiledModelSet 包含：
 
 - business version；
 - source digest；
@@ -1026,39 +946,43 @@ Information 结果缓存、QueryPlan 缓存均绑定该版本。
 
 ---
 
-## 16. `dec-expand-declaration` 收敛方案
+## 16. `dec-expand-declaration` 整体退役方案
 
-### 16.1 保留的能力
+### 16.1 决策边界
 
-可复用：
+该模块是临时项目，不属于目标架构。System、Business、Information、Action、Produce、Directory、Query、Session 和事务均不得依赖其代码。
 
-- Produce / Consume 概念；
-- SystemBuilder 的运行时实现注册思想；
-- TransactionPolicy / RollBackPolicy；
-- ExecutionResult 和回调概念；
-- DataStorage 的业务执行上下文思想。
+不执行以下工作：
 
-### 16.2 不保留的并行结构
+- 不抽取 Produce/Consume SPI；
+- 不迁移 SystemDesc/BusinessDesc；
+- 不提供 LegacyDeclarationAdapter；
+- 不兼容旧 declaration XML/YAML；
+- 不保留独立 parser、ContextStorage、workflow engine 或 artifact。
 
-不应继续保留为独立事实来源：
+### 16.2 替代能力归属
 
-- 第二套 SystemDesc；
-- 第二套 BusinessDesc；
-- 第二套 XML/YAML Parser；
-- 第二套 ContextStorage；
-- 独立流程执行器直接解释旧 declaration XML。
+| 旧模块中曾验证的概念 | 新实现位置 | 新语义来源 |
+|---|---|---|
+| System | P2 / System compiler | `mix/system` |
+| Business | P1/P2 / BusinessScope | `mix` 文件聚合关系 |
+| Produce/输入依赖 | P3/P4 | Information、ActionInput、Produce |
+| 流程与回调 | P5 | DirectoryEngine、ActionPipeline、Trace |
+| Query | P6 | QueryPlan |
+| Session/事务/回滚 | P7 | ExecutionSession、TransactionCoordinator、CompensationPolicy |
 
-### 16.3 迁移路径
+以上均为重新设计，不复制旧模块实现。
+
+### 16.3 删除路径
 
 ```text
-阶段 1：标记 legacy，冻结新增语义
-阶段 2：将 Produce/Consume/事务接口迁入统一 runtime SPI
-阶段 3：旧 declaration XML 通过 LegacyAdapter 转成统一 Raw AST
-阶段 4：demo 全部切换到 CompiledBusiness
-阶段 5：删除重复 parser、context 和 engine
+P1：删除 Maven module、依赖、源码与正式配置入口；把必要场景按 mix 重写到 dec-demo
+P2—P6：所有新能力只基于统一 Compiled AST 实现，并持续执行依赖隔离测试
+P7：验证统一 Session/Transaction/Runtime，不存在旧模块 Adapter 或复制 runtime
+P8：执行仓库、Reactor、依赖树、artifact 和文档残留扫描，发布清单中不得出现旧模块
 ```
 
-LegacyAdapter 只用于迁移，不能影响 `mix` 新语义。
+P0 的历史构建证据可以保留，但不构成继续保留该模块的理由。
 
 ---
 
@@ -1259,29 +1183,32 @@ dec-demo/src/test/resources/mix
 范围：
 
 - 新增 `dec-core-compiler`；
-- Raw / Compiled 定义；
-- 强类型 Key；
-- Diagnostic；
-- EngineContext；
+- Raw / Compiled 定义与逻辑 BusinessScope；
+- 强类型 Key、Diagnostic、EngineContext；
 - 删除固定 Config 数组扩展方式；
-- 保留旧 Config API 的临时 adapter。
+- 旧核心 Config 仅保留临时只读 adapter；
+- 整体删除 `dec-expand-declaration` 模块和依赖；必要场景按 `mix` 重写到 `dec-demo`。
 
 验收：
 
 - 可把现有 Data/View/Rule 编译到新 Context；
 - 同一 JVM 可同时存在两个 Context；
-- 错误集合包含文件与位置。
+- 错误集合包含文件与位置；
+- 仓库、Reactor 和依赖树不再包含废弃模块。
 
-### P2：System 与 RuleView 归属
+### P2：System、BusinessScope 与 RuleView 归属
 
 范围：
 
 - `system-file-info`；
 - System parser；
+- 逻辑 BusinessScope；
 - model access；
 - RuleView system 属性；
 - RuleViewKey；
 - 写路径静态校验和运行时屏障。
+
+BusinessScope 只存在于统一 AST/EngineContext，不是独立项目，也不映射旧 declaration 模型。
 
 验收：
 
@@ -1298,7 +1225,8 @@ dec-demo/src/test/resources/mix
 - Information DAG；
 - 识别结果；
 - materializer；
-- 增量失效。
+- 增量失效；
+- 将消费语义统一为 Information 依赖、模型/View read-set，不建立独立 Consumer runtime。
 
 验收：
 
@@ -1307,16 +1235,19 @@ dec-demo/src/test/resources/mix
 - 修改模型后只重算受影响节点；
 - 循环和非法引用有稳定诊断。
 
-### P4：Action、Produce 与自定义 SPI
+### P4：Action、输入契约、Produce 与自定义 SPI
 
 范围：
 
 - 新 Action runtime；
 - RuleView invoker；
 - CustomActionRegistry；
-- ProduceResult；
+- ActionInput / ActionResult；
+- ProduceVerifier；
 - payload contract；
 - 失败策略。
+
+所有接口直接依据 `mix` 定义，不迁移旧 Producer/Consumer SPI。
 
 验收：
 
@@ -1337,6 +1268,8 @@ dec-demo/src/test/resources/mix
 - BackPlan；
 - trace。
 
+流程执行只由统一 DirectoryEngine 根据 `mix` Compiled AST 完成，不调用旧 workflow runtime。
+
 验收：
 
 - 成功、失败、返回三条流程通过；
@@ -1355,6 +1288,8 @@ dec-demo/src/test/resources/mix
 - SQL/MySQL translator；
 - runtime-only 策略。
 
+QueryCompiler 只依赖统一 EngineContext/Compiled AST，不读取旧 declaration Context 或 Business runtime。
+
 验收：
 
 - PayResult union 查询；
@@ -1363,22 +1298,24 @@ dec-demo/src/test/resources/mix
 - with UserInfo；
 - 无硬编码连接和 SQL 注入路径。
 
-### P7：事务与运行时收敛
+### P7：事务、会话与核心运行时收敛
 
 范围：
 
 - TransactionCoordinator；
-- Session/ConnectionRoute；
+- ExecutionSession/ConnectionRoute；
+- RuntimeComponentRegistry；
 - 统一错误模型；
 - execution trace；
-- `dec-expand-declaration` adapter；
-- 删除第二套运行时的重复入口。
+- 外部副作用与 CompensationPolicy；
+- 资源生命周期和并发隔离；
+- 废弃模块残留门禁。
 
 验收：
 
 - 多 System 流程共享统一执行上下文；
-- 失败回滚符合策略；
-- 旧 declaration 样例通过 adapter 或明确迁移完成。
+- 失败回滚与外部副作用符合策略；
+- 不存在 `dec-expand-declaration`、Adapter 或复制的第二套 runtime。
 
 ### P8：YAML 对等、清理与正式发布
 
@@ -1387,6 +1324,7 @@ dec-demo/src/test/resources/mix
 - XML/YAML 同 AST；
 - legacy 属性删除；
 - dead code、空 Factory、重复工具类清理；
+- 废弃模块、artifact、包、文档和复制实现残留扫描；
 - 文档和示例更新；
 - 性能、并发和热加载测试。
 
@@ -1476,12 +1414,14 @@ dec-demo/src/test/resources/mix
 - readiness validation；
 - 生命周期管理。
 
-### `dec-expand-declaration`
+### `dec-expand-declaration`（删除）
 
-- 冻结旧 AST；
-- 抽取可复用 runtime SPI；
-- 提供 LegacyAdapter；
-- 最终删除并行 parser/context/engine。
+- 从根 Reactor 和 dependencyManagement 删除；
+- 删除模块源码、资源、测试和 artifact；
+- 不提供 Adapter，不抽取 runtime SPI；
+- 必要业务场景基于 `mix` 在 `dec-demo` 重新实现测试；
+- 增加依赖树和文本残留检查，防止重新引入。
+
 
 ### `dec-demo`
 
@@ -1496,6 +1436,7 @@ dec-demo/src/test/resources/mix
 
 框架整改完成必须同时满足：
 
+0. 仓库、Reactor、依赖树和发布 artifact 中不存在 `dec-expand-declaration`，且没有 LegacyDeclarationAdapter；
 1. `mix/orm-config.xml` 可直接加载；
 2. System、RuleView、Information、Directory 全部进入统一编译模型；
 3. `rule-view-info/@system` 在解析、注册、执行和权限检查中真实生效；
@@ -1531,7 +1472,7 @@ dec-demo/src/test/resources/mix
 -> Action + Produce
 -> Directory 执行
 -> QueryPlan
--> Transaction 与旧 declaration 收敛
+-> Transaction、Session 与核心 runtime 收敛
 -> YAML 对等与清理
 ```
 

@@ -2,5 +2,50 @@
   "schemaVersion": 1,
   "kind": "DERIVED_VIEW",
   "sourceInputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
-  "issues": []
+  "issues": [
+    {
+      "id": "ISSUE-P1-SCOPE-CHANGE-001",
+      "issue_type": "SCOPE_DRIFT",
+      "axis": "ARCHITECTURE",
+      "severity": "P1",
+      "confidence": 10,
+      "status": "OPEN",
+      "phase": "requirement_confirmation",
+      "round": "REQCONF-I002",
+      "artifact_revision": "P1-COMPILER-CR01",
+      "raised_by_agent": "ProjectManagerAgent",
+      "owner_agent": "RequirementConfirmationAgent",
+      "title": "dec-expand-declaration 整体退役导致 P1 需求和设计 Revision 失效",
+      "description": "R02 设计已按实际 mix 源图重写并彻底去除 dec-expand-declaration；仍需重新完成需求、分析、业务模型、设计与串行 Review。",
+      "impact": "不得进入 test_design；需重新执行需求确认、分析、业务模型、设计及串行 Review。",
+      "motivating_evidence": [
+        "version/V_1.0/doc/P1-COMPILER-CR01/requirement_change.md"
+      ],
+      "question": "R02 是否正确覆盖 root→data/view/system/business、system→rule 的实际源图，以及 P2～P7 Deferred 边界？",
+      "question_to": [
+        "RequirementConfirmationAgent",
+        "RequirementAnalysisAgent",
+        "DesignAgent"
+      ],
+      "responses": [],
+      "recommendation": "以 REQCONF-R02-DRAFT、REQAN-R03-DRAFT、BM-R02-DRAFT、DESIGN-R02-DRAFT 为输入，从 requirement_confirmation 串行重开。",
+      "affected_artifacts": [
+        "requirement",
+        "requirement_analysis",
+        "business_model",
+        "design",
+        "test_design",
+        "implementation_plan"
+      ],
+      "affected_trace_ids": [
+        "TR-P1-COMPILER-007"
+      ],
+      "decision": "",
+      "resolution_revision": "",
+      "resolution_evidence": "",
+      "verified_by_agent": "",
+      "verified_at": "",
+      "defer_reason": ""
+    }
+  ]
 }

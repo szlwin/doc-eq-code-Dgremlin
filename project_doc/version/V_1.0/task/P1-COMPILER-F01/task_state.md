@@ -1,13 +1,16 @@
 # P1-COMPILER-F01 长任务状态
 
+> R02 草案已按实际 `mix` 重写，但尚未通过重新确认和串行 Review；当前仍阻断在 requirement_confirmation。
+
+
 ```json task-state
 {
   "schema_version": 2,
   "target_id": "P1-COMPILER-F01",
   "version": "V_1.0",
-  "task_status": "READY",
-  "current_phase": "design",
-  "current_round": "DESIGN-I001",
+  "task_status": "BLOCKED",
+  "current_phase": "requirement_confirmation",
+  "current_round": "REQCONF-I002",
   "current_agent": "ProjectManagerAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
@@ -25,40 +28,40 @@
   },
   "artifact_revisions": {
     "requirement_confirmation": {
-      "revision": "REQCONF-R01@ac6d126dafb3",
-      "status": "PASSED",
-      "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-001",
-      "iteration_no": 1
+      "revision": "REQCONF-R02-DRAFT",
+      "status": "IN_PROGRESS",
+      "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002",
+      "iteration_no": 2
     },
     "requirement_analysis": {
-      "revision": "REQAN-R02@d38b7f83f222",
-      "status": "PASSED",
-      "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-001",
-      "iteration_no": 1
+      "revision": "REQAN-R03-DRAFT",
+      "status": "PENDING",
+      "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-002",
+      "iteration_no": 2
     },
     "business_model": {
-      "revision": "BM-R01@52a58f20cb32",
-      "status": "PASSED",
-      "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-001",
-      "iteration_no": 1
+      "revision": "BM-R02-DRAFT",
+      "status": "PENDING",
+      "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-002",
+      "iteration_no": 2
     },
     "design": {
-      "revision": "DESIGN-R01@a7a6820a381e",
-      "status": "PASSED",
-      "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-001",
-      "iteration_no": 1
+      "revision": "DESIGN-R02-DRAFT",
+      "status": "PENDING",
+      "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-002",
+      "iteration_no": 2
     },
     "test_design": {
       "revision": "",
       "status": "PENDING",
-      "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-001",
-      "iteration_no": 1
+      "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-002",
+      "iteration_no": 2
     },
     "implementation_plan": {
       "revision": "",
       "status": "PENDING",
-      "iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-001",
-      "iteration_no": 1
+      "iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-002",
+      "iteration_no": 2
     },
     "tdd": {
       "revision": "",
@@ -93,36 +96,19 @@
   },
   "collaboration_reviews": {
     "requirement_confirmation": {
-      "artifact_revision": "REQCONF-R01@ac6d126dafb3",
+      "artifact_revision": "REQCONF-R02-DRAFT",
       "required_reviewers": [
         "RequirementAnalysisAgent",
         "TestDesignAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {
-        "RequirementAnalysisAgent": {
-          "profile_id": "requirement_confirmation:RequirementAnalysisAgent",
-          "revision": "REQCONF-R01@ac6d126dafb3",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000001",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:10:00+00:00"
-        },
-        "TestDesignAgent": {
-          "profile_id": "requirement_confirmation:TestDesignAgent",
-          "revision": "REQCONF-R01@ac6d126dafb3",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000002",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:10:01+00:00"
-        }
-      },
-      "status": "PASSED",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-001",
+      "independent_conclusions": {},
+      "status": "PENDING",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002",
       "review_history": []
     },
     "requirement_analysis": {
-      "artifact_revision": "REQAN-R02@d38b7f83f222",
+      "artifact_revision": "REQAN-R03-DRAFT",
       "required_reviewers": [
         "BusinessModelAgent",
         "DesignAgent",
@@ -133,54 +119,13 @@
         "CrossModuleIntegrationReviewAgent": "cross_module_implementation_required"
       },
       "additional_reviewers": {},
-      "independent_conclusions": {
-        "BusinessModelAgent": {
-          "profile_id": "requirement_analysis:BusinessModelAgent",
-          "revision": "REQAN-R02@d38b7f83f222",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000003",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:27:52+00:00"
-        },
-        "DesignAgent": {
-          "profile_id": "requirement_analysis:DesignAgent",
-          "revision": "REQAN-R02@d38b7f83f222",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000004",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:27:53+00:00"
-        },
-        "TestDesignAgent": {
-          "profile_id": "requirement_analysis:TestDesignAgent",
-          "revision": "REQAN-R02@d38b7f83f222",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000005",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:27:54+00:00"
-        },
-        "ImpactAnalysisReviewAgent": {
-          "profile_id": "requirement_analysis:ImpactAnalysisReviewAgent",
-          "revision": "REQAN-R02@d38b7f83f222",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000006",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:27:55+00:00"
-        },
-        "CrossModuleIntegrationReviewAgent": {
-          "profile_id": "requirement_analysis:CrossModuleIntegrationReviewAgent",
-          "revision": "REQAN-R02@d38b7f83f222",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000007",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:30:42+00:00"
-        }
-      },
-      "status": "PASSED",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-001",
+      "independent_conclusions": {},
+      "status": "PENDING",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-002",
       "review_history": []
     },
     "business_model": {
-      "artifact_revision": "BM-R01@52a58f20cb32",
+      "artifact_revision": "BM-R02-DRAFT",
       "required_reviewers": [
         "BusinessModelReviewAgent",
         "DesignReviewAgent",
@@ -192,62 +137,13 @@
         "CrossModuleIntegrationReviewAgent": "cross_module_implementation_required"
       },
       "additional_reviewers": {},
-      "independent_conclusions": {
-        "RequirementReviewAgent": {
-          "profile_id": "business_model:RequirementReviewAgent",
-          "revision": "BM-R01@52a58f20cb32",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000008",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:40:11+00:00"
-        },
-        "BusinessModelReviewAgent": {
-          "profile_id": "business_model:BusinessModelReviewAgent",
-          "revision": "BM-R01@52a58f20cb32",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000009",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:40:13+00:00"
-        },
-        "DesignReviewAgent": {
-          "profile_id": "business_model:DesignReviewAgent",
-          "revision": "BM-R01@52a58f20cb32",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000010",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:40:15+00:00"
-        },
-        "TestDesignAgent": {
-          "profile_id": "business_model:TestDesignAgent",
-          "revision": "BM-R01@52a58f20cb32",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000011",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:40:16+00:00"
-        },
-        "ImpactAnalysisReviewAgent": {
-          "profile_id": "business_model:ImpactAnalysisReviewAgent",
-          "revision": "BM-R01@52a58f20cb32",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000012",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:40:18+00:00"
-        },
-        "CrossModuleIntegrationReviewAgent": {
-          "profile_id": "business_model:CrossModuleIntegrationReviewAgent",
-          "revision": "BM-R01@52a58f20cb32",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000013",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:40:20+00:00"
-        }
-      },
-      "status": "PASSED",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-001",
+      "independent_conclusions": {},
+      "status": "PENDING",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-002",
       "review_history": []
     },
     "design": {
-      "artifact_revision": "DESIGN-R01@a7a6820a381e",
+      "artifact_revision": "DESIGN-R02-DRAFT",
       "required_reviewers": [
         "ArchitectureReviewAgent",
         "BusinessModelReviewAgent",
@@ -260,66 +156,9 @@
         "CrossModuleIntegrationReviewAgent": "cross_module_implementation_required"
       },
       "additional_reviewers": {},
-      "independent_conclusions": {
-        "RequirementReviewAgent": {
-          "profile_id": "design:RequirementReviewAgent",
-          "revision": "DESIGN-R01@a7a6820a381e",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000014",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:49:13+00:00"
-        },
-        "BusinessModelReviewAgent": {
-          "profile_id": "design:BusinessModelReviewAgent",
-          "revision": "DESIGN-R01@a7a6820a381e",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000015",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:49:14+00:00"
-        },
-        "ArchitectureReviewAgent": {
-          "profile_id": "design:ArchitectureReviewAgent",
-          "revision": "DESIGN-R01@a7a6820a381e",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000016",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:49:15+00:00"
-        },
-        "TestDesignAgent": {
-          "profile_id": "design:TestDesignAgent",
-          "revision": "DESIGN-R01@a7a6820a381e",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000017",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:49:17+00:00"
-        },
-        "DevelopAgent": {
-          "profile_id": "design:DevelopAgent",
-          "revision": "DESIGN-R01@a7a6820a381e",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000018",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:49:18+00:00"
-        },
-        "ImpactAnalysisReviewAgent": {
-          "profile_id": "design:ImpactAnalysisReviewAgent",
-          "revision": "DESIGN-R01@a7a6820a381e",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000019",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:49:20+00:00"
-        },
-        "CrossModuleIntegrationReviewAgent": {
-          "profile_id": "design:CrossModuleIntegrationReviewAgent",
-          "revision": "DESIGN-R01@a7a6820a381e",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000020",
-          "finding_ids": [],
-          "reviewed_at": "2026-07-24T12:49:21+00:00"
-        }
-      },
-      "status": "PASSED",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-DESIGN-001",
+      "independent_conclusions": {},
+      "status": "PENDING",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-DESIGN-002",
       "review_history": []
     },
     "test_design": {
@@ -333,7 +172,7 @@
       "additional_reviewers": {},
       "independent_conclusions": {},
       "status": "PENDING",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-001",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-002",
       "review_history": []
     },
     "implementation_plan": {
@@ -347,7 +186,7 @@
       "additional_reviewers": {},
       "independent_conclusions": {},
       "status": "PENDING",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-001",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-002",
       "review_history": []
     },
     "tdd": {
@@ -397,12 +236,14 @@
     }
   },
   "review_rounds": {},
-  "open_issue_ids": [],
+  "open_issue_ids": [
+    "ISSUE-P1-SCOPE-CHANGE-001"
+  ],
   "last_gate": "business_model",
   "failed_attempts": {},
-  "next_action": "本次范围已完成；用户确认后进入 test_design，当前不实施代码或测试。",
-  "next_agent": "TestDesignAgent",
-  "resume_from": "执行 long_task.py task-context 获取当前任务、最新 attempt、开放问题和恢复引用；需要细节时再按引用读取",
+  "next_action": "由 RequirementConfirmationAgent 评审实际 mix R02 草案，按顺序重新完成需求确认、分析、业务模型、设计和串行 Review。",
+  "next_agent": "RequirementConfirmationAgent",
+  "resume_from": "requirement_confirmation",
   "max_auto_review_rounds": 3,
   "stale_events": [],
   "checkpoint_at": "2026-07-24T12:47:34+00:00"

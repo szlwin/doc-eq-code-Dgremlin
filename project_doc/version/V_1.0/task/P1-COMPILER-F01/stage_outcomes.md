@@ -22,8 +22,8 @@
     "completed_at": "2026-07-24T12:10:32+00:00",
     "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-001",
     "iteration_no": 1,
-    "is_current": true,
-    "superseded_by": ""
+    "is_current": false,
+    "superseded_by": "P1-COMPILER-CR01/R02"
   },
   {
     "id": "SO-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-I001",
@@ -57,8 +57,8 @@
     "completed_at": "2026-07-24T12:31:30+00:00",
     "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-001",
     "iteration_no": 1,
-    "is_current": true,
-    "superseded_by": ""
+    "is_current": false,
+    "superseded_by": "P1-COMPILER-CR01/R02"
   },
   {
     "id": "SO-P1-COMPILER-F01-BUSINESS-MODEL-I001",
@@ -91,8 +91,8 @@
     "completed_at": "2026-07-24T12:39:00+00:00",
     "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-001",
     "iteration_no": 1,
-    "is_current": true,
-    "superseded_by": ""
+    "is_current": false,
+    "superseded_by": "P1-COMPILER-CR01/R02"
   },
   {
     "id": "SO-P1-COMPILER-F01-DESIGN-I001",
@@ -127,8 +127,8 @@
     "completed_at": "2026-07-24T12:49:21+00:00",
     "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-001",
     "iteration_no": 1,
-    "is_current": true,
-    "superseded_by": ""
+    "is_current": false,
+    "superseded_by": "P1-COMPILER-CR01/R02"
   }
 ]
 ```

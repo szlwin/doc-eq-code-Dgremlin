@@ -46,9 +46,18 @@ python3 /mnt/data/common-develop-current/scripts/ai_context.py resolve \
 
 仓库根 `doc/` 和 `docs/` 下的同名计划文件只保留历史链接跳转，不再维护正文。
 
+## 已确认架构决策
+
+- `dec-expand-declaration` 为历史临时模块，从 P1 起整体删除；
+- 不抽取旧代码、不建立 Adapter、不迁移旧 declaration 配置；
+- `dec-demo/src/main/resources/mix` 是 P1—P8 唯一目标业务契约；
+- Business 仅是统一编译模型中的逻辑作用域，不是独立项目。
+
+详见 `docs/_plans/dec-expand-declaration-retirement-decision.md`。
+
 ## 当前状态
 
-- P0：`REVIEWING`。本地核心动态验证已通过；等待在干净工作树上完成统一的本地核心与 MySQL 正式验证。GitHub Actions 仅作非阻断辅助回归。
-- P1：需求确认、需求分析、业务模型和设计 Revision 已完成；当前门禁阻断，不能进入 `test_design` 或开发。
+- P0：`PASSED`。本地核心与 MySQL 正式验证已通过；GitHub Actions 仅作非阻断辅助回归。
+- P1：已登记 `P1-COMPILER-CR01` 范围变更；原需求确认、分析、业务模型和设计 Revision 转为历史输入，必须从 requirement_confirmation 重新执行，不能进入 `test_design` 或开发。
 - P2—P8：`TODO`。
 - 当前默认 Agent：`ProjectManagerAgent`。
