@@ -1,0 +1,56 @@
+name: Apply REQCONF-R04 Git bundle
+
+on:
+  pull_request:
+    branches:
+      - dev_all
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout helper branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild and verify bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY2'
+          from pathlib import Path
+          import base64
+          import hashlib
+
+          parts = sorted(Path('.github').glob('reqconf-r04-bundle.part-*'))
+          if len(parts) != 85:
+              raise SystemExit(f'expected 85 parts, found {len(parts)}')
+          encoded = ''.join(p.read_text(encoding='utf-8').strip() for p in parts)
+          payload = base64.b64decode(encoded, validate=True)
+          digest = hashlib.sha256(payload).hexdigest()
+          expected = '12e3a033d1fc4e776b98d1bdbe23c9d8b0bf902a09af63878286e82f388a7795'
+          if digest != expected:
+              raise SystemExit(f'payload sha mismatch: {digest}')
+          Path('/tmp/reqconf-r04.bundle.xz').write_bytes(payload)
+          print(f'payload verified: {digest}, bytes={len(payload)}')
+          PY2
+          xz -dc /tmp/reqconf-r04.bundle.xz > /tmp/reqconf-r04.bundle
+          git bundle verify /tmp/reqconf-r04.bundle
+
+      - name: Publish exact commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin dev_all
+          current="$(git rev-parse origin/dev_all)"
+          test "$current" = "44bd43d60393ba7be4f20b204131b570c1cb8a8b"
+          git fetch /tmp/reqconf-r04.bundle refs/heads/dev_all:refs/remotes/bundle/dev_all
+          candidate="$(git rev-parse refs/remotes/bundle/dev_all)"
+          test "$candidate" = "755d07fba9db2850b7b5de2aa2c12141fc666964"
+          parent="$(git rev-parse "${candidate}^")"
+          test "$parent" = "44bd43d60393ba7be4f20b204131b570c1cb8a8b"
+          git push origin "$candidate:refs/heads/agent/reqconf-r04-content-20260726"
