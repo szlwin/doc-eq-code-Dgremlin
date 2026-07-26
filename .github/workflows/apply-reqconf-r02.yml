@@ -1,0 +1,43 @@
+name: Apply REQCONF-R02 payload
+
+on:
+  push:
+    branches:
+      - agent/reqconf-r02-publish-20260726
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout helper branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild and verify payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/reqconf-r02-payload.part-* | base64 --decode > /tmp/reqconf-r02-changes.tar.gz
+          echo "f90a8c2c21dcd370f438178785f97126562a4087af95b9623a8c50c776220e32  /tmp/reqconf-r02-changes.tar.gz" | sha256sum -c -
+
+      - name: Commit content branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin dev_all
+          git checkout -B agent/reqconf-r02-content-20260726 origin/dev_all
+          tar -xzf /tmp/reqconf-r02-changes.tar.gz -C .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: confirm REQCONF-R02"
+          fi
+          git push --force-with-lease origin HEAD:agent/reqconf-r02-content-20260726
