@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "kind": "command_result",
+  "command": "python3 scripts/requirement_doc.py validate -g RequirementConfirmationAgent --file project_doc/version/V_1.0/doc/P1-COMPILER-F01/requirement.md --stage confirmation --json",
+  "exit_code": 0,
+  "executed_at": "2026-07-26T09:32:37+00:00",
+  "revision": "REQCONF-R04@c186ce681e1e",
+  "output_ref": "evidence/commands/REQCONF-R04-requirement-validation.output.json",
+  "output_digest": "04115ec2d8264f84dfaa6dbff394f6059832800eb042da78967f950d56b39768"
+}

@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 追踪矩阵
 
-> R02 草案。旧 R01 Review/Evidence 保留为历史，不覆盖本矩阵。
+> REQCONF-R04 候选。旧 Revision、Review 与 Evidence 保留为历史，不覆盖本矩阵。
 
 ```json traceability
 [
@@ -269,6 +269,89 @@
     "verification_evidence_ids": [],
     "verified_by_agents": [],
     "notes": "R02 草案，待对应阶段和串行 Review。"
+  },
+  {
+    "id": "TR-P1-COMPILER-008",
+    "description": "System-owned Information 与显式跨 View 属性映射",
+    "status": "PENDING",
+    "acceptance_criteria": [
+      "AC-P1-COMPILER-008"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/P1-COMPILER-F01/requirement.md#AC-P1-COMPILER-008",
+      "version/V_1.0/doc/P1-COMPILER-CR02/requirement.md"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "docs/_relations/dependency_impact.yaml"
+    ],
+    "business_flow_required": false,
+    "business_flow_refs": [],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [],
+    "business_model_refs": [],
+    "design_refs": [],
+    "test_case_ids": [
+      "CASE-P1-SYSTEM-INFORMATION-001",
+      "CASE-P1-MODEL-ACCESS-REF-001"
+    ],
+    "plan_task_ids": [
+      "TASK-P1-R2-001",
+      "TASK-P1-REQAN-001"
+    ],
+    "contract_refs": [
+      "dec-demo/src/main/resources/mix/system/systems.xml",
+      "dec-demo/src/main/resources/mix/business/order-business.xml"
+    ],
+    "implementation_refs": [
+      "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java",
+      "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py"
+    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "REQCONF-R03 已形成 XML 契约和独立结构测试；后续需求分析、业务模型与设计需基于该边界重做。"
+  },
+  {
+    "id": "TR-P1-COMPILER-009",
+    "description": "ModelAccess target-main 优先与 property path 回退",
+    "status": "PENDING",
+    "acceptance_criteria": [
+      "AC-P1-COMPILER-009"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/P1-COMPILER-F01/requirement.md#AC-P1-COMPILER-009",
+      "version/V_1.0/doc/P1-COMPILER-CR03/requirement.md"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "docs/_relations/dependency_impact.yaml"
+    ],
+    "business_flow_required": false,
+    "business_flow_refs": [],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [],
+    "business_model_refs": [],
+    "design_refs": [],
+    "test_case_ids": [
+      "CASE-P1-MODEL-ACCESS-TARGET-MAIN-001",
+      "CASE-P1-MODEL-ACCESS-PROPERTY-FALLBACK-001",
+      "CASE-P1-MODEL-ACCESS-SELECTOR-ERROR-001"
+    ],
+    "plan_task_ids": [
+      "TASK-P1-R2-001",
+      "TASK-P1-REQAN-001"
+    ],
+    "contract_refs": [
+      "dec-demo/src/main/resources/mix/system/systems.xml",
+      "dec-demo/src/main/resources/mix/view/orm-view.xml"
+    ],
+    "implementation_refs": [
+      "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java",
+      "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py"
+    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "REQCONF-R04 补充 target-main 优先、property path 回退及失败阻断；后续分析和设计需定义 Diagnostic code 与嵌套路径规则。"
   }
 ]
 ```

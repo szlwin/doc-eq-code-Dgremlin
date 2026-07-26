@@ -1,0 +1,16 @@
+{
+  "valid": true,
+  "stage": "confirmation",
+  "path": "project_doc/version/V_1.0/doc/P1-COMPILER-F01/requirement.md",
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "features": 1,
+    "businessRules": 19,
+    "crossFeatureRules": 0,
+    "acceptanceCriteria": 8,
+    "traceItems": 8,
+    "exceptionScenarios": 6,
+    "unresolvedPlaceholders": 0
+  }
+}

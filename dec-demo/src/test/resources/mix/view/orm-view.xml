@@ -3,9 +3,11 @@
 <orm-view-mapping>
 
     <!--
-        UserInfo 可用于独立用户场景。
-        OrderInfo 是跨模块业务模型，同时聚合 user、orderDetailList、payInfo 和 payDetailList。
-        业务模型跨 System，不代表某个 System 拥有整个模型。
+        UserInfo 是 user System 的本地 View，target-main="user" 是该 View 的根目标选择器。
+        OrderInfo 是跨模块共享模型，同时聚合 user、orderDetailList、payInfo 和 payDetailList。
+        System 只有在 view-info 中声明的 View 才能被本 System Information 直接引用；
+        共享模型路径与本地 View 的对应关系由 system/model-access/read|write/ref 显式声明；
+        ref@property 先精确匹配目标 View 的 target-main，未匹配时再精确查找 View property path。
     -->
 
     <view name="UserInfo" target-main="user">

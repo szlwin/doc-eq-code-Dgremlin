@@ -151,12 +151,12 @@
       "reason": "R02 草案尚未通过串行 Review。"
     },
     {
-      "assertion_id": "ASRT-P1-R2-REQCONF-RA-001",
-      "acceptance_id": "AC-P1-COMPILER-001",
-      "statement": "RequirementAnalysisAgent 对 REQCONF-R02 的目标、范围、可观察验收、失败边界和关键决策进行独立确认",
+      "assertion_id": "ASRT-P1-R4-REQCONF-RA-001",
+      "acceptance_id": "AC-P1-COMPILER-008",
+      "statement": "RequirementAnalysisAgent 确认 System-owned Information 边界与 ModelAccess target-main 优先/property path 回退规则一致且无隐式跨 View 解析",
       "type": "MANUAL_REVIEW",
       "phase": "requirement_confirmation",
-      "revision": "REQCONF-R02@d0868f1b679b",
+      "revision": "REQCONF-R04@c186ce681e1e",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -164,25 +164,28 @@
         "review_phase": "requirement_confirmation"
       },
       "source_refs": [
-        "TASK-P1-R2-001#expected_results/1"
+        "TASK-P1-R2-001#expected_results/0",
+        "TR-P1-COMPILER-008",
+        "TR-P1-COMPILER-009"
       ],
       "evidence_ids": [
-        "EVD-000220",
-        "EVD-000221",
-        "EVD-000222",
-        "EVD-000223"
+        "EVD-000243",
+        "EVD-000244",
+        "EVD-000245",
+        "EVD-000248",
+        "EVD-000249"
       ],
       "verified_by_agent": "RequirementAnalysisAgent",
-      "verified_at": "2026-07-26T05:54:44+00:00",
-      "reason": "PASSED。REQCONF-R02 已明确以实际 mix 为唯一目标契约、整体退役临时 declaration 模块、限制 CoreConfigProjection 为只读投影，并明确 P2～P7 的 Deferred 边界；未发现需由后续 Agent 猜测的范围或兼容决策。"
+      "verified_at": "2026-07-26T09:37:58+00:00",
+      "reason": "System-owned Information、源路径/目标选择器分离、target-main 优先及 property path 回退均已形成清晰、闭合且可分析的需求边界。"
     },
     {
-      "assertion_id": "ASRT-P1-R2-REQCONF-TD-001",
-      "acceptance_id": "AC-P1-COMPILER-007",
-      "statement": "TestDesignAgent 对 REQCONF-R02 的可观察验收、正常路径、边界和失败路径覆盖进行独立确认",
+      "assertion_id": "ASRT-P1-R4-REQCONF-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-009",
+      "statement": "TestDesignAgent 确认 target-main 主路径、property 回退路径、未匹配/歧义失败路径均具备可执行验证",
       "type": "MANUAL_REVIEW",
       "phase": "requirement_confirmation",
-      "revision": "REQCONF-R02@d0868f1b679b",
+      "revision": "REQCONF-R04@c186ce681e1e",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -190,16 +193,18 @@
         "review_phase": "requirement_confirmation"
       },
       "source_refs": [
-        "TASK-P1-R2-001#expected_results/1"
+        "TASK-P1-R2-001#expected_results/5",
+        "TR-P1-COMPILER-009"
       ],
       "evidence_ids": [
-        "EVD-000222",
-        "EVD-000220",
-        "EVD-000221"
+        "EVD-000248",
+        "EVD-000249",
+        "EVD-000243",
+        "EVD-000244"
       ],
       "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-07-26T05:54:45+00:00",
-      "reason": "PASSED。需求确认已具备进入需求分析所需的可测试性基础；具体 Case 数据、命令和测试层级仍由后续 test_design 阶段固化，不影响当前需求边界确认。"
+      "verified_at": "2026-07-26T09:38:00+00:00",
+      "reason": "target-main 主路径、property 回退路径和未匹配失败路径均有明确断言，独立 XML 契约测试 5/5 通过。"
     }
   ]
 }

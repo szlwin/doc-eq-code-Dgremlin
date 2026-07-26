@@ -8,12 +8,12 @@
     "id": "TASK-P1-REQCONF-001",
     "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-REQCONF-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-001",
-    "revision_reason": "R01 stable logical task reconciled to P1-COMPILER-CR01 / REQCONF-R02",
-    "title": "将稳定需求确认逻辑任务对齐到 REQCONF-R02",
-    "objective": "确认原稳定逻辑任务已由 REQCONF-R02 正式 Revision、Review 和 StageOutcome 完整替代",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003",
+    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
+    "title": "将稳定需求确认逻辑任务对齐到 REQCONF-R04",
+    "objective": "确认稳定需求确认逻辑任务复用 REQCONF-R03 的需求、Review、Evidence 与 StageOutcome，不产生并行事实",
     "phase": "requirement_confirmation",
     "status": "PASSED",
     "depends_on": [
@@ -41,45 +41,43 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
     "flow_refs": [],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "稳定逻辑任务绑定 REQCONF-R02@d0868f1b679b，复用同一机器校验、Review 与 Evidence，不产生第二份需求事实"
+      "稳定逻辑任务绑定 REQCONF-R03@7a9c82bdc1db，复用同一机器校验、Review 与 Evidence，不产生第二份需求事实"
     ],
     "stop_conditions": [
-      "不得生成与 REQCONF-R02 并行的需求确认 Revision"
+      "不得生成与 REQCONF-R04 并行的需求确认 Revision"
     ],
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "REQCONF-R02@d0868f1b679b",
+    "output_revision": "REQCONF-R04@c186ce681e1e",
     "validation_evidence_ids": [
-      "EVD-000220",
-      "EVD-000221",
-      "EVD-000222",
-      "EVD-000223",
-      "EVD-000224",
-      "EVD-000226",
-      "EVD-000227",
-      "EVD-000228",
-      "EVD-000229"
+      "EVD-000243",
+      "EVD-000244",
+      "EVD-000245",
+      "EVD-000250",
+      "EVD-000251"
     ]
   },
   {
     "id": "TASK-P1-REQAN-001",
     "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-REQAN-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-001",
-    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-003",
+    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
     "title": "重新分析 mix 源图与跨阶段影响",
-    "objective": "重新分析 mix 源图与跨阶段影响",
+    "objective": "分析 System-owned Information、System-local View、显式跨 View 映射及 BusinessScope 编排边界对 P1 与 P2～P7 的影响",
     "phase": "requirement_analysis",
-    "status": "READY",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P1-REQCONF-001"
     ],
@@ -90,7 +88,7 @@
       "TestDesignAgent"
     ],
     "input_revisions": {
-      "requirement_confirmation": "REQCONF-R02@d0868f1b679b"
+      "requirement_confirmation": "REQCONF-R03@7a9c82bdc1db"
     },
     "allowed_files": [
       "version/V_1.0/doc/P1-COMPILER-F01/requirement.md",
@@ -107,14 +105,17 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008"
     ],
     "flow_refs": [],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "REQAN-R03 对 REQCONF-R02 的 15 条业务规则、7 项 AC、5 个异常场景和实际 mix 源图完成可追踪分析",
-      "BusinessModelAgent、DesignAgent、TestDesignAgent 对同一 REQAN-R03 独立 Review 均为 PASSED",
+      "REQAN-R04 对 REQCONF-R03 的 19 条业务规则、8 项 AC、6 个异常场景及实际 mix 源图完成可追踪分析",
+      "明确 InformationKey 以 SystemKey 为所有权边界，BusinessScope 不拥有 Information",
+      "明确 model-access read/write/ref 的一对多映射、冲突、缺失与失败规则",
+      "BusinessModelAgent、DesignAgent、TestDesignAgent 对同一 REQAN-R04 独立 Review 均为 PASSED",
       "requirement_analysis StageOutcome 为 PASSED，且无开放 P0/P1 issue"
     ],
     "stop_conditions": [
@@ -130,14 +131,14 @@
     "id": "TASK-P1-BMODEL-001",
     "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-BMODEL-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-001",
-    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-003",
+    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
     "title": "重建 RawDefinition、CompiledModelSet 与 Deferred 模型",
     "objective": "重建 RawDefinition、CompiledModelSet 与 Deferred 模型",
     "phase": "business_model",
-    "status": "WAITING",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P1-REQAN-001"
     ],
@@ -183,14 +184,14 @@
     "id": "TASK-P1-DESIGN-001",
     "logical_task_id": "LOGICAL-SUPERSEDED-TASK-P1-DESIGN-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-DESIGN-001",
-    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-DESIGN-003",
+    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
     "title": "评审统一源图、Compiler Pipeline 与只读投影设计",
     "objective": "评审统一源图、Compiler Pipeline 与只读投影设计",
     "phase": "design",
-    "status": "WAITING",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P1-BMODEL-001"
     ],
@@ -240,12 +241,12 @@
     "id": "TASK-P1-R2-001",
     "logical_task_id": "LOGICAL-TASK-P1-R2-001",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "",
-    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
-    "title": "重新确认实际 mix 与模块退役范围",
-    "objective": "重新确认实际 mix 与模块退役范围",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003",
+    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
+    "title": "确认 System-owned Information、跨 View 映射与 target-main 解析契约",
+    "objective": "确认 Information 归属 System、仅关联本 System View，BusinessScope 只负责编排，并以 model-access read/ref 映射共享模型路径",
     "phase": "requirement_confirmation",
     "status": "PASSED",
     "depends_on": [],
@@ -262,7 +263,24 @@
       "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
       "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
       "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
-      "version/V_1.0/doc/P1-COMPILER-CR01/requirement.md"
+      "version/V_1.0/doc/P1-COMPILER-CR01/requirement.md",
+      "version/V_1.0/doc/P1-COMPILER-CR02/requirement.md",
+      "version/V_1.0/doc/P1-COMPILER-CR02/requirement_change.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
+      "dec-demo/src/main/resources/mix/system/systems.xml",
+      "dec-demo/src/main/resources/mix/view/orm-view.xml",
+      "dec-demo/src/main/resources/mix/rule/user-rule.xml",
+      "dec-demo/src/main/resources/mix/business/order-business.xml",
+      "dec-demo/src/test/resources/mix/system/systems.xml",
+      "dec-demo/src/test/resources/mix/view/orm-view.xml",
+      "dec-demo/src/test/resources/mix/rule/user-rule.xml",
+      "dec-demo/src/test/resources/mix/business/order-business.xml",
+      "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java",
+      "version/V_1.0/task/P1-COMPILER-F01/decision_log.md",
+      "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
+      "version/V_1.0/doc/P1-COMPILER-CR03/requirement.md",
+      "version/V_1.0/doc/P1-COMPILER-CR03/requirement_change.md",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md"
     ],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-001",
@@ -271,7 +289,9 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
     "flow_refs": [],
     "flow_step_refs": [],
@@ -279,38 +299,51 @@
       "python3 scripts/requirement_doc.py validate -g RequirementConfirmationAgent --file project_doc/version/V_1.0/doc/P1-COMPILER-F01/requirement.md --stage confirmation --json"
     ],
     "expected_results": [
-      "REQCONF-R02 正式 Revision 锁定目标、范围内外、七项验收、失败边界和五项持久决策",
-      "RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R02 独立 Review 均为 PASSED",
-      "requirement_confirmation StageOutcome 为 PASSED，且无开放 P0/P1 issue"
+      "REQCONF-R04 明确 Information 归属 System 且只能关联该 System view-info 中声明的 View",
+      "BusinessScope 不再拥有 Information，仅通过 system-qualified information-ref 编排 Directory/Action/Produce",
+      "user System 不再声明 OrderInfo，并通过 model-access/read/ref 将 OrderInfo.user 映射到 UserInfo.user",
+      "主资源与测试资源 XML 同步且契约测试验证所有 Information 的 System/View 归属和跨 View 映射",
+      "RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R04 独立 Review 均为 PASSED",
+      "ref@property first matches the selected View target-main exactly",
+      "property path lookup is used only when target-main does not match",
+      "missing or ambiguous selector fails without fuzzy or cross-View fallback"
     ],
     "stop_conditions": [
-      "dec-expand-declaration or second runtime reintroduced"
+      "Information remains owned by BusinessScope",
+      "Information references a View not declared by its owning System",
+      "dec-expand-declaration or second runtime reintroduced",
+      "ModelAccess selector skips target-main and directly guesses properties",
+      "ModelAccess selector performs fuzzy/global View matching",
+      "root-property is reintroduced as a second root alias"
     ],
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "REQCONF-R02@d0868f1b679b",
+    "output_revision": "REQCONF-R04@c186ce681e1e",
     "validation_evidence_ids": [
-      "EVD-000220",
-      "EVD-000221",
-      "EVD-000222",
-      "EVD-000223",
-      "EVD-000224",
-      "EVD-000226"
+      "EVD-000243",
+      "EVD-000244",
+      "EVD-000245",
+      "EVD-000246",
+      "EVD-000247",
+      "EVD-000248",
+      "EVD-000249",
+      "EVD-000250",
+      "EVD-000251"
     ]
   },
   {
     "id": "TASK-P1-R2-005",
     "logical_task_id": "LOGICAL-TASK-P1-R2-005",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "",
-    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-003",
+    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
     "title": "形成七项 AC 的可执行测试设计",
     "objective": "形成七项 AC 的可执行测试设计",
     "phase": "test_design",
-    "status": "WAITING",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P1-DESIGN-001"
     ],
@@ -349,14 +382,14 @@
     "id": "TASK-P1-R2-006",
     "logical_task_id": "LOGICAL-TASK-P1-R2-006",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "",
-    "revision_reason": "P1-COMPILER-CR01 + actual mix fixture",
+    "iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-003",
+    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
     "title": "形成 P1-T01～T15 实施计划",
     "objective": "形成 P1-T01～T15 实施计划",
     "phase": "implementation_plan",
-    "status": "WAITING",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P1-R2-005"
     ],

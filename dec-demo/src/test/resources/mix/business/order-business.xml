@@ -4,7 +4,8 @@
     目标设计示例：
 
     - OrderInfo 是跨 user、order、payment System 的共享业务模型；
-    - Information 通过 system-ref 指定识别或物化能力的归属；
+    - Information 由各 System 定义并拥有，只能关联该 System 的 View；
+    - BusinessScope 仅通过 system-qualified information-ref 组合跨 System 业务；
     - Directory Action 通过 system-ref + rule-ref 调用指定 System 的 RuleView；
     - 无 rule-ref 的 Action 由全局自定义 Action 注册表提供；
     - Produce 映射实际数据与 Information；
@@ -30,180 +31,18 @@
 <business-config name="order-payment">
 
     <!-- ========================================================= -->
-    <!-- 信息树                                                     -->
+    <!-- BusinessScope 只负责跨 System 业务编排                         -->
     <!-- ========================================================= -->
 
-    <information-info>
+    <!--
+        Information 已归属各自 System：
+        - user.*    -> user System
+        - order.*   -> order System
+        - payment.* -> payment System
 
-        <!-- 用户信息：由 user System 在共享 OrderInfo.user 上识别。 -->
-
-        <information
-                name="user.activated"
-                system-ref="user"
-                model-ref="OrderInfo"
-                rule-ref="isActivated"/>
-
-        <information
-                name="user.certified"
-                system-ref="user"
-                model-ref="OrderInfo"
-                rule-ref="isCertified"/>
-
-        <information
-                name="user.effective"
-                expression="
-                    user.activated
-                    and
-                    user.certified
-                "/>
-
-        <!-- 订单信息：由 order System 负责识别和物化。 -->
-
-        <information
-                name="order.ordered"
-                system-ref="order"
-                model-ref="OrderInfo"
-                rule-data="
-                    status = 1
-                    and
-                    every(orderDetailList, status = 1)
-                ">
-
-            <change-data>
-                <![CDATA[
-                    status : 1;
-                    every(orderDetailList, status : 1);
-                ]]>
-            </change-data>
-
-        </information>
-
-        <information
-                name="order.waitPay"
-                system-ref="order"
-                model-ref="OrderInfo"
-                rule-ref="isWaitPay"/>
-
-        <information
-                name="order.payable"
-                expression="
-                    order.ordered
-                    or
-                    order.waitPay
-                "/>
-
-        <information
-                name="order.paying"
-                system-ref="order"
-                model-ref="OrderInfo"
-                rule-data="
-                    status = 2
-                    and
-                    every(orderDetailList, status = 2)
-                ">
-
-            <change-data>
-                <![CDATA[
-                    status : 2;
-                    every(orderDetailList, status : 2);
-                ]]>
-            </change-data>
-
-        </information>
-
-        <!-- 支付信息：由 payment System 在共享 OrderInfo.payInfo 上识别。 -->
-
-        <information
-                name="payment.paymentInfo"
-                system-ref="payment"
-                model-ref="OrderInfo"
-                rule-ref="hasPaymentInfo"/>
-
-        <information
-                name="payment.hasResult"
-                system-ref="payment"
-                model-ref="OrderInfo"
-                rule-ref="hasPayResult"/>
-
-        <information
-                name="payment.success"
-                system-ref="payment"
-                model-ref="OrderInfo"
-                rule-ref="isPaySuccess"/>
-
-        <information
-                name="payment.error"
-                system-ref="payment"
-                model-ref="OrderInfo"
-                rule-ref="isPayError"/>
-
-        <information
-                name="payment.completed"
-                expression="
-                    payment.success
-                    or
-                    payment.error
-                "/>
-
-        <!-- 支付成功后的订单信息。 -->
-
-        <information
-                name="order.paySuccessStatus"
-                system-ref="order"
-                model-ref="OrderInfo"
-                rule-data="
-                    status = 3
-                    and
-                    every(orderDetailList, status = 3)
-                ">
-
-            <change-data>
-                <![CDATA[
-                    status : 3;
-                    every(orderDetailList, status : 3);
-                ]]>
-            </change-data>
-
-        </information>
-
-        <information
-                name="order.paySuccess"
-                expression="
-                    payment.success
-                    and
-                    order.paySuccessStatus
-                "/>
-
-        <!-- 支付失败后的订单信息。 -->
-
-        <information
-                name="order.payErrorStatus"
-                system-ref="order"
-                model-ref="OrderInfo"
-                rule-data="
-                    status = 4
-                    and
-                    every(orderDetailList, status = 4)
-                ">
-
-            <change-data>
-                <![CDATA[
-                    status : 4;
-                    every(orderDetailList, status : 4);
-                ]]>
-            </change-data>
-
-        </information>
-
-        <information
-                name="order.payError"
-                expression="
-                    payment.error
-                    and
-                    order.payErrorStatus
-                "/>
-
-    </information-info>
+        本文件只通过 system-qualified information-ref 使用这些 Information，
+        不再定义或拥有 Information。
+    -->
 
     <!-- ========================================================= -->
     <!-- 目录                                                       -->

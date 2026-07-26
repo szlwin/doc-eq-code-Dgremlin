@@ -3,18 +3,19 @@
 <orm-rule-mapping>
 
     <!--
-        两个 RuleView 都属于 user System，
-        但可在跨模块业务模型 OrderInfo 上读取 user 区域。
+        RuleView 属于 user System，只能直接关联 user System 的 UserInfo。
+        UserInfo 通过 root-property="user" 暴露本地根路径；当业务使用 OrderInfo 时，
+        system/model-access 将 OrderInfo.user 显式映射到 UserInfo.user。
     -->
 
-    <rule-view-info system="user" name="isActivated" view-ref="OrderInfo">
+    <rule-view-info system="user" name="isActivated" view-ref="UserInfo">
         <rule
                 name="checkActivated"
                 type="checkPattern"
                 pattern="user.status = 1"/>
     </rule-view-info>
 
-    <rule-view-info system="user" name="isCertified" view-ref="OrderInfo">
+    <rule-view-info system="user" name="isCertified" view-ref="UserInfo">
         <rule
                 name="checkCertified"
                 type="checkPattern"

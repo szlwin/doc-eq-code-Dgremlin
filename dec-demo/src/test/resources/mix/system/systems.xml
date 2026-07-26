@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    System 不拥有整个 Business Model。
-    多个 System 可以共同使用 OrderInfo，但只能修改各自声明的模型区域。
+    System 是 Data、View、RuleView 与 Information 的能力归属边界。
+
+    约束：
+    1. Information 只能通过 view-ref 关联本 System 的 view-info；
+    2. rule-ref 解析到本 System 的 RuleView；
+    3. 跨共享模型访问必须通过 model-access/read|write/ref 显式映射；
+       read|write@path 表示共享模型源路径，ref@view 选择本 System View，
+       ref@property 是目标 View 选择器：先精确匹配 View.target-main，
+       未匹配时再按 View 的 property path 精确查找；
+    4. 禁止模糊匹配、同名猜测和匹配失败后的静默降级；
+    5. BusinessScope 不拥有 Information，只引用 system-qualified InformationKey。
 -->
 <systems>
 
@@ -14,16 +23,46 @@
 
         <view-info>
             <view-ref name="UserInfo"/>
-            <view-ref name="OrderInfo"/>
         </view-info>
 
         <rule-file-info>
             <rule-file path="classpath:mix/rule/user-rule.xml"/>
         </rule-file-info>
 
+        <information-info>
+
+            <information
+                    name="activated"
+                    view-ref="UserInfo"
+                    rule-ref="isActivated"/>
+
+            <information
+                    name="certified"
+                    view-ref="UserInfo"
+                    rule-ref="isCertified"/>
+
+            <information
+                    name="effective"
+                    expression="
+                        user.activated
+                        and
+                        user.certified
+                    "/>
+
+        </information-info>
+
+        <!--
+            OrderInfo.user 是共享业务模型源路径，由 read@path="user" 指定；
+            ref@view="UserInfo" 选择 user System 的本地 View；
+            ref@property="user" 先匹配 UserInfo.target-main="user"，因此绑定到 View 根目标。
+            仅当 target-main 不匹配时，才按 property 值在 UserInfo 的属性树中精确查找；
+            两步均不匹配或出现歧义时必须产生 ERROR，不得猜测。
+        -->
         <model-access-info>
             <model-access model-ref="OrderInfo">
-                <read path="user"/>
+                <read path="user">
+                    <ref view="UserInfo" property="user"/>
+                </read>
             </model-access>
         </model-access-info>
 
@@ -43,6 +82,111 @@
         <rule-file-info>
             <rule-file path="classpath:mix/rule/order-rule.xml"/>
         </rule-file-info>
+
+        <information-info>
+
+            <information
+                    name="ordered"
+                    view-ref="OrderInfo"
+                    rule-data="
+                        status = 1
+                        and
+                        every(orderDetailList, status = 1)
+                    ">
+
+                <change-data>
+                    <![CDATA[
+                        status : 1;
+                        every(orderDetailList, status : 1);
+                    ]]>
+                </change-data>
+
+            </information>
+
+            <information
+                    name="waitPay"
+                    view-ref="OrderInfo"
+                    rule-ref="isWaitPay"/>
+
+            <information
+                    name="payable"
+                    expression="
+                        order.ordered
+                        or
+                        order.waitPay
+                    "/>
+
+            <information
+                    name="paying"
+                    view-ref="OrderInfo"
+                    rule-data="
+                        status = 2
+                        and
+                        every(orderDetailList, status = 2)
+                    ">
+
+                <change-data>
+                    <![CDATA[
+                        status : 2;
+                        every(orderDetailList, status : 2);
+                    ]]>
+                </change-data>
+
+            </information>
+
+            <information
+                    name="paySuccessStatus"
+                    view-ref="OrderInfo"
+                    rule-data="
+                        status = 3
+                        and
+                        every(orderDetailList, status = 3)
+                    ">
+
+                <change-data>
+                    <![CDATA[
+                        status : 3;
+                        every(orderDetailList, status : 3);
+                    ]]>
+                </change-data>
+
+            </information>
+
+            <information
+                    name="paySuccess"
+                    expression="
+                        payment.success
+                        and
+                        order.paySuccessStatus
+                    "/>
+
+            <information
+                    name="payErrorStatus"
+                    view-ref="OrderInfo"
+                    rule-data="
+                        status = 4
+                        and
+                        every(orderDetailList, status = 4)
+                    ">
+
+                <change-data>
+                    <![CDATA[
+                        status : 4;
+                        every(orderDetailList, status : 4);
+                    ]]>
+                </change-data>
+
+            </information>
+
+            <information
+                    name="payError"
+                    expression="
+                        payment.error
+                        and
+                        order.payErrorStatus
+                    "/>
+
+        </information-info>
 
         <model-access-info>
             <model-access model-ref="OrderInfo">
@@ -75,6 +219,38 @@
         <rule-file-info>
             <rule-file path="classpath:mix/rule/payment-rule.xml"/>
         </rule-file-info>
+
+        <information-info>
+
+            <information
+                    name="paymentInfo"
+                    view-ref="OrderInfo"
+                    rule-ref="hasPaymentInfo"/>
+
+            <information
+                    name="hasResult"
+                    view-ref="OrderInfo"
+                    rule-ref="hasPayResult"/>
+
+            <information
+                    name="success"
+                    view-ref="OrderInfo"
+                    rule-ref="isPaySuccess"/>
+
+            <information
+                    name="error"
+                    view-ref="OrderInfo"
+                    rule-ref="isPayError"/>
+
+            <information
+                    name="completed"
+                    expression="
+                        payment.success
+                        or
+                        payment.error
+                    "/>
+
+        </information-info>
 
         <model-access-info>
             <model-access model-ref="OrderInfo">

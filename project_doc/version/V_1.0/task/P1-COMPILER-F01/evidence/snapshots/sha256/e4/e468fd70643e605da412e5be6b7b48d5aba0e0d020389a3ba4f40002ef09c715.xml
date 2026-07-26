@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<orm-view-mapping>
+
+    <!--
+        UserInfo 是 user System 的本地 View，并通过 root-property="user" 暴露根属性别名。
+        OrderInfo 是跨模块共享模型，同时聚合 user、orderDetailList、payInfo 和 payDetailList。
+        System 只有在 view-info 中声明的 View 才能被本 System Information 直接引用；
+        共享模型路径与本地 View 的对应关系由 system/model-access/read|write/ref 显式声明。
+    -->
+
+    <view name="UserInfo" target-main="user" root-property="user">
+        <property-info>
+            <property name="id" ref-property="id"/>
+            <property name="name" ref-property="name"/>
+            <property name="activeTime" ref-property="activeTime"/>
+            <property name="status" ref-property="status"/>
+            <property name="certified" ref-property="certified"/>
+        </property-info>
+    </view>
+
+    <view name="OrderInfo" target-main="order">
+
+        <property-info>
+
+            <property name="id" ref-property="id"/>
+            <property name="userId" ref-property="userId"/>
+            <property name="productCount" ref-property="productCount"/>
+            <property name="totalPrice" ref-property="totalPrice"/>
+            <property name="totalAmount" ref-property="totalAmount"/>
+            <property name="status" ref-property="orderStatus"/>
+            <property name="dateTime" ref-property="createDate"/>
+            <property name="payId" ref-property="payId"/>
+
+            <property
+                    name="user"
+                    relation="one-to-one"
+                    data="user"
+                    key="id"
+                    rel-key="userId">
+
+                <property name="id" ref-property="id"/>
+                <property name="userName" ref-property="name"/>
+                <property name="activeTime" ref-property="activeTime"/>
+                <property name="status" ref-property="status"/>
+                <property name="certified" ref-property="certified"/>
+
+            </property>
+
+            <property
+                    name="orderDetailList"
+                    relation="one-to-many"
+                    data="orderDetail"
+                    key="orderId"
+                    rel-key="id">
+
+                <property name="id" ref-property="id"/>
+                <property name="orderId" ref-property="orderId"/>
+                <property name="userId" ref-property="userId" rel-value="user.id"/>
+                <property name="productId" ref-property="productId"/>
+                <property name="productName" ref-property="productName"/>
+                <property name="productAmount" ref-property="productAmount"/>
+                <property name="productPrice" ref-property="productPrice"/>
+                <property name="status" ref-property="status"/>
+                <property name="createDate" ref-property="createDate"/>
+
+            </property>
+
+            <property
+                    name="payInfo"
+                    relation="one-to-one"
+                    data="pay"
+                    key="orderId"
+                    rel-key="id">
+
+                <property name="id" ref-property="id"/>
+                <property name="userId" ref-property="userId" rel-value="user.id"/>
+                <property name="orderId" ref-property="orderId"/>
+                <property name="totalPrice" ref-property="totalPrice"/>
+                <property name="totalAmount" ref-property="totalAmount"/>
+                <property name="status" ref-property="payStatus"/>
+                <property name="resultCode" ref-property="resultCode"/>
+                <property name="resultMessage" ref-property="resultMessage"/>
+                <property name="createDate" ref-property="createDate"/>
+
+                <property
+                        name="payDetailList"
+                        relation="one-to-many"
+                        data="payDetail"
+                        key="payId"
+                        rel-key="id">
+
+                    <property name="id" ref-property="id"/>
+                    <property name="payId" ref-property="payId"/>
+                    <property name="userId" ref-property="userId" rel-value="user.id"/>
+                    <property name="productId" ref-property="productId"/>
+                    <property name="productName" ref-property="productName"/>
+                    <property name="payPrice" ref-property="payPrice"/>
+                    <property name="payAmount" ref-property="payAmount"/>
+                    <property name="createDate" ref-property="createDate"/>
+
+                </property>
+
+            </property>
+
+        </property-info>
+
+    </view>
+
+</orm-view-mapping>

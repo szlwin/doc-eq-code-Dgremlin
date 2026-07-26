@@ -1,10 +1,10 @@
 # 基于 `mix` 的 P0—P8 详细任务实施手册
 
-> 2026-07-25 架构决策更新：`dec-expand-declaration` 整体退役；P1—P8 直接以 `mix` 为唯一目标契约，不建立 Adapter。
+> 正式事实源：`project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md`。其他同名路径仅保留迁移跳转，不再维护正文。
 
 ## 1. 文档定位
 
-本文是 `docs/mix-framework-technical-remediation-plan.md` 的执行级配套文档，用于把 P0—P8 从架构阶段拆成可持续执行、可验收、可交接的具体任务，避免后续因会话、人员或 Agent 记忆变化而偏离目标。
+本文是 `project_doc/docs/_plans/mix-framework-technical-remediation-plan.md` 的执行级配套文档，用于把 P0—P8 从架构阶段拆成可持续执行、可验收、可交接的具体任务，避免后续因会话、人员或 Agent 记忆变化而偏离目标。
 
 本文固定以下内容：
 
@@ -22,9 +22,9 @@
 
 ```text
 XML / YAML
-    -> 统一 RawDefinitionSet
+    -> 统一 Raw AST
     -> 编译、引用解析、图构建和静态校验
-    -> 不可变 CompiledModelSet / EngineContext
+    -> 不可变 CompiledBusiness / EngineContext
     -> 统一解释执行引擎
 ```
 
@@ -84,7 +84,7 @@ find("PayResult").eq("error")   -> error only
 P0 -> P1 -> P2 -> P3 -> P4 -> P5 -> P6 -> P7 -> P8
 ```
 
-默认阶段串行。只有当前阶段退出门禁全部通过，才允许进入下一阶段。同阶段内可并行互不冲突的任务，但不得跨阶段提前实现依赖尚未稳定的能力。
+阶段、阶段内任务和 Review 当前全部串行执行。只有当前阶段退出门禁全部通过，才允许进入下一阶段；同一时刻只允许一个任务或一个 Review 处于 `IN_PROGRESS`/`REVIEWING`。多个 Review Agent 按任务计划登记顺序逐个执行，不得并行调度，也不得跨阶段提前实现依赖尚未稳定的能力。
 
 ### 3.2 状态与证据
 
@@ -187,20 +187,10 @@ docs/remediation/
 - 措施：在测试资源建立 `mix` fixture；P0 只验证文件完整、XML well-formed、引用文件存在，并为后续实体数量和编译断言留位。
 - 验收：资源损坏测试失败；未支持项明确 pending，不能注释整个测试。
 
-### P0-T09 建立可重复自动化验证门禁
+### P0-T09 建立 CI
 
-- 措施：
-  - 以 `scripts/remediation/run_p0_local_verification.sh` 作为 P0 唯一正式动态验收入口；
-  - 本地正式验证串行执行 Wrapper、legacy 依赖 bootstrap、全 Reactor `clean verify`、故意失败阻断证明、静态校验和 `mysql-it` profile；
-  - 正式证据必须绑定 Git commit SHA、分支、JDK、Wrapper Maven、数据库连接标识、命令和退出码，且不得记录数据库密码；
-  - 正式运行默认要求 Git 工作树干净；诊断运行可显式设置 `P0_REQUIRE_CLEAN_WORKTREE=0`，但不得作为退出证据；
-  - GitHub Actions 保留为跨环境辅助回归入口，不作为 P0 退出阻断条件；远程临时 MySQL 的环境差异单独治理，不覆盖本地失败，也不伪造为通过。
-- 验收：
-  - `run_p0_local_verification.sh` 返回 `0`；
-  - 核心 `clean verify` 在无 MySQL条件下返回 `0`；
-  - 本地 `-Pmysql-it clean verify` 在指定测试数据库中返回 `0`；
-  - 故意失败测试使内部 Maven 命令返回非零，而门禁证明脚本自身返回 `0`；
-  - 全部正式证据对应同一 Git commit；GitHub Actions 是否成功仅作为辅助信息记录。
+- 措施：PR 与 `dev_all` push 执行 Wrapper 构建，上传测试报告；MySQL IT 独立 job。
+- 验收：故意失败测试时 CI 阻断。
 
 ### P0-T10 建立异常和日志基线
 
@@ -213,159 +203,105 @@ docs/remediation/
 
 ## P0 退出门禁
 
-- [x] Wrapper 和本地核心验证可重复执行；
-- [x] 本地 MySQL 集成测试可重复执行；
-- [x] 正式验证证据绑定同一 Git commit 和执行环境，且正式运行前工作树干净；
-- [x] 测试失败阻断；
-- [x] 无 MySQL 核心测试通过；
-- [x] `dec-demo` 进入正式构建；
-- [x] 旧行为快照和 `mix` 骨架存在；
-- [x] GitHub Actions 作为非阻断辅助回归入口保留；
-- [x] P1 可依赖稳定基线。
+- [ ] Wrapper 和 CI 可重复构建；
+- [ ] 测试失败阻断；
+- [ ] 无 MySQL核心测试通过；
+- [ ] `dec-demo` 进入正式构建；
+- [ ] 旧行为快照和 `mix` 骨架存在；
+- [ ] P1 可依赖稳定基线。
 
 ---
 
-## P1—P8 共同架构决策：整体退役 `dec-expand-declaration`
-
-`dec-expand-declaration` 是临时验证模块，不属于目标架构。自 P1 起：
-
-- 从 Reactor、依赖管理、`dec-demo` 依赖和仓库源码中整体删除；
-- 不抽取旧代码、不建立 Adapter、不迁移旧 declaration 配置；
-- 仍有价值的场景只能基于 `dec-demo/src/main/resources/mix` 重新建立 fixture 和测试；
-- System、Business、Information、Directory、Action、Produce、Query、Session 和事务均由统一核心模块实现；
-- `Business` 是编译模型中的逻辑作用域，不是独立项目或第二套运行时；
-- P0 证据仅代表当时历史基线，模块删除后必须重新执行当前阶段规定的构建与回归。
-
-完整决策见：`dec-expand-declaration-retirement-decision.md`。
-
----
-
-# P1：基于实际 `mix` 的统一 AST、Registry 与 Compiler 骨架
+# P1：统一 AST、Registry 与 Compiler 骨架
 
 ## P1 当前情况
 
 - `ConfigFactory` 和多个全局 Config 使用固定类型槽位；
 - XML/YAML parser 直接写运行时 Config；
-- 实际 `mix` 根配置通过 Data/View 文件集合、System 文件、Business 文件装配，System 再间接发现 Rule 文件；
-- 旧 parser 未必支持 `system-file-info`、`business-file-info` 等目标元素；
-- 无统一 SourceGraph、RawDefinitionSet、Diagnostic、强类型 Registry 和实例级 EngineContext；
-- `dec-expand-declaration` 是临时模块，必须整体删除。
+- 无统一 Raw AST、source location 和集中 Diagnostic；
+- 同 JVM难以安全加载多个项目或版本；
+- parser、配置存储和 runtime 边界不清。
 
 ## P1 整改目标
 
-以用户提供的 `dec-demo/src/main/resources/mix` 为目标 fixture，建立：
-
-```text
-SourceGraph
- -> CanonicalDocumentSet
- -> RawDefinitionSet
- -> Compiler Pipeline
- -> CompiledModelSet
- -> EngineContext
-```
-
-Business 只作为 `BusinessScope` 逻辑作用域。P1 不建立第二套业务运行时；P2～P7 语义进入显式 DeferredDefinitionRegistry。
+建立格式中立 AST、Compiler Pipeline、强类型 Key、不可变 Registry 和实例级 EngineContext；旧 Config 仅通过只读 adapter 迁移。
 
 ## P1 任务
 
-### P1-T01 整体退役 `dec-expand-declaration`
+### P1-T01 新增 `dec-core-compiler`
 
-- 删除模块目录、根 POM module、dependencyManagement、`dec-demo` 依赖和运行引用；
-- 不抽取、不适配、不迁移；必要场景只按 `mix` 重写。
+- 建立独立模块，不依赖 SQL/MySQL/demo；定义 parser、compiler、runtime 边界和架构测试。
 
-### P1-T02 建立退役残留和架构门禁
+### P1-T02 定义 CanonicalDocumentNode
 
-- 扫描 POM、依赖树、package/import、ServiceLoader、反射字符串、文档和发布 artifact；
-- 禁止 `LegacyDeclarationAdapter`、复制类型和第二 Engine。
+- 字段：类型、属性、标量、顺序子节点、文件、行列/路径、格式、schema 版本。
+- 验收：同语义 XML/YAML 可规范化为等价节点。
 
-### P1-T03 定义 DocumentSource、SourceRef 与 Provider
+### P1-T03 定义 Raw AST
 
-- 支持 classpath/file/memory 测试源；生产代码不硬编码 demo 路径；
-- 限制 scheme、路径逃逸、源数量和深度。
+- 建立 RawConfig、Data、View、RuleView、System、Information、Directory、Action、Produce 和 SourceRef；字段覆盖 `mix`，即使部分运行语义后续才实现。
 
-### P1-T04 建立 `MixSourceGraph`
+### P1-T04 定义 SourceLocation 与 Diagnostic
 
-- root 发现 Data/View 文件集合、System 文件和 Business 文件；
-- System 再发现 Rule 文件；
-- 形成有类型边、稳定 sourceId、去重和确定性排序。
+- 建立 severity、稳定错误码、文件/行列/实体 Key；Compiler 聚合普通错误并稳定排序。
 
-### P1-T05 定义 CanonicalDocumentNode
+### P1-T05 建立强类型 Key
 
-- 字段：节点名、有序属性、标量、有序子节点、SourceRef、format、schemaVersion；
-- XML/YAML 前端不写业务 Config。
+- 至少包括 DataKey、ViewKey、RuleViewKey、SystemKey、InformationKey、DirectoryKey、BusinessKey、ActionKey。
+- `RuleViewKey` 预留 `(system,name)`。
 
-### P1-T06 定义 RawDefinitionSet
+### P1-T06 建立 SymbolTable 与 RegistryBuilder
 
-- 覆盖 DataSource、Connection、Data、View、System、RuleView、Rule、BusinessScope、Information、Directory、Action、Produce；
-- 统一使用 RawDefinition 术语。
+- 支持重复检测、跨文件前向引用、按类型遍历；编译结束发布不可变 Registry。
 
-### P1-T07 建立强类型 Key 与 SymbolTable
+### P1-T07 定义 Compiled AST
 
-- DataSourceKey、ConnectionKey、DataKey、ViewKey、SystemKey、RuleViewKey(system,name)、BusinessScopeKey、InformationKey、DirectoryKey、ActionKey；
-- 支持重复检测和跨文件前向引用。
+- Compiled 对象不保留未解析字符串引用，不依赖 DOM/YAML Node，可生成稳定 digest。
 
-### P1-T08 建立稳定 Diagnostic
+### P1-T08 实现 Compiler Pipeline
 
-- 错误码、SourceRef、entityKey、pass 和稳定排序；
-- 普通错误聚合，任何 ERROR 阻止发布。
+```text
+parse -> structural validation -> symbol registration -> reference resolution -> graph preparation -> semantic validation -> publish
+```
 
-### P1-T09 实现 ReferenceResolution 与 OwnershipValidation
+每个 pass 独立测试。
 
-- 校验 connection→datasource、system→data/view/rule、ruleView→system/view、business action→system/rule、directory→information 等引用；
-- 校验 Rule 文件来源 System 与 `rule-view-info/@system` 一致。
+### P1-T09 建立 EngineContext
 
-### P1-T10 建立 DeferredDefinitionRegistry
+- 持有 compiled registries、datasource metadata、plugins、schema/version/digest；实例不可变，不使用全局当前 Context。
 
-- ModelAccess、Information 表达式、Rule grammar、Directory 状态机、Action/Produce 执行等必须带 requiredStage 和 SourceRef；
-- 不得静默忽略或伪装为已完整编译。
+### P1-T10 建立旧 Config Adapter
 
-### P1-T11 发布 `CompiledModelSet` 与 EngineContext
+- 新 Context 可投影为旧 Config 只读视图；adapter deprecated，新代码禁止通过 adapter 注册。
 
-- 发布对象不可变、实例级、无 parser 节点、无未声明的可变共享状态；
-- sourceDigest 与 semanticDigest 分离。
+### P1-T11 改造 XML 前端
 
-### P1-T12 建立 `CoreConfigProjection`
+- 新增 `XmlDocumentFrontend`；未知属性严格校验；资源错误进入 Diagnostic；新能力不直接写全局 Config。
 
-- 只覆盖旧核心 Data/View/Rule 读取；
-- deprecated、只读、无 register/remove/clear；
-- 不包含 declaration 类型。
+### P1-T12 建立 YAML 同一前端接口
 
-### P1-T13 改造 XML Frontend
+- P1 实现最小等价路径，完整对等放 P8。
 
-- 支持实际 `mix` 根/System/Business/Rule 结构；
-- 禁止 DTD、外部实体、网络解析和未知节点静默忽略。
+### P1-T13 Compiler 测试
 
-### P1-T14 建立 YAML 最小同契约路径
-
-- YAML 使用安全 Node 模式，输出同一 Canonical/Raw 契约；
-- 完整业务对等放 P8。
-
-### P1-T15 实际 `mix` Contract 和退出验证
-
-- 从 classpath `mix/orm-config.xml` 启动；
-- 断言 10 文件、5 Data、2 View、3 System、14 RuleView、1 BusinessScope、16 Information、5 Directory、8 Action、4 Produce；
-- 仅验证 P2+ 语义的 Deferred 分类，不执行后续业务逻辑。
+- 覆盖重复定义、未知引用、前向引用、多文件、source location、Context 隔离、digest 和 Diagnostic 顺序。
 
 ## P1 禁止事项
 
-不得使用 `CompiledBusiness`、`RawDeclaration` 或 declaration Adapter 作为新设计类型；不得在 P1 实现完整 System 权限、Information 求值、Directory 状态机、Action/Produce 执行或事务；不得硬编码 demo fixture；不得让 DeferredDefinition 缺少 requiredStage；不得复制废弃模块代码。
+不得在 P1 实现完整 System 权限、Information 求值、Directory 状态机；不得让 Compiled AST 持有解析器节点；EngineContext 不得成为新全局单例。
 
 ## P1 退出门禁
 
-- [ ] `dec-expand-declaration` 已从仓库、Reactor、依赖树和 artifact 移除；
-- [ ] `dec-core-compiler` 进入 Reactor且依赖方向通过架构测试；
-- [ ] 实际 `mix` 源图可确定性发现；
-- [ ] XML 与最小 YAML 进入统一 Canonical/Raw 契约；
-- [ ] 强类型符号、引用和 RuleView System 归属校验通过；
-- [ ] P2～P7 语义全部显式 Deferred；
-- [ ] `CompiledModelSet`、EngineContext 不可变且两个 Context 无污染；
-- [ ] Diagnostic 有稳定错误码和位置；
-- [ ] `CoreConfigProjection` 只读；
-- [ ] 实际 `mix` contract tests 通过且无第二套 runtime。
+- [ ] `dec-core-compiler` 进入 Reactor；
+- [ ] XML 与最小 YAML生成统一 Raw AST；
+- [ ] Data/View/Rule 可编译进 EngineContext；
+- [ ] 两个 Context 无污染；
+- [ ] Diagnostic 有错误码和位置；
+- [ ] 旧 Config adapter 只读。
 
 ---
 
-# P2：System、Business 作用域与 RuleView 归属
+# P2：System 与 RuleView 归属
 
 ## P2 当前情况
 
@@ -373,11 +309,11 @@ Business 只作为 `BusinessScope` 逻辑作用域。P1 不建立第二套业务
 - `rule-view-info/@system` 已写入 XML，但现有模型、Parser、Registry 未完整执行；
 - RuleView 可能只按名称注册；
 - 共享模型缺少读写路径权限；
-- Business 作用域尚未被定义为统一编译模型中的逻辑边界。
+- declaration 有另一套 System，不能继续作为第二套核心实现。
 
 ## P2 整改目标
 
-System 成为一等编译实体；Business 仅作为 `mix` 的逻辑聚合/命名空间；RuleView 以 `(system,name)` 注册和调用；model-access 编译为静态与运行时权限屏障。整个阶段不依赖任何旧 declaration 模型。
+System 成为一等编译实体；RuleView 以 `(system,name)` 注册和调用；model-access 编译为静态与运行时权限屏障。
 
 ## P2 任务
 
@@ -399,7 +335,7 @@ System 成为一等编译实体；Business 仅作为 `mix` 的逻辑聚合/命�
 
 ### P2-T05 修改 RuleView 模型
 
-- `RuleViewInfo` 增加 system；Registry 使用 RuleViewKey；新 `mix` 中 system 必填，旧核心配置只经只读 adapter。
+- `RuleViewInfo` 增加 system；Registry 使用 RuleViewKey；新 `mix` 中 system 必填，旧配置只经 adapter。
 
 ### P2-T06 改造 RuleParser
 
@@ -429,14 +365,13 @@ Rule、change、custom action 禁止绕过统一写入服务。
 
 - 合法读写、未声明读写、只读路径写入、父路径、集合、自定义 Action、动态 grammar。
 
-### P2-T12 定义 BusinessScope 与 System 边界
+### P2-T12 declaration System 迁移边界
 
-- 根据 `mix` 明确 BusinessScope 只聚合 Information、Directory、Action 等业务定义；System 负责能力归属和模型权限。
-- BusinessScope 不拥有第二套 Context、parser、事务或执行器，也不映射旧 SystemDesc/BusinessDesc。
+- 记录旧 SystemDesc 到新 CompiledSystem 的映射和不能映射能力，P7 收敛入口。
 
 ## P2 禁止事项
 
-不得让 system 只是文档字段；不得按包名推断 System；不得默认允许共享模型写入；不得把 BusinessScope 实现为独立项目或第二套运行时；不得引入旧 declaration 入口。
+不得让 system 只是文档字段；不得按包名推断 System；不得默认允许共享模型写入；不得在 P2 删除旧 declaration 入口。
 
 ## P2 退出门禁
 
@@ -444,8 +379,7 @@ Rule、change、custom action 禁止绕过统一写入服务。
 - [ ] `mix` RuleView 均有有效 System；
 - [ ] RuleViewKey 全链路生效；
 - [ ] 同名隔离通过；
-- [ ] model-access 静态和运行时校验通过；
-- [ ] BusinessScope/System 边界有编译测试且无独立 runtime。
+- [ ] model-access 静态和运行时校验通过。
 
 ---
 
@@ -453,11 +387,11 @@ Rule、change、custom action 禁止绕过统一写入服务。
 
 ## P3 当前情况
 
-核心框架没有 Information 一等模型、DAG、识别结果、物化和增量失效；旧 Change 与目标 Information 语义不同；两套表达式语言尚未隔离；输入“消费”尚未被统一为模型读取、Information 依赖和 Action 输入契约。
+核心框架没有 Information 一等模型、DAG、识别结果、物化和增量失效；旧 Change 与目标 Information 语义不同；两套表达式语言尚未隔离。
 
 ## P3 整改目标
 
-直接按 `mix` 建立三类 Information、两套表达式编译器、DAG、RecognitionResult、Materializer 和增量失效。消费语义不建立独立 Consumer runtime，而由 Information 依赖、模型/视图读取和后续 Action 输入契约表达。
+建立三类 Information、两套表达式编译器、DAG、RecognitionResult、Materializer 和增量失效，使 RuleView 与 rule-data 识别进入统一 API。
 
 ## P3 任务
 
@@ -467,11 +401,11 @@ Rule、change、custom action 禁止绕过统一写入服务。
 
 ### P3-T02 实现 InformationParser
 
-- 解析 system/model/rule/rule-data/change-data/expression；校验互斥组合；复合 Information 禁止 materializer；只接受 `mix` 契约。
+- 解析 system/model/rule/rule-data/change-data/expression；校验互斥组合；复合 Information 禁止 materializer。
 
 ### P3-T03 实现 ModelExpressionCompiler
 
-- 仅允许模型路径、常量和受控函数；产出可执行 AST 与读写路径；禁止引用 Information。
+- 仅允许模型路径、常量和受控函数；产出可执行 AST与读写路径；禁止引用 Information。
 
 ### P3-T04 实现 InformationExpressionCompiler
 
@@ -516,60 +450,52 @@ explain(key)
 
 ### P3-T13 `mix` Information 测试
 
-- 覆盖 user、order、payment 的 Information，组合、物化和重算；数量以当前 `mix` 实际契约为准，不绑定旧模块样例。
+- 覆盖 user、order、payment 共 16 个 Information，组合、物化和重算。
 
 ### P3-T14 错误配置测试
 
 - expression 引用模型、rule-data 引用 Information、越权 change、复合 materializer、循环、缺失引用。
 
-### P3-T15 定义输入依赖/消费边界
-
-- 统一定义模型读取、View 输入、Information 依赖和 payload 引用；编译期输出 read-set。
-- 明确不提供独立 Consumer SPI、ContextStorage 或旧生产消费工作流。
-
 ## P3 禁止事项
 
-不得用旧 Directory Change 代替 Information；不得把 `payment.success` 放入 rule-data；不得把 ERROR 当 FALSE；不得在复合 Information 中写模型；不得建立旧式 Consumer runtime。
+不得用旧 Directory Change 代替 Information；不得把 `payment.success` 放入 rule-data；不得把 ERROR 当 FALSE；不得在复合 Information 中写模型。
 
 ## P3 退出门禁
 
 - [ ] 全部 `mix` Information 编译；
 - [ ] 两套表达式严格隔离；
 - [ ] DAG、结果状态、materialize、增量失效有测试；
-- [ ] 输入依赖/read-set 可解释；
-- [ ] P4/P5 可稳定调用 InformationEngine；
-- [ ] 无 `dec-expand-declaration` 类型或运行时依赖。
+- [ ] P4/P5 可稳定调用 InformationEngine。
 
 ---
 
-# P4：Action、RuleView、输入契约与 Produce
+# P4：Action、RuleView 与 Produce
 
 ## P4 当前情况
 
-旧 Action 缺少统一执行上下文；`ref-rule` 与 `rule-ref` 混杂；自定义 Action SPI 不匹配业务 Action；核心 runtime 无 Produce 契约；Rule 执行结果不能表达输入、产物、mutation 和 evidence。
+旧 Action 缺少统一执行上下文；`ref-rule` 与 `rule-ref` 混杂；自定义 Action SPI 不匹配业务 Action；核心 runtime 无 Produce 契约；Rule 执行结果不能表达产物、mutation 和 evidence。
 
 ## P4 整改目标
 
-根据 `mix` 建立统一 Action Runtime、RuleView Invoker、CustomActionRegistry、ActionInput、ActionResult、ProduceVerifier 和失败策略。Produce/消费语义直接由统一核心契约定义，不迁移旧模块 SPI。
+建立统一 Action Runtime、RuleView Invoker、CustomActionRegistry、ActionResult、ProduceVerifier 和失败策略。
 
 ## P4 任务
 
 ### P4-T01 定义 Raw/Compiled Action
 
-- 包含 owner directory、system、rule/custom type、payload、required inputs、produce、failure policy 和 source。
+- 包含 owner directory、system、rule/custom type、payload、produce、failure policy 和 source。
 
 ### P4-T02 新旧属性策略
 
-- 新契约只用 `rule-ref`；`ref-rule` 仅现有核心配置的限期 adapter；同时出现必须报错。
+- 新契约只用 `rule-ref`；`ref-rule` 仅 legacy adapter；同时出现必须报错。
 
 ### P4-T03 定义 ActionExecutionContext
 
 - EngineContext、Directory、System、model、payload、InformationEngine、transaction、trace、deadline。
 
-### P4-T04 定义 ActionInput 与 ActionResult
+### P4-T04 定义 ActionResult
 
-- ActionInput：payload、model/view 引用、required Information、read-set。
-- ActionResult：status、produced data、MutationSet、payload、diagnostics、error、evidence；禁止 null 表示结果。
+- status、produced data、MutationSet、payload、diagnostics、error、evidence；禁止 null 表示结果。
 
 ### P4-T05 RuleViewActionInvoker
 
@@ -585,7 +511,7 @@ explain(key)
 
 ### P4-T08 定义 Produce
 
-- ref/type、information-ref、payload source、required、multiplicity、scope、source；只以 `mix` 为定义来源。
+- ref/type、information-ref、payload source、required、multiplicity、scope、source。
 
 ### P4-T09 ProduceVerifier
 
@@ -594,12 +520,12 @@ explain(key)
 ### P4-T10 Action Pipeline
 
 ```text
-validate input -> precondition -> invoke -> apply mutation -> invalidate -> verify produce -> verify directory information -> trace
+precondition -> invoke -> apply mutation -> invalidate -> verify produce -> verify directory information -> trace
 ```
 
 ### P4-T11 迁移 `mix` Action
 
-- saveOrder、startPay、receivePayResult、confirmPaySuccess、recordPyaError、smsNotify、confirmPayError、resetPayResult，以实际 `mix` 定义为准。
+- saveOrder、startPay、receivePayResult、confirmPaySuccess、recordPyaError、smsNotify、confirmPayError、resetPayResult。
 
 ### P4-T12 Rule 内部执行一致性
 
@@ -607,24 +533,19 @@ validate input -> precondition -> invoke -> apply mutation -> invalidate -> veri
 
 ### P4-T13 Action/Produce 测试
 
-- 成功、失败、输入缺失、未注册、Produce 缺失、Information 不成立、越权 mutation、trace。
-
-### P4-T14 废弃模块隔离检查
-
-- Action/Produce API、包依赖和服务发现不得引用 `dec-expand-declaration`；禁止复制其 Producer/Consumer/BusinessDeclare 类型。
+- 成功、失败、未注册、Produce 缺失、Information 不成立、越权 mutation、trace。
 
 ## P4 禁止事项
 
-不得建立全局静态 CustomActionRegistry；不得忽略 Produce；不得让 Action 自管独立事务；不得在 P4 实现 Directory 路径规划；不得复用旧模块 Producer/Consumer SPI。
+不得建立全局静态 CustomActionRegistry；不得忽略 Produce；不得让 Action 自管独立事务；不得在 P4 实现 Directory 路径规划。
 
 ## P4 退出门禁
 
 - [ ] `rule-ref` 全链路生效；
-- [ ] RuleView 与 Custom Action 共用 ActionInput/ActionResult；
+- [ ] RuleView与Custom Action 共用 ActionResult；
 - [ ] `mix` 关键 Action 可独立执行；
 - [ ] Produce 和权限校验可阻断；
-- [ ] mutation 触发 Information 失效；
-- [ ] Action/Produce 依赖树无废弃模块。
+- [ ] mutation 触发 Information 失效。
 
 ---
 
@@ -632,11 +553,11 @@ validate input -> precondition -> invoke -> apply mutation -> invalidate -> veri
 
 ## P5 当前情况
 
-旧 Directory 以 `view-ref`、Change、any-one、mutual-exclusion 为中心；`DirectoryContainer.execute()` 无完整实现；普通执行边与 case 边未区分；Dependency、Produce、Back、分类无统一运行时。
+旧 Directory 以 `view-ref`、Change、any-one、mutual-exclusion 为中心；`DirectoryContainer.execute()` 无完整实现；普通执行边与 case 边未区分；Dependency、Produce、Back、分类无运行时。
 
 ## P5 整改目标
 
-只根据 `mix` 将 Directory 编译为有类型图；实现 PathPlanner、状态机、DependencyGate、Action/Change/Produce/Postcondition、PayResult 分类、BackPlan 和 Trace。流程执行由统一 DirectoryEngine 负责，不调用任何旧 declaration workflow。
+将 Directory 编译为有类型图；实现 PathPlanner、状态机、DependencyGate、Action/Change/Produce/Postcondition、PayResult 分类、BackPlan 和 Trace。
 
 ## P5 任务
 
@@ -672,7 +593,7 @@ PLANNED -> CHECKING_DEPENDENCIES -> EXECUTING_ACTIONS -> APPLYING_CHANGE -> VERI
 
 ### P5-T08 DependencyGate
 
-- 调用 InformationEngine；FALSE/UNRESOLVED/ERROR 有确定处理；不隐式物化。
+- 调用 InformationEngine；FALSE/UNRESOLVED/ERROR有确定处理；不隐式物化。
 
 ### P5-T09 接入 ActionPipeline
 
@@ -712,15 +633,11 @@ PLANNED -> CHECKING_DEPENDENCIES -> EXECUTING_ACTIONS -> APPLYING_CHANGE -> VERI
 
 ### P5-T18 路径和分类错误测试
 
-- 直接 execute success、路径歧义、循环、case 多/零命中、paying 错标、Back 目标缺失、Dependency 失败。
-
-### P5-T19 `mix` 唯一流程来源检查
-
-- DirectoryCompiler、PathPlanner、ActionPipeline 和测试 fixture 只读取统一 Compiled AST；禁止调用旧 workflow callback、BusinessDeclare 或 ContextStorage。
+- 直接 execute success、路径歧义、循环、case 多/零命中、paying 错标、Back 目标缺失、Dependency失败。
 
 ## P5 禁止事项
 
-不得把 paying 当 case；不得把 case 当执行前置；不得恢复 predecessor；不得直接设置目录状态跳过路径；不得在 P5 写最终 SQL 查询；不得存在第二个流程执行器。
+不得把 paying 当 case；不得把 case 当执行前置；不得恢复 predecessor；不得直接设置目录状态跳过路径；不得在 P5 写最终 SQL 查询。
 
 ## P5 退出门禁
 
@@ -730,8 +647,7 @@ PLANNED -> CHECKING_DEPENDENCIES -> EXECUTING_ACTIONS -> APPLYING_CHANGE -> VERI
 - [ ] startPay 只在 paying；
 - [ ] PayResult 只接收分类；
 - [ ] success/error 唯一；
-- [ ] Trace 可还原完整路径；
-- [ ] 流程执行链不依赖废弃模块。
+- [ ] Trace 可还原完整路径。
 
 ---
 
@@ -743,7 +659,7 @@ PLANNED -> CHECKING_DEPENDENCIES -> EXECUTING_ACTIONS -> APPLYING_CHANGE -> VERI
 
 ## P6 整改目标
 
-DirectoryQuery 表达业务查询，QueryCompiler 从统一 `mix` Compiled AST 生成中立 QueryPlan，SQL/MySQL adapter 负责翻译；支持 case union/filter、关联、分页、参数化和解释能力。Query 不读取任何旧 declaration Context 或 Business runtime。
+DirectoryQuery 表达业务查询，QueryCompiler 生成中立 QueryPlan，SQL/MySQL adapter 负责翻译；支持 case union/filter、关联、分页、参数化和解释能力。
 
 ## P6 任务
 
@@ -803,13 +719,9 @@ DirectoryQuery 表达业务查询，QueryCompiler 从统一 `mix` Compiled AST �
 
 - 输出 selected cases、Information predicates、joins、pushdown、post-filter、route 和 SQL。
 
-### P6-T15 查询依赖边界测试
-
-- QueryCompiler 只能依赖 EngineContext、CompiledInformation、CompiledDirectory、View/Model metadata；依赖树中不得出现废弃模块或旧 ContextStorage。
-
 ## P6 禁止事项
 
-不得在 DirectoryEngine 直接写 SQL；不得硬编码状态或连接；不得强行把所有 Information 转 SQL；不得拼用户参数；core 不依赖 MySQL；不得读取旧 declaration 配置或运行时。
+不得在 DirectoryEngine 直接写 SQL；不得硬编码状态或连接；不得强行把所有 Information 转 SQL；不得拼用户参数；core 不依赖 MySQL。
 
 ## P6 退出门禁
 
@@ -819,26 +731,25 @@ DirectoryQuery 表达业务查询，QueryCompiler 从统一 `mix` Compiled AST �
 - [ ] 全参数化；
 - [ ] 无 `con1`；
 - [ ] Join/分页/runtime-only 有测试；
-- [ ] SQL 与 MySQL 分层；
-- [ ] 查询链只依赖统一 Compiled AST。
+- [ ] SQL 与 MySQL 分层。
 
 ---
 
-# P7：事务、会话与核心运行时收敛
+# P7：事务、会话与运行时收敛
 
 ## P7 当前情况
 
-`dec-core-model` 内仍存在多套 Session/Transaction 路径；新 Directory/Action/Produce/Query 缺少统一会话；错误、回滚、Back、外部副作用和资源生命周期边界未统一。`dec-expand-declaration` 已在 P1 退役，不属于本阶段迁移或能力抽取对象。
+`dec-core-model` 存在多套 Session/Transaction；`dec-expand-declaration` 有独立 Context、System、Business、Service、事务和 parser；新 Directory/Action/Produce 缺少统一会话；错误、回滚、Back 和补偿边界未统一。
 
 ## P7 整改目标
 
-建立一个 ExecutionSession 和 TransactionCoordinator；所有核心 runtime 共享会话；统一错误、回滚、外部副作用和资源释放。P7 只收敛现有核心模块，不建立旧模块 Adapter，不复制其 SPI。
+建立一个 ExecutionSession 和 TransactionCoordinator；所有 runtime 共享会话；统一错误与回滚；吸收 declaration 可复用 SPI，停止第二套正式引擎。
 
 ## P7 任务
 
-### P7-T01 盘点核心事务路径
+### P7-T01 盘点事务路径
 
-- 列出 SimpleSession、SessionExecuter、MultipleTranContainer、connection lifecycle、Rule/Directory/Query 事务入口，标记保留/适配/删除。
+- 列出 SimpleSession、SessionExecuter、transaction groups、declaration policy、connection lifecycle，标记保留/适配/删除。
 
 ### P7-T02 定义 ExecutionSession
 
@@ -862,23 +773,23 @@ DirectoryQuery 表达业务查询，QueryCompiler 从统一 `mix` Compiled AST �
 
 ### P7-T07 整合 DirectoryEngine
 
-- 每次执行绑定同一 Session；Action/Mutation/Information/Query/Trace/Transaction 共用上下文。
+- 每次执行绑定同一 Session；Action/Mutation/Information/Trace/Transaction 共用上下文。
 
-### P7-T08 定义 RuntimeComponentRegistry
+### P7-T08 抽取 declaration 能力
 
-- 实例级注册 Action、Recognizer、Materializer、Query adapter、Transaction resource provider；启动 readiness validation；禁止静态全局注册。
+- 保留 Produce/Consumer SPI、workflow callback、transaction policy 等思想，改造成核心 SPI。
 
-### P7-T09 定义 ExternalEffect 与 CompensationPolicy
+### P7-T09 LegacyDeclarationAdapter
 
-- 数据库事务外的短信、远程调用等副作用必须声明执行时机、幂等键、失败结果和补偿；不假装与数据库原子提交。
+- 旧配置转新 Raw AST/运行计划；输出不兼容诊断；明确删除版本。
 
-### P7-T10 统一资源生命周期
+### P7-T10 冻结旧入口
 
-- 连接、statement、result、cache、trace sink、插件资源均由 Session/Coordinator 按 outcome 关闭；重复 close 幂等。
+- 旧 ContextStorage、SystemBuilder、ServiceDeclare deprecated；文档不推荐；禁止新增 `mix` 能力。
 
-### P7-T11 废弃模块残留门禁
+### P7-T11 删除重复运行路径
 
-- 验证仓库、Reactor、依赖树、ServiceLoader、配置入口和运行时反射均不存在 `dec-expand-declaration`、LegacyDeclarationAdapter 或其复制类型。
+- adapter 覆盖后删除重复 parser、Context、空工厂和工具类；更新依赖和迁移说明。
 
 ### P7-T12 多 System 单事务测试
 
@@ -890,21 +801,21 @@ DirectoryQuery 表达业务查询，QueryCompiler 从统一 `mix` Compiled AST �
 
 ### P7-T14 并发 Session 隔离
 
-- cache、transaction、trace、model、plugin scope 不串。
+- cache、transaction、trace、model 不串。
 
 ## P7 禁止事项
 
-不得保留两套正式 Engine；不得把 Back 当数据库 rollback；不得默认宣称多数据源原子事务；不得重新引入、适配或复制 `dec-expand-declaration`；不得让外部副作用伪装成已提交事务的一部分。
+不得保留两套正式 Engine；不得把 Back 当数据库 rollback；不得默认宣称多数据源原子事务；不得在旧 runtime 继续新增功能；删除前必须有 adapter。
 
 ## P7 退出门禁
 
 - [ ] ExecutionSession/Coordinator 生效；
-- [ ] Directory/Action/Rule/Produce/Query 共用会话与事务；
-- [ ] 失败回滚和外部副作用有测试；
+- [ ] Directory/Action/Rule/Produce 共用事务；
+- [ ] 失败回滚有测试；
 - [ ] 错误模型统一；
-- [ ] RuntimeComponentRegistry 和资源生命周期生效；
-- [ ] 仓库和依赖树无废弃模块、Adapter 或复制 runtime；
-- [ ] 多 System、多数据源和并发隔离通过。
+- [ ] declaration 能力已抽取；
+- [ ] 第二套 runtime 删除或完全冻结；
+- [ ] 并发隔离通过。
 
 ---
 
@@ -912,21 +823,21 @@ DirectoryQuery 表达业务查询，QueryCompiler 从统一 `mix` Compiled AST �
 
 ## P8 当前情况
 
-XML/YAML 独立演进；legacy 与新契约并存；存在重复异常、工具、空 Factory、生成代码来源不清；文档/demo/API 未统一；尚无发布级性能、并发、热加载与安全验收；需要最终确认废弃模块及其概念残留已清除。
+XML/YAML 独立演进；legacy 与新契约并存；存在重复异常、工具、空 Factory、生成代码来源不清；文档/demo/API 未统一；尚无发布级性能、并发、热加载与安全验收。
 
 ## P8 整改目标
 
-XML/YAML 只作为同一 AST 的不同前端；同语义 digest 一致；删除 legacy/dead code；`mix` 成为正式契约；完成安全、性能、并发、热加载、模块退役审计与发布。
+XML/YAML 只作为同一 AST 的不同前端；同语义 digest 一致；删除 legacy/dead code；`mix` 成为正式契约；完成安全、性能、并发、热加载、迁移与发布。
 
 ## P8 任务
 
 ### P8-T01 完成 YAML Canonical Frontend
 
-- 转 CanonicalDocumentNode；业务校验共用 Compiler；source location 和错误码与 XML 一致。
+- 转 CanonicalDocumentNode；业务校验共用 Compiler；source location 和错误码与 XML一致。
 
 ### P8-T02 XML/YAML 等价 fixture
 
-- Data、View、System、BusinessScope、RuleView、Information、Directory、Action/Produce、Back 和完整 `mix`。
+- Data、View、System、RuleView、Information、Directory、Action/Produce、Back 和完整 `mix`。
 
 ### P8-T03 Compiled digest 对等
 
@@ -938,7 +849,7 @@ XML/YAML 只作为同一 AST 的不同前端；同语义 digest 一致；删除 
 
 ### P8-T05 清理重复和死代码
 
-- 重复 exception、拼写错误兼容、空 Factory、未使用 Config 槽位、重复 parser 工具、注释旧实现；扫描并删除废弃模块名称、artifact、包和复制实现残留。
+- 重复 exception、拼写错误兼容、空 Factory、未使用 Config 槽位、重复 parser 工具、注释旧实现、第二 runtime 残留。
 
 ### P8-T06 统一生成代码来源
 
@@ -950,7 +861,7 @@ XML/YAML 只作为同一 AST 的不同前端；同语义 digest 一致；删除 
 
 ### P8-T08 更新文档体系
 
-- architecture、design、parser/schema、compiler、runtime、System、BusinessScope、Information、Directory、Query、transaction、migration、examples。
+- architecture、design、parser/schema、compiler、runtime、System、Information、Directory、Query、transaction、migration、examples。
 
 ### P8-T09 性能基线
 
@@ -972,9 +883,9 @@ load -> isolated compile -> readiness validation -> atomic publish
 
 - XML XXE、YAML 类型注入、SQL 注入、expression 沙箱、reflection path、custom action 注册、日志脱敏、路径穿越。
 
-### P8-T13 最终退役与迁移报告
+### P8-T13 最终迁移报告
 
-- 保留/deprecated/删除 API，配置迁移，XML/YAML 差异和升级步骤；单列 `dec-expand-declaration` 删除范围、无 Adapter 决策、`mix` 场景重写清单和残留扫描结果。
+- 保留/deprecated/删除 API，配置迁移，declaration 迁移，XML/YAML 差异和升级步骤。
 
 ### P8-T14 全仓最终验收
 
@@ -983,24 +894,23 @@ load -> isolated compile -> readiness validation -> atomic publish
 ./mvnw -Pmysql-it verify
 ```
 
-并验证 Reactor 不含废弃模块，成功/失败/Back、三类查询、权限、digest、并发、热替换、性能、安全全部通过。
+并验证成功/失败/Back、三类查询、权限、digest、并发、热替换、性能、安全。
 
 ### P8-T15 发布准备
 
-- 版本、changelog、release notes、migration guide、artifact 清单、source/javadoc、tag、rollback；artifact 清单不得包含废弃模块。
+- 版本、changelog、release notes、migration guide、artifact 清单、source/javadoc、tag、rollback。
 
 ## P8 禁止事项
 
-不得保留两套业务校验；不得无限期接受旧属性；不得原地修改正在使用的 Context；不得用性能猜测代替测量；不得发布 `dec-expand-declaration`、Adapter 或兼容包；测试失败不得发布。
+不得保留两套业务校验；不得无限期接受旧属性；不得原地修改正在使用的 Context；不得用性能猜测代替测量；测试失败不得发布。
 
 ## P8 退出门禁
 
 - [ ] XML/YAML digest 一致；
-- [ ] legacy 明确拒绝或仅在限期核心 Config adapter；
+- [ ] legacy 明确拒绝或仅在限期 adapter；
 - [ ] `mix` 正式可执行；
 - [ ] 全仓测试、安全、并发、热替换、性能通过；
-- [ ] 迁移、退役和发布文档完成；
-- [ ] 仓库、Reactor、依赖树和 artifact 清单不存在 `dec-expand-declaration`；
+- [ ] 迁移和发布文档完成；
 - [ ] 不存在两套正式业务 runtime。
 
 ---
@@ -1019,7 +929,7 @@ load -> isolated compile -> readiness validation -> atomic publish
 | Directory 执行/Back | P5 | P1—P4 | 成功/失败/Back |
 | case 查询/QueryPlan | P6 | P3/P5 | SQL/MySQL contract |
 | 统一事务/Session | P7 | P4—P6 | rollback/concurrency |
-| `dec-expand-declaration` 整体退役 | P1，P8 复核 | P0 历史基线 | 仓库/Reactor/依赖树无残留 |
+| declaration 收敛 | P7 | P1—P6 | 单 runtime |
 | XML/YAML/清理/发布 | P8 | 全部 | release gate |
 
 ---
@@ -1035,7 +945,7 @@ load -> isolated compile -> readiness validation -> atomic publish
 - 合并两套 Information 表达式语言；
 - 允许 System 默认越权访问；
 - 改为业务代码生成主模式；
-- 重新引入 `dec-expand-declaration`、LegacyDeclarationAdapter 或第二套正式 runtime；
+- 保留两套正式 runtime；
 - 改变 find/eq 语义；
 - 改变多数据源事务承诺。
 
@@ -1089,7 +999,7 @@ P0—P8 全部完成必须同时满足：
 
 1. `mix/orm-config.xml` 可直接加载；
 2. XML/YAML 进入同一 AST 和 Compiler；
-3. System、BusinessScope、RuleView、Information、Directory、Action、Produce、Back 是统一核心中的正式编译模型，BusinessScope 不是独立项目；
+3. System、RuleView、Information、Directory、Action、Produce、Back 是正式编译模型；
 4. RuleView System 参与 Key、校验、执行和权限；
 5. Information 两套语言严格隔离；
 6. DAG、识别、物化、增量失效完整；
@@ -1102,7 +1012,7 @@ P0—P8 全部完成必须同时满足：
 13. 查询使用 QueryPlan、typed parameter、connection route；
 14. System 越权写被拒绝；
 15. Directory/Action/Rule/Produce 共用 Session 和事务；
-16. 不存在 `dec-expand-declaration`、LegacyDeclarationAdapter 或两套正式业务 runtime；
+16. 不存在两套正式业务 runtime；
 17. 无外部数据库可运行核心测试；
 18. XML/YAML digest 一致；
 19. EngineContext 可并发读取和原子热替换；

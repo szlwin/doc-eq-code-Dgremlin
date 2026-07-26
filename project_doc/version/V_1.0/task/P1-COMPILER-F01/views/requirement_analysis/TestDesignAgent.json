@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
   "kind": "DERIVED_VIEW",
-  "sourceInputDigest": "053bb3d752b60a5752cf388150deffa07f768b6e2b7a51561ce798e71bdaeb37",
+  "sourceInputDigest": "641932e9fc806ca133323b1569417a620d1946d672607119c7e63f95fa70c3d5",
   "targetId": "P1-COMPILER-F01",
   "version": "V_1.0",
   "phase": "requirement_analysis",
   "agent": "TestDesignAgent",
   "role": "REQUIRED_REVIEWER",
   "gateStatus": "PASSED",
-  "currentRevision": "REQAN-R03-DRAFT",
-  "currentArtifactStatus": "PENDING",
+  "currentRevision": "",
+  "currentArtifactStatus": "STALE",
   "predecessorRevisions": [
     {
       "phase": "requirement_confirmation",
-      "revision": "REQCONF-R02@d0868f1b679b",
+      "revision": "REQCONF-R04@c186ce681e1e",
       "status": "PASSED"
     }
   ],
   "openIssueIds": [],
   "activeTaskIds": [],
   "currentAttemptId": "",
-  "nextAction": "RequirementAnalysisAgent 基于 REQCONF-R02@d0868f1b679b 启动 TASK-P1-REQAN-001，形成 REQAN-R03；不得直接进入设计或开发。",
+  "nextAction": "开始 requirement_analysis 阶段",
   "nextAgent": "RequirementAnalysisAgent",
   "reviewProfileIds": [
     "requirement_analysis:TestDesignAgent"

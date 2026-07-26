@@ -725,6 +725,242 @@
 | 测试与验证 | 登记 Evidence 9 项；命令 Evidence 0 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-R2-001-I003-A001","blockers":[],"event_id":"EVENT-ATTEMPT-TASK-P1-R2-001-I003-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000230","EVD-000231","EVD-000232","EVD-000233","EVD-000234","EVD-000235","EVD-000236","EVD-000237","EVD-000238","EVD-000239","EVD-000240","EVD-000241"],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","issue_ids":[],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003","iteration_no":3,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-CR02/requirement.md","version/V_1.0/doc/P1-COMPILER-CR02/requirement_change.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md","version/V_1.0/requirement_list.md","version/V_1.0/task/P1-COMPILER-F01/decision_log.md","version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py","dec-demo/src/main/resources/mix/system/systems.xml","dec-demo/src/main/resources/mix/view/orm-view.xml","dec-demo/src/main/resources/mix/rule/user-rule.xml","dec-demo/src/main/resources/mix/business/order-business.xml","dec-demo/src/test/resources/mix/system/systems.xml","dec-demo/src/test/resources/mix/view/orm-view.xml","dec-demo/src/test/resources/mix/rule/user-rule.xml","dec-demo/src/test/resources/mix/business/order-business.xml","dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"],"next_action":"固定 REQCONF-R03 artifact revision，执行 RequirementAnalysisAgent 与 TestDesignAgent 独立 Review。","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R03@7a9c82bdc1db","phase":"requirement_confirmation","record_id":"WR-20260726-091612-TASK-P1-R2-001-PASSED","render_digest":"50fd5e80561b7f64bb9de0d3bbef8e8fde83bdd56352690e9dea7cfd822381f6","review_result_refs":[],"schema_version":3,"scope":"确认 System-owned Information 与跨 View 映射契约","source":"long_task.py finish-attempt","sql_change_summary":"无 / 未登记","stage_outcome_refs":[],"state_change":"TASK-P1-R2-001: RUNNING → PASSED","status":"PASSED","summary":"确认 Information 归属 System、仅引用本 System View；BusinessScope 仅编排；显式 model-access read/ref 映射已落地并通过 5 项 XML 契约测试。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:16:12+00:00","validation_summary":"登记 Evidence 12 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260726-091612-TASK-P1-R2-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T09:16:12+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 确认 System-owned Information 与跨 View 映射契约 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 确认 Information 归属 System、仅引用本 System View；BusinessScope 仅编排；显式 model-access read/ref 映射已落地并通过 5 项 XML 契约测试。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-R2-001: RUNNING → PASSED |
+| Task | TASK-P1-R2-001 |
+| Attempt | ATTEMPT-TASK-P1-R2-001-I003-A001 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003 / 3 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-R03@7a9c82bdc1db |
+| StageOutcome | 无 |
+| Evidence | EVD-000230、EVD-000231、EVD-000232、EVD-000233、EVD-000234、EVD-000235、EVD-000236、EVD-000237、EVD-000238、EVD-000239、EVD-000240、EVD-000241 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 固定 REQCONF-R03 artifact revision，执行 RequirementAnalysisAgent 与 TestDesignAgent 独立 Review。 |
+
+### 变更摘要
+
+- 确认 Information 归属 System、仅引用本 System View；BusinessScope 仅编排；显式 model-access read/ref 映射已落地并通过 5 项 XML 契约测试。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
+- `version/V_1.0/doc/P1-COMPILER-CR02/requirement.md`
+- `version/V_1.0/doc/P1-COMPILER-CR02/requirement_change.md`
+- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md`
+- `version/V_1.0/requirement_list.md`
+- `version/V_1.0/task/P1-COMPILER-F01/decision_log.md`
+- `version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py`
+- `dec-demo/src/main/resources/mix/system/systems.xml`
+- `dec-demo/src/main/resources/mix/view/orm-view.xml`
+- `dec-demo/src/main/resources/mix/rule/user-rule.xml`
+- `dec-demo/src/main/resources/mix/business/order-business.xml`
+- `dec-demo/src/test/resources/mix/system/systems.xml`
+- `dec-demo/src/test/resources/mix/view/orm-view.xml`
+- `dec-demo/src/test/resources/mix/rule/user-rule.xml`
+- `dec-demo/src/test/resources/mix/business/order-business.xml`
+- `dec-demo/src/test/java/dec/demo/contract/MixContractTest.java`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 12 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-REQCONF-001-I003-A001","blockers":[],"event_id":"EVENT-ATTEMPT-TASK-P1-REQCONF-001-I003-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000230","EVD-000231","EVD-000232","EVD-000240","EVD-000241"],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","issue_ids":[],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003","iteration_no":3,"modified_files_summary":[],"next_action":"由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R03@7a9c82bdc1db","phase":"requirement_confirmation","record_id":"WR-20260726-091831-TASK-P1-REQCONF-001-PASSED","render_digest":"66a7c4dd978e61d1b772e18255029cce7127e575117a2c506544a4f17f75c0c5","review_result_refs":[],"schema_version":3,"scope":"将稳定需求确认逻辑任务对齐到 REQCONF-R03","source":"long_task.py finish-attempt","sql_change_summary":"无 / 未登记","stage_outcome_refs":[],"state_change":"TASK-P1-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"稳定需求确认逻辑任务已对齐 REQCONF-R03，复用同一需求事实、Review 与 Evidence。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:18:31+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 0 项","version":"V_1.0"} -->
+## WR-20260726-091831-TASK-P1-REQCONF-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T09:18:31+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 将稳定需求确认逻辑任务对齐到 REQCONF-R03 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 稳定需求确认逻辑任务已对齐 REQCONF-R03，复用同一需求事实、Review 与 Evidence。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-REQCONF-001: RUNNING → PASSED |
+| Task | TASK-P1-REQCONF-001 |
+| Attempt | ATTEMPT-TASK-P1-REQCONF-001-I003-A001 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003 / 3 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-R03@7a9c82bdc1db |
+| StageOutcome | 无 |
+| Evidence | EVD-000230、EVD-000231、EVD-000232、EVD-000240、EVD-000241 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。 |
+
+### 变更摘要
+
+- 稳定需求确认逻辑任务已对齐 REQCONF-R03，复用同一需求事实、Review 与 Evidence。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 0 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-R2-001-I004-A001","blockers":[],"event_id":"EVENT-ATTEMPT-TASK-P1-R2-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000243","EVD-000244","EVD-000245","EVD-000246","EVD-000247","EVD-000248","EVD-000249","EVD-000250","EVD-000251"],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","issue_ids":[],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004","iteration_no":4,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-CR03/requirement.md","version/V_1.0/doc/P1-COMPILER-CR03/requirement_change.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md","version/V_1.0/requirement_list.md","version/V_1.0/task/P1-COMPILER-F01/decision_log.md","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md","version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py","dec-demo/src/main/resources/mix/system/systems.xml","dec-demo/src/main/resources/mix/view/orm-view.xml","dec-demo/src/test/resources/mix/system/systems.xml","dec-demo/src/test/resources/mix/view/orm-view.xml","dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"],"next_action":"由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R04 独立 Review。","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-R04@c186ce681e1e","phase":"requirement_confirmation","record_id":"WR-20260726-093418-TASK-P1-R2-001-PASSED","render_digest":"aff33dad214829465a072270fc79cf4dd0736273431bf7005cf6977c2f5d8146","review_result_refs":[],"schema_version":3,"scope":"确认 System-owned Information、跨 View 映射与 target-main 解析契约","source":"long_task.py finish-attempt","sql_change_summary":"无 / 未登记","stage_outcome_refs":[],"state_change":"TASK-P1-R2-001: RUNNING → PASSED","status":"PASSED","summary":"明确 ModelAccess 源路径与目标选择器：ref@property 先匹配目标 View.target-main，失败后精确查找 property path；删除 root-property，需求与 5 项 XML 契约测试通过。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:34:18+00:00","validation_summary":"登记 Evidence 9 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260726-093418-TASK-P1-R2-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T09:34:18+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 确认 System-owned Information、跨 View 映射与 target-main 解析契约 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 明确 ModelAccess 源路径与目标选择器：ref@property 先匹配目标 View.target-main，失败后精确查找 property path；删除 root-property，需求与 5 项 XML 契约测试通过。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-R2-001: RUNNING → PASSED |
+| Task | TASK-P1-R2-001 |
+| Attempt | ATTEMPT-TASK-P1-R2-001-I004-A001 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004 / 4 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-R04@c186ce681e1e |
+| StageOutcome | 无 |
+| Evidence | EVD-000243、EVD-000244、EVD-000245、EVD-000246、EVD-000247、EVD-000248、EVD-000249、EVD-000250、EVD-000251 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementAnalysisAgent |
+| 后续事项 | 由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R04 独立 Review。 |
+
+### 变更摘要
+
+- 明确 ModelAccess 源路径与目标选择器：ref@property 先匹配目标 View.target-main，失败后精确查找 property path；删除 root-property，需求与 5 项 XML 契约测试通过。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
+- `version/V_1.0/doc/P1-COMPILER-CR03/requirement.md`
+- `version/V_1.0/doc/P1-COMPILER-CR03/requirement_change.md`
+- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md`
+- `version/V_1.0/requirement_list.md`
+- `version/V_1.0/task/P1-COMPILER-F01/decision_log.md`
+- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
+- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
+- `version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py`
+- `dec-demo/src/main/resources/mix/system/systems.xml`
+- `dec-demo/src/main/resources/mix/view/orm-view.xml`
+- `dec-demo/src/test/resources/mix/system/systems.xml`
+- `dec-demo/src/test/resources/mix/view/orm-view.xml`
+- `dec-demo/src/test/java/dec/demo/contract/MixContractTest.java`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 9 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-REQCONF-001-I004-A001","blockers":[],"event_id":"EVENT-ATTEMPT-TASK-P1-REQCONF-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000243","EVD-000244","EVD-000245","EVD-000250","EVD-000251"],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","issue_ids":[],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004","iteration_no":4,"modified_files_summary":[],"next_action":"由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R04@c186ce681e1e","phase":"requirement_confirmation","record_id":"WR-20260726-093836-TASK-P1-REQCONF-001-PASSED","render_digest":"b1ebde919bc4f40413a6199277f1d0ad921daa621b8ae5d3c058f9136dce5a13","review_result_refs":[],"schema_version":3,"scope":"将稳定需求确认逻辑任务对齐到 REQCONF-R04","source":"long_task.py finish-attempt","sql_change_summary":"无 / 未登记","stage_outcome_refs":[],"state_change":"TASK-P1-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"稳定需求确认逻辑任务已对齐 REQCONF-R04，复用同一需求事实、命令证据与独立 Review。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:38:36+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 0 项","version":"V_1.0"} -->
+## WR-20260726-093836-TASK-P1-REQCONF-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T09:38:36+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 将稳定需求确认逻辑任务对齐到 REQCONF-R04 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 稳定需求确认逻辑任务已对齐 REQCONF-R04，复用同一需求事实、命令证据与独立 Review。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-REQCONF-001: RUNNING → PASSED |
+| Task | TASK-P1-REQCONF-001 |
+| Attempt | ATTEMPT-TASK-P1-REQCONF-001-I004-A001 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004 / 4 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-R04@c186ce681e1e |
+| StageOutcome | 无 |
+| Evidence | EVD-000243、EVD-000244、EVD-000245、EVD-000250、EVD-000251 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。 |
+
+### 变更摘要
+
+- 稳定需求确认逻辑任务已对齐 REQCONF-R04，复用同一需求事实、命令证据与独立 Review。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 0 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
