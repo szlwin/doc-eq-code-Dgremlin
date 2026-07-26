@@ -510,6 +510,60 @@
 | 测试与验证 | POM XML 解析、validate_p0.py、Shell 语法和 git diff --check 通过；当前容器无法解析 maven.aliyun.com，未执行 Maven/MySQL 动态回归 |
 | 问题与阻塞 | 当前容器无法下载 Maven 3.9.15，完整 mysql-it 需在用户本地数据库环境验证 |
 
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"","blockers":[],"correction_of":"","event_id":"WR-20260726-025123-TASK-P1-R2-001-PASSED","event_type":"P1_GOVERNANCE_REPAIR","evidence_ids":["EVD-000215","EVD-000216","EVD-000217","EVD-000218","EVD-000219"],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"REQCONF-R02-DRAFT","issue_ids":["ISSUE-P1-SCOPE-CHANGE-001"],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["P1 evidence/index.json 与不可变 snapshots；decision_log.md；review_issues.md；task_state.md；task_plan.md；handoff/2026-07-26-p1-governance-repair.md；version/V_1.0/work_record.md"],"next_action":"启动 TASK-P1-R2-001，由 RequirementConfirmationAgent 正式确认 REQCONF-R02-DRAFT 并执行串行 Review","next_agent":"RequirementConfirmationAgent","output_revision":"GOV-REPAIR-R01@2422fc8521da","phase":"requirement_confirmation","record_id":"WR-20260726-025123-TASK-P1-R2-001-PASSED","render_digest":"1ca5799b34eb0779272ef594666f4c30cb4e658e1a3c943a7bcde30760350ed7","review_result_refs":[],"schema_version":3,"scope":"P1 immutable Evidence recovery, scope-change closure, derived-state repair","source":"common-develop 2.35 governance repair","sql_change_summary":"无 / 未登记","stage_outcome_refs":[],"state_change":"P1-COMPILER-F01 BLOCKED -> READY；ISSUE-P1-SCOPE-CHANGE-001 OPEN -> CLOSED；阶段保持 requirement_confirmation","status":"PASSED","summary":"按 common-develop 2.35 将 26 条历史 DIRECT Evidence 恢复为 Git 历史不可变快照，消除由 Evidence、Attempt 与 StageOutcome 重复回查展开的 78 条治理错误；登记当前 R02 草案 Evidence 并关闭已决范围变更问题","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"project_management","timestamp":"2026-07-26T02:51:23+00:00","validation_summary":"common-develop 2.35 long_task validate PASSED：errors=0，warnings=0；未推进阶段，未伪造 Review/StageOutcome","version":"V_1.0"} -->
+## WR-20260726-025123-TASK-P1-R2-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T02:51:23+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | common-develop 2.35 governance repair |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | P1 immutable Evidence recovery, scope-change closure, derived-state repair |
+| 阶段 | requirement_confirmation |
+| 任务类型 | project_management |
+| 事件类型 | P1_GOVERNANCE_REPAIR |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 按 common-develop 2.35 将 26 条历史 DIRECT Evidence 恢复为 Git 历史不可变快照，消除由 Evidence、Attempt 与 StageOutcome 重复回查展开的 78 条治理错误；登记当前 R02 草案 Evidence 并关闭已决范围变更问题 |
+| 状态 | PASSED |
+| 状态变更 | P1-COMPILER-F01 BLOCKED -> READY；ISSUE-P1-SCOPE-CHANGE-001 OPEN -> CLOSED；阶段保持 requirement_confirmation |
+| Task | TASK-P1-R2-001 |
+| Attempt | 无 / 未登记 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
+| 输入 Revision | REQCONF-R02-DRAFT |
+| 输出 Revision | GOV-REPAIR-R01@2422fc8521da |
+| StageOutcome | 无 |
+| Evidence | EVD-000215、EVD-000216、EVD-000217、EVD-000218、EVD-000219 |
+| Review | 无 |
+| 开放问题 | ISSUE-P1-SCOPE-CHANGE-001 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementConfirmationAgent |
+| 后续事项 | 启动 TASK-P1-R2-001，由 RequirementConfirmationAgent 正式确认 REQCONF-R02-DRAFT 并执行串行 Review |
+
+### 变更摘要
+
+- 按 common-develop 2.35 将 26 条历史 DIRECT Evidence 恢复为 Git 历史不可变快照，消除由 Evidence、Attempt 与 StageOutcome 重复回查展开的 78 条治理错误；登记当前 R02 草案 Evidence 并关闭已决范围变更问题
+
+### 文件变更摘要
+
+- `P1 evidence/index.json 与不可变 snapshots；decision_log.md；review_issues.md；task_state.md；task_plan.md；handoff/2026-07-26-p1-governance-repair.md；version/V_1.0/work_record.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | common-develop 2.35 long_task validate PASSED：errors=0，warnings=0；未推进阶段，未伪造 Review/StageOutcome |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

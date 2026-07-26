@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "kind": "DERIVED_VIEW",
+  "sourceInputDigest": "0f45b747a765669e87c481c322a56a4e1f6822d656881fa88395e64a04ce0388",
+  "targetId": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "phase": "requirement_confirmation",
+  "agent": "ProjectManagerAgent",
+  "role": "PROJECT_MANAGER",
+  "gateStatus": "PASSED",
+  "currentRevision": "REQCONF-R02-DRAFT",
+  "currentArtifactStatus": "IN_PROGRESS",
+  "predecessorRevisions": [],
+  "openIssueIds": [],
+  "activeTaskIds": [],
+  "currentAttemptId": "",
+  "nextAction": "由 RequirementConfirmationAgent 启动 TASK-P1-R2-001，对 REQCONF-R02-DRAFT 执行正式需求确认和串行 Review。",
+  "nextAgent": "RequirementConfirmationAgent",
+  "reviewProfileIds": [],
+  "lazyLoad": {
+    "evidenceBodies": false,
+    "reviewBodies": false,
+    "snapshotBodies": false,
+    "evidenceCommand": "python3 scripts/evidence.py show --task-dir /mnt/data/work_project/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/P1-COMPILER-F01 --evidence-id {EVD_ID}",
+    "reviewCommand": "python3 scripts/manual_review.py show --task-dir /mnt/data/work_project/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/P1-COMPILER-F01 --review-result-ref {REV_ID}"
+  }
+}

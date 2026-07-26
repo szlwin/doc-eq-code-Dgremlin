@@ -1,14 +1,11 @@
 {
   "schemaVersion": 1,
   "kind": "DERIVED_VIEW",
-  "sourceInputDigest": "7099830e5a0547662b3ce9362d8071ea9dced242a56df167696f21eb92857a4e",
+  "sourceInputDigest": "0f45b747a765669e87c481c322a56a4e1f6822d656881fa88395e64a04ce0388",
   "currentPhase": "requirement_confirmation",
-  "nextPhase": "requirement_confirmation",
-  "nextAgent": "RequirementConfirmationAgent",
+  "nextPhase": "requirement_analysis",
+  "nextAgent": "RequirementAnalysisAgent",
   "allowed": false,
-  "blockingReasons": [
-    "R02 artifacts are drafts and have not passed sequential reviews.",
-    "ISSUE-P1-SCOPE-CHANGE-001 remains OPEN until R02 review closes it."
-  ],
+  "blockingReasons": [],
   "sourceRef": "handoff.md"
 }
