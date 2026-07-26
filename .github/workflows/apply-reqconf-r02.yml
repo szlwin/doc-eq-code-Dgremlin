@@ -24,8 +24,23 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .github/reqconf-r02-payload.part-* | base64 --decode > /tmp/reqconf-r02-changes.tar.gz
-          echo "f90a8c2c21dcd370f438178785f97126562a4087af95b9623a8c50c776220e32  /tmp/reqconf-r02-changes.tar.gz" | sha256sum -c -
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+
+          parts = sorted(Path('.github').glob('reqconf-r02-payload.part-*'))
+          if len(parts) != 4:
+              raise SystemExit(f'expected 4 payload parts, found {len(parts)}')
+          encoded = ''.join(path.read_text(encoding='utf-8').strip() for path in parts)
+          payload = base64.b64decode(encoded, validate=True)
+          digest = hashlib.sha256(payload).hexdigest()
+          expected = 'f90a8c2c21dcd370f438178785f97126562a4087af95b9623a8c50c776220e32'
+          if digest != expected:
+              raise SystemExit(f'payload sha256 mismatch: {digest}')
+          Path('/tmp/reqconf-r02-changes.tar.gz').write_bytes(payload)
+          print(f'payload verified: {digest}, bytes={len(payload)}')
+          PY
 
       - name: Commit content branch
         shell: bash
