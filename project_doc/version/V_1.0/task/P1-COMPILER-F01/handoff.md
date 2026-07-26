@@ -1,24 +1,21 @@
 # P1-COMPILER-F01 阶段交接
 
-## 已完成的设计调整草案
+## REQCONF-R02 正式结论
 
-- 基于实际 `dec-demo/src/main/resources/mix` 重写源图和定义模型；
-- 输出改为 `CompiledModelSet`；
-- 术语改为 `RawDefinition`；
-- Business 改为 `BusinessScope` 逻辑作用域；
-- P2～P7 语义进入显式 Deferred Registry；
-- 删除 declaration Adapter/迁移设计；
-- 新增模块整体退役和残留扫描门禁。
+- requirement_confirmation：`PASSED`；
+- 正式 Revision：`REQCONF-R02@d0868f1b679b`；
+- StageOutcome：`SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002`；
+- RequirementAnalysisAgent Review：`REV-000021 / PASSED`；
+- TestDesignAgent Review：`REV-000022 / PASSED`；
+- 开放 P0/P1 Issue：0。
 
 ## 当前状态
 
-`BLOCKED / requirement_confirmation / REQCONF-I002`
+- 当前阶段：`requirement_analysis`；
+- 当前任务：`TASK-P1-REQAN-001 / READY`；
+- 下一 Agent：`RequirementAnalysisAgent`；
+- 尚未启动需求分析 attempt。
 
-R02 文档是待评审草案，不等于阶段已经通过。必须依次完成 requirement_confirmation、requirement_analysis、business_model、design 和串行 Review，关闭 `ISSUE-P1-SCOPE-CHANGE-001` 后才能进入 test_design。
+## 输入边界
 
-## 当前草案 Revision
-
-- REQCONF-R02-DRAFT；
-- REQAN-R03-DRAFT；
-- BM-R02-DRAFT；
-- DESIGN-R02-DRAFT。
+需求分析必须以 `REQCONF-R02@d0868f1b679b` 为唯一上游 Revision，覆盖 15 条业务规则、7 项 AC、5 个异常场景和实际 `mix` 源图。不得恢复 `dec-expand-declaration`、不得建立 declaration Adapter、不得跳过分析直接进入设计或开发。

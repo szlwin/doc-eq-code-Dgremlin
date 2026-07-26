@@ -1,15 +1,21 @@
 {
   "schemaVersion": 1,
   "kind": "DERIVED_VIEW",
-  "sourceInputDigest": "0f45b747a765669e87c481c322a56a4e1f6822d656881fa88395e64a04ce0388",
-  "phase": "requirement_confirmation",
-  "ownerAgent": "RequirementConfirmationAgent",
+  "sourceInputDigest": "053bb3d752b60a5752cf388150deffa07f768b6e2b7a51561ce798e71bdaeb37",
+  "phase": "requirement_analysis",
+  "ownerAgent": "RequirementAnalysisAgent",
   "requiredReviewerAgents": [
-    "RequirementAnalysisAgent",
+    "BusinessModelAgent",
+    "DesignAgent",
     "TestDesignAgent"
   ],
-  "conditionalReviewerAgents": [],
-  "requiredPredecessors": [],
-  "revision": "REQCONF-R02-DRAFT",
-  "artifactStatus": "IN_PROGRESS"
+  "conditionalReviewerAgents": [
+    "CrossModuleIntegrationReviewAgent",
+    "ImpactAnalysisReviewAgent"
+  ],
+  "requiredPredecessors": [
+    "requirement_confirmation"
+  ],
+  "revision": "REQAN-R03-DRAFT",
+  "artifactStatus": "PENDING"
 }

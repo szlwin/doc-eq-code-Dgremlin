@@ -564,6 +564,167 @@
 | 测试与验证 | common-develop 2.35 long_task validate PASSED：errors=0，warnings=0；未推进阶段，未伪造 Review/StageOutcome |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-R2-001-I002-A001","blockers":[],"event_id":"EVENT-ATTEMPT-TASK-P1-R2-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000220","EVD-000221","EVD-000222","EVD-000223","EVD-000224","EVD-000226"],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","issue_ids":[],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-CR01/requirement_change.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md","version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json"],"next_action":"由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R02 串行独立 Review","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-R02@d0868f1b679b","phase":"requirement_confirmation","record_id":"WR-20260726-055335-TASK-P1-R2-001-PASSED","render_digest":"f8ea9d3350c2833f0b5ec9f05e86c8263a87c16ff1d93d775185221e6cc3002d","review_result_refs":[],"schema_version":3,"scope":"重新确认实际 mix 与模块退役范围","source":"long_task.py finish-attempt","sql_change_summary":"无 / 未登记","stage_outcome_refs":[],"state_change":"TASK-P1-R2-001: RUNNING → PASSED","status":"PASSED","summary":"REQCONF-R02 已按 common-develop 2.35 模板固化并通过需求确认机器校验；目标、范围、七项验收、失败边界和五项决策已锁定。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T05:53:35+00:00","validation_summary":"登记 Evidence 6 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260726-055335-TASK-P1-R2-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T05:53:35+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 重新确认实际 mix 与模块退役范围 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | REQCONF-R02 已按 common-develop 2.35 模板固化并通过需求确认机器校验；目标、范围、七项验收、失败边界和五项决策已锁定。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-R2-001: RUNNING → PASSED |
+| Task | TASK-P1-R2-001 |
+| Attempt | ATTEMPT-TASK-P1-R2-001-I002-A001 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-R02@d0868f1b679b |
+| StageOutcome | 无 |
+| Evidence | EVD-000220、EVD-000221、EVD-000222、EVD-000223、EVD-000224、EVD-000226 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementAnalysisAgent |
+| 后续事项 | 由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R02 串行独立 Review |
+
+### 变更摘要
+
+- REQCONF-R02 已按 common-develop 2.35 模板固化并通过需求确认机器校验；目标、范围、七项验收、失败边界和五项决策已锁定。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
+- `version/V_1.0/doc/P1-COMPILER-CR01/requirement_change.md`
+- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
+- `version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 6 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"","blockers":[],"correction_of":"","event_id":"WR-20260726-060420-TASK-P1-R2-001-PASSED","event_type":"PHASE_COMPLETED","evidence_ids":["EVD-000220","EVD-000221","EVD-000222","EVD-000223","EVD-000224","EVD-000226","EVD-000227","EVD-000228","EVD-000229"],"execution_mode":"SEQUENTIAL","git_checkpoint_refs":[],"input_revision":"P1-COMPILER-CR01","issue_ids":[],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["requirement.md、CR01 requirement.md、requirement_list.md、task plan/state、StageOutcome、handoff"],"next_action":"ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R02@d0868f1b679b","phase":"requirement_confirmation","record_id":"WR-20260726-060420-TASK-P1-R2-001-PASSED","render_digest":"c3c3319863ff54cc8682766f2335ec1ed4ef5cbb6c6c4374753c1566b3744eb0","review_result_refs":["REV-000021","REV-000022"],"schema_version":3,"scope":"P1-COMPILER-CR01","source":"common-develop-2.35","sql_change_summary":"无 / 未登记","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002"],"state_change":"requirement_confirmation IN_PROGRESS -> PASSED","status":"PASSED","summary":"REQCONF-R02 正式需求确认完成：目标、范围、七项验收、失败边界和五项持久决策已锁定，两个独立 Review 均通过。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T06:04:20+00:00","validation_summary":"requirement_doc=PASSED; long_task=PASSED; task_verify complete-phase=PASSED; open P0/P1=0","version":"V_1.0"} -->
+## WR-20260726-060420-TASK-P1-R2-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T06:04:20+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | common-develop-2.35 |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | P1-COMPILER-CR01 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | PHASE_COMPLETED |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | REQCONF-R02 正式需求确认完成：目标、范围、七项验收、失败边界和五项持久决策已锁定，两个独立 Review 均通过。 |
+| 状态 | PASSED |
+| 状态变更 | requirement_confirmation IN_PROGRESS -> PASSED |
+| Task | TASK-P1-R2-001 |
+| Attempt | 无 / 未登记 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
+| 输入 Revision | P1-COMPILER-CR01 |
+| 输出 Revision | REQCONF-R02@d0868f1b679b |
+| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002 |
+| Evidence | EVD-000220、EVD-000221、EVD-000222、EVD-000223、EVD-000224、EVD-000226、EVD-000227、EVD-000228、EVD-000229 |
+| Review | REV-000021、REV-000022 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis |
+
+### 变更摘要
+
+- REQCONF-R02 正式需求确认完成：目标、范围、七项验收、失败边界和五项持久决策已锁定，两个独立 Review 均通过。
+
+### 文件变更摘要
+
+- `requirement.md、CR01 requirement.md、requirement_list.md、task plan/state、StageOutcome、handoff`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | requirement_doc=PASSED; long_task=PASSED; task_verify complete-phase=PASSED; open P0/P1=0 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-REQCONF-001-I002-A001","blockers":[],"event_id":"EVENT-ATTEMPT-TASK-P1-REQCONF-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000220","EVD-000221","EVD-000222","EVD-000223","EVD-000224","EVD-000226","EVD-000227","EVD-000228","EVD-000229"],"execution_mode":"standard / sequential","git_checkpoint_refs":[],"input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","issue_ids":[],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":[],"next_action":"ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R02@d0868f1b679b","phase":"requirement_confirmation","record_id":"WR-20260726-060857-TASK-P1-REQCONF-001-PASSED","render_digest":"75f1a56c32604b7691d01f7accbda4f80e93b9567da9a4ae6fbfe244f5cb9be8","review_result_refs":[],"schema_version":3,"scope":"将稳定需求确认逻辑任务对齐到 REQCONF-R02","source":"long_task.py finish-attempt","sql_change_summary":"无 / 未登记","stage_outcome_refs":[],"state_change":"TASK-P1-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"稳定需求确认逻辑任务已与 REQCONF-R02 正式 Revision、两项独立 Review 和当前 StageOutcome 对齐，未产生第二套需求事实。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T06:08:57+00:00","validation_summary":"登记 Evidence 9 项；命令 Evidence 0 项","version":"V_1.0"} -->
+## WR-20260726-060857-TASK-P1-REQCONF-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-26T06:08:57+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 将稳定需求确认逻辑任务对齐到 REQCONF-R02 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 稳定需求确认逻辑任务已与 REQCONF-R02 正式 Revision、两项独立 Review 和当前 StageOutcome 对齐，未产生第二套需求事实。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-REQCONF-001: RUNNING → PASSED |
+| Task | TASK-P1-REQCONF-001 |
+| Attempt | ATTEMPT-TASK-P1-REQCONF-001-I002-A001 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-R02@d0868f1b679b |
+| StageOutcome | 无 |
+| Evidence | EVD-000220、EVD-000221、EVD-000222、EVD-000223、EVD-000224、EVD-000226、EVD-000227、EVD-000228、EVD-000229 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis |
+
+### 变更摘要
+
+- 稳定需求确认逻辑任务已与 REQCONF-R02 正式 Revision、两项独立 Review 和当前 StageOutcome 对齐，未产生第二套需求事实。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 9 项；命令 Evidence 0 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
@@ -573,13 +734,3 @@
 - `task_attempts.md` 保存单次执行细节；本文件仅保存版本级摘要与索引。
 - 更正通过新增记录并填写 `correction_of`，不得修改旧记录。
 - `validate-work-record` 会校验隐藏元数据、可读正文摘要和 SHA-256 一致性。
-
-事件类型：P0_FORMAL_LOCAL_VERIFICATION_PASSED
-任务：P0-T09
-状态：PASSED
-状态变更：P0-T09 REVIEWING → PASSED；P0 REVIEWING → PASSED
-Evidence：docs/remediation/P0/evidence/local-full-20260725T142126Z/
-被验证提交：16f02ac18a5dd384ef9aaf4aeb8d69cd9cb4a584
-验证结果：core_exit=0；mysql_exit=0；start_head=end_head
-下一 Agent：ProjectManagerAgent
-下一事项：处理 P1 Evidence/Review 门禁

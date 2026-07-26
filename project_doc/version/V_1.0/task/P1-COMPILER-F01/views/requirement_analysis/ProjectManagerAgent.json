@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "kind": "DERIVED_VIEW",
+  "sourceInputDigest": "053bb3d752b60a5752cf388150deffa07f768b6e2b7a51561ce798e71bdaeb37",
+  "targetId": "P1-COMPILER-F01",
+  "version": "V_1.0",
+  "phase": "requirement_analysis",
+  "agent": "ProjectManagerAgent",
+  "role": "PROJECT_MANAGER",
+  "gateStatus": "PASSED",
+  "currentRevision": "REQAN-R03-DRAFT",
+  "currentArtifactStatus": "PENDING",
+  "predecessorRevisions": [
+    {
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R02@d0868f1b679b",
+      "status": "PASSED"
+    }
+  ],
+  "openIssueIds": [],
+  "activeTaskIds": [],
+  "currentAttemptId": "",
+  "nextAction": "RequirementAnalysisAgent 基于 REQCONF-R02@d0868f1b679b 启动 TASK-P1-REQAN-001，形成 REQAN-R03；不得直接进入设计或开发。",
+  "nextAgent": "RequirementAnalysisAgent",
+  "reviewProfileIds": [],
+  "lazyLoad": {
+    "evidenceBodies": false,
+    "reviewBodies": false,
+    "snapshotBodies": false,
+    "evidenceCommand": "python3 scripts/evidence.py show --task-dir /mnt/data/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/P1-COMPILER-F01 --evidence-id {EVD_ID}",
+    "reviewCommand": "python3 scripts/manual_review.py show --task-dir /mnt/data/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/P1-COMPILER-F01 --review-result-ref {REV_ID}"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "valid": true,
+  "stage": "confirmation",
+  "path": "/mnt/data/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/P1-COMPILER-F01/requirement.md",
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "features": 1,
+    "businessRules": 15,
+    "crossFeatureRules": 0,
+    "acceptanceCriteria": 7,
+    "traceItems": 7,
+    "exceptionScenarios": 5,
+    "unresolvedPlaceholders": 0
+  }
+}

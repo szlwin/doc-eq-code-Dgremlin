@@ -129,6 +129,33 @@
     "iteration_no": 1,
     "is_current": false,
     "superseded_by": "P1-COMPILER-CR01/R02"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002",
+    "phase": "requirement_confirmation",
+    "round": "REQCONF-I002",
+    "status": "PASSED",
+    "produced_by_agent": "RequirementConfirmationAgent",
+    "input_revisions": {},
+    "output_revision": "REQCONF-R02@d0868f1b679b",
+    "evidence_ids": [
+      "EVD-000220",
+      "EVD-000221",
+      "EVD-000222",
+      "EVD-000223",
+      "EVD-000224",
+      "EVD-000226",
+      "EVD-000227",
+      "EVD-000228",
+      "EVD-000229"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-26T05:44:32+00:00",
+    "completed_at": "2026-07-26T06:01:35+00:00",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002",
+    "iteration_no": 2,
+    "is_current": true,
+    "superseded_by": ""
   }
 ]
 ```
