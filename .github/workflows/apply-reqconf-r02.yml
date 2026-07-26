@@ -43,18 +43,36 @@ jobs:
           PY
 
       - name: Commit content branch
+        id: commit_content
+        continue-on-error: true
         shell: bash
         run: |
-          set -euo pipefail
-          git fetch origin dev_all
-          git checkout -B agent/reqconf-r02-content-20260726 origin/dev_all
-          tar -xJf /tmp/reqconf-r02-changes.tar.xz -C .
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "docs: confirm REQCONF-R02"
-          fi
-          git push origin HEAD:agent/reqconf-r02-content-20260726
+          set -o pipefail
+          {
+            set -eux
+            git fetch origin dev_all
+            git checkout -B agent/reqconf-r02-content-20260726 origin/dev_all
+            tar -xJf /tmp/reqconf-r02-changes.tar.xz -C .
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git status --short
+            if git diff --cached --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "docs: confirm REQCONF-R02"
+            fi
+            git push origin HEAD:agent/reqconf-r02-content-20260726
+          } 2>&1 | tee /tmp/reqconf-r02-git.log
+
+      - name: Upload Git diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reqconf-r02-git-diagnostics
+          path: /tmp/reqconf-r02-git.log
+          if-no-files-found: error
+
+      - name: Enforce publish success
+        if: steps.commit_content.outcome != 'success'
+        run: exit 1
