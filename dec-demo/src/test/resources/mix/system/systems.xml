@@ -11,7 +11,8 @@
        ref@property 是目标 View 选择器：先精确匹配 View.target-main，
        未匹配时再按 View 的 property path 精确查找；
     4. 禁止模糊匹配、同名猜测和匹配失败后的静默降级；
-    5. BusinessScope 不拥有 Information，只引用 system-qualified InformationKey。
+    5. 同一 System 的 expression 可组合本 System Information；跨 System expression 由 common System 拥有；
+    6. BusinessScope 不拥有 Information，只引用 system-qualified InformationKey。
 -->
 <systems>
 
@@ -153,14 +154,6 @@
             </information>
 
             <information
-                    name="paySuccess"
-                    expression="
-                        payment.success
-                        and
-                        order.paySuccessStatus
-                    "/>
-
-            <information
                     name="payErrorStatus"
                     view-ref="OrderInfo"
                     rule-data="
@@ -177,14 +170,6 @@
                 </change-data>
 
             </information>
-
-            <information
-                    name="payError"
-                    expression="
-                        payment.error
-                        and
-                        order.payErrorStatus
-                    "/>
 
         </information-info>
 
@@ -259,6 +244,40 @@
                 <write path="payInfo.payDetailList"/>
             </model-access>
         </model-access-info>
+
+    </system>
+
+    <!--
+        common System 不直接拥有 Data、View 或 RuleView，只拥有跨 System 的组合 Information。
+        expression 必须使用 system-qualified InformationKey；common 本身不参与模型读写。
+    -->
+    <system name="common">
+
+        <data-info/>
+
+        <view-info/>
+
+        <rule-file-info/>
+
+        <information-info>
+
+            <information
+                    name="paySuccess"
+                    expression="
+                        payment.success
+                        and
+                        order.paySuccessStatus
+                    "/>
+
+            <information
+                    name="payError"
+                    expression="
+                        payment.error
+                        and
+                        order.payErrorStatus
+                    "/>
+
+        </information-info>
 
     </system>
 

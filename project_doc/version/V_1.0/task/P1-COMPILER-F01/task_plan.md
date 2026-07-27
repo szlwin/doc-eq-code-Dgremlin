@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 任务计划
 
-> 当前只登记 R02 活动任务；R01 历史保留在 StageOutcome、Review 和 Evidence 中。
+> 当前登记 R04 活动任务；R01～R03 历史保留在 StageOutcome、Review 和 Evidence 中。
 
 ```json task-plan
 [
@@ -13,7 +13,7 @@
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003",
     "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
     "title": "将稳定需求确认逻辑任务对齐到 REQCONF-R04",
-    "objective": "确认稳定需求确认逻辑任务复用 REQCONF-R03 的需求、Review、Evidence 与 StageOutcome，不产生并行事实",
+    "objective": "确认稳定需求确认逻辑任务复用 REQCONF-R04 的需求、Review、Evidence 与 StageOutcome，不产生并行事实",
     "phase": "requirement_confirmation",
     "status": "PASSED",
     "depends_on": [
@@ -49,7 +49,7 @@
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "稳定逻辑任务绑定 REQCONF-R03@7a9c82bdc1db，复用同一机器校验、Review 与 Evidence，不产生第二份需求事实"
+      "稳定逻辑任务绑定 REQCONF-R04@c186ce681e1e，复用同一机器校验、Review 与 Evidence，不产生第二份需求事实"
     ],
     "stop_conditions": [
       "不得生成与 REQCONF-R04 并行的需求确认 Revision"
@@ -73,9 +73,9 @@
     "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004",
     "iteration_no": 4,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-003",
-    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
+    "revision_reason": "用户已确认 REQCONF-R04 的 ModelAccess selector 规则，并进一步明确：跨多个 System 的 Information expression 由独立 common System 统一拥有；common Information 只组合 system-qualified InformationKey，不直接拥有 Data、View 或 RuleView。",
     "title": "重新分析 mix 源图与跨阶段影响",
-    "objective": "分析 System-owned Information、System-local View、显式跨 View 映射及 BusinessScope 编排边界对 P1 与 P2～P7 的影响",
+    "objective": "基于 REQCONF-R04 分析 System-owned Information、System-local View、显式跨 View 映射、common 跨 System Information expression 及 BusinessScope 编排边界对 P1 与 P2～P7 的影响",
     "phase": "requirement_analysis",
     "status": "REWORK",
     "depends_on": [
@@ -88,7 +88,7 @@
       "TestDesignAgent"
     ],
     "input_revisions": {
-      "requirement_confirmation": "REQCONF-R03@7a9c82bdc1db"
+      "requirement_confirmation": "REQCONF-R04@c186ce681e1e"
     },
     "allowed_files": [
       "version/V_1.0/doc/P1-COMPILER-F01/requirement.md",
@@ -96,7 +96,14 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
-      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md"
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
+      "dec-demo/src/main/resources/mix/system/systems.xml",
+      "dec-demo/src/main/resources/mix/business/order-business.xml",
+      "dec-demo/src/test/resources/mix/system/systems.xml",
+      "dec-demo/src/test/resources/mix/business/order-business.xml",
+      "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java",
+      "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py"
     ],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-001",
@@ -106,14 +113,17 @@
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
       "TR-P1-COMPILER-007",
-      "TR-P1-COMPILER-008"
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
     "flow_refs": [],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "REQAN-R04 对 REQCONF-R03 的 19 条业务规则、8 项 AC、6 个异常场景及实际 mix 源图完成可追踪分析",
+      "REQAN-R04 对 REQCONF-R04 的 20 条业务规则、9 项 AC、7 个异常场景、9 条追踪及实际 mix 源图完成可追踪分析",
       "明确 InformationKey 以 SystemKey 为所有权边界，BusinessScope 不拥有 Information",
+      "明确同一 System 内 expression 可组合本 System InformationKey；跨 System expression 必须由 common System 拥有并只引用 system-qualified InformationKey",
+      "systems.xml 中 common.paySuccess 与 common.payError 分别组合 payment 与 order Information，业务目录引用同步更新",
       "明确 model-access read/write/ref 的一对多映射、冲突、缺失与失败规则",
       "BusinessModelAgent、DesignAgent、TestDesignAgent 对同一 REQAN-R04 独立 Review 均为 PASSED",
       "requirement_analysis StageOutcome 为 PASSED，且无开放 P0/P1 issue"

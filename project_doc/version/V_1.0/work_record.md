@@ -961,6 +961,62 @@
 | 测试与验证 | 登记 Evidence 5 项；命令 Evidence 0 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-R04-GOVERNANCE-COMMON-INFORMATION-20260727","event_type":"GOVERNANCE_AND_COMMON_INFORMATION_UPDATED","execution_mode":"standard / sequential","input_revision":"REQCONF-R04@c186ce681e1e","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004","iteration_no":4,"modified_files_summary":["project_doc/version/V_1.0/work.md、task_plan.md、task_state.md、work_record.md","dec-demo mix systems/business 主测试配置与契约测试","DEC_COMPILER_mix_contract_inventory.md"],"next_action":"由 RequirementAnalysisAgent 基于 REQCONF-R04 启动 requirement_analysis I004。","next_agent":"RequirementAnalysisAgent","phase":"requirement_analysis","record_id":"WR-20260727-044216-GOVERNANCE-COMMON-INFORMATION-20260727-PASSED","render_digest":"cd52d5da592e29aa1f4e0c5d5bb09b466022dac4be286aedcd41198388aadde2","schema_version":4,"scope":"R04 任务治理、Git checkpoint 与跨 System Information expression","source":"用户要求；common-develop 2.40","state_change":"TASK-P1-REQAN-001: REQCONF-R03 → REQCONF-R04；git_checkpoint: false → true","status":"PASSED","summary":"清除旧 work_record.jsonl；TASK-P1-REQAN-001 已绑定 R04；启用 Git checkpoint；新增 common System 承载 common.paySuccess/common.payError 跨 System expression，并同步业务引用和契约测试。","target_id":"P1-COMPILER-F01","task_id":"GOVERNANCE-COMMON-INFORMATION-20260727","task_type":"project_management","timestamp":"2026-07-27T04:42:16+00:00","validation_summary":"Python contract 5/5 PASSED；20 个 mix XML 解析通过；主/测试 fixture 一致；task_verify 全部 PASSED；Maven 因 DNS 无法解析镜像而未执行。","version":"V_1.0"} -->
+## WR-20260727-044216-GOVERNANCE-COMMON-INFORMATION-20260727-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-27T04:42:16+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | 用户要求；common-develop 2.40 |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | R04 任务治理、Git checkpoint 与跨 System Information expression |
+| 阶段 | requirement_analysis |
+| 任务类型 | project_management |
+| 事件类型 | GOVERNANCE_AND_COMMON_INFORMATION_UPDATED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 清除旧 work_record.jsonl；TASK-P1-REQAN-001 已绑定 R04；启用 Git checkpoint；新增 common System 承载 common.paySuccess/common.payError 跨 System expression，并同步业务引用和契约测试。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-REQAN-001: REQCONF-R03 → REQCONF-R04；git_checkpoint: false → true |
+| Task | GOVERNANCE-COMMON-INFORMATION-20260727 |
+| Attempt | 无 / 未登记 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004 / 4 |
+| 输入 Revision | REQCONF-R04@c186ce681e1e |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementAnalysisAgent |
+| 后续事项 | 由 RequirementAnalysisAgent 基于 REQCONF-R04 启动 requirement_analysis I004。 |
+
+### 变更摘要
+
+- 清除旧 work_record.jsonl；TASK-P1-REQAN-001 已绑定 R04；启用 Git checkpoint；新增 common System 承载 common.paySuccess/common.payError 跨 System expression，并同步业务引用和契约测试。
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/work.md、task_plan.md、task_state.md、work_record.md`
+- `dec-demo mix systems/business 主测试配置与契约测试`
+- `DEC_COMPILER_mix_contract_inventory.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | Python contract 5/5 PASSED；20 个 mix XML 解析通过；主/测试 fixture 一致；task_verify 全部 PASSED；Maven 因 DNS 无法解析镜像而未执行。 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

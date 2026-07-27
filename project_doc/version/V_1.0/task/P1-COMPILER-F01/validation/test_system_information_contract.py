@@ -44,6 +44,14 @@ class SystemInformationContractTest(unittest.TestCase):
                 keys.add(f"{system_name}.{local_name}")
 
         self.assertEqual(16, len(keys))
+        self.assertEqual(set(), system_views["common"])
+        self.assertIn("common.paySuccess", keys)
+        self.assertIn("common.payError", keys)
+        self.assertNotIn("order.paySuccess", keys)
+        self.assertNotIn("order.payError", keys)
+        common = next(node for node in self.systems.findall("system") if node.attrib["name"] == "common")
+        self.assert_cross_system_expression(common, "paySuccess", "payment.success", "order.paySuccessStatus")
+        self.assert_cross_system_expression(common, "payError", "payment.error", "order.payErrorStatus")
         self.assertEqual({"UserInfo"}, system_views["user"])
         self.assertEqual([], self.business.findall(".//information-info"))
         self.assertEqual([], self.business.findall(".//information"))
@@ -52,6 +60,19 @@ class SystemInformationContractTest(unittest.TestCase):
             ref = element.attrib.get("information-ref")
             if ref:
                 self.assertIn(ref, keys)
+
+    def assert_cross_system_expression(
+        self, system: ET.Element, name: str, first_ref: str, second_ref: str
+    ) -> None:
+        info = next(
+            node for node in system.findall("./information-info/information")
+            if node.attrib["name"] == name
+        )
+        expression = info.attrib["expression"]
+        self.assertIn(first_ref, expression)
+        self.assertIn(second_ref, expression)
+        self.assertNotIn("view-ref", info.attrib)
+        self.assertNotIn("rule-ref", info.attrib)
 
     def test_user_shared_model_mapping_is_explicit(self) -> None:
         user = next(node for node in self.systems.findall("system") if node.attrib["name"] == "user")

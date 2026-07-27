@@ -75,6 +75,15 @@ class MixContractTest {
         }
 
         assertEquals(16, informationKeys.size(), "Expected all Information definitions to be System-owned");
+        assertEquals(Collections.emptySet(), systemViews.get("common"),
+                "common System must not own a View");
+        assertTrue(informationKeys.contains("common.paySuccess"));
+        assertTrue(informationKeys.contains("common.payError"));
+        assertFalse(informationKeys.contains("order.paySuccess"));
+        assertFalse(informationKeys.contains("order.payError"));
+        Element commonSystem = findByName(systemNodes, "common");
+        assertCrossSystemExpression(commonSystem, "paySuccess", "payment.success", "order.paySuccessStatus");
+        assertCrossSystemExpression(commonSystem, "payError", "payment.error", "order.payErrorStatus");
         assertEquals(Collections.singleton("UserInfo"), systemViews.get("user"),
                 "user System must not directly own OrderInfo");
 
@@ -115,6 +124,20 @@ class MixContractTest {
                         "BusinessScope must reference a system-qualified InformationKey: " + informationRef);
             }
         }
+    }
+
+    private void assertCrossSystemExpression(
+            Element commonSystem, String informationName, String firstRef, String secondRef) {
+        Element informationInfo = directChild(commonSystem, "information-info");
+        Element information = findByAttribute(
+                directChildren(informationInfo, "information"), "name", informationName);
+        String expression = information.getAttribute("expression");
+        assertTrue(expression.contains(firstRef), informationName + " must reference " + firstRef);
+        assertTrue(expression.contains(secondRef), informationName + " must reference " + secondRef);
+        assertTrue(information.getAttribute("view-ref").isEmpty(),
+                "common expression Information must not own a View");
+        assertTrue(information.getAttribute("rule-ref").isEmpty(),
+                "common expression Information must not own a RuleView");
     }
 
     private String resolveViewSelector(Element view, String selector) {

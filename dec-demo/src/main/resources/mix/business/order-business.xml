@@ -39,6 +39,7 @@
         - user.*    -> user System
         - order.*   -> order System
         - payment.* -> payment System
+        - common.*  -> common System（只组合跨 System Information expression）
 
         本文件只通过 system-qualified information-ref 使用这些 Information，
         不再定义或拥有 Information。
@@ -184,11 +185,11 @@
 
         <!--
             success 是 PayResult 的 case 子目录。
-            当 payment.success 成立时，执行成功结果处理。
+            当 common.paySuccess（payment.success 且 order.paySuccessStatus）成立时，执行成功结果处理。
         -->
         <directory
                 name="success"
-                information-ref="order.paySuccess"
+                information-ref="common.paySuccess"
                 model-ref="OrderInfo">
 
             <dependency-info>
@@ -208,11 +209,11 @@
 
         <!--
             error 是 PayResult 的 case 子目录。
-            当 payment.error 成立时，执行失败结果处理。
+            当 common.payError（payment.error 且 order.payErrorStatus）成立时，执行失败结果处理。
         -->
         <directory
                 name="error"
-                information-ref="order.payError"
+                information-ref="common.payError"
                 model-ref="OrderInfo">
 
             <dependency-info>

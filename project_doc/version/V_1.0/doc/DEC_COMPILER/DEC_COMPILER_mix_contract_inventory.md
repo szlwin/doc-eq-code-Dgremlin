@@ -30,19 +30,20 @@ dec-demo/src/main/resources/mix/
 3. `orm-view-file-info` 发现 `mix/view/`；
 4. `system-file-info` 显式发现 `mix/system/systems.xml`；
 5. `business-file-info` 显式发现 `mix/business/order-business.xml`；
-6. 每个 `<system>` 通过自己的 `rule-file-info` 发现 RuleView 文件，并直接拥有本 System 的 Information；
-7. Information 使用局部名称和本 System `view-ref`，外部以 `{system}.{information}` 引用；
-8. BusinessScope 只包含 Directory、Action、Produce、依赖和回退结构，不拥有 Information；
-9. `model-access/read|write/ref` 显式声明共享模型源路径与当前 System View 目标选择器的对应关系；
-10. `ref@property` 先精确匹配目标 View 的 `target-main`，未匹配时再精确查找 View property path。
+6. 业务 System 通过自己的 `rule-file-info` 发现 RuleView 文件，并直接拥有本 System 的 Information；
+7. `common` System 不拥有 Data、View 或 RuleView，只拥有引用多个 System InformationKey 的 expression 组合信息；
+8. Information 使用局部名称和本 System `view-ref`，外部以 `{system}.{information}` 引用；
+9. BusinessScope 只包含 Directory、Action、Produce、依赖和回退结构，不拥有 Information；
+10. `model-access/read|write/ref` 显式声明共享模型源路径与当前 System View 目标选择器的对应关系；
+11. `ref@property` 先精确匹配目标 View 的 `target-main`，未匹配时再精确查找 View property path。
 
 ## 3. 当前实物规模
 
 - Data：5 个（`user`、`order`、`orderDetail`、`pay`、`payDetail`）；
 - View：2 个（`UserInfo`、`OrderInfo`）；
-- System：3 个（`user`、`order`、`payment`）；
+- System：4 个（`user`、`order`、`payment`、`common`）；
 - RuleView：14 个；
-- System-owned Information：16 个（user 3、order 8、payment 5）；
+- System-owned Information：16 个（user 3、order 6、payment 5、common 2）；
 - Directory：5 个；
 - Action：8 个；
 - Produce：4 个；
@@ -53,7 +54,7 @@ dec-demo/src/main/resources/mix/
 
 | 文件 | 根元素 | SHA-256 |
 |---|---|---|
-| `business/order-business.xml` | `business-config` | `5b5a356a8cc5a22735d463ff3e63e05cfe928334b5d250edcef155c71794be40` |
+| `business/order-business.xml` | `business-config` | `d9f2669b035c284808a961e716971fc0a47a883852de3e3efbb86c0e6be159c6` |
 | `data/Order.xml` | `orm-data-mapping` | `7d2c4df419f2303f4d9cb8da164e0cb262311ed1b0c7405b0db693619660ad82` |
 | `data/Pay.xml` | `orm-data-mapping` | `cf3527673235995bb0dc49dd7327e1c9ac45f9565d6cab5a21437c0a9e585276` |
 | `data/User.xml` | `orm-data-mapping` | `7b92ee68356cd855405d85874fa867adb73f8d33a974c3a8df9955930c9ed15d` |
@@ -61,15 +62,15 @@ dec-demo/src/main/resources/mix/
 | `rule/order-rule.xml` | `orm-rule-mapping` | `194bc314412e71d365fe4b85cea87c689bc3c5e3662f7bc879c7c27cec4b9941` |
 | `rule/payment-rule.xml` | `orm-rule-mapping` | `6cca261d2dbf7068643c199611b29870cf3aeba42de0244293a8b59926059dc0` |
 | `rule/user-rule.xml` | `orm-rule-mapping` | `e90a401713a91bdfea28d3055233fd7e195aece337ecf0c5095968e8e51fbdb3` |
-| `system/systems.xml` | `systems` | `fd673f7328745a9548f390767ea465a6b9950614e8031d43fe2a276d02bafe69` |
+| `system/systems.xml` | `systems` | `90ea455c2826edb3bf2be4dfc778d70e6aee9110e49eabc9651bf0c4c30920ff` |
 | `view/orm-view.xml` | `orm-view-mapping` | `93e34e687c59debebbe427ee40822b23e986bc846efc686ee2c15df2d01422e0` |
 
 ## 5. P1 采用的事实
 
 - `mix` 是目标配置契约的 fixture 名称，不是硬编码运行路径；
 - Root、System、Business 和 Rule 文件形成源发现图；
-- RuleView 与 Information 均以 System 为直接所有权边界；
-- InformationKey 使用 `(SystemKey, localName)`，BusinessScope 通过 system-qualified ref 使用；
+- RuleView 与 Information 均以 System 为直接所有权边界；`common` 是仅承载跨 System expression 的组合所有者；
+- InformationKey 使用 `(SystemKey, localName)`，BusinessScope 通过 system-qualified ref 使用；跨 System expression 由 `common` System 组合已有 InformationKey；
 - 带 `view-ref` 的 Information 和 RuleView 只能引用所属 System 的 View；
 - 共享模型与 System View 的路径关系必须通过 `model-access/read|write/ref` 显式声明；
 - `read|write@path` 是共享模型源路径；`ref@property` 先匹配选定 View 的 `target-main`，失败后才精确查找 property path；
