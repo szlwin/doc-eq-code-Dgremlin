@@ -73,11 +73,11 @@
     "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004",
     "iteration_no": 4,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-003",
-    "revision_reason": "用户已确认 REQCONF-R04 的 ModelAccess selector 规则，并进一步明确：跨多个 System 的 Information expression 由独立 common System 统一拥有；common Information 只组合 system-qualified InformationKey，不直接拥有 Data、View 或 RuleView。",
+    "revision_reason": "REQCONF-R04 已确认 ModelAccess selector 规则；随后 common System 已落地，跨多个 System 的 Information expression 由 common 统一拥有。I004 需把该实物事实、确定性解析、Diagnostic、测试和 P2～P7 影响分析闭合。",
     "title": "重新分析 mix 源图与跨阶段影响",
     "objective": "基于 REQCONF-R04 分析 System-owned Information、System-local View、显式跨 View 映射、common 跨 System Information expression 及 BusinessScope 编排边界对 P1 与 P2～P7 的影响",
     "phase": "requirement_analysis",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-REQCONF-001"
     ],
@@ -103,7 +103,8 @@
       "dec-demo/src/test/resources/mix/system/systems.xml",
       "dec-demo/src/test/resources/mix/business/order-business.xml",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java",
-      "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py"
+      "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
+      "docs/_relations/dependency_impact.yaml"
     ],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-001",
@@ -132,10 +133,16 @@
       "dec-expand-declaration or second runtime reintroduced"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "REQAN-R04@7421b050ed44",
+    "validation_evidence_ids": [
+      "EVD-000252",
+      "EVD-000253",
+      "EVD-000254",
+      "EVD-000255",
+      "EVD-000256"
+    ]
   },
   {
     "id": "TASK-P1-BMODEL-001",

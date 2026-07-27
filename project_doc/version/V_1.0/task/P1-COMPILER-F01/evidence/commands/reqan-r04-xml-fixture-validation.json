@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 -c <REQAN-R04 XML/static fixture validation>",
+  "exit_code": 0,
+  "executed_at": "2026-07-27T05:29:59+00:00",
+  "revision": "REQAN-R04@7421b050ed44",
+  "output": "{'xmlFiles': 10, 'systems': ['user', 'order', 'payment', 'common'], 'informationCounts': {'user': 3, 'order': 6, 'payment': 5, 'common': 2}, 'commonExpressions': {'paySuccess': 'payment.successandorder.paySuccessStatus', 'payError': 'payment.errorandorder.payErrorStatus'}, 'fixturesMatch': True}\n",
+  "output_digest": "7e6533d62e1babb61749e21f6e6a9f858c0c6dce1933bc3ac9e0b2e08f7263e7"
+}

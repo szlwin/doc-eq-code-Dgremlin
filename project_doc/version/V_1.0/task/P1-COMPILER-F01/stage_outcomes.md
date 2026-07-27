@@ -214,6 +214,42 @@
     "iteration_no": 4,
     "is_current": true,
     "superseded_by": ""
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-I004",
+    "phase": "requirement_analysis",
+    "round": "REQAN-I004",
+    "status": "PASSED",
+    "produced_by_agent": "RequirementAnalysisAgent",
+    "input_revisions": {
+      "requirement_confirmation": "REQCONF-R04@c186ce681e1e"
+    },
+    "output_revision": "REQAN-R04@7421b050ed44",
+    "evidence_ids": [
+      "EVD-000252",
+      "EVD-000253",
+      "EVD-000254",
+      "EVD-000255",
+      "EVD-000256",
+      "EVD-000257",
+      "EVD-000258",
+      "EVD-000259",
+      "EVD-000260",
+      "EVD-000261",
+      "EVD-000262",
+      "EVD-000263",
+      "EVD-000264",
+      "EVD-000265",
+      "EVD-000266",
+      "EVD-000267"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-27T05:15:11+00:00",
+    "completed_at": "2026-07-27T05:41:14+00:00",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004",
+    "iteration_no": 4,
+    "is_current": true,
+    "superseded_by": ""
   }
 ]
 ```
