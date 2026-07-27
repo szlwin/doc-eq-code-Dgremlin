@@ -31,9 +31,9 @@ flows:
         id: "P1-COMPILER-F01"
         module: "COMPILER"
     ruleRefs:
-      - "BR-P1-COMPILER-004"
-      - "BR-P1-COMPILER-006"
-      - "BR-P1-COMPILER-011"
+      - "BR-P1-004"
+      - "BR-P1-006"
+      - "BR-P1-011"
     acceptanceRefs:
       - "AC-P1-COMPILER-001"
       - "AC-P1-COMPILER-002"
@@ -128,7 +128,7 @@ flows:
         differences:
           - "使用安全 XML 解析并捕获行列位置。"
         ruleRefs:
-          - "BR-P1-COMPILER-001"
+          - "BR-P1-001"
       -
         id: "FVAR-CONFIG-FORMAT-YAML"
         name: "YAML 前端"
@@ -136,7 +136,7 @@ flows:
         differences:
           - "使用受控 YAML Node 并捕获 Mark；P1 仅最小等价路径。"
         ruleRefs:
-          - "BR-P1-COMPILER-001"
+          - "BR-P1-001"
     failurePaths:
       -
         id: "FAIL-CONFIG-COMPILE-001"

@@ -33,7 +33,7 @@
 
 | 规则编码 | 规则摘要 | 关联需求 | 关联功能 |
 | --- | --- | --- | --- |
-| BR-P1-COMPILER-001 | 编译失败不得发布部分 EngineContext | P1-COMPILER | P1-COMPILER-F01 |
+| BR-P1-001 | 编译失败不得发布部分 EngineContext | P1-COMPILER | P1-COMPILER-F01 |
 
 ## 模块依赖
 
