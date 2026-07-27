@@ -354,6 +354,155 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-07-27T05:39:40+00:00",
       "reason": "四个 System 的参与者、顺序、一致性、失败补偿、人工恢复、观测和 Case 映射闭合。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-BM-REQ-001",
+      "acceptance_id": "AC-P1-COMPILER-008",
+      "statement": "RequirementReviewAgent 确认 BM-R04 完整覆盖 REQAN-R04 的目标、范围、九项验收、失败边界与关键决策，未引入 P2-P8 运行语义",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R04@1b19a0ba26b6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000273",
+        "EVD-000268",
+        "EVD-000270"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-07-27T08:40:45+00:00",
+      "reason": "BM-R04 与 REQAN-R04 的目标、范围、验收、失败边界和决策一致，未引入 P2-P8 运行语义。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-BM-BMR-001",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "BusinessModelReviewAgent 确认 BM-R04 的统一语言、对象、聚合、不变量、状态机、错误与生命周期形成唯一一致模型",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R04@1b19a0ba26b6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000268",
+        "EVD-000273",
+        "EVD-000274"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-07-27T08:41:29+00:00",
+      "reason": "BM-R04 的统一语言、对象分类、聚合、不变量、状态机、错误、关联生命周期和跨文档映射形成唯一一致模型。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-BM-DES-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "DesignReviewAgent 确认 BM-R04 足以支撑模块边界、原子发布、错误恢复、不可变 Context 与后续技术设计",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R04@1b19a0ba26b6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000273",
+        "EVD-000268",
+        "EVD-000270"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-07-27T08:41:31+00:00",
+      "reason": "BM-R04 提供足够的模块、事务、一致性、错误恢复、可观测和测试接缝设计输入，且无实现泄漏。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-BM-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-009",
+      "statement": "TestDesignAgent 确认 BM-R04 的正常、边界、异常、安全、并发、兼容、common 与 ModelAccess 路径均可转为执行 Case",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R04@1b19a0ba26b6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000270",
+        "EVD-000273"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-27T08:41:33+00:00",
+      "reason": "BM-R04 的正常、边界、异常、安全、并发、兼容、跨系统和恢复语义均具备可执行测试与非测试验证接缝。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-BM-IMP-001",
+      "acceptance_id": "AC-P1-COMPILER-007",
+      "statement": "ImpactAnalysisReviewAgent 确认模块退役、历史与在途 Context、影响传播、下游失效和验证映射完整",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R04@1b19a0ba26b6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000268",
+        "EVD-000273",
+        "EVD-000270"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-07-27T08:41:35+00:00",
+      "reason": "关联节点、方向、处置策略、历史与在途 Context、影响传播、下游失效和验证映射完整。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-BM-XMOD-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "CrossModuleIntegrationReviewAgent 确认 frontend、compiler、context、starter、demo 与 common/order/payment/user 的顺序、一致性、失败和恢复边界闭合",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R04@1b19a0ba26b6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000273",
+        "EVD-000268",
+        "EVD-000270"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-07-27T08:43:45+00:00",
+      "reason": "跨模块参与者、顺序、契约、一致性、重复/失败、恢复、观测与 Case 映射闭合。"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 追踪矩阵
 
-> REQAN-R04 分析完成，等待本阶段串行独立 Review。旧 Revision、Review 与 Evidence 保留为历史。
+> BM-R04 已通过六个串行独立 Review，9 条追踪均绑定稳定业务模型 ID 与当前 Evidence；旧 Revision、Review 与 Evidence 保留为历史。
 
 ```json traceability
 [
@@ -31,7 +31,14 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-COMPILER-SUCCESS",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-SECURE-FRONTEND",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ENT-MIX-SOURCE-GRAPH",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-001",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-002",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-012",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-SOURCE-DISCOVERY",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#4-mixsourceresolver",
@@ -43,7 +50,8 @@
       "CASE-P1-SECURITY-XML-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -57,9 +65,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-002",
@@ -87,7 +102,14 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-COMPILER-SUCCESS",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-SECURE-FRONTEND",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ENT-RAW-DEFINITION-SET",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-CANONICAL-DOCUMENT-NODE",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-012",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-CANONICALIZATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-RAW-BUILDER",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#5-canonicaldocumentnode",
@@ -98,7 +120,8 @@
       "CASE-P1-SECURITY-YAML-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -112,9 +135,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-003",
@@ -144,7 +174,17 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-COMPILER-INVALID-REFERENCE",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ENT-SYMBOL-TABLE",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-TYPED-KEY",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-INFORMATION-KEY",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-003",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-004",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-006",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-015",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-SYMBOL-REGISTRATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-REFERENCE-RESOLUTION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#7-key-与符号注册",
@@ -157,7 +197,8 @@
       "CASE-P1-COMMON-EXPRESSION-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -171,9 +212,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-004",
@@ -203,7 +251,14 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-COMMON-EXPRESSION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ENT-DEFERRED-REGISTRY",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-DEFERRED-DEFINITION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-005",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-008",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-DEFERRED-CLASSIFICATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#POL-DEFERRED-BOUNDARY",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#9-deferreddefinition",
@@ -214,7 +269,8 @@
       "CASE-P1-COMMON-CYCLE-DEFERRED-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -228,9 +284,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-005",
@@ -258,7 +321,19 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-COMPILER-SUCCESS",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-COMPILER-INVALID-REFERENCE",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-MULTI-CONTEXT-ISOLATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#AGG-PUBLISHED-CONTEXT",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ENT-COMPILED-MODEL-SET",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ENT-ENGINE-CONTEXT",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-DIGEST-PAIR",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-009",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-010",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-011",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-MODEL-PUBLICATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#POL-PUBLICATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#11-compiledmodelset",
@@ -271,7 +346,8 @@
       "CASE-P1-PUBLISH-ATOMIC-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -285,9 +361,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-006",
@@ -314,7 +397,11 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-MULTI-CONTEXT-ISOLATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ENT-CORE-CONFIG-PROJECTION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#AGG-PUBLISHED-CONTEXT",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-014",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#13-coreconfigprojection",
@@ -324,7 +411,8 @@
       "CASE-P1-PROJECTION-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -338,9 +426,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-007",
@@ -367,7 +462,11 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-RETIRE-DECLARATION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-013",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#POL-RETIREMENT",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ERR-MIX-RETIREMENT-RESIDUE",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#16-dec-expand-declaration-退役",
@@ -377,7 +476,8 @@
       "CASE-P1-RETIREMENT-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -391,9 +491,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-008",
@@ -426,7 +533,16 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-COMMON-EXPRESSION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-MODEL-ACCESS-TARGET-MAIN",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-INFORMATION-KEY",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-MODEL-ACCESS-BINDING",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-004",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-005",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-006",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#POL-INFORMATION-OWNERSHIP",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SVC-REFERENCE-RESOLUTION",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
@@ -438,7 +554,8 @@
       "CASE-P1-MODEL-ACCESS-VIEW-OWNER-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -454,9 +571,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   },
   {
     "id": "TR-P1-COMPILER-009",
@@ -484,7 +608,15 @@
       "docs/_relations/dependency_impact.yaml#crossModuleImplementation/CMI-P1-COMPILER-001"
     ],
     "business_model_refs": [
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-MODEL-ACCESS-TARGET-MAIN",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#SCN-MODEL-ACCESS-PROPERTY-FALLBACK",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#VO-MODEL-ACCESS-BINDING",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#INV-COMPILER-007",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#POL-MODEL-ACCESS-SELECTOR",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ERR-MIX-MODEL-ACCESS-NOT-FOUND",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ERR-MIX-MODEL-ACCESS-AMBIGUOUS",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml#ERR-MIX-MODEL-ACCESS-NON-COMPOSITE",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md#15-追踪映射"
     ],
     "design_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
@@ -496,7 +628,8 @@
       "CASE-P1-MODEL-ACCESS-VIEW-OWNER-001"
     ],
     "plan_task_ids": [
-      "TASK-P1-REQAN-001"
+      "TASK-P1-REQAN-001",
+      "TASK-P1-BMODEL-001"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -512,9 +645,16 @@
     ],
     "verification_evidence_ids": [],
     "verified_by_agents": [
-      "RequirementAnalysisAgent"
+      "RequirementAnalysisAgent",
+      "BusinessModelAgent",
+      "RequirementReviewAgent",
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "REQAN-R04 已完成规则、影响、Case 与跨模块映射分析；等待本阶段串行独立 Review。"
+    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
   }
 ]
 ```

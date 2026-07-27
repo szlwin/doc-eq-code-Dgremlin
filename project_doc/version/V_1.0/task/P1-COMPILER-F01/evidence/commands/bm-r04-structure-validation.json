@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 <inline BM-R04 schema/stable-id/traceability validator>",
+  "exit_code": 0,
+  "executed_at": "2026-07-27T08:32:40+00:00",
+  "revision": "BM-R04@1b19a0ba26b6",
+  "output": "{\n  \"status\": \"PASSED\",\n  \"revision\": \"BM-R04@1b19a0ba26b6\",\n  \"counts\": {\n    \"terms\": 14,\n    \"scenarios\": 8,\n    \"entities\": 8,\n    \"valueObjects\": 10,\n    \"aggregates\": 2,\n    \"invariants\": 15,\n    \"stateMachines\": 1,\n    \"services\": 7,\n    \"policies\": 6,\n    \"events\": 3,\n    \"businessErrors\": 23,\n    \"traceability\": 9\n  },\n  \"stableIdCount\": 97\n}\n",
+  "output_digest": "6417fd6e898a5d96cb9d3649b4cd5056775e2ebe565381a93f80b5472e6a043f"
+}
