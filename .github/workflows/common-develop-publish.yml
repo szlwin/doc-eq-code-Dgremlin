@@ -36,7 +36,9 @@ jobs:
           git checkout --detach refs/remotes/origin/publish
           CURRENT_SHA="$(git rev-parse HEAD)"
           git merge-base --is-ancestor "$EXPECTED_PARENT" "$CURRENT_SHA"
-          cat .common-develop-publish/chunk-*.b64 | base64 -d > /tmp/reqan-r04.bundle
+          cat .common-develop-publish/chunk-*.b64 | tr -cd 'A-Za-z0-9+/=' > /tmp/reqan-r04.b64
+          test "$(wc -c < /tmp/reqan-r04.b64)" -eq 95836
+          base64 -d /tmp/reqan-r04.b64 > /tmp/reqan-r04.bundle
           test "$(wc -c < /tmp/reqan-r04.bundle)" -eq 71875
           test "$(sha256sum /tmp/reqan-r04.bundle | awk '{print $1}')" = "$EXPECTED_BUNDLE_SHA256"
           git bundle verify /tmp/reqan-r04.bundle
