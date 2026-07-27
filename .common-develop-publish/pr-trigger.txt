@@ -1,2 +1,2 @@
 Publish verified requirement-analysis checkpoint 582ba62642cacc8e4622ea9b0560884575ff5d04
-retry=3
+retry=4
