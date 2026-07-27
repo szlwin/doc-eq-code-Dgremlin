@@ -1,0 +1,43 @@
+name: common-develop exact checkpoint publish
+
+on:
+  pull_request:
+    branches:
+      - dev_all
+    paths:
+      - .common-develop-publish-bm/pr-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify and publish exact checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euxo pipefail
+          EXPECTED_PARENT="582ba62642cacc8e4622ea9b0560884575ff5d04"
+          TARGET_SHA="aa0e171ab42759d5ba1c115d839396987efb5e0a"
+          EXPECTED_BUNDLE_SHA256="93f70d78e599ad433a8275cb9cefab231f04c94a527e2a1c0f691f2120e42f23"
+          git init repo
+          cd repo
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "+refs/heads/dev_all:refs/remotes/origin/dev_all" "+refs/heads/${HEAD_REF}:refs/remotes/origin/publish"
+          git checkout --detach refs/remotes/origin/publish
+          CURRENT_SHA="$(git rev-parse HEAD)"
+          git merge-base --is-ancestor "$EXPECTED_PARENT" "$CURRENT_SHA"
+          cat .common-develop-publish-bm/part-*.b64 | tr -cd 'A-Za-z0-9+/=' > /tmp/bm-r04.b64
+          test "$(wc -c < /tmp/bm-r04.b64)" -eq 75316
+          base64 -d /tmp/bm-r04.b64 > /tmp/bm-r04.bundle
+          test "$(wc -c < /tmp/bm-r04.bundle)" -eq 56487
+          test "$(sha256sum /tmp/bm-r04.bundle | awk '{print $1}')" = "$EXPECTED_BUNDLE_SHA256"
+          git bundle verify /tmp/bm-r04.bundle
+          git fetch /tmp/bm-r04.bundle refs/heads/common-develop-transfer-target
+          test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "$TARGET_SHA^")" = "$EXPECTED_PARENT"
+          git push origin "$TARGET_SHA:refs/heads/dev_all" --force
