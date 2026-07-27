@@ -1,0 +1,33 @@
+name: common-develop exact checkpoint publish
+
+on:
+  push:
+    branches:
+      - dev_all
+    paths:
+      - .common-develop-publish/trigger.json
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and publish exact checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED_PARENT="c026509005d806b0e60ad8d9c76f5333a25aba5c"
+          TARGET_SHA="582ba62642cacc8e4622ea9b0560884575ff5d04"
+          CURRENT_SHA="$(git rev-parse HEAD)"
+          git merge-base --is-ancestor "$EXPECTED_PARENT" "$CURRENT_SHA"
+          cat .common-develop-publish/chunk-*.b64 | base64 -d > /tmp/reqan-r04.bundle
+          git bundle verify /tmp/reqan-r04.bundle
+          git fetch /tmp/reqan-r04.bundle refs/heads/common-develop-transfer-target
+          test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "$TARGET_SHA^")" = "$EXPECTED_PARENT"
+          git push origin "$TARGET_SHA:refs/heads/dev_all" --force
