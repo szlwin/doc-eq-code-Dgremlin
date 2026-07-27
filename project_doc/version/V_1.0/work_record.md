@@ -1077,6 +1077,119 @@
 | 测试与验证 | 登记 Evidence 5 项；命令 Evidence 4 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P1-BMODEL-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-BMODEL-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000268","EVD-000269","EVD-000270","EVD-000271","EVD-000272","EVD-000273","EVD-000274"],"execution_mode":"git_checkpoint","input_revision":"REQAN-R04@7421b050ed44","iteration_id":"ITER-P1-COMPILER-F01-BUSINESS-MODEL-004","iteration_no":4,"modified_files_summary":["version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md"],"next_action":"由六个适用 Reviewer 对同一 BM-R04 串行独立评审","next_agent":"BusinessModelReviewAgent","output_revision":"BM-R04@1b19a0ba26b6","phase":"business_model","record_id":"WR-20260727-083732-TASK-P1-BMODEL-001-PASSED","render_digest":"ec272bea966699a2c0135f830ceca001cb4e7291d39034ac4b509c707e67a7bf","schema_version":4,"scope":"形成 REQAN-R04 对应的 Compiler 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P1-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-BMODEL-001","task_type":"business_model","timestamp":"2026-07-27T08:37:32+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260727-083732-TASK-P1-BMODEL-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-27T08:37:32+00:00 |
+| 执行 Agent | BusinessModelAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 形成 REQAN-R04 对应的 Compiler 业务模型 |
+| 阶段 | business_model |
+| 任务类型 | business_model |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-BMODEL-001: RUNNING → PASSED |
+| Task | TASK-P1-BMODEL-001 |
+| Attempt | ATTEMPT-TASK-P1-BMODEL-001-I004-A001 |
+| Iteration | ITER-P1-COMPILER-F01-BUSINESS-MODEL-004 / 4 |
+| 输入 Revision | REQAN-R04@7421b050ed44 |
+| 输出 Revision | BM-R04@1b19a0ba26b6 |
+| StageOutcome | 无 |
+| Evidence | EVD-000268、EVD-000269、EVD-000270、EVD-000271、EVD-000272、EVD-000273、EVD-000274 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | BusinessModelReviewAgent |
+| 后续事项 | 由六个适用 Reviewer 对同一 BM-R04 串行独立评审 |
+
+### 变更摘要
+
+- BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md`
+- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml`
+- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
+- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 3 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-BUSINESS-MODEL-I004-COMPLETED","event_type":"STAGE_COMPLETED","evidence_ids":["EVD-000268","EVD-000269","EVD-000270","EVD-000271","EVD-000272","EVD-000273","EVD-000274"],"execution_mode":"git_checkpoint","input_revision":"REQAN-R04@7421b050ed44","iteration_id":"ITER-P1-COMPILER-F01-BUSINESS-MODEL-004","iteration_no":4,"modified_files_summary":["DEC_COMPILER_business_model.md/yaml","traceability.md、task_plan.md、task_state.md、stage_outcomes.md","acceptance_assertions.json、evidence/reviews.jsonl、evidence_index.json"],"next_action":"由 DesignAgent 基于 BM-R04 启动 design I004。","next_agent":"DesignAgent","output_revision":"BM-R04@1b19a0ba26b6","phase":"business_model","record_id":"WR-20260727-084735-TASK-P1-BMODEL-001-PASSED","render_digest":"394789775de091c1302e42b7b5519ac2f16d1a0dd6426d64109c2d8fbd0e64bc","review_result_refs":["REV-000032","REV-000033","REV-000034","REV-000035","REV-000036","REV-000037"],"schema_version":4,"scope":"business_model I004 阶段完成","source":"common-develop 2.40 business_model gate","stage_outcome_refs":["SO-P1-COMPILER-F01-BUSINESS-MODEL-I004"],"state_change":"business_model: IN_PROGRESS → PASSED；Review: 6/6 PASSED","status":"PASSED","summary":"BM-R04 已冻结：97 个稳定模型 ID、15 条不变量、23 个稳定错误和 9 条追踪均闭合；六个独立 Reviewer 全部 PASSED。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-BMODEL-001","task_type":"business_model","timestamp":"2026-07-27T08:47:35+00:00","validation_summary":"JSON Schema、稳定 ID、Information/common/ModelAccess 契约、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。","version":"V_1.0"} -->
+## WR-20260727-084735-TASK-P1-BMODEL-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-27T08:47:35+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | common-develop 2.40 business_model gate |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | business_model I004 阶段完成 |
+| 阶段 | business_model |
+| 任务类型 | business_model |
+| 事件类型 | STAGE_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | BM-R04 已冻结：97 个稳定模型 ID、15 条不变量、23 个稳定错误和 9 条追踪均闭合；六个独立 Reviewer 全部 PASSED。 |
+| 状态 | PASSED |
+| 状态变更 | business_model: IN_PROGRESS → PASSED；Review: 6/6 PASSED |
+| Task | TASK-P1-BMODEL-001 |
+| Attempt | 无 / 未登记 |
+| Iteration | ITER-P1-COMPILER-F01-BUSINESS-MODEL-004 / 4 |
+| 输入 Revision | REQAN-R04@7421b050ed44 |
+| 输出 Revision | BM-R04@1b19a0ba26b6 |
+| StageOutcome | SO-P1-COMPILER-F01-BUSINESS-MODEL-I004 |
+| Evidence | EVD-000268、EVD-000269、EVD-000270、EVD-000271、EVD-000272、EVD-000273、EVD-000274 |
+| Review | REV-000032、REV-000033、REV-000034、REV-000035、REV-000036、REV-000037 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DesignAgent |
+| 后续事项 | 由 DesignAgent 基于 BM-R04 启动 design I004。 |
+
+### 变更摘要
+
+- BM-R04 已冻结：97 个稳定模型 ID、15 条不变量、23 个稳定错误和 9 条追踪均闭合；六个独立 Reviewer 全部 PASSED。
+
+### 文件变更摘要
+
+- `DEC_COMPILER_business_model.md/yaml`
+- `traceability.md、task_plan.md、task_state.md、stage_outcomes.md`
+- `acceptance_assertions.json、evidence/reviews.jsonl、evidence_index.json`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | JSON Schema、稳定 ID、Information/common/ModelAccess 契约、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

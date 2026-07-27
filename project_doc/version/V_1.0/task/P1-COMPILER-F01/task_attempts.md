@@ -391,6 +391,44 @@
     ],
     "summary": "完成 REQAN-R04：闭合 20 条业务规则、9 项 AC、7 个异常场景、9 条追踪；明确 common 跨 System expression、ModelAccess selector 和 P2-P8 影响边界。",
     "next_action": "由 BusinessModelAgent、DesignAgent、TestDesignAgent、ImpactAnalysisReviewAgent、CrossModuleIntegrationReviewAgent 对同一 REQAN-R04 串行独立 Review"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-BMODEL-001-I004-A001",
+    "task_id": "TASK-P1-BMODEL-001",
+    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-004",
+    "iteration_no": 4,
+    "attempt_no": 1,
+    "agent": "BusinessModelAgent",
+    "phase": "business_model",
+    "status": "PASSED",
+    "input_revision": "REQAN-R04@7421b050ed44",
+    "output_revision": "BM-R04@1b19a0ba26b6",
+    "started_at": "2026-07-27T08:24:08+00:00",
+    "completed_at": "2026-07-27T08:37:32+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000269",
+      "EVD-000271",
+      "EVD-000272"
+    ],
+    "evidence_ids": [
+      "EVD-000268",
+      "EVD-000269",
+      "EVD-000270",
+      "EVD-000271",
+      "EVD-000272",
+      "EVD-000273",
+      "EVD-000274"
+    ],
+    "summary": "BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。",
+    "next_action": "由六个适用 Reviewer 对同一 BM-R04 串行独立评审"
   }
 ]
 ```

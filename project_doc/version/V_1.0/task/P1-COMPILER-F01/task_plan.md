@@ -151,27 +151,35 @@
     "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-004",
     "iteration_no": 4,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-003",
-    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
-    "title": "重建 RawDefinition、CompiledModelSet 与 Deferred 模型",
-    "objective": "重建 RawDefinition、CompiledModelSet 与 Deferred 模型",
+    "revision_reason": "REQAN-R04 已闭合 common 跨 System expression、System-owned Information、ModelAccess target-main 优先解析、稳定 Diagnostic 与 P2～P8 Deferred 边界；I004 必须在保留历史 BM-R01/BM-R02 草案的前提下形成新的 BM-R04。",
+    "title": "形成 REQAN-R04 对应的 Compiler 业务模型",
+    "objective": "基于 REQAN-R04 建立 CompilationSession、RawDefinitionSet、TypedKey、ModelAccessBinding、DeferredDefinition、CompiledModelSet、EngineContext、Diagnostic 及 common 跨 System expression 的一致业务模型",
     "phase": "business_model",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-REQAN-001"
     ],
     "owner_agent": "BusinessModelAgent",
-    "reviewer_agents": [],
+    "reviewer_agents": [
+      "BusinessModelReviewAgent",
+      "DesignReviewAgent",
+      "RequirementReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
+    ],
     "input_revisions": {
-      "change_requirement": "P1-COMPILER-CR01",
-      "draft_design": "DESIGN-R02-DRAFT"
+      "requirement_analysis": "REQAN-R04@7421b050ed44"
     },
     "allowed_files": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml",
       "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
       "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md",
       "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_plan.md"
     ],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-001",
@@ -180,22 +188,40 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
     "flow_refs": [],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "R02 artifacts reviewed and internally consistent"
+      "BM-R04 以结构化 YAML 与等价 Markdown 建立 CompilationSession 和 PublishedContext 两个聚合边界，覆盖 RawDefinition、TypedKey、Deferred、Diagnostic 与原子发布",
+      "InformationKey 以 SystemKey 为所有权边界；BusinessScope 不拥有 Information；common 只允许跨 System expression Information 且不拥有 Data/View/RuleView/ModelAccess",
+      "ModelAccessBinding 明确 source path 与 target selector 分离，selector 先精确匹配 target-main，未命中时才逐段精确解析 property path，歧义或缺失均阻断发布",
+      "P2～P8 的 DeferredDefinition、责任阶段、已解析 Key、SourceRef、失败与恢复边界完整可追踪",
+      "九条 TR 均引用 BM-R04 稳定模型 ID，且六个适用 Reviewer 对同一 Revision 独立 PASSED",
+      "business_model StageOutcome 为 PASSED，无开放 P0/P1，并创建 Git checkpoint"
     ],
     "stop_conditions": [
-      "dec-expand-declaration or second runtime reintroduced"
+      "不得重新引入 dec-expand-declaration、兼容 Adapter 或第二运行时",
+      "不得让 BusinessScope 拥有 Information 或普通 System 组合跨 System expression",
+      "不得使用 root-property、模糊匹配、跨 View 搜索或静默降级",
+      "不得在 P1 提前实现 P3 Information DAG/evaluation、P4-P7 运行语义"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "BM-R04@1b19a0ba26b6",
+    "validation_evidence_ids": [
+      "EVD-000268",
+      "EVD-000269",
+      "EVD-000270",
+      "EVD-000271",
+      "EVD-000272",
+      "EVD-000273",
+      "EVD-000274"
+    ]
   },
   {
     "id": "TASK-P1-DESIGN-001",
@@ -204,19 +230,27 @@
     "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-004",
     "iteration_no": 4,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-DESIGN-003",
-    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
-    "title": "评审统一源图、Compiler Pipeline 与只读投影设计",
-    "objective": "评审统一源图、Compiler Pipeline 与只读投影设计",
+    "revision_reason": "BM-R04 已冻结 CompilationSession/PublishedContext 聚合、TypedKey、common 跨 System expression、ModelAccess target-main 优先解析、DeferredDefinition、Diagnostic 与 P2～P8 责任边界；DESIGN I004 必须基于同一模型形成可实现设计。",
+    "title": "形成 BM-R04 对应的 Compiler 技术设计",
+    "objective": "基于 BM-R04 设计统一源图、Canonical Frontend、RawDefinition/Symbol/Deferred Pipeline、ModelAccess selector、Diagnostic、CompiledModelSet、EngineContext 原子发布与只读投影接口",
     "phase": "design",
     "status": "REWORK",
     "depends_on": [
       "TASK-P1-BMODEL-001"
     ],
     "owner_agent": "DesignAgent",
-    "reviewer_agents": [],
+    "reviewer_agents": [
+      "ArchitectureReviewAgent",
+      "BusinessModelReviewAgent",
+      "DevelopAgent",
+      "RequirementReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
+    ],
     "input_revisions": {
-      "change_requirement": "P1-COMPILER-CR01",
-      "draft_design": "DESIGN-R02-DRAFT"
+      "requirement_analysis": "REQAN-R04@7421b050ed44",
+      "business_model": "BM-R04@1b19a0ba26b6"
     },
     "allowed_files": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
@@ -237,16 +271,25 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
     "flow_refs": [],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "R02 artifacts reviewed and internally consistent"
+      "DESIGN-R04 将 BM-R04 的 CompilationSession、PublishedContext、TypedKey、DeferredDefinition 与 Diagnostic 转为模块、接口和数据流设计",
+      "XML/YAML Frontend 只产出 CanonicalDocumentNode，不修改全局 Config；Compiler 不依赖 demo、SQL 或旧 declaration runtime",
+      "ModelAccessBinding 保持 source path 与 target selector 分离，并实现 target-main 精确优先、property path 精确回退与稳定错误",
+      "编译成功原子发布不可变 EngineContext；失败不发布部分 Registry，调用方持有的旧 Context 保持有效",
+      "九条 TR、设计接缝、并发/安全/兼容测试和跨模块实现步骤均可追踪到 BM-R04 稳定 ID"
     ],
     "stop_conditions": [
-      "dec-expand-declaration or second runtime reintroduced"
+      "不得重新引入 dec-expand-declaration、兼容 Adapter、静态 current Context 或第二 Registry",
+      "不得让 BusinessScope 拥有 Information，或让普通 System 接受跨 System expression",
+      "不得使用 root-property、模糊 selector、跨 View 搜索或静默降级",
+      "不得在 P1 设计中提前实现 P3～P7 运行时语义"
     ],
     "risk_triggers": [],
     "attempts": 0,
