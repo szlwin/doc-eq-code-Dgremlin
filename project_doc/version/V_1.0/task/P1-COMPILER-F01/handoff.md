@@ -1,28 +1,24 @@
 # P1-COMPILER-F01 阶段交接
 
-## REQCONF-R04 正式结论
+## 已完成
 
-- requirement_confirmation：`PASSED`；
-- 正式 Revision：`REQCONF-R04@c186ce681e1e`；
-- `read|write@path` 表示共享模型源路径；
-- `ref@view` 选择当前 System View；
-- `ref@property` 先精确匹配目标 View 的 `target-main`，未匹配时再精确查找 property path；
-- `root-property` 已删除，不作为第二根别名；
-- RequirementAnalysisAgent Review：`REV-000025 / PASSED`；
-- TestDesignAgent Review：`REV-000026 / PASSED`；
-- 开放 P0/P1 Issue：0。
+- requirement_analysis I004 已完成；
+- 输出 Revision：`REQAN-R04@7421b050ed44`；
+- StageOutcome：`SO-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-I004`，PASSED；
+- Review：`REV-000027`～`REV-000031` 全部 PASSED；
+- 开放 P0/P1：0。
 
-## 当前状态
+## 下一阶段
 
-- 下一阶段：`requirement_analysis`；
-- 下一任务：`TASK-P1-REQAN-001`；
-- 下一 Agent：`RequirementAnalysisAgent`；
-- 需求分析 attempt 尚未启动。
+- 下一阶段：`business_model` I004；
+- 下一 Agent：`BusinessModelAgent`；
+- 输入 Revision：`REQAN-R04@7421b050ed44`；
+- 详细恢复信息：`handoff/2026-07-27-requirement-analysis-i004-complete.md`。
 
-## 输入边界
+## 冻结边界
 
-需求分析必须以 `REQCONF-R04@c186ce681e1e` 为唯一需求确认输入，区分共享模型源路径与目标 View selector，并补全 target-main 主匹配、property path 回退、未匹配/歧义 Diagnostic、多 ref 规则和对 RawDefinition/Registry 的影响。
-
-## 验证限制
-
-独立 Python XML 契约测试 5/5 通过；Java JUnit 测试代码已同步，但当前环境未执行 Maven/JUnit。
+1. Information 由 System 拥有，BusinessScope 只编排；
+2. 跨 System expression 只归 `common`；
+3. `common` 不拥有 Data、View、RuleView 或 ModelAccess；
+4. selector 先精确匹配 `target-main`，再精确回退 property path；
+5. 禁止模糊匹配、跨 View 搜索和静默降级。
