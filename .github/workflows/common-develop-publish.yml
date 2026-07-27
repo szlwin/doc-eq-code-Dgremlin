@@ -6,6 +6,11 @@ on:
       - dev_all
     paths:
       - .common-develop-publish/trigger.json
+  pull_request:
+    branches:
+      - dev_all
+    paths:
+      - .common-develop-publish/pr-trigger.txt
 
 permissions:
   contents: write
