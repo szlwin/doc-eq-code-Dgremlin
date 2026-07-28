@@ -52,7 +52,7 @@
     "axis": "ARCHITECTUREREVIEW",
     "severity": "P1",
     "confidence": 9,
-    "status": "OPEN",
+    "status": "CLOSED",
     "phase": "design",
     "round": "DESIGN-I004",
     "artifact_revision": "DESIGN-R04@1c14c8e89779",
@@ -70,17 +70,24 @@
     "question_to": [
       "DesignAgent"
     ],
-    "responses": [],
+    "responses": [
+      {
+        "agent": "ArchitectureReviewAgent",
+        "revision": "DESIGN-R05@0b37a9b4dd48",
+        "response": "replacement revision passed independent re-review",
+        "created_at": "2026-07-28T22:54:13+08:00"
+      }
+    ],
     "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
     "affected_artifacts": [
       "design"
     ],
     "affected_trace_ids": [],
-    "decision": "",
-    "resolution_revision": "",
-    "resolution_evidence": "",
-    "verified_by_agent": "",
-    "verified_at": "",
+    "decision": "replacement revision verified",
+    "resolution_revision": "DESIGN-R05@0b37a9b4dd48",
+    "resolution_evidence": "EVD-000284",
+    "verified_by_agent": "ArchitectureReviewAgent",
+    "verified_at": "2026-07-28T22:54:13+08:00",
     "defer_reason": ""
   },
   {
@@ -89,7 +96,7 @@
     "axis": "ARCHITECTUREREVIEW",
     "severity": "P1",
     "confidence": 9,
-    "status": "OPEN",
+    "status": "CLOSED",
     "phase": "design",
     "round": "DESIGN-I004",
     "artifact_revision": "DESIGN-R04@1c14c8e89779",
@@ -107,17 +114,24 @@
     "question_to": [
       "DesignAgent"
     ],
-    "responses": [],
+    "responses": [
+      {
+        "agent": "ArchitectureReviewAgent",
+        "revision": "DESIGN-R05@0b37a9b4dd48",
+        "response": "replacement revision passed independent re-review",
+        "created_at": "2026-07-28T22:54:13+08:00"
+      }
+    ],
     "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
     "affected_artifacts": [
       "design"
     ],
     "affected_trace_ids": [],
-    "decision": "",
-    "resolution_revision": "",
-    "resolution_evidence": "",
-    "verified_by_agent": "",
-    "verified_at": "",
+    "decision": "replacement revision verified",
+    "resolution_revision": "DESIGN-R05@0b37a9b4dd48",
+    "resolution_evidence": "EVD-000284",
+    "verified_by_agent": "ArchitectureReviewAgent",
+    "verified_at": "2026-07-28T22:54:13+08:00",
     "defer_reason": ""
   },
   {
@@ -126,7 +140,7 @@
     "axis": "ARCHITECTUREREVIEW",
     "severity": "P1",
     "confidence": 9,
-    "status": "OPEN",
+    "status": "CLOSED",
     "phase": "design",
     "round": "DESIGN-I004",
     "artifact_revision": "DESIGN-R04@1c14c8e89779",
@@ -144,17 +158,24 @@
     "question_to": [
       "DesignAgent"
     ],
-    "responses": [],
+    "responses": [
+      {
+        "agent": "ArchitectureReviewAgent",
+        "revision": "DESIGN-R05@0b37a9b4dd48",
+        "response": "replacement revision passed independent re-review",
+        "created_at": "2026-07-28T22:54:13+08:00"
+      }
+    ],
     "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
     "affected_artifacts": [
       "design"
     ],
     "affected_trace_ids": [],
-    "decision": "",
-    "resolution_revision": "",
-    "resolution_evidence": "",
-    "verified_by_agent": "",
-    "verified_at": "",
+    "decision": "replacement revision verified",
+    "resolution_revision": "DESIGN-R05@0b37a9b4dd48",
+    "resolution_evidence": "EVD-000284",
+    "verified_by_agent": "ArchitectureReviewAgent",
+    "verified_at": "2026-07-28T22:54:13+08:00",
     "defer_reason": ""
   },
   {
@@ -163,7 +184,7 @@
     "axis": "ARCHITECTUREREVIEW",
     "severity": "P1",
     "confidence": 9,
-    "status": "OPEN",
+    "status": "CLOSED",
     "phase": "design",
     "round": "DESIGN-I004",
     "artifact_revision": "DESIGN-R04@1c14c8e89779",
@@ -181,17 +202,24 @@
     "question_to": [
       "DesignAgent"
     ],
-    "responses": [],
+    "responses": [
+      {
+        "agent": "ArchitectureReviewAgent",
+        "revision": "DESIGN-R05@0b37a9b4dd48",
+        "response": "replacement revision passed independent re-review",
+        "created_at": "2026-07-28T22:54:13+08:00"
+      }
+    ],
     "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
     "affected_artifacts": [
       "design"
     ],
     "affected_trace_ids": [],
-    "decision": "",
-    "resolution_revision": "",
-    "resolution_evidence": "",
-    "verified_by_agent": "",
-    "verified_at": "",
+    "decision": "replacement revision verified",
+    "resolution_revision": "DESIGN-R05@0b37a9b4dd48",
+    "resolution_evidence": "EVD-000284",
+    "verified_by_agent": "ArchitectureReviewAgent",
+    "verified_at": "2026-07-28T22:54:13+08:00",
     "defer_reason": ""
   }
 ]

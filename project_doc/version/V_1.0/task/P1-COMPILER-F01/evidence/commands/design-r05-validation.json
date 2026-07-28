@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "DESIGN-R05 revision, Java 8 API, ownership, source graph, timing, digest, dependency impact, business flow, MixContractTest, document layout, and diff validation suite",
+  "exit_code": 0,
+  "executed_at": "2026-07-28T14:47:52Z",
+  "revision": "DESIGN-R05@0b37a9b4dd48",
+  "output": "DESIGN-R05 frozen revision digest PASSED; Java 8 API scan PASSED; compiler-owned compileAndPublish/publication contract markers PASSED; SourceGraphEdge/timing/semanticDigest contract markers PASSED; dependency impact PASSED; business flow PASSED; MixContractTest 2/2 PASSED; Maven reactor BUILD SUCCESS with Java 8 enforcer; document layout PASSED; git diff check PASSED. Current reactor still contains dec-expand-declaration as the pre-implementation baseline; retirement remains an implementation acceptance condition.",
+  "output_digest": "d0c96eb1ad1d0f5a8f5b9829847d6a35b5b5df0a62fdebb136c68dfcd3bb487b"
+}

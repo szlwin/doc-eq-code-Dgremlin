@@ -343,6 +343,28 @@
     "open_risks": [],
     "started_at": "2026-07-28T22:19:17+08:00",
     "completed_at": "2026-07-28T22:32:19+08:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-DESIGN-I007",
+    "phase": "design",
+    "round": "DESIGN-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "DesignAgent",
+    "input_revisions": {
+      "business_model": "BM-R05@4ecb1f8c09f4"
+    },
+    "output_revision": "DESIGN-R05@0b37a9b4dd48",
+    "evidence_ids": [
+      "EVD-000284",
+      "EVD-000283"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-28T22:52:09+08:00",
+    "completed_at": "2026-07-28T23:00:14+08:00"
   }
 ]
 ```

@@ -323,6 +323,171 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-07-28T22:25:13+08:00",
       "reason": "跨模块调用路径明确由 frontend 进入 compiler，compiler 在单次调用内通过注入的 publisher 原子发布；幂等、超时、部分失败、运行验证和恢复语义完整。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-DES-REQ-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "RequirementReviewAgent 确认 DESIGN-R05 完整承接 REQAN-R05 的范围、Java 8 约束、源图、原子发布和失败语义且无需求漂移",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000284"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-07-28T22:55:47+08:00",
+      "reason": "DESIGN-R05 完整承接 REQAN-R05 的 P1 范围、Java 8 约束、精确源图、原子发布、失败隔离、Diagnostic 与追踪要求，未引入需求漂移。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-DES-BMR-001",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "BusinessModelReviewAgent 确认 DESIGN-R05 无歧义实现 BM-R05 的聚合、不变量、状态机、服务、策略和错误语义",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000284"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-07-28T22:55:54+08:00",
+      "reason": "DESIGN-R05 将 BM-R05 的 CompilationSession、PublishedContext、TypedKey、Deferred、Diagnostic、不变量和状态转换映射为明确的模块、接口和失败路径。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-DES-ARCH-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "ArchitectureReviewAgent 确认 DESIGN-R05 的模块依赖、同调用原子发布、失败恢复、摘要去环、计时与精确源图契约闭合并解决 DESIGN-R04 的四个 P1",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000284",
+        "EVD-000283"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-07-28T22:54:14+08:00",
+      "reason": "DESIGN-R05 统一 compiler-owned 同调用发布边界，失败结果不强制摘要且仅有 PUBLISHED/FAILED，SemanticDigestInput 消除自引用；MonotonicClock、SourceGraphEdge、精确 10 源图与 Diagnostic 排序契约均已闭合。DESIGN-R04 的四个 P1 已解决。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-DES-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TestDesignAgent 确认 DESIGN-R05 为正常、边界、失败、并发、安全、兼容和精确源图场景提供可执行测试接缝",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000284"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-28T22:56:00+08:00",
+      "reason": "四份设计产物提供精确 source graph、Java 8 API、发布并发、失败、摘要确定性、安全 frontend、退役扫描和 timing observer 的可执行测试接缝。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-DES-DEV-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "DevelopAgent 确认 DESIGN-R05 的 Java 8 类型、包边界、接口、算法和迁移步骤可直接实施且无关键未决技术选择",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000284",
+        "EVD-000285",
+        "EVD-000283"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-07-28T22:58:26+08:00",
+      "reason": "Java 8 final class 值对象、包依赖、公共接口、pass 顺序、稳定错误码、算法输入和迁移边界均已确定，并与当前 Maven Java 8 工具链及模块配置一致，可进入实现计划和 TDD。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-DES-IMP-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "ImpactAnalysisReviewAgent 确认 DESIGN-R05 覆盖模块新增与退役、依赖方向、兼容窗口、历史与在途 Context、失败和回滚影响",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000284"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-07-28T22:56:11+08:00",
+      "reason": "新增 compiler、context 类型闭包、frontend/starter 依赖调整、旧 declaration 退役、兼容窗口、在途 Context、失败隔离与 Git 回滚边界均已覆盖。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-DES-XMOD-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "CrossModuleIntegrationReviewAgent 确认 DESIGN-R05 的 frontend、compiler、context、starter 协作契约覆盖顺序、原子性、幂等、超时、部分失败、恢复与观测",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "CMI-P1-COMPILER-001"
+      ],
+      "evidence_ids": [
+        "EVD-000284",
+        "EVD-000283"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-07-28T22:56:17+08:00",
+      "reason": "frontend 到 compiler、compiler 到 context publisher、starter 组装的顺序和契约完整；同调用 CAS、幂等、超时、部分失败、旧 Context 保留、观测与恢复均有明确设计和证据。"
     }
   ]
 }

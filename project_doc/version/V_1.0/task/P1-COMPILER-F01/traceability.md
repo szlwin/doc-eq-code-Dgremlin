@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 追踪矩阵
 
-> REQAN-R05 已正式通过；BM-R05 为当前业务模型候选，9 条追踪保持稳定 ID；design 及其下游仍为 STALE，`verification_evidence_ids` 保持为空，旧 Revision、Review 与 Evidence 保留为历史。
+> REQAN-R05 与 BM-R05 已正式通过；DESIGN-R05 已完成七类独立 Review，等待阶段归档，9 条追踪保持稳定 ID；test_design 及其下游仍为 STALE，`verification_evidence_ids` 保持为空，旧 Revision、Review 与 Evidence 保留为历史。
 
 ```json traceability
 [
@@ -70,14 +70,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-002",
@@ -142,14 +145,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-003",
@@ -222,14 +228,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-004",
@@ -296,14 +305,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-005",
@@ -375,14 +387,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-006",
@@ -441,14 +456,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-007",
@@ -507,14 +525,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-008",
@@ -595,14 +616,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   },
   {
     "id": "TR-P1-COMPILER-009",
@@ -674,14 +698,17 @@
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
+      "DesignAgent",
       "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "ArchitectureReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
+      "DevelopAgent",
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
   }
 ]
 ```

@@ -230,10 +230,10 @@
     "iteration_no": 7,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-DESIGN-006",
     "revision_reason": "独立设计复核发现 REQAN-R04 的 Atomic exposure owner 与需求正文/BM-R04 不一致，且 dependency_impact.yaml 仍为旧 2.42 结构；需形成新 REQAN Revision 并重建下游。",
-    "title": "形成 BM-R04 对应的 Compiler 技术设计",
-    "objective": "基于 BM-R04 设计统一源图、Canonical Frontend、RawDefinition/Symbol/Deferred Pipeline、ModelAccess selector、Diagnostic、CompiledModelSet、EngineContext 原子发布与只读投影接口",
+    "title": "形成 BM-R05 对应的 Compiler 技术设计",
+    "objective": "基于 BM-R05 设计统一源图、Canonical Frontend、RawDefinition/Symbol/Deferred Pipeline、ModelAccess selector、Diagnostic，以及由 Compiler 在同一次调用内协调 CompiledModelSet、EngineContext 原子发布与只读投影接口",
     "phase": "design",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-BMODEL-001"
     ],
@@ -248,8 +248,8 @@
       "CrossModuleIntegrationReviewAgent"
     ],
     "input_revisions": {
-      "requirement_analysis": "REQAN-R04@7421b050ed44",
-      "business_model": "BM-R04@1b19a0ba26b6"
+      "requirement_analysis": "REQAN-R05@7de35e8dc15b",
+      "business_model": "BM-R05@4ecb1f8c09f4"
     },
     "allowed_files": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
@@ -278,11 +278,11 @@
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "DESIGN-R04 将 BM-R04 的 CompilationSession、PublishedContext、TypedKey、DeferredDefinition 与 Diagnostic 转为模块、接口和数据流设计",
+      "DESIGN-R05 将 BM-R05 的 CompilationSession、PublishedContext、TypedKey、DeferredDefinition 与 Diagnostic 转为 Java 8 兼容的模块、接口和数据流设计",
       "XML/YAML Frontend 只产出 CanonicalDocumentNode，不修改全局 Config；Compiler 不依赖 demo、SQL 或旧 declaration runtime",
       "ModelAccessBinding 保持 source path 与 target selector 分离，并实现 target-main 精确优先、property path 精确回退与稳定错误",
-      "编译成功原子发布不可变 EngineContext；失败不发布部分 Registry，调用方持有的旧 Context 保持有效",
-      "九条 TR、设计接缝、并发/安全/兼容测试和跨模块实现步骤均可追踪到 BM-R04 稳定 ID"
+      "ModelCompiler 在同一次 compileAndPublish 调用中通过显式 ContextPublisher/expectedCurrent 原子发布不可变 EngineContext；失败不暴露部分 Registry，调用方持有的旧 Context 保持有效",
+      "九条 TR、设计接缝、并发/安全/兼容测试和跨模块实现步骤均可追踪到 BM-R05 稳定 ID，七个适用 Reviewer 对同一 DESIGN-R05 独立 PASSED"
     ],
     "stop_conditions": [
       "不得重新引入 dec-expand-declaration、兼容 Adapter、静态 current Context 或第二 Registry",
@@ -291,10 +291,12 @@
       "不得在 P1 设计中提前实现 P3～P7 运行时语义"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "DESIGN-R05@0b37a9b4dd48",
+    "validation_evidence_ids": [
+      "EVD-000284"
+    ]
   },
   {
     "id": "TASK-P1-R2-001",
