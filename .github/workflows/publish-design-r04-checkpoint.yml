@@ -1,0 +1,46 @@
+name: publish verified DESIGN-R04 checkpoint
+
+on:
+  pull_request:
+    branches:
+      - dev_all
+    paths:
+      - .common-develop-publish-design-r04/**
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify exact bundle and publish checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          set -euxo pipefail
+          EXPECTED_PARENT="aa0e171ab42759d5ba1c115d839396987efb5e0a"
+          TARGET_SHA="67fd301d3dd5a59c229337e3d05bd4b05d9984cf"
+          EXPECTED_B64_BYTES="68768"
+          EXPECTED_BUNDLE_BYTES="51574"
+          EXPECTED_BUNDLE_SHA256="9ffd2ca78cdd39c521afbab0f611963c893c035c0acdb0301c5b6eb08b6b24d8"
+          git init repo
+          cd repo
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "+refs/heads/dev_all:refs/remotes/origin/dev_all" "+refs/heads/${HEAD_REF}:refs/remotes/origin/publish"
+          CURRENT_SHA="$(git rev-parse refs/remotes/origin/dev_all)"
+          git merge-base --is-ancestor "$EXPECTED_PARENT" "$CURRENT_SHA"
+          test "$(git diff --name-only "$EXPECTED_PARENT" "$CURRENT_SHA" | grep -v '^.github/workflows/publish-design-r04-checkpoint.yml$' | wc -l)" -eq 0
+          git checkout --detach refs/remotes/origin/publish
+          cat .common-develop-publish-design-r04/part-*.b64 | tr -cd 'A-Za-z0-9+/=' > /tmp/design-r04.b64
+          test "$(wc -c < /tmp/design-r04.b64)" -eq "$EXPECTED_B64_BYTES"
+          base64 -d /tmp/design-r04.b64 > /tmp/design-r04.bundle
+          test "$(wc -c < /tmp/design-r04.bundle)" -eq "$EXPECTED_BUNDLE_BYTES"
+          test "$(sha256sum /tmp/design-r04.bundle | awk '{print $1}')" = "$EXPECTED_BUNDLE_SHA256"
+          git bundle verify /tmp/design-r04.bundle
+          git fetch /tmp/design-r04.bundle refs/heads/common-develop-transfer-target
+          test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "$TARGET_SHA^")" = "$EXPECTED_PARENT"
+          git push origin "$TARGET_SHA:refs/heads/dev_all" --force-with-lease="refs/heads/dev_all:$CURRENT_SHA"
