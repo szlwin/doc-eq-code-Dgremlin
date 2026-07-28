@@ -503,6 +503,191 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-07-27T08:43:45+00:00",
       "reason": "跨模块参与者、顺序、契约、一致性、重复/失败、恢复、观测与 Case 映射闭合。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-DES-ARCH-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "ArchitectureReviewAgent 确认 DESIGN-R04 的模块边界、依赖方向、主/失败路径、并发一致性、故障隔离与恢复设计完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R04@1c14c8e89779",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000282",
+        "EVD-000275",
+        "EVD-000284",
+        "EVD-000285",
+        "EVD-000283",
+        "EVD-000286"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-07-28T07:54:58+00:00",
+      "reason": "DESIGN-R04 的模块边界、主/失败路径、一致性、恢复、质量属性及模型映射完整。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-DES-BM-001",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "BusinessModelReviewAgent 确认 DESIGN-R04 保持 BM-R04 的统一语言、不变量、状态、错误和生命周期，且模型与设计映射唯一。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R04@1c14c8e89779",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000283",
+        "EVD-000282",
+        "EVD-000275",
+        "EVD-000286",
+        "EVD-000288"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-07-28T07:56:00+00:00",
+      "reason": "DESIGN-R04 与 BM-R04 的统一语言、不变量、状态、错误和生命周期保持一致，模型到设计映射唯一。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-DES-DEV-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "DevelopAgent 确认 DESIGN-R04 的模块、包、接口、失败语义和禁止边界可在当前代码库实施。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R04@1c14c8e89779",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000284",
+        "EVD-000275",
+        "EVD-000285"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-07-28T07:56:04+00:00",
+      "reason": "模块、包、接口、输入输出、失败语义、禁止依赖和测试接缝均可在当前代码库中实施。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-DES-REQ-001",
+      "acceptance_id": "AC-P1-COMPILER-008",
+      "statement": "RequirementReviewAgent 确认 DESIGN-R04 覆盖 REQAN-R04 九条追踪及验收边界，且没有范围漂移。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R04@1c14c8e89779",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000286",
+        "EVD-000283",
+        "EVD-000282",
+        "EVD-000275",
+        "EVD-000285"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-07-28T07:56:07+00:00",
+      "reason": "设计覆盖九条追踪、验收边界和关键决策，没有引入需求外运行语义。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-DES-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-009",
+      "statement": "TestDesignAgent 确认 DESIGN-R04 为正常、边界、异常、安全、并发、兼容和跨模块路径提供稳定测试接缝。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R04@1c14c8e89779",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000285",
+        "EVD-000275",
+        "EVD-000286"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-28T07:56:10+00:00",
+      "reason": "正常、边界、异常、安全、并发、兼容、跨模块和恢复路径均有稳定测试接缝与可执行 Case 映射。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-DES-IMP-001",
+      "acceptance_id": "AC-P1-COMPILER-007",
+      "statement": "ImpactAnalysisReviewAgent 确认 DESIGN-R04 的关系、退役、历史与在途 Context、影响传播和验证映射完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R04@1c14c8e89779",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000283",
+        "EVD-000275",
+        "EVD-000286",
+        "EVD-000285"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-07-28T07:56:37+00:00",
+      "reason": "关系节点、处置策略、历史与在途 Context、影响传播、退役和测试映射均已闭合。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R4-DES-XMOD-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "CrossModuleIntegrationReviewAgent 确认 frontend、compiler、context、starter、demo 的顺序、契约、一致性、超时、失败与恢复路径闭合。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R04@1c14c8e89779",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000282",
+        "EVD-000275",
+        "EVD-000283",
+        "EVD-000285",
+        "EVD-000288"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-07-28T07:56:41+00:00",
+      "reason": "跨模块参与者、顺序、Schema、一致性、超时、重复、部分成功、恢复、观测与 Case 映射闭合。"
     }
   ]
 }

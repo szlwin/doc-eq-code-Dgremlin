@@ -234,7 +234,7 @@
     "title": "形成 BM-R04 对应的 Compiler 技术设计",
     "objective": "基于 BM-R04 设计统一源图、Canonical Frontend、RawDefinition/Symbol/Deferred Pipeline、ModelAccess selector、Diagnostic、CompiledModelSet、EngineContext 原子发布与只读投影接口",
     "phase": "design",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-BMODEL-001"
     ],
@@ -292,10 +292,17 @@
       "不得在 P1 设计中提前实现 P3～P7 运行时语义"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "DESIGN-R04@1c14c8e89779",
+    "validation_evidence_ids": [
+      "EVD-000275",
+      "EVD-000276",
+      "EVD-000281",
+      "EVD-000278",
+      "EVD-000279",
+      "EVD-000280"
+    ]
   },
   {
     "id": "TASK-P1-R2-001",
@@ -399,9 +406,9 @@
     "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-004",
     "iteration_no": 4,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-003",
-    "revision_reason": "用户补充 ModelAccess 映射解析规则：ref@property 首先精确匹配目标 View 的 target-main；未匹配时再按 View property path 精确查找。该规则影响需求、验收、诊断与测试，需保留 R03 并形成新需求确认 Revision。",
-    "title": "形成七项 AC 的可执行测试设计",
-    "objective": "形成七项 AC 的可执行测试设计",
+    "revision_reason": "DESIGN-R04 已冻结 Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、原子发布及测试接缝；TEST_DESIGN I004 必须覆盖 9 条 TR 的正常、边界、异常、安全、并发、兼容和跨模块路径。",
+    "title": "形成 DESIGN-R04 的可执行测试设计",
+    "objective": "基于 DESIGN-R04 将 9 条 TR、23 个稳定业务错误、编译主/失败路径、原子发布、common expression 与 ModelAccess selector 转为可执行测试 Case 和非测试验证",
     "phase": "test_design",
     "status": "REWORK",
     "depends_on": [
@@ -410,8 +417,9 @@
     "owner_agent": "TestDesignAgent",
     "reviewer_agents": [],
     "input_revisions": {
-      "change_requirement": "P1-COMPILER-CR01",
-      "draft_design": "DESIGN-R02-DRAFT"
+      "requirement_analysis": "REQAN-R04@7421b050ed44",
+      "business_model": "BM-R04@1b19a0ba26b6",
+      "design": "DESIGN-R04@1c14c8e89779"
     },
     "allowed_files": [],
     "acceptance_trace_ids": [
@@ -421,16 +429,25 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
     "flow_refs": [],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "R02 artifacts reviewed and internally consistent"
+      "测试设计覆盖 XML/YAML 同义输入、SourceGraph、RawDefinition、TypedKey/SymbolTable 与稳定 Diagnostic",
+      "测试设计覆盖 System-owned Information、common 跨 System expression、未知/裸引用和后续 P3 循环边界",
+      "测试设计覆盖 ModelAccess target-main 精确优先、property path 精确回退、未找到、重复、冲突与歧义",
+      "测试设计覆盖 CompilationSession 隔离、并发、取消、超时、失败不发布和旧 EngineContext 保留",
+      "9 条 TR 均映射正常、边界、异常 Case、验证命令和 Evidence 类型"
     ],
     "stop_conditions": [
-      "dec-expand-declaration or second runtime reintroduced"
+      "不得把设计 Review 结论当作动态测试结果",
+      "不得省略失败、恢复、并发、安全、兼容或跨模块 Case",
+      "不得在测试设计阶段提前修改生产代码",
+      "不得重新引入 dec-expand-declaration、root-property、模糊 selector 或第二 Registry"
     ],
     "risk_triggers": [],
     "attempts": 0,

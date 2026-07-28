@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 -m unittest discover -s project_doc/version/V_1.0/task/P1-COMPILER-F01/validation -p test_system_information_contract.py -v",
+  "exit_code": 0,
+  "executed_at": "2026-07-28T07:48:25+00:00",
+  "revision": "DESIGN-R04@1c14c8e89779",
+  "output": "test_all_mix_xml_is_well_formed (test_system_information_contract.SystemInformationContractTest.test_all_mix_xml_is_well_formed) ... ok\ntest_information_is_system_owned_and_view_scoped (test_system_information_contract.SystemInformationContractTest.test_information_is_system_owned_and_view_scoped) ... ok\ntest_main_and_test_fixtures_match (test_system_information_contract.SystemInformationContractTest.test_main_and_test_fixtures_match) ... ok\ntest_rule_views_use_views_declared_by_their_system (test_system_information_contract.SystemInformationContractTest.test_rule_views_use_views_declared_by_their_system) ... ok\ntest_user_shared_model_mapping_is_explicit (test_system_information_contract.SystemInformationContractTest.test_user_shared_model_mapping_is_explicit) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.004s\n\nOK\n",
+  "output_digest": "392ac0c1673564514d627ec8284773f2826dd1c7288a4adf47b39bfa647f48ef"
+}

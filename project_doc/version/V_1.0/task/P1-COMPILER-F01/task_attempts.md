@@ -429,6 +429,46 @@
     ],
     "summary": "BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。",
     "next_action": "由六个适用 Reviewer 对同一 BM-R04 串行独立评审"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-DESIGN-001-I004-A001",
+    "task_id": "TASK-P1-DESIGN-001",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-004",
+    "iteration_no": 4,
+    "attempt_no": 1,
+    "agent": "DesignAgent",
+    "phase": "design",
+    "status": "PASSED",
+    "input_revision": "BM-R04@1b19a0ba26b6",
+    "output_revision": "DESIGN-R04@1c14c8e89779",
+    "started_at": "2026-07-28T07:38:22+00:00",
+    "completed_at": "2026-07-28T07:49:25+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000276",
+      "EVD-000281",
+      "EVD-000278",
+      "EVD-000279",
+      "EVD-000280"
+    ],
+    "evidence_ids": [
+      "EVD-000275",
+      "EVD-000276",
+      "EVD-000281",
+      "EVD-000278",
+      "EVD-000279",
+      "EVD-000280"
+    ],
+    "summary": "完成 DESIGN-R04：统一四份设计文档，覆盖 Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、EngineContext 原子发布及 P2-P8 接缝。",
+    "next_action": "准备并执行七个串行 Design Review。"
   }
 ]
 ```

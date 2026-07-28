@@ -277,6 +277,41 @@
     "iteration_no": 4,
     "is_current": true,
     "superseded_by": ""
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-DESIGN-I004",
+    "phase": "design",
+    "round": "DESIGN-R04",
+    "status": "PASSED",
+    "produced_by_agent": "DesignAgent",
+    "input_revisions": {
+      "requirement_analysis": "REQAN-R04@7421b050ed44",
+      "business_model": "BM-R04@1b19a0ba26b6"
+    },
+    "output_revision": "DESIGN-R04@1c14c8e89779",
+    "evidence_ids": [
+      "EVD-000275",
+      "EVD-000276",
+      "EVD-000278",
+      "EVD-000279",
+      "EVD-000280",
+      "EVD-000281",
+      "EVD-000282",
+      "EVD-000283",
+      "EVD-000284",
+      "EVD-000285",
+      "EVD-000286",
+      "EVD-000287",
+      "EVD-000288",
+      "EVD-000289"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-28T07:38:22+00:00",
+    "completed_at": "2026-07-28T07:59:31+00:00",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-004",
+    "iteration_no": 4,
+    "is_current": true,
+    "superseded_by": ""
   }
 ]
 ```
