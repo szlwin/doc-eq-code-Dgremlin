@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 可测试性说明
 
-> Revision：`TEST-SEAM-R04@7421b050ed44`。输入：`REQAN-R04@7421b050ed44`。
+> Revision：`TEST-SEAM-R05@7de35e8dc15b`。输入：`REQAN-R05@7de35e8dc15b`。
 
 ## 1. 必须注入的接缝
 
@@ -14,8 +14,8 @@
 - `CompilerPass`：可单独执行并观察输入、输出、Diagnostic；
 - `RegistryBuilder`：发布前可冻结并验证不可变；
 - `DigestStrategy`：固定版本，source/semantic digest 分离；
-- `ContextPublisher`：以测试替身验证原子切换；
-- `Clock/Timer`：只用于指标，不进入语义摘要。
+- `ContextPublisher`：由调用方显式注入，以测试替身验证 Compiler 在同一 Session 内至多一次 CAS；Starter 不二次发布；
+- `MonotonicClock`：同时驱动 Deadline 与计时，只用于控制/观察，不进入语义摘要。
 
 ## 2. 实物 fixture 基线
 

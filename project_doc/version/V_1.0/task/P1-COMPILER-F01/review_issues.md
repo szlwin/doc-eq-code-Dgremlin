@@ -45,6 +45,154 @@
     "verified_by_agent": "ProjectManagerAgent",
     "verified_at": "2026-07-26T02:47:18+00:00",
     "defer_reason": ""
+  },
+  {
+    "id": "ISSUE-MR-0001",
+    "issue_type": "INCONSISTENCY",
+    "axis": "ARCHITECTUREREVIEW",
+    "severity": "P1",
+    "confidence": 9,
+    "status": "OPEN",
+    "phase": "design",
+    "round": "DESIGN-I004",
+    "artifact_revision": "DESIGN-R04@1c14c8e89779",
+    "raised_by_agent": "ArchitectureReviewAgent",
+    "owner_agent": "DesignAgent",
+    "title": "组件、模块和依赖边界是否合理？",
+    "description": "P1：ModelCompiler.compile 只接收 CompilationRequest，无法访问 ContextPublisher 或 expectedCurrent；但详细设计要求同一 CompilationSession 原子暴露后进入 PUBLISHED，架构又把 CAS 发布放在 compile 返回后的 Starter，组件职责和终态所有权冲突。",
+    "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
+    "motivating_evidence": [
+      "EVD-000276",
+      "EVD-000277",
+      "EVD-000278"
+    ],
+    "question": "请补充或修正后重新执行人工 Review。",
+    "question_to": [
+      "DesignAgent"
+    ],
+    "responses": [],
+    "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
+    "affected_artifacts": [
+      "design"
+    ],
+    "affected_trace_ids": [],
+    "decision": "",
+    "resolution_revision": "",
+    "resolution_evidence": "",
+    "verified_by_agent": "",
+    "verified_at": "",
+    "defer_reason": ""
+  },
+  {
+    "id": "ISSUE-MR-0002",
+    "issue_type": "INCONSISTENCY",
+    "axis": "ARCHITECTUREREVIEW",
+    "severity": "P1",
+    "confidence": 9,
+    "status": "OPEN",
+    "phase": "design",
+    "round": "DESIGN-I004",
+    "artifact_revision": "DESIGN-R04@1c14c8e89779",
+    "raised_by_agent": "ArchitectureReviewAgent",
+    "owner_agent": "DesignAgent",
+    "title": "数据流、事务和失败恢复路径是否完整？",
+    "description": "P1：失败结果被要求强制携带 DigestPair，但 Source discovery、parse 等早期失败无法产生完整 semanticDigest；CompilationResult 又引入 CANCELLED/TIMED_OUT，而业务状态仅允许 PUBLISHED/FAILED，缺少确定映射。另有 CompiledModelSet 包含 DigestPair、semanticDigest 又基于 CompiledModelSet 计算的循环定义。",
+    "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
+    "motivating_evidence": [
+      "EVD-000276",
+      "EVD-000277",
+      "EVD-000278"
+    ],
+    "question": "请补充或修正后重新执行人工 Review。",
+    "question_to": [
+      "DesignAgent"
+    ],
+    "responses": [],
+    "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
+    "affected_artifacts": [
+      "design"
+    ],
+    "affected_trace_ids": [],
+    "decision": "",
+    "resolution_revision": "",
+    "resolution_evidence": "",
+    "verified_by_agent": "",
+    "verified_at": "",
+    "defer_reason": ""
+  },
+  {
+    "id": "ISSUE-MR-0003",
+    "issue_type": "INCONSISTENCY",
+    "axis": "ARCHITECTUREREVIEW",
+    "severity": "P1",
+    "confidence": 9,
+    "status": "OPEN",
+    "phase": "design",
+    "round": "DESIGN-I004",
+    "artifact_revision": "DESIGN-R04@1c14c8e89779",
+    "raised_by_agent": "ArchitectureReviewAgent",
+    "owner_agent": "DesignAgent",
+    "title": "性能、安全、可用性等质量属性是否有落实？",
+    "description": "P1：需求要求 discovery、parse、pass、digest 计时接缝，但 CompilationMetrics 未定义组成、时钟和观察接口；需求还要求每条源图边保留 SourceRef，当前 MixSourceGraph edge 没有字段契约与验证接缝。",
+    "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
+    "motivating_evidence": [
+      "EVD-000276",
+      "EVD-000277",
+      "EVD-000278"
+    ],
+    "question": "请补充或修正后重新执行人工 Review。",
+    "question_to": [
+      "DesignAgent"
+    ],
+    "responses": [],
+    "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
+    "affected_artifacts": [
+      "design"
+    ],
+    "affected_trace_ids": [],
+    "decision": "",
+    "resolution_revision": "",
+    "resolution_evidence": "",
+    "verified_by_agent": "",
+    "verified_at": "",
+    "defer_reason": ""
+  },
+  {
+    "id": "ISSUE-MR-0004",
+    "issue_type": "INCONSISTENCY",
+    "axis": "ARCHITECTUREREVIEW",
+    "severity": "P1",
+    "confidence": 9,
+    "status": "OPEN",
+    "phase": "design",
+    "round": "DESIGN-I004",
+    "artifact_revision": "DESIGN-R04@1c14c8e89779",
+    "raised_by_agent": "ArchitectureReviewAgent",
+    "owner_agent": "DesignAgent",
+    "title": "其余检查项（路径完整、模型与设计映射）是否均满足？",
+    "description": "P1：AC-P1-COMPILER-001 要求从根入口恰好发现 10 个 XML 和固定类型边，测试接缝只说明主/测试共 20 个 XML 可解析，不能证明 Resolver 的源图边界；Diagnostic 排序中的 entityKey 与 definitionKey/passId 也没有显式映射。",
+    "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
+    "motivating_evidence": [
+      "EVD-000276",
+      "EVD-000277",
+      "EVD-000278"
+    ],
+    "question": "请补充或修正后重新执行人工 Review。",
+    "question_to": [
+      "DesignAgent"
+    ],
+    "responses": [],
+    "recommendation": "修正相关产物并补充当前 revision 的证据，然后重新 Review。",
+    "affected_artifacts": [
+      "design"
+    ],
+    "affected_trace_ids": [],
+    "decision": "",
+    "resolution_revision": "",
+    "resolution_evidence": "",
+    "verified_by_agent": "",
+    "verified_at": "",
+    "defer_reason": ""
   }
 ]
 ```

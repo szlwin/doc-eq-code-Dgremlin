@@ -1190,6 +1190,191 @@
 | 测试与验证 | JSON Schema、稳定 ID、Information/common/ModelAccess 契约、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000276"],"execution_mode":"git_checkpoint","input_revision":"af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd","iteration_id":"ITER-P1-COMPILER-F01-DESIGN-004","iteration_no":4,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md"],"next_action":"由七个适用 Reviewer 对同一 DESIGN-R04 串行独立评审","next_agent":"RequirementReviewAgent","output_revision":"DESIGN-R04@1c14c8e89779","phase":"design","record_id":"WR-20260728-172754-TASK-P1-DESIGN-001-PASSED","render_digest":"a7dfb5b69260f3115946f10b61a93402cbdc27bb4432ff72cb963cd21eed5179","schema_version":4,"scope":"形成 BM-R04 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → PASSED","status":"PASSED","summary":"DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T17:27:54+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260728-172754-TASK-P1-DESIGN-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-28T17:27:54+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 形成 BM-R04 对应的 Compiler 技术设计 |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-DESIGN-001: RUNNING → PASSED |
+| Task | TASK-P1-DESIGN-001 |
+| Attempt | ATTEMPT-TASK-P1-DESIGN-001-I004-A001 |
+| Iteration | ITER-P1-COMPILER-F01-DESIGN-004 / 4 |
+| 输入 Revision | af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd |
+| 输出 Revision | DESIGN-R04@1c14c8e89779 |
+| StageOutcome | 无 |
+| Evidence | EVD-000276 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementReviewAgent |
+| 后续事项 | 由七个适用 Reviewer 对同一 DESIGN-R04 串行独立评审 |
+
+### 变更摘要
+
+- DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I006-A001","blockers":["UPSTREAM_INCONSISTENCY","独立复核确认冻结的 REQAN-R04 中 Atomic exposure 与需求正文/BM-R04/设计冲突，dependency impact 仍为旧 2.42 结构；必须形成新 requirement_analysis Revision 后再重建下游。"],"event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I006-A001-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"git_checkpoint","input_revision":"af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-DESIGN-006","iteration_no":6,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md","project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md","project_doc/docs/_relations/dependency_impact.yaml","project_doc/docs/_relations/dependency_graph.md","project_doc/version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml","project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml","project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md","project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"],"next_action":"重开 requirement_analysis，发布 REQAN-R05 并重新完成下游业务模型与设计门禁","next_agent":"RequirementAnalysisAgent","phase":"design","record_id":"WR-20260728-212151-TASK-P1-DESIGN-001-FAILED","render_digest":"d753b4bf1d7d8d12bf6ba12897f6a1a8a4be442582af9ff855764318c73c3b23","schema_version":4,"scope":"形成 BM-R04 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → REWORK","status":"FAILED","summary":"设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T21:21:51+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 0 项","version":"V_1.0"} -->
+## WR-20260728-212151-TASK-P1-DESIGN-001-FAILED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-28T21:21:51+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 形成 BM-R04 对应的 Compiler 技术设计 |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_FAILED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。 |
+| 状态 | FAILED |
+| 状态变更 | TASK-P1-DESIGN-001: RUNNING → REWORK |
+| Task | TASK-P1-DESIGN-001 |
+| Attempt | ATTEMPT-TASK-P1-DESIGN-001-I006-A001 |
+| Iteration | ITER-P1-COMPILER-F01-DESIGN-006 / 6 |
+| 输入 Revision | af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0001、ISSUE-MR-0002、ISSUE-MR-0003、ISSUE-MR-0004 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementAnalysisAgent |
+| 后续事项 | 重开 requirement_analysis，发布 REQAN-R05 并重新完成下游业务模型与设计门禁 |
+
+### 变更摘要
+
+- 设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
+- `project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md`
+- `project_doc/docs/_relations/dependency_impact.yaml`
+- `project_doc/docs/_relations/dependency_graph.md`
+- `project_doc/version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml`
+- `project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml`
+- `project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md`
+- `project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 0 项；命令 Evidence 0 项 |
+| 问题与阻塞 | UPSTREAM_INCONSISTENCY、独立复核确认冻结的 REQAN-R04 中 Atomic exposure 与需求正文/BM-R04/设计冲突，dependency impact 仍为旧 2.42 结构；必须形成新 requirement_analysis Revision 后再重建下游。 |
+
+<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P1-REQAN-001-I005-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQAN-001-I005-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000280"],"execution_mode":"git_checkpoint","input_revision":"REQCONF-R04@c186ce681e1e","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-005","iteration_no":5,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md","docs/_relations/dependency_impact.yaml","docs/_relations/dependency_graph.md","version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml","version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml","version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md"],"next_action":"发布 REQAN-R05 并由 5 个需求分析 Reviewer 串行独立 Review","next_agent":"BusinessModelAgent","output_revision":"REQAN-R05@7de35e8dc15b","phase":"requirement_analysis","record_id":"WR-20260728-213435-TASK-P1-REQAN-001-PASSED","render_digest":"67fda3e9b75db4f28260659b744b18d7b5d496904b487cbb92258658ceecdc53","schema_version":4,"scope":"重新分析 mix 源图与跨阶段影响","source":"long_task.py finish-attempt","state_change":"TASK-P1-REQAN-001: RUNNING → PASSED","status":"PASSED","summary":"形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQAN-001","task_type":"requirement_analysis","timestamp":"2026-07-28T21:34:35+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260728-213435-TASK-P1-REQAN-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-28T21:34:35+08:00 |
+| 执行 Agent | RequirementAnalysisAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 重新分析 mix 源图与跨阶段影响 |
+| 阶段 | requirement_analysis |
+| 任务类型 | requirement_analysis |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-REQAN-001: RUNNING → PASSED |
+| Task | TASK-P1-REQAN-001 |
+| Attempt | ATTEMPT-TASK-P1-REQAN-001-I005-A001 |
+| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-005 / 5 |
+| 输入 Revision | REQCONF-R04@c186ce681e1e |
+| 输出 Revision | REQAN-R05@7de35e8dc15b |
+| StageOutcome | 无 |
+| Evidence | EVD-000280 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0001、ISSUE-MR-0002、ISSUE-MR-0003、ISSUE-MR-0004 |
+| Git 检查点 | 无 |
+| 下一 Agent | BusinessModelAgent |
+| 后续事项 | 发布 REQAN-R05 并由 5 个需求分析 Reviewer 串行独立 Review |
+
+### 变更摘要
+
+- 形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
+- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md`
+- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md`
+- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md`
+- `docs/_relations/dependency_impact.yaml`
+- `docs/_relations/dependency_graph.md`
+- `version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml`
+- `version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml`
+- `version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md`
+- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
+- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

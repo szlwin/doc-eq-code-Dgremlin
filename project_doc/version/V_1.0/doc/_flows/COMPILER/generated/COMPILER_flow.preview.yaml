@@ -3,9 +3,9 @@ artifact: "business_flow"
 flowGroup:
   code: "COMPILER"
   name: "配置编译与上下文发布"
-  description: "描述配置源从发现、前端解析、编译校验到不可变 EngineContext 发布的端到端技术平台流程。"
-revision: "FLOW-R01@p1-analysis"
-baseRevision: ""
+  description: ""
+revision: "FLOW-R02@compiler-owned-discovery"
+baseRevision: "FLOW-R00@init"
 flows:
   -
     id: "FLOW-CONFIG-COMPILE"
@@ -21,7 +21,7 @@ flows:
       - "STARTER"
       - "DEMO"
     goal: "把 XML/YAML 文档集合确定性编译为可发布的不可变 EngineContext，失败时保持既有 Context 不变。"
-    trigger: "starter 或测试调用者提交 DocumentSource 集合。"
+    trigger: "starter 或测试调用者提交根 SourceReference、编译请求和显式发布请求。"
     requirementRefs:
       -
         id: "P1-COMPILER"
@@ -57,7 +57,7 @@ flows:
           - "调用方提供显式根路径或资源集合。"
         postconditions:
           - "得到按 sourceId 稳定排序的 DocumentSource 集合。"
-        notes: "由 STARTER 模块实现发现和装配，业务流程 owner 仍为 COMPILER。"
+        notes: "由 COMPILER 的 MixSourceResolver 执行发现；STARTER 只注入 SourceProvider 与根引用。"
       -
         id: "STEP-CONFIG-COMPILE-02"
         order: 2
@@ -118,8 +118,8 @@ flows:
         preconditions:
           - "编译结果已形成。"
         postconditions:
-          - "无 ERROR 时返回不可变 Context；有 ERROR 时保持现有 Context 不变。"
-        notes: "由 STARTER 返回结果，发布决策属于 COMPILER 契约。"
+          - "无 ERROR 且 caller-injected CAS 成功时返回 PUBLISHED；其它路径返回 FAILED 并保持现有 Context 不变。"
+        notes: "COMPILER 在 compileAndPublish 内调用 Publisher 一次；STARTER 只返回结果，不二次发布。"
     variants:
       -
         id: "FVAR-CONFIG-FORMAT-XML"

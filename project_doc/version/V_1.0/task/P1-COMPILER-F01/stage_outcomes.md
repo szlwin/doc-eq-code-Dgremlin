@@ -248,8 +248,8 @@
     "completed_at": "2026-07-27T05:41:14+00:00",
     "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004",
     "iteration_no": 4,
-    "is_current": true,
-    "superseded_by": ""
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-005"
   },
   {
     "id": "SO-P1-COMPILER-F01-BUSINESS-MODEL-I004",
@@ -275,8 +275,52 @@
     "completed_at": "2026-07-27T08:45:42+00:00",
     "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-004",
     "iteration_no": 4,
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-005"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-DESIGN-I004",
+    "phase": "design",
+    "round": "DESIGN-I004",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-004",
+    "iteration_no": 4,
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-DESIGN-005",
+    "status": "RUNNING",
+    "produced_by_agent": "DesignAgent",
+    "input_revisions": {
+      "business_model": "BM-R04@1b19a0ba26b6"
+    },
+    "output_revision": "DESIGN-R04@1c14c8e89779",
+    "evidence_ids": [
+      "EVD-000276",
+      "EVD-000275"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-28T20:11:27+08:00",
+    "completed_at": ""
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-REQUIREMENT_ANALYSIS-I005",
+    "phase": "requirement_analysis",
+    "round": "REQUIREMENT_ANALYSIS-I005",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-005",
+    "iteration_no": 5,
     "is_current": true,
-    "superseded_by": ""
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "RequirementAnalysisAgent",
+    "input_revisions": {
+      "requirement_confirmation": "REQCONF-R04@c186ce681e1e"
+    },
+    "output_revision": "REQAN-R05@7de35e8dc15b",
+    "evidence_ids": [
+      "EVD-000280",
+      "EVD-000279"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-28T21:34:52+08:00",
+    "completed_at": "2026-07-28T21:55:23+08:00"
   }
 ]
 ```

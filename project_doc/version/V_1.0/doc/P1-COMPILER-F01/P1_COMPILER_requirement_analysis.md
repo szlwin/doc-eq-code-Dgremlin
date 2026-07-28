@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 需求分析：统一 `mix` 编译骨架与跨 System Information
 
-> Revision：`REQAN-R04@7421b050ed44`。输入 Revision：`REQCONF-R04@c186ce681e1e`。本文在 R03 草案上增量收敛，旧 Revision 仅作为历史 Evidence 保留。
+> Revision：`REQAN-R05@7de35e8dc15b`。输入 Revision：`REQCONF-R04@c186ce681e1e`。本 Revision 修正原子发布责任、2.43 影响关系结构和 Compiler-owned source discovery；旧 Revision 仅作为历史 Evidence 保留。
 
 ## 1. 分析目标与输入冻结
 
@@ -156,7 +156,7 @@ P1 必须提供稳定 code、SourceRef、entityKey 和 pass。code 名称在设�
 | selector 未命中 | `MIX-REF-MODEL-ACCESS-TARGET-NOT-FOUND` | 是 |
 | selector 重复或歧义 | `MIX-REF-MODEL-ACCESS-TARGET-AMBIGUOUS` | 是 |
 | Deferred 缺少 requiredStage/SourceRef | `MIX-DEFERRED-INCOMPLETE` | 是 |
-| ERROR 后仍尝试发布 | `MIX-PUBLISH-WITH-ERROR` | 是 |
+| ERROR 后仍尝试发布 | `MIX-PUBLICATION-BLOCKED` | 是 |
 
 Diagnostic 排序固定为 `sourceId, line, column, code, entityKey, pass`，从而保证重跑和并行 Pass 不改变输出顺序。
 
@@ -207,7 +207,7 @@ Diagnostic 排序固定为 `sourceId, line, column, code, entityKey, pass`，从
 | XML/YAML frontend | 各 frontend | SourceRef/bytes | CanonicalDocumentNode | Diagnostic；不写全局 Config |
 | Raw build / symbol register | `dec-core-compiler` | Canonical nodes | RawDefinitionSet/SymbolTable | 收集 ERROR；无发布 |
 | Typed context model | `dec-core-context` | compiled definitions | immutable keys/registries | 构建失败返回 compiler |
-| Atomic exposure | `dec-core-starter` | successful EngineContext | 调用方显式持有的新 Context | 失败继续保留旧 Context |
+| Atomic exposure | `dec-core-compiler` | candidate EngineContext + caller-injected expectedCurrent/ContextPublisher | PUBLISHED 或 FAILED CompilationResult | CAS/Publisher 失败继续保留旧 Context；Starter 不二次发布 |
 | Fixture verification | `dec-demo` | `mix` resources | contract evidence | 仅测试失败，不形成生产依赖 |
 | Retirement | Reactor/build | repository/dependency tree | 无 declaration 残留 | Git 回滚，不保留 Adapter |
 
@@ -247,4 +247,4 @@ REQCONF-R04 已具备进入业务模型阶段所需的确定边界：
 6. P1 与 P2～P7 的 Deferred 和跨模块责任明确；
 7. 九项 AC 均有正常、边界、失败和恢复测试映射。
 
-候选输出为 `REQAN-R04@7421b050ed44`，需由 BusinessModelAgent、DesignAgent、TestDesignAgent、ImpactAnalysisReviewAgent、CrossModuleIntegrationReviewAgent 对同一 Revision 串行独立 Review。
+候选输出为 `REQAN-R05@7de35e8dc15b`，需由 BusinessModelAgent、DesignAgent、TestDesignAgent、ImpactAnalysisReviewAgent、CrossModuleIntegrationReviewAgent 对同一 Revision 串行独立 Review。

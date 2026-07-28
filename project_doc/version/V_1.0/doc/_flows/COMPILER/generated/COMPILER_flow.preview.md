@@ -1,8 +1,8 @@
 <!-- generated-by: common-develop/business_flow.py -->
 # 配置编译与上下文发布（COMPILER）
 
-- Revision：`FLOW-R01@p1-analysis`
-- Base Revision：``
+- Revision：`FLOW-R02@compiler-owned-discovery`
+- Base Revision：`FLOW-R00@init`
 - 层级：L0 端到端场景、L1 业务阶段、L2 关键子流程
 
 ## 流程目录
@@ -18,7 +18,7 @@
 - 主责模块：`COMPILER`
 - 参与模块：[CONTEXT](../../../../../../docs/CONTEXT/CONTEXT_desc.md), [COMPILER](../../../../../../docs/COMPILER/COMPILER_desc.md), [XML](../../../../../../docs/XML/XML_desc.md), [YAML](../../../../../../docs/YAML/YAML_desc.md), [STARTER](../../../../../../docs/STARTER/STARTER_desc.md), [DEMO](../../../../../../docs/DEMO/DEMO_desc.md)
 - 目标：把 XML/YAML 文档集合确定性编译为可发布的不可变 EngineContext，失败时保持既有 Context 不变。
-- 触发：starter 或测试调用者提交 DocumentSource 集合。
+- 触发：starter 或测试调用者提交根 SourceReference、编译请求和显式发布请求。
 - 状态：`ACTIVE`
 
 ### 需求、功能与追踪

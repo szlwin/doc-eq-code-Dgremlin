@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "render_relationships check && business_flow validate && requirement_doc validate --stage analysis && system_information_contract && doc_layout check && long_task validate && git diff --check",
+  "exit_code": 0,
+  "executed_at": "2026-07-28T21:31:43+08:00",
+  "revision": "REQAN-R05@7de35e8dc15b",
+  "output": "REQAN-R05 validation PASSED: dependency impact and business flow valid; requirement analysis 20 BR/9 AC/9 TR; fixture contract 5/5; document layout, long-task schema, and git diff checks passed.\n",
+  "output_digest": "8bb907216c437c43a765ac55ed9f966f22602df626d12c72cbe0148450e34acd"
+}

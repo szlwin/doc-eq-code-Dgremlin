@@ -429,6 +429,106 @@
     ],
     "summary": "BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。",
     "next_action": "由六个适用 Reviewer 对同一 BM-R04 串行独立评审"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-DESIGN-001-I004-A001",
+    "task_id": "TASK-P1-DESIGN-001",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-004",
+    "iteration_no": 4,
+    "attempt_no": 1,
+    "agent": "DesignAgent",
+    "phase": "design",
+    "status": "PASSED",
+    "input_revision": "af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd",
+    "output_revision": "DESIGN-R04@1c14c8e89779",
+    "started_at": "2026-07-28T17:23:39+08:00",
+    "completed_at": "2026-07-28T17:27:54+08:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md",
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md",
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000275"
+    ],
+    "evidence_ids": [
+      "EVD-000276"
+    ],
+    "summary": "DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过",
+    "next_action": "由七个适用 Reviewer 对同一 DESIGN-R04 串行独立评审"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-DESIGN-001-I006-A001",
+    "task_id": "TASK-P1-DESIGN-001",
+    "iteration_id": "ITER-P1-COMPILER-F01-DESIGN-006",
+    "iteration_no": 6,
+    "attempt_no": 1,
+    "agent": "DesignAgent",
+    "phase": "design",
+    "status": "FAILED",
+    "input_revision": "af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd",
+    "output_revision": "",
+    "started_at": "2026-07-28T20:38:40+08:00",
+    "completed_at": "2026-07-28T21:21:51+08:00",
+    "failure_type": "UPSTREAM_INCONSISTENCY",
+    "failure_reason": "独立复核确认冻结的 REQAN-R04 中 Atomic exposure 与需求正文/BM-R04/设计冲突，dependency impact 仍为旧 2.42 结构；必须形成新 requirement_analysis Revision 后再重建下游。",
+    "modified_files": [
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md",
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md",
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md",
+      "project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md",
+      "project_doc/docs/_relations/dependency_impact.yaml",
+      "project_doc/docs/_relations/dependency_graph.md",
+      "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml",
+      "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+      "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"
+    ],
+    "command_evidence_ids": [],
+    "evidence_ids": [],
+    "summary": "设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。",
+    "next_action": "重开 requirement_analysis，发布 REQAN-R05 并重新完成下游业务模型与设计门禁"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-REQAN-001-I005-A001",
+    "task_id": "TASK-P1-REQAN-001",
+    "iteration_id": "ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-005",
+    "iteration_no": 5,
+    "attempt_no": 1,
+    "agent": "RequirementAnalysisAgent",
+    "phase": "requirement_analysis",
+    "status": "PASSED",
+    "input_revision": "REQCONF-R04@c186ce681e1e",
+    "output_revision": "REQAN-R05@7de35e8dc15b",
+    "started_at": "2026-07-28T21:26:58+08:00",
+    "completed_at": "2026-07-28T21:34:35+08:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/doc/P1-COMPILER-F01/requirement.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
+      "docs/_relations/dependency_impact.yaml",
+      "docs/_relations/dependency_graph.md",
+      "version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml",
+      "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+      "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000279"
+    ],
+    "evidence_ids": [
+      "EVD-000280"
+    ],
+    "summary": "形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。",
+    "next_action": "发布 REQAN-R05 并由 5 个需求分析 Reviewer 串行独立 Review"
   }
 ]
 ```

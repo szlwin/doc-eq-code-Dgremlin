@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 validation/test_system_information_contract.py && rg DESIGN-R04/BM-R04 semantic gates && git diff --check",
+  "exit_code": 0,
+  "executed_at": "2026-07-28T17:25:27+08:00",
+  "revision": "DESIGN-R04@1c14c8e89779",
+  "output": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.007s\n\nOK\nDESIGN-R04 validation PASSED: mix contract, revision alignment, BM-R04 semantics, traceability seams, and whitespace checks.\n",
+  "output_digest": "50079e8a6d6fd69f95a23d02d1b7415166bd60baa17ee6e574e49bf0d21cef81"
+}

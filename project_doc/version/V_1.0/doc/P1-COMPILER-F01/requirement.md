@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 统一 `mix` AST、Registry 与 Compiler 骨架
 
-> 需求确认 Revision：`REQCONF-R04@c186ce681e1e`。需求分析 Revision：`REQAN-R04@7421b050ed44`。`REQCONF-R03@7a9c82bdc1db` 与旧需求分析 Revision 保留为历史 Evidence。
+> 需求确认 Revision：`REQCONF-R04@c186ce681e1e`。需求分析候选 Revision：`REQAN-R05@7de35e8dc15b`。`REQAN-R04@7421b050ed44`、`REQCONF-R03@7a9c82bdc1db` 与更早 Revision 保留为历史 Evidence。
 >
 > 本 Revision 锁定 P1 的目标、范围、失败模式、九项验收和禁止事项；只有同一 Revision 的两个必需 Reviewer 均通过并生成 StageOutcome 后，治理状态才可标记为 `PASSED`。
 

@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 分析测试矩阵
 
-> Revision：`REQAN-R04@7421b050ed44`。所有 Case 以 `REQCONF-R04@c186ce681e1e` 为输入，动态实现留给后续测试设计/TDD；本矩阵固定验收语义与失败边界。
+> Revision：`REQAN-R05@7de35e8dc15b`。所有 Case 以 `REQCONF-R04@c186ce681e1e` 为输入，动态实现留给后续测试设计/TDD；本矩阵固定验收语义与失败边界。
 
 | Case | AC / BR / TR | 层级 | 输入 | 主要断言 | 失败/恢复断言 |
 |---|---|---|---|---|---|
