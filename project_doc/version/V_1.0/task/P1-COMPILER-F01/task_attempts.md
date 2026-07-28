@@ -529,6 +529,36 @@
     ],
     "summary": "形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。",
     "next_action": "发布 REQAN-R05 并由 5 个需求分析 Reviewer 串行独立 Review"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-BMODEL-001-I005-A001",
+    "task_id": "TASK-P1-BMODEL-001",
+    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-005",
+    "iteration_no": 5,
+    "attempt_no": 1,
+    "agent": "BusinessModelAgent",
+    "phase": "business_model",
+    "status": "PASSED",
+    "input_revision": "REQAN-R05@7de35e8dc15b",
+    "output_revision": "BM-R05@4ecb1f8c09f4",
+    "started_at": "2026-07-28T22:01:17+08:00",
+    "completed_at": "2026-07-28T22:17:38+08:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000281"
+    ],
+    "evidence_ids": [
+      "EVD-000282"
+    ],
+    "summary": "形成 BM-R05：保持既有领域模型并统一 compiler-owned expectedCurrent 条件原子发布，YAML/Markdown/九条 TR 一致。",
+    "next_action": "发布 BM-R05 并由六个 Reviewer 串行独立评审"
   }
 ]
 ```

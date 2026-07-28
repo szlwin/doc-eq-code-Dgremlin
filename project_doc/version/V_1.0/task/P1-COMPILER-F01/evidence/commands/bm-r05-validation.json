@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "BM-R05 schema, stable ID, system information, dependency impact, business flow, MixContractTest, document layout, long-task, and diff validation suite",
+  "exit_code": 0,
+  "executed_at": "2026-07-28T14:15:34Z",
+  "revision": "BM-R05@4ecb1f8c09f4",
+  "output": "BM-R05 schema/stable IDs PASSED (14 terms, 8 scenarios, 8 entities, 10 value objects, 2 aggregates, 15 invariants, 1 state machine, 7 services, 6 policies, 3 events, 23 errors, 9 traces, 106 stable IDs); system information contract 5/5 PASSED; dependency impact PASSED; business flow PASSED; MixContractTest 2/2 PASSED; Maven reactor BUILD SUCCESS under Java 8 release; doc layout PASSED; long task PASSED; git diff check PASSED.",
+  "output_digest": "20d4634af026e15ca7845cbfab013dc9941d7183a68fde4321ce55c0718b3e69"
+}

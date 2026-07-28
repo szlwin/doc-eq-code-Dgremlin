@@ -1375,6 +1375,63 @@
 | 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P1-BMODEL-001-I005-A001","event_id":"EVENT-ATTEMPT-TASK-P1-BMODEL-001-I005-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000282"],"execution_mode":"git_checkpoint","input_revision":"REQAN-R05@7de35e8dc15b","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-BUSINESS-MODEL-005","iteration_no":5,"modified_files_summary":["version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md"],"next_action":"发布 BM-R05 并由六个 Reviewer 串行独立评审","next_agent":"RequirementReviewAgent","output_revision":"BM-R05@4ecb1f8c09f4","phase":"business_model","record_id":"WR-20260728-221738-TASK-P1-BMODEL-001-PASSED","render_digest":"ef96dd4204cc5e0ac3cd90cf485e8543440d959219994ec60b7e27e49e4d77b4","schema_version":4,"scope":"形成 REQAN-R05 对应的 Compiler 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P1-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"形成 BM-R05：保持既有领域模型并统一 compiler-owned expectedCurrent 条件原子发布，YAML/Markdown/九条 TR 一致。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-BMODEL-001","task_type":"business_model","timestamp":"2026-07-28T22:17:38+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260728-221738-TASK-P1-BMODEL-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-28T22:17:38+08:00 |
+| 执行 Agent | BusinessModelAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 形成 REQAN-R05 对应的 Compiler 业务模型 |
+| 阶段 | business_model |
+| 任务类型 | business_model |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 形成 BM-R05：保持既有领域模型并统一 compiler-owned expectedCurrent 条件原子发布，YAML/Markdown/九条 TR 一致。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-BMODEL-001: RUNNING → PASSED |
+| Task | TASK-P1-BMODEL-001 |
+| Attempt | ATTEMPT-TASK-P1-BMODEL-001-I005-A001 |
+| Iteration | ITER-P1-COMPILER-F01-BUSINESS-MODEL-005 / 5 |
+| 输入 Revision | REQAN-R05@7de35e8dc15b |
+| 输出 Revision | BM-R05@4ecb1f8c09f4 |
+| StageOutcome | 无 |
+| Evidence | EVD-000282 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0001、ISSUE-MR-0002、ISSUE-MR-0003、ISSUE-MR-0004 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementReviewAgent |
+| 后续事项 | 发布 BM-R05 并由六个 Reviewer 串行独立评审 |
+
+### 变更摘要
+
+- 形成 BM-R05：保持既有领域模型并统一 compiler-owned expectedCurrent 条件原子发布，YAML/Markdown/九条 TR 一致。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md`
+- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml`
+- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
+- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

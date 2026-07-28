@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 追踪矩阵
 
-> REQAN-R05 为当前需求分析候选，9 条追踪保持稳定 ID；下游 BM-R04 与 DESIGN I006 已因上游修订失效，`verification_evidence_ids` 保持为空，旧 Revision、Review 与 Evidence 保留为历史。
+> REQAN-R05 已正式通过；BM-R05 为当前业务模型候选，9 条追踪保持稳定 ID；design 及其下游仍为 STALE，`verification_evidence_ids` 保持为空，旧 Revision、Review 与 Evidence 保留为历史。
 
 ```json traceability
 [
@@ -77,7 +77,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-002",
@@ -149,7 +149,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-003",
@@ -229,7 +229,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-004",
@@ -303,7 +303,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-005",
@@ -382,7 +382,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-006",
@@ -448,7 +448,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-007",
@@ -514,7 +514,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-008",
@@ -602,7 +602,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   },
   {
     "id": "TR-P1-COMPILER-009",
@@ -681,7 +681,7 @@
       "ImpactAnalysisReviewAgent",
       "CrossModuleIntegrationReviewAgent"
     ],
-    "notes": "BM-R04@1b19a0ba26b6 已绑定稳定模型 ID，并由六个 business_model Reviewer （RequirementReviewAgent, BusinessModelReviewAgent, DesignReviewAgent, TestDesignAgent, ImpactAnalysisReviewAgent, CrossModuleIntegrationReviewAgent）独立 PASSED；Review Evidence 已由 REV-000032～REV-000037 归一化验证。"
+    "notes": "BM-R05@4ecb1f8c09f4 已由六个 business_model Reviewer 对同一 Revision 独立验证通过：REV-000044、REV-000045、REV-000046、REV-000047、REV-000048、REV-000049。"
   }
 ]
 ```

@@ -63,7 +63,7 @@
     "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
     "motivating_evidence": [
       "EVD-000276",
-      "EVD-000277",
+      "EVD-000276",
       "EVD-000278"
     ],
     "question": "请补充或修正后重新执行人工 Review。",
@@ -100,7 +100,7 @@
     "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
     "motivating_evidence": [
       "EVD-000276",
-      "EVD-000277",
+      "EVD-000276",
       "EVD-000278"
     ],
     "question": "请补充或修正后重新执行人工 Review。",
@@ -137,7 +137,7 @@
     "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
     "motivating_evidence": [
       "EVD-000276",
-      "EVD-000277",
+      "EVD-000276",
       "EVD-000278"
     ],
     "question": "请补充或修正后重新执行人工 Review。",
@@ -174,7 +174,7 @@
     "impact": "MANUAL_REVIEW assertion ASRT-P1-R4-DES-ARCH-001 cannot pass",
     "motivating_evidence": [
       "EVD-000276",
-      "EVD-000277",
+      "EVD-000276",
       "EVD-000278"
     ],
     "question": "请补充或修正后重新执行人工 Review。",

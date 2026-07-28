@@ -157,10 +157,10 @@
     "iteration_no": 5,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-004",
     "revision_reason": "独立设计复核发现 REQAN-R04 的 Atomic exposure owner 与需求正文/BM-R04 不一致，且 dependency_impact.yaml 仍为旧 2.42 结构；需形成新 REQAN Revision 并重建下游。",
-    "title": "形成 REQAN-R04 对应的 Compiler 业务模型",
-    "objective": "基于 REQAN-R04 建立 CompilationSession、RawDefinitionSet、TypedKey、ModelAccessBinding、DeferredDefinition、CompiledModelSet、EngineContext、Diagnostic 及 common 跨 System expression 的一致业务模型",
+    "title": "形成 REQAN-R05 对应的 Compiler 业务模型",
+    "objective": "基于 REQAN-R05 建立 CompilationSession、RawDefinitionSet、TypedKey、ModelAccessBinding、DeferredDefinition、CompiledModelSet、EngineContext、Diagnostic 及 compiler-owned 原子发布的一致业务模型",
     "phase": "business_model",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-REQAN-001"
     ],
@@ -174,7 +174,7 @@
       "CrossModuleIntegrationReviewAgent"
     ],
     "input_revisions": {
-      "requirement_analysis": "REQAN-R04@7421b050ed44"
+      "requirement_analysis": "REQAN-R05@7de35e8dc15b"
     },
     "allowed_files": [
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md",
@@ -201,11 +201,11 @@
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "BM-R04 以结构化 YAML 与等价 Markdown 建立 CompilationSession 和 PublishedContext 两个聚合边界，覆盖 RawDefinition、TypedKey、Deferred、Diagnostic 与原子发布",
+      "BM-R05 以结构化 YAML 与等价 Markdown 建立 CompilationSession 和 PublishedContext 两个聚合边界，覆盖 RawDefinition、TypedKey、Deferred、Diagnostic 与 compiler-owned 原子发布",
       "InformationKey 以 SystemKey 为所有权边界；BusinessScope 不拥有 Information；common 只允许跨 System expression Information 且不拥有 Data/View/RuleView/ModelAccess",
       "ModelAccessBinding 明确 source path 与 target selector 分离，selector 先精确匹配 target-main，未命中时才逐段精确解析 property path，歧义或缺失均阻断发布",
       "P2～P8 的 DeferredDefinition、责任阶段、已解析 Key、SourceRef、失败与恢复边界完整可追踪",
-      "九条 TR 均引用 BM-R04 稳定模型 ID，且六个适用 Reviewer 对同一 Revision 独立 PASSED",
+      "九条 TR 均引用 BM-R05 稳定模型 ID，且六个适用 Reviewer 对同一 Revision 独立 PASSED",
       "business_model StageOutcome 为 PASSED，无开放 P0/P1，并创建 Git checkpoint"
     ],
     "stop_conditions": [
@@ -215,10 +215,12 @@
       "不得在 P1 提前实现 P3 Information DAG/evaluation、P4-P7 运行语义"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "BM-R05@4ecb1f8c09f4",
+    "validation_evidence_ids": [
+      "EVD-000282"
+    ]
   },
   {
     "id": "TASK-P1-DESIGN-001",

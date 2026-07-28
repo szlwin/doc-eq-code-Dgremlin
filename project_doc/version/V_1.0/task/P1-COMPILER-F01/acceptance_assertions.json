@@ -184,6 +184,145 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-07-28T21:42:13+08:00",
       "reason": "REQAN-R05 的跨模块实现映射已覆盖发现、解析、编译、原子发布及失败不暴露路径，并声明注入契约和稳定失败语义。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-BM-REQ-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "RequirementReviewAgent 确认 BM-R05 完整承接 REQAN-R05 的范围、原子发布语义和验收约束且未引入需求漂移",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R05@4ecb1f8c09f4",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-07-28T22:22:31+08:00",
+      "reason": "BM-R05 完整承接 REQAN-R05 的编译边界、原子发布职责、验收约束和失败语义，未发现需求漂移。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-BM-BMR-001",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "BusinessModelReviewAgent 确认 BM-R05 的实体、值对象、聚合、不变量、状态机、服务、策略、事件和业务错误语义闭合且 MD/YAML 一致",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R05@4ecb1f8c09f4",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-07-28T22:23:54+08:00",
+      "reason": "BM-R05 的对象边界、15 项不变量、发布状态机、异常与幂等责任形成闭环，MD/YAML 稳定 ID 和语义一致。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-BM-DES-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "DesignReviewAgent 确认 BM-R05 能无歧义映射到 Java 8 设计、编译器内原子发布和模块责任边界",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R05@4ecb1f8c09f4",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-07-28T22:24:00+08:00",
+      "reason": "BM-R05 明确 compiler、context 与 frontend 的责任和依赖方向，原子发布可直接映射为 Java 8 设计契约。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-BM-TD-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TestDesignAgent 确认 BM-R05 的不变量、状态转换、异常与原子发布均可形成可执行测试接缝",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R05@4ecb1f8c09f4",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-07-28T22:24:06+08:00",
+      "reason": "不变量、状态迁移、失败不发布、超时、确定性与并发语义均具有可观察结果和可执行测试接缝。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-BM-IMP-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "ImpactAnalysisReviewAgent 确认 BM-R05 覆盖模块迁移、兼容窗口、失败不发布、历史与在途 Context 处置及退役影响",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R05@4ecb1f8c09f4",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-07-28T22:24:11+08:00",
+      "reason": "模块迁移、兼容窗口、历史与在途 Context、失败阻断、回滚以及旧模块退役影响均已显式约束。"
+    },
+    {
+      "assertion_id": "ASRT-P1-R5-BM-XMOD-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "CrossModuleIntegrationReviewAgent 确认 BM-R05 的编译器、上下文和前端协作契约覆盖幂等、超时、部分失败、恢复与原子可见性",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R05@4ecb1f8c09f4",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "CMI-P1-COMPILER-001"
+      ],
+      "evidence_ids": [
+        "EVD-000282",
+        "EVD-000281"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-07-28T22:25:13+08:00",
+      "reason": "跨模块调用路径明确由 frontend 进入 compiler，compiler 在单次调用内通过注入的 publisher 原子发布；幂等、超时、部分失败、运行验证和恢复语义完整。"
     }
   ]
 }

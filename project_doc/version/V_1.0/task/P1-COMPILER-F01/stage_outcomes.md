@@ -321,6 +321,28 @@
     "open_risks": [],
     "started_at": "2026-07-28T21:34:52+08:00",
     "completed_at": "2026-07-28T21:55:23+08:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-BUSINESS_MODEL-I005",
+    "phase": "business_model",
+    "round": "BUSINESS_MODEL-I005",
+    "iteration_id": "ITER-P1-COMPILER-F01-BUSINESS-MODEL-005",
+    "iteration_no": 5,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "BusinessModelAgent",
+    "input_revisions": {
+      "requirement_analysis": "REQAN-R05@7de35e8dc15b"
+    },
+    "output_revision": "BM-R05@4ecb1f8c09f4",
+    "evidence_ids": [
+      "EVD-000282",
+      "EVD-000281"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-28T22:19:17+08:00",
+    "completed_at": "2026-07-28T22:32:19+08:00"
   }
 ]
 ```

@@ -3,8 +3,8 @@ artifact: business_model
 module:
   code: DEC_COMPILER
   name: 统一 mix 编译与不可变模型发布
-revision: BM-R04@1b19a0ba26b6
-baseRevision: BM-R02-DRAFT
+revision: BM-R05@4ecb1f8c09f4
+baseRevision: BM-R04@1b19a0ba26b6
 terms:
 - id: TERM-COMPILATION-SESSION
   name: CompilationSession
@@ -13,7 +13,7 @@ terms:
   - global current compiler
   - shared mutable compiler
   sourceRefs:
-  - REQAN-R04@7421b050ed44
+  - REQAN-R05@7de35e8dc15b
 - id: TERM-RAW-DEFINITION
   name: RawDefinition
   definition: 从 CanonicalDocumentNode 构建、保留 SourceRef 且尚未执行后续阶段运行语义的格式中立定义。
@@ -127,11 +127,12 @@ scenarios:
 - id: SCN-COMPILER-SUCCESS
   given:
   - 根 DocumentSource 位于允许根路径
-  - XML/YAML frontend 已注册
+  - XML/YAML frontend 与 ContextPublisher 已注入
   - 所有引用最终可解析
-  when: CompilationSession 执行发现、解析、Raw 构建、符号注册、引用解析、Deferred 分类和发布
+  when: CompilationSession 执行发现、解析、Raw 构建、符号注册、引用解析、Deferred 分类，并以 expectedCurrent 条件发布
   then:
   - 产生不可变 CompiledModelSet 与 EngineContext
+  - ContextPublisher 在同一次 compile 调用内原子替换 expectedCurrent
   - sourceDigest 与 semanticDigest 均记录
   - Diagnostic 无 ERROR
   traceIds:
@@ -679,7 +680,7 @@ aggregates:
   - INV-COMPILER-011
   - INV-COMPILER-012
   - INV-COMPILER-013
-  transactionBoundary: 一次 compile 调用；构建期所有变化只存在于该 Session，终态前不对外发布
+  transactionBoundary: 一次 compile 调用；构建期变化只存在于该 Session，成功时由 compiler 调用注入的 ContextPublisher 条件发布后才进入 PUBLISHED
   consistency: 强一致、全有或全无；不同 Session 不共享可变对象
   traceIds:
   - TR-P1-COMPILER-001
@@ -765,8 +766,8 @@ invariants:
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
 - id: INV-COMPILER-009
-  statement: 任一 ERROR 都使 CompilationSession 进入 FAILED，CompiledModelSet 与 EngineContext 不得部分构造或发布，调用方旧 Context 不变。
-  trigger: 任一 Compiler Pass 结束或发布前
+  statement: 任一 ERROR、ContextPublisher 拒绝 expectedCurrent 条件或发布异常都使 CompilationSession 进入 FAILED；compiler 不得返回未发布的成功结果，CompiledModelSet 与 EngineContext 不得部分暴露，调用方旧 Context 不变。
+  trigger: 任一 Compiler Pass 结束或 compiler 原子发布时
   failure: ERR-MIX-PUBLICATION-BLOCKED
   traceIds:
   - TR-P1-COMPILER-003
@@ -907,14 +908,15 @@ stateMachines:
     failure: ERROR 转 FAILED
   - id: TRANS-COMP-009
     from: SEMANTICALLY_VALIDATED
-    command: publish
+    command: publishAtomically
     to: PUBLISHED
     preconditions:
     - Diagnostic 中不存在 ERROR
     - 所有 Registry 可防御性冻结
+    - ContextPublisher 与 expectedCurrent 已注入
     sideEffects:
-    - 一次性创建 CompiledModelSet 与 EngineContext
-    failure: 发布失败转 FAILED且不替换旧 Context
+    - compiler 一次性创建 CompiledModelSet 和 EngineContext，并在本次 compile 调用内按 expectedCurrent 条件原子发布
+    failure: 条件冲突、空返回或异常均转 FAILED且不替换旧 Context
   traceIds:
   - TR-P1-COMPILER-001
   - TR-P1-COMPILER-002
@@ -997,9 +999,11 @@ services:
   - TR-P1-COMPILER-008
 - id: SVC-MODEL-PUBLICATION
   name: ModelPublicationService
-  reason: 只有单一服务能保护 ERROR 不发布、防御性冻结和旧 Context 不替换不变量。
+  reason: 只有 compiler 内的单一服务能保护 ERROR 不发布、防御性冻结、expectedCurrent 条件和旧 Context 不替换不变量。
   inputs:
   - ValidatedCompilationSession
+  - PublicationRequest
+  - ContextPublisher
   outputs:
   - CompilationResult
   - CompiledModelSet
@@ -1049,10 +1053,12 @@ policies:
   - TR-P1-COMPILER-004
 - id: POL-PUBLICATION
   name: AtomicPublicationPolicy
-  reason: 保护无 ERROR、全量冻结和旧 Context 保留的一致性边界。
+  reason: 保护无 ERROR、全量冻结、expectedCurrent 条件发布和旧 Context 保留的一致性边界。
   inputs:
   - CompilationSession
   - DiagnosticSet
+  - PublicationRequest
+  - ContextPublisher
   outputs:
   - CompilationResult
   traceIds:
@@ -1106,10 +1112,11 @@ events:
   - TR-P1-COMPILER-009
 - id: EVT-MODEL-PUBLISHED
   name: ModelPublished
-  reason: 对外表达新的不可变 Context 已原子可见。
+  reason: 对外表达 compiler 已在同一次 compile 调用内使新的不可变 Context 原子可见。
   inputs:
   - CompiledModelSet
   - DigestPair
+  - expectedCurrent
   outputs:
   - EngineContextId
   traceIds:

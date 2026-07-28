@@ -1,10 +1,10 @@
 # DEC_COMPILER 业务模型
 
-> Revision：`BM-R04@1b19a0ba26b6`。输入：`REQAN-R04@7421b050ed44`；基线草案：`BM-R02-DRAFT`。结构化事实源为同目录 YAML，本文提供等价的人类可读视图。
+> Revision：`BM-R05@4ecb1f8c09f4`。输入：`REQAN-R05@7de35e8dc15b`；上一正式版本：`BM-R04@1b19a0ba26b6`。结构化事实源为同目录 YAML，本文提供等价的人类可读视图。
 
 ## 1. 模块使命与边界
 
-DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追踪、可复现的 `CompiledModelSet` 与实例级 `EngineContext`。它只负责 P1 的源发现、格式中立结构、强类型符号、P1 引用解析、Deferred 登记、Diagnostic、摘要和原子发布；不执行 P2～P8 的运行语义，不拥有数据库连接，不生成大批业务 Java 类，也不恢复 `dec-expand-declaration` 或第二运行时。
+DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追踪、可复现的 `CompiledModelSet` 与实例级 `EngineContext`。它负责 P1 的源发现、格式中立结构、强类型符号、P1 引用解析、Deferred 登记、Diagnostic、摘要，并在同一次 compile 调用内通过注入的 `ContextPublisher` 完成条件原子发布；不执行 P2～P8 的运行语义，不拥有数据库连接，不生成大批业务 Java 类，也不恢复 `dec-expand-declaration` 或第二运行时。
 
 ## 2. 统一语言
 
@@ -29,7 +29,7 @@ DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追�
 
 | 场景 ID | Given | When | Then | 追踪 |
 |---|---|---|---|---|
-| SCN-COMPILER-SUCCESS | 根 DocumentSource 位于允许根路径；XML/YAML frontend 已注册；所有引用最终可解析 | CompilationSession 执行发现、解析、Raw 构建、符号注册、引用解析、Deferred 分类和发布 | 产生不可变 CompiledModelSet 与 EngineContext；sourceDigest 与 semanticDigest 均记录；Diagnostic 无 ERROR | TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P1-COMPILER-005 |
+| SCN-COMPILER-SUCCESS | 根 DocumentSource 位于允许根路径；XML/YAML frontend 与 ContextPublisher 已注入；所有引用最终可解析 | CompilationSession 执行发现、解析、Raw 构建、符号注册、引用解析、Deferred 分类，并以 expectedCurrent 条件发布 | 产生不可变 CompiledModelSet 与 EngineContext；ContextPublisher 在同一次 compile 调用内原子替换 expectedCurrent；sourceDigest 与 semanticDigest 均记录；Diagnostic 无 ERROR | TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P1-COMPILER-005 |
 | SCN-COMPILER-INVALID-REFERENCE | 输入包含未知引用、重复 TypedKey 或归属冲突；调用方持有旧 EngineContext | ReferenceResolutionService 或验证策略产生 ERROR | CompilationSession 进入 FAILED；不构造或发布新 CompiledModelSet；调用方旧 EngineContext 保持原值 | TR-P1-COMPILER-003, TR-P1-COMPILER-005 |
 | SCN-COMMON-EXPRESSION | common.payError expression 引用 payment.error 与 order.payErrorStatus；两个引用均为已注册 InformationKey | InformationOwnershipPolicy 编译 common expression | 建立 common.payError 到两个 system-qualified InformationKey 的依赖；登记 P3 expression evaluation Deferred；common 不获得 Data/View/RuleView/ModelAccess | TR-P1-COMPILER-004, TR-P1-COMPILER-008 |
 | SCN-MODEL-ACCESS-TARGET-MAIN | read@path=user；ref@view=UserInfo；ref@property=user；UserInfo.target-main=user | ModelAccessSelectorPolicy 解析目标 | 源路径保持 SharedModelPath(user)；selector 精确命中 target-main；绑定到 UserInfo 根目标且不查找其它 View | TR-P1-COMPILER-008, TR-P1-COMPILER-009 |
@@ -42,13 +42,14 @@ DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追�
 
 | 聚合 ID | 根 | 成员 | 事务/原子边界 | 一致性 | 不变量 |
 |---|---|---|---|---|---|
-| AGG-COMPILATION-SESSION | `ENT-COMPILATION-SESSION` | ENT-MIX-SOURCE-GRAPH, ENT-RAW-DEFINITION-SET, ENT-SYMBOL-TABLE, ENT-DEFERRED-REGISTRY, VO-DOCUMENT-SOURCE, VO-CANONICAL-DOCUMENT-NODE, VO-SOURCE-REF, VO-TYPED-KEY, VO-INFORMATION-KEY, VO-MODEL-ACCESS-BINDING, VO-DEFERRED-DEFINITION, VO-DIAGNOSTIC, VO-DIGEST-PAIR, VO-COMPILATION-RESULT | 一次 compile 调用；构建期所有变化只存在于该 Session，终态前不对外发布 | 强一致、全有或全无；不同 Session 不共享可变对象 | INV-COMPILER-001, INV-COMPILER-002, INV-COMPILER-003, INV-COMPILER-004, INV-COMPILER-005, INV-COMPILER-006, INV-COMPILER-007, INV-COMPILER-008, INV-COMPILER-009, INV-COMPILER-010, INV-COMPILER-011, INV-COMPILER-012, INV-COMPILER-013 |
+| AGG-COMPILATION-SESSION | `ENT-COMPILATION-SESSION` | ENT-MIX-SOURCE-GRAPH, ENT-RAW-DEFINITION-SET, ENT-SYMBOL-TABLE, ENT-DEFERRED-REGISTRY, VO-DOCUMENT-SOURCE, VO-CANONICAL-DOCUMENT-NODE, VO-SOURCE-REF, VO-TYPED-KEY, VO-INFORMATION-KEY, VO-MODEL-ACCESS-BINDING, VO-DEFERRED-DEFINITION, VO-DIAGNOSTIC, VO-DIGEST-PAIR, VO-COMPILATION-RESULT | 一次 compile 调用；构建期变化只存在于该 Session，成功时由 compiler 调用注入的 ContextPublisher 条件发布后才进入 PUBLISHED | 强一致、全有或全无；不同 Session 不共享可变对象 | INV-COMPILER-001, INV-COMPILER-002, INV-COMPILER-003, INV-COMPILER-004, INV-COMPILER-005, INV-COMPILER-006, INV-COMPILER-007, INV-COMPILER-008, INV-COMPILER-009, INV-COMPILER-010, INV-COMPILER-011, INV-COMPILER-012, INV-COMPILER-013 |
 | AGG-PUBLISHED-CONTEXT | `ENT-ENGINE-CONTEXT` | ENT-COMPILED-MODEL-SET, ENT-CORE-CONFIG-PROJECTION, VO-DIGEST-PAIR | 只有 PUBLISHED 终态才能一次性创建并交给调用方；失败不替换旧 Context | 发布后永久不可变；Projection 与 CompiledModelSet 同源 | INV-COMPILER-009, INV-COMPILER-010, INV-COMPILER-011, INV-COMPILER-014 |
 
 ### 4.1 Compilation Session Aggregate
 
 - `CompilationSession` 是唯一允许构建期变化的聚合根；SourceGraph、RawDefinitionSet、SymbolTable、Deferred Registry 和 Diagnostic 只属于该 Session。
 - 所有 TypedKey 注册完成后才允许解析前向引用；任何 ERROR 使整个 Session 失败。
+- compiler 是原子发布用例的唯一编排者；Starter 只注入 `ContextPublisher`、`expectedCurrent` 和其它依赖，不得在 compile 返回后执行第二次发布。
 - Session 终态只有 `PUBLISHED` 或 `FAILED`，终态后不得继续写入。
 
 ### 4.2 Published Context Aggregate
@@ -163,7 +164,7 @@ DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追�
 | INV-COMPILER-006 | Information view-ref、rule-ref 与 ModelAccess ref@view 只能指向当前 System 已声明的 View 或 RuleView。 | 解析 System 内引用 | `ERR-MIX-REF-VIEW-NOT-DECLARED 或 ERR-MIX-REF-RULE-SYSTEM-MISMATCH` | TR-P1-COMPILER-003, TR-P1-COMPILER-008 |
 | INV-COMPILER-007 | ModelAccess sourcePath 与 target selector 是不同字段；selector 先精确匹配 target-main，未匹配才逐段精确解析同一 View property path；禁止模糊、跨 View 或静默降级。 | 解析 ModelAccessBinding | `ERR-MIX-MODEL-ACCESS-NOT-FOUND、AMBIGUOUS 或 NON-COMPOSITE` | TR-P1-COMPILER-008, TR-P1-COMPILER-009 |
 | INV-COMPILER-008 | 每个后续语义必须登记包含 requiredStage、reason、SourceRef 和已解析 TypedKey 的 DeferredDefinition；P1 不执行 P2～P8 运行语义。 | Deferred 分类 | `ERR-MIX-DEFERRED-INCOMPLETE` | TR-P1-COMPILER-004, TR-P1-COMPILER-008, TR-P1-COMPILER-009 |
-| INV-COMPILER-009 | 任一 ERROR 都使 CompilationSession 进入 FAILED，CompiledModelSet 与 EngineContext 不得部分构造或发布，调用方旧 Context 不变。 | 任一 Compiler Pass 结束或发布前 | `ERR-MIX-PUBLICATION-BLOCKED` | TR-P1-COMPILER-003, TR-P1-COMPILER-005, TR-P1-COMPILER-008, TR-P1-COMPILER-009 |
+| INV-COMPILER-009 | 任一 ERROR、ContextPublisher 拒绝 expectedCurrent 条件或发布异常都使 CompilationSession 进入 FAILED；compiler 不得返回未发布的成功结果，CompiledModelSet 与 EngineContext 不得部分暴露，调用方旧 Context 不变。 | 任一 Compiler Pass 结束或 compiler 原子发布时 | `ERR-MIX-PUBLICATION-BLOCKED` | TR-P1-COMPILER-003, TR-P1-COMPILER-005, TR-P1-COMPILER-008, TR-P1-COMPILER-009 |
 | INV-COMPILER-010 | 同义输入、稳定选项和同一编译器版本必须产生相同 semanticDigest；sourceDigest 单独反映原文。 | 摘要计算 | `ERR-MIX-DIGEST-NONDETERMINISTIC` | TR-P1-COMPILER-005 |
 | INV-COMPILER-011 | 已发布 Registry、CompiledModelSet 与 EngineContext 永久不可变，不存在全局 current Context，不同 Context 不共享可变状态。 | 发布和读取 | `ERR-MIX-CONTEXT-MUTATION` | TR-P1-COMPILER-005, TR-P1-COMPILER-006 |
 | INV-COMPILER-012 | XML 禁止外部实体和网络解析，YAML 禁止任意 Java 类型，Source 不得逃逸允许根路径或使用未授权 scheme。 | Source 读取和 frontend 解析 | `ERR-MIX-SOURCE-PATH-ESCAPE、ERR-MIX-XML-UNSAFE 或 ERR-MIX-YAML-UNSAFE` | TR-P1-COMPILER-001, TR-P1-COMPILER-002 |
@@ -183,7 +184,7 @@ DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追�
 | TRANS-COMP-006 | SYMBOLS_REGISTERED | `resolveReferences` | REFERENCES_RESOLVED | 注册阶段已封存 | 解析前向引用、Information owner、ModelAccess selector | 未知、归属或歧义 ERROR 转 FAILED |
 | TRANS-COMP-007 | REFERENCES_RESOLVED | `classifyDeferred` | GRAPH_PREPARED | P1 可解析 Key 完整 | 登记 P2～P8 DeferredDefinition | Deferred 不完整转 FAILED |
 | TRANS-COMP-008 | GRAPH_PREPARED | `validateSemantics` | SEMANTICALLY_VALIDATED | 无先前 ERROR | 计算稳定 Diagnostic 顺序与 digest 输入 | ERROR 转 FAILED |
-| TRANS-COMP-009 | SEMANTICALLY_VALIDATED | `publish` | PUBLISHED | Diagnostic 中不存在 ERROR；所有 Registry 可防御性冻结 | 一次性创建 CompiledModelSet 与 EngineContext | 发布失败转 FAILED且不替换旧 Context |
+| TRANS-COMP-009 | SEMANTICALLY_VALIDATED | `publishAtomically` | PUBLISHED | Diagnostic 中不存在 ERROR；所有 Registry 可防御性冻结；ContextPublisher 与 expectedCurrent 已注入 | compiler 一次性创建 CompiledModelSet 和 EngineContext，并在本次 compile 调用内按 expectedCurrent 条件原子发布 | 条件冲突、空返回或异常均转 FAILED且不替换旧 Context |
 
 任何阶段产生 ERROR 都直接转入 `FAILED`；不存在从 `FAILED` 恢复同一 Session 的转换。修复配置后必须创建新的 CompilationSession。
 
@@ -199,7 +200,7 @@ DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追�
 | SVC-SYMBOL-REGISTRATION | `SymbolRegistrationService` | 跨文件前向引用要求先完成所有 TypedKey 注册再解析。 | RawDefinitionSet | SymbolTable, Diagnostic |
 | SVC-REFERENCE-RESOLUTION | `ReferenceResolutionService` | Information 所有权、RuleView 归属、ModelAccess selector 和跨文件引用需要统一确定性策略。 | RawDefinitionSet, SymbolTable, InformationOwnershipPolicy, ModelAccessSelectorPolicy | ResolvedDefinitions, ModelAccessBinding, Diagnostic |
 | SVC-DEFERRED-CLASSIFICATION | `DeferredClassificationService` | P1 必须显式区分已解析结构与后续阶段运行语义。 | ResolvedDefinitions | DeferredDefinitionRegistry, Diagnostic |
-| SVC-MODEL-PUBLICATION | `ModelPublicationService` | 只有单一服务能保护 ERROR 不发布、防御性冻结和旧 Context 不替换不变量。 | ValidatedCompilationSession | CompilationResult, CompiledModelSet, EngineContext |
+| SVC-MODEL-PUBLICATION | `ModelPublicationService` | 只有 compiler 内的单一服务能保护 ERROR 不发布、防御性冻结、expectedCurrent 条件和旧 Context 不替换不变量。 | ValidatedCompilationSession, PublicationRequest, ContextPublisher | PUBLISHED 或 FAILED CompilationResult, CompiledModelSet, EngineContext |
 
 ### 12.2 策略
 
@@ -208,7 +209,7 @@ DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追�
 | POL-INFORMATION-OWNERSHIP | `InformationOwnershipPolicy` | Information owner 和 common 跨 System 规则横跨 System、Information 与 BusinessScope 定义。 | RawSystemDefinition, RawInformationDefinition, SymbolTable | InformationKey, ResolvedInformationDependencies, Diagnostic |
 | POL-MODEL-ACCESS-SELECTOR | `ModelAccessSelectorPolicy` | target-main 优先和 property path 回退是可变但必须确定性的业务规则。 | SharedModelPath, ViewKey, TargetSelector, CompiledViewStructure | ModelAccessBinding, Diagnostic |
 | POL-DEFERRED-BOUNDARY | `DeferredBoundaryPolicy` | 防止 P1 提前执行 P2～P8 语义或静默忽略未完成定义。 | ResolvedDefinition, StageOwnershipMatrix | DeferredDefinition |
-| POL-PUBLICATION | `AtomicPublicationPolicy` | 保护无 ERROR、全量冻结和旧 Context 保留的一致性边界。 | CompilationSession, DiagnosticSet | CompilationResult |
+| POL-PUBLICATION | `AtomicPublicationPolicy` | 保护无 ERROR、全量冻结、expectedCurrent 条件发布和旧 Context 保留的一致性边界。 | CompilationSession, DiagnosticSet, PublicationRequest, ContextPublisher | PUBLISHED 或 FAILED CompilationResult |
 | POL-SOURCE-SECURITY | `SourceSecurityPolicy` | 路径、URI、XML 和 YAML 安全需要统一前置拒绝。 | DocumentSource, FrontendSecurityOptions | AllowedSource|Diagnostic |
 | POL-RETIREMENT | `DeclarationRetirementPolicy` | 不可逆替代必须保证临时模块及 Adapter 无残留。 | RepositoryTree, Reactor, DependencyTree, ArtifactList | RetirementGateResult |
 
@@ -218,7 +219,7 @@ DEC_COMPILER 将调用方提供的配置根 Source 编译为不可变、可追�
 |---|---|---|---|---|
 | EVT-SOURCES-DISCOVERED | `SourcesDiscovered` | 记录源图事实供后续 Pass 使用，不表示业务运行事件。 | MixSourceGraph | source count, typed edge count |
 | EVT-COMPILATION-FAILED | `CompilationFailed` | 对外表达未发布且旧 Context 不变的已发生编译事实。 | CompilationSessionId, DiagnosticSet | FAILED CompilationResult |
-| EVT-MODEL-PUBLISHED | `ModelPublished` | 对外表达新的不可变 Context 已原子可见。 | CompiledModelSet, DigestPair | EngineContextId |
+| EVT-MODEL-PUBLISHED | `ModelPublished` | 对外表达 compiler 已在同一次 compile 调用内使新的不可变 Context 原子可见。 | CompiledModelSet, DigestPair, expectedCurrent | EngineContextId |
 
 ## 13. 业务错误与 Diagnostic
 
@@ -255,9 +256,9 @@ Diagnostic 稳定排序键为 `sourceId → line → column → code → definit
 | 模块 | 业务模型责任 | 输入 | 输出 | 失败责任 |
 |---|---|---|---|---|
 | XML/YAML frontend | 安全解析并产生 CanonicalDocumentNode | DocumentSource | Canonical node / format Diagnostic | 格式与安全错误 |
-| `dec-core-compiler` | Session、SourceGraph、Raw、TypedKey、Reference、Deferred、Diagnostic、digest、发布策略 | Canonical nodes | CompilationResult / CompiledModelSet | 任一 ERROR 不发布 |
-| `dec-core-context` | 不可变 EngineContext 与 CoreConfigProjection | CompiledModelSet | Context / read-only projection | 不可变性与实例隔离 |
-| `dec-core-starter` | 注入 SourceProvider、frontend 与 compiler，显式交付 Context | root Source + options | CompilationResult | 组装失败且旧 Context 不变 |
+| `dec-core-compiler` | Session、SourceGraph、Raw、TypedKey、Reference、Deferred、Diagnostic、digest，以及同一次 compile 调用内的原子发布编排 | Canonical nodes, PublicationRequest, ContextPublisher | PUBLISHED / FAILED CompilationResult | 任一 ERROR、发布冲突或异常均不暴露新 Context |
+| `dec-core-context` | 不可变 EngineContext、CoreConfigProjection 与 ContextPublisher 条件发布契约/实现 | CompiledModelSet, expectedCurrent | Context / read-only projection / publication result | 不可变性、实例隔离与条件替换 |
+| `dec-core-starter` | 注入 SourceProvider、frontend、compiler 与 ContextPublisher，并返回 compiler 结果 | root Source + options + expectedCurrent | CompilationResult | 组装失败且旧 Context 不变；禁止二次发布 |
 | `dec-demo` | 提供真实 mix fixture 和契约证据 | fixture | tests/evidence | fixture 漂移；不得成为核心依赖 |
 
 `dec-expand-declaration` 的处置为整体删除，无迁移、无 Adapter、无在途运行时双轨；历史只保留在 Git 与 Evidence，恢复方式只有 Git revert。
@@ -280,11 +281,11 @@ Diagnostic 稳定排序键为 `sourceId → line → column → code → definit
 
 | 项目 | 内容 |
 |---|---|
-| Change Set | `CHG-V_1.0-DEC_COMPILER-BM-004` |
-| Base Revision | `BM-R02-DRAFT` |
-| Result Revision | `BM-R04@1b19a0ba26b6` |
-| Input Revision | `REQAN-R04@7421b050ed44` |
-| 变更原因 | common 跨 System expression、System-owned Information、ModelAccess target-main 优先规则和 P2～P8 Deferred 边界已在 REQAN-R04 确认 |
+| Change Set | `CHG-V_1.0-DEC_COMPILER-BM-005` |
+| Base Revision | `BM-R04@1b19a0ba26b6` |
+| Result Revision | `BM-R05@4ecb1f8c09f4` |
+| Input Revision | `REQAN-R05@7de35e8dc15b` |
+| 变更原因 | REQAN-R05 将原子发布责任统一归属 dec-core-compiler，并把 ContextPublisher 定义为注入契约；业务模型需消除 Starter 发布歧义 |
 | 受影响追踪 | `TR-P1-COMPILER-001`～`TR-P1-COMPILER-009` |
 | 下游处置 | design/test_design/implementation_plan 继续保持 STALE，必须消费本 Revision |
 
@@ -294,6 +295,7 @@ Diagnostic 稳定排序键为 `sourceId → line → column → code → definit
 - 新增 `InformationKey(SystemKey,localName)`、`ModelAccessBinding`、`DeferredDefinition` 与稳定 Diagnostic 模型；
 - 明确 common System 与 BusinessScope 的边界；
 - 明确 CompilationSession 状态机及 ERROR 全有或全无发布；
+- 明确 compiler 在同一次 compile 调用内完成 expectedCurrent 条件发布，Starter 只注入依赖并返回结果；
 - 将 9 条 TR 映射到稳定模型 ID；
 - 保留 BM-R01/BM-R02 草案及其 Review/Evidence 作为不可变历史，不覆盖历史记录。
 
