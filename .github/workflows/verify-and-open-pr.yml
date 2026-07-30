@@ -176,6 +176,7 @@ jobs:
       - name: Run MySQL integration tests
         env:
           DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
+          DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1
           DEC_MYSQL_USER: root
           DEC_MYSQL_PASSWORD: mysqldb
         run: |
