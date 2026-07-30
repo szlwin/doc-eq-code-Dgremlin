@@ -3,7 +3,6 @@ name: Verify and Open PR
 run-name: Verify ${{ github.ref_name }} and open PR to ${{ inputs.base_branch || 'dev_all' }}
 
 "on":
-  # 推荐方式：代码完成并推送后，由开发者手工触发。
   workflow_dispatch:
     inputs:
       base_branch:
@@ -11,13 +10,13 @@ run-name: Verify ${{ github.ref_name }} and open PR to ${{ inputs.base_branch ||
         required: true
         default: dev_all
         type: string
+
       pr_title:
         description: Pull request title; leave empty to generate automatically
         required: false
         default: ""
         type: string
 
-  # 可选的自动方式：这些功能分支每次 push 后自动验证并创建或复用 PR。
   push:
     branches:
       - "feature/**"
@@ -25,23 +24,19 @@ run-name: Verify ${{ github.ref_name }} and open PR to ${{ inputs.base_branch ||
       - "refactor/**"
       - "chore/**"
 
-# 默认只允许读取仓库内容。
 permissions:
   contents: read
 
-# 同一分支只保留最新运行，避免旧提交继续占用 Runner。
 concurrency:
-  # push：同一分支共用一个组，只保留最新提交。
-  # workflow_dispatch：使用唯一 run_id，每次手工运行互不取消。
+  # push：同一分支只保留最新运行。
+  # workflow_dispatch：每次手工运行使用独立 run_id，互不取消。
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || 'push' }}
-  # 只有新的 push 才取消同一分支上旧的 push 运行。
-  # 手工触发的运行不会取消其他运行。
   cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   core-verify:
     name: Core build and tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:
@@ -86,22 +81,15 @@ jobs:
   mysql-it:
     name: MySQL integration tests
     needs: core-verify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: mysqldb
-          MYSQL_DATABASE: demo-test2
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -pmysqldb"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
+    # Java 测试代码通过这些环境变量读取数据库连接信息。
+    env:
+      DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
+      DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1
+      DEC_MYSQL_USER: root
+      DEC_MYSQL_PASSWORD: root
 
     steps:
       - name: Checkout source branch
@@ -120,66 +108,185 @@ jobs:
       - name: Bootstrap repository-bundled legacy dependencies
         run: scripts/remediation/bootstrap_legacy_dependencies.sh
 
-      - name: Initialize MySQL schema
-        env:
-          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
-          MYSQL_TEST_PASSWORD: mysqldb
+      - name: Start preinstalled MySQL
+        shell: bash
         run: |
-          set -eu
+          set -euo pipefail
 
-          test -f dec-demo/src/test/resources/mysql/schema.sql
+          sudo systemctl start mysql.service
 
-          docker exec \
-            -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
-            -i "$MYSQL_CONTAINER_ID" \
-            mysql \
-            -uroot \
-            --database="demo-test2" \
-            < dec-demo/src/test/resources/mysql/schema.sql
+          MYSQL_READY=false
 
-      - name: Initialize MySQL test data
-        env:
-          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
-          MYSQL_TEST_PASSWORD: mysqldb
-        run: |
-          set -eu
+          for attempt in $(seq 1 30); do
+            if MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+              mysqladmin \
+                --protocol=TCP \
+                --host=127.0.0.1 \
+                --port=3306 \
+                --user="$DEC_MYSQL_USER" \
+                ping \
+                --silent
+            then
+              MYSQL_READY=true
+              break
+            fi
 
-          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
-            docker exec \
-              -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
-              -i "$MYSQL_CONTAINER_ID" \
-              mysql \
-              -uroot \
-              --database="demo-test2" \
-              < dec-demo/src/test/resources/mysql/data.sql
+            echo "Waiting for MySQL: attempt ${attempt}/30"
+            sleep 1
+          done
+
+          if [ "$MYSQL_READY" != "true" ]; then
+            echo "::error::MySQL did not become ready within 30 seconds."
+            sudo systemctl status mysql.service --no-pager || true
+            exit 1
           fi
 
-      - name: Verify MySQL schema
-        env:
-          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
-          MYSQL_TEST_PASSWORD: mysqldb
-        run: |
-          set -eu
-
-          docker exec \
-            -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
-            "$MYSQL_CONTAINER_ID" \
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
             mysql \
-            -uroot \
-            --database="demo-test2" \
-            -e "
-              SELECT DATABASE();
-              SHOW TABLES;
-              SHOW TABLES LIKE 'order_info';
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SELECT VERSION() AS mysql_version;
+                SELECT CURRENT_USER() AS current_user;
+              "
+
+      - name: Initialize MySQL schema
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SCHEMA_FILE="dec-demo/src/test/resources/mysql/schema.sql"
+
+          if [ ! -f "$SCHEMA_FILE" ]; then
+            echo "::error::Missing MySQL schema file: $SCHEMA_FILE"
+            exit 1
+          fi
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              < "$SCHEMA_FILE"
+
+      - name: Initialize MySQL test data
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DATA_FILE="dec-demo/src/test/resources/mysql/data.sql"
+
+          if [ -f "$DATA_FILE" ]; then
+            MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+              mysql \
+                --protocol=TCP \
+                --host=127.0.0.1 \
+                --port=3306 \
+                --user="$DEC_MYSQL_USER" \
+                --database="demo-test2" \
+                < "$DATA_FILE"
+          else
+            echo "Optional MySQL test data file does not exist: $DATA_FILE"
+          fi
+
+      - name: Verify MySQL schemas
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mysql_value() {
+            MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+              mysql \
+                --protocol=TCP \
+                --host=127.0.0.1 \
+                --port=3306 \
+                --user="$DEC_MYSQL_USER" \
+                --batch \
+                --skip-column-names \
+                --execute="$1"
+          }
+
+          SCHEMA_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.SCHEMATA
+              WHERE SCHEMA_NAME IN ('demo-test1', 'demo-test2');
             "
+          )"
+
+          if [ "$SCHEMA_COUNT" -ne 2 ]; then
+            echo "::error::Expected demo-test1 and demo-test2, found ${SCHEMA_COUNT} schemas."
+            exit 1
+          fi
+
+          DEMO1_PRODUCT_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.TABLES
+              WHERE TABLE_SCHEMA = 'demo-test1'
+                AND TABLE_NAME = 'product_info';
+            "
+          )"
+
+          DEMO2_PRODUCT_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.TABLES
+              WHERE TABLE_SCHEMA = 'demo-test2'
+                AND TABLE_NAME = 'product_info';
+            "
+          )"
+
+          DEMO2_ORDER_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.TABLES
+              WHERE TABLE_SCHEMA = 'demo-test2'
+                AND TABLE_NAME = 'order_info';
+            "
+          )"
+
+          if [ "$DEMO1_PRODUCT_COUNT" -ne 1 ]; then
+            echo "::error::Missing demo-test1.product_info."
+            exit 1
+          fi
+
+          if [ "$DEMO2_PRODUCT_COUNT" -ne 1 ]; then
+            echo "::error::Missing demo-test2.product_info."
+            exit 1
+          fi
+
+          if [ "$DEMO2_ORDER_COUNT" -ne 1 ]; then
+            echo "::error::Missing demo-test2.order_info."
+            exit 1
+          fi
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SELECT SCHEMA_NAME
+                FROM INFORMATION_SCHEMA.SCHEMATA
+                WHERE SCHEMA_NAME IN ('demo-test1', 'demo-test2')
+                ORDER BY SCHEMA_NAME;
+
+                SHOW TABLES FROM \`demo-test1\`;
+                SHOW TABLES FROM \`demo-test2\`;
+              "
 
       - name: Run MySQL integration tests
-        env:
-          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
-          DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1
-          DEC_MYSQL_USER: root
-          DEC_MYSQL_PASSWORD: mysqldb
+        shell: bash
         run: |
+          echo "Primary JDBC URL: $DEC_MYSQL_URL"
+          echo "Secondary JDBC URL: $DEC_MYSQL_URL_2"
+          echo "Database user: $DEC_MYSQL_USER"
+
           ./mvnw \
             --batch-mode \
             --no-transfer-progress \
@@ -198,13 +305,59 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Show MySQL diagnostics after failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "## MySQL service status"
+          sudo systemctl status mysql.service --no-pager || true
+
+          echo
+          echo "## MySQL process list"
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SHOW FULL PROCESSLIST;
+              " || true
+
+          echo
+          echo "## InnoDB status"
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SHOW ENGINE INNODB STATUS;
+              " || true
+
+          echo
+          echo "## Active InnoDB transactions"
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SELECT *
+                FROM INFORMATION_SCHEMA.INNODB_TRX;
+              " || true
+
   create-pr:
     name: Create or reuse pull request
     needs: mysql-it
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
 
-    # 仅最后一个 Job 可以创建 PR。
     permissions:
       contents: read
       pull-requests: write
@@ -273,7 +426,9 @@ jobs:
           - Maven clean verify
           - Core unit tests
           - Failure-gate proof
-          - MySQL 8.0 schema initialization
+          - Preinstalled MySQL startup
+          - MySQL schema initialization
+          - Separate demo-test1 and demo-test2 validation
           - MySQL integration tests
 
           Source branch: \`$SOURCE_BRANCH\`
