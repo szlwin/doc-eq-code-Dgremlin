@@ -83,7 +83,7 @@ public class DemoLoadTests {
         
         // 设置数据库信息
 		hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		hikariConfig.setJdbcUrl(env("DEC_MYSQL_URL_2", env("DEC_MYSQL_URL", "jdbc:mysql://127.0.0.1:3306/demo-test1")));
+		hikariConfig.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/demo-test1");
 		hikariConfig.setUsername(env("DEC_MYSQL_USER", "root"));
 		hikariConfig.setPassword(env("DEC_MYSQL_PASSWORD", "mysqldb"));
         hikariConfig.setMinimumIdle(2);
