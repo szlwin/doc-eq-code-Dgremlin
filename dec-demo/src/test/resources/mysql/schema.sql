@@ -65,6 +65,22 @@ CREATE TABLE IF NOT EXISTS `user_info` (
     PRIMARY KEY (`u_id`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE DATABASE IF NOT EXISTS `demo-test1` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+INSERT INTO `user_info`
+(
+    `u_name`,
+    `u_status`)
+VALUES
+    (
+        'test',
+        1);
+INSERT INTO `demo-test2`.`user_info`
+(
+    `u_name`,
+    `u_status`)
+VALUES
+    (
+        'test',
+        2);
 use `demo-test1`;
 CREATE TABLE IF NOT EXISTS `order_info` (
                                             `o_id` int NOT NULL AUTO_INCREMENT,
