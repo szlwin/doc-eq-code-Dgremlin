@@ -31,8 +31,12 @@ permissions:
 
 # 同一分支只保留最新运行，避免旧提交继续占用 Runner。
 concurrency:
-  group: verify-and-open-pr-${{ github.ref }}
-  cancel-in-progress: true
+  # push：同一分支共用一个组，只保留最新提交。
+  # workflow_dispatch：使用唯一 run_id，每次手工运行互不取消。
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || 'push' }}
+  # 只有新的 push 才取消同一分支上旧的 push 运行。
+  # 手工触发的运行不会取消其他运行。
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   core-verify:
