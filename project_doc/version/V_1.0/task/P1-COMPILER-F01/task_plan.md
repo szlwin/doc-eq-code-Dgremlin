@@ -397,12 +397,21 @@
     "id": "TASK-P1-R2-005",
     "logical_task_id": "LOGICAL-TASK-P1-R2-005",
     "feature_id": "P1-COMPILER-F01",
+<<<<<<< HEAD
     "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-007",
     "iteration_no": 7,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-006",
     "revision_reason": "独立设计复核发现 REQAN-R04 的 Atomic exposure owner 与需求正文/BM-R04 不一致，且 dependency_impact.yaml 仍为旧 2.42 结构；需形成新 REQAN Revision 并重建下游。",
     "title": "形成七项 AC 的可执行测试设计",
     "objective": "形成七项 AC 的可执行测试设计",
+=======
+    "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-003",
+    "revision_reason": "DESIGN-R04 已冻结 Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、原子发布及测试接缝；TEST_DESIGN I004 必须覆盖 9 条 TR 的正常、边界、异常、安全、并发、兼容和跨模块路径。",
+    "title": "形成 DESIGN-R04 的可执行测试设计",
+    "objective": "基于 DESIGN-R04 将 9 条 TR、23 个稳定业务错误、编译主/失败路径、原子发布、common expression 与 ModelAccess selector 转为可执行测试 Case 和非测试验证",
+>>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
     "phase": "test_design",
     "status": "REWORK",
     "depends_on": [
@@ -422,7 +431,9 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
     "flow_refs": [],
     "flow_step_refs": [],

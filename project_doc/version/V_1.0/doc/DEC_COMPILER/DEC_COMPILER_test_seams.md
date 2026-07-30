@@ -12,6 +12,7 @@
 - `InformationExpressionFixture`；
 - `ModelAccessFixture`；
 - `DiagnosticSnapshot`、`SemanticDigestSnapshot`；
+<<<<<<< HEAD
 - `ContextPublisherSpy`：记录同一 compileAndPublish 调用中的发布次数和 expected/candidate；
 - `CancellationTokenStub`、`MonotonicClockStub`：使用同一纳秒域确定性触发 Deadline；
 - `CompilationObserverSpy`：验证四类 timing、完整状态转换与 Observer 故障隔离。

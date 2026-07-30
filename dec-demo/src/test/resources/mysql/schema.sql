@@ -64,3 +64,5 @@ CREATE TABLE `user_info` (
                              `u_password` varchar(45) DEFAULT NULL,
                              PRIMARY KEY (`u_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE DATABASE `demo-test1` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+use demo-test1;

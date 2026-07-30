@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "cross_module_design_contract",
+  "revision": "DESIGN-R04@1c14c8e89779",
+  "participants": [
+    {"module": "dec-context-config-parse-xml", "owner": "Canonical XML Frontend", "output": "CanonicalDocumentNode"},
+    {"module": "dec-context-config-parse-yaml", "owner": "Canonical YAML Frontend", "output": "CanonicalDocumentNode"},
+    {"module": "dec-core-compiler", "owner": "CompilationSession and compiler pipeline", "output": "CompiledModelSet or DiagnosticSet"},
+    {"module": "dec-core-context", "owner": "immutable registries and EngineContext", "output": "EngineContext"},
+    {"module": "dec-core-starter", "owner": "atomic context publication", "output": "published EngineContext"},
+    {"module": "dec-demo", "owner": "contract fixtures only", "output": "test evidence"}
+  ],
+  "ordered_steps": [
+    "discover sources",
+    "secure parse into canonical nodes",
+    "build raw definitions",
+    "register typed symbols",
+    "resolve references and selectors",
+    "validate ownership and contracts",
+    "register deferred definitions",
+    "build immutable compiled model",
+    "atomically publish EngineContext"
+  ],
+  "consistency": {
+    "local_boundary": "CompilationSession",
+    "visibility_boundary": "successful immutable EngineContext publication",
+    "partial_success": "forbidden",
+    "old_context_on_failure": "retained by caller"
+  },
+  "retry_timeout_idempotency": {
+    "retry": "new CompilationSession; do not reuse mutable builders",
+    "timeout": "cancel session and discard unpublished state",
+    "idempotency": "same normalized semantics produces same semantic digest",
+    "duplicate_or_out_of_order": "deterministic source and diagnostic ordering"
+  },
+  "failure_and_recovery": {
+    "parse_or_validation_error": "return stable Diagnostics; publish nothing",
+    "publication_failure": "new context remains invisible; old context remains valid",
+    "manual_recovery": "correct SourceRef configuration and recompile",
+    "rollback": "Git revert; no dual runtime"
+  },
+  "test_mappings": [
+    "CASE-P1-MIX-DISCOVERY-001",
+    "CASE-P1-COMMON-EXPRESSION-001",
+    "CASE-P1-MODEL-ACCESS-TARGET-MAIN-001",
+    "CASE-P1-CONTEXT-001",
+    "CASE-P1-PUBLISH-ATOMIC-001",
+    "CASE-P1-RETIREMENT-001"
+  ]
+}
