@@ -23,6 +23,7 @@ jobs:
           cache: maven
       - name: Verify Maven Wrapper
         run: ./mvnw --version
+
       - name: Bootstrap repository-bundled legacy dependencies
         run: scripts/remediation/bootstrap_legacy_dependencies.sh
       - name: Core build and tests
