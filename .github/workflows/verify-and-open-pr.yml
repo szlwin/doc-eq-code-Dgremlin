@@ -1,0 +1,298 @@
+name: Verify and Open PR
+
+run-name: Verify ${{ github.ref_name }} and open PR to ${{ inputs.base_branch || 'dev_all' }}
+
+"on":
+  # 推荐方式：代码完成并推送后，由开发者手工触发。
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: Pull request target branch
+        required: true
+        default: dev_all
+        type: string
+      pr_title:
+        description: Pull request title; leave empty to generate automatically
+        required: false
+        default: ""
+        type: string
+
+  # 可选的自动方式：这些功能分支每次 push 后自动验证并创建或复用 PR。
+  push:
+    branches:
+      - "feature/**"
+      - "fix/**"
+      - "refactor/**"
+      - "chore/**"
+
+# 默认只允许读取仓库内容。
+permissions:
+  contents: read
+
+# 同一分支只保留最新运行，避免旧提交继续占用 Runner。
+concurrency:
+  group: verify-and-open-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-verify:
+    name: Core build and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v6
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Verify Maven Wrapper
+        run: ./mvnw --version
+
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Compile and run core tests
+        run: |
+          ./mvnw \
+            --batch-mode \
+            --no-transfer-progress \
+            clean verify
+
+      - name: Prove failing tests block the build
+        run: scripts/remediation/prove_test_failure_gate.sh
+
+      - name: Upload core test reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: core-test-reports-${{ github.run_id }}
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            **/target/site/jacoco/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  mysql-it:
+    name: MySQL integration tests
+    needs: core-verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mysqldb
+          MYSQL_DATABASE: demo-test2
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pmysqldb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v6
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Verify Maven Wrapper
+        run: ./mvnw --version
+
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Initialize MySQL schema
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          set -eu
+
+          test -f dec-demo/src/test/resources/mysql/schema.sql
+
+          docker exec \
+            -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+            -i "$MYSQL_CONTAINER_ID" \
+            mysql \
+            -uroot \
+            --database="demo-test2" \
+            < dec-demo/src/test/resources/mysql/schema.sql
+
+      - name: Initialize MySQL test data
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          set -eu
+
+          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
+            docker exec \
+              -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+              -i "$MYSQL_CONTAINER_ID" \
+              mysql \
+              -uroot \
+              --database="demo-test2" \
+              < dec-demo/src/test/resources/mysql/data.sql
+          fi
+
+      - name: Verify MySQL schema
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          set -eu
+
+          docker exec \
+            -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+            "$MYSQL_CONTAINER_ID" \
+            mysql \
+            -uroot \
+            --database="demo-test2" \
+            -e "
+              SELECT DATABASE();
+              SHOW TABLES;
+              SHOW TABLES LIKE 'order_info';
+            "
+
+      - name: Run MySQL integration tests
+        env:
+          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
+          DEC_MYSQL_USER: root
+          DEC_MYSQL_PASSWORD: mysqldb
+        run: |
+          ./mvnw \
+            --batch-mode \
+            --no-transfer-progress \
+            -Pmysql-it \
+            verify
+
+      - name: Upload MySQL integration test reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: mysql-test-reports-${{ github.run_id }}
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            **/target/site/jacoco/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  create-pr:
+    name: Create or reuse pull request
+    needs: mysql-it
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    # 仅最后一个 Job 可以创建 PR。
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Verify GitHub CLI
+        run: gh --version
+
+      - name: Create or reuse pull request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_BRANCH: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          BASE_BRANCH_INPUT: ${{ inputs.base_branch }}
+          PR_TITLE_INPUT: ${{ inputs.pr_title }}
+        run: |
+          set -euo pipefail
+
+          if [ "$REF_TYPE" != "branch" ]; then
+            echo "::error::This workflow must run against a branch."
+            exit 1
+          fi
+
+          BASE_BRANCH="${BASE_BRANCH_INPUT:-dev_all}"
+
+          if [ "$SOURCE_BRANCH" = "$BASE_BRANCH" ]; then
+            echo "::error::Source and target branches cannot both be '$BASE_BRANCH'."
+            exit 1
+          fi
+
+          PR_TITLE="${PR_TITLE_INPUT:-Merge ${SOURCE_BRANCH} into ${BASE_BRANCH}}"
+
+          EXISTING_PR_URL="$(
+            gh pr list \
+              --repo "$GITHUB_REPOSITORY" \
+              --head "$SOURCE_BRANCH" \
+              --base "$BASE_BRANCH" \
+              --state open \
+              --json url \
+              --jq '.[0].url // empty'
+          )"
+
+          if [ -n "$EXISTING_PR_URL" ]; then
+            {
+              echo "## Pull request"
+              echo
+              echo "An open pull request already exists:"
+              echo
+              echo "$EXISTING_PR_URL"
+            } >> "$GITHUB_STEP_SUMMARY"
+
+            echo "Existing pull request: $EXISTING_PR_URL"
+            exit 0
+          fi
+
+          cat > /tmp/pr-body.md <<EOF
+          ## Verification result
+
+          This pull request was created only after all pre-PR checks passed.
+
+          Passed checks:
+
+          - Maven Wrapper verification
+          - Repository-bundled legacy dependency bootstrap
+          - Maven clean verify
+          - Core unit tests
+          - Failure-gate proof
+          - MySQL 8.0 schema initialization
+          - MySQL integration tests
+
+          Source branch: \`$SOURCE_BRANCH\`
+
+          Target branch: \`$BASE_BRANCH\`
+
+          Workflow run:
+
+          $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+          EOF
+
+          PR_URL="$(
+            gh pr create \
+              --repo "$GITHUB_REPOSITORY" \
+              --head "$SOURCE_BRANCH" \
+              --base "$BASE_BRANCH" \
+              --title "$PR_TITLE" \
+              --body-file /tmp/pr-body.md
+          )"
+
+          {
+            echo "## Pull request created"
+            echo
+            echo "$PR_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "Created pull request: $PR_URL"
