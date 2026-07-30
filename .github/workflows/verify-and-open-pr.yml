@@ -166,11 +166,15 @@ jobs:
             "$MYSQL_CONTAINER_ID" \
             mysql \
             -uroot \
-            --database="demo-test2" \
             -e "
-              SELECT DATABASE();
-              SHOW TABLES;
-              SHOW TABLES LIKE 'order_info';
+              SELECT SCHEMA_NAME
+              FROM INFORMATION_SCHEMA.SCHEMATA
+              WHERE SCHEMA_NAME IN ('demo-test1', 'demo-test2')
+              ORDER BY SCHEMA_NAME;
+
+              SHOW TABLES FROM \`demo-test1\` LIKE 'product_info';
+              SHOW TABLES FROM \`demo-test2\` LIKE 'product_info';
+              SHOW TABLES FROM \`demo-test2\` LIKE 'order_info';
             "
 
       - name: Run MySQL integration tests
