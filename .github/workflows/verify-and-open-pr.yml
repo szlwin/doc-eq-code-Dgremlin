@@ -149,7 +149,7 @@ jobs:
               --user="$DEC_MYSQL_USER" \
               --execute="
                 SELECT VERSION() AS mysql_version;
-                SELECT CURRENT_USER() AS current_user;
+                SELECT CURRENT_USER();
               "
 
       - name: Initialize MySQL schema
