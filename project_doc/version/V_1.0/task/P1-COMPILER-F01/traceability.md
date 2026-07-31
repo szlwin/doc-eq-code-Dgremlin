@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 追踪矩阵
 
-> REQAN-R05 与 BM-R05 已正式通过；DESIGN-R05 已完成七类独立 Review，等待阶段归档，9 条追踪保持稳定 ID；test_design 及其下游仍为 STALE，`verification_evidence_ids` 保持为空，旧 Revision、Review 与 Evidence 保留为历史。
+> TESTDESIGN-R01@ba7779cf089b 已通过 test_design 四项串行独立 Review；9 条 TR 均绑定可执行 Case 与 Evidence，下一阶段为 implementation_plan I007。
 
 ```json traceability
 [
@@ -47,26 +47,35 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-MIX-DISCOVERY-001",
-      "CASE-P1-MIX-DISCOVERY-ORDER-001",
-      "CASE-P1-SECURITY-XML-001"
+      "CASE-P1-TD-SOURCE-MANIFEST-001",
+      "CASE-P1-TD-SOURCE-ORDER-001",
+      "CASE-P1-TD-SOURCE-POLICY-001",
+      "CASE-P1-TD-SOURCE-NOT-FOUND-001",
+      "CASE-P1-TD-SOURCE-SECURITY-001",
+      "CASE-P1-TD-SOURCE-DUPLICATE-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -78,9 +87,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-002",
@@ -123,25 +134,34 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-MIX-RAW-001",
-      "CASE-P1-SECURITY-YAML-001"
+      "CASE-P1-TD-FRONTEND-XML-001",
+      "CASE-P1-TD-FRONTEND-YAML-001",
+      "CASE-P1-TD-CANONICAL-PARITY-001",
+      "CASE-P1-TD-STRUCTURE-UNKNOWN-001",
+      "CASE-P1-TD-RAW-INVENTORY-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -153,9 +173,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-003",
@@ -204,27 +226,34 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-SYMBOL-001",
-      "CASE-P1-RULE-SYSTEM-001",
-      "CASE-P1-SYSTEM-INFORMATION-001",
-      "CASE-P1-COMMON-EXPRESSION-001"
+      "CASE-P1-TD-SYMBOL-DUPLICATE-001",
+      "CASE-P1-TD-REFERENCE-001",
+      "CASE-P1-TD-RULE-SYSTEM-001",
+      "CASE-P1-TD-INFORMATION-OWNER-001",
+      "CASE-P1-TD-PUBLISH-BLOCKED-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -236,9 +265,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-004",
@@ -283,25 +314,32 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-DEFERRED-001",
-      "CASE-P1-COMMON-CYCLE-DEFERRED-001"
+      "CASE-P1-TD-COMMON-SUCCESS-001",
+      "CASE-P1-TD-DEFERRED-COMPLETE-001",
+      "CASE-P1-TD-DEFERRED-NO-RUNTIME-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -313,9 +351,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-005",
@@ -363,27 +403,42 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-CONTEXT-001",
-      "CASE-P1-DIGEST-001",
-      "CASE-P1-DIAGNOSTIC-ORDER-001",
-      "CASE-P1-PUBLISH-ATOMIC-001"
+      "CASE-P1-TD-SOURCE-ORDER-001",
+      "CASE-P1-TD-CANONICAL-PARITY-001",
+      "CASE-P1-TD-PUBLISH-SUCCESS-001",
+      "CASE-P1-TD-PUBLISH-BLOCKED-001",
+      "CASE-P1-TD-PUBLISH-TIMEOUT-001",
+      "CASE-P1-TD-PUBLISH-CANCEL-001",
+      "CASE-P1-TD-CONTEXT-CONSTRUCTION-001",
+      "CASE-P1-TD-PUBLISH-CONFLICT-001",
+      "CASE-P1-TD-PUBLISH-FAILURE-001",
+      "CASE-P1-TD-DIGEST-001",
+      "CASE-P1-TD-CONTEXT-ISOLATION-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001",
+      "CASE-P1-TD-OBSERVER-TIMING-001",
+      "CASE-P1-TD-JAVA8-MODULE-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -395,9 +450,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-006",
@@ -435,24 +492,31 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-PROJECTION-001"
+      "CASE-P1-TD-CONTEXT-ISOLATION-001",
+      "CASE-P1-TD-PROJECTION-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -464,9 +528,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-007",
@@ -504,24 +570,31 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-RETIREMENT-001"
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001",
+      "CASE-P1-TD-RETIREMENT-001",
+      "CASE-P1-TD-JAVA8-MODULE-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md",
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
-      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md"
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py",
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -533,9 +606,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-008",
@@ -590,15 +665,22 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-SYSTEM-INFORMATION-001",
-      "CASE-P1-COMMON-EXPRESSION-001",
-      "CASE-P1-COMMON-OWNER-NEGATIVE-001",
-      "CASE-P1-MODEL-ACCESS-VIEW-OWNER-001"
+      "CASE-P1-TD-RULE-SYSTEM-001",
+      "CASE-P1-TD-INFORMATION-OWNER-001",
+      "CASE-P1-TD-COMMON-SUCCESS-001",
+      "CASE-P1-TD-INFORMATION-CROSS-SYSTEM-001",
+      "CASE-P1-TD-COMMON-MEMBER-001",
+      "CASE-P1-TD-COMMON-QUALIFIED-001",
+      "CASE-P1-TD-VIEW-BOUNDARY-001",
+      "CASE-P1-TD-MODEL-ACCESS-TARGET-MAIN-001",
+      "CASE-P1-TD-DEFERRED-NO-RUNTIME-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -606,13 +688,17 @@
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
       "dec-demo/src/main/resources/mix/system/systems.xml",
       "dec-demo/src/main/resources/mix/business/order-business.xml",
-      "dec-demo/src/main/resources/mix/view/orm-view.xml"
+      "dec-demo/src/main/resources/mix/view/orm-view.xml",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java",
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -624,9 +710,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   },
   {
     "id": "TR-P1-COMPILER-009",
@@ -672,15 +760,19 @@
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md"
     ],
     "test_case_ids": [
-      "CASE-P1-MODEL-ACCESS-TARGET-MAIN-001",
-      "CASE-P1-MODEL-ACCESS-PROPERTY-PATH-001",
-      "CASE-P1-MODEL-ACCESS-MULTI-REF-001",
-      "CASE-P1-MODEL-ACCESS-VIEW-OWNER-001"
+      "CASE-P1-TD-VIEW-BOUNDARY-001",
+      "CASE-P1-TD-MODEL-ACCESS-TARGET-MAIN-001",
+      "CASE-P1-TD-MODEL-ACCESS-PATH-001",
+      "CASE-P1-TD-MODEL-ACCESS-NOT-FOUND-001",
+      "CASE-P1-TD-MODEL-ACCESS-AMBIGUOUS-001",
+      "CASE-P1-TD-MODEL-ACCESS-NON-COMPOSITE-001",
+      "CASE-P1-TD-DIAGNOSTIC-CATALOG-001"
     ],
     "plan_task_ids": [
       "TASK-P1-REQAN-001",
       "TASK-P1-BMODEL-001",
-      "TASK-P1-DESIGN-001"
+      "TASK-P1-DESIGN-001",
+      "TASK-P1-R2-005"
     ],
     "contract_refs": [
       "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
@@ -688,13 +780,17 @@
       "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md",
       "dec-demo/src/main/resources/mix/system/systems.xml",
       "dec-demo/src/main/resources/mix/view/orm-view.xml",
-      "dec-demo/src/main/resources/mix/business/order-business.xml"
+      "dec-demo/src/main/resources/mix/business/order-business.xml",
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md"
     ],
     "implementation_refs": [
       "dec-demo/src/test/java/dec/demo/contract/MixContractTest.java",
       "version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py"
     ],
-    "verification_evidence_ids": [],
+    "verification_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
     "verified_by_agents": [
       "RequirementAnalysisAgent",
       "BusinessModelAgent",
@@ -706,9 +802,11 @@
       "TestDesignAgent",
       "DevelopAgent",
       "ImpactAnalysisReviewAgent",
-      "CrossModuleIntegrationReviewAgent"
+      "CrossModuleIntegrationReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
     ],
-    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。"
+    "notes": "DESIGN-R05@0b37a9b4dd48 已由七个 design Reviewer 对同一 Revision 独立验证通过：REV-000050、REV-000051、REV-000052、REV-000053、REV-000054、REV-000055、REV-000056；ISSUE-MR-0001～0004 已由 ArchitectureReviewAgent 复核关闭。 TESTDESIGN-R01 已通过四项串行独立 Review：REV-000057, REV-000058, REV-000059, REV-000060。"
   }
 ]
 ```

@@ -365,6 +365,31 @@
     "open_risks": [],
     "started_at": "2026-07-28T22:52:09+08:00",
     "completed_at": "2026-07-28T23:00:14+08:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-TEST_DESIGN-I007",
+    "phase": "test_design",
+    "round": "TEST_DESIGN-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TestDesignAgent",
+    "input_revisions": {
+      "requirement_confirmation": "REQCONF-R04@c186ce681e1e",
+      "requirement_analysis": "REQAN-R05@7de35e8dc15b",
+      "business_model": "BM-R05@4ecb1f8c09f4",
+      "design": "DESIGN-R05@0b37a9b4dd48"
+    },
+    "output_revision": "TESTDESIGN-R01@ba7779cf089b",
+    "evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ],
+    "open_risks": [],
+    "started_at": "2026-07-31T16:29:52+00:00",
+    "completed_at": "2026-07-31T16:35:17+00:00"
   }
 ]
 ```

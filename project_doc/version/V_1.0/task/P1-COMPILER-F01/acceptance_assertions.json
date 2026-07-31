@@ -488,6 +488,175 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-07-28T22:56:17+08:00",
       "reason": "frontend 到 compiler、compiler 到 context publisher、starter 组装的顺序和契约完整；同调用 CAS、幂等、超时、部分失败、旧 Context 保留、观测与恢复均有明确设计和证据。"
+    },
+    {
+      "assertion_id": "ASRT-P1-TD-R01-DES-001",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "测试设计与 DESIGN-R05 的模块、接口、失败和可观测性接缝一致，未把实现细节或 P2-P7 运行语义提前写入 Case。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "test_design",
+        "criteria_ids": [
+          "RC-DES-001",
+          "RC-DES-005",
+          "RC-DES-006",
+          "RC-DES-007",
+          "RC-DES-008",
+          "RC-DES-010",
+          "RC-TEST-001"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-005",
+        "../../doc/P1-COMPILER-F01/test_case.md",
+        "TR-P1-COMPILER-001",
+        "TR-P1-COMPILER-002",
+        "TR-P1-COMPILER-003",
+        "TR-P1-COMPILER-004",
+        "TR-P1-COMPILER-005",
+        "TR-P1-COMPILER-006",
+        "TR-P1-COMPILER-007",
+        "TR-P1-COMPILER-008",
+        "TR-P1-COMPILER-009"
+      ],
+      "evidence_ids": [
+        "EVD-000286",
+        "EVD-000287"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-07-31T16:34:53+00:00",
+      "reason": "测试设计与 DESIGN-R05 的模块、接口、失败和可观测性接缝一致，未把实现细节或 P2-P7 运行语义提前写入 Case。"
+    },
+    {
+      "assertion_id": "ASRT-P1-TD-R01-REQ-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "41 个 Case 覆盖全部 9 TR 与 9 AC，正常、边界、异常、安全、并发和兼容验收均有真实 oracle 与禁止副作用。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "test_design",
+        "criteria_ids": [
+          "RC-REQ-003",
+          "RC-REQ-004",
+          "RC-TEST-001",
+          "RC-ACPT-001"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-005",
+        "../../doc/P1-COMPILER-F01/test_case.md",
+        "TR-P1-COMPILER-001",
+        "TR-P1-COMPILER-002",
+        "TR-P1-COMPILER-003",
+        "TR-P1-COMPILER-004",
+        "TR-P1-COMPILER-005",
+        "TR-P1-COMPILER-006",
+        "TR-P1-COMPILER-007",
+        "TR-P1-COMPILER-008",
+        "TR-P1-COMPILER-009"
+      ],
+      "evidence_ids": [
+        "EVD-000286",
+        "EVD-000287"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-07-31T16:34:54+00:00",
+      "reason": "41 个 Case 覆盖全部 9 TR 与 9 AC，正常、边界、异常、安全、并发和兼容验收均有真实 oracle 与禁止副作用。"
+    },
+    {
+      "assertion_id": "ASRT-P1-TD-R01-TDD-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "每个 Case 均声明未来可编译测试骨架、行为型 RED 原因与命令；模块不存在、依赖失败、类加载或语法错误被明确排除为有效 RED。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "test_design",
+        "criteria_ids": [
+          "RC-TDD-001",
+          "RC-TDD-004",
+          "RC-TDD-005",
+          "RC-TDD-006",
+          "RC-TEST-008",
+          "RC-BFLOW-005"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-005",
+        "../../doc/P1-COMPILER-F01/test_case.md",
+        "TR-P1-COMPILER-001",
+        "TR-P1-COMPILER-002",
+        "TR-P1-COMPILER-003",
+        "TR-P1-COMPILER-004",
+        "TR-P1-COMPILER-005",
+        "TR-P1-COMPILER-006",
+        "TR-P1-COMPILER-007",
+        "TR-P1-COMPILER-008",
+        "TR-P1-COMPILER-009"
+      ],
+      "evidence_ids": [
+        "EVD-000286",
+        "EVD-000287"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-07-31T16:34:55+00:00",
+      "reason": "每个 Case 均声明未来可编译测试骨架、行为型 RED 原因与命令；模块不存在、依赖失败、类加载或语法错误被明确排除为有效 RED。"
+    },
+    {
+      "assertion_id": "ASRT-P1-TD-R01-EVID-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "测试设计 Evidence 可复现并记录精确摘要、输入 Revision、Case/TR/AC/code/source/edge/inventory 计数；仅证明测试设计通过，不虚构生产测试结果。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design",
+        "criteria_ids": [
+          "RC-TEST-008",
+          "RC-TEST-009",
+          "RC-TEST-010",
+          "RC-EVID-001",
+          "RC-EVID-002",
+          "RC-EVID-003",
+          "RC-EVID-007",
+          "RC-BFLOW-005"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-005",
+        "../../doc/P1-COMPILER-F01/test_case.md",
+        "TR-P1-COMPILER-001",
+        "TR-P1-COMPILER-002",
+        "TR-P1-COMPILER-003",
+        "TR-P1-COMPILER-004",
+        "TR-P1-COMPILER-005",
+        "TR-P1-COMPILER-006",
+        "TR-P1-COMPILER-007",
+        "TR-P1-COMPILER-008",
+        "TR-P1-COMPILER-009"
+      ],
+      "evidence_ids": [
+        "EVD-000286",
+        "EVD-000287"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-07-31T16:34:56+00:00",
+      "reason": "测试设计 Evidence 可复现并记录精确摘要、输入 Revision、Case/TR/AC/code/source/edge/inventory 计数；仅证明测试设计通过，不虚构生产测试结果。"
     }
   ]
 }
