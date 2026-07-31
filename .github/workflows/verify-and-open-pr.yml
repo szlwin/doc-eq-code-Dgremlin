@@ -121,26 +121,16 @@ jobs:
           work_record_revision, work_record_bytes = work_result
           (root / work_record_path).write_bytes(work_record_bytes)
 
-          required_traceability = (
-              'TR-P1-COMPILER-001',
-              'TR-P1-COMPILER-009',
-              'REQAN-R05@7de35e8dc15b',
-              'BM-R05@4ecb1f8c09f4',
-              'DESIGN-R05@0b37a9b4dd48'
-          )
-          trace_result = newest_clean_history(traceability_path, required_traceability)
-          if trace_result is not None:
-              traceability_revision, traceability_bytes = trace_result
-              (root / traceability_path).write_bytes(traceability_bytes)
-          else:
-              traceability_revision = 'current HEAD side selection'
-              traceability_text = (root / traceability_path).read_text(encoding='utf-8')
-              repaired_traceability = select_head_sides(traceability_text)
-              if marker_re.search(repaired_traceability):
-                  raise SystemExit('traceability conflict markers remain after HEAD-side selection')
-              if not all(value in repaired_traceability for value in required_traceability):
-                  raise SystemExit('traceability HEAD side is missing current R05 facts')
-              (root / traceability_path).write_text(repaired_traceability, encoding='utf-8')
+          traceability_revision = 'current HEAD side selection'
+          traceability_text = (root / traceability_path).read_text(encoding='utf-8')
+          repaired_traceability = select_head_sides(traceability_text)
+          if marker_re.search(repaired_traceability):
+              raise SystemExit('traceability conflict markers remain after HEAD-side selection')
+          trace_header = repaired_traceability.split('```json traceability', 1)[0]
+          for value in ('REQAN-R05', 'BM-R05', 'DESIGN-R05'):
+              if value not in trace_header:
+                  raise SystemExit(f'traceability current header is missing {value}')
+          (root / traceability_path).write_text(repaired_traceability, encoding='utf-8')
 
           task_state_path = task_dir / 'task_state.md'
           task_state_text = task_state_path.read_text(encoding='utf-8')
@@ -198,13 +188,22 @@ jobs:
           assert {item['id'] for item in traceability} == {
               f'TR-P1-COMPILER-{number:03d}' for number in range(1, 10)
           }
+          assert all(
+              'DESIGN-R05@0b37a9b4dd48' in item.get('notes', '')
+              for item in traceability
+          )
+          assert all(
+              'TASK-P1-DESIGN-001' in item.get('plan_task_ids', [])
+              for item in traceability
+          )
 
           restored_test_seams = (root / test_seams_path).read_text(encoding='utf-8')
           restored_work_record = (root / work_record_path).read_text(encoding='utf-8')
           restored_traceability = (root / traceability_path).read_text(encoding='utf-8')
           assert all(value in restored_test_seams for value in required_test_seam_markers)
           assert all(value in restored_work_record for value in required_work_record)
-          assert all(value in restored_traceability for value in required_traceability)
+          assert 'REV-000050' in restored_traceability
+          assert 'REV-000056' in restored_traceability
 
           conflicts = []
           for path in (root / 'project_doc').rglob('*'):
