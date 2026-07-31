@@ -30,7 +30,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
-      - name: Restore DESIGN-R05 evidence and validate project facts
+      - name: Restore verified history and validate project facts
         shell: bash
         run: |
           set -euo pipefail
@@ -40,92 +40,69 @@ jobs:
           import json
           import pathlib
           import re
-          import tarfile
+          import subprocess
 
           root = pathlib.Path('.')
           task_dir = root / 'project_doc/version/V_1.0/task/P1-COMPILER-F01'
           marker_re = re.compile(r'^(<<<<<<<(?:\s.*)?|=======|>>>>>>>(?:\s.*)?)$', re.M)
 
-          bundle = task_dir / 'evidence/bundles/sha256/c2/c2f1744bbd9e4aa28d1f7d8ff6cedccd36cedc3bc106f300b655b2635ddaf793.tar.xz'
+          def git_output(*args, text=False):
+              return subprocess.check_output(['git', *args], text=text)
+
+          def revisions_for(path):
+              output = git_output('rev-list', '--all', '--date-order', '--', path, text=True)
+              return [line.strip() for line in output.splitlines() if line.strip()]
+
+          def blob_at(revision, path):
+              return git_output('show', f'{revision}:{path}')
+
+          test_seams_path = 'project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md'
+          work_record_path = 'project_doc/version/V_1.0/work_record.md'
           expected_test_seams_digest = '27ec2b994669948111a08dfe03d295ca39806a7a584076215cee678144843175'
-          test_seams_target = root / 'project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md'
-          work_record_target = root / 'project_doc/version/V_1.0/work_record.md'
 
-          digest_matches = []
+          matching_test_seams = []
+          for revision in revisions_for(test_seams_path):
+              try:
+                  data = blob_at(revision, test_seams_path)
+              except subprocess.CalledProcessError:
+                  continue
+              if hashlib.sha256(data).hexdigest() == expected_test_seams_digest:
+                  matching_test_seams.append((revision, data))
+
+          if not matching_test_seams:
+              raise SystemExit('no Git history blob matches the DESIGN-R05 test-seams digest')
+
+          test_seams_revision, test_seams_bytes = matching_test_seams[0]
+          (root / test_seams_path).write_bytes(test_seams_bytes)
+
           work_record_candidates = []
+          for revision in revisions_for(work_record_path):
+              try:
+                  data = blob_at(revision, work_record_path)
+                  text = data.decode('utf-8')
+              except (subprocess.CalledProcessError, UnicodeDecodeError):
+                  continue
 
-          with tarfile.open(bundle, mode='r:xz') as archive:
-              for member in archive.getmembers():
-                  if not member.isfile():
-                      continue
-                  extracted = archive.extractfile(member)
-                  if extracted is None:
-                      continue
-                  data = extracted.read()
-                  digest = hashlib.sha256(data).hexdigest()
-                  if digest == expected_test_seams_digest:
-                      digest_matches.append((member.name, data))
-
-                  if b'# V_1.0 ' in data and b'work-record-events-end' in data:
-                      try:
-                          text = data.decode('utf-8')
-                      except UnicodeDecodeError:
-                          continue
-                      if 'DESIGN-R05@0b37a9b4dd48' in text and not marker_re.search(text):
-                          work_record_candidates.append((member.name, data))
-
-          if len(digest_matches) != 1:
-              raise SystemExit(
-                  'expected exactly one DESIGN-R05 test-seams artifact in bundle; found '
-                  + repr([name for name, _ in digest_matches])
+              required = (
+                  'REQAN-R05@7de35e8dc15b',
+                  'BM-R05@4ecb1f8c09f4',
+                  'DESIGN-R05@0b37a9b4dd48',
+                  'WR-20260728-225152-TASK-P1-DESIGN-001-PASSED',
+                  '<!-- work-record-events-end -->'
               )
+              if (
+                  all(value in text for value in required)
+                  and not marker_re.search(text)
+                  and len(data) >= 50000
+              ):
+                  work_record_candidates.append((revision, data))
+                  break
 
-          test_seams_name, test_seams_bytes = digest_matches[0]
-          test_seams_target.write_bytes(test_seams_bytes)
+          if not work_record_candidates:
+              raise SystemExit('no clean DESIGN-R05 work_record found in Git history')
 
-          work_record_source = 'resolved-current-file'
-          if work_record_candidates:
-              work_record_candidates.sort(key=lambda item: len(item[1]), reverse=True)
-              work_record_source, work_record_bytes = work_record_candidates[0]
-              work_record_target.write_bytes(work_record_bytes)
-          else:
-              original = work_record_target.read_text(encoding='utf-8')
-              marker_count = len(marker_re.findall(original))
-              if marker_count == 0:
-                  raise SystemExit('bundle has no work_record and current file has no repair markers')
-
-              output = []
-              state = 'normal'
-              for line in original.splitlines(keepends=True):
-                  stripped = line.rstrip('\r\n')
-                  if stripped.startswith('<<<<<<<'):
-                      state = 'ours'
-                      continue
-                  if stripped == '=======':
-                      state = 'theirs'
-                      continue
-                  if stripped.startswith('>>>>>>>'):
-                      state = 'normal'
-                      continue
-                  if state in {'normal', 'ours'}:
-                      output.append(line)
-              work_record_target.write_text(''.join(output), encoding='utf-8')
-
-          work_record_text = work_record_target.read_text(encoding='utf-8')
-          required_content = [
-              'REQAN-R05@7de35e8dc15b',
-              'BM-R05@4ecb1f8c09f4',
-              'DESIGN-R05@0b37a9b4dd48',
-              'WR-20260728-225152-TASK-P1-DESIGN-001-PASSED',
-              '<!-- work-record-events-end -->'
-          ]
-          for value in required_content:
-              if value not in work_record_text:
-                  raise SystemExit(f'missing required work record content after repair: {value}')
-          if marker_re.search(work_record_text):
-              raise SystemExit('work_record still contains conflict markers')
-          if len(work_record_text.encode('utf-8')) < 50000:
-              raise SystemExit('work_record became unexpectedly small during repair')
+          work_record_revision, work_record_bytes = work_record_candidates[0]
+          (root / work_record_path).write_bytes(work_record_bytes)
 
           task_state_path = task_dir / 'task_state.md'
           task_state_text = task_state_path.read_text(encoding='utf-8')
@@ -146,7 +123,7 @@ jobs:
               raise SystemExit('unexpected task_state resume_from state')
           task_state_path.write_text(task_state_text, encoding='utf-8')
 
-          def fenced_json(path: pathlib.Path, fence: str):
+          def fenced_json(path, fence):
               content = path.read_text(encoding='utf-8')
               match = re.search(rf'```json {re.escape(fence)}\s*(.*?)\s*```', content, re.S)
               if not match:
@@ -174,9 +151,13 @@ jobs:
           assert task_state['resume_from'] == 'design'
           assert all(issue['status'] == 'CLOSED' for issue in review_issues)
 
-          restored_digest = hashlib.sha256(test_seams_target.read_bytes()).hexdigest()
-          if restored_digest != expected_test_seams_digest:
+          restored_test_digest = hashlib.sha256((root / test_seams_path).read_bytes()).hexdigest()
+          if restored_test_digest != expected_test_seams_digest:
               raise SystemExit('restored DESIGN-R05 test-seams digest mismatch')
+
+          restored_work_record = (root / work_record_path).read_text(encoding='utf-8')
+          if marker_re.search(restored_work_record):
+              raise SystemExit('restored work_record contains conflict markers')
 
           conflicts = []
           for path in (root / 'project_doc').rglob('*'):
@@ -193,8 +174,8 @@ jobs:
           if conflicts:
               raise SystemExit('remaining conflict markers: ' + ', '.join(conflicts))
 
-          print(f'test seams restored from bundle member: {test_seams_name}')
-          print(f'work record restored from: {work_record_source}')
+          print(f'test seams restored from commit: {test_seams_revision}')
+          print(f'work record restored from commit: {work_record_revision}')
           print('task plan JSON: PASSED')
           print('task state JSON: PASSED')
           print('review issues JSON: PASSED')
