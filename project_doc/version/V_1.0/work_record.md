@@ -1190,23 +1190,14 @@
 | 测试与验证 | JSON Schema、稳定 ID、Information/common/ModelAccess 契约、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。 |
 | 问题与阻塞 | 无 |
 
-<<<<<<< HEAD
 <!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000276"],"execution_mode":"git_checkpoint","input_revision":"af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd","iteration_id":"ITER-P1-COMPILER-F01-DESIGN-004","iteration_no":4,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md"],"next_action":"由七个适用 Reviewer 对同一 DESIGN-R04 串行独立评审","next_agent":"RequirementReviewAgent","output_revision":"DESIGN-R04@1c14c8e89779","phase":"design","record_id":"WR-20260728-172754-TASK-P1-DESIGN-001-PASSED","render_digest":"a7dfb5b69260f3115946f10b61a93402cbdc27bb4432ff72cb963cd21eed5179","schema_version":4,"scope":"形成 BM-R04 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → PASSED","status":"PASSED","summary":"DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T17:27:54+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
 ## WR-20260728-172754-TASK-P1-DESIGN-001-PASSED
-=======
-<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000275","EVD-000276","EVD-000281","EVD-000278","EVD-000279","EVD-000280"],"execution_mode":"git_checkpoint","input_revision":"BM-R04@1b19a0ba26b6","iteration_id":"ITER-P1-COMPILER-F01-DESIGN-004","iteration_no":4,"modified_files_summary":["version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md","version/V_1.0/task/P1-COMPILER-F01/traceability.md"],"next_action":"准备并执行七个串行 Design Review。","next_agent":"ArchitectureReviewAgent","output_revision":"DESIGN-R04@1c14c8e89779","phase":"design","record_id":"WR-20260728-074925-TASK-P1-DESIGN-001-PASSED","render_digest":"aabd2b7f9aee3b96f129098f34ce2b1e67baa5a383ebe2ad32552b05d727a799","schema_version":4,"scope":"形成 BM-R04 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → PASSED","status":"PASSED","summary":"完成 DESIGN-R04：统一四份设计文档，覆盖 Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、EngineContext 原子发布及 P2-P8 接缝。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T07:49:25+00:00","validation_summary":"登记 Evidence 6 项；命令 Evidence 5 项","version":"V_1.0"} -->
-## WR-20260728-074925-TASK-P1-DESIGN-001-PASSED
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-<<<<<<< HEAD
 | 时间 | 2026-07-28T17:27:54+08:00 |
-=======
-| 时间 | 2026-07-28T07:49:25+00:00 |
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 | 执行 Agent | DesignAgent |
 | 命令或来源 | long_task.py finish-attempt |
 | 版本 | V_1.0 |
@@ -1221,17 +1212,12 @@
 
 | 字段 | 内容 |
 |---|---|
-<<<<<<< HEAD
 | 本次结论 | DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过 |
-=======
-| 本次结论 | 完成 DESIGN-R04：统一四份设计文档，覆盖 Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、EngineContext 原子发布及 P2-P8 接缝。 |
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 | 状态 | PASSED |
 | 状态变更 | TASK-P1-DESIGN-001: RUNNING → PASSED |
 | Task | TASK-P1-DESIGN-001 |
 | Attempt | ATTEMPT-TASK-P1-DESIGN-001-I004-A001 |
 | Iteration | ITER-P1-COMPILER-F01-DESIGN-004 / 4 |
-<<<<<<< HEAD
 | 输入 Revision | af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd |
 | 输出 Revision | DESIGN-R04@1c14c8e89779 |
 | StageOutcome | 无 |
@@ -1252,54 +1238,22 @@
 - `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
 - `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
 - `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
-=======
-| 输入 Revision | BM-R04@1b19a0ba26b6 |
-| 输出 Revision | DESIGN-R04@1c14c8e89779 |
-| StageOutcome | 无 |
-| Evidence | EVD-000275、EVD-000276、EVD-000281、EVD-000278、EVD-000279、EVD-000280 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ArchitectureReviewAgent |
-| 后续事项 | 准备并执行七个串行 Design Review。 |
-
-### 变更摘要
-
-- 完成 DESIGN-R04：统一四份设计文档，覆盖 Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、EngineContext 原子发布及 P2-P8 接缝。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
-- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 
 ### SQL、验证与阻塞
 
 | 项目 | 内容 |
 |---|---|
 | SQL 变更 | 无 / 未登记 |
-<<<<<<< HEAD
 | 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
 <!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I006-A001","blockers":["UPSTREAM_INCONSISTENCY","独立复核确认冻结的 REQAN-R04 中 Atomic exposure 与需求正文/BM-R04/设计冲突，dependency impact 仍为旧 2.42 结构；必须形成新 requirement_analysis Revision 后再重建下游。"],"event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I006-A001-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"git_checkpoint","input_revision":"af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-DESIGN-006","iteration_no":6,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md","project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md","project_doc/docs/_relations/dependency_impact.yaml","project_doc/docs/_relations/dependency_graph.md","project_doc/version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml","project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml","project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md","project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"],"next_action":"重开 requirement_analysis，发布 REQAN-R05 并重新完成下游业务模型与设计门禁","next_agent":"RequirementAnalysisAgent","phase":"design","record_id":"WR-20260728-212151-TASK-P1-DESIGN-001-FAILED","render_digest":"d753b4bf1d7d8d12bf6ba12897f6a1a8a4be442582af9ff855764318c73c3b23","schema_version":4,"scope":"形成 BM-R04 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → REWORK","status":"FAILED","summary":"设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T21:21:51+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 0 项","version":"V_1.0"} -->
 ## WR-20260728-212151-TASK-P1-DESIGN-001-FAILED
-=======
-| 测试与验证 | 登记 Evidence 6 项；命令 Evidence 5 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-DESIGN-I004-COMPLETED","event_type":"STAGE_COMPLETED","evidence_ids":["EVD-000275","EVD-000276","EVD-000278","EVD-000279","EVD-000280","EVD-000281"],"execution_mode":"git_checkpoint","input_revision":"BM-R04@1b19a0ba26b6","iteration_id":"ITER-P1-COMPILER-F01-DESIGN-004","iteration_no":4,"modified_files_summary":["四份 DESIGN-R04 文档、traceability.md、task_plan.md、task_state.md、stage_outcomes.md、Acceptance/Review/Evidence"],"next_action":"由 TestDesignAgent 基于 DESIGN-R04 启动 test_design I004。","next_agent":"TestDesignAgent","output_revision":"DESIGN-R04@1c14c8e89779","phase":"design","record_id":"WR-20260728-080021-TASK-P1-DESIGN-001-PASSED","render_digest":"49ee99b7676ae35543a8a6aa1420de2be247397349863b1bf097d9aab67c3735","review_result_refs":["REV-000038","REV-000039","REV-000040","REV-000041","REV-000042","REV-000043","REV-000044"],"schema_version":4,"scope":"design I004 阶段完成","source":"common-develop 2.42 design gate","stage_outcome_refs":["SO-P1-COMPILER-F01-DESIGN-I004"],"state_change":"design: IN_PROGRESS → PASSED；Review: 7/7 PASSED","status":"PASSED","summary":"DESIGN-R04 已冻结：Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、EngineContext 原子发布和 P2-P8 接缝闭合；七个独立 Reviewer 全部 PASSED。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T08:00:21+00:00","validation_summary":"共享 digest、38 个稳定锚点、23 个 BM-R04 错误映射、Information 合同 5/5、20 份 XML、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。","version":"V_1.0"} -->
-## WR-20260728-080021-TASK-P1-DESIGN-001-PASSED
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-<<<<<<< HEAD
 | 时间 | 2026-07-28T21:21:51+08:00 |
 | 执行 Agent | DesignAgent |
 | 命令或来源 | long_task.py finish-attempt |
@@ -1309,24 +1263,12 @@
 | 阶段 | design |
 | 任务类型 | design |
 | 事件类型 | TASK_ATTEMPT_FAILED |
-=======
-| 时间 | 2026-07-28T08:00:21+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | common-develop 2.42 design gate |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | design I004 阶段完成 |
-| 阶段 | design |
-| 任务类型 | design |
-| 事件类型 | STAGE_COMPLETED |
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 | 执行模式 | git_checkpoint |
 
 ### 执行结果与追踪
 
 | 字段 | 内容 |
 |---|---|
-<<<<<<< HEAD
 | 本次结论 | 设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。 |
 | 状态 | FAILED |
 | 状态变更 | TASK-P1-DESIGN-001: RUNNING → REWORK |
@@ -1360,38 +1302,12 @@
 - `project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml`
 - `project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md`
 - `project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-=======
-| 本次结论 | DESIGN-R04 已冻结：Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、EngineContext 原子发布和 P2-P8 接缝闭合；七个独立 Reviewer 全部 PASSED。 |
-| 状态 | PASSED |
-| 状态变更 | design: IN_PROGRESS → PASSED；Review: 7/7 PASSED |
-| Task | TASK-P1-DESIGN-001 |
-| Attempt | 无 / 未登记 |
-| Iteration | ITER-P1-COMPILER-F01-DESIGN-004 / 4 |
-| 输入 Revision | BM-R04@1b19a0ba26b6 |
-| 输出 Revision | DESIGN-R04@1c14c8e89779 |
-| StageOutcome | SO-P1-COMPILER-F01-DESIGN-I004 |
-| Evidence | EVD-000275、EVD-000276、EVD-000278、EVD-000279、EVD-000280、EVD-000281 |
-| Review | REV-000038、REV-000039、REV-000040、REV-000041、REV-000042、REV-000043、REV-000044 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | TestDesignAgent |
-| 后续事项 | 由 TestDesignAgent 基于 DESIGN-R04 启动 test_design I004。 |
-
-### 变更摘要
-
-- DESIGN-R04 已冻结：Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、EngineContext 原子发布和 P2-P8 接缝闭合；七个独立 Reviewer 全部 PASSED。
-
-### 文件变更摘要
-
-- `四份 DESIGN-R04 文档、traceability.md、task_plan.md、task_state.md、stage_outcomes.md、Acceptance/Review/Evidence`
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 
 ### SQL、验证与阻塞
 
 | 项目 | 内容 |
 |---|---|
 | SQL 变更 | 无 / 未登记 |
-<<<<<<< HEAD
 | 测试与验证 | 登记 Evidence 0 项；命令 Evidence 0 项 |
 | 问题与阻塞 | UPSTREAM_INCONSISTENCY、独立复核确认冻结的 REQAN-R04 中 Atomic exposure 与需求正文/BM-R04/设计冲突，dependency impact 仍为旧 2.42 结构；必须形成新 requirement_analysis Revision 后再重建下游。 |
 
@@ -1572,9 +1488,6 @@
 |---|---|
 | SQL 变更 | 无 / 未登记 |
 | 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
-=======
-| 测试与验证 | 共享 digest、38 个稳定锚点、23 个 BM-R04 错误映射、Information 合同 5/5、20 份 XML、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。 |
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 | 问题与阻塞 | 无 |
 
 <!-- work-record-events-end -->

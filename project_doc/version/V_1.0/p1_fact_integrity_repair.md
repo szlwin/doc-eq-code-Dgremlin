@@ -31,3 +31,19 @@ P1-COMPILER-F01
 - 四项设计问题均已关闭；
 - `DEC_COMPILER_test_seams.md` 的 SHA-256 与 `EVD-000284` 一致；
 - 正常 `verify-and-open-pr.yml` 已恢复，临时修复 Workflow 不进入 PR 最终文件树。
+
+
+## 自动验证结果
+
+- DESIGN-R05 测试接缝恢复提交：`189cd60133394d306a05529448f8eada3790c545`；
+- 测试接缝 SHA-256：`27ec9cb82d7d4ea2ab893d9200c9ed1db82628a3ca6372df39c72e213c67e8ac`；
+- 工作记录恢复提交：`b9bc52ba7dc0e4eb2e9b1b179ea7a553a51a7234`；
+- 工作记录 SHA-256：`f1e39f9bfcf0bc0eb359d6aa2bda9f2a7405670795ac652b94c886b0c3d18a49`；
+- 追踪矩阵恢复来源：`current HEAD side selection`；
+- 追踪矩阵 SHA-256：`536968529395f53f854d0fa03269a2a88d5d93ffddb6f73f0f859c3449faa35b`；
+- Task Plan JSON：PASSED；
+- Task State JSON：PASSED；
+- Review Issue JSON：PASSED；
+- Traceability 9/9：PASSED；
+- DESIGN-R05 命令 Evidence：PASSED；
+- `project_doc` 冲突标记扫描：PASSED。

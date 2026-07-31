@@ -1,10 +1,6 @@
 # P1-COMPILER-F01 追踪矩阵
 
-<<<<<<< HEAD
 > REQAN-R05 与 BM-R05 已正式通过；DESIGN-R05 已完成七类独立 Review，等待阶段归档，9 条追踪保持稳定 ID；test_design 及其下游仍为 STALE，`verification_evidence_ids` 保持为空，旧 Revision、Review 与 Evidence 保留为历史。
-=======
-> DESIGN-R04@1c14c8e89779 已通过七个串行独立 Review，9 条追踪均绑定设计锚点和当前验证 Evidence。
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
 
 ```json traceability
 [

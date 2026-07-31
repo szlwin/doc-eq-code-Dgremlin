@@ -1,274 +1,458 @@
-name: Repair P1 Project Facts
+name: Verify and Open PR
+
+run-name: Verify ${{ github.ref_name }} and open PR to ${{ inputs.base_branch || 'dev_all' }}
 
 "on":
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: Pull request target branch
+        required: true
+        default: dev_all
+        type: string
+
+      pr_title:
+        description: Pull request title; leave empty to generate automatically
+        required: false
+        default: ""
+        type: string
+
+  push:
     branches:
-      - dev_all
-    types:
-      - opened
-      - reopened
-      - synchronize
+      - "feature/**"
+      - "fix/**"
+      - "refactor/**"
+      - "chore/**"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: p1-fact-integrity-repair-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  # push：同一分支只保留最新运行。
+  # workflow_dispatch：每次手工运行使用独立 run_id，互不取消。
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || 'push' }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
-  repair:
-    if: github.head_ref == 'feature/p1-fact-integrity-repair-20260731-1940'
+  core-verify:
+    name: Core build and tests
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 30
 
     steps:
-      - name: Checkout repair branch
+      - name: Checkout source branch
         uses: actions/checkout@v6
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
+          distribution: temurin
+          java-version: "17"
+          cache: maven
 
-      - name: Restore verified history and validate project facts
+      - name: Verify Maven Wrapper
+        run: ./mvnw --version
+
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Compile and run core tests
+        run: |
+          ./mvnw \
+            --batch-mode \
+            --no-transfer-progress \
+            clean verify
+
+      - name: Prove failing tests block the build
+        run: scripts/remediation/prove_test_failure_gate.sh
+
+      - name: Upload core test reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: core-test-reports-${{ github.run_id }}
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            **/target/site/jacoco/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  mysql-it:
+    name: MySQL integration tests
+    needs: core-verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    # Java 测试代码通过这些环境变量读取数据库连接信息。
+    env:
+      DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
+      DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1
+      DEC_MYSQL_USER: root
+      DEC_MYSQL_PASSWORD: root
+
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v6
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Verify Maven Wrapper
+        run: ./mvnw --version
+
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Start preinstalled MySQL
         shell: bash
         run: |
           set -euo pipefail
 
-          python3 - <<'PY'
-          import hashlib
-          import json
-          import pathlib
-          import re
-          import subprocess
+          sudo systemctl start mysql.service
 
-          root = pathlib.Path('.')
-          task_dir = root / 'project_doc/version/V_1.0/task/P1-COMPILER-F01'
-          marker_re = re.compile(r'^(<<<<<<<(?:\s.*)?|=======|>>>>>>>(?:\s.*)?)$', re.M)
+          MYSQL_READY=false
 
-          def git_output(*args, text=False):
-              return subprocess.check_output(['git', *args], text=text)
+          for attempt in $(seq 1 30); do
+            if MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+              mysqladmin \
+                --protocol=TCP \
+                --host=127.0.0.1 \
+                --port=3306 \
+                --user="$DEC_MYSQL_USER" \
+                ping \
+                --silent
+            then
+              MYSQL_READY=true
+              break
+            fi
 
-          def revisions_for(path):
-              output = git_output('rev-list', '--all', '--date-order', '--', path, text=True)
-              return [line.strip() for line in output.splitlines() if line.strip()]
+            echo "Waiting for MySQL: attempt ${attempt}/30"
+            sleep 1
+          done
 
-          def blob_at(revision, path):
-              return git_output('show', f'{revision}:{path}')
-
-          def newest_clean_history(path, required_values, minimum_size=0):
-              for revision in revisions_for(path):
-                  try:
-                      data = blob_at(revision, path)
-                      text = data.decode('utf-8')
-                  except (subprocess.CalledProcessError, UnicodeDecodeError):
-                      continue
-                  if (
-                      all(value in text for value in required_values)
-                      and not marker_re.search(text)
-                      and len(data) >= minimum_size
-                  ):
-                      return revision, data
-              return None
-
-          def select_head_sides(text):
-              output = []
-              state = 'normal'
-              for line in text.splitlines(keepends=True):
-                  stripped = line.rstrip('\r\n')
-                  if stripped.startswith('<<<<<<<'):
-                      state = 'ours'
-                      continue
-                  if stripped == '=======':
-                      state = 'theirs'
-                      continue
-                  if stripped.startswith('>>>>>>>'):
-                      state = 'normal'
-                      continue
-                  if state in {'normal', 'ours'}:
-                      output.append(line)
-              return ''.join(output)
-
-          test_seams_path = 'project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md'
-          work_record_path = 'project_doc/version/V_1.0/work_record.md'
-          traceability_path = 'project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md'
-
-          required_test_seam_markers = (
-              'DESIGN-R05@0b37a9b4dd48',
-              'ContextPublisherSpy',
-              'MonotonicClockStub',
-              'MixSourceResolverContractTest',
-              'MIX-PUBLICATION-CONFLICT',
-              'MIX-OBSERVER-FAILURE',
-              'TR-P1-COMPILER-009'
-          )
-          test_result = newest_clean_history(test_seams_path, required_test_seam_markers)
-          if test_result is None:
-              raise SystemExit('no clean DESIGN-R05 test-seams blob found in Git history')
-          test_seams_revision, test_seams_bytes = test_result
-          (root / test_seams_path).write_bytes(test_seams_bytes)
-
-          required_work_record = (
-              'REQAN-R05@7de35e8dc15b',
-              'BM-R05@4ecb1f8c09f4',
-              'DESIGN-R05@0b37a9b4dd48',
-              'WR-20260728-225152-TASK-P1-DESIGN-001-PASSED',
-              '<!-- work-record-events-end -->'
-          )
-          work_result = newest_clean_history(work_record_path, required_work_record, 50000)
-          if work_result is None:
-              raise SystemExit('no clean DESIGN-R05 work_record found in Git history')
-          work_record_revision, work_record_bytes = work_result
-          (root / work_record_path).write_bytes(work_record_bytes)
-
-          traceability_revision = 'current HEAD side selection'
-          traceability_text = (root / traceability_path).read_text(encoding='utf-8')
-          repaired_traceability = select_head_sides(traceability_text)
-          if marker_re.search(repaired_traceability):
-              raise SystemExit('traceability conflict markers remain after HEAD-side selection')
-          trace_header = repaired_traceability.split('```json traceability', 1)[0]
-          for value in ('REQAN-R05', 'BM-R05', 'DESIGN-R05'):
-              if value not in trace_header:
-                  raise SystemExit(f'traceability current header is missing {value}')
-          (root / traceability_path).write_text(repaired_traceability, encoding='utf-8')
-
-          task_state_path = task_dir / 'task_state.md'
-          task_state_text = task_state_path.read_text(encoding='utf-8')
-          old_header = '> BM-R04 已完成并通过六个串行独立 Review；当前等待 business_model StageOutcome 与 Git checkpoint 后推进 design I004。'
-          new_header = '> DESIGN-R05 已完成并通过七个串行独立 Review；当前进入 test_design I007，由 TestDesignAgent 基于当前设计 Revision 形成可执行测试设计。'
-          if old_header in task_state_text:
-              task_state_text = task_state_text.replace(old_header, new_header, 1)
-          elif new_header not in task_state_text:
-              raise SystemExit('unexpected task_state header state')
-
-          if '"resume_from": "business_model"' in task_state_text:
-              task_state_text = task_state_text.replace(
-                  '"resume_from": "business_model"',
-                  '"resume_from": "design"',
-                  1
-              )
-          elif '"resume_from": "design"' not in task_state_text:
-              raise SystemExit('unexpected task_state resume_from state')
-          task_state_path.write_text(task_state_text, encoding='utf-8')
-
-          def fenced_json(path, fence):
-              content = path.read_text(encoding='utf-8')
-              match = re.search(rf'```json {re.escape(fence)}\s*(.*?)\s*```', content, re.S)
-              if not match:
-                  raise SystemExit(f'missing {fence} JSON fence in {path}')
-              return json.loads(match.group(1))
-
-          task_plan = fenced_json(task_dir / 'task_plan.md', 'task-plan')
-          task_state = fenced_json(task_state_path, 'task-state')
-          review_issues = fenced_json(task_dir / 'review_issues.md', 'review-issues')
-          traceability = fenced_json(root / traceability_path, 'traceability')
-          design_validation = json.loads(
-              (task_dir / 'evidence/commands/design-r05-validation.json').read_text(encoding='utf-8')
-          )
-
-          task_by_id = {item['id']: item for item in task_plan}
-          test_design = task_by_id['TASK-P1-R2-005']
-          implementation_plan = task_by_id['TASK-P1-R2-006']
-
-          assert test_design['iteration_id'] == 'ITER-P1-COMPILER-F01-TEST-DESIGN-007'
-          assert test_design['status'] == 'TODO'
-          assert test_design['input_revisions']['design'] == 'DESIGN-R05@0b37a9b4dd48'
-          assert implementation_plan['depends_on'] == ['TASK-P1-R2-005']
-          assert task_state['current_phase'] == 'test_design'
-          assert task_state['current_round'] == 'TEST_DESIGN-I007'
-          assert task_state['artifact_revisions']['design']['status'] == 'PASSED'
-          assert task_state['artifact_revisions']['design']['revision'] == 'DESIGN-R05@0b37a9b4dd48'
-          assert task_state['open_issue_ids'] == []
-          assert task_state['next_agent'] == 'TestDesignAgent'
-          assert task_state['resume_from'] == 'design'
-          assert all(issue['status'] == 'CLOSED' for issue in review_issues)
-          assert design_validation['revision'] == 'DESIGN-R05@0b37a9b4dd48'
-          assert design_validation['exit_code'] == 0
-          assert len(traceability) == 9
-          assert {item['id'] for item in traceability} == {
-              f'TR-P1-COMPILER-{number:03d}' for number in range(1, 10)
-          }
-          assert all(
-              'DESIGN-R05@0b37a9b4dd48' in item.get('notes', '')
-              for item in traceability
-          )
-          assert all(
-              'TASK-P1-DESIGN-001' in item.get('plan_task_ids', [])
-              for item in traceability
-          )
-
-          restored_test_seams = (root / test_seams_path).read_text(encoding='utf-8')
-          restored_work_record = (root / work_record_path).read_text(encoding='utf-8')
-          restored_traceability = (root / traceability_path).read_text(encoding='utf-8')
-          assert all(value in restored_test_seams for value in required_test_seam_markers)
-          assert all(value in restored_work_record for value in required_work_record)
-          assert 'REV-000050' in restored_traceability
-          assert 'REV-000056' in restored_traceability
-
-          conflicts = []
-          for path in (root / 'project_doc').rglob('*'):
-              if not path.is_file() or path.suffix.lower() in {
-                  '.xz', '.zip', '.gz', '.png', '.jpg', '.jpeg', '.gif', '.pdf'
-              }:
-                  continue
-              try:
-                  candidate = path.read_text(encoding='utf-8')
-              except UnicodeDecodeError:
-                  continue
-              if marker_re.search(candidate):
-                  conflicts.append(str(path))
-          if conflicts:
-              raise SystemExit('remaining conflict markers: ' + ', '.join(conflicts))
-
-          test_seams_digest = hashlib.sha256((root / test_seams_path).read_bytes()).hexdigest()
-          work_record_digest = hashlib.sha256((root / work_record_path).read_bytes()).hexdigest()
-          traceability_digest = hashlib.sha256((root / traceability_path).read_bytes()).hexdigest()
-
-          report_path = root / 'project_doc/version/V_1.0/p1_fact_integrity_repair.md'
-          report = report_path.read_text(encoding='utf-8')
-          report = re.sub(r'\n## 自动验证结果\n.*\Z', '', report, flags=re.S)
-          report += f'''\n\n## 自动验证结果\n\n- DESIGN-R05 测试接缝恢复提交：`{test_seams_revision}`；\n- 测试接缝 SHA-256：`{test_seams_digest}`；\n- 工作记录恢复提交：`{work_record_revision}`；\n- 工作记录 SHA-256：`{work_record_digest}`；\n- 追踪矩阵恢复来源：`{traceability_revision}`；\n- 追踪矩阵 SHA-256：`{traceability_digest}`；\n- Task Plan JSON：PASSED；\n- Task State JSON：PASSED；\n- Review Issue JSON：PASSED；\n- Traceability 9/9：PASSED；\n- DESIGN-R05 命令 Evidence：PASSED；\n- `project_doc` 冲突标记扫描：PASSED。\n'''
-          report_path.write_text(report, encoding='utf-8')
-
-          print(f'test seams restored from: {test_seams_revision}')
-          print(f'work record restored from: {work_record_revision}')
-          print(f'traceability restored from: {traceability_revision}')
-          print('Task Plan JSON: PASSED')
-          print('Task State JSON: PASSED')
-          print('Review Issue JSON: PASSED')
-          print('Traceability 9/9: PASSED')
-          print('DESIGN-R05 command evidence: PASSED')
-          print('project_doc conflict scan: PASSED')
-          PY
-
-      - name: Restore normal verification workflow and commit repair
-        shell: bash
-        env:
-          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
-        run: |
-          set -euo pipefail
-
-          git show e602c4b7a56bb3529a5be64a3743346fbc569124:.github/workflows/verify-and-open-pr.yml \
-            > .github/workflows/verify-and-open-pr.yml
-          rm -f .github/workflows/p1-fact-integrity-repair.yml
-
-          git config user.name "common-develop ProjectManagerAgent"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md \
-            project_doc/version/V_1.0/work_record.md \
-            project_doc/version/V_1.0/task/P1-COMPILER-F01/task_state.md \
-            project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md \
-            project_doc/version/V_1.0/p1_fact_integrity_repair.md \
-            .github/workflows/verify-and-open-pr.yml \
-            .github/workflows/p1-fact-integrity-repair.yml
-
-          git diff --cached --check
-
-          if git diff --cached --quiet; then
-            echo "::error::No repair changes were produced."
+          if [ "$MYSQL_READY" != "true" ]; then
+            echo "::error::MySQL did not become ready within 30 seconds."
+            sudo systemctl status mysql.service --no-pager || true
             exit 1
           fi
 
-          git commit -m "docs: repair P1 project fact integrity"
-          git push origin "HEAD:${HEAD_BRANCH}"
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SELECT VERSION() AS mysql_version;
+                SELECT CURRENT_USER();
+              "
+
+      - name: Initialize MySQL schema
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SCHEMA_FILE="dec-demo/src/test/resources/mysql/schema.sql"
+
+          if [ ! -f "$SCHEMA_FILE" ]; then
+            echo "::error::Missing MySQL schema file: $SCHEMA_FILE"
+            exit 1
+          fi
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              < "$SCHEMA_FILE"
+
+      - name: Initialize MySQL test data
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DATA_FILE="dec-demo/src/test/resources/mysql/data.sql"
+
+          if [ -f "$DATA_FILE" ]; then
+            MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+              mysql \
+                --protocol=TCP \
+                --host=127.0.0.1 \
+                --port=3306 \
+                --user="$DEC_MYSQL_USER" \
+                --database="demo-test2" \
+                < "$DATA_FILE"
+          else
+            echo "Optional MySQL test data file does not exist: $DATA_FILE"
+          fi
+
+      - name: Verify MySQL schemas
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mysql_value() {
+            MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+              mysql \
+                --protocol=TCP \
+                --host=127.0.0.1 \
+                --port=3306 \
+                --user="$DEC_MYSQL_USER" \
+                --batch \
+                --skip-column-names \
+                --execute="$1"
+          }
+
+          SCHEMA_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.SCHEMATA
+              WHERE SCHEMA_NAME IN ('demo-test1', 'demo-test2');
+            "
+          )"
+
+          if [ "$SCHEMA_COUNT" -ne 2 ]; then
+            echo "::error::Expected demo-test1 and demo-test2, found ${SCHEMA_COUNT} schemas."
+            exit 1
+          fi
+
+          DEMO1_PRODUCT_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.TABLES
+              WHERE TABLE_SCHEMA = 'demo-test1'
+                AND TABLE_NAME = 'product_info';
+            "
+          )"
+
+          DEMO2_PRODUCT_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.TABLES
+              WHERE TABLE_SCHEMA = 'demo-test2'
+                AND TABLE_NAME = 'product_info';
+            "
+          )"
+
+          DEMO2_ORDER_COUNT="$(
+            mysql_value "
+              SELECT COUNT(*)
+              FROM INFORMATION_SCHEMA.TABLES
+              WHERE TABLE_SCHEMA = 'demo-test2'
+                AND TABLE_NAME = 'order_info';
+            "
+          )"
+
+          if [ "$DEMO1_PRODUCT_COUNT" -ne 1 ]; then
+            echo "::error::Missing demo-test1.product_info."
+            exit 1
+          fi
+
+          if [ "$DEMO2_PRODUCT_COUNT" -ne 1 ]; then
+            echo "::error::Missing demo-test2.product_info."
+            exit 1
+          fi
+
+          if [ "$DEMO2_ORDER_COUNT" -ne 1 ]; then
+            echo "::error::Missing demo-test2.order_info."
+            exit 1
+          fi
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SELECT SCHEMA_NAME
+                FROM INFORMATION_SCHEMA.SCHEMATA
+                WHERE SCHEMA_NAME IN ('demo-test1', 'demo-test2')
+                ORDER BY SCHEMA_NAME;
+
+                SHOW TABLES FROM \`demo-test1\`;
+                SHOW TABLES FROM \`demo-test2\`;
+              "
+
+      - name: Run MySQL integration tests
+        shell: bash
+        run: |
+          echo "Primary JDBC URL: $DEC_MYSQL_URL"
+          echo "Secondary JDBC URL: $DEC_MYSQL_URL_2"
+          echo "Database user: $DEC_MYSQL_USER"
+
+          ./mvnw \
+            --batch-mode \
+            --no-transfer-progress \
+            -Pmysql-it \
+            verify
+
+      - name: Upload MySQL integration test reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: mysql-test-reports-${{ github.run_id }}
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            **/target/site/jacoco/**
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Show MySQL diagnostics after failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "## MySQL service status"
+          sudo systemctl status mysql.service --no-pager || true
+
+          echo
+          echo "## MySQL process list"
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SHOW FULL PROCESSLIST;
+              " || true
+
+          echo
+          echo "## InnoDB status"
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SHOW ENGINE INNODB STATUS;
+              " || true
+
+          echo
+          echo "## Active InnoDB transactions"
+
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" \
+            mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=3306 \
+              --user="$DEC_MYSQL_USER" \
+              --execute="
+                SELECT *
+                FROM INFORMATION_SCHEMA.INNODB_TRX;
+              " || true
+
+  create-pr:
+    name: Create or reuse pull request
+    needs: mysql-it
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Verify GitHub CLI
+        run: gh --version
+
+      - name: Create or reuse pull request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_BRANCH: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          BASE_BRANCH_INPUT: ${{ inputs.base_branch }}
+          PR_TITLE_INPUT: ${{ inputs.pr_title }}
+        run: |
+          set -euo pipefail
+
+          if [ "$REF_TYPE" != "branch" ]; then
+            echo "::error::This workflow must run against a branch."
+            exit 1
+          fi
+
+          BASE_BRANCH="${BASE_BRANCH_INPUT:-dev_all}"
+
+          if [ "$SOURCE_BRANCH" = "$BASE_BRANCH" ]; then
+            echo "::error::Source and target branches cannot both be '$BASE_BRANCH'."
+            exit 1
+          fi
+
+          PR_TITLE="${PR_TITLE_INPUT:-Merge ${SOURCE_BRANCH} into ${BASE_BRANCH}}"
+
+          EXISTING_PR_URL="$(
+            gh pr list \
+              --repo "$GITHUB_REPOSITORY" \
+              --head "$SOURCE_BRANCH" \
+              --base "$BASE_BRANCH" \
+              --state open \
+              --json url \
+              --jq '.[0].url // empty'
+          )"
+
+          if [ -n "$EXISTING_PR_URL" ]; then
+            {
+              echo "## Pull request"
+              echo
+              echo "An open pull request already exists:"
+              echo
+              echo "$EXISTING_PR_URL"
+            } >> "$GITHUB_STEP_SUMMARY"
+
+            echo "Existing pull request: $EXISTING_PR_URL"
+            exit 0
+          fi
+
+          cat > /tmp/pr-body.md <<EOF
+          ## Verification result
+
+          This pull request was created only after all pre-PR checks passed.
+
+          Passed checks:
+
+          - Maven Wrapper verification
+          - Repository-bundled legacy dependency bootstrap
+          - Maven clean verify
+          - Core unit tests
+          - Failure-gate proof
+          - Preinstalled MySQL startup
+          - MySQL schema initialization
+          - Separate demo-test1 and demo-test2 validation
+          - MySQL integration tests
+
+          Source branch: \`$SOURCE_BRANCH\`
+
+          Target branch: \`$BASE_BRANCH\`
+
+          Workflow run:
+
+          $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+          EOF
+
+          PR_URL="$(
+            gh pr create \
+              --repo "$GITHUB_REPOSITORY" \
+              --head "$SOURCE_BRANCH" \
+              --base "$BASE_BRANCH" \
+              --title "$PR_TITLE" \
+              --body-file /tmp/pr-body.md
+          )"
+
+          {
+            echo "## Pull request created"
+            echo
+            echo "$PR_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "Created pull request: $PR_URL"
