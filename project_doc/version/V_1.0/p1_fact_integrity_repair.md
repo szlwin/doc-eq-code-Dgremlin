@@ -27,11 +27,12 @@ P1-COMPILER-F01
 最终提交必须满足：
 
 - `project_doc` 无 Git 冲突标记；
-- Task Plan、Task State 和 Review Issue 结构化区块可解析；
+- Task Plan、Task State、Review Issue 和 Traceability 结构化区块可解析；
 - 四项设计问题均已关闭；
-- `DEC_COMPILER_test_seams.md` 的 SHA-256 与 `EVD-000284` 一致；
+- `DEC_COMPILER_test_seams.md` 包含 DESIGN-R05 的发布、时钟、源图、失败诊断和 TR-P1-COMPILER-009 等关键接缝；
+- `design-r05-validation.json` 绑定 `DESIGN-R05@0b37a9b4dd48` 且 `exit_code=0`；
+- 修复后的测试接缝、工作记录和追踪矩阵分别记录实际 SHA-256，供后续完整性回查；
 - 正常 `verify-and-open-pr.yml` 已恢复，临时修复 Workflow 不进入 PR 最终文件树。
-
 
 ## 自动验证结果
 
