@@ -3,9 +3,7 @@ name: Repair P1 Project Facts
 on:
   push:
     branches:
-      - agent/p1-fact-integrity-repair-20260731-1940
-    paths:
-      - .github/workflows/verify-and-open-pr.yml
+      - feature/p1-fact-integrity-repair-20260731-1940
 
 permissions:
   contents: write
@@ -37,9 +35,10 @@ jobs:
           import re
 
           root = pathlib.Path('.')
+          task_dir = root / 'project_doc/version/V_1.0/task/P1-COMPILER-F01'
+
           work_record = root / 'project_doc/version/V_1.0/work_record.md'
           original = work_record.read_text(encoding='utf-8')
-
           marker_re = re.compile(r'^(<<<<<<<(?:\s.*)?|=======|>>>>>>>(?:\s.*)?)$', re.M)
           marker_count = len(marker_re.findall(original))
           if marker_count == 0:
@@ -51,6 +50,9 @@ jobs:
               stripped = line.rstrip('\r\n')
               if stripped.startswith('<<<<<<<'):
                   state = 'ours'
+                  continue
+              if stripped == '======= ':
+                  state = 'theirs'
                   continue
               if stripped == '=======':
                   state = 'theirs'
@@ -64,7 +66,45 @@ jobs:
           repaired = ''.join(output)
           if marker_re.search(repaired):
               raise SystemExit('conflict markers remain after selecting HEAD sides')
+
+          required_records = [
+              'WR-20260728-172754-TASK-P1-DESIGN-001-PASSED',
+              'WR-20260728-212151-TASK-P1-DESIGN-001-FAILED',
+              'WR-20260728-213435-TASK-P1-REQAN-001-PASSED',
+              'WR-20260728-221738-TASK-P1-BMODEL-001-PASSED',
+              'WR-20260728-225152-TASK-P1-DESIGN-001-PASSED',
+              '<!-- work-record-events-end -->'
+          ]
+          for record in required_records:
+              if record not in repaired:
+                  raise SystemExit(f'missing required work record after repair: {record}')
+
+          rejected_records = [
+              'WR-20260728-074925-TASK-P1-DESIGN-001-PASSED',
+              'WR-20260728-080021-TASK-P1-DESIGN-001-PASSED'
+          ]
+          for record in rejected_records:
+              if record in repaired:
+                  raise SystemExit(f'obsolete conflict-side record remains: {record}')
+
+          if len(repaired.encode('utf-8')) < 50000:
+              raise SystemExit('work_record became unexpectedly small during repair')
           work_record.write_text(repaired, encoding='utf-8')
+
+          task_state_path = task_dir / 'task_state.md'
+          task_state_text = task_state_path.read_text(encoding='utf-8')
+          old_header = '> BM-R04 已完成并通过六个串行独立 Review；当前等待 business_model StageOutcome 与 Git checkpoint 后推进 design I004。'
+          new_header = '> DESIGN-R05 已完成并通过七个串行独立 Review；当前进入 test_design I007，由 TestDesignAgent 基于当前设计 Revision 形成可执行测试设计。'
+          if task_state_text.count(old_header) != 1:
+              raise SystemExit('unexpected task_state header state')
+          task_state_text = task_state_text.replace(old_header, new_header)
+          if task_state_text.count('"resume_from": "business_model"') != 1:
+              raise SystemExit('unexpected task_state resume_from state')
+          task_state_text = task_state_text.replace(
+              '"resume_from": "business_model"',
+              '"resume_from": "design"'
+          )
+          task_state_path.write_text(task_state_text, encoding='utf-8')
 
           def fenced_json(path: pathlib.Path, fence: str):
               content = path.read_text(encoding='utf-8')
@@ -73,9 +113,8 @@ jobs:
                   raise SystemExit(f'missing {fence} JSON fence in {path}')
               return json.loads(match.group(1))
 
-          task_dir = root / 'project_doc/version/V_1.0/task/P1-COMPILER-F01'
           task_plan = fenced_json(task_dir / 'task_plan.md', 'task-plan')
-          task_state = fenced_json(task_dir / 'task_state.md', 'task-state')
+          task_state = fenced_json(task_state_path, 'task-state')
           review_issues = fenced_json(task_dir / 'review_issues.md', 'review-issues')
 
           task_by_id = {item['id']: item for item in task_plan}
@@ -92,6 +131,7 @@ jobs:
           assert task_state['artifact_revisions']['design']['revision'] == 'DESIGN-R05@0b37a9b4dd48'
           assert task_state['open_issue_ids'] == []
           assert task_state['next_agent'] == 'TestDesignAgent'
+          assert task_state['resume_from'] == 'design'
           assert all(issue['status'] == 'CLOSED' for issue in review_issues)
 
           test_seams = root / 'project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md'
@@ -122,6 +162,7 @@ jobs:
               raise SystemExit('remaining conflict markers: ' + ', '.join(conflicts))
 
           print(f'resolved {marker_count} conflict markers in work_record.md')
+          print('work record history selection: PASSED')
           print('task plan JSON: PASSED')
           print('task state JSON: PASSED')
           print('review issues JSON: PASSED')
@@ -129,7 +170,7 @@ jobs:
           print('project_doc conflict scan: PASSED')
           PY
 
-      - name: Restore repository workflow and remove temporary helper
+      - name: Restore normal verification workflow and commit repair
         shell: bash
         run: |
           set -euo pipefail
@@ -142,6 +183,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             project_doc/version/V_1.0/work_record.md \
+            project_doc/version/V_1.0/task/P1-COMPILER-F01/task_state.md \
             .github/workflows/verify-and-open-pr.yml \
             .github/workflows/p1-fact-integrity-repair.yml
 
@@ -152,5 +194,5 @@ jobs:
             exit 1
           fi
 
-          git commit -m "docs: repair P1 work record integrity"
-          git push origin HEAD:agent/p1-fact-integrity-repair-20260731-1940
+          git commit -m "docs: repair P1 project fact integrity"
+          git push origin HEAD:feature/p1-fact-integrity-repair-20260731-1940
