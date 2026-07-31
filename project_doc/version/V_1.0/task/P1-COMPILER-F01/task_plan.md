@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 任务计划
 
-> 当前登记 R04 活动任务；R01～R03 历史保留在 StageOutcome、Review 和 Evidence 中。
+> 当前活动输入为 `DESIGN-R05@0b37a9b4dd48`；需求确认、需求分析、业务模型和设计历史保留在 StageOutcome、Review 和 Evidence 中。下一可执行阶段为 `test_design` I007，全部任务和 Review 按 SEQUENTIAL 顺序执行。
 
 ```json task-plan
 [
@@ -202,7 +202,7 @@
     "validation_commands": [],
     "expected_results": [
       "BM-R05 以结构化 YAML 与等价 Markdown 建立 CompilationSession 和 PublishedContext 两个聚合边界，覆盖 RawDefinition、TypedKey、Deferred、Diagnostic 与 compiler-owned 原子发布",
-      "InformationKey 以 SystemKey 为所有权边界；BusinessScope 不拥有 Information；common 只允许跨 System expression Information 且不拥有 Data/View/RuleView/ModelAccess",
+      "InformationKey 以 SystemKey 为所有权边界；BusinessScope 不拥有 Information；common 只允许跨 System expression Information且不拥有 Data/View/RuleView/ModelAccess",
       "ModelAccessBinding 明确 source path 与 target selector 分离，selector 先精确匹配 target-main，未命中时才逐段精确解析 property path，歧义或缺失均阻断发布",
       "P2～P8 的 DeferredDefinition、责任阶段、已解析 Key、SourceRef、失败与恢复边界完整可追踪",
       "九条 TR 均引用 BM-R05 稳定模型 ID，且六个适用 Reviewer 对同一 Revision 独立 PASSED",
@@ -397,33 +397,40 @@
     "id": "TASK-P1-R2-005",
     "logical_task_id": "LOGICAL-TASK-P1-R2-005",
     "feature_id": "P1-COMPILER-F01",
-<<<<<<< HEAD
     "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-007",
     "iteration_no": 7,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-006",
-    "revision_reason": "独立设计复核发现 REQAN-R04 的 Atomic exposure owner 与需求正文/BM-R04 不一致，且 dependency_impact.yaml 仍为旧 2.42 结构；需形成新 REQAN Revision 并重建下游。",
-    "title": "形成七项 AC 的可执行测试设计",
-    "objective": "形成七项 AC 的可执行测试设计",
-=======
-    "iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-004",
-    "iteration_no": 4,
-    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-TEST-DESIGN-003",
-    "revision_reason": "DESIGN-R04 已冻结 Compiler Pipeline、System-owned Information/common expression、ModelAccess selector、DeferredDefinition、Diagnostic、原子发布及测试接缝；TEST_DESIGN I004 必须覆盖 9 条 TR 的正常、边界、异常、安全、并发、兼容和跨模块路径。",
-    "title": "形成 DESIGN-R04 的可执行测试设计",
-    "objective": "基于 DESIGN-R04 将 9 条 TR、23 个稳定业务错误、编译主/失败路径、原子发布、common expression 与 ModelAccess selector 转为可执行测试 Case 和非测试验证",
->>>>>>> 67fd301d3dd5a59c229337e3d05bd4b05d9984cf
+    "revision_reason": "DESIGN-R05 已修复 DESIGN-R04 的四项 P1 finding，并通过七类独立 Review；旧测试设计输入已失效，TEST_DESIGN I007 必须只绑定 DESIGN-R05。",
+    "title": "形成 DESIGN-R05 的可执行测试设计",
+    "objective": "基于 DESIGN-R05 将 9 条 TR、23 个稳定业务错误、源图、Canonical/Raw、TypedKey、Deferred、Diagnostic、原子发布、并发、安全和退役边界转为可执行 Case 与非测试验证。",
     "phase": "test_design",
-    "status": "REWORK",
+    "status": "TODO",
     "depends_on": [
       "TASK-P1-DESIGN-001"
     ],
     "owner_agent": "TestDesignAgent",
-    "reviewer_agents": [],
+    "reviewer_agents": [
+      "DesignReviewAgent",
+      "RequirementReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
+    ],
     "input_revisions": {
-      "change_requirement": "P1-COMPILER-CR01",
-      "draft_design": "DESIGN-R02-DRAFT"
+      "requirement_confirmation": "REQCONF-R04@c186ce681e1e",
+      "requirement_analysis": "REQAN-R05@7de35e8dc15b",
+      "business_model": "BM-R05@4ecb1f8c09f4",
+      "design": "DESIGN-R05@0b37a9b4dd48"
     },
-    "allowed_files": [],
+    "allowed_files": [
+      "version/V_1.0/doc/P1-COMPILER-F01/test_case.md",
+      "version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md",
+      "version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/work_record.md"
+    ],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-001",
       "TR-P1-COMPILER-002",
@@ -435,14 +442,23 @@
       "TR-P1-COMPILER-008",
       "TR-P1-COMPILER-009"
     ],
-    "flow_refs": [],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "R02 artifacts reviewed and internally consistent"
+      "每条适用 TR 至少映射一个可执行 Case，Case 可反向追溯到需求、设计 seam 和 acceptance assertion",
+      "覆盖正常、边界、异常、安全、并发、兼容、超时、取消、CAS conflict 和失败不发布",
+      "精确验证 10 个 SourceManifest source、7 条 declaration edge 和固定 mix inventory，不从实现输出反推 expected",
+      "验证 System-owned Information、common 跨 System expression、ModelAccess target-main 优先/property path 回退及所有禁止降级路径",
+      "明确 TDD RED 接缝、测试数据、预期结果、禁止副作用和开发后 Evidence 采集方式",
+      "DesignReviewAgent、RequirementReviewAgent、TDDReviewAgent、TestEvidenceReviewAgent 对同一 TESTDESIGN Revision 串行独立 PASSED"
     ],
     "stop_conditions": [
-      "dec-expand-declaration or second runtime reintroduced"
+      "不得复用 DESIGN-R04、DESIGN-R02-DRAFT 或旧测试设计 Evidence",
+      "不得在 test_design 阶段编写生产实现或提前实现 P2～P7 运行语义",
+      "不得遗漏失败路径、禁止副作用、Case 反向追踪或当前 DESIGN-R05 输入绑定"
     ],
     "risk_triggers": [],
     "attempts": 0,
@@ -457,21 +473,33 @@
     "iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-007",
     "iteration_no": 7,
     "supersedes_iteration_id": "ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-006",
-    "revision_reason": "独立设计复核发现 REQAN-R04 的 Atomic exposure owner 与需求正文/BM-R04 不一致，且 dependency_impact.yaml 仍为旧 2.42 结构；需形成新 REQAN Revision 并重建下游。",
+    "revision_reason": "DESIGN-R05 已通过，旧实施计划输入已失效；本任务必须等待 TEST_DESIGN I007 通过后再绑定其正式 Revision。",
     "title": "形成 P1-T01～T15 实施计划",
-    "objective": "形成 P1-T01～T15 实施计划",
+    "objective": "基于 DESIGN-R05 和后续通过的 TESTDESIGN Revision，将 P1 编译骨架拆分为可独立验证的纵向任务，固定依赖、允许文件、TDD 接缝、验证命令、停止条件和 Reviewer。",
     "phase": "implementation_plan",
-    "status": "REWORK",
+    "status": "TODO",
     "depends_on": [
       "TASK-P1-R2-005"
     ],
     "owner_agent": "ImplementationPlanAgent",
-    "reviewer_agents": [],
+    "reviewer_agents": [
+      "ArchitectureReviewAgent",
+      "DevelopAgent",
+      "PlanReviewAgent",
+      "TestDesignAgent"
+    ],
     "input_revisions": {
-      "change_requirement": "P1-COMPILER-CR01",
-      "draft_design": "DESIGN-R02-DRAFT"
+      "requirement_analysis": "REQAN-R05@7de35e8dc15b",
+      "business_model": "BM-R05@4ecb1f8c09f4",
+      "design": "DESIGN-R05@0b37a9b4dd48"
     },
-    "allowed_files": [],
+    "allowed_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/development_tasks.yaml",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/work_record.md"
+    ],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-001",
       "TR-P1-COMPILER-002",
@@ -479,16 +507,26 @@
       "TR-P1-COMPILER-004",
       "TR-P1-COMPILER-005",
       "TR-P1-COMPILER-006",
-      "TR-P1-COMPILER-007"
+      "TR-P1-COMPILER-007",
+      "TR-P1-COMPILER-008",
+      "TR-P1-COMPILER-009"
     ],
-    "flow_refs": [],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
     "flow_step_refs": [],
     "validation_commands": [],
     "expected_results": [
-      "R02 artifacts reviewed and internally consistent"
+      "计划覆盖 P1-T01～T15 与 9 条 TR，依赖无环且同一时刻只允许一个任务或 Review 运行",
+      "每项任务声明目标、实现方式、验收标准、允许文件、输入输出、TDD/测试命令、预期结果和停止条件",
+      "实施顺序先建立 context 中立契约和 compiler 模块，再接入 XML/YAML frontend、starter、只读投影和退役门禁",
+      "不得提前实现 P2～P7 runtime；dec-expand-declaration 的删除作为实现验收任务而非当前文档修复动作",
+      "ArchitectureReviewAgent、DevelopAgent、PlanReviewAgent、TestDesignAgent 对同一 TP Revision 串行独立 PASSED"
     ],
     "stop_conditions": [
-      "dec-expand-declaration or second runtime reintroduced"
+      "TEST_DESIGN I007 尚未通过或未生成正式 Revision",
+      "任务存在占位符、循环依赖、无验证结束条件或跨越允许文件范围",
+      "计划引入第二运行时、兼容 Adapter、静态 current Context 或提前实现 P2～P7"
     ],
     "risk_triggers": [],
     "attempts": 0,
