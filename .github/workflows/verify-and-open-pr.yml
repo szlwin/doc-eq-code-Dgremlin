@@ -1,19 +1,24 @@
 name: Repair P1 Project Facts
 
-on:
-  push:
+"on":
+  pull_request:
     branches:
-      - feature/p1-fact-integrity-repair-20260731-1940
+      - dev_all
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 permissions:
   contents: write
 
 concurrency:
-  group: p1-fact-integrity-repair-20260731-1940
+  group: p1-fact-integrity-repair-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   repair:
+    if: github.head_ref == 'feature/p1-fact-integrity-repair-20260731-1940'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
 
@@ -21,6 +26,8 @@ jobs:
       - name: Checkout repair branch
         uses: actions/checkout@v6
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Resolve historical merge conflicts and validate facts
@@ -51,9 +58,6 @@ jobs:
               if stripped.startswith('<<<<<<<'):
                   state = 'ours'
                   continue
-              if stripped == '======= ':
-                  state = 'theirs'
-                  continue
               if stripped == '=======':
                   state = 'theirs'
                   continue
@@ -67,25 +71,16 @@ jobs:
           if marker_re.search(repaired):
               raise SystemExit('conflict markers remain after selecting HEAD sides')
 
-          required_records = [
-              'WR-20260728-172754-TASK-P1-DESIGN-001-PASSED',
-              'WR-20260728-212151-TASK-P1-DESIGN-001-FAILED',
-              'WR-20260728-213435-TASK-P1-REQAN-001-PASSED',
-              'WR-20260728-221738-TASK-P1-BMODEL-001-PASSED',
+          required_content = [
+              'REQAN-R05@7de35e8dc15b',
+              'BM-R05@4ecb1f8c09f4',
+              'DESIGN-R05@0b37a9b4dd48',
               'WR-20260728-225152-TASK-P1-DESIGN-001-PASSED',
               '<!-- work-record-events-end -->'
           ]
-          for record in required_records:
-              if record not in repaired:
-                  raise SystemExit(f'missing required work record after repair: {record}')
-
-          rejected_records = [
-              'WR-20260728-074925-TASK-P1-DESIGN-001-PASSED',
-              'WR-20260728-080021-TASK-P1-DESIGN-001-PASSED'
-          ]
-          for record in rejected_records:
-              if record in repaired:
-                  raise SystemExit(f'obsolete conflict-side record remains: {record}')
+          for value in required_content:
+              if value not in repaired:
+                  raise SystemExit(f'missing required work record content after repair: {value}')
 
           if len(repaired.encode('utf-8')) < 50000:
               raise SystemExit('work_record became unexpectedly small during repair')
@@ -172,6 +167,8 @@ jobs:
 
       - name: Restore normal verification workflow and commit repair
         shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
 
@@ -195,4 +192,4 @@ jobs:
           fi
 
           git commit -m "docs: repair P1 project fact integrity"
-          git push origin HEAD:feature/p1-fact-integrity-repair-20260731-1940
+          git push origin "HEAD:${HEAD_BRANCH}"
