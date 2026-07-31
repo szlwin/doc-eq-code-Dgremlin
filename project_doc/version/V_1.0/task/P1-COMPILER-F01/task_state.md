@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 长任务状态
 
-> BM-R04 已完成并通过六个串行独立 Review；当前等待 business_model StageOutcome 与 Git checkpoint 后推进 design I004。
+> DESIGN-R05 已完成并通过七个串行独立 Review；当前进入 test_design I007，由 TestDesignAgent 基于当前设计 Revision 形成可执行测试设计。
 
 
 ```json task-state
@@ -605,7 +605,7 @@
   },
   "next_action": "开始 test_design 阶段",
   "next_agent": "TestDesignAgent",
-  "resume_from": "business_model",
+  "resume_from": "design",
   "max_auto_review_rounds": 3,
   "stale_events": [
     {
