@@ -657,6 +657,48 @@
     ],
     "summary": "wk -tp 形成并冻结 15 个严格串行开发增量，四项计划 Review 均通过。",
     "next_action": "ProjectManagerAgent 启动 TDD-I007，并由 TddAgent 执行 TASK-P1-T01 的有效 RED。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-T01-I007-A001",
+    "task_id": "TASK-P1-T01",
+    "iteration_id": "ITER-P1-COMPILER-F01-TDD-007",
+    "iteration_no": 7,
+    "attempt_no": 1,
+    "agent": "TddAgent",
+    "phase": "tdd",
+    "status": "PASSED",
+    "input_revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+    "output_revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "started_at": "2026-08-01T03:33:00+00:00",
+    "completed_at": "2026-08-01T03:37:19+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "project_doc/version/V_1.0/work_record.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000291"
+    ],
+    "evidence_ids": [
+      "EVD-000290",
+      "EVD-000291"
+    ],
+    "summary": "三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。",
+    "next_action": "由 DevelopAgent 实现 TASK-P1-T01 最小生产契约，使当前 RED 转为 GREEN。"
   }
 ]
 ```

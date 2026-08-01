@@ -657,6 +657,184 @@
       "verified_by_agent": "TestEvidenceReviewAgent",
       "verified_at": "2026-07-31T16:34:56+00:00",
       "reason": "测试设计 Evidence 可复现并记录精确摘要、输入 Revision、Case/TR/AC/code/source/edge/inventory 计数；仅证明测试设计通过，不虚构生产测试结果。"
+    },
+    {
+      "assertion_id": "ASRT-P1-T01-TDD-R01-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TASK-P1-T01 的三个测试类可编译、可执行，并以 3 个行为断言 failure 明确冻结 Context 中立不可变公共契约；不存在编译、依赖、选择或环境错误。",
+      "type": "MANUAL_REVIEW",
+      "phase": "tdd",
+      "revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "tdd",
+        "criteria_ids": [
+          "RC-TDD-001",
+          "RC-TDD-004",
+          "RC-TDD-005",
+          "RC-TDD-006",
+          "RC-EVID-001",
+          "RC-EVID-002"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-T01",
+        "dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java",
+        "dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java",
+        "dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java",
+        "dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java",
+        "TR-P1-COMPILER-003",
+        "TR-P1-COMPILER-004",
+        "TR-P1-COMPILER-005",
+        "TR-P1-COMPILER-006"
+      ],
+      "evidence_ids": [
+        "EVD-000290",
+        "EVD-000291"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T03:39:00+00:00",
+      "reason": "测试源码先编译，旧基线和依赖方向独立验证通过；三项新测试实际执行为 3 failures / 0 errors，均由冻结的公共生产契约尚未实现触发，未使用 Mock 或私有实现 seam。"
+    },
+    {
+      "assertion_id": "ASRT-P1-IP-R01-PLAN-001",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "15 个串行增量字段完整、依赖无环、验证和停止条件可执行",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PlanReviewAgent",
+        "review_phase": "implementation_plan",
+        "criteria_ids": [
+          "RC-PLAN-001",
+          "RC-PLAN-002",
+          "RC-PLAN-003",
+          "RC-PLAN-004",
+          "RC-PLAN-005",
+          "RC-PLAN-006",
+          "RC-PLAN-007",
+          "RC-PLAN-008",
+          "RC-ACPT-001",
+          "RC-BFLOW-002",
+          "RC-BFLOW-005"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-006",
+        "development_tasks.yaml"
+      ],
+      "evidence_ids": [
+        "EVD-000288",
+        "EVD-000289"
+      ],
+      "verified_by_agent": "PlanReviewAgent",
+      "verified_at": "2026-08-01T02:50:19+00:00",
+      "reason": "15 个串行增量字段完整、依赖无环、验证和停止条件可执行"
+    },
+    {
+      "assertion_id": "ASRT-P1-IP-R01-ARCH-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "模块依赖、原子发布、上下文隔离与退役顺序符合 DESIGN-R05",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "implementation_plan",
+        "criteria_ids": [
+          "RC-ARCH-001",
+          "RC-ARCH-002",
+          "RC-ARCH-004",
+          "RC-ARCH-006",
+          "RC-PLAN-003",
+          "RC-PLAN-004"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-006",
+        "development_tasks.yaml"
+      ],
+      "evidence_ids": [
+        "EVD-000288",
+        "EVD-000289"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-01T02:50:20+00:00",
+      "reason": "模块依赖、原子发布、上下文隔离与退役顺序符合 DESIGN-R05"
+    },
+    {
+      "assertion_id": "ASRT-P1-IP-R01-TEST-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "41 个测试 Case 已转换为各增量的 RED/GREEN 命令与可判定结果",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "implementation_plan",
+        "criteria_ids": [
+          "RC-TEST-001",
+          "RC-TEST-002",
+          "RC-TEST-003",
+          "RC-TEST-004",
+          "RC-PLAN-006",
+          "RC-PLAN-008"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-006",
+        "development_tasks.yaml"
+      ],
+      "evidence_ids": [
+        "EVD-000288",
+        "EVD-000289"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-01T02:50:20+00:00",
+      "reason": "41 个测试 Case 已转换为各增量的 RED/GREEN 命令与可判定结果"
+    },
+    {
+      "assertion_id": "ASRT-P1-IP-R01-DEV-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "文件路径、模块顺序、Java 8 与验证命令具备工程可行性",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "implementation_plan",
+        "criteria_ids": [
+          "RC-PLAN-002",
+          "RC-PLAN-003",
+          "RC-PLAN-004",
+          "RC-PLAN-005",
+          "RC-PLAN-006",
+          "RC-PLAN-007",
+          "RC-DES-011"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-R2-006",
+        "development_tasks.yaml"
+      ],
+      "evidence_ids": [
+        "EVD-000288",
+        "EVD-000289"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-01T02:50:21+00:00",
+      "reason": "文件路径、模块顺序、Java 8 与验证命令具备工程可行性"
     }
   ]
 }

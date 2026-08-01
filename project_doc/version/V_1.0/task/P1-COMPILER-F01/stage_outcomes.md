@@ -415,6 +415,30 @@
     "open_risks": [],
     "started_at": "2026-08-01T02:49:38+00:00",
     "completed_at": "2026-08-01T02:50:21+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-TDD-I007",
+    "phase": "tdd",
+    "round": "TDD-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-TDD-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TddAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "test_design": "TESTDESIGN-R01@ba7779cf089b",
+      "design": "DESIGN-R05@0b37a9b4dd48"
+    },
+    "output_revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "evidence_ids": [
+      "EVD-000290",
+      "EVD-000291"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T03:33:00+00:00",
+    "completed_at": "2026-08-01T03:40:00+00:00"
   }
 ]
 ```

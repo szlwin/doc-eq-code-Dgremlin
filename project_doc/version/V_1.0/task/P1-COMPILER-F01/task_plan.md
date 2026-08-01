@@ -547,6 +547,84 @@
       "EVD-000288",
       "EVD-000289"
     ]
+  },
+  {
+    "id": "TASK-P1-T01",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-TDD",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-TDD-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "",
+    "revision_reason": "基于 TP-P1-COMPILER-F01-R01 启动首个纵向增量的 TDD RED，固定 Context 中立不可变公共契约。",
+    "title": "建立 Context 中立不可变编译契约的有效 RED",
+    "objective": "为 dec-core-context 的中立值对象、只读 Registry、EngineContext 和 CoreConfigProjection 建立可编译、可执行、可归因的 RED 门禁。",
+    "phase": "tdd",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P1-R2-006"
+    ],
+    "owner_agent": "TddAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "test_design": "TESTDESIGN-R01@ba7779cf089b",
+      "design": "DESIGN-R05@0b37a9b4dd48"
+    },
+    "allowed_files": [
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/**",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "./mvnw -pl dec-core-context -am -DskipTests test-compile",
+      "./mvnw -pl dec-core-context -am -Dtest=BaseDataContractTest test",
+      "./mvnw -pl dec-core-context dependency:tree -Dincludes=doc.eq.code:dec-core-compiler",
+      "./mvnw -pl dec-core-context -am -Dtest=ContextValueContractTest,RegistryImmutabilityTest,EngineContextApiTest test"
+    ],
+    "expected_results": [
+      "测试源码编译通过，现有 BaseDataContractTest 保持 GREEN",
+      "dec-core-context dependency tree 不包含 dec-core-compiler",
+      "三项新测试实际执行为 3 failures、0 errors、0 skipped，退出码非零且失败均由冻结公共契约尚未实现导致",
+      "日志中不存在 compilation、dependency、test selection 或 environment failure",
+      "TDDReviewAgent 对同一 TDD Revision 独立 PASSED"
+    ],
+    "stop_conditions": [
+      "需要改变 DESIGN-R05 的包归属、状态语义或公共字段",
+      "现有依赖迫使 context 反向依赖 compiler",
+      "RED 只能由测试无法编译、依赖、选择或环境错误产生"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "validation_evidence_ids": [
+      "EVD-000290",
+      "EVD-000291"
+    ]
   }
 ]
 ```

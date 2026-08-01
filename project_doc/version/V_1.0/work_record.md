@@ -1490,18 +1490,162 @@
 | 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P1-R2-005-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-R2-005-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000286","EVD-000287"],"execution_mode":"git_checkpoint","input_revision":"DESIGN-R05@0b37a9b4dd48","iteration_id":"ITER-P1-COMPILER-F01-TEST-DESIGN-007","iteration_no":7,"next_action":"由 ImplementationPlanAgent 形成 P1-T01～T15 实施计划","next_agent":"ImplementationPlanAgent","output_revision":"TESTDESIGN-R01@ba7779cf089b","phase":"test_design","record_id":"WR-20260731-163512-TASK-P1-R2-005-PASSED","render_digest":"c6c96a2de454255c41b7db3c1248ce97e2966003848a7f566d17cdce43b018b3","review_result_refs":["REV-000057","REV-000058","REV-000059","REV-000060"],"schema_version":4,"scope":"形成 DESIGN-R05 的可执行测试设计","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-TEST_DESIGN-I007"],"state_change":"TASK-P1-R2-005: RUNNING → PASSED","status":"PASSED","summary":"形成 41 个可执行 Case并通过四项独立 Review。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-005","task_type":"test_design","timestamp":"2026-07-31T16:35:12+00:00","validation_summary":"41 Case / 9 TR / 9 AC；命令验证 PASSED","version":"V_1.0"} -->
+## WR-20260731-163512-TASK-P1-R2-005-PASSED
 
-## WR-20260731-TEST-DESIGN-I007-PASSED
+### 基本信息
 
-- 任务：`TASK-P1-R2-005`
-- Agent：`TestDesignAgent`
-- 状态：`PASSED`
-- 输入：`DESIGN-R05@0b37a9b4dd48`
-- 输出：`TESTDESIGN-R01@ba7779cf089b`
-- Case：41；TR：9；AC：9；业务 Diagnostic：23；设计级 code：7。
-- Review：REV-000057, REV-000058, REV-000059, REV-000060。
-- Evidence：`EVD-000286`、`EVD-000287`。
-- 下一任务：`TASK-P1-R2-006 / ImplementationPlanAgent`。
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-07-31T16:35:12+00:00 |
+| 执行 Agent | TestDesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 形成 DESIGN-R05 的可执行测试设计 |
+| 阶段 | test_design |
+| 任务类型 | test_design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 形成 41 个可执行 Case并通过四项独立 Review。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-R2-005: RUNNING → PASSED |
+| Task | TASK-P1-R2-005 |
+| Attempt | ATTEMPT-TASK-P1-R2-005-I007-A001 |
+| Iteration | ITER-P1-COMPILER-F01-TEST-DESIGN-007 / 7 |
+| 输入 Revision | DESIGN-R05@0b37a9b4dd48 |
+| 输出 Revision | TESTDESIGN-R01@ba7779cf089b |
+| StageOutcome | SO-P1-COMPILER-F01-TEST_DESIGN-I007 |
+| Evidence | EVD-000286、EVD-000287 |
+| Review | REV-000057、REV-000058、REV-000059、REV-000060 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ImplementationPlanAgent |
+| 后续事项 | 由 ImplementationPlanAgent 形成 P1-T01～T15 实施计划 |
+
+### 变更摘要
+
+- 形成 41 个可执行 Case并通过四项独立 Review。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 41 Case / 9 TR / 9 AC；命令验证 PASSED |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ImplementationPlanAgent","attempt_id":"ATTEMPT-TASK-P1-R2-006-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-R2-006-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000288","EVD-000289"],"execution_mode":"git_checkpoint","input_revision":"TESTDESIGN-R01@ba7779cf089b","iteration_id":"ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-007","iteration_no":7,"next_action":"由 TddAgent 执行 TASK-P1-T01 有效 RED","next_agent":"TddAgent","output_revision":"TP-P1-COMPILER-F01-R01@88b56e6caa64","phase":"implementation_plan","record_id":"WR-20260801-025021-TASK-P1-R2-006-PASSED","render_digest":"7c13b653fc81b879b40a13bcf4e7677e3545d4afba6ce2adedb2c0fe626bd367","review_result_refs":["TPR-000001","TPR-000002","TPR-000003","TPR-000004"],"schema_version":4,"scope":"形成 P1-T01～T15 实施计划","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-IMPLEMENTATION_PLAN-I007"],"state_change":"TASK-P1-R2-006: RUNNING → PASSED","status":"PASSED","summary":"wk -tp 冻结 15 个严格串行开发增量。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-006","task_type":"implementation_plan","timestamp":"2026-08-01T02:50:21+00:00","validation_summary":"15 tasks / 4 reviews / 9 TR；命令验证 PASSED","version":"V_1.0"} -->
+## WR-20260801-025021-TASK-P1-R2-006-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-01T02:50:21+00:00 |
+| 执行 Agent | ImplementationPlanAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 形成 P1-T01～T15 实施计划 |
+| 阶段 | implementation_plan |
+| 任务类型 | implementation_plan |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | wk -tp 冻结 15 个严格串行开发增量。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-R2-006: RUNNING → PASSED |
+| Task | TASK-P1-R2-006 |
+| Attempt | ATTEMPT-TASK-P1-R2-006-I007-A001 |
+| Iteration | ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-007 / 7 |
+| 输入 Revision | TESTDESIGN-R01@ba7779cf089b |
+| 输出 Revision | TP-P1-COMPILER-F01-R01@88b56e6caa64 |
+| StageOutcome | SO-P1-COMPILER-F01-IMPLEMENTATION_PLAN-I007 |
+| Evidence | EVD-000288、EVD-000289 |
+| Review | TPR-000001、TPR-000002、TPR-000003、TPR-000004 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | TddAgent |
+| 后续事项 | 由 TddAgent 执行 TASK-P1-T01 有效 RED |
+
+### 变更摘要
+
+- wk -tp 冻结 15 个严格串行开发增量。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 15 tasks / 4 reviews / 9 TR；命令验证 PASSED |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"TddAgent","attempt_id":"ATTEMPT-TASK-P1-T01-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000290","EVD-000291"],"execution_mode":"git_checkpoint","input_revision":"TP-P1-COMPILER-F01-R01@88b56e6caa64","iteration_id":"ITER-P1-COMPILER-F01-TDD-007","iteration_no":7,"modified_files_summary":["dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java","dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java","dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java","dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java"],"next_action":"由 DevelopAgent 实现最小生产契约使 RED 转 GREEN","next_agent":"DevelopAgent","output_revision":"TDD-P1-T01-R01@4ebeed4dad6a","phase":"tdd","record_id":"WR-20260801-033719-TASK-P1-T01-PASSED","render_digest":"579a7b3158906a1b1bdf81d3e7946fdb7bddc9ff3df7fa8cb6524ef95107a46c","review_result_refs":["REV-000061"],"schema_version":4,"scope":"建立 Context 中立不可变编译契约的有效 RED","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-TDD-I007"],"state_change":"TASK-P1-T01: RUNNING → PASSED","status":"PASSED","summary":"三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01","task_type":"tdd","timestamp":"2026-08-01T03:37:19+00:00","validation_summary":"test-compile PASSED；baseline PASSED；dependency direction PASSED；RED 3 failures / 0 errors","version":"V_1.0"} -->
+## WR-20260801-033719-TASK-P1-T01-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-01T03:37:19+00:00 |
+| 执行 Agent | TddAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 建立 Context 中立不可变编译契约的有效 RED |
+| 阶段 | tdd |
+| 任务类型 | tdd |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-T01: RUNNING → PASSED |
+| Task | TASK-P1-T01 |
+| Attempt | ATTEMPT-TASK-P1-T01-I007-A001 |
+| Iteration | ITER-P1-COMPILER-F01-TDD-007 / 7 |
+| 输入 Revision | TP-P1-COMPILER-F01-R01@88b56e6caa64 |
+| 输出 Revision | TDD-P1-T01-R01@4ebeed4dad6a |
+| StageOutcome | SO-P1-COMPILER-F01-TDD-I007 |
+| Evidence | EVD-000290、EVD-000291 |
+| Review | REV-000061 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | 由 DevelopAgent 实现最小生产契约使 RED 转 GREEN |
+
+### 变更摘要
+
+- 三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。
+
+### 文件变更摘要
+
+- `dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java`
+- `dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java`
+- `dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java`
+- `dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | test-compile PASSED；baseline PASSED；dependency direction PASSED；RED 3 failures / 0 errors |
+| 问题与阻塞 | 无 |
 
 <!-- work-record-events-end -->
 
@@ -1512,14 +1656,3 @@
 - `task_attempts.md` 保存单次执行细节；本文件仅保存版本级摘要与索引。
 - 更正通过新增记录并填写 `correction_of`，不得修改旧记录。
 - `validate-work-record` 会校验隐藏元数据、可读正文和 SHA-256 一致性。
-
-## TP-P1-COMPILER-F01-R01@88b56e6caa64 implementation_plan 完成
-
-- 时间：`2026-08-01T02:50:21+00:00`
-- Agent：`ImplementationPlanAgent`
-- 任务：`TASK-P1-R2-006 / IMPLEMENTATION_PLAN-I007`
-- 结果：`PASSED`
-- 计划：15 个严格串行开发增量，`TASK-P1-T01`～`TASK-P1-T15`
-- Review：`TPR-000001`、`TPR-000002`、`TPR-000003`、`TPR-000004` 均 PASSED
-- Evidence：`EVD-000288`、`EVD-000289`
-- 下一步：进入 `TDD-I007`，由 `TddAgent` 执行 `TASK-P1-T01` 的行为型 RED

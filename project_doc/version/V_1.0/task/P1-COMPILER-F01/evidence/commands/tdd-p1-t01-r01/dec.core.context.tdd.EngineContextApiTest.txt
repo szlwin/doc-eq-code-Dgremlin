@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Test set: dec.core.context.tdd.EngineContextApiTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.069 s <<< FAILURE! -- in dec.core.context.tdd.EngineContextApiTest
+dec.core.context.tdd.EngineContextApiTest.exposesExplicitReadOnlyContextBoundary -- Time elapsed: 0.033 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: TDD RED [CASE-P1-T01-ENGINE-CONTEXT-RED-001]: missing production contract type dec.core.context.model.CompiledModelSet
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at dec.core.context.tdd.ContractReflectionAssertions.requireType(ContractReflectionAssertions.java:21)
+	at dec.core.context.tdd.EngineContextApiTest.exposesExplicitReadOnlyContextBoundary(EngineContextApiTest.java:19)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+

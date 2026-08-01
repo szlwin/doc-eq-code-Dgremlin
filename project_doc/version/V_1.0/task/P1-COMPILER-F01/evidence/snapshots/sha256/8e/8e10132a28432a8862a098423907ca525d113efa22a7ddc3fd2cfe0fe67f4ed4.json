@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+  "task_id": "TASK-P1-T01",
+  "phase": "tdd",
+  "test_sources": [
+    {
+      "path": "dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java",
+      "sha256": "3f84ed813979c221d18ff97bf824a504208cac948952e34224f6b6c1452bacbc",
+      "size": 3954
+    },
+    {
+      "path": "dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java",
+      "sha256": "c4fda7a817eb041b0461b554bd6e4ee83034392ce1b150722c145acc9e3eb531",
+      "size": 2974
+    },
+    {
+      "path": "dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java",
+      "sha256": "030e29c899b86bd5b9c38db0826ad68de8345012f0ce3c936b4533ec1f92eee7",
+      "size": 2156
+    },
+    {
+      "path": "dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java",
+      "sha256": "e4d6f7c5f241fd9fe793431c27ae548e0f2cd3e144321f07e758dc5ae71f2f48",
+      "size": 2616
+    }
+  ],
+  "case_ids": [
+    "CASE-P1-T01-CONTEXT-VALUE-RED-001",
+    "CASE-P1-T01-REGISTRY-RED-001",
+    "CASE-P1-T01-ENGINE-CONTEXT-RED-001"
+  ],
+  "design_revision": "DESIGN-R05@0b37a9b4dd48",
+  "test_design_revision": "TESTDESIGN-R01@ba7779cf089b"
+}
