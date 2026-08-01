@@ -14,15 +14,19 @@ import dec.core.context.model.DeferredKey;
 import dec.core.context.model.DefinitionKey;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
+import dec.core.context.model.DiagnosticSeverity;
 import dec.core.context.model.DigestPair;
 import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.ImmutableRegistry;
 import dec.core.context.model.PublishedSourceDependency;
+import dec.core.context.model.PublishedSourceDescriptor;
 import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.SourceRef;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -39,6 +43,9 @@ class ContextReworkR03ContractTest {
                 CASE_ID,
                 "dec.core.context.ProjectionWriteRejectedException");
         ContractReflectionAssertions.assertStableValueShape(CASE_ID, exceptionType);
+        assertTrue(
+                UnsupportedOperationException.class.isAssignableFrom(exceptionType),
+                "专用异常必须保持 UnsupportedOperationException 兼容性");
 
         Method diagnosticCode = ContractReflectionAssertions.requirePublicMethod(
                 CASE_ID,
@@ -79,9 +86,16 @@ class ContextReworkR03ContractTest {
                 CoreConfigProjection.class,
                 "clear",
                 void.class);
+        assertDeprecated(register);
+        assertDeprecated(replace);
+        assertDeprecated(remove);
+        assertDeprecated(clear);
 
         CompiledModelSet modelSet = emptyModelSet();
         CoreConfigProjection projection = CoreConfigProjection.from(modelSet);
+        List<CompiledDefinition> originalData = projection.data();
+        List<CompiledDefinition> originalViews = projection.views();
+        List<CompiledDefinition> originalRules = projection.rules();
 
         assertRejected(
                 exceptionType,
@@ -120,15 +134,18 @@ class ContextReworkR03ContractTest {
                 new Object[0],
                 "clear");
 
-        // 所有拒绝入口必须保持 Projection 与来源模型完全不变。
+        // 所有拒绝入口必须保持 Projection 与来源模型的对象身份和值完全不变。
         assertSame(modelSet, projection.sourceModelSet());
+        assertSame(originalData, projection.data());
+        assertSame(originalViews, projection.views());
+        assertSame(originalRules, projection.rules());
         assertTrue(projection.data().isEmpty());
         assertTrue(projection.views().isEmpty());
         assertTrue(projection.rules().isEmpty());
     }
 
     @Test
-    @DisplayName(CASE_ID + " 依赖声明位置必须属于 fromSourceId")
+    @DisplayName(CASE_ID + " 普通依赖声明位置必须属于 fromSourceId")
     void dependencyDeclarationSourceMustMatchFromSource() {
         assertThrows(
                 IllegalArgumentException.class,
@@ -141,6 +158,60 @@ class ContextReworkR03ContractTest {
                                 10,
                                 4,
                                 "/system/rule-file")));
+    }
+
+    @Test
+    @DisplayName(CASE_ID + " synthetic root edge 使用同一来源身份")
+    void syntheticRootDependencyUsesSameSourceIdentity() {
+        PublishedSourceDescriptor root = new PublishedSourceDescriptor(
+                "synthetic:root",
+                "SYNTHETIC",
+                "root-digest");
+        PublishedSourceDescriptor child = new PublishedSourceDescriptor(
+                "source:child",
+                "XML",
+                "child-digest");
+        PublishedSourceDependency dependency = new PublishedSourceDependency(
+                "ROOT_SYSTEM_FILE",
+                "synthetic:root",
+                "source:child",
+                new SourceRef(
+                        "synthetic:root",
+                        0,
+                        0,
+                        "/root/system-file"));
+
+        PublishedSourceManifest manifest = new PublishedSourceManifest(
+                "synthetic:root",
+                Arrays.asList(root, child),
+                Collections.singletonList(dependency));
+
+        assertEquals("synthetic:root", manifest.rootSourceId());
+        assertEquals(
+                manifest.dependencies().get(0).fromSourceId(),
+                manifest.dependencies().get(0).declarationSourceRef().sourceId());
+    }
+
+    @Test
+    @DisplayName(CASE_ID + " synthetic root edge 拒绝声明来源错配")
+    void syntheticRootDependencyRejectsMismatchedSourceIdentity() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PublishedSourceDependency(
+                        "ROOT_SYSTEM_FILE",
+                        "synthetic:root",
+                        "source:child",
+                        new SourceRef(
+                                "source:child",
+                                0,
+                                0,
+                                "/root/system-file")));
+    }
+
+    private static void assertDeprecated(Method method) {
+        assertTrue(
+                method.isAnnotationPresent(Deprecated.class),
+                "兼容写入口必须明确标记为 deprecated: " + method.getName());
     }
 
     private static void assertRejected(
@@ -164,7 +235,14 @@ class ContextReworkR03ContractTest {
         assertEquals(expectedOperation, invoke(operation, failure));
         Diagnostic value = (Diagnostic) invoke(diagnostic, failure);
         assertEquals(DiagnosticCode.MIX_PROJECTION_WRITE, value.code());
+        assertEquals(DiagnosticSeverity.ERROR, value.severity());
+        assertEquals("projection.write.rejected", value.messageKey());
         assertEquals("synthetic:core-config-projection", value.sourceRef().sourceId());
+        assertEquals(
+                "/compatibility-write/" + expectedOperation,
+                value.sourceRef().nodePath());
+        assertEquals("CoreConfigProjection", value.pass());
+        assertTrue(value.recoveryHint().isPresent());
     }
 
     private static void invokeWrite(
