@@ -22,9 +22,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          sha256sum .github/p1-t01-final-sync/small-*
           cat .github/p1-t01-final-sync/small-* | tr -cd 'A-Za-z0-9+/=' > /tmp/p1-t01-final-facts.b64
+          echo "combined_base64_bytes=$(wc -c < /tmp/p1-t01-final-facts.b64)"
           test "$(wc -c < /tmp/p1-t01-final-facts.b64)" -eq 80136
           base64 --decode /tmp/p1-t01-final-facts.b64 > /tmp/p1-t01-final-facts.tar.xz
+          sha256sum /tmp/p1-t01-final-facts.tar.xz
           echo '888490efba23cc24a7f1b6afb2194ddb2df3ebe8fa8301910c7d600a8e7dc05c  /tmp/p1-t01-final-facts.tar.xz' | sha256sum --check --strict
           test "$(tar -tJf /tmp/p1-t01-final-facts.tar.xz | wc -l)" -eq 19
           ! tar -tJf /tmp/p1-t01-final-facts.tar.xz | grep -Ev '^project_doc/'
