@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 /**
  * 冻结 I009 新增的 Projection 写入拒绝和来源边自洽合同。
@@ -134,6 +135,32 @@ class ContextReworkR03ContractTest {
                 new Object[0],
                 "clear");
 
+        // List 暴露面上的所有写入尝试也必须产生同一稳定错误语义。
+        assertListRejected(
+                exceptionType,
+                diagnosticCode,
+                operation,
+                () -> projection.data().add(null),
+                "data.add");
+        assertListRejected(
+                exceptionType,
+                diagnosticCode,
+                operation,
+                () -> projection.views().clear(),
+                "views.clear");
+        assertListRejected(
+                exceptionType,
+                diagnosticCode,
+                operation,
+                () -> projection.rules().remove(null),
+                "rules.remove");
+        assertListRejected(
+                exceptionType,
+                diagnosticCode,
+                operation,
+                () -> projection.data().sort(null),
+                "data.sort");
+
         // 所有拒绝入口必须保持 Projection 与来源模型的对象身份和值完全不变。
         assertSame(modelSet, projection.sourceModelSet());
         assertSame(originalData, projection.data());
@@ -212,6 +239,22 @@ class ContextReworkR03ContractTest {
         assertTrue(
                 method.isAnnotationPresent(Deprecated.class),
                 "兼容写入口必须明确标记为 deprecated: " + method.getName());
+    }
+
+    private static void assertListRejected(
+            Class<?> exceptionType,
+            Method diagnosticCode,
+            Method operation,
+            Executable write,
+            String expectedOperation) {
+        Throwable failure = assertThrows(Throwable.class, write);
+        assertTrue(
+                exceptionType.isInstance(failure),
+                "List 写入必须抛出 ProjectionWriteRejectedException");
+        assertEquals(
+                DiagnosticCode.MIX_PROJECTION_WRITE,
+                invoke(diagnosticCode, failure));
+        assertEquals(expectedOperation, invoke(operation, failure));
     }
 
     private static void assertRejected(
