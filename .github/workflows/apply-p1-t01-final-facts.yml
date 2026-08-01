@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - feature/p1-t01-tdd-red-i007-20260801-1122
-    paths:
-      - .github/p1-t01-final-facts/**
 
 permissions:
   contents: write
