@@ -1,5 +1,7 @@
 package dec.core.compiler.api;
 
+import java.util.Objects;
+
 /**
  * Immutable input for one compiler session.
  */
@@ -19,18 +21,58 @@ public final class CompilationRequest {
             String rootSourceId,
             CompilationOptions options,
             CancellationToken cancellationToken) {
-        throw new UnsupportedOperationException("Architecture skeleton only");
+        this.rootSourceId = ApiContracts.requireText(rootSourceId, "rootSourceId");
+        this.options = Objects.requireNonNull(options, "options");
+        this.cancellationToken = Objects.requireNonNull(
+                cancellationToken,
+                "cancellationToken");
     }
 
+    /**
+     * Returns the normalized root source identifier.
+     */
     public String rootSourceId() {
-        throw new UnsupportedOperationException("Architecture skeleton only");
+        return rootSourceId;
     }
 
+    /**
+     * Returns the immutable option and deadline boundary for this session.
+     */
     public CompilationOptions options() {
-        throw new UnsupportedOperationException("Architecture skeleton only");
+        return options;
     }
 
+    /**
+     * Returns the cancellation token owned by this compilation request.
+     */
     public CancellationToken cancellationToken() {
-        throw new UnsupportedOperationException("Architecture skeleton only");
+        return cancellationToken;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof CompilationRequest)) {
+            return false;
+        }
+        CompilationRequest that = (CompilationRequest) other;
+        return rootSourceId.equals(that.rootSourceId)
+                && options.equals(that.options)
+                && cancellationToken.equals(that.cancellationToken);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rootSourceId, options, cancellationToken);
+    }
+
+    @Override
+    public String toString() {
+        return "CompilationRequest{"
+                + "rootSourceId='" + rootSourceId + '\''
+                + ", options=" + options
+                + '}';
     }
 }
