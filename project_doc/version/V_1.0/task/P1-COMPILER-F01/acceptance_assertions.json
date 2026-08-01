@@ -1083,6 +1083,1115 @@
       "verified_by_agent": "TestEvidenceReviewAgent",
       "verified_at": "2026-08-01T09:06:20+00:00",
       "reason": "Testing Evidence 可复现、完整、新鲜并与声明边界一致；无测试或基础设施 blocker。"
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "business_model StageOutcome 为 PASSED，无开放 P0/P1，并创建 Git checkpoint",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R05@4ecb1f8c09f4",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P1-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-08-01T12:11:15+00:00",
+      "reason": "Existing PASSED BusinessModelReviewAgent conclusion and ACTIVE evidence verify TASK-P1-BMODEL-001#expected_results/5."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-002",
+      "acceptance_id": "AC-P1-COMPILER-002",
+      "statement": "ModelAccessBinding 保持 source path 与 target selector 分离，并实现 target-main 精确优先、property path 精确回退与稳定错误",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-R05@0b37a9b4dd48",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P1-DESIGN-001#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000284"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-01T12:11:16+00:00",
+      "reason": "Existing PASSED DevelopAgent conclusion and ACTIVE evidence verify TASK-P1-DESIGN-001#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-003",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "BusinessScope 不再拥有 Information，仅通过 system-qualified information-ref 编排 Directory/Action/Produce",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R04@c186ce681e1e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-R2-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000243"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-01T12:11:18+00:00",
+      "reason": "Existing PASSED RequirementAnalysisAgent conclusion and ACTIVE evidence verify TASK-P1-R2-001#expected_results/1."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-004",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "user System 不再声明 OrderInfo，并通过 model-access/read/ref 将 OrderInfo.user 映射到 UserInfo.user",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R04@c186ce681e1e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-R2-001#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000243"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-01T12:11:19+00:00",
+      "reason": "Existing PASSED RequirementAnalysisAgent conclusion and ACTIVE evidence verify TASK-P1-R2-001#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-005",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "主资源与测试资源 XML 同步且契约测试验证所有 Information 的 System/View 归属和跨 View 映射",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R04@c186ce681e1e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-R2-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000243"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-01T12:11:21+00:00",
+      "reason": "Existing PASSED RequirementAnalysisAgent conclusion and ACTIVE evidence verify TASK-P1-R2-001#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-006",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R04 独立 Review 均为 PASSED",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R04@c186ce681e1e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-R2-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000248"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-01T12:11:22+00:00",
+      "reason": "Existing PASSED TestDesignAgent conclusion and ACTIVE evidence verify TASK-P1-R2-001#expected_results/4."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-007",
+      "acceptance_id": "AC-P1-COMPILER-002",
+      "statement": "property path lookup is used only when target-main does not match",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R04@c186ce681e1e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-R2-001#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000243"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-01T12:11:24+00:00",
+      "reason": "Existing PASSED RequirementAnalysisAgent conclusion and ACTIVE evidence verify TASK-P1-R2-001#expected_results/6."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-008",
+      "acceptance_id": "AC-P1-COMPILER-002",
+      "statement": "missing or ambiguous selector fails without fuzzy or cross-View fallback",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R04@c186ce681e1e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-R2-001#expected_results/7"
+      ],
+      "evidence_ids": [
+        "EVD-000243"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-01T12:11:25+00:00",
+      "reason": "Existing PASSED RequirementAnalysisAgent conclusion and ACTIVE evidence verify TASK-P1-R2-001#expected_results/7."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-009",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "每条适用 TR 至少映射一个可执行 Case，Case 可反向追溯到需求、设计 seam 和 acceptance assertion",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P1-R2-005#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:11:27+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-005#expected_results/0."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-010",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "覆盖正常、边界、异常、安全、并发、兼容、超时、取消、CAS conflict 和失败不发布",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P1-R2-005#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:11:28+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-005#expected_results/1."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-011",
+      "acceptance_id": "AC-P1-COMPILER-002",
+      "statement": "精确验证 10 个 SourceManifest source、7 条 declaration edge 和固定 mix inventory，不从实现输出反推 expected",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P1-R2-005#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:11:30+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-005#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-012",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "验证 System-owned Information、common 跨 System expression、ModelAccess target-main 优先/property path 回退及所有禁止降级路径",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P1-R2-005#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:11:31+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-005#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-013",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "明确 TDD RED 接缝、测试数据、预期结果、禁止副作用和开发后 Evidence 采集方式",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P1-R2-005#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:11:33+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-005#expected_results/4."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-014",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "DesignReviewAgent、RequirementReviewAgent、TDDReviewAgent、TestEvidenceReviewAgent 对同一 TESTDESIGN Revision 串行独立 PASSED",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-R01@ba7779cf089b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P1-R2-005#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:11:34+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-005#expected_results/5."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-015",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "计划覆盖 P1-T01～T15 与 9 条 TR，依赖无环且同一时刻只允许一个任务或 Review 运行",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PlanReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P1-R2-006#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000288"
+      ],
+      "verified_by_agent": "PlanReviewAgent",
+      "verified_at": "2026-08-01T12:11:36+00:00",
+      "reason": "Existing PASSED PlanReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-006#expected_results/0."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-016",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "每项任务声明目标、实现方式、验收标准、允许文件、输入输出、TDD/测试命令、预期结果和停止条件",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PlanReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P1-R2-006#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000288"
+      ],
+      "verified_by_agent": "PlanReviewAgent",
+      "verified_at": "2026-08-01T12:11:37+00:00",
+      "reason": "Existing PASSED PlanReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-006#expected_results/1."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-017",
+      "acceptance_id": "AC-P1-COMPILER-002",
+      "statement": "实施顺序先建立 context 中立契约和 compiler 模块，再接入 XML/YAML frontend、starter、只读投影和退役门禁",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P1-R2-006#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000288"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-01T12:11:39+00:00",
+      "reason": "Existing PASSED ArchitectureReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-006#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-018",
+      "acceptance_id": "AC-P1-COMPILER-007",
+      "statement": "不得提前实现 P2～P7 runtime；dec-expand-declaration 的删除作为实现验收任务而非当前文档修复动作",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P1-R2-006#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000288"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-01T12:11:40+00:00",
+      "reason": "Existing PASSED ArchitectureReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-006#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-019",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "ArchitectureReviewAgent、DevelopAgent、PlanReviewAgent、TestDesignAgent 对同一 TP Revision 串行独立 PASSED",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P1-R2-006#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000288"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-01T12:11:42+00:00",
+      "reason": "Existing PASSED ArchitectureReviewAgent conclusion and ACTIVE evidence verify TASK-P1-R2-006#expected_results/4."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-020",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "明确 InformationKey 以 SystemKey 为所有权边界，BusinessScope 不拥有 Information",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R05@7de35e8dc15b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000280"
+      ],
+      "verified_by_agent": "DesignAgent",
+      "verified_at": "2026-08-01T12:11:44+00:00",
+      "reason": "Existing PASSED DesignAgent conclusion and ACTIVE evidence verify TASK-P1-REQAN-001#expected_results/1."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-021",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "明确同一 System 内 expression 可组合本 System InformationKey；跨 System expression 必须由 common System 拥有并只引用 system-qualified InformationKey",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R05@7de35e8dc15b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000280"
+      ],
+      "verified_by_agent": "DesignAgent",
+      "verified_at": "2026-08-01T12:11:45+00:00",
+      "reason": "Existing PASSED DesignAgent conclusion and ACTIVE evidence verify TASK-P1-REQAN-001#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-022",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "systems.xml 中 common.paySuccess 与 common.payError 分别组合 payment 与 order Information，业务目录引用同步更新",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R05@7de35e8dc15b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000280"
+      ],
+      "verified_by_agent": "DesignAgent",
+      "verified_at": "2026-08-01T12:11:47+00:00",
+      "reason": "Existing PASSED DesignAgent conclusion and ACTIVE evidence verify TASK-P1-REQAN-001#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-023",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "BusinessModelAgent、DesignAgent、TestDesignAgent 对同一 REQAN-R05 独立 Review 均为 PASSED",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R05@7de35e8dc15b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000280"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TestDesignAgent conclusion and ACTIVE evidence verify TASK-P1-REQAN-001#expected_results/5."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-024",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "requirement_analysis StageOutcome 为 PASSED，且无开放 P0/P1 issue",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-R05@7de35e8dc15b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P1-REQAN-001#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000280"
+      ],
+      "verified_by_agent": "BusinessModelAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED BusinessModelAgent conclusion and ACTIVE evidence verify TASK-P1-REQAN-001#expected_results/6."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-025",
+      "acceptance_id": "AC-P1-COMPILER-001",
+      "statement": "稳定逻辑任务绑定 REQCONF-R04@c186ce681e1e，复用同一机器校验、Review 与 Evidence，不产生第二份需求事实",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-R04@c186ce681e1e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P1-REQCONF-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000243"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED RequirementAnalysisAgent conclusion and ACTIVE evidence verify TASK-P1-REQCONF-001#expected_results/0."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-026",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "三项新测试实际执行为 3 failures、0 errors、0 skipped，退出码非零且失败均由冻结公共契约尚未实现导致",
+      "type": "MANUAL_REVIEW",
+      "phase": "tdd",
+      "revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "tdd"
+      },
+      "source_refs": [
+        "TASK-P1-T01#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000290"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-027",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "日志中不存在 compilation、dependency、test selection 或 environment failure",
+      "type": "MANUAL_REVIEW",
+      "phase": "tdd",
+      "revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "tdd"
+      },
+      "source_refs": [
+        "TASK-P1-T01#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000290"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-028",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TDDReviewAgent 对同一 TDD Revision 独立 PASSED",
+      "type": "MANUAL_REVIEW",
+      "phase": "tdd",
+      "revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "tdd"
+      },
+      "source_refs": [
+        "TASK-P1-T01#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000290"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01#expected_results/4."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-029",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "Spec Review confirms no missing requirement or scope drift",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "SpecComplianceReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P1-T01-CODE-REVIEW#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000321"
+      ],
+      "verified_by_agent": "SpecComplianceReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED SpecComplianceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/0."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-030",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "Engineering Review confirms immutable implementation and tests are maintainable",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "EngineeringStandardsReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P1-T01-CODE-REVIEW#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000321"
+      ],
+      "verified_by_agent": "EngineeringStandardsReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED EngineeringStandardsReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/1."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-031",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "Architecture Review confirms context remains compiler-neutral and failure-isolated",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P1-T01-CODE-REVIEW#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000322"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED ArchitectureReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-032",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "No open P0/P1 findings",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P1-T01-CODE-REVIEW#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000322"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED CrossModuleIntegrationReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-033",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "所有阶段 Revision 与 Evidence ACTIVE 且可回查",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.result",
+        "operator": "EQUALS",
+        "expected": "PASSED"
+      },
+      "source_refs": [
+        "TASK-P1-T01-COMPLETION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000333"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-034",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "无开放 P0/P1 finding",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.open_p0_p1_findings",
+        "operator": "EQUALS",
+        "expected": []
+      },
+      "source_refs": [
+        "TASK-P1-T01-COMPLETION#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000333"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-035",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "最终 PR 不包含临时 workflow/payload/chunk/trigger",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.temporary_path_count",
+        "operator": "EQUALS",
+        "expected": 0
+      },
+      "source_refs": [
+        "TASK-P1-T01-COMPLETION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000335"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-036",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "最终干净 Head 标准 P0 全绿",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.result",
+        "operator": "EQUALS",
+        "expected": "PASSED"
+      },
+      "source_refs": [
+        "TASK-P1-T01-COMPLETION#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000334"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-037",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "T01 状态 PASSED 并交接到 TASK-P1-T02 TDD",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.next_task_started",
+        "operator": "EQUALS",
+        "expected": false
+      },
+      "source_refs": [
+        "TASK-P1-T01-COMPLETION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000333"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-038",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "三个冻结 TDD 合同测试全部 GREEN",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P1-T01-DEV-SKELETON#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000297"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-DEV-SKELETON#expected_results/0."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-039",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "BaseDataContractTest 与新增语义测试全部 GREEN",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P1-T01-DEV-SKELETON#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000297"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-DEV-SKELETON#expected_results/1."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-040",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "dec-core-context verify 成功并使用 Java 8 release",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P1-T01-DEV-SKELETON#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000297"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-DEV-SKELETON#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-041",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "dec-core-context 不依赖 dec-core-compiler",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P1-T01-DEV-SKELETON#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000297"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-DEV-SKELETON#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-042",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "所有集合防御性复制且无 public mutator/static current",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P1-T01-DEV-SKELETON#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000297"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-DEV-SKELETON#expected_results/4."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-043",
+      "acceptance_id": "AC-P1-COMPILER-003",
+      "statement": "DiagnosticCode 与 DeferredDefinition/InformationKey 对齐 DESIGN-R05",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P1-T01-DEV-SKELETON#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000297"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-DEV-SKELETON#expected_results/5."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-044",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "R02 9 tests 全绿",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "testing"
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000330"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/0."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-045",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "标准 P0 normal suites 全绿",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "testing"
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000330"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/1."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-046",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "故意失败测试被构建门禁正确阻断",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "testing"
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000330"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/2."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-047",
+      "acceptance_id": "AC-P1-COMPILER-004",
+      "statement": "dec-core-context 不依赖 dec-core-compiler",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "testing"
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000330"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/3."
+    },
+    {
+      "assertion_id": "ASRT-P1-CLOSURE-048",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "MySQL 对 T01 明确为不适用而非伪造通过",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "testing"
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000330"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T12:13:37+00:00",
+      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/4."
     }
   ]
 }

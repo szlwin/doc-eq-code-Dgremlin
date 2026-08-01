@@ -909,7 +909,7 @@
     "title": "验证 TASK-P1-T01 全流程完成与可合并性",
     "objective": "确认 TDD、架构骨架、具体实现、Code Review、Testing、Evidence、Git checkpoint 与最终干净 PR 全部闭环。",
     "phase": "completion_verification",
-    "status": "RUNNING",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-T01-TESTING"
     ],
@@ -934,7 +934,11 @@
       "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
       "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/**",
       "version/V_1.0/work_record.md",
-      "version/V_1.0/work.md"
+      "version/V_1.0/work.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/completion-report.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/p0-run.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/clean-tree-manifest.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/command-result.json"
     ],
     "acceptance_trace_ids": [
       "TR-P1-COMPILER-003",
@@ -966,8 +970,13 @@
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+    "validation_evidence_ids": [
+      "EVD-000333",
+      "EVD-000334",
+      "EVD-000335",
+      "EVD-000336"
+    ]
   }
 ]
 ```

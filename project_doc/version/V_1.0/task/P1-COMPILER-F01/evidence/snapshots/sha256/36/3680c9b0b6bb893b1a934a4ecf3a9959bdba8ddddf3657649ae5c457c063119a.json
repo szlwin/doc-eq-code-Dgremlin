@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "completion_verification_report",
+  "task_id": "TASK-P1-T01",
+  "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+  "input_revisions": {
+    "tdd": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "development": "DEV-P1-T01-R01@de1adfd37c9b",
+    "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "testing": "TESTING-P1-T01-R01@2c618f7c32a6"
+  },
+  "stage_statuses": {
+    "tdd": "PASSED",
+    "development": "PASSED",
+    "code_review": "PASSED",
+    "testing": "PASSED"
+  },
+  "review_ids": [
+    "REV-000061",
+    "REV-000066",
+    "REV-000067",
+    "REV-000068",
+    "REV-000069",
+    "REV-000070",
+    "REV-000071",
+    "REV-000072",
+    "REV-000073",
+    "REV-000074",
+    "REV-000075",
+    "REV-000076"
+  ],
+  "active_evidence_required": true,
+  "open_p0_p1_findings": [],
+  "clean_head_sha": "a3c584de3a4d08378706e101af27bdad82976629",
+  "p0_run_id": 30695457680,
+  "p0_result": "PASSED",
+  "temporary_path_count": 0,
+  "task_status": "PASSED",
+  "next_task": "TASK-P1-T02",
+  "next_task_started": false,
+  "claim_boundary": "TASK-P1-T01 only; TASK-P1-T02 through TASK-P1-T15 are not started or claimed.",
+  "result": "PASSED"
+}

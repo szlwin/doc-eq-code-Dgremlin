@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "kind": "clean_tree_manifest",
+  "task_id": "TASK-P1-T01",
+  "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+  "head_sha": "a3c584de3a4d08378706e101af27bdad82976629",
+  "temporary_paths": [],
+  "temporary_path_count": 0,
+  "required_source_roots": [
+    "dec-core-context/src/main/java/dec/core/context",
+    "dec-core-context/src/test/java/dec/core/context/tdd"
+  ],
+  "result": "PASSED"
+}

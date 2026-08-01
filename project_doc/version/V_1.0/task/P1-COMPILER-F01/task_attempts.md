@@ -889,18 +889,30 @@
     "attempt_no": 1,
     "agent": "CompletionVerificationAgent",
     "phase": "completion_verification",
-    "status": "RUNNING",
+    "status": "PASSED",
     "input_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
-    "output_revision": "",
+    "output_revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
     "started_at": "2026-08-01T09:08:37+00:00",
-    "completed_at": "",
+    "completed_at": "2026-08-01T12:07:28+00:00",
     "failure_type": "",
     "failure_reason": "",
-    "modified_files": [],
-    "command_evidence_ids": [],
-    "evidence_ids": [],
-    "summary": "验证 T01 全阶段闭环、最终干净 PR 文件树和标准 P0。",
-    "next_action": "先发布干净中间 Head 并取得最终 P0，再冻结 Completion Revision。"
+    "modified_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/completion-report.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/p0-run.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/clean-tree-manifest.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/command-result.json"
+    ],
+    "command_evidence_ids": [
+      "EVD-000336"
+    ],
+    "evidence_ids": [
+      "EVD-000333",
+      "EVD-000334",
+      "EVD-000335",
+      "EVD-000336"
+    ],
+    "summary": "TASK-P1-T01 全阶段 Revision/Evidence 可回查，最终干净代码 Head 的标准 P0 通过，无开放 P0/P1，临时文件为零。",
+    "next_action": "发布 Completion Revision，完成阶段验收并将 TASK-P1-T02 保持为待执行未启动。"
   }
 ]
 ```
