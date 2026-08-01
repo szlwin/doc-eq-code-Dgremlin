@@ -7,15 +7,26 @@ import java.util.List;
  * Immutable terminal result shared by published and failed compilations.
  */
 public abstract class CompilationResult {
+    private final String sessionId;
     private final List<Diagnostic> diagnostics;
 
     /**
-     * Defensively freezes the diagnostic snapshot for all result subtypes.
+     * Freezes the session identity and diagnostic snapshot for every result.
      *
+     * @param sessionId stable identity of the isolated compilation session
      * @param diagnostics diagnostics already validated by the concrete subtype
      */
-    protected CompilationResult(List<Diagnostic> diagnostics) {
+    protected CompilationResult(String sessionId, List<Diagnostic> diagnostics) {
+        this.sessionId = ApiContracts.requireText(sessionId, "sessionId");
         this.diagnostics = ApiContracts.immutableDiagnostics(diagnostics);
+    }
+
+    /**
+     * Returns the stable identity of the compilation session that produced this
+     * terminal result.
+     */
+    public final String sessionId() {
+        return sessionId;
     }
 
     /**
