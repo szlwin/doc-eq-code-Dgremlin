@@ -124,6 +124,15 @@ public final class PublishedSourceManifest {
                         "Dependency target is absent from manifest: "
                                 + dependency.targetSourceId());
             }
+            // Manifest 再次执行防御性校验，避免未来替代构造路径带入矛盾来源。
+            if (!dependency.fromSourceId().equals(
+                    dependency.declarationSourceRef().sourceId())) {
+                throw new IllegalArgumentException(
+                        "Dependency declaration source must equal fromSourceId: "
+                                + dependency.fromSourceId()
+                                + " != "
+                                + dependency.declarationSourceRef().sourceId());
+            }
         }
     }
 
