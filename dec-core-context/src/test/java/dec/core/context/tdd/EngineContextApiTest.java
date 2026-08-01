@@ -51,7 +51,8 @@ class EngineContextApiTest {
                 0,
                 projection.getConstructors().length,
                 "Projection 不得公开任意事实组合构造器");
-        ContractReflectionAssertions.assertNoPublicMutationApi(CASE_ID, projection);
+        // Projection 允许存在显式 deprecated 写入口，但这些入口只能稳定拒绝；
+        // 具体签名、异常和模型不变性由 R03 合同测试单独冻结。
         ContractReflectionAssertions.assertNoStaticMutableState(CASE_ID, projection);
         ContractReflectionAssertions.requirePublicMethod(
                 CASE_ID,
