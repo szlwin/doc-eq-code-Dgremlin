@@ -33,6 +33,24 @@ jobs:
           rm -rf /tmp/implementation-plan
           mkdir -p /tmp/implementation-plan
           tar -xJf /tmp/implementation-plan.tar.xz -C /tmp/implementation-plan
+          python3 - <<'PYFIX'
+          from pathlib import Path
+          path = Path('/tmp/implementation-plan/finalize_impl_plan.py')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(
+              'if f"revision: {REVISION}" not in yaml_text or "status: PASSED" not in yaml_text:',
+              'if f\'revision: "{REVISION}"\' not in yaml_text or \'status: "PASSED"\' not in yaml_text:'
+          )
+          text = text.replace(
+              'if "execution_mode: SEQUENTIAL" not in yaml_text:',
+              'if \'execution_mode: "SEQUENTIAL"\' not in yaml_text:'
+          )
+          text = text.replace(
+              'ids = re.findall(r"(?m)^  - task_id: (TASK-P1-T\\d{2})$", yaml_text)',
+              'ids = re.findall(r\'(?m)^    task_id: "(TASK-P1-T\\d{2})"$\', yaml_text)'
+          )
+          path.write_text(text, encoding='utf-8')
+          PYFIX
           python3 /tmp/implementation-plan/finalize_impl_plan.py
 
       - name: Remove helper payload and commit final result
