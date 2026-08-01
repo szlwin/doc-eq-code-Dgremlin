@@ -50,6 +50,14 @@ class ContextValueContractTest {
             ContractReflectionAssertions.assertStableValueShape(CASE_ID, type);
         }
 
+        Class<?> projectionWriteException = ContractReflectionAssertions.requireType(
+                CASE_ID,
+                "dec.core.context.ProjectionWriteRejectedException");
+        ContractReflectionAssertions.assertStableValueShape(CASE_ID, projectionWriteException);
+        assertTrue(
+                UnsupportedOperationException.class.isAssignableFrom(projectionWriteException),
+                "Projection 写入异常必须保持 UnsupportedOperationException 兼容性");
+
         Class<?> definitionKey = ContractReflectionAssertions.requireType(
                 CASE_ID,
                 "dec.core.context.model.DefinitionKey");
