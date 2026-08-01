@@ -30,6 +30,14 @@ public final class PublishedSourceDependency implements Comparable<PublishedSour
         this.declarationSourceRef = Objects.requireNonNull(
                 declarationSourceRef,
                 "declarationSourceRef");
+        // 声明位置必须属于依赖起点 Source，否则同一条边会表达两个声明来源。
+        if (!this.fromSourceId.equals(this.declarationSourceRef.sourceId())) {
+            throw new IllegalArgumentException(
+                    "Dependency declaration source must equal fromSourceId: "
+                            + this.fromSourceId
+                            + " != "
+                            + this.declarationSourceRef.sourceId());
+        }
     }
 
     /**
