@@ -4,10 +4,15 @@ import dec.core.context.model.CompiledDefinition;
 import dec.core.context.model.CompiledModelSet;
 import dec.core.context.model.DefinitionKey;
 import dec.core.context.model.Registry;
+import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * 从同一个 CompiledModelSet 确定性派生的旧 Core 配置只读投影。
@@ -40,9 +45,9 @@ public final class CoreConfigProjection {
         CompiledModelSet source = Objects.requireNonNull(modelSet, "modelSet");
         return new CoreConfigProjection(
                 source,
-                immutableValues(source.typedRegistries().data()),
-                immutableValues(source.typedRegistries().views()),
-                immutableValues(source.typedRegistries().ruleViews()));
+                immutableValues("data", source.typedRegistries().data()),
+                immutableValues("views", source.typedRegistries().views()),
+                immutableValues("rules", source.typedRegistries().ruleViews()));
     }
 
     /** 返回生成当前 Projection 的唯一模型来源。 */
@@ -116,6 +121,7 @@ public final class CoreConfigProjection {
     }
 
     private static <K extends DefinitionKey> List<CompiledDefinition> immutableValues(
+            String projectionName,
             Registry<K, CompiledDefinition> registry) {
         Objects.requireNonNull(registry, "registry");
         List<CompiledDefinition> values =
@@ -126,7 +132,106 @@ public final class CoreConfigProjection {
                     registry.require(key),
                     "registry contains null definition"));
         }
-        return Collections.unmodifiableList(values);
+        return new ProjectionReadOnlyList<CompiledDefinition>(projectionName, values);
+    }
+
+    /**
+     * 对 List 的所有变更入口提供统一的 Projection 专用拒绝语义。
+     *
+     * <p>不能只使用 Collections.unmodifiableList，因为空列表上的 remove、
+     * removeAll 或 clear 可能表现为普通异常或无操作，无法产生稳定错误码。</p>
+     */
+    private static final class ProjectionReadOnlyList<E> extends AbstractList<E> {
+        private final String projectionName;
+        private final List<E> values;
+
+        private ProjectionReadOnlyList(String projectionName, List<E> values) {
+            this.projectionName = Objects.requireNonNull(projectionName, "projectionName");
+            this.values = Collections.unmodifiableList(new ArrayList<E>(values));
+        }
+
+        @Override
+        public E get(int index) {
+            return values.get(index);
+        }
+
+        @Override
+        public int size() {
+            return values.size();
+        }
+
+        @Override
+        public E set(int index, E element) {
+            throw rejected("set");
+        }
+
+        @Override
+        public boolean add(E element) {
+            throw rejected("add");
+        }
+
+        @Override
+        public void add(int index, E element) {
+            throw rejected("add");
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends E> values) {
+            throw rejected("addAll");
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends E> values) {
+            throw rejected("addAll");
+        }
+
+        @Override
+        public E remove(int index) {
+            throw rejected("remove");
+        }
+
+        @Override
+        public boolean remove(Object value) {
+            throw rejected("remove");
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> values) {
+            throw rejected("removeAll");
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> values) {
+            throw rejected("retainAll");
+        }
+
+        @Override
+        public void clear() {
+            throw rejected("clear");
+        }
+
+        @Override
+        public boolean removeIf(Predicate<? super E> filter) {
+            throw rejected("removeIf");
+        }
+
+        @Override
+        public void replaceAll(UnaryOperator<E> operator) {
+            throw rejected("replaceAll");
+        }
+
+        @Override
+        public void sort(Comparator<? super E> comparator) {
+            throw rejected("sort");
+        }
+
+        /**
+         * 生成包含投影分类与具体 List 操作的稳定拒绝事实。
+         */
+        private ProjectionWriteRejectedException rejected(String operation) {
+            return new ProjectionWriteRejectedException(
+                    projectionName + "." + operation);
+        }
     }
 
     @Override
