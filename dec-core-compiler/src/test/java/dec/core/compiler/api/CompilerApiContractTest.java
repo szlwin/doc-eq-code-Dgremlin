@@ -9,9 +9,18 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dec.core.context.EngineContext;
+import dec.core.context.model.CompiledDefinition;
+import dec.core.context.model.CompiledModelSet;
+import dec.core.context.model.DefinitionKey;
+import dec.core.context.model.DeferredDefinition;
+import dec.core.context.model.DeferredKey;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
+import dec.core.context.model.DigestPair;
+import dec.core.context.model.ImmutableDeferredRegistry;
+import dec.core.context.model.ImmutableRegistry;
 import dec.core.context.model.SourceRef;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -20,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -71,17 +81,9 @@ class CompilerApiContractTest {
 
         for (Class<?> valueType : valueTypes) {
             assertTrue(Modifier.isFinal(valueType.getModifiers()), valueType.getName());
-            for (Field field : valueType.getDeclaredFields()) {
-                // JaCoCo adds synthetic state during CI; only source-declared fields
-                // are part of the immutable public contract.
-                if (field.isSynthetic()) {
-                    continue;
-                }
-                assertTrue(Modifier.isPrivate(field.getModifiers()), field.toString());
-                assertTrue(Modifier.isFinal(field.getModifiers()), field.toString());
-                assertFalse(Modifier.isStatic(field.getModifiers()), field.toString());
-            }
+            assertPrivateFinalSourceFields(valueType);
         }
+        assertPrivateFinalSourceFields(CompilationResult.class);
     }
 
     @Test
@@ -116,30 +118,99 @@ class CompilerApiContractTest {
     }
 
     @Test
-    void failedResultDefensivelyCopiesDiagnosticsAndExposesNoContext() {
+    void failedResultDefensivelyCopiesDiagnosticsAndExposesNoCandidate() {
         List<Diagnostic> mutableDiagnostics = new ArrayList<Diagnostic>();
         mutableDiagnostics.add(publicationBlockedDiagnostic());
 
-        FailedCompilationResult result = new FailedCompilationResult(mutableDiagnostics);
+        FailedCompilationResult result = new FailedCompilationResult(
+                "session-failed",
+                mutableDiagnostics);
         mutableDiagnostics.clear();
 
+        assertEquals("session-failed", result.sessionId());
         assertEquals(CompilationStatus.FAILED, result.status());
         assertFalse(result.isPublished());
         assertEquals(1, result.diagnostics().size());
         assertThrows(UnsupportedOperationException.class,
                 () -> result.diagnostics().add(publicationBlockedDiagnostic()));
         assertThrows(IllegalArgumentException.class,
-                () -> new FailedCompilationResult(Collections.<Diagnostic>emptyList()));
+                () -> new FailedCompilationResult(
+                        "session-failed",
+                        Collections.<Diagnostic>emptyList()));
         assertFalse(Arrays.stream(FailedCompilationResult.class.getMethods())
-                .anyMatch(method -> method.getName().equals("context")));
+                .anyMatch(method -> method.getName().equals("context")
+                        || method.getName().equals("compiledModelSet")
+                        || method.getName().equals("digests")));
     }
 
     @Test
-    void publishedResultRejectsMissingPublishedContext() {
+    void publishedResultExposesTheCompletePublishedFact() {
+        CompiledModelSet modelSet = emptyModelSet();
+        EngineContext context = new EngineContext(modelSet);
+        PublishedCompilationResult result = new PublishedCompilationResult(
+                "session-published",
+                modelSet,
+                context,
+                Collections.<Diagnostic>emptyList());
+
+        assertEquals("session-published", result.sessionId());
+        assertEquals(CompilationStatus.PUBLISHED, result.status());
+        assertTrue(result.isPublished());
+        assertSame(modelSet, result.compiledModelSet());
+        assertSame(context, result.context());
+        assertEquals(modelSet.digestPair(), result.digests());
+        assertEquals("compiler-1", result.compilerVersion());
+        assertEquals("schema-1", result.schemaVersion());
+        assertEquals("options-1", result.optionsVersion());
+    }
+
+    @Test
+    void publishedResultRejectsMissingOrMismatchedContext() {
+        CompiledModelSet modelSet = emptyModelSet();
         assertThrows(NullPointerException.class,
                 () -> new PublishedCompilationResult(
+                        "session-published",
+                        modelSet,
                         null,
                         Collections.<Diagnostic>emptyList()));
+        assertThrows(IllegalArgumentException.class,
+                () -> new PublishedCompilationResult(
+                        "session-published",
+                        modelSet,
+                        new EngineContext(emptyModelSetWithSemanticDigest("other")),
+                        Collections.<Diagnostic>emptyList()));
+    }
+
+    private static void assertPrivateFinalSourceFields(Class<?> valueType) {
+        for (Field field : valueType.getDeclaredFields()) {
+            // JaCoCo adds synthetic state during CI; only source-declared fields
+            // are part of the immutable public contract.
+            if (field.isSynthetic()) {
+                continue;
+            }
+            assertTrue(Modifier.isPrivate(field.getModifiers()), field.toString());
+            assertTrue(Modifier.isFinal(field.getModifiers()), field.toString());
+            assertFalse(Modifier.isStatic(field.getModifiers()), field.toString());
+        }
+    }
+
+    private static CompiledModelSet emptyModelSet() {
+        return emptyModelSetWithSemanticDigest("semantic");
+    }
+
+    private static CompiledModelSet emptyModelSetWithSemanticDigest(String semanticDigest) {
+        Map<DefinitionKey, CompiledDefinition> definitions =
+                Collections.<DefinitionKey, CompiledDefinition>emptyMap();
+        Map<DeferredKey, DeferredDefinition> deferred =
+                Collections.<DeferredKey, DeferredDefinition>emptyMap();
+        return new CompiledModelSet(
+                new ImmutableRegistry<DefinitionKey, CompiledDefinition>(definitions),
+                new ImmutableDeferredRegistry(deferred),
+                Collections.<Diagnostic>emptyList(),
+                new DigestPair("source", semanticDigest),
+                "compiler-1",
+                "schema-1",
+                "options-1");
     }
 
     private static Diagnostic publicationBlockedDiagnostic() {
