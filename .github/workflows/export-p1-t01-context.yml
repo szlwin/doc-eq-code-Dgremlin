@@ -31,6 +31,7 @@ jobs:
           cp pom.xml /tmp/p1-t01-context/root-pom.xml
           cp -a dec-core-context /tmp/p1-t01-context/
           cp -a project_doc/version/V_1.0/task/P1-COMPILER-F01 /tmp/p1-t01-context/task
+          cp -a project_doc/version/V_1.0/doc/DEC_COMPILER /tmp/p1-t01-context/design
           cp project_doc/version/V_1.0/work_record.md /tmp/p1-t01-context/work_record.md
           find /tmp/p1-t01-context -type d -name target -prune -exec rm -rf {} +
           find /tmp/p1-t01-context -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/p1-t01-context/SHA256SUMS
