@@ -75,6 +75,9 @@ final class ContractReflectionAssertions {
     static void assertNoStaticMutableState(String caseId, Class<?> type) {
         List<String> mutable = new ArrayList<String>();
         for (Field field : type.getDeclaredFields()) {
+            if (field.isSynthetic()) {
+                continue;
+            }
             int modifiers = field.getModifiers();
             if (Modifier.isStatic(modifiers) && !Modifier.isFinal(modifiers)) {
                 mutable.add(field.toGenericString());
