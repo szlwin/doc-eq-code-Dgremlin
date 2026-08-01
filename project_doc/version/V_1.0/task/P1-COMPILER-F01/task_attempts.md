@@ -849,6 +849,58 @@
     ],
     "summary": "固定 DEV-P1-T01-R01 的最终代码 Review 对象、静态检查和风险分类；无开放 finding。",
     "next_action": "由七个 required reviewers 对同一 CODEREVIEW Revision 串行独立确认。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-T01-TESTING-I007-A001",
+    "task_id": "TASK-P1-T01-TESTING",
+    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
+    "iteration_no": 7,
+    "attempt_no": 1,
+    "agent": "TestAgent",
+    "phase": "testing",
+    "status": "PASSED",
+    "input_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "output_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+    "started_at": "2026-08-01T09:03:17+00:00",
+    "completed_at": "2026-08-01T09:04:51+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/test-report-manifest.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/p0-run.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/command-result.json"
+    ],
+    "command_evidence_ids": [
+      "EVD-000332"
+    ],
+    "evidence_ids": [
+      "EVD-000330",
+      "EVD-000331",
+      "EVD-000332"
+    ],
+    "summary": "R02 专项验证与真实源码树标准 P0 全部通过；14 个普通测试全绿，故意失败测试被门禁正确阻断，T01 无数据库变更。",
+    "next_action": "发布 Testing Revision 并由 TestEvidenceReviewAgent 独立复核 Evidence 完整性。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-T01-COMPLETION-I007-A001",
+    "task_id": "TASK-P1-T01-COMPLETION",
+    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
+    "iteration_no": 7,
+    "attempt_no": 1,
+    "agent": "CompletionVerificationAgent",
+    "phase": "completion_verification",
+    "status": "RUNNING",
+    "input_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+    "output_revision": "",
+    "started_at": "2026-08-01T09:08:37+00:00",
+    "completed_at": "",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [],
+    "command_evidence_ids": [],
+    "evidence_ids": [],
+    "summary": "验证 T01 全阶段闭环、最终干净 PR 文件树和标准 P0。",
+    "next_action": "先发布干净中间 Head 并取得最终 P0，再冻结 Completion Revision。"
   }
 ]
 ```

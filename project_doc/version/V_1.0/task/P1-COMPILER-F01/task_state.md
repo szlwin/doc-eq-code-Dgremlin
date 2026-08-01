@@ -8,14 +8,16 @@
   "schema_version": 2,
   "target_id": "P1-COMPILER-F01",
   "version": "V_1.0",
-  "task_status": "PARTIAL",
-  "current_phase": "testing",
-  "current_round": "TESTING-I007",
-  "current_agent": "ProjectManagerAgent",
+  "task_status": "RUNNING",
+  "current_phase": "completion_verification",
+  "current_round": "COMPLETION_VERIFICATION-I007",
+  "current_agent": "CompletionVerificationAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
-  "active_task_ids": [],
-  "current_attempt_id": "",
+  "active_task_ids": [
+    "TASK-P1-T01-COMPLETION"
+  ],
+  "current_attempt_id": "ATTEMPT-TASK-P1-T01-COMPLETION-I007-A001",
   "work_mode": {
     "ref": "version/V_1.0/work.md",
     "digest": "962b2fe133462e80642706e4fb51469f4a8492676ca0a44734d9ee474a56f410",
@@ -83,14 +85,14 @@
       "iteration_no": 7
     },
     "testing": {
-      "revision": "",
-      "status": "STALE",
+      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "status": "PASSED",
       "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
       "iteration_no": 7
     },
     "completion_verification": {
       "revision": "",
-      "status": "STALE",
+      "status": "IN_PROGRESS",
       "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
       "iteration_no": 7
     }
@@ -742,13 +744,22 @@
       "review_history": []
     },
     "testing": {
-      "artifact_revision": "",
+      "artifact_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
       "required_reviewers": [
         "TestEvidenceReviewAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {},
-      "status": "PENDING",
+      "independent_conclusions": {
+        "TestEvidenceReviewAgent": {
+          "profile_id": "testing:TestEvidenceReviewAgent",
+          "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000076",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-01T09:06:20+00:00"
+        }
+      },
+      "status": "PASSED",
       "current_iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
       "review_history": []
     },
@@ -800,12 +811,12 @@
   },
   "review_rounds": {},
   "open_issue_ids": [],
-  "last_gate": "code_review",
+  "last_gate": "testing",
   "failed_attempts": {
     "TASK-P1-DESIGN-001": 1
   },
-  "next_action": "开始 testing 阶段",
-  "next_agent": "TestAgent",
+  "next_action": "先发布干净中间 Head 并取得最终 P0，再冻结 Completion Revision。",
+  "next_agent": "CompletionVerificationAgent",
   "resume_from": "tdd",
   "max_auto_review_rounds": 3,
   "stale_events": [
@@ -916,7 +927,7 @@
       "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-01T08:38:53+00:00",
+  "checkpoint_at": "2026-08-01T09:08:37+00:00",
   "request_intake": {
     "ref": "",
     "digest": "",

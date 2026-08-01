@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "runtime_result",
+  "task_id": "TASK-P1-T01",
+  "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+  "run_id": 30692772905,
+  "head_sha": "2dd7112f814ae0c02ba716b852fa5bfde769fd49",
+  "jobs": {
+    "core-verify": "PASSED",
+    "mysql-it": "SKIPPED_NOT_APPLICABLE_T01_NO_DB_CHANGE"
+  },
+  "steps": {
+    "maven_wrapper": "PASSED",
+    "legacy_dependency_bootstrap": "PASSED",
+    "core_build_and_tests": "PASSED",
+    "intentional_failure_blocks_build": "PASSED"
+  },
+  "artifact_id": 8816242828,
+  "artifact_digest": "sha256:1e169da762f154ea9f3d835b3b0e0d7f68c7384a47c0a026a81c1a1b97031a3f",
+  "r02_verification_run_id": 30691339716,
+  "r02_result": "PASSED"
+}

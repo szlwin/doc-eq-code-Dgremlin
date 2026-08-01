@@ -820,6 +820,154 @@
       "EVD-000324"
     ],
     "feature_id": "P1-COMPILER-F01"
+  },
+  {
+    "id": "TASK-P1-T01-TESTING",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-TESTING",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "",
+    "revision_reason": "CODEREVIEW-P1-T01-R01 已由七项独立 Review 通过，进入真实源码树的标准 P0 与专项 GREEN 验证。",
+    "title": "验证 T01 Context 不可变契约与主干回归",
+    "objective": "在真实 PR 源码树上验证 T01 合同、行为、模块回归、依赖方向、标准 P0 和故意失败阻断门禁。",
+    "phase": "testing",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P1-T01-CODE-REVIEW"
+    ],
+    "owner_agent": "TestAgent",
+    "reviewer_agents": [
+      "TestEvidenceReviewAgent"
+    ],
+    "input_revisions": {
+      "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "development": "DEV-P1-T01-R01@de1adfd37c9b"
+    },
+    "allowed_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/**",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/test-report-manifest.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/p0-run.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/command-result.json"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "verify TASK-P1-T01 R02 GREEN, Context module verify, dependency direction, standard P0 core build/tests, and intentional failure blocking"
+    ],
+    "expected_results": [
+      "R02 9 tests 全绿",
+      "标准 P0 normal suites 全绿",
+      "故意失败测试被构建门禁正确阻断",
+      "dec-core-context 不依赖 dec-core-compiler",
+      "MySQL 对 T01 明确为不适用而非伪造通过"
+    ],
+    "stop_conditions": [
+      "任何普通测试 failure/error",
+      "故意失败门禁未能阻断构建",
+      "依赖方向出现 context→compiler",
+      "Evidence 无法绑定真实 run/head/artifact"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+    "validation_evidence_ids": [
+      "EVD-000330",
+      "EVD-000331",
+      "EVD-000332"
+    ]
+  },
+  {
+    "id": "TASK-P1-T01-COMPLETION",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-COMPLETION",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "",
+    "revision_reason": "TESTING-P1-T01-R01 已通过 TestEvidenceReviewAgent，进入 T01 全流程完成验证和 PR 清理。",
+    "title": "验证 TASK-P1-T01 全流程完成与可合并性",
+    "objective": "确认 TDD、架构骨架、具体实现、Code Review、Testing、Evidence、Git checkpoint 与最终干净 PR 全部闭环。",
+    "phase": "completion_verification",
+    "status": "RUNNING",
+    "depends_on": [
+      "TASK-P1-T01-TESTING"
+    ],
+    "owner_agent": "CompletionVerificationAgent",
+    "reviewer_agents": [],
+    "input_revisions": {
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "development": "DEV-P1-T01-R01@de1adfd37c9b",
+      "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "testing": "TESTING-P1-T01-R01@2c618f7c32a6"
+    },
+    "allowed_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/**",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "verify TASK-P1-T01 lifecycle closure, final clean PR tree and final P0 Build Gate"
+    ],
+    "expected_results": [
+      "所有阶段 Revision 与 Evidence ACTIVE 且可回查",
+      "无开放 P0/P1 finding",
+      "最终 PR 不包含临时 workflow/payload/chunk/trigger",
+      "最终干净 Head 标准 P0 全绿",
+      "T01 状态 PASSED 并交接到 TASK-P1-T02 TDD"
+    ],
+    "stop_conditions": [
+      "任何阶段未 PASSED",
+      "Evidence 摘要或 Git 引用不可解析",
+      "最终 PR 含临时文件",
+      "最终 P0 非成功",
+      "存在开放 P0/P1"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
   }
 ]
 ```

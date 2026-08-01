@@ -1041,6 +1041,48 @@
       "verified_by_agent": "SecurityReviewAgent",
       "verified_at": "2026-08-01T08:34:31+00:00",
       "reason": "The security scan trigger is a lexical false positive. T01 adds immutable metadata contracts only and introduces no security-sensitive execution surface."
+    },
+    {
+      "assertion_id": "ASRT-P1-T01-TEST-EVID-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TestEvidenceReviewAgent 确认 TESTING-P1-T01-R01 绑定真实 PR Head、P0/R02 Run 与不可变 Artifact 摘要；普通测试全绿、故意失败门禁有效、MySQL 不适用说明透明。",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "testing",
+        "criteria_ids": [
+          "RC-EVID-001",
+          "RC-EVID-002",
+          "RC-EVID-003",
+          "RC-EVID-004",
+          "RC-EVID-005",
+          "RC-EVID-006",
+          "RC-EVID-007",
+          "RC-TEST-008",
+          "RC-BFLOW-005"
+        ]
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING",
+        "CODEREVIEW-P1-T01-R01@488bc81150f7",
+        "DEV-P1-T01-R01@de1adfd37c9b",
+        "TR-P1-COMPILER-003",
+        "TR-P1-COMPILER-004",
+        "TR-P1-COMPILER-005",
+        "TR-P1-COMPILER-006"
+      ],
+      "evidence_ids": [
+        "EVD-000330",
+        "EVD-000331",
+        "EVD-000332"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-01T09:06:20+00:00",
+      "reason": "Testing Evidence 可复现、完整、新鲜并与声明边界一致；无测试或基础设施 blocker。"
     }
   ]
 }

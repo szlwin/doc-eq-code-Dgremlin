@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "kind": "test_report_manifest",
+  "task_id": "TASK-P1-T01",
+  "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+  "captured_at": "2026-08-01T09:02:56+00:00",
+  "workflow": {
+    "run_id": 30692772905,
+    "head_sha": "2dd7112f814ae0c02ba716b852fa5bfde769fd49",
+    "core_verify": "PASSED",
+    "mysql_it": "SKIPPED_NOT_APPLICABLE_T01_NO_DB_CHANGE",
+    "artifact_id": 8816242828,
+    "artifact_digest": "sha256:1e169da762f154ea9f3d835b3b0e0d7f68c7384a47c0a026a81c1a1b97031a3f"
+  },
+  "suites": [
+    {
+      "path": "dec-core-context/target/surefire-reports/TEST-dec.core.context.data.BaseDataContractTest.xml",
+      "suite": "dec.core.context.data.BaseDataContractTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "cfb099d9de9fe5967e877f0daf76790ccac9fa2abf1e57a9db461e81df915c8d"
+    },
+    {
+      "path": "dec-core-context/target/surefire-reports/TEST-dec.core.context.gate.P0IntentionalFailureTest.xml",
+      "suite": "dec.core.context.gate.P0IntentionalFailureTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "a407d86f73ff24e1ce4297a12cfc024c2232363bffc7e44bc10ae1c1d1292e09"
+    },
+    {
+      "path": "dec-core-context/target/surefire-reports/TEST-dec.core.context.tdd.ContextContractBehaviorTest.xml",
+      "suite": "dec.core.context.tdd.ContextContractBehaviorTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "9a93e002fef673527ae20421b9c7594ef9d253f0ccf5aa5d27ddcef18746304c"
+    },
+    {
+      "path": "dec-core-context/target/surefire-reports/TEST-dec.core.context.tdd.ContextValueContractTest.xml",
+      "suite": "dec.core.context.tdd.ContextValueContractTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "c33f09562817b7b3d17db38736dd0b9d02e432606034e00a4a6962b735ca444e"
+    },
+    {
+      "path": "dec-core-context/target/surefire-reports/TEST-dec.core.context.tdd.EngineContextApiTest.xml",
+      "suite": "dec.core.context.tdd.EngineContextApiTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "0c371dbc20860157480f266b047847c299cb591722c5d6ac656afa75a163ba78"
+    },
+    {
+      "path": "dec-core-context/target/surefire-reports/TEST-dec.core.context.tdd.RegistryImmutabilityTest.xml",
+      "suite": "dec.core.context.tdd.RegistryImmutabilityTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "094177f51be2c4ab49164371af4ca092637aaa95b0999e5fa8affbdcbad4e084"
+    },
+    {
+      "path": "dec-demo/target/surefire-reports/TEST-dec.demo.contract.LegacyResourceSnapshotTest.xml",
+      "suite": "dec.demo.contract.LegacyResourceSnapshotTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "71f44a8eb4e9a910ccefd4712d5b4adf5b9fb0bc51b678fbae586657fd309d06"
+    },
+    {
+      "path": "dec-demo/target/surefire-reports/TEST-dec.demo.contract.MixContractTest.xml",
+      "suite": "dec.demo.contract.MixContractTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "3c38fcc394a26079417da098e40b2b30e114c014ef833d21ca5dfe2f47f5e94f"
+    },
+    {
+      "path": "dec-demo/target/surefire-reports/TEST-dec.demo.declaration.TestOrderBusiness.xml",
+      "suite": "dec.demo.declaration.TestOrderBusiness",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "3679f01e7937f04cb41f65a8a54ef19fb61c00cbed60277b720d066468e1abe5"
+    },
+    {
+      "path": "dec-expand-declaration/target/surefire-reports/TEST-test.business.TestOrderBusiness.xml",
+      "suite": "test.business.TestOrderBusiness",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "0371f4c4393c74e1788bd8ae564fd8feb274b14c717c59c3b62e6c4dd41e7179"
+    }
+  ],
+  "metrics": {
+    "normal_tests": 14,
+    "normal_failures": 0,
+    "normal_errors": 0,
+    "normal_skipped": 0,
+    "intentional_failure_tests": 1,
+    "intentional_failure_failures": 1,
+    "p0_run_id": 30692772905,
+    "p0_head_sha": "2dd7112f814ae0c02ba716b852fa5bfde769fd49",
+    "p0_artifact_id": 8816242828,
+    "p0_artifact_sha256": "1e169da762f154ea9f3d835b3b0e0d7f68c7384a47c0a026a81c1a1b97031a3f",
+    "r02_run_id": 30691339716,
+    "r02_artifact_id": 8815769069,
+    "r02_tests": 9,
+    "r02_failures": 0,
+    "r02_errors": 0,
+    "r02_skipped": 0,
+    "mysql_it": "SKIPPED_NOT_APPLICABLE_T01_NO_DB_CHANGE"
+  },
+  "claim_boundary": "P0 core reactor, TASK-P1-T01 contract/behavior tests, existing contract tests, and intentional-failure gate; no database behavior changed by T01."
+}
