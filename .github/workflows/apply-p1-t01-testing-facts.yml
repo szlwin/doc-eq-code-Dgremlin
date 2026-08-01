@@ -1,0 +1,45 @@
+name: Apply P1 T01 Testing Facts
+
+on:
+  pull_request:
+    branches: [dev_all]
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.pull_request.head.ref == 'feature/p1-t01-tdd-red-i007-20260801-1122'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feature/p1-t01-tdd-red-i007-20260801-1122
+          fetch-depth: 0
+
+      - name: Apply Testing and Completion-running facts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/p1-t01-testing-completion/chunk-* | base64 --decode > /tmp/p1-t01-testing-completion.patch.xz
+          echo '023aa95b669edce19cc3660147e21bc6a602245babc9a145a2bec6cb9e597a97  /tmp/p1-t01-testing-completion.patch.xz' | sha256sum --check --strict
+          xz -dc /tmp/p1-t01-testing-completion.patch.xz > /tmp/p1-t01-testing-completion.patch
+          git apply --3way /tmp/p1-t01-testing-completion.patch
+
+      - name: Commit machine facts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add project_doc
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'Testing facts already applied.'
+            exit 0
+          fi
+          git commit -m 'test(context): record P1 T01 verification facts' \
+            -m 'WK-Checkpoint: CP-V_1.0-P1-COMPILER-F01-TESTING-007' \
+            -m 'WK-Revision: TESTING-P1-T01-R01@2c618f7c32a6'
+          git push origin HEAD:feature/p1-t01-tdd-red-i007-20260801-1122
