@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "completion_verification_report",
+  "task_id": "TASK-P1-T02",
+  "revision": "COMPLETION-P1-T02-R01@643b44a8b72a",
+  "input_revisions": {
+    "tdd": "TDD-P1-T02-R01@9f44d25f3cc7",
+    "architecture_skeleton": "DEVSKEL-P1-T02-R01@5bbfd315f65e",
+    "development": "DEV-P1-T02-R01@643b44a8b72a",
+    "code_review": "CODEREVIEW-P1-T02-R01@643b44a8b72a",
+    "testing": "TESTING-P1-T02-R01@643b44a8b72a"
+  },
+  "stage_statuses": {
+    "tdd": "PASSED",
+    "architecture_skeleton": "PASSED",
+    "development": "PASSED",
+    "code_review": "PASSED",
+    "testing": "PASSED"
+  },
+  "review_ids": [
+    "REV-000077",
+    "REV-000078",
+    "REV-000079",
+    "REV-000080",
+    "REV-000081",
+    "REV-000082",
+    "REV-000083",
+    "REV-000084"
+  ],
+  "evidence_ids": [
+    "EVD-000337",
+    "EVD-000338",
+    "EVD-000339",
+    "EVD-000340",
+    "EVD-000341",
+    "EVD-000342"
+  ],
+  "clean_code_head_sha": "643b44a8b72adbd88c040431626ccdb5a8ebddb5",
+  "p0_run_id": 30702001625,
+  "p0_result": "PASSED",
+  "open_p0_p1_findings": [],
+  "temporary_workflow_or_payload_paths": [],
+  "database_change": false,
+  "task_status": "PASSED",
+  "next_task": "TASK-P1-T03",
+  "next_task_started": false,
+  "claim_boundary": "TASK-P1-T02 only; TASK-P1-T03 through TASK-P1-T15 are not started or claimed.",
+  "evidence_id": "EVD-000342",
+  "result": "PASSED"
+}
