@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 任务计划
 
-> 当前活动输入为 `DESIGN-R05@0b37a9b4dd48`；需求确认、需求分析、业务模型和设计历史保留在 StageOutcome、Review 和 Evidence 中。下一可执行阶段为 `test_design` I007，全部任务和 Review 按 SEQUENTIAL 顺序执行。
+> `TP-P1-COMPILER-F01-R01@88b56e6caa64` 已通过四项串行计划 Review；下一阶段为 `TDD-I007`，首个增量为 `TASK-P1-T01`。
 
 ```json task-plan
 [
@@ -482,7 +482,7 @@
     "title": "形成 P1-T01～T15 实施计划",
     "objective": "基于 DESIGN-R05 和后续通过的 TESTDESIGN Revision，将 P1 编译骨架拆分为可独立验证的纵向任务，固定依赖、允许文件、TDD 接缝、验证命令、停止条件和 Reviewer。",
     "phase": "implementation_plan",
-    "status": "TODO",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-R2-005"
     ],
@@ -501,6 +501,8 @@
     },
     "allowed_files": [
       "version/V_1.0/task/P1-COMPILER-F01/development_tasks.yaml",
+      "version/V_1.0/task/P1-COMPILER-F01/development_tasks.md",
+      "version/V_1.0/task/P1-COMPILER-F01/development_task_reviews.jsonl",
       "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
       "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
       "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
@@ -521,7 +523,10 @@
       "FLOW-CONFIG-COMPILE"
     ],
     "flow_step_refs": [],
-    "validation_commands": [],
+    "validation_commands": [
+      "python3 /mnt/data/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/P1-COMPILER-F01 --require-revision",
+      "python3 /mnt/data/common-develop/scripts/task_plan.py status -g ProjectManagerAgent --task-dir project_doc/version/V_1.0/task/P1-COMPILER-F01"
+    ],
     "expected_results": [
       "计划覆盖 P1-T01～T15 与 9 条 TR，依赖无环且同一时刻只允许一个任务或 Review 运行",
       "每项任务声明目标、实现方式、验收标准、允许文件、输入输出、TDD/测试命令、预期结果和停止条件",
@@ -535,10 +540,13 @@
       "计划引入第二运行时、兼容 Adapter、静态 current Context 或提前实现 P2～P7"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+    "validation_evidence_ids": [
+      "EVD-000288",
+      "EVD-000289"
+    ]
   }
 ]
 ```
