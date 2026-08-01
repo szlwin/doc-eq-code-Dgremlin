@@ -1,0 +1,51 @@
+name: Finalize P1 Implementation Plan
+
+on:
+  pull_request:
+    branches:
+      - dev_all
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'feature/p1-implementation-plan-i007-20260801-1041'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v6
+        with:
+          ref: feature/p1-implementation-plan-i007-20260801-1041
+          fetch-depth: 0
+
+      - name: Materialize and validate TP-R01
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/implementation-plan-payload/chunk-* | base64 --decode > /tmp/implementation-plan.tar.xz
+          echo '6bfa35c64dd22d7953adaddab3227e79922a499ed77f4105a0a624470969d12d  /tmp/implementation-plan.tar.xz' | sha256sum --check --strict
+          rm -rf /tmp/implementation-plan
+          mkdir -p /tmp/implementation-plan
+          tar -xJf /tmp/implementation-plan.tar.xz -C /tmp/implementation-plan
+          python3 /tmp/implementation-plan/finalize_impl_plan.py
+
+      - name: Remove helper payload and commit final result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm -r .github/implementation-plan-payload
+          git rm .github/workflows/finalize-p1-implementation-plan.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add project_doc
+          git diff --cached --check
+          git commit -m 'docs(implementation-plan): complete P1 wk -tp plan' \
+            -m 'WK-Checkpoint: CP-V_1.0-P1-COMPILER-F01-IMPLEMENTATION-PLAN-007' \
+            -m 'WK-Revision: TP-P1-COMPILER-F01-R01@88b56e6caa64'
+          git push origin HEAD:feature/p1-implementation-plan-i007-20260801-1041
