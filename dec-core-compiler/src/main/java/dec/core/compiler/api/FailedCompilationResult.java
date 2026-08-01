@@ -10,12 +10,14 @@ import java.util.Objects;
  */
 public final class FailedCompilationResult extends CompilationResult {
     /**
-     * Captures the diagnostics that explain why publication did not occur.
+     * Captures the session identity and diagnostics that explain why publication
+     * did not occur.
      *
+     * @param sessionId stable identity of the failed compilation session
      * @param diagnostics non-empty snapshot containing at least one ERROR
      */
-    public FailedCompilationResult(List<Diagnostic> diagnostics) {
-        super(ApiContracts.failedDiagnostics(diagnostics));
+    public FailedCompilationResult(String sessionId, List<Diagnostic> diagnostics) {
+        super(sessionId, ApiContracts.failedDiagnostics(diagnostics));
     }
 
     @Override
@@ -27,16 +29,20 @@ public final class FailedCompilationResult extends CompilationResult {
     public boolean equals(Object other) {
         return this == other
                 || (other instanceof FailedCompilationResult
+                && sessionId().equals(((FailedCompilationResult) other).sessionId())
                 && diagnostics().equals(((FailedCompilationResult) other).diagnostics()));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(diagnostics());
+        return Objects.hash(sessionId(), diagnostics());
     }
 
     @Override
     public String toString() {
-        return "FailedCompilationResult{diagnostics=" + diagnostics().size() + '}';
+        return "FailedCompilationResult{"
+                + "sessionId='" + sessionId() + '\''
+                + ", diagnostics=" + diagnostics().size()
+                + '}';
     }
 }
