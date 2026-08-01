@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_summary",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I008",
+  "revision": "DEVSKEL-P1-T01-R02@55ebd6d2f203",
+  "input_revision": "TDD-P1-T01-R02@0ef4578bdff9",
+  "head_sha": "55ebd6d2f2034a03054317ebdd84a0bd62c7de9b",
+  "p0_run_id": 30705283373,
+  "compile": {
+    "production_sources": 101,
+    "test_sources": 7,
+    "java_release": 8,
+    "result": "PASSED"
+  },
+  "explicit_unfinished_seams": [
+    "TypedDefinitionRegistries.from",
+    "CoreConfigProjection.from"
+  ],
+  "skeleton_contracts": [
+    "DirectoryKey owns BusinessScopeKey",
+    "PublishedSourceManifest remains context-neutral",
+    "TypedDefinitionRegistries forms the published typed closure",
+    "DeferredDefinition owns one complete DeferredKey",
+    "EngineContext exposes no independent projection constructor",
+    "CompiledModelSet rejects ERROR and key/value identity mismatch"
+  ],
+  "reviews": [
+    {
+      "review_id": "REV-000086",
+      "reviewer": "ArchitectureReviewAgent",
+      "result": "PASSED"
+    },
+    {
+      "review_id": "REV-000087",
+      "reviewer": "SpecComplianceReviewAgent",
+      "result": "PASSED"
+    }
+  ],
+  "open_p0_p1_findings": [],
+  "evidence_id": "EVD-000344",
+  "result": "PASSED"
+}
