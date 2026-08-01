@@ -72,6 +72,11 @@ class CompilerApiContractTest {
         for (Class<?> valueType : valueTypes) {
             assertTrue(Modifier.isFinal(valueType.getModifiers()), valueType.getName());
             for (Field field : valueType.getDeclaredFields()) {
+                // JaCoCo adds synthetic state during CI; only source-declared fields
+                // are part of the immutable public contract.
+                if (field.isSynthetic()) {
+                    continue;
+                }
                 assertTrue(Modifier.isPrivate(field.getModifiers()), field.toString());
                 assertTrue(Modifier.isFinal(field.getModifiers()), field.toString());
                 assertFalse(Modifier.isStatic(field.getModifiers()), field.toString());
