@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "verify TASK-P1-T01 lifecycle closure, final clean PR tree and final P0 Build Gate",
+  "exit_code": 0,
+  "executed_at": "2026-08-01T10:19:13+00:00",
+  "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+  "result": "PASSED",
+  "metrics": {
+    "stage_revisions": 4,
+    "independent_reviews": 12,
+    "open_p0_p1_findings": 0,
+    "temporary_paths": 0,
+    "p0_run_id": 30695457680,
+    "p0_head_sha": "a3c584de3a4d08378706e101af27bdad82976629",
+    "p0_artifact_id": 8817098426,
+    "acceptance_trace_ids": 4,
+    "next_task_started": false
+  },
+  "claim_boundary": "TASK-P1-T01 completion only; T02-T15 are not started.",
+  "output": "{\"claim_boundary\":\"TASK-P1-T01 completion only; T02-T15 are not started.\",\"metrics\":{\"acceptance_trace_ids\":4,\"independent_reviews\":12,\"next_task_started\":false,\"open_p0_p1_findings\":0,\"p0_artifact_id\":8817098426,\"p0_head_sha\":\"a3c584de3a4d08378706e101af27bdad82976629\",\"p0_run_id\":30695457680,\"stage_revisions\":4,\"temporary_paths\":0},\"result\":\"PASSED\"}",
+  "output_digest": "041e4fafa43446604eb09f7f698d001d0b11363da77ed5339b03d0e5137ad61e"
+}

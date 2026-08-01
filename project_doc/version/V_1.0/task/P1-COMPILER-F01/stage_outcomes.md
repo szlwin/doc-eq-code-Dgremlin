@@ -415,6 +415,147 @@
     "open_risks": [],
     "started_at": "2026-08-01T02:49:38+00:00",
     "completed_at": "2026-08-01T02:50:21+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-TDD-I007",
+    "phase": "tdd",
+    "round": "TDD-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-TDD-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TddAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "test_design": "TESTDESIGN-R01@ba7779cf089b",
+      "design": "DESIGN-R05@0b37a9b4dd48"
+    },
+    "output_revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "evidence_ids": [
+      "EVD-000290",
+      "EVD-000291"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T03:33:00+00:00",
+    "completed_at": "2026-08-01T03:40:00+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-DEVELOPMENT-I007",
+    "phase": "development",
+    "round": "DEVELOPMENT-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-007",
+    "iteration_no": 7,
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-DEVELOPMENT-008",
+    "status": "PASSED",
+    "produced_by_agent": "DevelopAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a"
+    },
+    "output_revision": "DEVSKEL-P1-T01-R01@57bbc887eb13",
+    "evidence_ids": [
+      "EVD-000293",
+      "EVD-000294"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T08:02:08+00:00",
+    "completed_at": "2026-08-01T08:04:10+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-DEVELOPMENT-I008",
+    "phase": "development",
+    "round": "DEVELOPMENT-I008",
+    "iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-008",
+    "iteration_no": 8,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "DevelopAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a"
+    },
+    "output_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+    "evidence_ids": [
+      "EVD-000295",
+      "EVD-000296"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T08:17:06+00:00",
+    "completed_at": "2026-08-01T08:18:56+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-CODE_REVIEW-I007",
+    "phase": "code_review",
+    "round": "CODE_REVIEW-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "ProjectManagerAgent",
+    "input_revisions": {
+      "development": "DEV-P1-T01-R01@de1adfd37c9b"
+    },
+    "output_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "evidence_ids": [
+      "EVD-000321",
+      "EVD-000322",
+      "EVD-000323",
+      "EVD-000324"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T08:26:41+00:00",
+    "completed_at": "2026-08-01T08:38:48+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-TESTING-I007",
+    "phase": "testing",
+    "round": "TESTING-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TestAgent",
+    "input_revisions": {
+      "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7"
+    },
+    "output_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+    "evidence_ids": [
+      "EVD-000330",
+      "EVD-000331",
+      "EVD-000332"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T09:04:54+00:00",
+    "completed_at": "2026-08-01T09:06:49+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I007",
+    "phase": "completion_verification",
+    "round": "COMPLETION_VERIFICATION-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "CompletionVerificationAgent",
+    "input_revisions": {
+      "testing": "TESTING-P1-T01-R01@2c618f7c32a6"
+    },
+    "output_revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+    "evidence_ids": [
+      "EVD-000333",
+      "EVD-000334",
+      "EVD-000335",
+      "EVD-000336"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T12:07:31+00:00",
+    "completed_at": "2026-08-01T12:14:03+00:00"
   }
 ]
 ```

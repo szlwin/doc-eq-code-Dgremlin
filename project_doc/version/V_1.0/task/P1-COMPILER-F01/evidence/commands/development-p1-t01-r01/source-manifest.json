@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+  "source_digest": "de1adfd37c9b6200a9a80f87a9ae631b8a801f916c0abefe09df1177015ff937",
+  "files": [
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java",
+      "sha256": "41357288e123d6eb2bfd73a2cfec0fcce54e55cbbf8a4dbb95525ec65091f51b",
+      "bytes": 1663
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/EngineContext.java",
+      "sha256": "dcb11107b45c83f9747a4339dd0f6880f13704bcbc49489f03f45933b66bad7d",
+      "bytes": 1282
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java",
+      "sha256": "2b56b5940468da516b6c83fcaaac1f7abbb2691be15fa9af51c56f4d3112ac74",
+      "bytes": 1459
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/ActionKey.java",
+      "sha256": "7281f8aabcd5b93a9c904b11578114d93747164be7a3f2e08b08ff049994522b",
+      "bytes": 606
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java",
+      "sha256": "e482d9d67f50382c970137234c2ef9ba42c1fbbe87e26beceb50a8fbb95c3e40",
+      "bytes": 348
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java",
+      "sha256": "73e04fecde7a38b1ef56f05410435a5849fd4cf57b9e2478614462d0d0e5861c",
+      "bytes": 1183
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
+      "sha256": "283e4ff62ea798e72296bc554065846d81cf92afd349631063697d9bfe8a8588",
+      "bytes": 4035
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java",
+      "sha256": "415a4aaf5813ab5ed5c1781cb82e577b2b28748683b202c7261c5caccfaeb3c5",
+      "bytes": 338
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DataKey.java",
+      "sha256": "a65d895e5ae1d4a9005381a1c2aa49f6b23f14d08b42ffc6b6858141066c9085",
+      "bytes": 320
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java",
+      "sha256": "faa003545c01b63e11f6e45646bddd841306acda1672d5a80c7e87b2708a5892",
+      "bytes": 339
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java",
+      "sha256": "80a431ab7525ca61a16706b7e001c3be4debc1449689aadc2e257d9a1f12a923",
+      "bytes": 2690
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java",
+      "sha256": "886aca8ec495927cdc649da7da2663d6958e4f4cb273ad82b8fb2e8d95d86917",
+      "bytes": 908
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java",
+      "sha256": "77c5a6e8b9d767b10213bb2eff01f0b9faa6a1d921c2baf2f8a50211cf8e489f",
+      "bytes": 154
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java",
+      "sha256": "143d69f477362a956397b2f1fa2f55cf51c88f90b923f9e7343c7308e6a10e32",
+      "bytes": 341
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java",
+      "sha256": "4e2ec2f9aa6725692a2223310bc28864db71dd73fefae3dddeebdaba583fc18f",
+      "bytes": 126
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java",
+      "sha256": "fc5bcecab8c757af29ea6d45b3ccdf6b831de1e02b14acd5758f7a26d2c7981b",
+      "bytes": 3817
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java",
+      "sha256": "dbe3f4fba8d7c0a7e253276bbccafb0b4da7dcc6f0730755dd0252591e205ea4",
+      "bytes": 1933
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java",
+      "sha256": "3b02fbdbd2ba7812122a5096fa3a0b138dab34cf0226ca9d2f06dedbf8b6941e",
+      "bytes": 88
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DigestPair.java",
+      "sha256": "fbbfdef3037a3692a8f2e71d3bd4069c5607b458dfcef8dbc06df19685a07ce4",
+      "bytes": 965
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java",
+      "sha256": "9323b1827af42e0ae217fceae387343cb18bdf4cee5f938c6fc47441cf73a727",
+      "bytes": 335
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java",
+      "sha256": "a6b69864892e8ddda47e898a0404965d103ef342be93645da292aa4094d79157",
+      "bytes": 2411
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java",
+      "sha256": "adee4648b5e9801f8a9cfc9c433075c1281e712a8c6a71cc62a9a291a65ea0b4",
+      "bytes": 1732
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/InformationKey.java",
+      "sha256": "0f093f1beb260679cdffee5b0a69be27162c0d0a08f13f601acd0b7967d553a4",
+      "bytes": 525
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java",
+      "sha256": "d7cdcf5cdd64a4c680cdd507b0497080c6b42c443cb51ad318626d7a85883fdf",
+      "bytes": 856
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java",
+      "sha256": "72470db845b604bb38811f5eb210ee90dc4e38c5f5ab3c9e244b345a392e043d",
+      "bytes": 743
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/Registry.java",
+      "sha256": "7a094b10b14298cf7c1f6bdb48d05a845b8398207c3c69bcaea90d63ba351f3b",
+      "bytes": 227
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java",
+      "sha256": "3a99b9b984a80804ec791d58da0cf71d6c654b4eb0b64c004b596215ad122e61",
+      "bytes": 85
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
+      "sha256": "de4dac3e7f0c266db4db839177b22ad360b6adc3a76e928ee00848d14628dce8",
+      "bytes": 550
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/SourceRef.java",
+      "sha256": "3b8ad45f9f36afed74d8eab43b5cf30757dd26e072dfd5e766014cc0c9dead9d",
+      "bytes": 1921
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/SystemKey.java",
+      "sha256": "38bf76ce64cbd132bcb675948fc193c31be5518525cbee80482242bb1edc98c6",
+      "bytes": 326
+    },
+    {
+      "path": "dec-core-context/src/main/java/dec/core/context/model/ViewKey.java",
+      "sha256": "c8ebbfb222f0cf270a119d7e13136a2649defd932199618e2f27d75d3597bc56",
+      "bytes": 320
+    },
+    {
+      "path": "dec-core-context/src/test/java/dec/core/context/tdd/ContextContractBehaviorTest.java",
+      "sha256": "f7b51267de780054e58846b8d4982ad3ad6eda716b798fd705cbf36b9aa7f29f",
+      "bytes": 5124
+    }
+  ],
+  "claim_boundary": "TASK-P1-T01 context-neutral immutable contracts and behavior test only; no T02+ compiler runtime behavior claimed"
+}

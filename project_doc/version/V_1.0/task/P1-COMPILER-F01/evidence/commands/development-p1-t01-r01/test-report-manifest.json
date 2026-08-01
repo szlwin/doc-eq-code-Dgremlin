@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+  "result": "PASSED",
+  "totals": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "reports": [
+    {
+      "path": "TEST-dec.core.context.data.BaseDataContractTest.xml",
+      "sha256": "5b5a0b1741683c05a9b610166f6fbbb4ebd21a340a4afa377812e71e22e39394",
+      "bytes": 6741,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "TEST-dec.core.context.tdd.ContextContractBehaviorTest.xml",
+      "sha256": "738b953f76ea98d77e1e299ee94f4854cb00c270109232b29b9f04aebd12d5ce",
+      "bytes": 7344,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "TEST-dec.core.context.tdd.ContextValueContractTest.xml",
+      "sha256": "72faf76c34695155c4c773623440db92b125176dd4917fbfdae27192ea316a8b",
+      "bytes": 6756,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "TEST-dec.core.context.tdd.EngineContextApiTest.xml",
+      "sha256": "187a74a8efaa90a933336845c20b8a1b845d1537605a10db4e130fbc2a9758ff",
+      "bytes": 6745,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "TEST-dec.core.context.tdd.RegistryImmutabilityTest.xml",
+      "sha256": "b7bb56c84a9d1a3e0093780acb42354d79d1fb4aae583c6589238ad5cbae0b5b",
+      "bytes": 6747,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "workflow_run_id": 30691339716,
+  "artifact_id": 8815769069
+}

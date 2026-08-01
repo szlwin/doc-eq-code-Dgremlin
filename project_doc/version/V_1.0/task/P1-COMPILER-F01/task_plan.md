@@ -545,7 +545,437 @@
     "output_revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
     "validation_evidence_ids": [
       "EVD-000288",
-      "EVD-000289"
+      "EVD-000289",
+      "EVD-000292"
+    ]
+  },
+  {
+    "id": "TASK-P1-T01",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-TDD",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-TDD-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "",
+    "revision_reason": "基于 TP-P1-COMPILER-F01-R01 启动首个纵向增量的 TDD RED，固定 Context 中立不可变公共契约。",
+    "title": "建立 Context 中立不可变编译契约的有效 RED",
+    "objective": "为 dec-core-context 的中立值对象、只读 Registry、EngineContext 和 CoreConfigProjection 建立可编译、可执行、可归因的 RED 门禁。",
+    "phase": "tdd",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P1-R2-006"
+    ],
+    "owner_agent": "TddAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "test_design": "TESTDESIGN-R01@ba7779cf089b",
+      "design": "DESIGN-R05@0b37a9b4dd48"
+    },
+    "allowed_files": [
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/**",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "verify TDD-P1-T01-R01 executable RED and supporting baseline/dependency gates"
+    ],
+    "expected_results": [
+      "测试源码编译通过，现有 BaseDataContractTest 保持 GREEN",
+      "dec-core-context dependency tree 不包含 dec-core-compiler",
+      "三项新测试实际执行为 3 failures、0 errors、0 skipped，退出码非零且失败均由冻结公共契约尚未实现导致",
+      "日志中不存在 compilation、dependency、test selection 或 environment failure",
+      "TDDReviewAgent 对同一 TDD Revision 独立 PASSED"
+    ],
+    "stop_conditions": [
+      "需要改变 DESIGN-R05 的包归属、状态语义或公共字段",
+      "现有依赖迫使 context 反向依赖 compiler",
+      "RED 只能由测试无法编译、依赖、选择或环境错误产生"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "validation_evidence_ids": [
+      "EVD-000290",
+      "EVD-000291"
+    ]
+  },
+  {
+    "id": "TASK-P1-T01-DEV-SKELETON",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-DEVELOPMENT",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-008",
+    "iteration_no": 8,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-007",
+    "revision_reason": "wk -ar 骨架 DEVSKEL-P1-T01-R01 已由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 通过；当前进入具体实现 iteration。",
+    "title": "实现 T01 Context 中立不可变公共契约并转 GREEN",
+    "objective": "在已通过 DEVSKEL-P1-T01-R01 骨架上实现 31 个 Java 8 不可变公共类型，修复 TDD RED，保持 context→compiler 零反向依赖并补充语义回归。",
+    "phase": "development",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P1-T01"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "design": "DESIGN-R05@0b37a9b4dd48",
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64"
+    },
+    "allowed_files": [
+      "dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java",
+      "dec-core-context/src/main/java/dec/core/context/EngineContext.java",
+      "dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ActionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java",
+      "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DataKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DigestPair.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/InformationKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/Registry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java",
+      "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/SourceRef.java",
+      "dec-core-context/src/main/java/dec/core/context/model/SystemKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ViewKey.java",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md",
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContextContractBehaviorTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "verify TASK-P1-T01 concrete implementation GREEN, module regression and dependency direction"
+    ],
+    "expected_results": [
+      "三个冻结 TDD 合同测试全部 GREEN",
+      "BaseDataContractTest 与新增语义测试全部 GREEN",
+      "dec-core-context verify 成功并使用 Java 8 release",
+      "dec-core-context 不依赖 dec-core-compiler",
+      "所有集合防御性复制且无 public mutator/static current",
+      "DiagnosticCode 与 DeferredDefinition/InformationKey 对齐 DESIGN-R05"
+    ],
+    "stop_conditions": [
+      "需要改变已通过骨架的包归属或公共调用边界",
+      "实现引入 context 到 compiler 反向依赖",
+      "通过删除/弱化 TDD 断言或跳过测试获得 GREEN",
+      "提前实现 T02-T15 runtime 行为"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+    "validation_evidence_ids": [
+      "EVD-000295",
+      "EVD-000296"
+    ]
+  },
+  {
+    "id": "TASK-P1-T01-CODE-REVIEW",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-CODE-REVIEW",
+    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "",
+    "revision_reason": "DEV-P1-T01-R01 已通过 Development/TDD Review，进入三项独立最终代码 Review。",
+    "title": "审查 T01 Context 中立不可变公共契约",
+    "objective": "独立验证 DEV-P1-T01-R01 对 DESIGN-R05/TDD-R01 的符合性、工程质量、架构边界和测试可靠性。",
+    "phase": "code_review",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P1-T01-DEV-SKELETON"
+    ],
+    "owner_agent": "ProjectManagerAgent",
+    "reviewer_agents": [
+      "ArchitectureReviewAgent",
+      "CrossModuleIntegrationReviewAgent",
+      "EngineeringStandardsReviewAgent",
+      "ImpactAnalysisReviewAgent",
+      "PerformanceReviewAgent",
+      "SecurityReviewAgent",
+      "SpecComplianceReviewAgent"
+    ],
+    "input_revisions": {
+      "development": "DEV-P1-T01-R01@de1adfd37c9b",
+      "design": "DESIGN-R05@0b37a9b4dd48",
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a"
+    },
+    "allowed_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/review_issues.md",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/**",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/review-report.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/command-result.json"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "verify DEV-P1-T01-R01 final code review scope, standards, architecture and detected risk classifications"
+    ],
+    "expected_results": [
+      "Spec Review confirms no missing requirement or scope drift",
+      "Engineering Review confirms immutable implementation and tests are maintainable",
+      "Architecture Review confirms context remains compiler-neutral and failure-isolated",
+      "No open P0/P1 findings"
+    ],
+    "stop_conditions": [
+      "Any reviewer returns NEEDS_CHANGES or BLOCKED",
+      "Open P0/P1 finding exists",
+      "Review requires changing frozen DESIGN-R05 contract"
+    ],
+    "risk_triggers": [
+      "architecture_change",
+      "cross_module_integration",
+      "impact_analysis",
+      "performance",
+      "security"
+    ],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "validation_evidence_ids": [
+      "EVD-000321",
+      "EVD-000322",
+      "EVD-000323",
+      "EVD-000324"
+    ],
+    "feature_id": "P1-COMPILER-F01"
+  },
+  {
+    "id": "TASK-P1-T01-TESTING",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-TESTING",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "",
+    "revision_reason": "CODEREVIEW-P1-T01-R01 已由七项独立 Review 通过，进入真实源码树的标准 P0 与专项 GREEN 验证。",
+    "title": "验证 T01 Context 不可变契约与主干回归",
+    "objective": "在真实 PR 源码树上验证 T01 合同、行为、模块回归、依赖方向、标准 P0 和故意失败阻断门禁。",
+    "phase": "testing",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P1-T01-CODE-REVIEW"
+    ],
+    "owner_agent": "TestAgent",
+    "reviewer_agents": [
+      "TestEvidenceReviewAgent"
+    ],
+    "input_revisions": {
+      "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "development": "DEV-P1-T01-R01@de1adfd37c9b"
+    },
+    "allowed_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/**",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/test-report-manifest.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/p0-run.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/command-result.json"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "verify TASK-P1-T01 R02 GREEN, Context module verify, dependency direction, standard P0 core build/tests, and intentional failure blocking"
+    ],
+    "expected_results": [
+      "R02 9 tests 全绿",
+      "标准 P0 normal suites 全绿",
+      "故意失败测试被构建门禁正确阻断",
+      "dec-core-context 不依赖 dec-core-compiler",
+      "MySQL 对 T01 明确为不适用而非伪造通过"
+    ],
+    "stop_conditions": [
+      "任何普通测试 failure/error",
+      "故意失败门禁未能阻断构建",
+      "依赖方向出现 context→compiler",
+      "Evidence 无法绑定真实 run/head/artifact"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+    "validation_evidence_ids": [
+      "EVD-000330",
+      "EVD-000331",
+      "EVD-000332"
+    ]
+  },
+  {
+    "id": "TASK-P1-T01-COMPLETION",
+    "logical_task_id": "LOGICAL-TASK-P1-T01-COMPLETION",
+    "feature_id": "P1-COMPILER-F01",
+    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "",
+    "revision_reason": "TESTING-P1-T01-R01 已通过 TestEvidenceReviewAgent，进入 T01 全流程完成验证和 PR 清理。",
+    "title": "验证 TASK-P1-T01 全流程完成与可合并性",
+    "objective": "确认 TDD、架构骨架、具体实现、Code Review、Testing、Evidence、Git checkpoint 与最终干净 PR 全部闭环。",
+    "phase": "completion_verification",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P1-T01-TESTING"
+    ],
+    "owner_agent": "CompletionVerificationAgent",
+    "reviewer_agents": [],
+    "input_revisions": {
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "development": "DEV-P1-T01-R01@de1adfd37c9b",
+      "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "testing": "TESTING-P1-T01-R01@2c618f7c32a6"
+    },
+    "allowed_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/**",
+      "version/V_1.0/work_record.md",
+      "version/V_1.0/work.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/completion-report.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/p0-run.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/clean-tree-manifest.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/command-result.json"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P1-COMPILER-003",
+      "TR-P1-COMPILER-004",
+      "TR-P1-COMPILER-005",
+      "TR-P1-COMPILER-006"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [],
+    "validation_commands": [
+      "verify TASK-P1-T01 lifecycle closure, final clean PR tree and final P0 Build Gate"
+    ],
+    "expected_results": [
+      "所有阶段 Revision 与 Evidence ACTIVE 且可回查",
+      "无开放 P0/P1 finding",
+      "最终 PR 不包含临时 workflow/payload/chunk/trigger",
+      "最终干净 Head 标准 P0 全绿",
+      "T01 状态 PASSED 并交接到 TASK-P1-T02 TDD"
+    ],
+    "stop_conditions": [
+      "任何阶段未 PASSED",
+      "Evidence 摘要或 Git 引用不可解析",
+      "最终 PR 含临时文件",
+      "最终 P0 非成功",
+      "存在开放 P0/P1"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+    "validation_evidence_ids": [
+      "EVD-000333",
+      "EVD-000334",
+      "EVD-000335",
+      "EVD-000336"
     ]
   }
 ]

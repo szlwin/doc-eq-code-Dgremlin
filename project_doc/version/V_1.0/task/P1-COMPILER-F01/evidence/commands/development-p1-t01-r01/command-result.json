@@ -1,0 +1,26 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "verify TASK-P1-T01 concrete implementation GREEN, module regression and dependency direction",
+  "exit_code": 0,
+  "executed_at": "2026-08-01T08:14:12+00:00",
+  "revision": "DEV-P1-T01-R01@de1adfd37c9b",
+  "result": "PASSED",
+  "metrics": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "production_source_count": 31,
+    "behavior_test_source_count": 1,
+    "java_release": 8,
+    "dependency_on_dec_core_compiler": false,
+    "workflow_run_id": 30691339716,
+    "workflow_artifact_id": 8815769069
+  },
+  "source_digest": "de1adfd37c9b6200a9a80f87a9ae631b8a801f916c0abefe09df1177015ff937",
+  "overlay_sha256": "1144bf9bbae771839185e999a2be7d0c4c01ad8eaaa98313ea8dda10ff253e94",
+  "claim_boundary": "GREEN, module regression and dependency direction for TASK-P1-T01 only",
+  "output": "{\"claim_boundary\":\"GREEN, module regression and dependency direction for TASK-P1-T01 only\",\"metrics\":{\"behavior_test_source_count\":1,\"dependency_on_dec_core_compiler\":false,\"errors\":0,\"failures\":0,\"java_release\":8,\"production_source_count\":31,\"skipped\":0,\"tests\":9,\"workflow_artifact_id\":8815769069,\"workflow_run_id\":30691339716},\"overlay_sha256\":\"1144bf9bbae771839185e999a2be7d0c4c01ad8eaaa98313ea8dda10ff253e94\",\"result\":\"PASSED\",\"source_digest\":\"de1adfd37c9b6200a9a80f87a9ae631b8a801f916c0abefe09df1177015ff937\"}",
+  "output_digest": "4fdf9e6060aaa90aee2b98d5fcb5612536fa2954f853d1394799faadbe460acb"
+}

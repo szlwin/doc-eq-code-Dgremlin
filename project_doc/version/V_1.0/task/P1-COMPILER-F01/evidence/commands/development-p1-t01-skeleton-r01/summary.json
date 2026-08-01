@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "verify TASK-P1-T01 architecture skeleton Java 8 compile and package boundary",
+  "exit_code": 0,
+  "executed_at": "2026-08-01T08:01:36+00:00",
+  "revision": "DEVSKEL-P1-T01-R01@57bbc887eb13",
+  "result": "PASSED",
+  "metrics": {
+    "source_count": 31,
+    "class_count": 31,
+    "reflection_probe": "PASSED",
+    "marker_file_count": 24,
+    "issue_count": 0
+  },
+  "source_digest": "57bbc887eb13e3ca6b6beb8253e6f0522fa23b9341f171fa6c445352e04722ab",
+  "issues": [],
+  "claim_boundary": "architecture skeleton compile and boundary validation only; concrete behavior and GREEN are not claimed",
+  "output": "{\"claim_boundary\":\"architecture skeleton compile and boundary validation only; concrete behavior and GREEN are not claimed\",\"issues\":[],\"metrics\":{\"class_count\":31,\"issue_count\":0,\"marker_file_count\":24,\"reflection_probe\":\"PASSED\",\"source_count\":31},\"result\":\"PASSED\",\"source_digest\":\"57bbc887eb13e3ca6b6beb8253e6f0522fa23b9341f171fa6c445352e04722ab\"}",
+  "output_digest": "25e4737a25b30a05f2ea53e94698010e2b866b7dd8b2ecb19194c5e1fbece5c8"
+}

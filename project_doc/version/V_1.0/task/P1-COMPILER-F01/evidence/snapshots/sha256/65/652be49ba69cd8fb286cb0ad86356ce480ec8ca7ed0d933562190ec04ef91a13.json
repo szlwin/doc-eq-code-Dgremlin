@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "verify TASK-P1-T01 R02 GREEN, Context module verify, dependency direction, standard P0 core build/tests, and intentional failure blocking",
+  "exit_code": 0,
+  "executed_at": "2026-08-01T09:02:56+00:00",
+  "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+  "result": "PASSED",
+  "metrics": {
+    "normal_tests": 14,
+    "normal_failures": 0,
+    "normal_errors": 0,
+    "normal_skipped": 0,
+    "intentional_failure_tests": 1,
+    "intentional_failure_failures": 1,
+    "p0_run_id": 30692772905,
+    "p0_head_sha": "2dd7112f814ae0c02ba716b852fa5bfde769fd49",
+    "p0_artifact_id": 8816242828,
+    "p0_artifact_sha256": "1e169da762f154ea9f3d835b3b0e0d7f68c7384a47c0a026a81c1a1b97031a3f",
+    "r02_run_id": 30691339716,
+    "r02_artifact_id": 8815769069,
+    "r02_tests": 9,
+    "r02_failures": 0,
+    "r02_errors": 0,
+    "r02_skipped": 0,
+    "mysql_it": "SKIPPED_NOT_APPLICABLE_T01_NO_DB_CHANGE"
+  },
+  "claim_boundary": "TASK-P1-T01 testing only; T02-T15 and MySQL runtime behavior are not claimed.",
+  "output": "{\"claim_boundary\":\"TASK-P1-T01 testing only; T02-T15 and MySQL runtime behavior are not claimed.\",\"metrics\":{\"intentional_failure_failures\":1,\"intentional_failure_tests\":1,\"mysql_it\":\"SKIPPED_NOT_APPLICABLE_T01_NO_DB_CHANGE\",\"normal_errors\":0,\"normal_failures\":0,\"normal_skipped\":0,\"normal_tests\":14,\"p0_artifact_id\":8816242828,\"p0_artifact_sha256\":\"1e169da762f154ea9f3d835b3b0e0d7f68c7384a47c0a026a81c1a1b97031a3f\",\"p0_head_sha\":\"2dd7112f814ae0c02ba716b852fa5bfde769fd49\",\"p0_run_id\":30692772905,\"r02_artifact_id\":8815769069,\"r02_errors\":0,\"r02_failures\":0,\"r02_run_id\":30691339716,\"r02_skipped\":0,\"r02_tests\":9},\"result\":\"PASSED\"}",
+  "output_digest": "788310503a14ff0a535aaf64a8f056b227fd552e7e5af0ef888552b9299fd0cf"
+}

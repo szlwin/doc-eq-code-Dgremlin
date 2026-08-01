@@ -1,0 +1,118 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] doc-eq-code-parent                                                 [pom]
+[INFO] dec-core-context                                                   [jar]
+[INFO] 
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0                                    [1/2]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ doc-eq-code-parent ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ doc-eq-code-parent ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/target/jacoco.exec
+[INFO] 
+[INFO] --------------------< doc.eq.code:dec-core-context >--------------------
+[INFO] Building dec-core-context 1.0                                      [2/2]
+[INFO]   from dec-core-context/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-context ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-context ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-context ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-context ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-context ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-context ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-context ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running dec.core.context.tdd.EngineContextApiTest
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.069 s <<< FAILURE! -- in dec.core.context.tdd.EngineContextApiTest
+[ERROR] dec.core.context.tdd.EngineContextApiTest.exposesExplicitReadOnlyContextBoundary -- Time elapsed: 0.033 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: TDD RED [CASE-P1-T01-ENGINE-CONTEXT-RED-001]: missing production contract type dec.core.context.model.CompiledModelSet
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at dec.core.context.tdd.ContractReflectionAssertions.requireType(ContractReflectionAssertions.java:21)
+	at dec.core.context.tdd.EngineContextApiTest.exposesExplicitReadOnlyContextBoundary(EngineContextApiTest.java:19)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] Running dec.core.context.tdd.RegistryImmutabilityTest
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.006 s <<< FAILURE! -- in dec.core.context.tdd.RegistryImmutabilityTest
+[ERROR] dec.core.context.tdd.RegistryImmutabilityTest.exposesReadOnlyRegistryContracts -- Time elapsed: 0.002 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: TDD RED [CASE-P1-T01-REGISTRY-RED-001]: missing production contract type dec.core.context.model.DefinitionKey
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at dec.core.context.tdd.ContractReflectionAssertions.requireType(ContractReflectionAssertions.java:21)
+	at dec.core.context.tdd.RegistryImmutabilityTest.exposesReadOnlyRegistryContracts(RegistryImmutabilityTest.java:17)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] Running dec.core.context.tdd.ContextValueContractTest
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.005 s <<< FAILURE! -- in dec.core.context.tdd.ContextValueContractTest
+[ERROR] dec.core.context.tdd.ContextValueContractTest.publishesNeutralImmutableValueTypeClosure -- Time elapsed: 0.004 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: TDD RED [CASE-P1-T01-CONTEXT-VALUE-RED-001]: missing production contract type dec.core.context.model.SourceRef
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at dec.core.context.tdd.ContractReflectionAssertions.requireType(ContractReflectionAssertions.java:21)
+	at dec.core.context.tdd.ContextValueContractTest.publishesNeutralImmutableValueTypeClosure(ContextValueContractTest.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   ContextValueContractTest.publishesNeutralImmutableValueTypeClosure:43 TDD RED [CASE-P1-T01-CONTEXT-VALUE-RED-001]: missing production contract type dec.core.context.model.SourceRef
+[ERROR]   EngineContextApiTest.exposesExplicitReadOnlyContextBoundary:19 TDD RED [CASE-P1-T01-ENGINE-CONTEXT-RED-001]: missing production contract type dec.core.context.model.CompiledModelSet
+[ERROR]   RegistryImmutabilityTest.exposesReadOnlyRegistryContracts:17 TDD RED [CASE-P1-T01-REGISTRY-RED-001]: missing production contract type dec.core.context.model.DefinitionKey
+[INFO] 
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for doc-eq-code-parent 1.0:
+[INFO] 
+[INFO] doc-eq-code-parent ................................. SUCCESS [  0.339 s]
+[INFO] dec-core-context ................................... FAILURE [  1.812 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.268 s
+[INFO] Finished at: 2026-08-01T03:37:18Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.2.5:test (default-test) on project dec-core-context: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :dec-core-context

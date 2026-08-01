@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Test set: dec.core.context.tdd.ContextValueContractTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.005 s <<< FAILURE! -- in dec.core.context.tdd.ContextValueContractTest
+dec.core.context.tdd.ContextValueContractTest.publishesNeutralImmutableValueTypeClosure -- Time elapsed: 0.004 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: TDD RED [CASE-P1-T01-CONTEXT-VALUE-RED-001]: missing production contract type dec.core.context.model.SourceRef
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at dec.core.context.tdd.ContractReflectionAssertions.requireType(ContractReflectionAssertions.java:21)
+	at dec.core.context.tdd.ContextValueContractTest.publishesNeutralImmutableValueTypeClosure(ContextValueContractTest.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
