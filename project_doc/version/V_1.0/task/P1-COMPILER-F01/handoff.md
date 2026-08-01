@@ -1,22 +1,41 @@
 # P1-COMPILER-F01 阶段交接
 
-> `TASK-P1-T01` 已以 `COMPLETION-P1-T01-R01@7be02cd9af4c` 完成 TDD、架构骨架、Development、Code Review、Testing 与 Completion Verification 全流程。
+> `TASK-P1-T01` 的原 R01 Completion 因追溯 Review 被重开；REWORK iteration `I008` 已以 `COMPLETION-P1-T01-R02@a0daaf94f74b` 完成全部流程。原 R01 记录作为历史保留。
 
-## 已完成
+## T01 REWORK 已完成
 
-- TDD：`TDD-P1-T01-R01@4ebeed4dad6a`，有效 RED，`REV-000061` PASSED；
-- Development：`DEV-P1-T01-R01@de1adfd37c9b`，合同与行为测试 GREEN，`REV-000066`～`REV-000068` PASSED；
-- Code Review：`CODEREVIEW-P1-T01-R01@488bc81150f7`，`REV-000069`～`REV-000075` PASSED，无开放 Finding；
-- Testing：`TESTING-P1-T01-R01@2c618f7c32a6`，`REV-000076` PASSED；
-- Completion：`COMPLETION-P1-T01-R01@7be02cd9af4c`，Evidence `EVD-000333`～`EVD-000336` ACTIVE；
-- 最终干净代码 Head `a3c584de3a4d08378706e101af27bdad82976629` 的 P0 Run `30695457680` 全绿；
-- 86 条结构化 Acceptance Assertion 全部 VERIFIED；
-- `dec-core-context` 保持 Java 8、不可变、无 public mutator、无 static current，且不依赖 `dec-core-compiler`；
-- T01 无数据库变更，MySQL Job 明确为不适用，不计为伪造通过；
-- 开放 P0/P1：无。
+- Design Revision：`DESIGN-R06@P1-T01-REWORK-I008`；
+- Implementation Plan：`TP-P1-COMPILER-F01-R02@P1-T01-REWORK-I008`；
+- TDD：`TDD-P1-T01-R02@0ef4578bdff9`，P0 Run `30704998465` 形成有效 RED，`REV-000085` PASSED；
+- Architecture Skeleton：`DEVSKEL-P1-T01-R02@55ebd6d2f203`，`REV-000086`、`REV-000087` PASSED；
+- Development：`DEV-P1-T01-R02@a0daaf94f74b`，17 项 Context 测试 GREEN；
+- Code Review：`CODEREVIEW-P1-T01-R02@a0daaf94f74b`，`REV-000088`～`REV-000091` PASSED；
+- Testing：`TESTING-P1-T01-R02@a0daaf94f74b`，`REV-000092` PASSED；
+- Completion：`COMPLETION-P1-T01-R02@a0daaf94f74b`，`REV-000093` PASSED；
+- Evidence：`EVD-000343`～`EVD-000348` ACTIVE；
+- 干净代码 Head：`a0daaf94f74b38186bc1e80ecc00903744bac0b4`；
+- 干净代码 P0 Run：`30705625463`，完整 Reactor 与失败门禁均 PASSED；
+- MySQL Job：T01 无数据库变更，`SKIPPED_NOT_APPLICABLE`；
+- 追溯 Review 的 5 个 P1 Finding 全部 CLOSED；
+- 开放 P0/P1 Finding：无。
 
-## 下一任务
+## 已冻结的公共合同
 
-下一任务为 `TASK-P1-T02`：创建 `dec-core-compiler` 模块与公共编译入口。应从最新 `dev_all` 新建独立功能分支，先由 `TddAgent` 建立 `CompilerApiContractTest` 与 `ModuleDependencyTest` 的有效 RED，再按 `-ar` 进入架构骨架 Review。
+- `DirectoryKey` 身份为 `BusinessScopeKey + name`；
+- `PublishedSourceManifest`、`PublishedSourceDescriptor`、`PublishedSourceDependency` 位于中立 Context 模块；
+- `CompiledModelSet` 包含 SourceManifest、完整 Registry、Typed Registry、Deferred、Diagnostic、Digest 和版本事实；
+- ERROR Diagnostic 不能进入 `CompiledModelSet`；
+- Definition Registry 和 Deferred Registry 拒绝 Key/Value 身份错配；
+- `DeferredDefinition` 直接持有完整 `DeferredKey`；
+- `CoreConfigProjection` 只能从同一个 `CompiledModelSet` 派生；
+- `EngineContext` 只公开 `EngineContext(CompiledModelSet)`；
+- `dec-core-context` 不依赖 `dec-core-compiler`，不存在第二运行时或 static current。
 
-`TASK-P1-T02` 当前仅完成交接，尚未启动 Attempt、未创建代码、未创建 PR。
+## 下一步
+
+1. 先将 PR #16 合并到 `dev_all`；
+2. PR #15（TASK-P1-T02）必须基于新的 `dev_all` rebase，并适配 `CompiledModelSet`、`DeferredDefinition` 等新合同；
+3. 对 T02 重新执行受影响测试、独立 Review、Testing 和 Completion Verification；
+4. T02 重验证完成前不得启动 TASK-P1-T03。
+
+当前没有在 T01 分支启动 T02 或 T03 实现。
