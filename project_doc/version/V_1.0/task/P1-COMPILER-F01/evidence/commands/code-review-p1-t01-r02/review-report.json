@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "kind": "code_review_report",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I008",
+  "revision": "CODEREVIEW-P1-T01-R02@a0daaf94f74b",
+  "input_revision": "DEV-P1-T01-R02@a0daaf94f74b",
+  "reviewed_head_sha": "a0daaf94f74b38186bc1e80ecc00903744bac0b4",
+  "reviews": [
+    {
+      "review_id": "REV-000088",
+      "reviewer": "SpecComplianceReviewAgent",
+      "result": "PASSED",
+      "checked": [
+        "DESIGN-R06 published fact closure",
+        "DirectoryKey BusinessScope identity",
+        "ERROR publication boundary",
+        "Projection source consistency",
+        "Definition and Deferred complete identity"
+      ]
+    },
+    {
+      "review_id": "REV-000089",
+      "reviewer": "EngineeringStandardsReviewAgent",
+      "result": "PASSED",
+      "checked": [
+        "Java 8 release compatibility",
+        "defensive copying and stable ordering",
+        "Override annotations on separate lines",
+        "Chinese method and important-logic comments"
+      ]
+    },
+    {
+      "review_id": "REV-000090",
+      "reviewer": "ArchitectureReviewAgent",
+      "result": "PASSED",
+      "checked": [
+        "dec-core-context has no compiler dependency",
+        "published source types are parser-neutral",
+        "no second runtime or global current context",
+        "projection is derived rather than independently assembled"
+      ]
+    },
+    {
+      "review_id": "REV-000091",
+      "reviewer": "TDDReviewAgent",
+      "result": "PASSED",
+      "checked": [
+        "six valid RED assertions were preserved as semantic GREEN contracts",
+        "oracle expanded to manifest closure and typed registry behavior",
+        "negative tests were not weakened"
+      ]
+    }
+  ],
+  "closed_findings": [
+    {
+      "finding_id": "FND-P1-T01-RETRO-001",
+      "severity": "P1",
+      "summary": "DirectoryKey missing BusinessScope namespace",
+      "resolution": "DirectoryKey now owns BusinessScopeKey and derives canonical identity from owner plus name"
+    },
+    {
+      "finding_id": "FND-P1-T01-RETRO-002",
+      "severity": "P1",
+      "summary": "CompiledModelSet missing published source and typed registry closure",
+      "resolution": "PublishedSourceManifest and TypedDefinitionRegistries are required published facts"
+    },
+    {
+      "finding_id": "FND-P1-T01-RETRO-003",
+      "severity": "P1",
+      "summary": "Invalid ERROR model and independent projection could be constructed",
+      "resolution": "ERROR diagnostics are rejected and projection is derived only from the same model"
+    },
+    {
+      "finding_id": "FND-P1-T01-RETRO-004",
+      "severity": "P1",
+      "summary": "Registry key and definition identity could disagree",
+      "resolution": "Definition and Deferred registries reject complete identity mismatch"
+    },
+    {
+      "finding_id": "FND-P1-T01-RETRO-005",
+      "severity": "P1",
+      "summary": "T01 tests validated generic shape rather than design semantics",
+      "resolution": "Eight direct rework tests and strengthened API/value tests freeze all reviewed invariants"
+    },
+    {
+      "finding_id": "FND-P1-T01-R02-006",
+      "severity": "P3",
+      "summary": "Projection static factory assertion used indirect boolean equality",
+      "resolution": "Replaced with explicit assertTrue before final clean-code checkpoint"
+    }
+  ],
+  "open_p0_p1_findings": [],
+  "evidence_id": "EVD-000346",
+  "result": "PASSED"
+}
