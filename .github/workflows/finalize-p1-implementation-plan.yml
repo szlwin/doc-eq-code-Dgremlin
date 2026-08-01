@@ -61,6 +61,11 @@ jobs:
           git rm .github/workflows/finalize-p1-implementation-plan.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PYNORM'
+          from pathlib import Path
+          path = Path('project_doc/version/V_1.0/work_record.md')
+          path.write_text(path.read_text(encoding='utf-8').rstrip() + '\n', encoding='utf-8')
+          PYNORM
           git add project_doc
           git diff --cached --check
           git commit -m 'docs(implementation-plan): complete P1 wk -tp plan' \
