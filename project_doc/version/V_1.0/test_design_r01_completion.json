@@ -1,0 +1,22 @@
+{
+  "revision": "TESTDESIGN-R01@ba7779cf089b",
+  "case_count": 41,
+  "tr_count": 9,
+  "ac_count": 9,
+  "business_codes": 23,
+  "design_codes": 7,
+  "evidence_ids": [
+    "EVD-000286",
+    "EVD-000287"
+  ],
+  "review_ids": [
+    "REV-000057",
+    "REV-000058",
+    "REV-000059",
+    "REV-000060"
+  ],
+  "next_phase": "implementation_plan",
+  "next_agent": "ImplementationPlanAgent",
+  "test_case_sha256": "4f9e29bbc345c592dec350d1f2977f7f63ee3a5f9725159739eb4f041b6289bb",
+  "matrix_sha256": "d8093126747fbb33f92c523e436eefed9e3f7880e277b0cd8c988b3284e5f567"
+}

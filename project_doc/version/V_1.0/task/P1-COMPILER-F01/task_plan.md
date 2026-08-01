@@ -404,7 +404,7 @@
     "title": "形成 DESIGN-R05 的可执行测试设计",
     "objective": "基于 DESIGN-R05 将 9 条 TR、23 个稳定业务错误、源图、Canonical/Raw、TypedKey、Deferred、Diagnostic、原子发布、并发、安全和退役边界转为可执行 Case 与非测试验证。",
     "phase": "test_design",
-    "status": "TODO",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-DESIGN-001"
     ],
@@ -446,7 +446,9 @@
       "FLOW-CONFIG-COMPILE"
     ],
     "flow_step_refs": [],
-    "validation_commands": [],
+    "validation_commands": [
+      "validate TESTDESIGN-R01 machine block and evidence command result"
+    ],
     "expected_results": [
       "每条适用 TR 至少映射一个可执行 Case，Case 可反向追溯到需求、设计 seam 和 acceptance assertion",
       "覆盖正常、边界、异常、安全、并发、兼容、超时、取消、CAS conflict 和失败不发布",
@@ -461,10 +463,13 @@
       "不得遗漏失败路径、禁止副作用、Case 反向追踪或当前 DESIGN-R05 输入绑定"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "TESTDESIGN-R01@ba7779cf089b",
+    "validation_evidence_ids": [
+      "EVD-000286",
+      "EVD-000287"
+    ]
   },
   {
     "id": "TASK-P1-R2-006",
@@ -491,7 +496,8 @@
     "input_revisions": {
       "requirement_analysis": "REQAN-R05@7de35e8dc15b",
       "business_model": "BM-R05@4ecb1f8c09f4",
-      "design": "DESIGN-R05@0b37a9b4dd48"
+      "design": "DESIGN-R05@0b37a9b4dd48",
+      "test_design": "TESTDESIGN-R01@ba7779cf089b"
     },
     "allowed_files": [
       "version/V_1.0/task/P1-COMPILER-F01/development_tasks.yaml",

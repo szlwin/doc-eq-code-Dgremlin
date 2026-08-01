@@ -1,42 +1,69 @@
-# P1-COMPILER-F01 分析测试矩阵
+# P1-COMPILER-F01 测试矩阵
 
-> Revision：`REQAN-R05@7de35e8dc15b`。所有 Case 以 `REQCONF-R04@c186ce681e1e` 为输入，动态实现留给后续测试设计/TDD；本矩阵固定验收语义与失败边界。
+> Revision：`TESTDESIGN-R01@ba7779cf089b`。本矩阵由 `TestDesignAgent` 基于 `DESIGN-R05@0b37a9b4dd48` 冻结；详细 Given/When/Then、禁止副作用、RED 合同和命令见 [test_case.md](test_case.md)。
 
-| Case | AC / BR / TR | 层级 | 输入 | 主要断言 | 失败/恢复断言 |
+| Case | TR | AC | 类型 | 主要 oracle | 失败 code |
 |---|---|---|---|---|---|
-| CASE-P1-MIX-DISCOVERY-001 | AC-001 / BR-001～004 / TR-001 | fixture contract | 实际 `mix` | 发现 10 文件，root 与 system 边类型正确，sourceId 稳定排序 | 缺文件、重复 sourceId、路径逃逸阻断；不访问未授权源 |
-| CASE-P1-MIX-DISCOVERY-ORDER-001 | AC-001 / BR-003～004 | boundary | 打乱目录枚举和合法前向引用 | source 集、符号结果和 semanticDigest 不变 | 不依赖文件系统顺序 |
-| CASE-P1-MIX-RAW-001 | AC-002 / BR-004、007、013 / TR-002 | compiler contract | 实际 XML + 最小同义 YAML | 5 Data、2 View、4 System、14 RuleView、16 Information、1 Scope、5/8/4 D/A/P 全部进入 RawDefinitionSet | 未知节点不静默丢弃；编译结果不持有 DOM/YAML Node |
-| CASE-P1-SYMBOL-001 | AC-003 / BR-005～006、009 / TR-003 | unit/contract | 前向引用、同名异类型、重复 Key | 强类型 Key 分离，合法引用成功，Diagnostic 稳定 | 重复 Key 不覆盖，ERROR 不发布 |
-| CASE-P1-RULE-SYSTEM-001 | AC-003 / BR-005、017 | negative | Rule 文件来源 System 与 RuleView.system 冲突 | `MIX-REF-RULE-SYSTEM-MISMATCH` | 不猜测 owner，不发布 Context |
-| CASE-P1-SYSTEM-INFORMATION-001 | AC-003、008 / BR-016～019 / TR-003、008 | fixture contract | 当前 4 System | 16 Information 全部归 System；BusinessScope 无 Information | System 外 View/rule 或 BusinessScope Information 阻断 |
-| CASE-P1-COMMON-EXPRESSION-001 | AC-003、008 / BR-016、019 / TR-008 | fixture contract | `common.paySuccess/payError` | common 无 Data/View/Rule/ModelAccess；两个 Information 仅 expression；引用均完整限定且存在 | common 非 expression 成员、未知/裸引用阻断 |
-| CASE-P1-COMMON-OWNER-NEGATIVE-001 | AC-008 / BR-016、019 | negative | 把 `payment.error and order.payErrorStatus` 放回 order | 普通 System 只允许本 System expression | 产生跨 System owner ERROR，不自动迁移 |
-| CASE-P1-COMMON-CYCLE-DEFERRED-001 | AC-004、008 / BR-007～008 | deferred boundary | common expression 间接循环 | P1 解析 Key 并登记 P3 Deferred | P1 不求值；P3 必须检测循环，不能静默缓存 |
-| CASE-P1-MODEL-ACCESS-TARGET-MAIN-001 | AC-008、009 / BR-018、020 / TR-009 | unit/fixture | `OrderInfo.user -> UserInfo(property=user,target-main=user)` | source path 保持 `user`，selector 首先命中 target-main，绑定根目标 | 不使用同名猜测或 root-property |
-| CASE-P1-MODEL-ACCESS-PROPERTY-PATH-001 | AC-009 / BR-020 | unit | selector 未命中 target-main 但命中嵌套 property | 逐段、区分大小写、精确绑定 | 中间段非复合、缺段或大小写不同产生 NOT_FOUND |
-| CASE-P1-MODEL-ACCESS-MULTI-REF-001 | AC-008、009 / BR-018、020 | boundary | 一个 read/write 多个 ref | 每个 ref 独立、唯一、无冲突绑定 | 完全重复、重叠写或多候选产生 DUPLICATE/AMBIGUOUS |
-| CASE-P1-MODEL-ACCESS-VIEW-OWNER-001 | AC-008、009 / BR-017～020 | negative | ref@view 未在当前 System.view-info | `MIX-REF-VIEW-NOT-DECLARED` | 不跨 View 或跨 System 搜索 |
-| CASE-P1-DEFERRED-001 | AC-004 / BR-007～008、015、018～019 / TR-004 | compiler contract | ModelAccess、expression、Directory、Action、Produce | requiredStage/reason/SourceRef/已解析 Key 完整 | P1 不执行 P2～P7 语义；缺字段阻断 |
-| CASE-P1-CONTEXT-001 | AC-005 / BR-009～011 / TR-005 | concurrency | 两组配置并发编译、一次错误编译 | Context 隔离、摘要稳定、Registry 不可变 | ERROR 不替换旧 Context；无静态 current |
-| CASE-P1-DIGEST-001 | AC-005 / BR-003、010 | boundary | 等义源顺序、注释/格式变化 | semanticDigest 对同义语义稳定，sourceDigest 反映原文 | 并行调度不改变 Diagnostic/摘要排序 |
-| CASE-P1-PROJECTION-001 | AC-006 / BR-011～012 / TR-006 | compatibility | 新 Context 的 Data/View/Rule | 只读投影与 Registry 一致 | 写 API 拒绝，无双写/第二 Registry |
-| CASE-P1-RETIREMENT-001 | AC-007 / BR-014～015 / TR-007 | architecture/build | 仓库、POM、依赖树、服务、反射、artifact | 无 `dec-expand-declaration` 和 Adapter | 任一残留阻断；恢复只通过 Git |
-| CASE-P1-SECURITY-XML-001 | AC-001、002 / BR-013 | security | XML 外部实体、网络 URI、路径逃逸 | 读取/解析边界拒绝并记录 SourceRef | 不访问网络或根目录外资源 |
-| CASE-P1-SECURITY-YAML-001 | AC-002 / BR-013 | security | YAML 任意类型标签/别名攻击边界 | 安全 Node 加载 | 不实例化任意 Java 类型 |
-| CASE-P1-DIAGNOSTIC-ORDER-001 | AC-003～005 | audit | 多文件多 ERROR、不同执行顺序 | 固定排序 `sourceId,line,column,code,entityKey,pass` | 重跑输出一致 |
-| CASE-P1-PUBLISH-ATOMIC-001 | AC-005 / BR-009 | recovery | 发布前最后一步失败 | 无部分模型可见，旧 Context 保持 | 新 Session 修复后可重试 |
+| `CASE-P1-TD-SOURCE-MANIFEST-001` | TR-P1-COMPILER-001 | AC-P1-COMPILER-001 | contract | SourceManifest 恰好包含 10 个固定 sourceId；声明边恰好 7 条且 edgeType/from/target/SourceRef 精确匹配；inventory 为 5 Data、2 View、4 System、14 RuleView、16 Information、1 Scope、5 Directory、8 Action、4 Produce。 | — |
+| `CASE-P1-TD-SOURCE-ORDER-001` | TR-P1-COMPILER-001, TR-P1-COMPILER-005 | AC-P1-COMPILER-001, AC-P1-COMPILER-005 | boundary | sourceId、边集合、Diagnostic 顺序和 semanticDigest 完全一致；sourceDigest 可因原文字节变化而独立变化。 | MIX-DIGEST-NONDETERMINISTIC |
+| `CASE-P1-TD-SOURCE-POLICY-001` | TR-P1-COMPILER-001 | AC-P1-COMPILER-001 | negative | 统一返回 FAILED Diagnostic=MIX-SOURCE-POLICY，SourceRef 指向声明位置。 | MIX-SOURCE-POLICY |
+| `CASE-P1-TD-SOURCE-NOT-FOUND-001` | TR-P1-COMPILER-001 | AC-P1-COMPILER-001 | negative | 产生 MIX-SOURCE-NOT-FOUND；CompilationSession FAILED；Publisher 调用 0 次。 | MIX-SOURCE-NOT-FOUND |
+| `CASE-P1-TD-SOURCE-SECURITY-001` | TR-P1-COMPILER-001 | AC-P1-COMPILER-001 | security | 访问前拒绝并产生 MIX-SOURCE-PATH-ESCAPE；网络/根外读取计数为 0。 | MIX-SOURCE-PATH-ESCAPE |
+| `CASE-P1-TD-SOURCE-DUPLICATE-001` | TR-P1-COMPILER-001 | AC-P1-COMPILER-001 | negative | 两组均以 MIX-SOURCE-DUPLICATE-ID 阻断，不覆盖已有 Source。 | MIX-SOURCE-DUPLICATE-ID |
+| `CASE-P1-TD-FRONTEND-XML-001` | TR-P1-COMPILER-002 | AC-P1-COMPILER-002 | security | 解析前/解析中拒绝，产生 MIX-FRONTEND-XML-UNSAFE；外部访问计数 0。 | MIX-FRONTEND-XML-UNSAFE |
+| `CASE-P1-TD-FRONTEND-YAML-001` | TR-P1-COMPILER-002 | AC-P1-COMPILER-002 | security | 产生 MIX-FRONTEND-YAML-UNSAFE；不实例化任意类型。 | MIX-FRONTEND-YAML-UNSAFE |
+| `CASE-P1-TD-CANONICAL-PARITY-001` | TR-P1-COMPILER-002, TR-P1-COMPILER-005 | AC-P1-COMPILER-002, AC-P1-COMPILER-005 | contract | CanonicalDocumentNode 和 semanticDigest 等价；SourceRef 保留各自来源；Canonical 不持有 DOM/YAML Node。 | — |
+| `CASE-P1-TD-STRUCTURE-UNKNOWN-001` | TR-P1-COMPILER-002 | AC-P1-COMPILER-002 | negative | 所有 P1 模式均产生 ERROR MIX-STRUCTURE-UNKNOWN，未知节点 SourceRef 精确。 | MIX-STRUCTURE-UNKNOWN |
+| `CASE-P1-TD-RAW-INVENTORY-001` | TR-P1-COMPILER-002 | AC-P1-COMPILER-002 | contract | RawDefinitionSet 数量与类型精确匹配固定 inventory，全部对象有 SourceRef。 | — |
+| `CASE-P1-TD-SYMBOL-DUPLICATE-001` | TR-P1-COMPILER-003 | AC-P1-COMPILER-003 | negative | 同 TypedKey 产生 MIX-SYMBOL-DUPLICATE；异类型同名可共存。 | MIX-SYMBOL-DUPLICATE |
+| `CASE-P1-TD-REFERENCE-001` | TR-P1-COMPILER-003 | AC-P1-COMPILER-003 | contract | 全部注册后合法前向引用成功；未知 key 产生 MIX-REF-UNKNOWN。 | MIX-REF-UNKNOWN |
+| `CASE-P1-TD-RULE-SYSTEM-001` | TR-P1-COMPILER-003, TR-P1-COMPILER-008 | AC-P1-COMPILER-003, AC-P1-COMPILER-008 | negative | 每个冲突均产生 MIX-REF-RULE-SYSTEM-MISMATCH。 | MIX-REF-RULE-SYSTEM-MISMATCH |
+| `CASE-P1-TD-INFORMATION-OWNER-001` | TR-P1-COMPILER-003, TR-P1-COMPILER-008 | AC-P1-COMPILER-003, AC-P1-COMPILER-008 | negative | 产生 MIX-INFORMATION-OWNER；BusinessScope Information 数为 0。 | MIX-INFORMATION-OWNER |
+| `CASE-P1-TD-COMMON-SUCCESS-001` | TR-P1-COMPILER-004, TR-P1-COMPILER-008 | AC-P1-COMPILER-004, AC-P1-COMPILER-008 | contract | 仅解析 system-qualified InformationKey，登记 P3 Deferred；common 无 Data/View/RuleView/ModelAccess。 | — |
+| `CASE-P1-TD-INFORMATION-CROSS-SYSTEM-001` | TR-P1-COMPILER-008 | AC-P1-COMPILER-008 | negative | 产生 MIX-INFORMATION-CROSS-SYSTEM。 | MIX-INFORMATION-CROSS-SYSTEM |
+| `CASE-P1-TD-COMMON-MEMBER-001` | TR-P1-COMPILER-008 | AC-P1-COMPILER-008 | negative | 逐类产生 MIX-COMMON-MEMBER。 | MIX-COMMON-MEMBER |
+| `CASE-P1-TD-COMMON-QUALIFIED-001` | TR-P1-COMPILER-008 | AC-P1-COMPILER-008 | negative | 产生 MIX-COMMON-UNQUALIFIED，relatedRefs 指向问题 token。 | MIX-COMMON-UNQUALIFIED |
+| `CASE-P1-TD-VIEW-BOUNDARY-001` | TR-P1-COMPILER-008, TR-P1-COMPILER-009 | AC-P1-COMPILER-008, AC-P1-COMPILER-009 | negative | 产生 MIX-REF-VIEW-NOT-DECLARED。 | MIX-REF-VIEW-NOT-DECLARED |
+| `CASE-P1-TD-MODEL-ACCESS-TARGET-MAIN-001` | TR-P1-COMPILER-008, TR-P1-COMPILER-009 | AC-P1-COMPILER-008, AC-P1-COMPILER-009 | contract | selector 首先且仅命中 target-main 根目标，sourcePath 仍为 user。 | — |
+| `CASE-P1-TD-MODEL-ACCESS-PATH-001` | TR-P1-COMPILER-009 | AC-P1-COMPILER-009 | contract | 区分大小写逐段命中唯一目标。 | — |
+| `CASE-P1-TD-MODEL-ACCESS-NOT-FOUND-001` | TR-P1-COMPILER-009 | AC-P1-COMPILER-009 | negative | 产生 MIX-MODEL-ACCESS-NOT-FOUND。 | MIX-MODEL-ACCESS-NOT-FOUND |
+| `CASE-P1-TD-MODEL-ACCESS-AMBIGUOUS-001` | TR-P1-COMPILER-009 | AC-P1-COMPILER-009 | negative | 逐种产生 MIX-MODEL-ACCESS-AMBIGUOUS，零绑定发布。 | MIX-MODEL-ACCESS-AMBIGUOUS |
+| `CASE-P1-TD-MODEL-ACCESS-NON-COMPOSITE-001` | TR-P1-COMPILER-009 | AC-P1-COMPILER-009 | negative | 产生 MIX-MODEL-ACCESS-NON-COMPOSITE。 | MIX-MODEL-ACCESS-NON-COMPOSITE |
+| `CASE-P1-TD-DEFERRED-COMPLETE-001` | TR-P1-COMPILER-004 | AC-P1-COMPILER-004 | contract | 完整项冻结成功；任一字段缺失产生 MIX-DEFERRED-INCOMPLETE。 | MIX-DEFERRED-INCOMPLETE |
+| `CASE-P1-TD-DEFERRED-NO-RUNTIME-001` | TR-P1-COMPILER-004, TR-P1-COMPILER-008 | AC-P1-COMPILER-004, AC-P1-COMPILER-008 | boundary | Information evaluator、Action/Directory executor、Query planner、Transaction manager 调用均为 0。 | — |
+| `CASE-P1-TD-PUBLISH-SUCCESS-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | contract | 同一 compileAndPublish 调用内 Publisher 恰好 1 次，返回 PUBLISHED 与完整不可变 Context；返回后不再调用。 | — |
+| `CASE-P1-TD-PUBLISH-BLOCKED-001` | TR-P1-COMPILER-003, TR-P1-COMPILER-005 | AC-P1-COMPILER-003, AC-P1-COMPILER-005 | negative | FAILED/MIX-PUBLICATION-BLOCKED；model/context/digest 不可取得；Publisher 0 次；旧 Context digest 不变。 | MIX-PUBLICATION-BLOCKED |
+| `CASE-P1-TD-PUBLISH-TIMEOUT-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | failure | FAILED/MIX-COMPILATION-TIMED-OUT；Publisher 0 次；状态机结束 FAILED。 | MIX-COMPILATION-TIMED-OUT |
+| `CASE-P1-TD-PUBLISH-CANCEL-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | failure | FAILED/MIX-COMPILATION-CANCELLED；Publisher 0 次；旧 Context 保持。 | MIX-COMPILATION-CANCELLED |
+| `CASE-P1-TD-CONTEXT-CONSTRUCTION-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | failure | FAILED/MIX-CONTEXT-CONSTRUCTION-FAILED；Publisher 0 次；无 model/context/digest。 | MIX-CONTEXT-CONSTRUCTION-FAILED |
+| `CASE-P1-TD-PUBLISH-CONFLICT-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | concurrency | FAILED/MIX-PUBLICATION-CONFLICT；Publisher 1 次；现有新 Context 不被覆盖。 | MIX-PUBLICATION-CONFLICT |
+| `CASE-P1-TD-PUBLISH-FAILURE-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | failure | FAILED/MIX-PUBLICATION-FAILURE；Publisher 1 次；旧 Context 保持。 | MIX-PUBLICATION-FAILURE |
+| `CASE-P1-TD-DIGEST-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | determinism | 同义输入 semanticDigest 相同，非同义不同；sourceDigest 反映原文；digest 输入不含 DigestPair 自身。 | MIX-DIGEST-NONDETERMINISTIC |
+| `CASE-P1-TD-CONTEXT-ISOLATION-001` | TR-P1-COMPILER-005, TR-P1-COMPILER-006 | AC-P1-COMPILER-005, AC-P1-COMPILER-006 | concurrency | Registry/Diagnostic/digest 无交叉污染；修改拒绝并产生/映射 MIX-CONTEXT-MUTATION；无 static mutable current。 | MIX-CONTEXT-MUTATION |
+| `CASE-P1-TD-PROJECTION-001` | TR-P1-COMPILER-006 | AC-P1-COMPILER-006 | compatibility | 读取与 CompiledModelSet 一致；写操作产生 MIX-PROJECTION-WRITE；不存在第二 Registry。 | MIX-PROJECTION-WRITE |
+| `CASE-P1-TD-DIAGNOSTIC-CATALOG-001` | TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P1-COMPILER-005, TR-P1-COMPILER-006, TR-P1-COMPILER-007, TR-P1-COMPILER-008, TR-P1-COMPILER-009 | AC-P1-COMPILER-001, AC-P1-COMPILER-002, AC-P1-COMPILER-003, AC-P1-COMPILER-004, AC-P1-COMPILER-005, AC-P1-COMPILER-006, AC-P1-COMPILER-007, AC-P1-COMPILER-008, AC-P1-COMPILER-009 | contract | 23 个稳定 code 均有 code/severity/SourceRef/definitionKey/relatedRefs/pass/recoveryHint；排序为 sourceId,line,column,code,entityKey,pass。 | — |
+| `CASE-P1-TD-OBSERVER-TIMING-001` | TR-P1-COMPILER-005 | AC-P1-COMPILER-005 | observability | discovery/parse/每 pass/digest 各一次非负 elapsedNanos；状态转换完整；Observer 异常仅增加非 ERROR MIX-OBSERVER-FAILURE，不改变原结果/context/digest。 | MIX-OBSERVER-FAILURE |
+| `CASE-P1-TD-RETIREMENT-001` | TR-P1-COMPILER-007 | AC-P1-COMPILER-007 | architecture | dec-expand-declaration、LegacyDeclarationAdapter、复制实现和第二运行时残留数为 0；否则 MIX-RETIREMENT-RESIDUE。 | MIX-RETIREMENT-RESIDUE |
+| `CASE-P1-TD-JAVA8-MODULE-001` | TR-P1-COMPILER-005, TR-P1-COMPILER-007 | AC-P1-COMPILER-005, AC-P1-COMPILER-007 | architecture | Java 8 编译通过；无 record/List.of/Map.of/Optional.isEmpty/var；compiler core 无 DOM4J/SnakeYAML/SQL/MySQL/demo 生产依赖；context 不反向依赖 compiler。 | — |
 
-## 覆盖摘要
+## 覆盖门禁
 
-| AC | 至少覆盖 Case | 覆盖类型 |
+- Case：41 个，ID 唯一；
+- TR：`TR-P1-COMPILER-001`～`009` 全覆盖；
+- AC：`AC-P1-COMPILER-001`～`009` 全覆盖；
+- BM-R05：23 个稳定业务 Diagnostic code 全覆盖；
+- DESIGN-R05：超时、取消、Context 构造失败、CAS conflict、Publisher failure、Observer failure 和未知结构均有专用 Case；
+- 测试层级覆盖 unit、contract、boundary、negative、security、concurrency、compatibility、architecture；
+- 每个 Case 都定义禁止副作用和有效 RED，未实现模块/依赖失败不计 RED。
+
+## 执行批次
+
+| 批次 | Case 范围 | 主要命令 |
 |---|---|---|
-| AC-001 | DISCOVERY、ORDER、SECURITY-XML | 正常、顺序、依赖失败、安全 |
-| AC-002 | RAW、SECURITY-YAML | XML/YAML、数量、未知节点、安全 |
-| AC-003 | SYMBOL、RULE-SYSTEM、SYSTEM-INFORMATION、COMMON | Key、重复、归属、未知引用 |
-| AC-004 | DEFERRED、COMMON-CYCLE-DEFERRED | 后续阶段边界、循环语义 Deferred |
-| AC-005 | CONTEXT、DIGEST、DIAGNOSTIC、PUBLISH-ATOMIC | 幂等、并发、事务、恢复、审计 |
-| AC-006 | PROJECTION | 兼容读、写拒绝、第二事实源禁止 |
-| AC-007 | RETIREMENT | 目录、依赖、服务、artifact、Git 恢复 |
-| AC-008 | SYSTEM-INFORMATION、COMMON、OWNER-NEGATIVE、VIEW-OWNER | 4 System、common、所有权、跨 View |
-| AC-009 | TARGET-MAIN、PROPERTY-PATH、MULTI-REF、VIEW-OWNER | 主匹配、回退、歧义、失败 |
+| TD-B01 | SourceGraph/Frontend/Raw | `./mvnw -pl dec-core-compiler -am -Dtest=MixSourceResolverContractTest,CanonicalParityContractTest,RawDefinitionInventoryTest test` |
+| TD-B02 | Symbol/Information/ModelAccess/Deferred | `./mvnw -pl dec-core-compiler -am -Dtest=TypedSymbolTableTest,InformationOwnershipPolicyTest,ModelAccessSelectorPolicyTest,DeferredDefinitionCompletenessTest test` |
+| TD-B03 | Publication/Digest/Context | `./mvnw -pl dec-core-compiler,dec-core-context -am -Dtest=AtomicPublicationContractTest,SemanticDigestContractTest,EngineContextIsolationTest test` |
+| TD-B04 | Diagnostic/Observer | `./mvnw -pl dec-core-compiler -am -Dtest=DiagnosticCatalogContractTest,CompilationObserverContractTest test` |
+| TD-B05 | Architecture/Retirement | Java 8 compile、`dependency:tree`、repository/artifact/static scans |
+
+批次必须串行执行；单批失败后先定位最早责任阶段，不继续以其它批次通过掩盖失败。
