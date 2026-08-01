@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_red_summary",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I008",
+  "revision": "TDD-P1-T01-R02@0ef4578bdff9",
+  "input_revisions": {
+    "design": "DESIGN-R06@P1-T01-REWORK-I008",
+    "implementation_plan": "TP-P1-COMPILER-F01-R02@P1-T01-REWORK-I008",
+    "retrospective_review": "T01-RETRO-REVIEW-20260801"
+  },
+  "head_sha": "0ef4578bdff9a9cdc73ad70017c4a4e69e1b0129",
+  "p0_run_id": 30704998465,
+  "production_compile": "PASSED_JAVA_RELEASE_8",
+  "test_compile": "PASSED_JAVA_RELEASE_8",
+  "rework_tests": {
+    "run": 6,
+    "failures": 6,
+    "errors": 0,
+    "skipped": 0
+  },
+  "existing_context_tests": {
+    "run": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failure_contracts": [
+    "DirectoryKey missing BusinessScope owner",
+    "CompiledModelSet missing PublishedSourceManifest and TypedDefinitionRegistries",
+    "CompiledModelSet accepting ERROR diagnostics",
+    "EngineContext accepting independently constructed projection",
+    "Definition registry identity mismatch not rejected",
+    "Deferred registry complete identity mismatch not rejected"
+  ],
+  "invalid_red_causes_absent": [
+    "production compilation failure",
+    "test compilation failure",
+    "dependency failure",
+    "test selection failure",
+    "environment failure"
+  ],
+  "review_id": "REV-000085",
+  "reviewer": "TDDReviewAgent",
+  "review_result": "PASSED",
+  "evidence_id": "EVD-000343",
+  "result": "PASSED"
+}
