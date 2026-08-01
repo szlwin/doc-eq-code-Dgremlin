@@ -2,6 +2,10 @@ package dec.core.context;
 
 import dec.core.context.model.CompiledDefinition;
 import dec.core.context.model.CompiledModelSet;
+import dec.core.context.model.DefinitionKey;
+import dec.core.context.model.Registry;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,42 +30,53 @@ public final class CoreConfigProjection {
     }
 
     /**
-     * 架构骨架阶段先冻结唯一派生入口，具体 Registry 投影在 Development 实现。
+     * 从模型中的 Typed Registry 确定性生成 Projection。
+     * 调用方无法传入独立列表，因此 Projection 不会成为第二事实源。
      *
      * @param modelSet Projection 唯一来源模型
      * @return 与该模型同源的只读 Projection
      */
     public static CoreConfigProjection from(CompiledModelSet modelSet) {
-        Objects.requireNonNull(modelSet, "modelSet");
-        throw new UnsupportedOperationException("T01 REWORK architecture skeleton");
+        CompiledModelSet source = Objects.requireNonNull(modelSet, "modelSet");
+        return new CoreConfigProjection(
+                source,
+                immutableValues(source.typedRegistries().data()),
+                immutableValues(source.typedRegistries().views()),
+                immutableValues(source.typedRegistries().ruleViews()));
     }
 
-    /**
-     * 返回生成当前 Projection 的唯一模型来源。
-     */
+    /** 返回生成当前 Projection 的唯一模型来源。 */
     public CompiledModelSet sourceModelSet() {
         return sourceModelSet;
     }
 
-    /**
-     * 返回 Data 定义只读投影。
-     */
+    /** 返回 Data 定义只读投影。 */
     public List<CompiledDefinition> data() {
         return data;
     }
 
-    /**
-     * 返回 View 定义只读投影。
-     */
+    /** 返回 View 定义只读投影。 */
     public List<CompiledDefinition> views() {
         return views;
     }
 
-    /**
-     * 返回 RuleView 定义只读投影。
-     */
+    /** 返回 RuleView 定义只读投影。 */
     public List<CompiledDefinition> rules() {
         return rules;
+    }
+
+    private static <K extends DefinitionKey> List<CompiledDefinition> immutableValues(
+            Registry<K, CompiledDefinition> registry) {
+        Objects.requireNonNull(registry, "registry");
+        List<CompiledDefinition> values =
+                new ArrayList<CompiledDefinition>(registry.size());
+        // Registry 的 key 已稳定排序，按 key 顺序读取即可得到确定性 Projection。
+        for (K key : registry.keys()) {
+            values.add(Objects.requireNonNull(
+                    registry.require(key),
+                    "registry contains null definition"));
+        }
+        return Collections.unmodifiableList(values);
     }
 
     @Override
