@@ -56,6 +56,8 @@ public Diagnostic diagnostic()
 
 所有兼容写入口调用同一个私有拒绝逻辑，保证错误码、异常类型和消息语义一致。失败前后 `sourceModelSet`、Data、View、Rule 列表必须保持相同对象和值。
 
+`data()`、`views()`、`rules()` 返回的 List 也属于公共写入尝试入口。不能只依赖 `Collections.unmodifiableList`，因为空列表上的 `remove`、`removeAll`、`clear` 等调用可能无操作返回，且其它变更只产生普通集合异常。三个 List 必须使用内部只读实现统一拦截 `add/set/remove/clear/addAll/removeAll/retainAll/removeIf/replaceAll/sort` 等 Java 8 变更入口，并抛出同一个 `ProjectionWriteRejectedException`。operation 使用 `<projection>.<listOperation>`，例如 `data.add`、`views.clear`。
+
 ## 3. Source dependency 声明来源一致性
 
 `PublishedSourceDependency` 构造器必须保证：
@@ -74,7 +76,8 @@ dependency.fromSourceId()
 新增 R03 合同测试，必须覆盖：
 
 - 四个 deprecated 兼容写入口均存在；
-- 所有入口抛出 `ProjectionWriteRejectedException`；
+- 所有兼容入口抛出 `ProjectionWriteRejectedException`；
+- Data/View/Rule List 的直接变更入口也抛出同一专用异常；
 - 异常携带 `MIX-PROJECTION-WRITE` Diagnostic；
 - 写入失败前后模型、Projection 列表和来源引用不变；
 - 普通 Source edge 拒绝声明 SourceRef 与 fromSourceId 错配；
@@ -86,7 +89,7 @@ dependency.fromSourceId()
 ## 5. 兼容与范围
 
 - Projection 的写入口只用于提供稳定拒绝语义，不恢复可变 Core 配置；
-- 不允许捕获专用异常后通过其它路径修改 Projection；
+- 不允许捕获专用异常后通过 List 或其它路径修改 Projection；
 - 不改变 `CompiledModelSet`、Typed Registry 或 EngineContext 的单一事实源；
 - 不启动 `TASK-P1-T02` 重验证或 `TASK-P1-T03`；
 - 原 R02 Completion 与 Evidence 保留为被本次完整规格 Review 推翻的历史记录。
