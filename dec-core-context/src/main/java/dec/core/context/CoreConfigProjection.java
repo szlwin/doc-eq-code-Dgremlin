@@ -65,6 +65,56 @@ public final class CoreConfigProjection {
         return rules;
     }
 
+    /**
+     * 兼容旧注册入口，但 Projection 永远不允许成为可变事实源。
+     *
+     * @param definition 被旧调用方尝试注册的定义
+     * @throws ProjectionWriteRejectedException 每次调用都拒绝写入
+     */
+    @Deprecated
+    public void register(CompiledDefinition definition) {
+        throw rejectWrite("register");
+    }
+
+    /**
+     * 兼容旧替换入口，但不允许替换已发布模型中的任何事实。
+     *
+     * @param definition 被旧调用方尝试替换的定义
+     * @throws ProjectionWriteRejectedException 每次调用都拒绝写入
+     */
+    @Deprecated
+    public void replace(CompiledDefinition definition) {
+        throw rejectWrite("replace");
+    }
+
+    /**
+     * 兼容旧删除入口，但不允许删除已发布模型中的任何事实。
+     *
+     * @param key 被旧调用方尝试删除的定义身份
+     * @throws ProjectionWriteRejectedException 每次调用都拒绝写入
+     */
+    @Deprecated
+    public void remove(DefinitionKey key) {
+        throw rejectWrite("remove");
+    }
+
+    /**
+     * 兼容旧清空入口，但不允许清空已发布模型。
+     *
+     * @throws ProjectionWriteRejectedException 每次调用都拒绝写入
+     */
+    @Deprecated
+    public void clear() {
+        throw rejectWrite("clear");
+    }
+
+    /**
+     * 统一创建写入拒绝异常，避免不同兼容入口产生平行失败语义。
+     */
+    private ProjectionWriteRejectedException rejectWrite(String operation) {
+        return new ProjectionWriteRejectedException(operation);
+    }
+
     private static <K extends DefinitionKey> List<CompiledDefinition> immutableValues(
             Registry<K, CompiledDefinition> registry) {
         Objects.requireNonNull(registry, "registry");
