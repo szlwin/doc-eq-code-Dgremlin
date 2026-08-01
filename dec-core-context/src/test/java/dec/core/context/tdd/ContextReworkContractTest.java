@@ -27,13 +27,18 @@ import dec.core.context.model.DirectoryKey;
 import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.ImmutableRegistry;
 import dec.core.context.model.NormalizedBody;
+import dec.core.context.model.PublishedSourceDependency;
+import dec.core.context.model.PublishedSourceDescriptor;
+import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.Registry;
 import dec.core.context.model.RequiredStage;
 import dec.core.context.model.SourceRef;
+import dec.core.context.model.TypedDefinitionRegistries;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,8 +47,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * 追溯 Review 的可执行 RED。测试通过反射跨越旧、新公共构造器，
- * 确保失败来自合同语义缺失，而不是测试源无法编译。
+ * 追溯 Review 的可执行合同测试，直接冻结业务身份和发布聚合不变量。
  */
 class ContextReworkContractTest {
     private static final String CASE_ID = "CASE-P1-T01-REWORK-I008";
@@ -69,6 +73,7 @@ class ContextReworkContractTest {
 
         assertNotEquals(payment, order);
         assertEquals(payment, paymentAgain);
+        assertNotEquals(payment.canonical(), order.canonical());
         Method owner = assertDoesNotThrow(() -> DirectoryKey.class.getMethod("owner"));
         assertEquals(new BusinessScopeKey("payment"), invoke(owner, payment));
     }
@@ -95,6 +100,93 @@ class ContextReworkContractTest {
                 CompiledModelSet.class,
                 "typedRegistries",
                 typedRegistriesType);
+    }
+
+    @Test
+    @DisplayName(CASE_ID + " SourceManifest 保持节点唯一和依赖闭合")
+    void sourceManifestIsStableUniqueAndClosed() {
+        PublishedSourceDescriptor root = new PublishedSourceDescriptor(
+                "source:root",
+                "XML",
+                "digest-root");
+        PublishedSourceDescriptor child = new PublishedSourceDescriptor(
+                "source:child",
+                "YAML",
+                "digest-child");
+        PublishedSourceDependency dependency = new PublishedSourceDependency(
+                "ROOT_SYSTEM_FILE",
+                "source:root",
+                "source:child",
+                new SourceRef("source:root", 3, 5, "/root/system-file"));
+
+        List<PublishedSourceDescriptor> mutableSources =
+                new ArrayList<PublishedSourceDescriptor>(Arrays.asList(child, root));
+        List<PublishedSourceDependency> mutableDependencies =
+                new ArrayList<PublishedSourceDependency>(Collections.singletonList(dependency));
+        PublishedSourceManifest manifest = new PublishedSourceManifest(
+                "source:root",
+                mutableSources,
+                mutableDependencies);
+        mutableSources.clear();
+        mutableDependencies.clear();
+
+        assertEquals("source:root", manifest.sources().get(1).sourceId());
+        assertEquals(2, manifest.sources().size());
+        assertEquals(1, manifest.dependencies().size());
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> manifest.sources().add(root));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PublishedSourceManifest(
+                        "source:root",
+                        Arrays.asList(root, root),
+                        Collections.<PublishedSourceDependency>emptyList()));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PublishedSourceManifest(
+                        "source:missing",
+                        Arrays.asList(root, child),
+                        Collections.<PublishedSourceDependency>emptyList()));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new PublishedSourceManifest(
+                        "source:root",
+                        Arrays.asList(root, child),
+                        Collections.singletonList(
+                                new PublishedSourceDependency(
+                                        "ROOT_SYSTEM_FILE",
+                                        "source:root",
+                                        "source:missing",
+                                        new SourceRef(
+                                                "source:root",
+                                                3,
+                                                5,
+                                                "/root/system-file")))));
+    }
+
+    @Test
+    @DisplayName(CASE_ID + " Typed Registry 按完整 Key 类型分类")
+    void typedRegistriesClassifyPublishedDefinitions() {
+        DataKey dataKey = new DataKey("orders");
+        DirectoryKey directoryKey = new DirectoryKey(
+                new BusinessScopeKey("payment"),
+                "refund");
+        Map<DefinitionKey, CompiledDefinition> definitions =
+                new LinkedHashMap<DefinitionKey, CompiledDefinition>();
+        definitions.put(dataKey, compiledDefinition(dataKey));
+        definitions.put(directoryKey, compiledDefinition(directoryKey));
+
+        CompiledModelSet modelSet = newModelSet(
+                Collections.<Diagnostic>emptyList(),
+                definitions,
+                Collections.<DeferredKey, DeferredDefinition>emptyMap());
+        TypedDefinitionRegistries typed = modelSet.typedRegistries();
+
+        assertEquals(2, modelSet.definitions().size());
+        assertEquals(1, typed.data().size());
+        assertEquals(1, typed.directories().size());
+        assertEquals(directoryKey, typed.directories().keys().get(0));
     }
 
     @Test
@@ -137,20 +229,14 @@ class ContextReworkContractTest {
                 Collections.<DeferredKey, DeferredDefinition>emptyMap());
         EngineContext context = new EngineContext(modelSet);
         assertNotNull(context.projection());
-
-        Method sourceModel = assertDoesNotThrow(
-                () -> CoreConfigProjection.class.getMethod("sourceModelSet"));
-        assertEquals(modelSet, invoke(sourceModel, context.projection()));
+        assertEquals(modelSet, context.projection().sourceModelSet());
     }
 
     @Test
     @DisplayName(CASE_ID + " Definition Registry 拒绝身份错配")
     void definitionRegistryRejectsMismatchedIdentity() {
         DataKey mapKey = new DataKey("A");
-        CompiledDefinition value = new CompiledDefinition(
-                new DataKey("B"),
-                new SourceRef("test:root", 1, 1, "/data"),
-                new NormalizedBody("canonical", "B"));
+        CompiledDefinition value = compiledDefinition(new DataKey("B"));
         Map<DefinitionKey, CompiledDefinition> definitions =
                 new LinkedHashMap<DefinitionKey, CompiledDefinition>();
         definitions.put(mapKey, value);
@@ -254,17 +340,6 @@ class ContextReworkContractTest {
                             new NormalizedBody("expression", "A"),
                             Collections.<DefinitionKey>emptyList());
                 }
-                if (parameterTypes.length == 7
-                        && DefinitionKey.class.isAssignableFrom(parameterTypes[0])) {
-                    return (DeferredDefinition) constructor.newInstance(
-                            key.owner(),
-                            key.kind(),
-                            RequiredStage.P3,
-                            "MIX-INFORMATION-OWNER",
-                            new SourceRef("test:root", 2, 1, "/information"),
-                            new NormalizedBody("expression", "A"),
-                            Collections.<DefinitionKey>emptyList());
-                }
             }
             throw new AssertionError("没有可识别的 DeferredDefinition 公共构造器");
         } catch (InvocationTargetException failure) {
@@ -272,6 +347,13 @@ class ContextReworkContractTest {
         } catch (ReflectiveOperationException failure) {
             throw new AssertionError("创建 DeferredDefinition 失败", failure);
         }
+    }
+
+    private static CompiledDefinition compiledDefinition(DefinitionKey key) {
+        return new CompiledDefinition(
+                key,
+                new SourceRef("test:root", 1, 1, "/definition"),
+                new NormalizedBody("canonical", key.canonical()));
     }
 
     private static <T> T newInstance(
