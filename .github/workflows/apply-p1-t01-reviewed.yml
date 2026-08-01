@@ -22,9 +22,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          sha256sum .github/p1-t01-final-facts/chunk-*
           cat .github/p1-t01-final-facts/chunk-* | tr -cd 'A-Za-z0-9+/=' > /tmp/p1-t01-facts.b64
+          echo "combined_base64_bytes=$(wc -c < /tmp/p1-t01-facts.b64)"
           test "$(wc -c < /tmp/p1-t01-facts.b64)" -eq 91292
           base64 --decode /tmp/p1-t01-facts.b64 > /tmp/p1-t01-facts.tar.xz
+          sha256sum /tmp/p1-t01-facts.tar.xz
           echo '36dd1c3ac971508a016af595486d9b74bd0324da4caf0e102b4da728273963e5  /tmp/p1-t01-facts.tar.xz' | sha256sum --check --strict
           tar -xJf /tmp/p1-t01-facts.tar.xz -C .
           python3 - <<'PY'
