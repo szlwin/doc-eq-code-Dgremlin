@@ -1,0 +1,35 @@
+{
+  "revision": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+  "task_count": 15,
+  "execution_mode": "SEQUENTIAL",
+  "review_round": 1,
+  "evidence_ids": [
+    "EVD-000288",
+    "EVD-000289"
+  ],
+  "review_ids": [
+    "TPR-000001",
+    "TPR-000002",
+    "TPR-000003",
+    "TPR-000004"
+  ],
+  "trace_ids": [
+    "TR-P1-COMPILER-001",
+    "TR-P1-COMPILER-002",
+    "TR-P1-COMPILER-003",
+    "TR-P1-COMPILER-004",
+    "TR-P1-COMPILER-005",
+    "TR-P1-COMPILER-006",
+    "TR-P1-COMPILER-007",
+    "TR-P1-COMPILER-008",
+    "TR-P1-COMPILER-009"
+  ],
+  "next_phase": "tdd",
+  "next_round": "TDD-I007",
+  "next_agent": "TddAgent",
+  "next_task": "TASK-P1-T01",
+  "plan_sha256": "9207687b655dbc6f233b49ddca4760d2c2e977a038294ed197179a6fb090a82a",
+  "rendered_markdown_sha256": "6a69b1e6043ac3527583e1dfc6bf7c5307fd929db298d823f0944ba5655bf6b4",
+  "review_history_sha256": "6ee0e09997ae83ad51f3fb361fe4938235a998c2ba6e869226085a1faee3cdcd",
+  "command_evidence_sha256": "5ec2ea9e59a5dd4b5d6748490f359d063f6b95a0f71a309a4f76a15c53378d12"
+}

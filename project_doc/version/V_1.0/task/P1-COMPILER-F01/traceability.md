@@ -810,3 +810,19 @@
   }
 ]
 ```
+
+## Implementation Plan TP-P1-COMPILER-F01-R01
+
+Revision：`TP-P1-COMPILER-F01-R01@88b56e6caa64`。以下映射由 `development_tasks.yaml` 生成，作为 TDD/开发任务入口。
+
+| TR | 开发任务 |
+|---|---|
+| `TR-P1-COMPILER-001` | `TASK-P1-T03` |
+| `TR-P1-COMPILER-002` | `TASK-P1-T04`, `TASK-P1-T05`, `TASK-P1-T06` |
+| `TR-P1-COMPILER-003` | `TASK-P1-T01`, `TASK-P1-T07`, `TASK-P1-T08` |
+| `TR-P1-COMPILER-004` | `TASK-P1-T01`, `TASK-P1-T09`, `TASK-P1-T11` |
+| `TR-P1-COMPILER-005` | `TASK-P1-T01`, `TASK-P1-T12`, `TASK-P1-T13`, `TASK-P1-T14` |
+| `TR-P1-COMPILER-006` | `TASK-P1-T01`, `TASK-P1-T15` |
+| `TR-P1-COMPILER-007` | `TASK-P1-T02`, `TASK-P1-T15` |
+| `TR-P1-COMPILER-008` | `TASK-P1-T09`, `TASK-P1-T11` |
+| `TR-P1-COMPILER-009` | `TASK-P1-T10` |
