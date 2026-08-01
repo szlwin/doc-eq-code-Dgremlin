@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "development_command_result",
+  "task_id": "TASK-P1-T02",
+  "revision": "DEV-P1-T02-R01@643b44a8b72a",
+  "input_revisions": {
+    "tdd": "TDD-P1-T02-R01@9f44d25f3cc7",
+    "architecture_skeleton": "DEVSKEL-P1-T02-R01@5bbfd315f65e",
+    "design": "DESIGN-R05@0b37a9b4dd48"
+  },
+  "head_sha": "643b44a8b72adbd88c040431626ccdb5a8ebddb5",
+  "p0_run_id": 30702001625,
+  "implementation": [
+    "Registered dec-core-compiler in the Maven reactor and dependency management",
+    "Added Java 8 immutable request, option, publication and result contracts",
+    "Kept compiler to context as the only production module dependency",
+    "Exposed compileAndPublish as the only ModelCompiler public method",
+    "Published results expose session, model, context, digests and versions",
+    "Failed results expose no model, context or digest candidate"
+  ],
+  "formatting_validation": {
+    "override_annotations_on_separate_lines": true,
+    "public_methods_documented": true,
+    "important_logic_commented": true
+  },
+  "compiler_tests": {
+    "run": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "java_release": 8,
+  "evidence_id": "EVD-000339",
+  "result": "PASSED"
+}
