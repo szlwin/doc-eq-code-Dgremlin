@@ -1,0 +1,46 @@
+name: Export P1 T01 Context
+
+on:
+  pull_request:
+    branches:
+      - dev_all
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: github.event.pull_request.head.ref == 'feature/p1-t01-tdd-red-i007-20260801-1122'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v6
+        with:
+          ref: feature/p1-t01-tdd-red-i007-20260801-1122
+          fetch-depth: 0
+
+      - name: Package exact task context
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/p1-t01-context
+          cp pom.xml /tmp/p1-t01-context/root-pom.xml
+          cp -a dec-core-context /tmp/p1-t01-context/
+          cp -a project_doc/version/V_1.0/task/P1-COMPILER-F01 /tmp/p1-t01-context/task
+          cp project_doc/version/V_1.0/work_record.md /tmp/p1-t01-context/work_record.md
+          find /tmp/p1-t01-context -type d -name target -prune -exec rm -rf {} +
+          find /tmp/p1-t01-context -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/p1-t01-context/SHA256SUMS
+          tar -C /tmp -cJf /tmp/p1-t01-context.tar.xz p1-t01-context
+          sha256sum /tmp/p1-t01-context.tar.xz
+
+      - name: Upload task context
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-t01-context
+          path: /tmp/p1-t01-context.tar.xz
+          if-no-files-found: error
+          retention-days: 1
