@@ -439,6 +439,76 @@
     "open_risks": [],
     "started_at": "2026-08-01T03:33:00+00:00",
     "completed_at": "2026-08-01T03:40:00+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-DEVELOPMENT-I007",
+    "phase": "development",
+    "round": "DEVELOPMENT-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-007",
+    "iteration_no": 7,
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-DEVELOPMENT-008",
+    "status": "PASSED",
+    "produced_by_agent": "DevelopAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a"
+    },
+    "output_revision": "DEVSKEL-P1-T01-R01@57bbc887eb13",
+    "evidence_ids": [
+      "EVD-000293",
+      "EVD-000294"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T08:02:08+00:00",
+    "completed_at": "2026-08-01T08:04:10+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-DEVELOPMENT-I008",
+    "phase": "development",
+    "round": "DEVELOPMENT-I008",
+    "iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-008",
+    "iteration_no": 8,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "DevelopAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-P1-COMPILER-F01-R01@88b56e6caa64",
+      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a"
+    },
+    "output_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+    "evidence_ids": [
+      "EVD-000295",
+      "EVD-000296"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T08:17:06+00:00",
+    "completed_at": "2026-08-01T08:18:56+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-CODE_REVIEW-I007",
+    "phase": "code_review",
+    "round": "CODE_REVIEW-I007",
+    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "ProjectManagerAgent",
+    "input_revisions": {
+      "development": "DEV-P1-T01-R01@de1adfd37c9b"
+    },
+    "output_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "evidence_ids": [
+      "EVD-000321",
+      "EVD-000322",
+      "EVD-000323",
+      "EVD-000324"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-01T08:26:41+00:00",
+    "completed_at": "2026-08-01T08:38:48+00:00"
   }
 ]
 ```

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T01",
+  "result": "PASSED",
+  "overlay_sha256": "1144bf9bbae771839185e999a2be7d0c4c01ad8eaaa98313ea8dda10ff253e94",
+  "commands": [
+    {
+      "path": "p1-t01-r02-contract-tests.log",
+      "sha256": "2ca920a5797d2f9ee2d77004122621965e89ed613c085cd4f6f764ac6f1bf171",
+      "size": 5515
+    },
+    {
+      "path": "p1-t01-r02-context-verify.log",
+      "sha256": "08c5e0b43c8f641cc9265d602a2900daebca951b0540039d12b5cd30aeaf897c",
+      "size": 5625
+    },
+    {
+      "path": "p1-t01-r02-dependency-tree.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    }
+  ]
+}

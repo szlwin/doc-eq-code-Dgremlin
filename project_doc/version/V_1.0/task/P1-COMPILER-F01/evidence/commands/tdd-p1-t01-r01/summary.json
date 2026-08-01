@@ -4,7 +4,7 @@
   "phase": "tdd",
   "task_id": "TASK-P1-T01",
   "revision": "TDD-P1-T01-R01@4ebeed4dad6a",
-  "command": "./mvnw -pl dec-core-context -am -Dtest=ContextValueContractTest,RegistryImmutabilityTest,EngineContextApiTest test",
+  "command": "verify TDD-P1-T01-R01 executable RED and supporting baseline/dependency gates",
   "command_exit_code": 1,
   "red_valid": true,
   "test_compile": "PASSED",
@@ -36,6 +36,9 @@
   "artifact_digest": "2c008a434d86776d5fcd23c922e838094fd47ed55cfa3e9c9c15e24630cd4b47",
   "test_sources_sha256": "4ebeed4dad6ae6fc1e43bfad3f8b3f5fd40de7f9b847f0f678b59426459022a4",
   "claim_boundary": "TDD RED only; no production implementation or GREEN claimed",
-  "exit_code": 1,
-  "expected_nonzero_exit": true
+  "exit_code": 0,
+  "expected_nonzero_exit": true,
+  "kind": "command_result",
+  "output": "{\"artifact_digest\":\"2c008a434d86776d5fcd23c922e838094fd47ed55cfa3e9c9c15e24630cd4b47\",\"baseline_test\":\"PASSED\",\"claim_boundary\":\"TDD RED only; no production implementation or GREEN claimed\",\"dependency_direction\":\"PASSED\",\"expected_nonzero_exit\":true,\"failure_kind\":\"PUBLIC_CONTRACT_BEHAVIOR_MISSING\",\"forbidden_failure_kinds_absent\":[\"COMPILATION_ERROR\",\"DEPENDENCY_ERROR\",\"TEST_SELECTION_ERROR\",\"ENVIRONMENT_ERROR\"],\"observed_test_command_exit_code\":1,\"red_valid\":true,\"result\":\"PASSED\",\"test_compile\":\"PASSED\",\"totals\":{\"errors\":0,\"failures\":3,\"skipped\":0,\"tests\":3},\"workflow_run_id\":30682333155}",
+  "output_digest": "6b865958f1710b0cd605917e4cbdd86fcf63772fcdede0cdf75513d7fb8cf1d9"
 }

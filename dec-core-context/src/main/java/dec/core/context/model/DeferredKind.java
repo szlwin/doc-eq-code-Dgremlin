@@ -1,0 +1,2 @@
+package dec.core.context.model;
+public enum DeferredKind { SYSTEM_PERMISSION, MODEL_ACCESS, INFORMATION, ACTION, PRODUCE, DIRECTORY, QUERY, TRANSACTION }

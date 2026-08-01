@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "command": "validate TESTDESIGN-R01 machine block, matrix, TR/AC/code/source/edge/inventory coverage",
+  "command": "validate TESTDESIGN-R01 machine block and evidence command result",
   "exit_code": 0,
   "executed_at": "2026-07-31T16:34:51+00:00",
   "revision": "TESTDESIGN-R01@ba7779cf089b",
@@ -16,5 +16,8 @@
   },
   "test_case_sha256": "4f9e29bbc345c592dec350d1f2977f7f63ee3a5f9725159739eb4f041b6289bb",
   "matrix_sha256": "d8093126747fbb33f92c523e436eefed9e3f7880e277b0cd8c988b3284e5f567",
-  "notes": "This validates the test design itself. It does not claim production tests have run; executable Case commands are consumed by implementation_plan/TDD/testing."
+  "notes": "This validates the test design itself. It does not claim production tests have run; executable Case commands are consumed by implementation_plan/TDD/testing.",
+  "kind": "command_result",
+  "output": "{\"claim_boundary\":\"test design validation only; no production test execution claimed\",\"matrix_sha256\":\"d8093126747fbb33f92c523e436eefed9e3f7880e277b0cd8c988b3284e5f567\",\"metrics\":{\"ac_count\":9,\"business_diagnostic_count\":23,\"case_count\":41,\"declaration_edge_count\":7,\"design_diagnostic_count\":7,\"source_count\":10,\"tr_count\":9},\"result\":\"PASSED\",\"test_case_sha256\":\"4f9e29bbc345c592dec350d1f2977f7f63ee3a5f9725159739eb4f041b6289bb\"}",
+  "output_digest": "e24430eef43884f30ba34a2700029b7ad576e5ec79e545e066fc707ed5a8eed3"
 }

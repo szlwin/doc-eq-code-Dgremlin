@@ -640,20 +640,22 @@
     "failure_type": "",
     "failure_reason": "",
     "modified_files": [
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/development_tasks.yaml",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/development_tasks.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/development_task_reviews.jsonl",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/handoff.md",
-      "project_doc/version/V_1.0/work_record.md"
+      "version/V_1.0/task/P1-COMPILER-F01/development_tasks.yaml",
+      "version/V_1.0/task/P1-COMPILER-F01/development_tasks.md",
+      "version/V_1.0/task/P1-COMPILER-F01/development_task_reviews.jsonl",
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/work_record.md"
     ],
     "command_evidence_ids": [
-      "EVD-000289"
+      "EVD-000289",
+      "EVD-000292"
     ],
     "evidence_ids": [
       "EVD-000288",
-      "EVD-000289"
+      "EVD-000289",
+      "EVD-000292"
     ],
     "summary": "wk -tp 形成并冻结 15 个严格串行开发增量，四项计划 Review 均通过。",
     "next_action": "ProjectManagerAgent 启动 TDD-I007，并由 TddAgent 执行 TASK-P1-T01 的有效 RED。"
@@ -678,17 +680,17 @@
       "dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java",
       "dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java",
       "dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_state.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/handoff.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
-      "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
-      "project_doc/version/V_1.0/work_record.md"
+      "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_state.md",
+      "version/V_1.0/task/P1-COMPILER-F01/task_attempts.md",
+      "version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md",
+      "version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json",
+      "version/V_1.0/task/P1-COMPILER-F01/traceability.md",
+      "version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+      "version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/evidence_index.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/reviews.jsonl",
+      "version/V_1.0/work_record.md"
     ],
     "command_evidence_ids": [
       "EVD-000291"
@@ -699,6 +701,154 @@
     ],
     "summary": "三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。",
     "next_action": "由 DevelopAgent 实现 TASK-P1-T01 最小生产契约，使当前 RED 转为 GREEN。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-T01-DEV-SKELETON-I007-A001",
+    "task_id": "TASK-P1-T01-DEV-SKELETON",
+    "iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-007",
+    "iteration_no": 7,
+    "attempt_no": 1,
+    "agent": "DevelopAgent",
+    "phase": "development",
+    "status": "PASSED",
+    "input_revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "output_revision": "DEVSKEL-P1-T01-R01@57bbc887eb13",
+    "started_at": "2026-08-01T08:00:35+00:00",
+    "completed_at": "2026-08-01T08:02:06+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java",
+      "dec-core-context/src/main/java/dec/core/context/EngineContext.java",
+      "dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ActionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java",
+      "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DataKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DigestPair.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/InformationKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/Registry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java",
+      "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/SourceRef.java",
+      "dec-core-context/src/main/java/dec/core/context/model/SystemKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ViewKey.java"
+    ],
+    "command_evidence_ids": [
+      "EVD-000294"
+    ],
+    "evidence_ids": [
+      "EVD-000293",
+      "EVD-000294"
+    ],
+    "summary": "31 个 Context 公共契约骨架使用 Java 8 编译通过；包边界、不可变形状和无反向依赖检查通过，具体行为保持 ARCHITECTURE_SKELETON。",
+    "next_action": "发布骨架 Revision，依次由 ArchitectureReviewAgent 和 SpecComplianceReviewAgent 审查。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-T01-DEV-SKELETON-I008-A001",
+    "task_id": "TASK-P1-T01-DEV-SKELETON",
+    "iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-008",
+    "iteration_no": 8,
+    "attempt_no": 1,
+    "agent": "DevelopAgent",
+    "phase": "development",
+    "status": "PASSED",
+    "input_revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+    "output_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+    "started_at": "2026-08-01T08:07:32+00:00",
+    "completed_at": "2026-08-01T08:17:04+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ActionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java",
+      "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DataKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DigestPair.java",
+      "dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/InformationKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/Registry.java",
+      "dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java",
+      "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/SourceRef.java",
+      "dec-core-context/src/main/java/dec/core/context/model/SystemKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/ViewKey.java",
+      "dec-core-context/src/main/java/dec/core/context/EngineContext.java",
+      "dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java",
+      "dec-core-context/src/test/java/dec/core/context/tdd/ContextContractBehaviorTest.java"
+    ],
+    "command_evidence_ids": [
+      "EVD-000296"
+    ],
+    "evidence_ids": [
+      "EVD-000295",
+      "EVD-000296"
+    ],
+    "summary": "31 个 Context 中立不可变公共类型和 1 个语义回归测试完成；冻结合同与模块回归 GREEN，Java 8 和依赖方向通过。",
+    "next_action": "由 TDDReviewAgent 复核 DEV-P1-T01-R01 后完成 Development 阶段。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-T01-CODE-REVIEW-I007-A001",
+    "task_id": "TASK-P1-T01-CODE-REVIEW",
+    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
+    "iteration_no": 7,
+    "attempt_no": 1,
+    "agent": "ProjectManagerAgent",
+    "phase": "code_review",
+    "status": "PASSED",
+    "input_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+    "output_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "started_at": "2026-08-01T08:24:24+00:00",
+    "completed_at": "2026-08-01T08:26:39+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/review-report.json",
+      "version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/command-result.json"
+    ],
+    "command_evidence_ids": [
+      "EVD-000323"
+    ],
+    "evidence_ids": [
+      "EVD-000321",
+      "EVD-000322",
+      "EVD-000323",
+      "EVD-000324"
+    ],
+    "summary": "固定 DEV-P1-T01-R01 的最终代码 Review 对象、静态检查和风险分类；无开放 finding。",
+    "next_action": "由七个 required reviewers 对同一 CODEREVIEW Revision 串行独立确认。"
   }
 ]
 ```

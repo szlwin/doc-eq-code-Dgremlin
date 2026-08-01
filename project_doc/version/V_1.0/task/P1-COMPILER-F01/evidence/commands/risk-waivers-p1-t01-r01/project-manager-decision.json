@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "input_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+  "risk_type": "architecture_change",
+  "detection_ids": [
+    "DET-20E381C430AF",
+    "DET-219BF4B1D7F5",
+    "DET-25D37F74C27B",
+    "DET-30F91A777715",
+    "DET-35847C66C282",
+    "DET-459ED9F54A4E",
+    "DET-46068F462C8F",
+    "DET-502F725033EC",
+    "DET-521BD3A2D35D",
+    "DET-6381552BC536",
+    "DET-6EB353B96D63",
+    "DET-7DAFD75C1DEA",
+    "DET-7F7AF828CD06",
+    "DET-906B8E447ED3",
+    "DET-A1A10D2AD29A",
+    "DET-A245B6613763",
+    "DET-D7C20349EA66",
+    "DET-EBD5336674C3",
+    "DET-ED4391F2A696",
+    "DET-EDE92B118ABF"
+  ],
+  "decision": "WAIVE_LEXICAL_FALSE_POSITIVE",
+  "reason": "The detector matched the substring port inside Java import/support identifiers. Source review confirms no network port, hexagonal adapter port, new module dependency, or cross-module runtime path. ArchitectureReviewAgent still completed the mandatory architecture review.",
+  "approved_by": "ProjectManagerAgent"
+}

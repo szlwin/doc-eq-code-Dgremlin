@@ -2,12 +2,671 @@
   "schema_version": 1,
   "target_id": "P1-COMPILER-F01",
   "version": "V_1.0",
-  "input_revision": "",
-  "input_files": [],
-  "input_digest": "",
-  "status": "NOT_SCANNED",
-  "scanned_by_agent": "",
-  "scanned_at": "",
-  "detections": [],
-  "waivers": []
+  "input_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+  "input_files": [
+    "dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/ActionKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java",
+    "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
+    "dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DataKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DigestPair.java",
+    "dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java",
+    "dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java",
+    "dec-core-context/src/main/java/dec/core/context/model/InformationKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java",
+    "dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/Registry.java",
+    "dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java",
+    "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/SourceRef.java",
+    "dec-core-context/src/main/java/dec/core/context/model/SystemKey.java",
+    "dec-core-context/src/main/java/dec/core/context/model/ViewKey.java",
+    "dec-core-context/src/main/java/dec/core/context/EngineContext.java",
+    "dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java",
+    "dec-core-context/src/test/java/dec/core/context/tdd/ContextContractBehaviorTest.java"
+  ],
+  "input_digest": "18f6d134543f795c02dcf8e0cedde8bee376886281e39308cb48156979a2e49f",
+  "status": "SCANNED",
+  "scanned_by_agent": "ProjectManagerAgent",
+  "scanned_at": "2026-08-01T08:23:28+00:00",
+  "detections": [
+    {
+      "detection_id": "DET-20E381C430AF",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000305"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-219BF4B1D7F5",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000309"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-25D37F74C27B",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000312"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-30F91A777715",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000303"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-35847C66C282",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000318"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-35CED3D8FDA7",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000310"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-4148F33724DF",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000318"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-459ED9F54A4E",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000317"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-46068F462C8F",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000300"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-502F725033EC",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000301"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-521BD3A2D35D",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000315"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-6082A36A8994",
+      "rule_id": "RISK-IMP-001",
+      "risk_type": "impact_analysis",
+      "confidence": 8,
+      "required_reviewer": "ImpactAnalysisReviewAgent",
+      "evidence_ids": [
+        "EVD-000307"
+      ],
+      "status": "DETECTED",
+      "reason": "content:cancel",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-6381552BC536",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000302"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-6522494172A7",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000304"
+      ],
+      "status": "DETECTED",
+      "reason": "content:permission",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-6EB353B96D63",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000299"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-7DAFD75C1DEA",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000310"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-7F5E8A89FEE0",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000309"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-7F7AF828CD06",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000316"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-906B8E447ED3",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000308"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-A1A10D2AD29A",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000319"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-A245B6613763",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000298"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-D7C20349EA66",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000314"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-EBD5336674C3",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000313"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-ED4391F2A696",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000311"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-EDE92B118ABF",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000306"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-EFD4D0227BDE",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000301"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F038F2449065",
+      "rule_id": "RISK-IMP-TRACE-001",
+      "risk_type": "impact_analysis",
+      "confidence": 9,
+      "required_reviewer": "ImpactAnalysisReviewAgent",
+      "evidence_ids": [
+        "EVD-000320"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability impact_required=true: TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P1-COMPILER-005, TR-P1-COMPILER-006, TR-P1-COMPILER-007, TR-P1-COMPILER-008, TR-P1-COMPILER-009",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-FE4B1454B988",
+      "rule_id": "RISK-XMOD-TRACE-001",
+      "risk_type": "cross_module_integration",
+      "confidence": 9,
+      "required_reviewer": "CrossModuleIntegrationReviewAgent",
+      "evidence_ids": [
+        "EVD-000320"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability cross_module_implementation_required=true: TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P1-COMPILER-005, TR-P1-COMPILER-006, TR-P1-COMPILER-007, TR-P1-COMPILER-008, TR-P1-COMPILER-009",
+      "source": "DETECTOR"
+    }
+  ],
+  "waivers": [
+    {
+      "detection_id": "DET-20E381C430AF",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:21+00:00"
+    },
+    {
+      "detection_id": "DET-219BF4B1D7F5",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:22+00:00"
+    },
+    {
+      "detection_id": "DET-25D37F74C27B",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:23+00:00"
+    },
+    {
+      "detection_id": "DET-30F91A777715",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:24+00:00"
+    },
+    {
+      "detection_id": "DET-35847C66C282",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:25+00:00"
+    },
+    {
+      "detection_id": "DET-459ED9F54A4E",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:26+00:00"
+    },
+    {
+      "detection_id": "DET-46068F462C8F",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:27+00:00"
+    },
+    {
+      "detection_id": "DET-502F725033EC",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:28+00:00"
+    },
+    {
+      "detection_id": "DET-521BD3A2D35D",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:29+00:00"
+    },
+    {
+      "detection_id": "DET-6381552BC536",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:30+00:00"
+    },
+    {
+      "detection_id": "DET-6EB353B96D63",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:31+00:00"
+    },
+    {
+      "detection_id": "DET-7DAFD75C1DEA",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:33+00:00"
+    },
+    {
+      "detection_id": "DET-7F7AF828CD06",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:34+00:00"
+    },
+    {
+      "detection_id": "DET-906B8E447ED3",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:35+00:00"
+    },
+    {
+      "detection_id": "DET-A1A10D2AD29A",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:36+00:00"
+    },
+    {
+      "detection_id": "DET-A245B6613763",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:37+00:00"
+    },
+    {
+      "detection_id": "DET-D7C20349EA66",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:38+00:00"
+    },
+    {
+      "detection_id": "DET-EBD5336674C3",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:39+00:00"
+    },
+    {
+      "detection_id": "DET-ED4391F2A696",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:40+00:00"
+    },
+    {
+      "detection_id": "DET-EDE92B118ABF",
+      "reason": "Lexical false positive: the detector matched port inside Java import/support identifiers; no network port, adapter port, new module dependency, or cross-module runtime path is introduced.",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000328",
+        "EVD-000329"
+      ],
+      "approved_at": "2026-08-01T08:38:41+00:00"
+    }
+  ]
 }
