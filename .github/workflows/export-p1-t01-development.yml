@@ -1,0 +1,35 @@
+name: Export P1 T01 Development Context
+
+on:
+  pull_request:
+    branches: [dev_all]
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: github.event.pull_request.head.ref == 'feature/p1-t01-tdd-red-i007-20260801-1122'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feature/p1-t01-tdd-red-i007-20260801-1122
+          fetch-depth: 0
+      - name: Build complete Git bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git bundle create /tmp/p1-t01-final.bundle --all
+          git bundle verify /tmp/p1-t01-final.bundle
+          git rev-parse HEAD > /tmp/p1-t01-final-head.txt
+          git rev-parse 'HEAD^{tree}' > /tmp/p1-t01-final-tree.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p1-t01-final-git-context
+          path: |
+            /tmp/p1-t01-final.bundle
+            /tmp/p1-t01-final-head.txt
+            /tmp/p1-t01-final-tree.txt
+          retention-days: 2
