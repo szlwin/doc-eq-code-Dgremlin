@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_summary",
+  "task_id": "TASK-P1-T02",
+  "revision": "DEVSKEL-P1-T02-R01@5bbfd315f65e",
+  "input_revision": "TDD-P1-T02-R01@9f44d25f3cc7",
+  "head_sha": "5bbfd315f65e5a5d3eb7f0546a8af0c703e14205",
+  "p0_run_id": 30701610426,
+  "skeleton_contracts": [
+    "ModelCompiler exposes only compileAndPublish",
+    "CompilationRequest carries root source, options and cancellation",
+    "PublicationRequest carries expected context and one atomic publisher",
+    "Terminal result statuses are PUBLISHED and FAILED",
+    "No public compile-only path, global session or second runtime"
+  ],
+  "reviews": [
+    {
+      "review_id": "REV-000078",
+      "reviewer": "ArchitectureReviewAgent",
+      "result": "PASSED"
+    },
+    {
+      "review_id": "REV-000079",
+      "reviewer": "SpecComplianceReviewAgent",
+      "result": "PASSED"
+    }
+  ],
+  "closed_findings": [
+    {
+      "finding_id": "FND-P1-T02-001",
+      "summary": "JaCoCo synthetic field was incorrectly treated as source API state",
+      "resolution": "Reflection contract now ignores only Field.isSynthetic instrumentation state"
+    }
+  ],
+  "evidence_id": "EVD-000338",
+  "result": "PASSED"
+}
