@@ -23,7 +23,7 @@ jobs:
           ref: feature/p1-t01-tdd-red-i007-20260801-1122
           fetch-depth: 0
 
-      - name: Package exact development context
+      - name: Package exact development context and Git history
         shell: bash
         run: |
           set -euo pipefail
@@ -37,12 +37,21 @@ jobs:
           find /tmp/p1-t01-development-context -type d -name target -prune -exec rm -rf {} +
           find /tmp/p1-t01-development-context -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/p1-t01-development-context/SHA256SUMS
           tar -C /tmp -cJf /tmp/p1-t01-development-context.tar.xz p1-t01-development-context
-          sha256sum /tmp/p1-t01-development-context.tar.xz
+          tar -cJf /tmp/p1-t01-git-history.tar.xz .git
+          sha256sum /tmp/p1-t01-development-context.tar.xz /tmp/p1-t01-git-history.tar.xz
 
       - name: Upload context
         uses: actions/upload-artifact@v4
         with:
           name: p1-t01-development-context
           path: /tmp/p1-t01-development-context.tar.xz
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload Git history
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-t01-git-history
+          path: /tmp/p1-t01-git-history.tar.xz
           if-no-files-found: error
           retention-days: 1
