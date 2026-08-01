@@ -1,6 +1,7 @@
 package dec.core.context.tdd;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -80,8 +81,7 @@ class EngineContextApiTest {
                 List.class);
 
         // from 是唯一公共工厂，但它不保存静态可变状态。
-        assertEquals(
-                true,
+        assertTrue(
                 Modifier.isStatic(
                         ContractReflectionAssertions.requirePublicMethod(
                                 CASE_ID,
