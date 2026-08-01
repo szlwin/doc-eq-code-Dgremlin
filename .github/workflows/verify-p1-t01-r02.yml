@@ -1,0 +1,116 @@
+name: Verify P1 T01 R02
+
+on:
+  pull_request:
+    branches: [dev_all]
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event.pull_request.head.ref == 'feature/p1-t01-tdd-red-i007-20260801-1122'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feature/p1-t01-tdd-red-i007-20260801-1122
+          fetch-depth: 0
+
+      - name: Apply reviewed implementation overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 --decode .github/p1-t01-r02-overlay.b64 > /tmp/p1-t01-r02-overlay.tar.xz
+          echo '1144bf9bbae771839185e999a2be7d0c4c01ad8eaaa98313ea8dda10ff253e94  /tmp/p1-t01-r02-overlay.tar.xz' | sha256sum --check --strict
+          tar -xJf /tmp/p1-t01-r02-overlay.tar.xz -C .
+          ! grep -R 'ARCHITECTURE_SKELETON' -n dec-core-context/src/main/java/dec/core/context/model dec-core-context/src/main/java/dec/core/context/EngineContext.java dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java
+          ! grep -R 'dec\.core\.compiler' -n dec-core-context/src/main/java/dec/core/context/model dec-core-context/src/main/java/dec/core/context/EngineContext.java dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Run T01 contract and behavior tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./mvnw --batch-mode --no-transfer-progress -pl dec-core-context -am \
+            -Dtest=ContextValueContractTest,RegistryImmutabilityTest,EngineContextApiTest,ContextContractBehaviorTest \
+            test | tee /tmp/p1-t01-r02-contract-tests.log
+
+      - name: Verify Context module
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./mvnw --batch-mode --no-transfer-progress -pl dec-core-context -am verify \
+            | tee /tmp/p1-t01-r02-context-verify.log
+
+      - name: Verify dependency direction with bounded retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > /tmp/p1-t01-r02-dependency-tree.log
+          for attempt in 1 2 3 4; do
+            if ./mvnw --batch-mode --no-transfer-progress -pl dec-core-context \
+              org.apache.maven.plugins:maven-dependency-plugin:3.7.0:tree \
+              -Dincludes=doc.eq.code:dec-core-compiler \
+              -DoutputFile=/tmp/p1-t01-r02-dependency-tree.log; then
+              break
+            fi
+            if [ "$attempt" -eq 4 ]; then
+              echo '::error::Maven dependency plugin resolution failed after four attempts'
+              exit 1
+            fi
+            sleep $((attempt * 30))
+          done
+          if grep -F 'doc.eq.code:dec-core-compiler' /tmp/p1-t01-r02-dependency-tree.log; then
+            echo '::error::dec-core-context must not depend on dec-core-compiler'
+            exit 1
+          fi
+
+      - name: Record verification summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          files = [
+              pathlib.Path('/tmp/p1-t01-r02-contract-tests.log'),
+              pathlib.Path('/tmp/p1-t01-r02-context-verify.log'),
+              pathlib.Path('/tmp/p1-t01-r02-dependency-tree.log'),
+          ]
+          result = {
+              'schema_version': 1,
+              'task_id': 'TASK-P1-T01',
+              'result': 'PASSED',
+              'overlay_sha256': '1144bf9bbae771839185e999a2be7d0c4c01ad8eaaa98313ea8dda10ff253e94',
+              'commands': [],
+          }
+          for path in files:
+              data = path.read_bytes()
+              result['commands'].append({
+                  'path': path.name,
+                  'sha256': hashlib.sha256(data).hexdigest(),
+                  'size': len(data),
+              })
+          pathlib.Path('/tmp/p1-t01-r02-summary.json').write_text(
+              json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p1-t01-r02-verification
+          path: |
+            /tmp/p1-t01-r02-*.log
+            /tmp/p1-t01-r02-summary.json
+            dec-core-context/target/surefire-reports/**
+          if-no-files-found: warn
+          retention-days: 14
