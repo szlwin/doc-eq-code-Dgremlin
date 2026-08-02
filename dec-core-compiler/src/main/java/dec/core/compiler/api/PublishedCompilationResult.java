@@ -71,9 +71,17 @@ public final class PublishedCompilationResult implements CompilationResult {
     }
 
     /**
-     * 创建成功发布结果。
+     * 创建成功发布结果，并确保所有公开事实均来自同一个 T01 发布模型。
      *
-     * <p>Architecture Skeleton 阶段只冻结公共签名，Development 阶段完成创建行为。</p>
+     * @param diagnostics 与模型 Diagnostic 等值的成功诊断集合
+     * @param modelSet Compiler 产生的完整不可变模型
+     * @param engineContext Publisher 实际暴露的 Context
+     * @param digests 与模型一致的源摘要和语义摘要
+     * @param compilerVersion 与模型一致的 Compiler 版本
+     * @param schemaVersion 与模型一致的 Schema 版本
+     * @param optionsDigest 与模型兼容字段一致的规范化选项摘要
+     * @param digestAlgorithmVersion 非空白 Digest 算法合同版本
+     * @return 完整且不可重新拼接的成功发布事实
      */
     public static PublishedCompilationResult published(
             List<Diagnostic> diagnostics,
@@ -84,7 +92,15 @@ public final class PublishedCompilationResult implements CompilationResult {
             String schemaVersion,
             String optionsDigest,
             String digestAlgorithmVersion) {
-        throw new UnsupportedOperationException("Architecture skeleton only");
+        return new PublishedCompilationResult(
+                diagnostics,
+                modelSet,
+                engineContext,
+                digests,
+                compilerVersion,
+                schemaVersion,
+                optionsDigest,
+                digestAlgorithmVersion);
     }
 
     /**
