@@ -55,14 +55,33 @@ class XmlCanonicalContractTest {
         assertEquals("first", first.name());
         assertEquals("alpha", first.scalar().get());
         assertEquals("x", first.attributes().get("code"));
+        assertEquals("1.0", first.schemaVersion());
         assertSource(first, 2, 3, "/cfg/first");
 
         CanonicalDocumentNode second = root.children().get(1);
         assertEquals("second", second.name());
         assertFalse(second.scalar().isPresent());
+        assertEquals("1.0", second.schemaVersion());
         assertSource(second, 3, 3, "/cfg/second");
-        assertEquals("leaf", second.children().get(0).name());
-        assertSource(second.children().get(0), 4, 5, "/cfg/second/leaf");
+        CanonicalDocumentNode leaf = second.children().get(0);
+        assertEquals("leaf", leaf.name());
+        assertEquals("1.0", leaf.schemaVersion());
+        assertSource(leaf, 4, 5, "/cfg/second/leaf");
+    }
+
+    /**
+     * 普通文本、CDATA 和后续普通文本必须按文档顺序拼接后统一 trim。
+     */
+    @Test
+    void concatenatesTextAndCdataInDocumentOrder() {
+        String xml = "<root> before <![CDATA[<middle>]]> after </root>";
+        FrontendResult result = XmlFrontendTestSupport.parse(
+                XmlFrontendTestSupport.frontend(),
+                XmlFrontendTestSupport.xmlSource(xml));
+
+        assertEquals(FrontendStatus.PARSED, result.status());
+        assertEquals("before <middle> after",
+                result.canonicalRoot().get().scalar().get());
     }
 
     /**
