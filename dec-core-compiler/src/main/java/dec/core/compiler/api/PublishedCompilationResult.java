@@ -8,108 +8,155 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 成功发布终态，包含 Publisher 实际暴露的模型与 Context。
+ * 成功发布终态，包含 Publisher 实际暴露的完整发布事实。
  */
-public final class PublishedCompilationResult extends CompilationResult {
-    private final CompiledModelSet compiledModelSet;
-    private final EngineContext context;
+public final class PublishedCompilationResult implements CompilationResult {
+    private final List<Diagnostic> diagnostics;
+    private final CompiledModelSet modelSet;
+    private final EngineContext engineContext;
+    private final DigestPair digests;
+    private final String compilerVersion;
+    private final String schemaVersion;
+    private final String optionsDigest;
+    private final String digestAlgorithmVersion;
 
     /**
-     * 冻结成功发布的模型、Context 和非 ERROR Diagnostic。
-     *
-     * <p>成功结果只能包装 Publisher 实际暴露的同一个模型实例，不能使用值相等模型
-     * 重新拼接发布聚合。Diagnostic 也必须归属于该模型的发布事实。</p>
-     *
-     * @param sessionId 完成编译会话的稳定身份
-     * @param compiledModelSet 声称已经发布的不可变模型
-     * @param context Publisher 实际暴露的不可变 Context
-     * @param diagnostics 不含 ERROR 且属于模型的稳定 Diagnostic 快照
+     * 冻结并校验成功发布的完整事实。
      */
-    public PublishedCompilationResult(
-            String sessionId,
-            CompiledModelSet compiledModelSet,
-            EngineContext context,
-            List<Diagnostic> diagnostics) {
-        super(
-                sessionId,
-                requirePublishedDiagnostics(compiledModelSet, diagnostics),
-                DiagnosticOwnership.PUBLISHED_MODEL_FACT);
-        this.compiledModelSet = Objects.requireNonNull(
-                compiledModelSet,
-                "compiledModelSet");
-        this.context = Objects.requireNonNull(context, "context");
-        // INV-T02-R09-001：必须是 Publisher 暴露 Context 所持有的同一模型实例。
-        if (compiledModelSet != context.compiledModelSet()) {
+    private PublishedCompilationResult(
+            List<Diagnostic> diagnostics,
+            CompiledModelSet modelSet,
+            EngineContext engineContext,
+            DigestPair digests,
+            String compilerVersion,
+            String schemaVersion,
+            String optionsDigest,
+            String digestAlgorithmVersion) {
+        this.modelSet = Objects.requireNonNull(modelSet, "modelSet");
+        this.engineContext = Objects.requireNonNull(engineContext, "engineContext");
+        this.digests = Objects.requireNonNull(digests, "digests");
+        this.compilerVersion = ApiContracts.requireText(
+                compilerVersion,
+                "compilerVersion");
+        this.schemaVersion = ApiContracts.requireText(schemaVersion, "schemaVersion");
+        this.optionsDigest = ApiContracts.requireText(optionsDigest, "optionsDigest");
+        this.digestAlgorithmVersion = ApiContracts.requireText(
+                digestAlgorithmVersion,
+                "digestAlgorithmVersion");
+
+        // 成功结果必须包装 Publisher 实际暴露 Context 所持有的同一个模型实例。
+        if (modelSet != engineContext.compiledModelSet()) {
             throw new IllegalArgumentException(
-                    "context must reference the exact published compiledModelSet instance");
+                    "engineContext must reference the exact published modelSet instance");
         }
+
+        List<Diagnostic> validated = ApiContracts.publishedDiagnostics(diagnostics);
+        if (!modelSet.diagnostics().equals(validated)) {
+            throw new IllegalArgumentException(
+                    "published diagnostics must match modelSet diagnostics");
+        }
+        if (!modelSet.digestPair().equals(digests)) {
+            throw new IllegalArgumentException("digests must match modelSet digestPair");
+        }
+        requireEqualText(
+                modelSet.compilerVersion(),
+                this.compilerVersion,
+                "compilerVersion");
+        requireEqualText(modelSet.schemaVersion(), this.schemaVersion, "schemaVersion");
+        // T01 的 optionsVersion 兼容字段在 P1 中承载同一个规范化 options digest。
+        requireEqualText(modelSet.optionsVersion(), this.optionsDigest, "optionsDigest");
+
+        // 模型已完成排序和不可变冻结，成功结果必须复用同一 Diagnostic 事实实例。
+        this.diagnostics = modelSet.diagnostics();
     }
 
     /**
-     * 校验成功结果的 Diagnostic 只能来自 CompiledModelSet 发布事实。
+     * 创建成功发布结果。
      *
-     * <p>构造参数为兼容旧 T02 API 保留，但返回值始终复用模型中的不可变集合，
-     * 防止结果对象形成第二份可分叉的 Diagnostic 事实。</p>
+     * <p>Architecture Skeleton 阶段只冻结公共签名，Development 阶段完成创建行为。</p>
      */
-    private static List<Diagnostic> requirePublishedDiagnostics(
-            CompiledModelSet compiledModelSet,
-            List<Diagnostic> diagnostics) {
-        CompiledModelSet model = Objects.requireNonNull(
-                compiledModelSet,
-                "compiledModelSet");
-        List<Diagnostic> validated = ApiContracts.publishedDiagnostics(diagnostics);
-        if (!model.diagnostics().equals(validated)) {
+    public static PublishedCompilationResult published(
+            List<Diagnostic> diagnostics,
+            CompiledModelSet modelSet,
+            EngineContext engineContext,
+            DigestPair digests,
+            String compilerVersion,
+            String schemaVersion,
+            String optionsDigest,
+            String digestAlgorithmVersion) {
+        throw new UnsupportedOperationException("Architecture skeleton only");
+    }
+
+    /**
+     * 校验调用方提供的版本事实必须与模型事实一致。
+     */
+    private static void requireEqualText(
+            String expected,
+            String actual,
+            String fieldName) {
+        if (!expected.equals(actual)) {
             throw new IllegalArgumentException(
-                    "published diagnostics must match compiledModelSet diagnostics");
+                    fieldName + " must match modelSet published fact");
         }
-        return model.diagnostics();
+    }
+
+    @Override
+    public CompilationStatus status() {
+        return CompilationStatus.PUBLISHED;
+    }
+
+    @Override
+    public List<Diagnostic> diagnostics() {
+        return diagnostics;
     }
 
     /**
      * 返回 Compiler 产生的完整不可变模型。
      */
-    public CompiledModelSet compiledModelSet() {
-        return compiledModelSet;
+    public CompiledModelSet modelSet() {
+        return modelSet;
     }
 
     /**
-     * 返回 Publisher 已暴露的不可变 Context。
+     * 返回 Publisher 实际暴露的不可变 EngineContext。
      */
-    public EngineContext context() {
-        return context;
+    public EngineContext engineContext() {
+        return engineContext;
     }
 
     /**
-     * 返回确定性的源 Digest 与语义 Digest。
+     * 返回确定性的源摘要和语义摘要。
      */
     public DigestPair digests() {
-        return compiledModelSet.digestPair();
+        return digests;
     }
 
     /**
      * 返回参与发布语义身份的 Compiler 版本。
      */
     public String compilerVersion() {
-        return compiledModelSet.compilerVersion();
+        return compilerVersion;
     }
 
     /**
-     * 返回本次编译使用的 Schema 版本。
+     * 返回解释输入源时使用的 Schema 版本。
      */
     public String schemaVersion() {
-        return compiledModelSet.schemaVersion();
+        return schemaVersion;
     }
 
     /**
-     * 返回本次编译使用的规范化选项版本。
+     * 返回规范化编译选项摘要。
      */
-    public String optionsVersion() {
-        return compiledModelSet.optionsVersion();
+    public String optionsDigest() {
+        return optionsDigest;
     }
 
-    @Override
-    public CompilationStatus status() {
-        return CompilationStatus.PUBLISHED;
+    /**
+     * 返回 Digest 算法合同版本。
+     */
+    public String digestAlgorithmVersion() {
+        return digestAlgorithmVersion;
     }
 
     @Override
@@ -121,23 +168,38 @@ public final class PublishedCompilationResult extends CompilationResult {
             return false;
         }
         PublishedCompilationResult that = (PublishedCompilationResult) other;
-        return sessionId().equals(that.sessionId())
-                && compiledModelSet.equals(that.compiledModelSet)
-                && context.equals(that.context)
-                && diagnostics().equals(that.diagnostics());
+        return diagnostics.equals(that.diagnostics)
+                && modelSet.equals(that.modelSet)
+                && engineContext.equals(that.engineContext)
+                && digests.equals(that.digests)
+                && compilerVersion.equals(that.compilerVersion)
+                && schemaVersion.equals(that.schemaVersion)
+                && optionsDigest.equals(that.optionsDigest)
+                && digestAlgorithmVersion.equals(that.digestAlgorithmVersion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sessionId(), compiledModelSet, context, diagnostics());
+        return Objects.hash(
+                diagnostics,
+                modelSet,
+                engineContext,
+                digests,
+                compilerVersion,
+                schemaVersion,
+                optionsDigest,
+                digestAlgorithmVersion);
     }
 
     @Override
     public String toString() {
         return "PublishedCompilationResult{"
-                + "sessionId='" + sessionId() + '\''
-                + ", semanticDigest='" + digests().semanticDigest() + '\''
-                + ", diagnostics=" + diagnostics().size()
+                + "semanticDigest='" + digests.semanticDigest() + '\''
+                + ", compilerVersion='" + compilerVersion + '\''
+                + ", schemaVersion='" + schemaVersion + '\''
+                + ", optionsDigest='" + optionsDigest + '\''
+                + ", digestAlgorithmVersion='" + digestAlgorithmVersion + '\''
+                + ", diagnostics=" + diagnostics.size()
                 + '}';
     }
 }
