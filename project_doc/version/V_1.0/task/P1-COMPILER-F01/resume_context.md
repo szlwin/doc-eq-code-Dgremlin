@@ -1,40 +1,40 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T03 / I001` 已完成
-- 当前 Completion Revision：`COMPLETION-P1-T03-R01@713848bfa65e`
+- 当前逻辑任务：`TASK-P1-T03 / I002` REWORK 已完成
+- 历史 Completion：`COMPLETION-P1-T03-R01@713848bfa65e`（`REV-000152` 推翻，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T03-R02@6af43b47f044`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@370b72f4bf4ec9b3620586f26d13d95f611f3cc9`
-- T01 Completion：`COMPLETION-P1-T01-R04@ee99223a243f`
-- T02 Completion：`COMPLETION-P1-T02-R05@35376308b013`
-- 当前设计事实：`DESIGN-R13@P1-T03-I001` + `TESTDESIGN-R01@ba7779cf089b` + `DESIGN-R12@P1-T02-REWORK-I005` + `DESIGN-R05@0b37a9b4dd48`
+- Rework base：`335cc7ae2843145ae891a22892a169e74ac5d6fc`
+- 当前设计事实：`DESIGN-R14@P1-T03-REWORK-I002` + `DESIGN-R13@P1-T03-I001` + `TESTDESIGN-R01@ba7779cf089b` + `DESIGN-R12@P1-T02-REWORK-I005`
 - 开放 P0/P1：无
-- Completion Evidence：`EVD-000386`～`EVD-000392`
-- Review：`REV-000145`～`REV-000151` 全部 PASSED
-- Clean-code Head：`713848bfa65e19c8c802e4777944a3e22efec83e`
-- 验证 P0 Run：`30736808017`，结果 `PASSED`
-- Artifact：`8829855289`
-- Context 测试：26 run / 0 failures / 0 errors / 0 skipped
-- Compiler 测试：62 run / 0 failures / 0 errors / 0 skipped
-- T03 测试：15 run / 0 failures / 0 errors / 0 skipped
-- 完整 Reactor：12 modules / PASSED
+- Review：`REV-000152`～`REV-000162`
+- Evidence：`EVD-000393`～`EVD-000403`
+- Clean-code Head：`6af43b47f0446f3dc4980f5877a58275aaf17448`
+- 验证 P0 Run：`30738516967`，结果 `PASSED`
+- Artifact：`8830460790`
+- Artifact SHA-256：`3352eb12faab339e120c4e1b6968ed1972358069785ee95e9d98134dc50bed48`
+- Context：26 run / 0 failures / 0 errors / 0 skipped
+- Compiler：68 run / 0 failures / 0 errors / 0 skipped
+- I002 专项：6 run / 0 failures / 0 errors / 0 skipped
+- Reactor：12 modules / PASSED
 - Java release 8：PASSED
-- 故意失败阻断门禁：PASSED
+- 故意失败阻断：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- 根入口：`classpath:mix/orm-config.xml`
 - SourceManifest：10 个唯一 Source
 - SourceGraph：7 条真实声明边
 - Provider 调用：8 次
-- 文件集顺序：正序、逆序、随机结果一致
-- 主资源与测试镜像：固定 10 个 Source 字节和图一致
-- 安全门禁：字面量/编码 traversal、unknown scheme、opaque query 在 Provider 前拒绝
-- XML 声明提取：DTD、外部实体和外部资源解析关闭
-- 失败语义：missing、duplicate、Provider 合同、资源预算、重复声明和 cycle 均稳定 Diagnostic 且无部分图
-- 当前 PR：`#18`，目标分支 `dev_all`
+- canonical key：Provider、edge、duplicate key、sorting、graph equality、cycle stack 统一使用
+- 身份域：sourceId 与 canonical reference 分离
+- cycle：`sourceId != URI` 时仍在递归 Provider 前返回 `MIX_SOURCE_POLICY`
+- declaration origin：真实 fixture 7 条边精确验证 start tag `<` 的 line、column、nodePath
+- traversal：`..`、`%2e%2e`、query、fragment 不被 canonicalization 隐藏
+- 当前 PR：`#18`，目标 `dev_all`
 - 当前分支：`feature/p1-t03-source-graph-20260802-1430`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r01_completion.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r02_completion.json`
 - 下一 Agent：`ProjectManagerAgent`
 - 下一动作：Review PR #18，并在明确授权后合并；合并后从最新 `dev_all` 启动 `TASK-P1-T04`
-- TASK-P1-T04 状态：未启动且保持阻断
+- TASK-P1-T04：未启动且保持阻断
 - 注意：不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #18；不得在 PR #18 合并前启动或声明 T04。
