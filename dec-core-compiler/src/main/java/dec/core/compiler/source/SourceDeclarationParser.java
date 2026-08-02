@@ -35,7 +35,7 @@ final class SourceDeclarationParser {
     }
 
     /**
-     * 使用关闭 DTD 和外部实体的 StAX，只识别 T03 允许的 Source 声明节点。
+     * 使用关闭 DTD 和外部实体的 StAX，只识别 T03 冻结的完整声明路径。
      */
     private static List<SourceGraphEdge> parse(
             DocumentSource source,
@@ -46,6 +46,7 @@ final class SourceDeclarationParser {
         byte[] content = source.content();
         DeclarationLocator locator = new DeclarationLocator(content);
         XMLStreamReader reader = null;
+        boolean rootSeen = false;
         try {
             reader = factory.createXMLStreamReader(
                     new ByteArrayInputStream(content),
@@ -59,6 +60,10 @@ final class SourceDeclarationParser {
                 if (event == XMLStreamConstants.START_ELEMENT) {
                     String localName = reader.getLocalName();
                     path.add(localName);
+                    if (path.size() == 1) {
+                        validateDocumentRoot(localName, rootDocument);
+                        rootSeen = true;
+                    }
                     SourceEdgeType edgeType = rootDocument
                             ? rootEdgeType(path)
                             : systemEdgeType(path);
@@ -77,6 +82,14 @@ final class SourceDeclarationParser {
                     path.remove(path.size() - 1);
                 }
             }
+            if (!rootSeen) {
+                throw new SourceDeclarationException(
+                        "Source declaration document must contain a root element");
+            }
+            if (!rootDocument && edges.isEmpty()) {
+                throw new SourceDeclarationException(
+                        "Systems declaration must contain at least one rule-file");
+            }
         } catch (XMLStreamException parseFailure) {
             throw new SourceDeclarationException(
                     "Unable to parse source declarations",
@@ -86,6 +99,19 @@ final class SourceDeclarationParser {
         }
         Collections.sort(edges);
         return Collections.unmodifiableList(edges);
+    }
+
+    /**
+     * 验证两类声明文档拥有各自冻结的根元素，防止错误文档提升声明权限。
+     */
+    private static void validateDocumentRoot(
+            String localName,
+            boolean rootDocument) {
+        String expected = rootDocument ? "orm-config" : "systems";
+        if (!expected.equals(localName)) {
+            throw new SourceDeclarationException(
+                    "Unexpected source declaration root: " + localName);
+        }
     }
 
     /**
@@ -133,31 +159,69 @@ final class SourceDeclarationParser {
     }
 
     /**
-     * 根据完整节点路径识别 root 文档中的四类声明。
+     * 根据完整元素栈识别 root 文档中的四类直接声明。
      */
     private static SourceEdgeType rootEdgeType(List<String> path) {
-        if (endsWith(path, "orm-data-file-info", "orm-file")) {
+        if (matchesPath(
+                path,
+                "orm-config",
+                "orm-data-file-info",
+                "orm-file")) {
             return SourceEdgeType.ROOT_DATA_FILESET;
         }
-        if (endsWith(path, "orm-view-file-info", "orm-file")) {
+        if (matchesPath(
+                path,
+                "orm-config",
+                "orm-view-file-info",
+                "orm-file")) {
             return SourceEdgeType.ROOT_VIEW_FILESET;
         }
-        if (endsWith(path, "system-file-info", "system-file")) {
+        if (matchesPath(
+                path,
+                "orm-config",
+                "system-file-info",
+                "system-file")) {
             return SourceEdgeType.ROOT_SYSTEM_FILE;
         }
-        if (endsWith(path, "business-file-info", "business-file")) {
+        if (matchesPath(
+                path,
+                "orm-config",
+                "business-file-info",
+                "business-file")) {
             return SourceEdgeType.ROOT_BUSINESS_FILE;
         }
         return null;
     }
 
     /**
-     * 根据完整节点路径识别 systems 文档中的 rule-file 声明。
+     * 根据完整元素栈识别 systems 文档中的 rule-file 声明。
      */
     private static SourceEdgeType systemEdgeType(List<String> path) {
-        return endsWith(path, "rule-file-info", "rule-file")
+        return matchesPath(
+                path,
+                "systems",
+                "system",
+                "rule-file-info",
+                "rule-file")
                 ? SourceEdgeType.SYSTEM_RULE_FILE
                 : null;
+    }
+
+    /**
+     * 精确比较当前 local-name 元素栈，不允许额外祖先、错误嵌套或后缀匹配。
+     */
+    private static boolean matchesPath(
+            List<String> path,
+            String... expected) {
+        if (path.size() != expected.length) {
+            return false;
+        }
+        for (int index = 0; index < expected.length; index++) {
+            if (!expected[index].equals(path.get(index))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -204,19 +268,6 @@ final class SourceDeclarationParser {
             result.append('/').append(element);
         }
         return result.toString();
-    }
-
-    /**
-     * 判断当前元素栈是否以给定父子节点结尾。
-     */
-    private static boolean endsWith(
-            List<String> path,
-            String parent,
-            String child) {
-        int size = path.size();
-        return size >= 2
-                && parent.equals(path.get(size - 2))
-                && child.equals(path.get(size - 1));
     }
 
     /**
