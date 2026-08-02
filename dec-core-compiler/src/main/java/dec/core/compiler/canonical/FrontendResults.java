@@ -19,9 +19,6 @@ public final class FrontendResults {
     /**
      * 创建成功解析结果。
      *
-     * <p>Architecture Skeleton 阶段先冻结签名和输入校验，实际结果构造
-     * 在 Development 阶段完成。</p>
-     *
      * @param canonicalRoot 唯一 Canonical 根节点
      * @param diagnostics 不含 ERROR 的稳定 Diagnostic 输入
      * @return 成功 Frontend 结果
@@ -29,9 +26,13 @@ public final class FrontendResults {
     public static FrontendResult parsed(
             CanonicalDocumentNode canonicalRoot,
             List<Diagnostic> diagnostics) {
-        Objects.requireNonNull(canonicalRoot, "canonicalRoot");
-        parsedDiagnostics(diagnostics);
-        throw new UnsupportedOperationException("Architecture skeleton only");
+        CanonicalDocumentNode root = Objects.requireNonNull(
+                canonicalRoot,
+                "canonicalRoot");
+        return new ImmutableFrontendResult(
+                FrontendStatus.PARSED,
+                Optional.of(root),
+                parsedDiagnostics(diagnostics));
     }
 
     /**
