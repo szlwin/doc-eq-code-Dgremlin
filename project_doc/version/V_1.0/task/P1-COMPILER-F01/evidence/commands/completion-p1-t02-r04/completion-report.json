@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "kind": "completion_verification_report",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I004",
+  "revision": "COMPLETION-P1-T02-R04@8b3e716a9730",
+  "input_revisions": {
+    "business_model": "BM-R05@4ecb1f8c09f4",
+    "base_design": "DESIGN-R05@0b37a9b4dd48",
+    "api_contract": "DEC_COMPILER_api_contract.md",
+    "context_completion": "COMPLETION-P1-T01-R04@ee99223a243f",
+    "session_design": "DESIGN-R10@P1-T02-REWORK-I003",
+    "design": "DESIGN-R11@P1-T02-REWORK-I004",
+    "implementation_plan": "TP-P1-COMPILER-F01-R07@P1-T02-REWORK-I004",
+    "tdd": "TDD-P1-T02-R04@b0502ee13dba",
+    "architecture_skeleton": "DEVSKEL-P1-T02-R04@21d28d33eac9",
+    "development": "DEV-P1-T02-R04@8b3e716a9730",
+    "code_review": "CODEREVIEW-P1-T02-R04@8b3e716a9730",
+    "testing": "TESTING-P1-T02-R04@8b3e716a9730"
+  },
+  "stage_statuses": {
+    "design_revision": "PASSED",
+    "implementation_plan": "PASSED",
+    "tdd": "PASSED",
+    "architecture_skeleton": "PASSED",
+    "development": "PASSED",
+    "code_review": "PASSED",
+    "testing": "PASSED",
+    "completion_verification": "PASSED"
+  },
+  "review_ids": [
+    "REV-000129",
+    "REV-000130",
+    "REV-000131",
+    "REV-000132",
+    "REV-000133",
+    "REV-000134",
+    "REV-000135",
+    "REV-000136",
+    "REV-000137"
+  ],
+  "evidence_ids": [
+    "EVD-000373",
+    "EVD-000374",
+    "EVD-000375",
+    "EVD-000376",
+    "EVD-000377",
+    "EVD-000378"
+  ],
+  "clean_code_head_sha": "8b3e716a9730d12fe84c6efd3fb8481998e335e0",
+  "p0_run_id": 30733616822,
+  "p0_result": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 35,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "closed_findings": [
+    "FND-P1-T02-I004-001",
+    "FND-P1-T02-I004-002",
+    "FND-P1-T02-I004-003",
+    "FND-P1-T02-I003-004",
+    "FND-P2-T02-I004-004"
+  ],
+  "open_p0_p1_findings": [],
+  "source_frontend_closure": {
+    "document_source_complete_facts": "PASSED",
+    "canonical_result_available": "PASSED",
+    "success_failure_candidate_isolation": "PASSED",
+    "provider_frontend_canonical_flow": "PASSED",
+    "parser_implementation_isolation": "PASSED",
+    "t03_public_signature_change_required": false
+  },
+  "database_change": false,
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "task_status": "PASSED",
+  "current_pr": 17,
+  "superseded_completion": "COMPLETION-P1-T02-R03@122ffc28165f",
+  "next_task": "TASK-P1-T03",
+  "next_task_started": false,
+  "claim_boundary": "TASK-P1-T02 I004 only; TASK-P1-T03 is not started or claimed.",
+  "review_id": "REV-000137",
+  "reviewer": "CompletionVerificationAgent",
+  "evidence_id": "EVD-000378",
+  "result": "PASSED"
+}
