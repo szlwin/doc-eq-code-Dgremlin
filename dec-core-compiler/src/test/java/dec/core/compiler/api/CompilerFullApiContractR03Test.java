@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.context.EngineContext;
 import dec.core.context.model.CompiledModelSet;
-import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DigestPair;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -249,11 +248,15 @@ class CompilerFullApiContractR03Test {
     }
 
     /**
-     * 确保 Session 输入和值对象没有可变 static 状态。
+     * 确保 Session 输入和值对象没有源码声明的可变 static 状态。
      */
     private static void assertNoStaticMutableFields(Class<?>... types) {
         for (Class<?> type : types) {
             for (Field field : type.getDeclaredFields()) {
+                // JaCoCo 会在 CI 字节码中注入 synthetic $jacocoData，不属于源码状态。
+                if (field.isSynthetic()) {
+                    continue;
+                }
                 if (Modifier.isStatic(field.getModifiers())) {
                     assertTrue(
                             Modifier.isFinal(field.getModifiers()),
