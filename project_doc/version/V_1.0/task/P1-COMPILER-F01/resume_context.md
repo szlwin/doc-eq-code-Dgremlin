@@ -1,25 +1,27 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T02` REWORK iteration `I002` 已完成
-- 历史 T02 Completion：`COMPLETION-P1-T02-R01@643b44a8b72a`（因 T01 最终公共合同变化被重开，历史保留）
-- 当前 Completion Revision：`COMPLETION-P1-T02-R02@8847b3c7dfac`
+- 当前逻辑任务：`TASK-P1-T02` REWORK iteration `I003` 已完成
+- 历史 T02 Completion：`COMPLETION-P1-T02-R01@643b44a8b72a`、`COMPLETION-P1-T02-R02@8847b3c7dfac`（均被后续 Review 重开，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T02-R03@122ffc28165f`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@f88f45731e16868bfacb489b63e3086aae49d018`
 - T01 Completion：`COMPLETION-P1-T01-R04@ee99223a243f`
+- 当前设计事实：`DESIGN-R10@P1-T02-REWORK-I003` + `DEC_COMPILER_api_contract.md` + `DESIGN-R05@0b37a9b4dd48`
 - 开放 P0/P1：无
-- Completion Evidence：`EVD-000361`、`EVD-000362`、`EVD-000363`、`EVD-000364`、`EVD-000365`、`EVD-000366`
-- Review：`REV-000112`～`REV-000120` 全部 PASSED
-- 干净代码 Head：`8847b3c7dfaca3e5e99030b15f456ff13d9cb5d4`
-- 验证 P0 Run：`30730762775`，结果 `PASSED`
+- Completion Evidence：`EVD-000367`～`EVD-000372`
+- Review：`REV-000121`～`REV-000128` 全部 PASSED
+- 干净代码 Head：`122ffc28165ff33c5e75955bfbece9a23c6803d7`
+- 验证 P0 Run：`30732488810`，结果 `PASSED`
 - Context 测试：26 run / 0 failures / 0 errors / 0 skipped
-- Compiler 测试：12 run / 0 failures / 0 errors / 0 skipped
+- Compiler 测试：20 run / 0 failures / 0 errors / 0 skipped
+- 完整 Reactor：12 modules / PASSED
 - 当前 PR：`#17`，目标分支 `dev_all`
-- 被替代 PR：`#15`
+- 被替代 PR：`#15`，已关闭且未合并
 - 当前分支：`feature/p1-t02-rework-i002-20260802-1116`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t02_r02_completion.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t02_r03_completion.json`
 - 下一 Agent：`ProjectManagerAgent`
-- 下一动作：完成 PR #17 Review 与合并后，从最新 `dev_all` 启动 `TASK-P1-T03`
+- 下一动作：PR #17 完成 Review 并合并后，从最新 `dev_all` 启动 `TASK-P1-T03`
 - TASK-P1-T03 状态：未启动且保持阻断
-- 注意：不得在 PR #17 合并前启动或声明 T03；不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过。
+- 注意：不得在 PR #17 合并前启动或声明 T03；不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #17。
