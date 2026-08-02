@@ -1,5 +1,6 @@
 package dec.core.compiler.api;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import dec.core.context.EngineContext;
@@ -38,15 +39,16 @@ class PublishedFactIdentityTest {
         CompiledModelSet modelSet = modelSet(Collections.singletonList(warning));
         EngineContext engineContext = new EngineContext(modelSet);
 
-        PublishedCompilationResult result = PublishedCompilationResult.published(
-                modelSet.diagnostics(),
-                modelSet,
-                engineContext,
-                modelSet.digestPair(),
-                modelSet.compilerVersion(),
-                modelSet.schemaVersion(),
-                modelSet.optionsVersion(),
-                "sha-256-v1");
+        PublishedCompilationResult result = assertDoesNotThrow(
+                () -> PublishedCompilationResult.published(
+                        modelSet.diagnostics(),
+                        modelSet,
+                        engineContext,
+                        modelSet.digestPair(),
+                        modelSet.compilerVersion(),
+                        modelSet.schemaVersion(),
+                        modelSet.optionsVersion(),
+                        "sha-256-v1"));
 
         // 成功结果必须复用模型和模型已冻结的 Diagnostic 单一事实源。
         assertSame(modelSet, result.modelSet());
