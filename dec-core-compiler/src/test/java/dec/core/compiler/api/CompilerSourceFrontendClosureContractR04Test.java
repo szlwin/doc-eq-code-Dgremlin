@@ -180,20 +180,26 @@ class CompilerSourceFrontendClosureContractR04Test {
     private static void assertAccessor(
             Class<?> owner,
             String methodName,
-            Class<?> returnType) throws Exception {
+            Class<?> returnType) {
         assertMethod(owner, methodName, returnType);
     }
 
     /**
-     * 验证公共方法的返回类型和参数顺序。
+     * 验证公共方法的返回类型和参数顺序，并把缺失方法记录为语义失败。
      */
     private static void assertMethod(
             Class<?> owner,
             String methodName,
             Class<?> returnType,
-            Class<?>... parameterTypes) throws Exception {
-        Method method = owner.getMethod(methodName, parameterTypes);
-        assertEquals(returnType, method.getReturnType());
+            Class<?>... parameterTypes) {
+        try {
+            Method method = owner.getMethod(methodName, parameterTypes);
+            assertEquals(returnType, method.getReturnType());
+        } catch (NoSuchMethodException exception) {
+            throw new AssertionError(
+                    "Missing frozen API method: " + owner.getName() + "." + methodName,
+                    exception);
+        }
     }
 
     /**
