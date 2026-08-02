@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.compiler.canonical.DocumentFormat;
+import dec.core.compiler.canonical.FrontendOptions;
 import dec.core.compiler.canonical.FrontendResult;
 import dec.core.compiler.canonical.FrontendStatus;
 import dec.core.context.model.DiagnosticCode;
@@ -91,6 +92,38 @@ class XmlFrontendSecurityTest {
         FrontendResult result = XmlFrontendTestSupport.parse(
                 harness,
                 XmlFrontendTestSupport.source("<root/>", DocumentFormat.YAML));
+
+        assertFailure(result);
+        assertEquals(0, harness.externalAccessAttempts());
+    }
+
+    /**
+     * null Source 必须返回稳定失败，不能抛出参数异常或访问外部资源。
+     */
+    @Test
+    void rejectsNullSourceWithStableFailure() {
+        XmlFrontendTestSupport.FrontendHarness harness =
+                XmlFrontendTestSupport.frontend();
+        FrontendResult result = XmlFrontendTestSupport.parse(
+                harness,
+                null,
+                new FrontendOptions("1.0"));
+
+        assertFailure(result);
+        assertEquals(0, harness.externalAccessAttempts());
+    }
+
+    /**
+     * null FrontendOptions 必须返回稳定失败且不发布部分 root。
+     */
+    @Test
+    void rejectsNullOptionsWithStableFailure() {
+        XmlFrontendTestSupport.FrontendHarness harness =
+                XmlFrontendTestSupport.frontend();
+        FrontendResult result = XmlFrontendTestSupport.parse(
+                harness,
+                XmlFrontendTestSupport.xmlSource("<root/>"),
+                null);
 
         assertFailure(result);
         assertEquals(0, harness.externalAccessAttempts());
