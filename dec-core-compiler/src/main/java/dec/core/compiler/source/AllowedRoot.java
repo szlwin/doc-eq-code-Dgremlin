@@ -44,7 +44,9 @@ public final class AllowedRoot {
      * 判断候选 URI 是否位于同 scheme、同 authority 的根边界内。
      *
      * <p>判断使用路径段边界而不是普通字符串前缀，避免
-     * {@code /config} 错误匹配 {@code /configuration}。</p>
+     * {@code /config} 错误匹配 {@code /configuration}。根和候选的尾部斜杠
+     * 会在边界比较时统一，因此 {@code /config} 与 {@code /config/}
+     * 被视为同一根位置。</p>
      *
      * @param candidate 待验证候选 URI
      * @return 候选与根相同或位于根的后代路径时返回 true
@@ -62,26 +64,23 @@ public final class AllowedRoot {
             return false;
         }
 
-        String rootLocation = location(uri);
-        String candidateLocation = location(normalized);
-        if (containsTraversalSegment(candidateLocation)) {
+        String decodedCandidateLocation = location(normalized);
+        if (containsTraversalSegment(decodedCandidateLocation)) {
             return false;
         }
+        String rootLocation = boundaryLocation(uri);
+        String candidateLocation = boundaryLocation(normalized);
         if (rootLocation.equals(candidateLocation)) {
             return true;
         }
         if (rootLocation.isEmpty() || "/".equals(rootLocation)) {
             return candidateLocation.startsWith("/") || !candidateLocation.isEmpty();
         }
-
-        String descendantPrefix = rootLocation.endsWith("/")
-                ? rootLocation
-                : rootLocation + "/";
-        return candidateLocation.startsWith(descendantPrefix);
+        return candidateLocation.startsWith(rootLocation + "/");
     }
 
     /**
-     * 返回层次 URI 的 path，或不透明 URI 的 scheme-specific part。
+     * 返回层次 URI 的解码 path，或不透明 URI 的 scheme-specific part。
      */
     private static String location(URI value) {
         String location = value.isOpaque()
@@ -91,7 +90,18 @@ public final class AllowedRoot {
     }
 
     /**
-     * 检查路径中是否仍存在独立的父目录穿越段。
+     * 统一路径分隔符并移除非根路径的尾部斜杠，用于稳定边界比较。
+     */
+    private static String boundaryLocation(URI value) {
+        String normalized = location(value).replace('\\', '/');
+        while (normalized.length() > 1 && normalized.endsWith("/")) {
+            normalized = normalized.substring(0, normalized.length() - 1);
+        }
+        return normalized;
+    }
+
+    /**
+     * 检查解码路径中是否仍存在独立的父目录穿越段。
      */
     private static boolean containsTraversalSegment(String value) {
         String[] segments = value.replace('\\', '/').split("/");
