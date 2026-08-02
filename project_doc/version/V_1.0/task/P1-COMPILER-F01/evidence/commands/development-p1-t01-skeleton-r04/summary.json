@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_evidence",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I010",
+  "revision": "DEVSKEL-P1-T01-R04@1865378a29e3",
+  "head_sha": "1865378a29e3ccec4a27dfed6bf02c81527b743a",
+  "p0_run_id": 30729803354,
+  "result": "PASSED",
+  "java_release": 8,
+  "tests": {
+    "run": 25,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "existing_tests_passed": 21,
+    "sublist_contracts_passed": 3
+  },
+  "skeleton_contracts": [
+    "subList returns a defensive ProjectionReadOnlyList snapshot",
+    "nested subList retains projection operation path",
+    "iterator and listIterator structures are controlled",
+    "unfinished iterator mutations fail explicitly with architecture skeleton exception"
+  ],
+  "pseudo_success_paths": [],
+  "review_ids": ["REV-000104", "REV-000105"],
+  "reviewers": ["ArchitectureReviewAgent", "SpecComplianceReviewAgent"],
+  "evidence_id": "EVD-000356"
+}
