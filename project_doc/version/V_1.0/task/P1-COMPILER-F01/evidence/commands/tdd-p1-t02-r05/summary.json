@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_red_summary",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I005",
+  "revision": "TDD-P1-T02-R05@0e2924d4f125",
+  "input_revisions": {
+    "design": "DESIGN-R12@P1-T02-REWORK-I005",
+    "implementation_plan": "TP-P1-COMPILER-F01-R08@P1-T02-REWORK-I005",
+    "superseded_completion": "COMPLETION-P1-T02-R04@8b3e716a9730"
+  },
+  "head_sha": "0e2924d4f125c971d1189ac24399a7b975b2e1d0",
+  "p0_run_id": 30734576119,
+  "artifact_id": 8829101902,
+  "java_release": 8,
+  "production_compile": "PASSED",
+  "test_compile": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "existing_compiler_tests": {
+    "run": 35,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_source_policy_tests": {
+    "run": 8,
+    "expected_failures": 8,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_total": {
+    "run": 43,
+    "failures": 8,
+    "errors": 0,
+    "skipped": 0
+  },
+  "red_reasons": [
+    "AllowedRoot normalized before rejecting original traversal",
+    "opaque URI query was not recognized",
+    "resolvedSingle and resolvedFileSet were absent",
+    "validateSingle and validateFileSet were absent",
+    "ambiguous resolved(List,List) still existed"
+  ],
+  "red_classification": "VALID_BEHAVIORAL_RED",
+  "evidence_id": "EVD-000379",
+  "result": "PASSED"
+}
