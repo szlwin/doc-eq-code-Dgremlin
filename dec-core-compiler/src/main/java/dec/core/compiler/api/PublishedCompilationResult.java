@@ -17,29 +17,52 @@ public final class PublishedCompilationResult extends CompilationResult {
     /**
      * 冻结成功发布的模型、Context 和非 ERROR Diagnostic。
      *
-     * <p>当前实现先按旧 T02 行为重放，用于让 I002 新合同测试形成有效 RED；
-     * Development 阶段将按 DESIGN-R09 收紧为精确发布事实。</p>
+     * <p>成功结果只能包装 Publisher 实际暴露的同一个模型实例，不能使用值相等模型
+     * 重新拼接发布聚合。Diagnostic 也必须归属于该模型的发布事实。</p>
      *
      * @param sessionId 完成编译会话的稳定身份
      * @param compiledModelSet 声称已经发布的不可变模型
      * @param context Publisher 实际暴露的不可变 Context
-     * @param diagnostics 不含 ERROR 的稳定 Diagnostic 快照
+     * @param diagnostics 不含 ERROR 且属于模型的稳定 Diagnostic 快照
      */
     public PublishedCompilationResult(
             String sessionId,
             CompiledModelSet compiledModelSet,
             EngineContext context,
             List<Diagnostic> diagnostics) {
-        super(sessionId, ApiContracts.publishedDiagnostics(diagnostics));
+        super(
+                sessionId,
+                architectureSkeletonPublishedDiagnostics(
+                        compiledModelSet,
+                        diagnostics));
         this.compiledModelSet = Objects.requireNonNull(
                 compiledModelSet,
                 "compiledModelSet");
         this.context = Objects.requireNonNull(context, "context");
-        // I002 RED：旧实现只比较值相等，尚未证明二者属于同一发布聚合实例。
-        if (!compiledModelSet.equals(context.compiledModelSet())) {
+        // INV-T02-R09-001：必须是 Publisher 暴露 Context 所持有的同一模型实例。
+        if (compiledModelSet != context.compiledModelSet()) {
             throw new IllegalArgumentException(
-                    "context must be backed by the published compiledModelSet");
+                    "context must reference the exact published compiledModelSet instance");
         }
+    }
+
+    /**
+     * Architecture Skeleton 先建立 Diagnostic 单一事实源边界。
+     *
+     * <p>当输入不一致时保留显式骨架失败，证明边界已经落位但具体失败语义尚未完成。</p>
+     */
+    private static List<Diagnostic> architectureSkeletonPublishedDiagnostics(
+            CompiledModelSet compiledModelSet,
+            List<Diagnostic> diagnostics) {
+        CompiledModelSet model = Objects.requireNonNull(
+                compiledModelSet,
+                "compiledModelSet");
+        List<Diagnostic> validated = ApiContracts.publishedDiagnostics(diagnostics);
+        if (!model.diagnostics().equals(validated)) {
+            throw new UnsupportedOperationException(
+                    "Architecture skeleton only: published diagnostics closure");
+        }
+        return model.diagnostics();
     }
 
     /**
