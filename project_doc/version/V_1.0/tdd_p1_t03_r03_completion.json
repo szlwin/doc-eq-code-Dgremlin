@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "kind": "task_completion_checkpoint",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I003",
+  "status": "COMPLETED",
+  "base_sha": "370b72f4bf4ec9b3620586f26d13d95f611f3cc9",
+  "rework_base_sha": "4f218f5dbf329949b8f7b3d7396668919482d198",
+  "branch": "feature/p1-t03-source-graph-20260802-1430",
+  "design_revision": "DESIGN-R15@P1-T03-REWORK-I003",
+  "plan_revision": "TP-P1-COMPILER-F01-R11@P1-T03-REWORK-I003",
+  "tdd_revision": "TDD-P1-T03-R03@d5b42e9eb166",
+  "architecture_skeleton_revision": "DEVSKEL-P1-T03-R03@3c9f64c4ac11",
+  "development_revision": "DEV-P1-T03-R03@cedf22bb14ff",
+  "code_review_revision": "CODEREVIEW-P1-T03-R03@cedf22bb14ff",
+  "testing_revision": "TESTING-P1-T03-R03@cedf22bb14ff",
+  "completion_revision": "COMPLETION-P1-T03-R03@cedf22bb14ff",
+  "superseded_completion_revisions": [
+    "COMPLETION-P1-T03-R01@713848bfa65e",
+    "COMPLETION-P1-T03-R02@6af43b47f044"
+  ],
+  "clean_code_head_sha": "cedf22bb14ffbcd45e0eff2f680c3505dc9f7ed0",
+  "p0_run_id": 30739517365,
+  "artifact_id": 8830794341,
+  "artifact_sha256": "b833525e84af935c99c05ed3ab95424d59577f98bd2fa54905473c5cc08b7973",
+  "test_counts": {
+    "context": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+    "compiler": {"run": 74, "failures": 0, "errors": 0, "skipped": 0},
+    "i003": {"run": 6, "failures": 0, "errors": 0, "skipped": 0}
+  },
+  "closed_findings": [
+    "FND-P1-T03-I003-001",
+    "FND-P1-T03-I003-002",
+    "FND-P1-T03-I003-003"
+  ],
+  "open_p0_p1_findings": [],
+  "source_count": 10,
+  "edge_count": 7,
+  "current_directory_nonblank_contract": "PASSED",
+  "invalid_root_stable_failure": "PASSED",
+  "percent_encoded_dot_canonicalization": "PASSED",
+  "encoded_parent_and_separator_preservation": "PASSED",
+  "lf_crlf_cr_declaration_origin": "PASSED",
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "current_pr": 18,
+  "merge_authorized": false,
+  "next_task": "TASK-P1-T04",
+  "next_task_started": false,
+  "next_action": "Review PR #18; merge only after explicit authorization; then start TASK-P1-T04 from latest dev_all."
+}
