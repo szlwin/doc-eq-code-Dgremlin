@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I004",
+  "revision": "TDD-P1-T03-R04@282951053978",
+  "review_id": "REV-000177",
+  "evidence_id": "EVD-000418",
+  "head_sha": "282951053978faf8d7036be02c162622993639f8",
+  "p0_run_id": 30740438344,
+  "artifact_id": 8831088554,
+  "artifact_sha256": "177464718912f6469b08005f11bac872dca36f848ce9f05028f93d30a81b008f",
+  "java_release": 8,
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_compiler_tests": {"run": 74, "failures": 0, "errors": 0, "skipped": 0},
+  "i004_tests": {"run": 4, "expected_failures": 2, "passes": 2, "errors": 0},
+  "expected_failures": [
+    "preservesRelativeUriCategoryAfterLeadingCurrentDirectoryCanonicalization",
+    "rejectsPromotableRelativeRootsBeforeProviderAccess"
+  ],
+  "passing_guards": [
+    "keepsAbsoluteUriCategoryForExistingCanonicalReferences",
+    "mapsNullProviderToStableFailedResult"
+  ],
+  "production_changed": false,
+  "red_valid": true,
+  "result": "PASSED"
+}
