@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_summary",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I001",
+  "revision": "DEVSKEL-P1-T03-R01@f8437837e2a8",
+  "input_revisions": {
+    "design": "DESIGN-R13@P1-T03-I001",
+    "implementation_plan": "TP-P1-COMPILER-F01-R09@P1-T03-I001",
+    "tdd": "TDD-P1-T03-R01@deaed1e7ea1a"
+  },
+  "head_sha": "f8437837e2a868360a6d31703b494f4cc72e229d",
+  "p0_run_id": 30736568295,
+  "artifact_id": 8829765541,
+  "artifact_sha256": "00382d7decd5b1baf7776a99f044de08a6c7b6850dedc1560009fceee040c148",
+  "java_release": 8,
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 57,
+    "failures": 9,
+    "errors": 0,
+    "skipped": 0
+  },
+  "established_contracts": [
+    "SourcePolicy immutable limits and allowed root",
+    "SourceEdgeType and SourceGraphEdge",
+    "SourceManifest and MixSourceGraph",
+    "SourceGraphResolutionResult candidate isolation",
+    "pre-provider scheme, traversal and allowed-root validation",
+    "null provider conversion to MIX_SOURCE_POLICY",
+    "SourceDeclarationParser architecture boundary"
+  ],
+  "newly_passing_oracle": [
+    "literal traversal rejected before provider access",
+    "unknown scheme rejected before provider access"
+  ],
+  "controlled_red": "9 T03 tests fail only because safe-root resolver flow remains Architecture skeleton only",
+  "evidence_id": "EVD-000387",
+  "result": "PASSED"
+}
