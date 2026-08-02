@@ -39,9 +39,10 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
             "http://www.w3.org/2001/XMLSchema-instance";
     private static final String PASS = "xml-frontend";
     private final Consumer<String> externalAccessObserver;
+    private final XmlFrontendLimits limits;
 
     /**
-     * 创建生产使用的安全 XML Frontend。
+     * 创建生产使用的安全 XML Frontend，并使用 Design R19 冻结预算。
      */
     public SecureXmlDocumentFrontend() {
         this(new Consumer<String>() {
@@ -49,7 +50,7 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
             public void accept(String location) {
                 // 生产模式不记录被拒绝的外部位置，避免额外状态和信息泄漏。
             }
-        });
+        }, XmlFrontendLimits.production());
     }
 
     /**
@@ -58,9 +59,22 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
      * @param externalAccessObserver 仅在解析器尝试解析外部资源时调用的探针
      */
     SecureXmlDocumentFrontend(Consumer<String> externalAccessObserver) {
+        this(externalAccessObserver, XmlFrontendLimits.production());
+    }
+
+    /**
+     * 创建带可注入预算的同包测试 Frontend。
+     *
+     * @param externalAccessObserver 外部资源解析尝试探针
+     * @param limits 当前解析使用的不可变资源预算
+     */
+    SecureXmlDocumentFrontend(
+            Consumer<String> externalAccessObserver,
+            XmlFrontendLimits limits) {
         this.externalAccessObserver = Objects.requireNonNull(
                 externalAccessObserver,
                 "externalAccessObserver");
+        this.limits = Objects.requireNonNull(limits, "limits");
     }
 
     /**
@@ -214,10 +228,11 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
             }
             if (event == XMLStreamConstants.START_ELEMENT) {
                 String localName = reader.getLocalName();
+                Position position = locator.locate(reader.getLocation(), localName);
                 SourceRef sourceRef = new SourceRef(
                         source.sourceId(),
-                        locator.locate(reader.getLocation(), localName).line(),
-                        locator.locate(reader.getLocation(), localName).column(),
+                        position.line(),
+                        position.column(),
                         nodePath(stack, localName));
                 stack.add(new NodeBuilder(
                         localName,
