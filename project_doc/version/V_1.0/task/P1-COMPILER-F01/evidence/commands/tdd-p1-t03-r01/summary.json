@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_red_summary",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I001",
+  "revision": "TDD-P1-T03-R01@deaed1e7ea1a",
+  "input_revisions": {
+    "design": "DESIGN-R13@P1-T03-I001",
+    "implementation_plan": "TP-P1-COMPILER-F01-R09@P1-T03-I001",
+    "dependency_completion": "COMPLETION-P1-T02-R05@35376308b013"
+  },
+  "base_sha": "370b72f4bf4ec9b3620586f26d13d95f611f3cc9",
+  "head_sha": "deaed1e7ea1adcf2580f01e75fe6ec39a140aba1",
+  "p0_run_id": 30736453340,
+  "artifact_id": 8829731583,
+  "artifact_sha256": "165eb108f4b394c13da6450e46e481069bed6ffeab2a490b951437ddecf27733",
+  "java_release": 8,
+  "production_compile": "PASSED",
+  "test_compile": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "existing_compiler_tests": {
+    "run": 47,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_t03_tests": {
+    "run": 10,
+    "expected_failures": 10,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_total": {
+    "run": 57,
+    "failures": 10,
+    "errors": 0,
+    "skipped": 0
+  },
+  "red_reason": "MixSourceResolver.resolve throws Architecture skeleton only",
+  "invalid_red_causes": {
+    "class_not_found": 0,
+    "no_such_method": 0,
+    "syntax_or_compile_error": 0,
+    "dependency_error": 0,
+    "fixture_missing": 0
+  },
+  "red_classification": "VALID_BEHAVIORAL_RED",
+  "evidence_id": "EVD-000386",
+  "result": "PASSED"
+}
