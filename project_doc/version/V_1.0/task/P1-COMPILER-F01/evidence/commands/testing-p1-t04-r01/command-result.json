@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "kind": "testing_evidence",
+  "task_id": "TASK-P1-T04",
+  "iteration": "I001",
+  "revision": "TESTING-P1-T04-R01@ba472906c719",
+  "input_revisions": {
+    "development": "DEV-P1-T04-R01@ba472906c719",
+    "code_review": "CODEREVIEW-P1-T04-R01@ba472906c719"
+  },
+  "tested_head_sha": "ba472906c719985b21cb6cbed70df5360a59fadc",
+  "p0_run_id": 30743067868,
+  "artifact_id": 8831948275,
+  "artifact_sha256": "0824424e712ff64af63736d0b6be0bddf5f2e372ca26bf8633ebb6f822d6eee3",
+  "suites": {
+    "context": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+    "compiler": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+    "xml_t04": {"run": 15, "failures": 0, "errors": 0, "skipped": 0},
+    "legacy_xml_downstream": "PASSED",
+    "demo_regression": {"run": 4, "failures": 0, "errors": 0, "skipped": 0}
+  },
+  "security_oracles": {
+    "doctype": "PASSED",
+    "internal_entity": "PASSED",
+    "network_external_entity": "PASSED_ZERO_ACCESS",
+    "file_external_entity": "PASSED_ZERO_ACCESS",
+    "external_parameter_entity": "PASSED_ZERO_ACCESS",
+    "network_schema": "PASSED_ZERO_ACCESS",
+    "file_schema": "PASSED_ZERO_ACCESS",
+    "xinclude": "PASSED_NOT_RESOLVED",
+    "malformed_xml": "PASSED_NO_PARTIAL_ROOT",
+    "wrong_format": "PASSED_CONTROLLED_FAILURE"
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "review_id": "REV-000205",
+  "evidence_id": "EVD-000449",
+  "result": "PASSED"
+}
