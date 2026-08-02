@@ -574,7 +574,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * 读取属性 scalar；隐式 YAML null 映射为空字符串。
+         * 读取属性 scalar；合法 YAML null 映射为空字符串。
          */
         private String readAttributeValue(Node node, String nodePath) {
             enter(node, nodePath);
@@ -686,7 +686,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * 允许隐式标准 scalar tag 与显式字符串，拒绝显式 typed tag。
+         * 标准 scalar 必须同时满足 tag 白名单与冻结词法合同。
          */
         private static void requireAllowedScalarTag(
                 ScalarNode node,
@@ -703,9 +703,9 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                         node.getStartMark(),
                         nodePath);
             }
-            if (!node.isResolved() && !Tag.STR.equals(tag)) {
+            if (!YamlScalarLexemePolicy.isValid(tag, node.getValue())) {
                 throw unsafe(
-                        "yaml.frontend.scalar.explicit-typed-tag",
+                        "yaml.frontend.scalar.invalid-lexeme",
                         node.getStartMark(),
                         nodePath);
             }
