@@ -2,31 +2,37 @@ package dec.core.compiler.api;
 
 import dec.core.context.EngineContext;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 调用方提供的不可变条件发布边界。
  */
 public final class PublicationRequest {
-    private final EngineContext expectedCurrent;
+    private final Optional<EngineContext> expectedCurrent;
     private final ContextPublisher publisher;
 
     /**
      * 绑定当前 Context 预期与唯一允许的发布副作用。
      *
-     * <p>{@code expectedCurrent} 为空表示首次发布；非空时由 Publisher 执行 compare-and-set。</p>
+     * <p>{@link Optional#empty()} 明确表示首次发布；Optional 本身不接受 null，
+     * 从而区分首次发布与调用方漏传参数。</p>
      *
-     * @param expectedCurrent 可为空的当前 Context 预期
+     * @param expectedCurrent 当前 Context 的显式可选预期
      * @param publisher 非空原子发布器
      */
-    public PublicationRequest(EngineContext expectedCurrent, ContextPublisher publisher) {
-        this.expectedCurrent = expectedCurrent;
+    public PublicationRequest(
+            Optional<EngineContext> expectedCurrent,
+            ContextPublisher publisher) {
+        this.expectedCurrent = Objects.requireNonNull(
+                expectedCurrent,
+                "expectedCurrent");
         this.publisher = Objects.requireNonNull(publisher, "publisher");
     }
 
     /**
-     * 返回调用方提供的可空 compare-and-set 预期。
+     * 返回调用方提供的 compare-and-set 预期。
      */
-    public EngineContext expectedCurrent() {
+    public Optional<EngineContext> expectedCurrent() {
         return expectedCurrent;
     }
 
@@ -46,7 +52,7 @@ public final class PublicationRequest {
             return false;
         }
         PublicationRequest that = (PublicationRequest) other;
-        return Objects.equals(expectedCurrent, that.expectedCurrent)
+        return expectedCurrent.equals(that.expectedCurrent)
                 && publisher.equals(that.publisher);
     }
 
