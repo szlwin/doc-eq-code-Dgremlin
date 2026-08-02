@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "kind": "testing_result",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I003",
+  "revision": "TESTING-P1-T02-R03@122ffc28165f",
+  "tested_head_sha": "122ffc28165ff33c5e75955bfbece9a23c6803d7",
+  "p0_run_id": 30732488810,
+  "artifact": {
+    "id": 8828428922,
+    "sha256": "b939cba57f4e60b1ba035b903edbaac1b2ce1c453f91205591b41e175e5f9fb3"
+  },
+  "toolchain": {
+    "maven_wrapper": "PASSED",
+    "java_runtime": "17.0.19",
+    "maven_compiler_release": 8,
+    "legacy_dependency_bootstrap": "PASSED"
+  },
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 20,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "classes": {
+      "CompilerFullApiBehaviorR03Test": 4,
+      "PublishedFactIdentityTest": 1,
+      "CompilerValueSemanticsR03Test": 2,
+      "CompilerApiContractTest": 8,
+      "CompilerFullApiContractR03Test": 4,
+      "ModuleDependencyTest": 1
+    }
+  },
+  "compiler_sources": {
+    "production": 31,
+    "test": 6
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "review_id": "REV-000127",
+  "reviewer": "TestEvidenceReviewAgent",
+  "evidence_id": "EVD-000371",
+  "result": "PASSED"
+}
