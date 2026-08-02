@@ -73,9 +73,9 @@
 ### 4.3 Name/path
 
 - 使用字符级判断实现 `[A-Za-z_][A-Za-z0-9._-]*`，避免 regex 隐藏分配；
-- 仅对进入 nodePath 的根和子节点名称应用该规则；
-- 在 `reserveNode` 和 nodePath 拼接前拒绝非法名称；
-- 属性 key 继续使用 R20 规则，不因路径 Finding 扩大限制；
+- 根、子节点和属性名称应用同一可移植子集；
+- 在 `reserveNode` 和 nodePath 拼接前拒绝非法节点名称；
+- 属性名在写入 Canonical Map 前校验；
 - 保留简单合法名称的 XML/YAML parity。
 
 ## 5. Review
