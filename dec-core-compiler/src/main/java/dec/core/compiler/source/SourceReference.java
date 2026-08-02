@@ -15,10 +15,6 @@ import java.util.Objects;
  * 同时 SourcePolicy 仍能看到并拒绝父目录穿越和其它安全违规。</p>
  */
 public final class SourceReference {
-    private static final int NOT_DOT_SEGMENT = 0;
-    private static final int CURRENT_DIRECTORY_SEGMENT = 1;
-    private static final int PARENT_DIRECTORY_SEGMENT = 2;
-
     private final String value;
 
     /**
@@ -124,7 +120,7 @@ public final class SourceReference {
         String[] segments = value.split("/", -1);
         List<String> output = new ArrayList<String>(segments.length);
         for (String segment : segments) {
-            if (dotSegmentKind(segment) != CURRENT_DIRECTORY_SEGMENT) {
+            if (dotSegmentKind(segment) != DotSegmentKind.CURRENT_DIRECTORY) {
                 output.add(segment);
             }
         }
@@ -135,7 +131,7 @@ public final class SourceReference {
             return value.startsWith("/") ? "/" : ".";
         }
         if (dotSegmentKind(segments[segments.length - 1])
-                == CURRENT_DIRECTORY_SEGMENT
+                == DotSegmentKind.CURRENT_DIRECTORY
                 && !result.endsWith("/")) {
             return result + '/';
         }
@@ -147,9 +143,9 @@ public final class SourceReference {
      *
      * <p>这里只识别 ASCII 点及其百分号编码，不执行通用 URI 解码。</p>
      */
-    private static int dotSegmentKind(String rawSegment) {
+    private static DotSegmentKind dotSegmentKind(String rawSegment) {
         if (rawSegment.isEmpty()) {
-            return NOT_DOT_SEGMENT;
+            return DotSegmentKind.NOT_DOT;
         }
         int dotCount = 0;
         for (int index = 0; index < rawSegment.length(); index++) {
@@ -159,23 +155,23 @@ public final class SourceReference {
                 continue;
             }
             if (current != '%' || index + 2 >= rawSegment.length()) {
-                return NOT_DOT_SEGMENT;
+                return DotSegmentKind.NOT_DOT;
             }
             int high = hexValue(rawSegment.charAt(index + 1));
             int low = hexValue(rawSegment.charAt(index + 2));
             if (high < 0 || low < 0 || ((high << 4) + low) != '.') {
-                return NOT_DOT_SEGMENT;
+                return DotSegmentKind.NOT_DOT;
             }
             dotCount++;
             index += 2;
         }
         if (dotCount == 1) {
-            return CURRENT_DIRECTORY_SEGMENT;
+            return DotSegmentKind.CURRENT_DIRECTORY;
         }
         if (dotCount == 2) {
-            return PARENT_DIRECTORY_SEGMENT;
+            return DotSegmentKind.PARENT_DIRECTORY;
         }
-        return NOT_DOT_SEGMENT;
+        return DotSegmentKind.NOT_DOT;
     }
 
     /**
@@ -230,5 +226,14 @@ public final class SourceReference {
     @Override
     public String toString() {
         return "SourceReference{value='" + value + "'}";
+    }
+
+    /**
+     * raw segment 一次解码后的点段类别；不携带运行时状态。
+     */
+    private enum DotSegmentKind {
+        NOT_DOT,
+        CURRENT_DIRECTORY,
+        PARENT_DIRECTORY
     }
 }
