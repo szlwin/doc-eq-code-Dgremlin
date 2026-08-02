@@ -1,7 +1,9 @@
 package dec.core.compiler.source;
 
 import dec.core.context.model.Diagnostic;
+import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
+import dec.core.context.model.SourceRef;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,10 +30,10 @@ public final class SourceResolutionResults {
             List<Diagnostic> diagnostics) {
         List<DocumentSource> sources = Collections.singletonList(
                 Objects.requireNonNull(source, "source"));
-        return new ImmutableSourceResolutionResult(
-                SourceResolutionStatus.RESOLVED,
-                immutableUniqueSources(sources),
-                nonErrorDiagnostics(diagnostics));
+        return resolvedResult(
+                sources,
+                diagnostics,
+                true);
     }
 
     /**
@@ -44,45 +46,48 @@ public final class SourceResolutionResults {
     public static SourceResolutionResult resolvedFileSet(
             List<DocumentSource> sources,
             List<Diagnostic> diagnostics) {
-        List<DocumentSource> sourceCopy = immutableUniqueSources(sources);
-        if (sourceCopy.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "resolved file set sources must not be empty");
-        }
-        return new ImmutableSourceResolutionResult(
-                SourceResolutionStatus.RESOLVED,
-                sourceCopy,
-                nonErrorDiagnostics(diagnostics));
+        return resolvedResult(
+                sources,
+                diagnostics,
+                false);
     }
 
     /**
      * 验证第三方 Provider 的单 Source 解析结果。
      *
+     * <p>Provider 合同违规不会向 T03 抛出预期异常，而是转换为不携带
+     * 部分 Source 的 {@code MIX-SOURCE-POLICY} 失败结果。</p>
+     *
      * @param reference 本次解析引用，用于违规 Diagnostic 定位
      * @param result Provider 返回的待验证结果
-     * @return 规范化结果；Architecture Skeleton 阶段暂不实现
+     * @return 规范化不可变结果或 Source 策略失败结果
      */
     public static SourceResolutionResult validateSingle(
             SourceReference reference,
             SourceResolutionResult result) {
-        Objects.requireNonNull(reference, "reference");
-        Objects.requireNonNull(result, "result");
-        throw new AssertionError("Architecture skeleton only");
+        return validateProviderResult(
+                reference,
+                result,
+                true);
     }
 
     /**
      * 验证第三方 Provider 的文件集解析结果。
      *
+     * <p>合法结果也会重新复制和排序，避免第三方结果在返回后继续修改
+     * Source 或 Diagnostic 集合。</p>
+     *
      * @param reference 本次解析引用，用于违规 Diagnostic 定位
      * @param result Provider 返回的待验证结果
-     * @return 规范化结果；Architecture Skeleton 阶段暂不实现
+     * @return 规范化不可变结果或 Source 策略失败结果
      */
     public static SourceResolutionResult validateFileSet(
             SourceReference reference,
             SourceResolutionResult result) {
-        Objects.requireNonNull(reference, "reference");
-        Objects.requireNonNull(result, "result");
-        throw new AssertionError("Architecture skeleton only");
+        return validateProviderResult(
+                reference,
+                result,
+                false);
     }
 
     /**
@@ -96,6 +101,83 @@ public final class SourceResolutionResults {
                 SourceResolutionStatus.FAILED,
                 Collections.<DocumentSource>emptyList(),
                 errorDiagnostics(diagnostics));
+    }
+
+    /**
+     * 创建并校验单 Source 或文件集成功结果。
+     */
+    private static SourceResolutionResult resolvedResult(
+            List<DocumentSource> sources,
+            List<Diagnostic> diagnostics,
+            boolean single) {
+        List<DocumentSource> sourceCopy = immutableUniqueSources(sources);
+        if (single && sourceCopy.size() != 1) {
+            throw new IllegalArgumentException(
+                    "resolved single result must contain exactly one source");
+        }
+        if (!single && sourceCopy.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "resolved file set sources must not be empty");
+        }
+        return new ImmutableSourceResolutionResult(
+                SourceResolutionStatus.RESOLVED,
+                sourceCopy,
+                nonErrorDiagnostics(diagnostics));
+    }
+
+    /**
+     * 防御性验证第三方 Provider 返回值并转换合同违规。
+     */
+    private static SourceResolutionResult validateProviderResult(
+            SourceReference reference,
+            SourceResolutionResult result,
+            boolean single) {
+        SourceReference checkedReference = Objects.requireNonNull(
+                reference,
+                "reference");
+        try {
+            SourceResolutionResult checkedResult = Objects.requireNonNull(
+                    result,
+                    "result");
+            SourceResolutionStatus status = Objects.requireNonNull(
+                    checkedResult.status(),
+                    "result.status()");
+            List<DocumentSource> sources = checkedResult.sources();
+            List<Diagnostic> diagnostics = checkedResult.diagnostics();
+
+            if (status == SourceResolutionStatus.RESOLVED) {
+                return resolvedResult(sources, diagnostics, single);
+            }
+            if (status == SourceResolutionStatus.FAILED) {
+                List<DocumentSource> sourceCopy = immutableUniqueSources(sources);
+                if (!sourceCopy.isEmpty()) {
+                    throw new IllegalArgumentException(
+                            "failed result must not contain partial sources");
+                }
+                return failed(diagnostics);
+            }
+            throw new IllegalArgumentException(
+                    "unsupported source resolution status: " + status);
+        } catch (RuntimeException contractViolation) {
+            return policyFailure(checkedReference);
+        }
+    }
+
+    /**
+     * 创建不泄漏部分 Source 的 Provider 合同违规失败结果。
+     */
+    private static SourceResolutionResult policyFailure(
+            SourceReference reference) {
+        Diagnostic diagnostic = new Diagnostic(
+                DiagnosticCode.MIX_SOURCE_POLICY,
+                DiagnosticSeverity.ERROR,
+                "source.provider.contract",
+                null,
+                new SourceRef(reference.value(), 0, 0, "/source"),
+                Collections.<SourceRef>emptyList(),
+                "修复 DocumentSourceProvider 返回合同",
+                "SourceResolutionContractPass");
+        return failed(Collections.singletonList(diagnostic));
     }
 
     /**
