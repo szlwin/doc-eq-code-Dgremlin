@@ -9,12 +9,16 @@ import java.util.Objects;
 /**
  * 调用方提供的不可变 Source 引用及其统一 canonical key。
  *
- * <p>该值对象只消除独立的当前目录 {@code .} 段并统一 URI scheme 大小写，
- * 不消除 {@code ..}、query、fragment 或非法 URI 文本。这样 Provider、声明边、
- * 排序和环路检测可以共享同一身份，同时 SourcePolicy 仍能看到并拒绝原有的
- * 父目录穿越和其它安全违规。</p>
+ * <p>该值对象只消除独立的当前目录 {@code .} 段及其一次编码形式，
+ * 并统一 URI scheme 大小写。不消除 {@code ..}、query、fragment、编码分隔符
+ * 或非法 URI 文本。这样 Provider、声明边、排序和环路检测可以共享同一身份，
+ * 同时 SourcePolicy 仍能看到并拒绝父目录穿越和其它安全违规。</p>
  */
 public final class SourceReference {
+    private static final int NOT_DOT_SEGMENT = 0;
+    private static final int CURRENT_DIRECTORY_SEGMENT = 1;
+    private static final int PARENT_DIRECTORY_SEGMENT = 2;
+
     private final String value;
 
     /**
@@ -28,7 +32,12 @@ public final class SourceReference {
         if (checked.isEmpty()) {
             throw new IllegalArgumentException("value must not be blank");
         }
-        this.value = canonicalize(checked);
+        String canonical = canonicalize(checked);
+        if (canonical.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "canonical value must not be blank");
+        }
+        this.value = canonical;
     }
 
     /**
@@ -55,7 +64,7 @@ public final class SourceReference {
     }
 
     /**
-     * 规范 opaque URI 的 scheme-specific part，例如 classpath:mix/./a.xml。
+     * 规范 opaque URI 的 scheme-specific part，例如 classpath:mix/%2e/a.xml。
      */
     private static String canonicalOpaque(URI uri) {
         String scheme = uri.getScheme() == null
@@ -103,30 +112,98 @@ public final class SourceReference {
     }
 
     /**
-     * 只移除独立 {@code .} 段；{@code ..} 和编码段必须保留给安全策略验证。
+     * 逐个 raw segment 删除一次解码后恰好为 {@code .} 的当前目录段。
+     *
+     * <p>解码后为 {@code ..} 的 segment 保留原始文本，让 SourcePolicy 明确拒绝；
+     * {@code %2F} 等编码分隔符不会在这里被解码，因此不能改变路径结构。</p>
      */
     private static String removeCurrentDirectorySegments(String value) {
-        if (value.isEmpty() || value.indexOf('.') < 0) {
+        if (value.isEmpty()) {
             return value;
         }
         String[] segments = value.split("/", -1);
         List<String> output = new ArrayList<String>(segments.length);
         for (String segment : segments) {
-            if (!".".equals(segment)) {
+            if (dotSegmentKind(segment) != CURRENT_DIRECTORY_SEGMENT) {
                 output.add(segment);
             }
         }
-        if ((value.equals(".") || value.endsWith("/."))
-                && (output.isEmpty()
-                || !output.get(output.size() - 1).isEmpty())) {
-            output.add("");
+
+        String result = joinSegments(output);
+        if (result.isEmpty()) {
+            // 绝对根仍为根；仅由当前目录段组成的相对引用统一保留为点。
+            return value.startsWith("/") ? "/" : ".";
         }
-        StringBuilder result = new StringBuilder(value.length());
-        for (int index = 0; index < output.size(); index++) {
+        if (dotSegmentKind(segments[segments.length - 1])
+                == CURRENT_DIRECTORY_SEGMENT
+                && !result.endsWith("/")) {
+            return result + '/';
+        }
+        return result;
+    }
+
+    /**
+     * 判断 raw segment 一次解码后是单点、双点还是普通 segment。
+     *
+     * <p>这里只识别 ASCII 点及其百分号编码，不执行通用 URI 解码。</p>
+     */
+    private static int dotSegmentKind(String rawSegment) {
+        if (rawSegment.isEmpty()) {
+            return NOT_DOT_SEGMENT;
+        }
+        int dotCount = 0;
+        for (int index = 0; index < rawSegment.length(); index++) {
+            char current = rawSegment.charAt(index);
+            if (current == '.') {
+                dotCount++;
+                continue;
+            }
+            if (current != '%' || index + 2 >= rawSegment.length()) {
+                return NOT_DOT_SEGMENT;
+            }
+            int high = hexValue(rawSegment.charAt(index + 1));
+            int low = hexValue(rawSegment.charAt(index + 2));
+            if (high < 0 || low < 0 || ((high << 4) + low) != '.') {
+                return NOT_DOT_SEGMENT;
+            }
+            dotCount++;
+            index += 2;
+        }
+        if (dotCount == 1) {
+            return CURRENT_DIRECTORY_SEGMENT;
+        }
+        if (dotCount == 2) {
+            return PARENT_DIRECTORY_SEGMENT;
+        }
+        return NOT_DOT_SEGMENT;
+    }
+
+    /**
+     * 将十六进制字符转换为数值；非法字符返回 -1。
+     */
+    private static int hexValue(char value) {
+        if (value >= '0' && value <= '9') {
+            return value - '0';
+        }
+        if (value >= 'a' && value <= 'f') {
+            return value - 'a' + 10;
+        }
+        if (value >= 'A' && value <= 'F') {
+            return value - 'A' + 10;
+        }
+        return -1;
+    }
+
+    /**
+     * 使用原有斜杠边界连接 raw segment。
+     */
+    private static String joinSegments(List<String> segments) {
+        StringBuilder result = new StringBuilder();
+        for (int index = 0; index < segments.size(); index++) {
             if (index > 0) {
                 result.append('/');
             }
-            result.append(output.get(index));
+            result.append(segments.get(index));
         }
         return result.toString();
     }
