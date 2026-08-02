@@ -28,12 +28,7 @@ public final class SourceReference {
         if (checked.isEmpty()) {
             throw new IllegalArgumentException("value must not be blank");
         }
-        String canonical = canonicalize(checked);
-        if (canonical.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "canonical value must not be blank");
-        }
-        this.value = canonical;
+        this.value = requireCanonicalText(canonicalize(checked));
     }
 
     /**
@@ -202,6 +197,18 @@ public final class SourceReference {
             result.append(segments.get(index));
         }
         return result.toString();
+    }
+
+    /**
+     * 冻结 canonicalization 后的非空后置条件，防止值对象内部出现空 key。
+     */
+    private static String requireCanonicalText(String value) {
+        String checked = Objects.requireNonNull(value, "canonical value").trim();
+        if (checked.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "canonical value must not be blank");
+        }
+        return checked;
     }
 
     /**
