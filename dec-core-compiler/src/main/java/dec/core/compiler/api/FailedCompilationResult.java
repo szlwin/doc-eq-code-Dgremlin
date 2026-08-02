@@ -54,6 +54,6 @@ public final class FailedCompilationResult implements CompilationResult {
 
     @Override
     public String toString() {
-        return "FailedCompilationResult{diagnostics=" + diagnostics.size() + '}';
+        return "FailedCompilationResult{diagnostics=" + diagnostics + '}';
     }
 }
