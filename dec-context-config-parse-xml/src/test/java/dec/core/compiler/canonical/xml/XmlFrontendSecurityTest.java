@@ -45,6 +45,16 @@ class XmlFrontendSecurityTest {
     }
 
     /**
+     * 外部参数实体必须在 DTD 展开前失败，且不得触发网络访问。
+     */
+    @Test
+    void rejectsExternalParameterEntityWithoutAccess() {
+        assertUnsafe("<!DOCTYPE root [<!ENTITY % ext SYSTEM "
+                + "\"https://example.invalid/external.dtd\"> %ext;]>"
+                + "<root/>");
+    }
+
+    /**
      * 外部网络 schema 位置必须直接拒绝，不能触发 SchemaFactory 或网络访问。
      */
     @Test
