@@ -63,8 +63,7 @@ class YamlFrontendResourceLimitTest {
                         + "  child:\n"
                         + "    \"#text\": abc\n");
 
-        assertEquals(FrontendStatus.PARSED, result.status());
-        assertTrue(result.canonicalRoot().isPresent());
+        assertSafe(result);
     }
 
     /**
@@ -194,11 +193,13 @@ class YamlFrontendResourceLimitTest {
     }
 
     /**
-     * 断言预算失败不发布部分 root，并返回统一 YAML 安全 Diagnostic。
+     * 先证明相同预算能解析边界内控制样本，再断言目标输入受控失败。
+     * 该控制样本防止“拒绝所有 YAML”的伪资源门禁通过负向 Oracle。
      */
     private static void assertLimitFailure(
             String yaml,
             DocumentFrontend frontend) {
+        assertSafe(parse(frontend, "a: b\n"));
         FrontendResult result = parse(frontend, yaml);
 
         assertEquals(FrontendStatus.FAILED, result.status());
@@ -206,5 +207,13 @@ class YamlFrontendResourceLimitTest {
         assertTrue(result.diagnostics().stream()
                 .anyMatch(diagnostic -> diagnostic.code()
                         == DiagnosticCode.MIX_FRONTEND_YAML_UNSAFE));
+    }
+
+    /**
+     * 安全控制样本必须发布 Canonical 根。
+     */
+    private static void assertSafe(FrontendResult result) {
+        assertEquals(FrontendStatus.PARSED, result.status());
+        assertTrue(result.canonicalRoot().isPresent());
     }
 }
