@@ -60,15 +60,15 @@ Oracle 覆盖普通 scalar、`#text`、`@attributes` value、Sequence item，并
 
 ## 4. Canonical 名称与 nodePath 合同
 
-R21 不改变 compiler `SourceRef` 公共 API，而在 YAML Frontend 输入边界限制进入 nodePath 的 Canonical 节点名称。
+R21 不改变 compiler `SourceRef` 公共 API，而在 YAML Frontend 输入边界限制 Canonical 名称。
 
-允许节点名称为可移植 XML-compatible ASCII NCName 子集：
+允许节点名和属性名为可移植 XML-compatible ASCII NCName 子集：
 
 ```text
 [A-Za-z_][A-Za-z0-9._-]*
 ```
 
-因此节点名称不得包含：
+因此名称不得包含：
 
 - `/`、`~`、反斜线；
 - `:`；
@@ -76,9 +76,9 @@ R21 不改变 compiler `SourceRef` 公共 API，而在 YAML Frontend 输入边�
 - 以数字、点或连字符开头的名称；
 - 非 ASCII 字符。
 
-`@attributes` 与 `#text` 仍只作为 Mapping 保留 key，不是 Canonical 节点名称。属性 key 不参与 nodePath，因此不因本 Finding 新增路径限制，继续沿用 R20 的非空、非保留、非 merge、非重复规则。
+根和子节点名称会进入 nodePath，必须在路径拼接和 Canonical 节点分配前完成校验。属性名虽然不进入 nodePath，也采用同一可移植子集，以保证 YAML/XML 跨格式名称事实一致且避免多行或分隔符名称进入诊断与后续引用模型。`@attributes` 与 `#text` 仍只作为 Mapping 保留 key，不是普通名称。
 
-节点名称不符合合同必须在 nodePath 拼接和 Canonical 节点分配前失败，messageKey 为 `yaml.frontend.node.invalid-name`。合法名称的路径继续使用 `/segment`，因为每个 segment 已保证不包含分隔符或换行。
+名称不符合合同返回 `yaml.frontend.node.invalid-name` 或属性 key 的稳定失败。合法节点路径继续使用 `/segment`，因为每个 segment 已保证不包含分隔符或换行。
 
 ## 5. 不变量
 
