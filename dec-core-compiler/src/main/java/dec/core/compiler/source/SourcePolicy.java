@@ -1,11 +1,17 @@
 package dec.core.compiler.source;
 
+import dec.core.context.model.Diagnostic;
+import dec.core.context.model.DiagnosticCode;
+import dec.core.context.model.DiagnosticSeverity;
+import dec.core.context.model.SourceRef;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -78,6 +84,77 @@ public final class SourcePolicy {
 
     public long maxTotalBytes() {
         return maxTotalBytes;
+    }
+
+    /**
+     * 在调用 Provider 前验证引用的 scheme、根边界和解析深度。
+     *
+     * <p>路径类违规必须在任何 IO 或 Provider 访问前返回，因此该方法
+     * 不执行规范化后的容错访问，也不会尝试其它同名资源。</p>
+     *
+     * @param reference 待解析的 Source 引用
+     * @param depth 当前引用相对根 Source 的深度
+     * @param declarationSourceRef 声明该引用的位置
+     * @return 无违规时为空，否则返回稳定 ERROR Diagnostic
+     */
+    Optional<Diagnostic> validateReference(
+            SourceReference reference,
+            int depth,
+            SourceRef declarationSourceRef) {
+        Objects.requireNonNull(reference, "reference");
+        Objects.requireNonNull(declarationSourceRef, "declarationSourceRef");
+        if (depth > maxDepth) {
+            return Optional.of(diagnostic(
+                    DiagnosticCode.MIX_SOURCE_POLICY,
+                    "source.policy.max-depth",
+                    declarationSourceRef,
+                    "降低声明深度或提高 SourcePolicy.maxDepth"));
+        }
+
+        try {
+            URI uri = URI.create(reference.value());
+            String scheme = uri.getScheme();
+            boolean allowedScheme = scheme != null
+                    && allowedSchemes.contains(scheme.toLowerCase(Locale.ROOT));
+            if (!uri.isAbsolute()
+                    || !allowedScheme
+                    || !allowedRoot.contains(uri)) {
+                return Optional.of(pathEscape(declarationSourceRef));
+            }
+        } catch (IllegalArgumentException invalidUri) {
+            return Optional.of(pathEscape(declarationSourceRef));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * 创建路径越界 Diagnostic；调用方不得在返回后继续访问 Provider。
+     */
+    private static Diagnostic pathEscape(SourceRef sourceRef) {
+        return diagnostic(
+                DiagnosticCode.MIX_SOURCE_PATH_ESCAPE,
+                "source.path.escape",
+                sourceRef,
+                "仅声明允许根内且 scheme 已授权的绝对 Source URI");
+    }
+
+    /**
+     * 创建 Source discovery 阶段的稳定 ERROR Diagnostic。
+     */
+    private static Diagnostic diagnostic(
+            DiagnosticCode code,
+            String messageKey,
+            SourceRef sourceRef,
+            String recoveryHint) {
+        return new Diagnostic(
+                code,
+                DiagnosticSeverity.ERROR,
+                messageKey,
+                null,
+                sourceRef,
+                Collections.<SourceRef>emptyList(),
+                recoveryHint,
+                "SourceDiscoveryPass");
     }
 
     @Override
