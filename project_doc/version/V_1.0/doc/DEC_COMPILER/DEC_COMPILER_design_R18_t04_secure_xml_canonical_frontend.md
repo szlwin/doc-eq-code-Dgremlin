@@ -32,11 +32,11 @@
 - 显式拒绝 `DOCTYPE`；
 - 关闭 DTD、外部通用实体、外部参数实体和实体替换；
 - 安装拒绝全部外部资源的 `XMLResolver`；
-- 不创建 SchemaFactory，不读取 `xsi:schemaLocation` 或 `xsi:noNamespaceSchemaLocation`；这些属性仅作为普通 Canonical 属性，绝不触发访问；
+- 不创建 SchemaFactory；检测到 `xsi:schemaLocation` 或 `xsi:noNamespaceSchemaLocation` 时立即失败，不能把外部 schema 位置降级成普通业务属性；
 - 不解析 XInclude；
 - 只从 `DocumentSource.content()` 读取字节，不根据 URI、systemId、schemaLocation 或实体声明打开网络与文件；
 - 解析器不支持关键安全属性时立即返回受控失败，不静默降级；
-- XML 格式不匹配、null 参数、Malformed XML、重复 Canonical 属性 key、外部实体和 DTD 均返回无部分根的失败结果。
+- XML 格式不匹配、null 参数、Malformed XML、重复 Canonical 属性 key、外部 schema、外部实体和 DTD 均返回无部分根的失败结果。
 
 ## 5. SourceRef 定位
 
