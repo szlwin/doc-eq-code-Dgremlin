@@ -12,6 +12,9 @@ import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
 import dec.core.context.model.SourceRef;
 import java.io.StringReader;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +42,8 @@ import org.yaml.snakeyaml.nodes.Tag;
 /**
  * 将不可信 YAML 文档转换为 compiler-owned Canonical 树的安全 Frontend。
  *
- * <p>该实现只使用 SnakeYAML 的 compose 表示树，不调用通用对象加载入口，
- * 并在发布 Canonical 根之前完成 tag、图结构和资源预算校验。</p>
+ * <p>实现只使用 SnakeYAML compose 表示树，不调用通用对象加载入口；
+ * 原始字节、tag 来源事实、图结构、路径和资源预算均在发布根之前完成校验。</p>
  */
 public final class SafeYamlDocumentFrontend implements DocumentFrontend {
     private static final String PASS = "yaml-frontend";
@@ -51,7 +54,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
     private final YamlFrontendLimits limits;
 
     /**
-     * 使用 Design R20 冻结的生产预算创建 YAML Frontend。
+     * 使用 Design R20/R21 冻结的生产预算创建 YAML Frontend。
      */
     public SafeYamlDocumentFrontend() {
         this(YamlFrontendLimits.production());
@@ -75,7 +78,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
     }
 
     /**
-     * 使用安全 compose 表示树解析 YAML，并在完整根生成前保持结果不可见。
+     * 使用严格 UTF-8 和安全 compose 表示树解析 YAML。
      *
      * @param source Provider 返回的不可变 YAML Source
      * @param options 当前 Session 的显式 Frontend 选项
@@ -101,10 +104,11 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         try {
+            String yamlText = decodeUtf8(content);
             LoaderOptions loaderOptions = loaderOptions();
             Yaml yaml = new Yaml(new SafeConstructor(loaderOptions));
-            Iterator<Node> documents = yaml.composeAll(new StringReader(
-                    new String(content, StandardCharsets.UTF_8))).iterator();
+            Iterator<Node> documents = yaml.composeAll(
+                    new StringReader(yamlText)).iterator();
             if (!documents.hasNext()) {
                 throw unsafe("yaml.frontend.document.empty", null, "/");
             }
@@ -136,9 +140,27 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
     }
 
     /**
+     * 使用 REPORT 策略严格解码 UTF-8，禁止替换字符掩盖非法原始字节。
+     */
+    private static String decodeUtf8(byte[] content) {
+        try {
+            return StandardCharsets.UTF_8.newDecoder()
+                    .onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT)
+                    .decode(ByteBuffer.wrap(content))
+                    .toString();
+        } catch (CharacterCodingException failure) {
+            throw unsafe(
+                    "yaml.frontend.encoding.invalid-utf8",
+                    null,
+                    "/");
+        }
+    }
+
+    /**
      * 创建 fail-closed 的 SnakeYAML LoaderOptions。
      *
-     * <p>即使 parser 已配置安全限制，Canonical 遍历仍会再次验证 tag、共享图和预算。</p>
+     * <p>Parser 限制之外，Canonical 遍历仍会再次验证 tag、图和预算。</p>
      */
     private LoaderOptions loaderOptions() {
         LoaderOptions options = new LoaderOptions();
@@ -176,7 +198,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                 null,
                 sourceRef,
                 Collections.<SourceRef>emptyList(),
-                "请提供符合 Design R20 安全合同的 YAML 文档",
+                "请提供符合 Design R21 来源事实与安全合同的 YAML 文档",
                 PASS);
         return FrontendResults.failed(Collections.singletonList(diagnostic));
     }
@@ -259,7 +281,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * 构建一个 Canonical 节点，并在危险集合或字符串分配前执行预算检查。
+         * 构建一个 Canonical 节点，并在路径及集合分配前执行名称和预算检查。
          */
         private CanonicalDocumentNode buildElement(
                 String name,
@@ -267,7 +289,10 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                 Mark declarationMark,
                 String parentPath,
                 int depth) {
-            String normalizedName = requireName(name, declarationMark, parentPath);
+            String normalizedName = requireName(
+                    name,
+                    declarationMark,
+                    parentPath);
             if (depth > limits.maxNestingDepth()) {
                 throw unsafe(
                         "yaml.frontend.limit.nesting-depth",
@@ -389,7 +414,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * 读取 `@attributes` Mapping，并拒绝复杂 key、重复 key和非 scalar value。
+         * 读取 `@attributes` Mapping，并拒绝复杂、重复或不可移植属性名称。
          */
         private Map<String, String> readAttributes(
                 Node node,
@@ -408,7 +433,10 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                 Map<String, String> attributes =
                         new LinkedHashMap<String, String>();
                 for (NodeTuple tuple : mapping.getValue()) {
-                    String key = readKey(tuple.getKeyNode(), nodePath);
+                    String key = requireName(
+                            readKey(tuple.getKeyNode(), nodePath),
+                            tuple.getKeyNode().getStartMark(),
+                            nodePath);
                     if (isReservedKey(key) || MERGE_KEY.equals(key)) {
                         throw unsafe(
                                 "yaml.frontend.attributes.invalid-key",
@@ -423,7 +451,9 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                     }
                     attributes.put(
                             key,
-                            readAttributeValue(tuple.getValueNode(), nodePath));
+                            readAttributeValue(
+                                    tuple.getValueNode(),
+                                    nodePath));
                 }
                 return attributes;
             } finally {
@@ -494,8 +524,8 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                             node.getStartMark(),
                             nodePath);
                 }
-                String key = ((ScalarNode) node).getValue().trim();
-                if (key.isEmpty()) {
+                String key = ((ScalarNode) node).getValue();
+                if (key == null || key.trim().isEmpty()) {
                     throw unsafe(
                             "yaml.frontend.mapping.blank-key",
                             node.getStartMark(),
@@ -544,7 +574,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * 读取属性 scalar；YAML null 映射为空字符串，但仍不允许复杂值。
+         * 读取属性 scalar；隐式 YAML null 映射为空字符串。
          */
         private String readAttributeValue(Node node, String nodePath) {
             enter(node, nodePath);
@@ -561,7 +591,10 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                     return "";
                 }
                 String value = scalar.getValue().trim();
-                reserveScalar(value.length(), scalar.getStartMark(), nodePath);
+                reserveScalar(
+                        value.length(),
+                        scalar.getStartMark(),
+                        nodePath);
                 return value;
             } finally {
                 leave(node);
@@ -597,7 +630,10 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         /**
          * 在保存 scalar 前预留单值和累计字符预算。
          */
-        private void reserveScalar(int length, Mark mark, String nodePath) {
+        private void reserveScalar(
+                int length,
+                Mark mark,
+                String nodePath) {
             if (length > limits.maxScalarCharsPerNode()) {
                 throw unsafe(
                         "yaml.frontend.limit.scalar-per-node",
@@ -622,7 +658,9 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         /**
          * 校验单 Mapping 的 entry 数，避免先扩容大集合再拒绝。
          */
-        private void requireMappingSize(MappingNode mapping, String nodePath) {
+        private void requireMappingSize(
+                MappingNode mapping,
+                String nodePath) {
             if (mapping.getValue().size()
                     > limits.maxMappingEntriesPerNode()) {
                 throw unsafe(
@@ -648,7 +686,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * scalar 只允许 Design R20 冻结的标准无对象构造 tag。
+         * 允许隐式标准 scalar tag 与显式字符串，拒绝显式 typed tag。
          */
         private static void requireAllowedScalarTag(
                 ScalarNode node,
@@ -665,10 +703,16 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                         node.getStartMark(),
                         nodePath);
             }
+            if (!node.isResolved() && !Tag.STR.equals(tag)) {
+                throw unsafe(
+                        "yaml.frontend.scalar.explicit-typed-tag",
+                        node.getStartMark(),
+                        nodePath);
+            }
         }
 
         /**
-         * 进入一个 parser Node，并拒绝 anchor、alias、共享节点和递归图。
+         * 进入 parser Node，并拒绝 anchor、alias、共享节点和递归图。
          */
         private void enter(Node node, String nodePath) {
             if (node == null) {
@@ -706,24 +750,60 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         private SourceRef sourceRef(Mark mark, String nodePath) {
             int line = mark == null ? 0 : mark.getLine() + 1;
             int column = mark == null ? 0 : mark.getColumn() + 1;
-            return new SourceRef(source.sourceId(), line, column, nodePath);
+            return new SourceRef(
+                    source.sourceId(),
+                    line,
+                    column,
+                    nodePath);
         }
 
         /**
-         * 校验 Canonical 名称并拒绝空白名称。
+         * 限制 Canonical 名称为可移植 ASCII NCName 子集，保证路径可逆且单行。
          */
         private static String requireName(
                 String name,
                 Mark mark,
                 String parentPath) {
-            String normalized = Objects.requireNonNull(name, "name").trim();
-            if (normalized.isEmpty()) {
+            if (name == null || name.isEmpty()) {
                 throw unsafe(
                         "yaml.frontend.node.blank-name",
                         mark,
                         parentPath);
             }
-            return normalized;
+            if (!isNameStart(name.charAt(0))) {
+                throw unsafe(
+                        "yaml.frontend.node.invalid-name",
+                        mark,
+                        parentPath);
+            }
+            for (int index = 1; index < name.length(); index++) {
+                if (!isNamePart(name.charAt(index))) {
+                    throw unsafe(
+                            "yaml.frontend.node.invalid-name",
+                            mark,
+                            parentPath);
+                }
+            }
+            return name;
+        }
+
+        /**
+         * 判断 ASCII NCName 首字符。
+         */
+        private static boolean isNameStart(char value) {
+            return value == '_'
+                    || value >= 'A' && value <= 'Z'
+                    || value >= 'a' && value <= 'z';
+        }
+
+        /**
+         * 判断 ASCII NCName 后续字符。
+         */
+        private static boolean isNamePart(char value) {
+            return isNameStart(value)
+                    || value >= '0' && value <= '9'
+                    || value == '.'
+                    || value == '-';
         }
 
         /**
