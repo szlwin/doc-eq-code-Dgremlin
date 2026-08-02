@@ -5,6 +5,9 @@ import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
 import dec.core.context.model.SourceRef;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -103,10 +106,40 @@ final class SourceTestFixture {
     }
 
     /**
+     * 从 Maven 挂载的主资源或测试镜像创建真实字节 Provider。
+     *
+     * @param prefix `main-fixture/` 或 `test-fixture/`
+     */
+    static InMemoryProvider providerFromClasspath(
+            String prefix,
+            FileSetOrder order) {
+        InMemoryProvider provider = new InMemoryProvider(order);
+        provider.putSingle(resourceSource(prefix, ROOT));
+        provider.putSingle(resourceSource(prefix, SYSTEMS));
+        provider.putSingle(resourceSource(prefix, BUSINESS));
+        provider.putSingle(resourceSource(prefix, USER_RULE));
+        provider.putSingle(resourceSource(prefix, ORDER_RULE));
+        provider.putSingle(resourceSource(prefix, PAYMENT_RULE));
+        provider.putFileSet(DATA_ROOT, Arrays.asList(
+                resourceSource(prefix, "classpath:mix/data/User.xml"),
+                resourceSource(prefix, "classpath:mix/data/Order.xml"),
+                resourceSource(prefix, "classpath:mix/data/Pay.xml")));
+        provider.putFileSet(VIEW_ROOT, Collections.singletonList(
+                resourceSource(prefix, "classpath:mix/view/orm-view.xml")));
+        return provider;
+    }
+
+    /**
      * 创建完整 DocumentSource，并以内容字节计算稳定摘要。
      */
     static DocumentSource source(String sourceId, String content) {
-        byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+        return source(sourceId, content.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 以真实 fixture 字节创建完整 DocumentSource。
+     */
+    static DocumentSource source(String sourceId, byte[] bytes) {
         return new DocumentSource(
                 sourceId,
                 URI.create(sourceId),
@@ -174,6 +207,47 @@ final class SourceTestFixture {
             String from,
             String target) {
         return edgeType + "|" + from + "|" + target;
+    }
+
+    /**
+     * 从挂载目录读取指定 classpath Source 的原始字节。
+     */
+    private static DocumentSource resourceSource(
+            String prefix,
+            String sourceId) {
+        String resourceName = prefix + sourceId.substring("classpath:".length());
+        InputStream input = SourceTestFixture.class
+                .getClassLoader()
+                .getResourceAsStream(resourceName);
+        if (input == null) {
+            throw new AssertionError("fixture resource not found: " + resourceName);
+        }
+        try {
+            return source(sourceId, readAll(input));
+        } catch (IOException readFailure) {
+            throw new AssertionError(
+                    "unable to read fixture resource: " + resourceName,
+                    readFailure);
+        } finally {
+            try {
+                input.close();
+            } catch (IOException ignored) {
+                // 测试资源关闭失败不改变已读取字节的断言事实。
+            }
+        }
+    }
+
+    /**
+     * 使用 Java 8 兼容方式读取完整 InputStream。
+     */
+    private static byte[] readAll(InputStream input) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int read;
+        while ((read = input.read(buffer)) >= 0) {
+            output.write(buffer, 0, read);
+        }
+        return output.toByteArray();
     }
 
     /**
@@ -251,6 +325,8 @@ final class SourceTestFixture {
                 new HashMap<String, List<DocumentSource>>();
         private final Set<String> throwingReferences =
                 new LinkedHashSet<String>();
+        private final Set<String> nullReferences =
+                new LinkedHashSet<String>();
         private final FileSetOrder order;
         private int accessCount;
 
@@ -259,6 +335,7 @@ final class SourceTestFixture {
         }
 
         void putSingle(DocumentSource source) {
+            nullReferences.remove(source.sourceId());
             singles.put(
                     source.sourceId(),
                     SourceResolutionResults.resolvedSingle(
@@ -267,11 +344,18 @@ final class SourceTestFixture {
         }
 
         void putSingleResult(String reference, SourceResolutionResult result) {
-            singles.put(reference, result);
+            if (result == null) {
+                singles.remove(reference);
+                nullReferences.add(reference);
+            } else {
+                nullReferences.remove(reference);
+                singles.put(reference, result);
+            }
         }
 
         void removeSingle(String reference) {
             singles.remove(reference);
+            nullReferences.remove(reference);
         }
 
         void putFileSet(String reference, List<DocumentSource> sources) {
@@ -293,6 +377,9 @@ final class SourceTestFixture {
             accessCount++;
             if (throwingReferences.contains(reference.value())) {
                 throw new IllegalStateException("provider failure");
+            }
+            if (nullReferences.contains(reference.value())) {
+                return null;
             }
             SourceResolutionResult result = singles.get(reference.value());
             if (result != null) {
