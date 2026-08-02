@@ -1,0 +1,46 @@
+{
+  "task_id": "TASK-P1-T05",
+  "iteration": "I003",
+  "status": "COMPLETED",
+  "completion_revision": "COMPLETION-P1-T05-R03@30529276cd8f",
+  "superseded_completions": [
+    "COMPLETION-P1-T05-R01@040f09b80463",
+    "COMPLETION-P1-T05-R02@27d566714f5c"
+  ],
+  "design_revision": "DESIGN-R22@P1-T05-REWORK-I003",
+  "plan_revision": "TP-P1-COMPILER-F01-R18@P1-T05-REWORK-I003",
+  "tdd_revision": "TDD-P1-T05-R03@3deacf0aa036",
+  "architecture_skeleton_revision": "DEVSKEL-P1-T05-R03@05873e286c2d",
+  "development_revision": "DEV-P1-T05-R03@30529276cd8f",
+  "code_review_revision": "CODEREVIEW-P1-T05-R03@30529276cd8f",
+  "testing_revision": "TESTING-P1-T05-R03@30529276cd8f",
+  "rework_base_sha": "499b977a773da3e25b776d4debf7abb1391b5192",
+  "clean_code_head_sha": "30529276cd8fa35e0eeeafb1256b85cb99820afb",
+  "revision_lock": {
+    "design_first_commit": "ab9ca21cf668aba03f030129022458bbd46304fc",
+    "design_blob": "b8ffb41226866b0854def9d4ce12a6c68c150b3b",
+    "plan_first_commit": "a2283a8661210e0ebda26a67fad05a60d770a89b",
+    "plan_blob": "26adb13c7192e5f7419c59acf445bf8b56b6ceb7"
+  },
+  "red_run_id": 30755854204,
+  "red_artifact_id": 8835892685,
+  "skeleton_run_id": 30756121600,
+  "skeleton_artifact_id": 8835973306,
+  "development_run_id": 30756293074,
+  "development_artifact_id": 8836020099,
+  "development_artifact_sha256": "3362ee5de19129f0a819bb1587e42552077618f7bf43b3011e15540ec0bcd688",
+  "yaml_tests": 59,
+  "closed_findings": [
+    "FND-P1-T05-I003-001",
+    "FND-P1-T05-I003-002",
+    "FND-P1-T05-I003-003"
+  ],
+  "open_p0_p1_p2": [],
+  "review_range": "REV-000244..REV-000256",
+  "evidence_range": "EVD-000487..EVD-000498",
+  "completion_report": "task/P1-COMPILER-F01/evidence/commands/completion-p1-t05-r03/completion-report.json",
+  "current_pr": 20,
+  "merge_authorized": false,
+  "next_task": "TASK-P1-T06",
+  "next_task_started": false
+}
