@@ -1,21 +1,25 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T01` REWORK iteration `I010` 已完成
-- 历史 Completion：`COMPLETION-P1-T01-R01@7be02cd9af4c`、`COMPLETION-P1-T01-R02@a0daaf94f74b`、`COMPLETION-P1-T01-R03@175b86e1e3ea`（均被后续 Review 重开，历史保留）
-- 当前 Completion Revision：`COMPLETION-P1-T01-R04@ee99223a243f`
+- 当前逻辑任务：`TASK-P1-T02` REWORK iteration `I002` 已完成
+- 历史 T02 Completion：`COMPLETION-P1-T02-R01@643b44a8b72a`（因 T01 最终公共合同变化被重开，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T02-R02@8847b3c7dfac`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
+- 基线：`dev_all@f88f45731e16868bfacb489b63e3086aae49d018`
+- T01 Completion：`COMPLETION-P1-T01-R04@ee99223a243f`
 - 开放 P0/P1：无
-- Completion Evidence：`EVD-000355`、`EVD-000356`、`EVD-000357`、`EVD-000358`、`EVD-000359`、`EVD-000360`
-- Review：`REV-000103`～`REV-000111` 全部 PASSED
-- 干净代码 Head：`ee99223a243fd5f470e37e3e81b50c9980524ae4`
-- 验证 P0 Run：`30729866803`，结果 `PASSED`
+- Completion Evidence：`EVD-000361`、`EVD-000362`、`EVD-000363`、`EVD-000364`、`EVD-000365`、`EVD-000366`
+- Review：`REV-000112`～`REV-000120` 全部 PASSED
+- 干净代码 Head：`8847b3c7dfaca3e5e99030b15f456ff13d9cb5d4`
+- 验证 P0 Run：`30730762775`，结果 `PASSED`
 - Context 测试：26 run / 0 failures / 0 errors / 0 skipped
-- 当前 PR：`#16`，目标分支 `dev_all`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t01_r04_completion.json`
+- Compiler 测试：12 run / 0 failures / 0 errors / 0 skipped
+- 当前 PR：`#17`，目标分支 `dev_all`
+- 被替代 PR：`#15`
+- 当前分支：`feature/p1-t02-rework-i002-20260802-1116`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t02_r02_completion.json`
 - 下一 Agent：`ProjectManagerAgent`
-- 下一动作：PR #16 合并后，rebase、适配并重新验证 PR #15 的 `TASK-P1-T02`
-- TASK-P1-T02 状态：实现 PR 已存在，但受最终 T01 合同变化影响，当前不得合并
+- 下一动作：完成 PR #17 Review 与合并后，从最新 `dev_all` 启动 `TASK-P1-T03`
 - TASK-P1-T03 状态：未启动且保持阻断
-- 注意：不得继续在 T01 分支实现 T02/T03；T02 适配必须从 PR #16 合并后的最新 `dev_all` 执行。
+- 注意：不得在 PR #17 合并前启动或声明 T03；不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过。
