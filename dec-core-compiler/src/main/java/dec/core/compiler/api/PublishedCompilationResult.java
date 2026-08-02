@@ -30,11 +30,7 @@ public final class PublishedCompilationResult extends CompilationResult {
             CompiledModelSet compiledModelSet,
             EngineContext context,
             List<Diagnostic> diagnostics) {
-        super(
-                sessionId,
-                architectureSkeletonPublishedDiagnostics(
-                        compiledModelSet,
-                        diagnostics));
+        super(sessionId, requirePublishedDiagnostics(compiledModelSet, diagnostics));
         this.compiledModelSet = Objects.requireNonNull(
                 compiledModelSet,
                 "compiledModelSet");
@@ -47,11 +43,12 @@ public final class PublishedCompilationResult extends CompilationResult {
     }
 
     /**
-     * Architecture Skeleton 先建立 Diagnostic 单一事实源边界。
+     * 校验成功结果的 Diagnostic 只能来自 CompiledModelSet 发布事实。
      *
-     * <p>当输入不一致时保留显式骨架失败，证明边界已经落位但具体失败语义尚未完成。</p>
+     * <p>构造参数为兼容旧 T02 API 保留，但返回值始终使用模型中的不可变集合，
+     * 防止结果对象形成第二份可分叉的 Diagnostic 事实。</p>
      */
-    private static List<Diagnostic> architectureSkeletonPublishedDiagnostics(
+    private static List<Diagnostic> requirePublishedDiagnostics(
             CompiledModelSet compiledModelSet,
             List<Diagnostic> diagnostics) {
         CompiledModelSet model = Objects.requireNonNull(
@@ -59,8 +56,8 @@ public final class PublishedCompilationResult extends CompilationResult {
                 "compiledModelSet");
         List<Diagnostic> validated = ApiContracts.publishedDiagnostics(diagnostics);
         if (!model.diagnostics().equals(validated)) {
-            throw new UnsupportedOperationException(
-                    "Architecture skeleton only: published diagnostics closure");
+            throw new IllegalArgumentException(
+                    "published diagnostics must match compiledModelSet diagnostics");
         }
         return model.diagnostics();
     }
