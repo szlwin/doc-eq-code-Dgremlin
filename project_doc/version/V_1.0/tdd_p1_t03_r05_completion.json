@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I005",
+  "status": "COMPLETED",
+  "completion_revision": "COMPLETION-P1-T03-R05@91271c9a1c20",
+  "historical_completions": [
+    "COMPLETION-P1-T03-R01@713848bfa65e",
+    "COMPLETION-P1-T03-R02@6af43b47f044",
+    "COMPLETION-P1-T03-R03@cedf22bb14ff",
+    "COMPLETION-P1-T03-R04@04bfb86c9bf1"
+  ],
+  "design_revision": "DESIGN-R17@P1-T03-REWORK-I005",
+  "plan_revision": "TP-P1-COMPILER-F01-R13@P1-T03-REWORK-I005",
+  "tdd_revision": "TDD-P1-T03-R05@06bc2a0c0ebd",
+  "skeleton_revision": "DEVSKEL-P1-T03-R05@1d49bb2f1fa3",
+  "development_revision": "DEV-P1-T03-R05@91271c9a1c20",
+  "code_review_revision": "CODEREVIEW-P1-T03-R05@91271c9a1c20",
+  "testing_revision": "TESTING-P1-T03-R05@91271c9a1c20",
+  "base_sha": "370b72f4bf4ec9b3620586f26d13d95f611f3cc9",
+  "rework_base_sha": "d41b4553189b4b9e80a7ca92c4acd34e4fc97e42",
+  "clean_code_head_sha": "91271c9a1c2083c2843b7c2e69bb3570f9155d55",
+  "p0_run_id": 30741699603,
+  "artifact_id": 8831504648,
+  "artifact_sha256": "de9e07229c82374a5eb36cc4a5ca4b2c5df0f18e53de582a13b456cd1bc206f7",
+  "tests": {
+    "context": 26,
+    "compiler": 83,
+    "i005": 5
+  },
+  "closed_findings": ["FND-P1-T03-I005-001"],
+  "open_p0_p1_findings": [],
+  "review_ids": ["REV-000185", "REV-000186", "REV-000187", "REV-000188", "REV-000189", "REV-000190", "REV-000191", "REV-000192", "REV-000193", "REV-000194", "REV-000195"],
+  "evidence_ids": ["EVD-000428", "EVD-000429", "EVD-000430", "EVD-000431", "EVD-000432", "EVD-000433", "EVD-000434", "EVD-000435", "EVD-000436", "EVD-000437", "EVD-000438"],
+  "current_pr": 18,
+  "branch": "feature/p1-t03-source-graph-20260802-1430",
+  "merge_authorized": false,
+  "next_task": "TASK-P1-T04",
+  "next_task_started": false,
+  "next_action": "Review PR #18 and merge only after explicit authorization."
+}

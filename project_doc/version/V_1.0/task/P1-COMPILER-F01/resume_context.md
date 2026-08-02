@@ -1,36 +1,49 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T02` REWORK iteration `I005` 已完成
-- 历史 T02 Completion：`COMPLETION-P1-T02-R01@643b44a8b72a`、`COMPLETION-P1-T02-R02@8847b3c7dfac`、`COMPLETION-P1-T02-R03@122ffc28165f`、`COMPLETION-P1-T02-R04@8b3e716a9730`（均被后续 Review 重开，历史保留）
-- 当前 Completion Revision：`COMPLETION-P1-T02-R05@35376308b013`
+- 当前逻辑任务：`TASK-P1-T03 / I005` REWORK 已完成
+- 历史 Completion R01：`COMPLETION-P1-T03-R01@713848bfa65e`（`REV-000152` 推翻，历史保留）
+- 历史 Completion R02：`COMPLETION-P1-T03-R02@6af43b47f044`（`REV-000163` 推翻，历史保留）
+- 历史 Completion R03：`COMPLETION-P1-T03-R03@cedf22bb14ff`（`REV-000174` 推翻，历史保留）
+- 历史 Completion R04：`COMPLETION-P1-T03-R04@04bfb86c9bf1`（`REV-000185` 推翻，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T03-R05@91271c9a1c20`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
-- 基线：`dev_all@f88f45731e16868bfacb489b63e3086aae49d018`
-- T01 Completion：`COMPLETION-P1-T01-R04@ee99223a243f`
-- 当前设计事实：`DESIGN-R12@P1-T02-REWORK-I005` + `DESIGN-R11@P1-T02-REWORK-I004` + `DESIGN-R10@P1-T02-REWORK-I003` + `DEC_COMPILER_api_contract.md` + `DESIGN-R05@0b37a9b4dd48`
+- 基线：`dev_all@370b72f4bf4ec9b3620586f26d13d95f611f3cc9`
+- Rework base：`d41b4553189b4b9e80a7ca92c4acd34e4fc97e42`
+- 当前设计事实：`DESIGN-R17@P1-T03-REWORK-I005` + R16 + R15 + R14 + R13
 - 开放 P0/P1：无
-- Completion Evidence：`EVD-000379`～`EVD-000385`
-- Review：`REV-000138`～`REV-000144` 全部 PASSED
-- Clean-code Head：`35376308b0133344ebddadc1bf45e07c11f7959c`
-- 验证 P0 Run：`30734789072`，结果 `PASSED`
-- Artifact：`8829179331`
-- Context 测试：26 run / 0 failures / 0 errors / 0 skipped
-- Compiler 测试：47 run / 0 failures / 0 errors / 0 skipped
-- 完整 Reactor：12 modules / PASSED
+- Review：`REV-000185`～`REV-000195`
+- Evidence：`EVD-000428`～`EVD-000438`
+- Clean-code Head：`91271c9a1c2083c2843b7c2e69bb3570f9155d55`
+- 验证 P0 Run：`30741699603`，结果 `PASSED`
+- Artifact：`8831504648`
+- Artifact SHA-256：`de9e07229c82374a5eb36cc4a5ca4b2c5df0f18e53de582a13b456cd1bc206f7`
+- Context：26 run / 0 failures / 0 errors / 0 skipped
+- Compiler：83 run / 0 failures / 0 errors / 0 skipped
+- I005 专项：5 run / 0 failures / 0 errors / 0 skipped
+- Reactor：12 modules / PASSED
 - Java release 8：PASSED
-- 故意失败阻断门禁：PASSED
+- 故意失败阻断：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- AllowedRoot：原始与规范化 URI 双重检查，raw/decoded traversal、层次与 opaque query/fragment 拒绝均 PASSED
-- DocumentSource：原始 URI 在 normalize 前执行允许根验证
-- SourceResolution：单源恰好一个、文件集至少一个、sourceId 唯一、成功无 ERROR、失败无候选且至少一个 ERROR
-- Provider 防御：`validateSingle/validateFileSet` 将第三方合同违规转换为无候选 `MIX-SOURCE-POLICY` FAILED
-- Source/Frontend 主闭包、Canonical 候选隔离和 Parser 实现隔离继续 PASSED
-- 当前 PR：`#17`，目标分支 `dev_all`
-- 被替代 PR：`#15`，已关闭且未合并
-- 当前分支：`feature/p1-t02-rework-i002-20260802-1116`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t02_r05_completion.json`
+- SourceManifest：10 个唯一 Source
+- SourceGraph：7 条真实声明边
+- Provider 调用：8 次
+- root 元素：只接受 `orm-config`
+- systems 元素：只接受 `systems`
+- root 完整路径：四条冻结路径精确匹配
+- system 完整路径：`/systems/system/rule-file-info/rule-file`
+- suffix matching：已移除
+- wrong-root / wrong-nesting：`MIX_SOURCE_POLICY`、graph empty、只访问 root Provider
+- wrong-systems-root / wrong-system-path：`MIX_SOURCE_POLICY`、graph empty、不访问 rule/business Provider
+- ignored subtree：不创建 Edge、不改变 10 Source / 7 Edge / 8 Provider 调用
+- published nodePath：仅允许五条冻结完整路径
+- 相对 URI 类别保持、Resolver 根受控边界、编码点段和安全证据均保持
+- declaration origin：LF、CRLF、CR 均验证七条边 line、column、nodePath
+- 当前 PR：`#18`，目标 `dev_all`
+- 当前分支：`feature/p1-t03-source-graph-20260802-1430`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r05_completion.json`
 - 下一 Agent：`ProjectManagerAgent`
-- 下一动作：PR #17 完成 Review 并在明确授权后合并；合并后从最新 `dev_all` 启动 `TASK-P1-T03`
-- TASK-P1-T03 状态：未启动且保持阻断
-- 注意：不得在 PR #17 合并前启动或声明 T03；不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #17。
+- 下一动作：Review PR #18，并在明确授权后合并；合并后从最新 `dev_all` 启动 `TASK-P1-T04`
+- TASK-P1-T04：未启动且保持阻断
+- 注意：不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #18；不得在 PR #18 合并前启动或声明 T04。

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I005",
+  "revision": "TDD-P1-T03-R05@06bc2a0c0ebd",
+  "review_id": "REV-000186",
+  "evidence_id": "EVD-000429",
+  "head_sha": "06bc2a0c0ebd0ec372d58b38d471827547606666",
+  "p0_run_id": 30741527344,
+  "artifact_id": 8831445409,
+  "artifact_sha256": "293ff166a24332bdf729407b91b18dbb2dccd3864a237354bbb41a08884ea132",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_compiler_tests": {"run": 78, "failures": 0, "errors": 0, "skipped": 0},
+  "i005_tests": {"run": 5, "expected_failures": 5, "errors": 0},
+  "red_proofs": [
+    "wrong root was incorrectly resolved",
+    "wrong nesting was incorrectly resolved",
+    "ignored subtree duplicates incorrectly failed as duplicate edges",
+    "wrong systems root was incorrectly resolved",
+    "wrong system path was incorrectly resolved"
+  ],
+  "java_release": 8,
+  "result": "PASSED_VALID_RED"
+}

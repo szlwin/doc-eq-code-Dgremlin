@@ -18,4 +18,22 @@
             <artifactId>dec-core-context</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>${project.basedir}/../dec-demo/src/main/resources</directory>
+                <targetPath>main-fixture</targetPath>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>${project.basedir}/../dec-demo/src/test/resources</directory>
+                <targetPath>test-fixture</targetPath>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
+    </build>
 </project>

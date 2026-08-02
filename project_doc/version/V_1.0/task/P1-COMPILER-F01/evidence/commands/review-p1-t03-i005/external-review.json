@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I005",
+  "review_id": "REV-000185",
+  "reviewer": "IndependentReviewAgent",
+  "reviewed_head": "d41b4553189b4b9e80a7ca92c4acd34e4fc97e42",
+  "superseded_completion": "COMPLETION-P1-T03-R04@04bfb86c9bf1",
+  "result": "NEEDS_CHANGES",
+  "findings": [
+    {
+      "id": "FND-P1-T03-I005-001",
+      "severity": "P1",
+      "status": "OPEN",
+      "title": "Source declaration parser accepts suffix-matched elements outside frozen full XML paths",
+      "required_fix": [
+        "match root declarations by exact full element stack",
+        "match system rule declarations by exact full element stack",
+        "validate orm-config and systems document roots",
+        "ignore same-name elements outside allowed paths",
+        "return MIX_SOURCE_POLICY with no partial graph for invalid structures",
+        "prove downstream invalid targets are not accessed"
+      ]
+    }
+  ],
+  "evidence_id": "EVD-000428"
+}

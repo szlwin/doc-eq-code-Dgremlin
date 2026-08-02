@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_red_evidence",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I002",
+  "revision": "TDD-P1-T03-R02@15e7144d489a",
+  "head_sha": "15e7144d489a7d45089178d58b12ed4f0bd2fa17",
+  "p0_run_id": 30738178655,
+  "artifact_id": 8830340794,
+  "artifact_sha256": "1bd7f3b9581bb422837013554d2c15976548eac6d5a4d68b2035f6e7dcfe2c89",
+  "java_release": 8,
+  "production_compile": "PASSED",
+  "test_compile": "PASSED",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_compiler_tests": {"run": 62, "failures": 0, "errors": 0, "skipped": 0},
+  "new_rework_oracle": {"run": 4, "failures": 4, "errors": 0, "skipped": 0},
+  "red_reasons": [
+    "opaque dot segment is not canonicalized before provider access",
+    "equivalent declaration text is not classified by canonical duplicate key",
+    "cycle stack compares source reference with sourceId",
+    "StAX end-of-start-tag column is published as declaration start column"
+  ],
+  "class_or_method_missing": false,
+  "fixture_missing": false,
+  "result": "PASSED_VALID_RED",
+  "review_id": "REV-000153",
+  "evidence_id": "EVD-000394"
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I005",
+  "revision": "DEVSKEL-P1-T03-R05@1d49bb2f1fa3",
+  "review_id": "REV-000187",
+  "evidence_id": "EVD-000430",
+  "head_sha": "1d49bb2f1fa343cb2954fc56a3092ae41cacbae3",
+  "p0_run_id": 30741597030,
+  "artifact_id": 8831469179,
+  "artifact_sha256": "3c7d409a4265644a95d811519bbf7e450af8a7bef4cc6131f7d4ff0d823c67f7",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+  "i005_tests": {"run": 5, "failures": 0, "errors": 0, "skipped": 0},
+  "contracts": {
+    "exact_root_paths": true,
+    "exact_system_path": true,
+    "document_roots_validated": true,
+    "ignored_subtrees_isolated": true,
+    "failed_result_has_partial_graph": false
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "result": "PASSED"
+}

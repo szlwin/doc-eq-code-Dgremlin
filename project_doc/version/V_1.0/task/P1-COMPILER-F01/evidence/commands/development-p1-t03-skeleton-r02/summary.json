@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_evidence",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I002",
+  "revision": "DEVSKEL-P1-T03-R02@a9f2ceaa4d19",
+  "head_sha": "a9f2ceaa4d19368e93e45d60de05b95ecd9ffa1a",
+  "p0_run_id": 30738270965,
+  "artifact_id": 8830369511,
+  "artifact_sha256": "617486218dd3d5f978e00a44369a5a2be6af1ed22f51f45a40925828e4d75aaa",
+  "java_release": 8,
+  "production_compile": "PASSED",
+  "test_compile": "PASSED",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_compiler_tests": {"run": 62, "failures": 0, "errors": 0, "skipped": 0},
+  "rework_oracle": {"run": 4, "passed": 2, "failures": 2, "errors": 0, "skipped": 0},
+  "green_contracts": [
+    "opaque classpath dot segments are canonicalized before provider and graph construction",
+    "all seven declaration SourceRefs point to the original start-tag less-than character"
+  ],
+  "controlled_red_contracts": [
+    "root declaration cardinality is checked before canonical duplicate edge registration",
+    "ancestor stack still stores sourceId instead of canonical reference key"
+  ],
+  "result": "PASSED_CONTROLLED_RED",
+  "review_id": "REV-000154",
+  "evidence_id": "EVD-000395"
+}

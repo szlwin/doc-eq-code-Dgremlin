@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "development_command_result",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I001",
+  "revision": "DEV-P1-T03-R01@713848bfa65e",
+  "input_revisions": {
+    "design": "DESIGN-R13@P1-T03-I001",
+    "implementation_plan": "TP-P1-COMPILER-F01-R09@P1-T03-I001",
+    "tdd": "TDD-P1-T03-R01@deaed1e7ea1a",
+    "architecture_skeleton": "DEVSKEL-P1-T03-R01@f8437837e2a8",
+    "dependency_completion": "COMPLETION-P1-T02-R05@35376308b013"
+  },
+  "base_sha": "370b72f4bf4ec9b3620586f26d13d95f611f3cc9",
+  "clean_code_head_sha": "713848bfa65e19c8c802e4777944a3e22efec83e",
+  "p0_run_id": 30736808017,
+  "artifact_id": 8829855289,
+  "artifact_sha256": "b0ec425971acf6492d2c83f22cdb561aa3ae0398bab956adc1fa8b082fe127ae",
+  "changes": [
+    "SourcePolicy validates scheme, allowed root, traversal and depth before Provider access",
+    "SourceDeclarationParser extracts only root and system Source declarations with secure JDK StAX",
+    "DTD, external entities and external resource resolution are disabled",
+    "MixSourceResolver resolves root, file sets, system, rules and business without producing T04 Canonical data",
+    "SourceManifest sorts by sourceId, rejects duplicate identity and freezes total bytes",
+    "MixSourceGraph freezes exact declaration edges and immutable SourceManifest",
+    "Provider null, exception and typed-result contract violations map to stable policy diagnostics",
+    "missing explicit Source preserves MIX_SOURCE_NOT_FOUND",
+    "duplicate sourceId maps to MIX_SOURCE_DUPLICATE_ID before generic typed-result validation",
+    "depth, source count and total byte limits fail without publishing a partial graph",
+    "main and test mix mirrors are mounted only as Compiler test resources"
+  ],
+  "fixed_graph": {
+    "source_count": 10,
+    "edge_count": 7,
+    "provider_calls": 8,
+    "provider_call_oracle_correction": "The original test expected 10 calls, but one file-set call can return multiple Sources. Correct calls are root, two file sets, system, three rules and business."
+  },
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 62,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "t03_tests": {
+    "run": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "preexisting_compiler_tests": 47,
+  "main_fixture_resources_copied": 51,
+  "test_fixture_resources_copied": 53,
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "override_annotations_standalone": true,
+  "chinese_method_and_logic_comments": true,
+  "context_production_changed": false,
+  "demo_production_dependency_added": false,
+  "t04_implementation_started": false,
+  "evidence_id": "EVD-000388",
+  "result": "PASSED"
+}

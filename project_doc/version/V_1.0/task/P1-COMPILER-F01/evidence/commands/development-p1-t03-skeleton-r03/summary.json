@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_evidence",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I003",
+  "revision": "DEVSKEL-P1-T03-R03@3c9f64c4ac11",
+  "head_sha": "3c9f64c4ac115898288e5468536502d0eb14168e",
+  "p0_run_id": 30739402674,
+  "artifact_id": 8830758315,
+  "artifact_sha256": "dcd36bb4cca0f7b088ca11fc7b8eb6f1dbb47cc41901854a2c06df8b655c0c78",
+  "java_release": 8,
+  "production_compile": "PASSED",
+  "test_compile": "PASSED",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 74, "failures": 0, "errors": 0, "skipped": 0},
+  "i003_tests": {"run": 6, "failures": 0, "errors": 0, "skipped": 0},
+  "contracts": {
+    "current_directory_only_key": ".",
+    "canonical_key_non_blank": true,
+    "opaque_encoded_dot_segment": "PASSED",
+    "hierarchical_encoded_dot_segment": "PASSED",
+    "encoded_parent_segment_preserved": true,
+    "encoded_separator_preserved": true,
+    "canonical_provider_lookup": "PASSED",
+    "encoded_duplicate_detection": "PASSED",
+    "encoded_cycle_detection": "PASSED",
+    "crlf_cr_origin_oracle": "PASSED",
+    "source_reference_instance_fields_only": true
+  },
+  "result": "PASSED",
+  "review_id": "REV-000165",
+  "evidence_id": "EVD-000406"
+}

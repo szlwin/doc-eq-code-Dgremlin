@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I004",
+  "design_revision": "DESIGN-R16@P1-T03-REWORK-I004",
+  "plan_revision": "TP-P1-COMPILER-F01-R12@P1-T03-REWORK-I004",
+  "reviews": [
+    {
+      "review_id": "REV-000175",
+      "evidence_id": "EVD-000416",
+      "review_type": "design_review",
+      "result": "PASSED"
+    },
+    {
+      "review_id": "REV-000176",
+      "evidence_id": "EVD-000417",
+      "review_type": "implementation_plan_review",
+      "result": "PASSED"
+    }
+  ],
+  "checked_contracts": [
+    "relative_and_absolute_uri_category_is_preserved",
+    "promotable_relative_roots_are_rejected_before_provider",
+    "resolver_root_operations_are_inside_controlled_failure_boundary",
+    "root_and_policy_null_remain_explicit_parameter_errors",
+    "existing_t03_graph_security_and_location_contracts_remain_frozen",
+    "task_p1_t04_remains_out_of_scope"
+  ],
+  "open_p0_p1_findings": [],
+  "result": "PASSED"
+}

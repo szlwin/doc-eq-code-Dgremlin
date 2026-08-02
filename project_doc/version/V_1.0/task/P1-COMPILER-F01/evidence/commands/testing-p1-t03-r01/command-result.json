@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "kind": "testing_command_result",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I001",
+  "revision": "TESTING-P1-T03-R01@713848bfa65e",
+  "input_revisions": {
+    "development": "DEV-P1-T03-R01@713848bfa65e",
+    "code_review": "CODEREVIEW-P1-T03-R01@713848bfa65e"
+  },
+  "tested_head_sha": "713848bfa65e19c8c802e4777944a3e22efec83e",
+  "p0_run_id": 30736808017,
+  "artifact_id": 8829855289,
+  "artifact_sha256": "b0ec425971acf6492d2c83f22cdb561aa3ae0398bab956adc1fa8b082fe127ae",
+  "maven_wrapper": "PASSED",
+  "legacy_dependency_bootstrap": "PASSED",
+  "core_build_and_tests": "PASSED",
+  "failure_gate_proof": "PASSED",
+  "test_report_upload": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 62,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_test_distribution": {
+    "preexisting_compiler_tests": 47,
+    "MixSourceResolverContractTest": 3,
+    "SourcePolicySecurityTest": 3,
+    "SourceGraphFailureTest": 4,
+    "SourceGraphSecurityReviewTest": 5
+  },
+  "fixed_graph_assertions": {
+    "source_count": 10,
+    "edge_count": 7,
+    "provider_calls": 8,
+    "main_test_mirror_bytes_equal": true,
+    "enumeration_order_independent": true
+  },
+  "negative_oracle": {
+    "literal_traversal_pre_provider": "PASSED",
+    "encoded_traversal_pre_provider": "PASSED",
+    "unknown_scheme_pre_provider": "PASSED",
+    "opaque_query_pre_provider": "PASSED",
+    "missing_source": "PASSED",
+    "duplicate_source_id_same_content": "PASSED",
+    "duplicate_source_id_different_content": "PASSED",
+    "null_provider": "PASSED",
+    "throwing_provider": "PASSED",
+    "invalid_single_cardinality": "PASSED",
+    "empty_file_set": "PASSED",
+    "null_provider_result": "PASSED",
+    "max_depth": "PASSED",
+    "max_sources": "PASSED",
+    "max_total_bytes": "PASSED",
+    "dtd_and_external_entity_rejection": "PASSED",
+    "duplicate_root_declaration": "PASSED",
+    "ancestor_cycle": "PASSED",
+    "no_partial_graph_on_failure": "PASSED",
+    "immutable_result_collections": "PASSED"
+  },
+  "main_fixture_resources_copied": 51,
+  "test_fixture_resources_copied": 53,
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "intentional_failure_test": {
+    "run": 1,
+    "expected_failures": 1,
+    "gate_result": "PASSED"
+  },
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "review_id": "REV-000150",
+  "reviewer": "TestingAgent",
+  "evidence_id": "EVD-000391",
+  "result": "PASSED"
+}
