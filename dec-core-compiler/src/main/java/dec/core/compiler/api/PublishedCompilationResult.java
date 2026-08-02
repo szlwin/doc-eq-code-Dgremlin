@@ -30,7 +30,10 @@ public final class PublishedCompilationResult extends CompilationResult {
             CompiledModelSet compiledModelSet,
             EngineContext context,
             List<Diagnostic> diagnostics) {
-        super(sessionId, requirePublishedDiagnostics(compiledModelSet, diagnostics));
+        super(
+                sessionId,
+                requirePublishedDiagnostics(compiledModelSet, diagnostics),
+                DiagnosticOwnership.PUBLISHED_MODEL_FACT);
         this.compiledModelSet = Objects.requireNonNull(
                 compiledModelSet,
                 "compiledModelSet");
@@ -45,7 +48,7 @@ public final class PublishedCompilationResult extends CompilationResult {
     /**
      * 校验成功结果的 Diagnostic 只能来自 CompiledModelSet 发布事实。
      *
-     * <p>构造参数为兼容旧 T02 API 保留，但返回值始终使用模型中的不可变集合，
+     * <p>构造参数为兼容旧 T02 API 保留，但返回值始终复用模型中的不可变集合，
      * 防止结果对象形成第二份可分叉的 Diagnostic 事实。</p>
      */
     private static List<Diagnostic> requirePublishedDiagnostics(
