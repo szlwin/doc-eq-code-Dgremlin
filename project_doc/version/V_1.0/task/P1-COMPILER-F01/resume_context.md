@@ -1,31 +1,35 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T02` REWORK iteration `I004` 已完成
-- 历史 T02 Completion：`COMPLETION-P1-T02-R01@643b44a8b72a`、`COMPLETION-P1-T02-R02@8847b3c7dfac`、`COMPLETION-P1-T02-R03@122ffc28165f`（均被后续 Review 重开，历史保留）
-- 当前 Completion Revision：`COMPLETION-P1-T02-R04@8b3e716a9730`
+- 当前逻辑任务：`TASK-P1-T02` REWORK iteration `I005` 已完成
+- 历史 T02 Completion：`COMPLETION-P1-T02-R01@643b44a8b72a`、`COMPLETION-P1-T02-R02@8847b3c7dfac`、`COMPLETION-P1-T02-R03@122ffc28165f`、`COMPLETION-P1-T02-R04@8b3e716a9730`（均被后续 Review 重开，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T02-R05@35376308b013`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@f88f45731e16868bfacb489b63e3086aae49d018`
 - T01 Completion：`COMPLETION-P1-T01-R04@ee99223a243f`
-- 当前设计事实：`DESIGN-R11@P1-T02-REWORK-I004` + `DESIGN-R10@P1-T02-REWORK-I003` + `DEC_COMPILER_api_contract.md` + `DESIGN-R05@0b37a9b4dd48`
+- 当前设计事实：`DESIGN-R12@P1-T02-REWORK-I005` + `DESIGN-R11@P1-T02-REWORK-I004` + `DESIGN-R10@P1-T02-REWORK-I003` + `DEC_COMPILER_api_contract.md` + `DESIGN-R05@0b37a9b4dd48`
 - 开放 P0/P1：无
-- Completion Evidence：`EVD-000373`～`EVD-000378`
-- Review：`REV-000129`～`REV-000137` 全部 PASSED
-- 干净代码 Head：`8b3e716a9730d12fe84c6efd3fb8481998e335e0`
-- 验证 P0 Run：`30733616822`，结果 `PASSED`
+- Completion Evidence：`EVD-000379`～`EVD-000385`
+- Review：`REV-000138`～`REV-000144` 全部 PASSED
+- Clean-code Head：`35376308b0133344ebddadc1bf45e07c11f7959c`
+- 验证 P0 Run：`30734789072`，结果 `PASSED`
+- Artifact：`8829179331`
 - Context 测试：26 run / 0 failures / 0 errors / 0 skipped
-- Compiler 测试：35 run / 0 failures / 0 errors / 0 skipped
+- Compiler 测试：47 run / 0 failures / 0 errors / 0 skipped
 - 完整 Reactor：12 modules / PASSED
 - Java release 8：PASSED
 - 故意失败阻断门禁：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- Source/Frontend 闭包：DocumentSource 完整来源事实、AllowedRoot 边界、CanonicalDocumentNode、Frontend PARSED/FAILED 候选隔离和 Provider → Frontend → Canonical 可执行数据流均 PASSED
-- Parser 实现隔离：公共 API 无 DOM、YAML Node 或第三方 Parser 类型
+- AllowedRoot：原始与规范化 URI 双重检查，raw/decoded traversal、层次与 opaque query/fragment 拒绝均 PASSED
+- DocumentSource：原始 URI 在 normalize 前执行允许根验证
+- SourceResolution：单源恰好一个、文件集至少一个、sourceId 唯一、成功无 ERROR、失败无候选且至少一个 ERROR
+- Provider 防御：`validateSingle/validateFileSet` 将第三方合同违规转换为无候选 `MIX-SOURCE-POLICY` FAILED
+- Source/Frontend 主闭包、Canonical 候选隔离和 Parser 实现隔离继续 PASSED
 - 当前 PR：`#17`，目标分支 `dev_all`
 - 被替代 PR：`#15`，已关闭且未合并
 - 当前分支：`feature/p1-t02-rework-i002-20260802-1116`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t02_r04_completion.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t02_r05_completion.json`
 - 下一 Agent：`ProjectManagerAgent`
 - 下一动作：PR #17 完成 Review 并在明确授权后合并；合并后从最新 `dev_all` 启动 `TASK-P1-T03`
 - TASK-P1-T03 状态：未启动且保持阻断
