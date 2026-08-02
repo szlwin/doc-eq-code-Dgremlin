@@ -1,85 +1,80 @@
 # P1-COMPILER-F01 阶段交接
 
-> `TASK-P1-T01` 已通过 PR #16 合并，`TASK-P1-T02` 已通过 PR #17 合并。最新完成任务为 `TASK-P1-T03 / I001`，有效 Completion 为 `COMPLETION-P1-T03-R01@713848bfa65e`。T01/T02 的全部历史 Revision、Review、Evidence 和被后续 Review 推翻的 Completion 均继续保留。
+> `TASK-P1-T01` 已通过 PR #16 合并，`TASK-P1-T02` 已通过 PR #17 合并。`TASK-P1-T03 / I001` 的 Completion R01 被独立 Review `REV-000152` 推翻并作为历史保留；最新有效 iteration 为 `I002`，Completion 为 `COMPLETION-P1-T03-R02@6af43b47f044`。
 
 ## 已合并前置任务
 
-### T01
+- T01 Completion：`COMPLETION-P1-T01-R04@ee99223a243f`，merge `f88f45731e16868bfacb489b63e3086aae49d018`。
+- T02 Completion：`COMPLETION-P1-T02-R05@35376308b013`，merge / T03 base `370b72f4bf4ec9b3620586f26d13d95f611f3cc9`。
 
-- Completion：`COMPLETION-P1-T01-R04@ee99223a243f`；
-- Merge commit：`f88f45731e16868bfacb489b63e3086aae49d018`；
-- Context Projection 和发布聚合合同已冻结。
+## T03 历史与当前 Revision
 
-### T02
+### I001（历史，已失效）
 
-- Completion：`COMPLETION-P1-T02-R05@35376308b013`；
-- Merge commit / T03 基线：`370b72f4bf4ec9b3620586f26d13d95f611f3cc9`；
-- Source、AllowedRoot、Provider typed-result、Frontend 和 Canonical 公共合同已冻结；
-- `validateSingle/validateFileSet` 可供 T03 防御性验证 Provider 结果。
-
-## T03 I001 已完成
-
-- Base：`dev_all@370b72f4bf4ec9b3620586f26d13d95f611f3cc9`；
-- Design：`DESIGN-R13@P1-T03-I001`；
-- Plan：`TP-P1-COMPILER-F01-R09@P1-T03-I001`；
-- TDD：`TDD-P1-T03-R01@deaed1e7ea1a`；
-- Architecture Skeleton：`DEVSKEL-P1-T03-R01@f8437837e2a8`；
-- Development：`DEV-P1-T03-R01@713848bfa65e`；
-- Code Review：`CODEREVIEW-P1-T03-R01@713848bfa65e`；
-- Testing：`TESTING-P1-T03-R01@713848bfa65e`；
 - Completion：`COMPLETION-P1-T03-R01@713848bfa65e`；
-- Review：`REV-000145`～`REV-000151` 全部 PASSED；
-- Evidence：`EVD-000386`～`EVD-000392` ACTIVE；
-- Clean-code Head：`713848bfa65e19c8c802e4777944a3e22efec83e`；
-- P0 Run：`30736808017`；
-- Artifact：`8829855289`；
+- 最终文档 Head：`335cc7ae2843145ae891a22892a169e74ac5d6fc`；
+- 独立 Review 发现 canonical reference、cycle identity 和声明起始列缺口；
+- R01 不修改、不删除，状态为 `STALE_BY_REVIEW`。
+
+### I002（当前有效）
+
+- Design：`DESIGN-R14@P1-T03-REWORK-I002`；
+- Plan：`TP-P1-COMPILER-F01-R10@P1-T03-REWORK-I002`；
+- TDD：`TDD-P1-T03-R02@15e7144d489a`；
+- Architecture Skeleton：`DEVSKEL-P1-T03-R02@a9f2ceaa4d19`；
+- Development：`DEV-P1-T03-R02@6af43b47f044`；
+- Code Review：`CODEREVIEW-P1-T03-R02@6af43b47f044`；
+- Testing：`TESTING-P1-T03-R02@6af43b47f044`；
+- Completion：`COMPLETION-P1-T03-R02@6af43b47f044`；
+- Review：`REV-000152`～`REV-000162`；
+- Evidence：`EVD-000393`～`EVD-000403`；
+- Clean-code Head：`6af43b47f0446f3dc4980f5877a58275aaf17448`；
+- P0 Run：`30738516967`；
+- Artifact：`8830460790`；
 - Context：26 run / 0 failures / 0 errors / 0 skipped；
-- Compiler：62 run / 0 failures / 0 errors / 0 skipped；
-- T03 Oracle：15 run / 0 failures / 0 errors / 0 skipped；
-- 完整 12 模块 Reactor、Java release 8 和故意失败测试阻断：PASSED；
+- Compiler：68 run / 0 failures / 0 errors / 0 skipped；
+- I002 专项：6 run / 0 failures / 0 errors / 0 skipped；
+- 12 模块 Reactor、Java 8、故意失败阻断：PASSED；
 - MySQL：`SKIPPED_NOT_APPLICABLE`；
-- 开放 P0/P1 Finding：无。
+- 开放 P0/P1：无。
 
-## T03 已冻结合同
+## T03 当前冻结合同
 
-### 精确 SourceGraph
+### SourceGraph
 
-- 根入口：`classpath:mix/orm-config.xml`；
-- SourceManifest：精确 10 个唯一 Source，按 sourceId 稳定排序；
-- 声明边：精确 7 条；
-- root → data/view/system/business 共 4 条；
-- systems → 3 个 rule 共 3 条；
-- data/view 文件集展开只登记 Source，不产生伪边；
-- Provider 合同调用为 8 次：root、2 个文件集、system、3 个 rule、business；
-- 文件集正序、逆序和随机顺序产生相同图；
-- 主资源与测试镜像的固定 10 个 Source 字节和图一致。
+- 固定根入口 `classpath:mix/orm-config.xml`；
+- 精确 10 个唯一 Source、7 条真实声明边；
+- 目录展开项不伪造边；
+- 文件集正序、逆序、随机顺序产生相同图；
+- 主资源和测试镜像的固定字节及图一致。
 
-### 安全和失败语义
+### Canonical reference 与身份域
 
-- SourcePolicy 在 Provider 前验证绝对 URI、scheme、AllowedRoot、字面量/编码 traversal、opaque query 和 depth；
-- 每个 Provider 返回 Source 再次验证 AllowedRoot；
-- 最小声明解析器只提取 T03 Source 声明，不生成 Canonical；
-- StAX 关闭 DTD、外部实体和外部资源解析；
-- missing Source 使用 `MIX-SOURCE-NOT-FOUND`；
-- duplicate sourceId 使用 `MIX-SOURCE-DUPLICATE-ID`；
-- Provider 合同、资源预算、重复声明和环路失败使用 `MIX-SOURCE-POLICY`；
-- 任何失败不暴露部分 SourceGraph；
-- 所有公开集合均不可变。
+- `SourceReference.value()` 是 Provider、边目标、重复键、排序、图相等性和 cycle stack 共用的 canonical key；
+- opaque `classpath:` 和 hierarchical/relative 路径只消除独立 `.` 段并统一 scheme 大小写；
+- `..`、编码 traversal、query、fragment 和非法 URI 文本不被隐藏，继续交给 SourcePolicy 拒绝；
+- sourceId 独立用于 Manifest 唯一性和 Diagnostic 身份，不要求与 URI 相等；
+- `sourceId != URI` 的环路在递归 Provider 调用前阻断，返回 `MIX-SOURCE-POLICY`。
+
+### 声明位置与安全
+
+- StAX 继续负责安全 tokenization，DTD、外部实体和外部资源关闭；
+- 基于原始 UTF-8 文本定位声明 start tag `<`；
+- 真实 root/systems fixture 的 7 条边均精确验证 line、column、nodePath；
+- 失败不暴露部分 SourceGraph。
 
 ## 编码和范围
 
-- 所有新增和修改的 `@Override` 独占一行；
-- 方法、构造器和重要安全、排序、候选隔离逻辑使用中文注释；
+- `@Override` 独占一行；
+- 方法、构造器和关键逻辑使用中文注释；
+- Java release 8；
 - 未修改 `dec-core-context` 生产代码；
-- Compiler 生产依赖仍仅为 Context；
-- `dec-demo` 只作为 Maven testResources fixture，不是生产依赖；
 - 未实现 T04 Canonical Frontend、RawDefinitionSet、Symbol 或 Compiler Pipeline。
 
 ## PR 状态与下一步
 
-- 当前 PR：`#18`，目标分支 `dev_all`；
+- 当前 PR：`#18`，目标 `dev_all`；
 - 当前分支：`feature/p1-t03-source-graph-20260802-1430`；
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r01_completion.json`；
-- 未获得明确授权不得合并 PR #18；
-- PR #18 合并前 `TASK-P1-T04` 保持未启动和阻断；
-- PR #18 合并后，才能从新的 `dev_all` 启动 T04。
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r02_completion.json`；
+- 未经明确授权不得合并 PR #18；
+- PR #18 合并前 `TASK-P1-T04` 保持未启动和阻断。
