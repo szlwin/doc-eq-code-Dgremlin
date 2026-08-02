@@ -1,24 +1,25 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T03 / I002` REWORK 已完成
-- 历史 Completion：`COMPLETION-P1-T03-R01@713848bfa65e`（`REV-000152` 推翻，历史保留）
-- 当前 Completion Revision：`COMPLETION-P1-T03-R02@6af43b47f044`
+- 当前逻辑任务：`TASK-P1-T03 / I003` REWORK 已完成
+- 历史 Completion R01：`COMPLETION-P1-T03-R01@713848bfa65e`（`REV-000152` 推翻，历史保留）
+- 历史 Completion R02：`COMPLETION-P1-T03-R02@6af43b47f044`（`REV-000163` 推翻，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T03-R03@cedf22bb14ff`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@370b72f4bf4ec9b3620586f26d13d95f611f3cc9`
-- Rework base：`335cc7ae2843145ae891a22892a169e74ac5d6fc`
-- 当前设计事实：`DESIGN-R14@P1-T03-REWORK-I002` + `DESIGN-R13@P1-T03-I001` + `TESTDESIGN-R01@ba7779cf089b` + `DESIGN-R12@P1-T02-REWORK-I005`
+- Rework base：`4f218f5dbf329949b8f7b3d7396668919482d198`
+- 当前设计事实：`DESIGN-R15@P1-T03-REWORK-I003` + `DESIGN-R14@P1-T03-REWORK-I002` + `DESIGN-R13@P1-T03-I001` + `TESTDESIGN-R01@ba7779cf089b`
 - 开放 P0/P1：无
-- Review：`REV-000152`～`REV-000162`
-- Evidence：`EVD-000393`～`EVD-000403`
-- Clean-code Head：`6af43b47f0446f3dc4980f5877a58275aaf17448`
-- 验证 P0 Run：`30738516967`，结果 `PASSED`
-- Artifact：`8830460790`
-- Artifact SHA-256：`3352eb12faab339e120c4e1b6968ed1972358069785ee95e9d98134dc50bed48`
+- Review：`REV-000163`～`REV-000173`
+- Evidence：`EVD-000404`～`EVD-000414`
+- Clean-code Head：`cedf22bb14ffbcd45e0eff2f680c3505dc9f7ed0`
+- 验证 P0 Run：`30739517365`，结果 `PASSED`
+- Artifact：`8830794341`
+- Artifact SHA-256：`b833525e84af935c99c05ed3ab95424d59577f98bd2fa54905473c5cc08b7973`
 - Context：26 run / 0 failures / 0 errors / 0 skipped
-- Compiler：68 run / 0 failures / 0 errors / 0 skipped
-- I002 专项：6 run / 0 failures / 0 errors / 0 skipped
+- Compiler：74 run / 0 failures / 0 errors / 0 skipped
+- I003 专项：6 run / 0 failures / 0 errors / 0 skipped
 - Reactor：12 modules / PASSED
 - Java release 8：PASSED
 - 故意失败阻断：PASSED
@@ -26,14 +27,16 @@
 - SourceManifest：10 个唯一 Source
 - SourceGraph：7 条真实声明边
 - Provider 调用：8 次
-- canonical key：Provider、edge、duplicate key、sorting、graph equality、cycle stack 统一使用
+- canonical 非空：`.`、`./`、`./.` 均为 `.`
+- 无效相对根：`MIX_SOURCE_PATH_ESCAPE`、graph empty、Provider access 0、无异常泄漏
+- 编码点段：opaque/hierarchical `%2e/%2E` 与字面量点段统一
+- 安全保留：`%2e%2e`、混合双点、`%2F`、query、fragment 不被隐藏或重分段
 - 身份域：sourceId 与 canonical reference 分离
-- cycle：`sourceId != URI` 时仍在递归 Provider 前返回 `MIX_SOURCE_POLICY`
-- declaration origin：真实 fixture 7 条边精确验证 start tag `<` 的 line、column、nodePath
-- traversal：`..`、`%2e%2e`、query、fragment 不被 canonicalization 隐藏
+- cycle：编码等价引用在递归 Provider 前返回 `MIX_SOURCE_POLICY`
+- declaration origin：LF、CRLF、CR 均直接验证 7 条边的 line、column、nodePath
 - 当前 PR：`#18`，目标 `dev_all`
 - 当前分支：`feature/p1-t03-source-graph-20260802-1430`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r02_completion.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r03_completion.json`
 - 下一 Agent：`ProjectManagerAgent`
 - 下一动作：Review PR #18，并在明确授权后合并；合并后从最新 `dev_all` 启动 `TASK-P1-T04`
 - TASK-P1-T04：未启动且保持阻断
