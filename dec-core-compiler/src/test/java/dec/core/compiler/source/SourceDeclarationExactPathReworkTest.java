@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -56,6 +59,11 @@ class SourceDeclarationExactPathReworkTest {
         assertEquals(10, result.graph().get().manifest().sources().size());
         assertEquals(7, result.graph().get().edges().size());
         assertEquals(8, provider.accessCount());
+        Set<String> frozenPaths = frozenDeclarationPaths();
+        for (SourceGraphEdge edge : result.graph().get().edges()) {
+            String nodePath = edge.declarationSourceRef().nodePath();
+            assertTrue(frozenPaths.contains(nodePath), nodePath);
+        }
     }
 
     /**
@@ -84,6 +92,18 @@ class SourceDeclarationExactPathReworkTest {
 
         assertPolicyFailure(result);
         assertEquals(4, provider.accessCount());
+    }
+
+    /**
+     * 返回允许发布到 SourceGraphEdge 的五条完整声明节点路径。
+     */
+    private static Set<String> frozenDeclarationPaths() {
+        return new HashSet<String>(Arrays.asList(
+                "/orm-config/orm-data-file-info/orm-file",
+                "/orm-config/orm-view-file-info/orm-file",
+                "/orm-config/system-file-info/system-file",
+                "/orm-config/business-file-info/business-file",
+                "/systems/system/rule-file-info/rule-file"));
     }
 
     /**
