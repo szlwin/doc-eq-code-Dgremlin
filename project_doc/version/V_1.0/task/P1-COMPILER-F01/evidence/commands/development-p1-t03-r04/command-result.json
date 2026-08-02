@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I004",
+  "revision": "DEV-P1-T03-R04@04bfb86c9bf1",
+  "evidence_id": "EVD-000420",
+  "clean_code_head_sha": "04bfb86c9bf1accf879a729b3ceb04e1eee46f86",
+  "p0_run_id": 30740667853,
+  "artifact_id": 8831175314,
+  "artifact_sha256": "af2820e792436d885d24ca91fbae7318445d0d22d64a84fda317e7442fd2ce6f",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 78, "failures": 0, "errors": 0, "skipped": 0},
+  "i004_tests": {"run": 4, "failures": 0, "errors": 0, "skipped": 0},
+  "implemented_contracts": {
+    "literal_dot_relative_key": "./classpath:mix/orm-config.xml",
+    "encoded_dot_relative_key": "./classpath:mix/orm-config.xml",
+    "literal_dot_file_relative_key": "./file:/mix/root.xml",
+    "encoded_dot_file_relative_key": "./file:/mix/root.xml",
+    "relative_uri_stays_relative": true,
+    "absolute_uri_stays_absolute": true,
+    "invalid_relative_root_diagnostic": "MIX_SOURCE_PATH_ESCAPE",
+    "invalid_relative_root_graph_present": false,
+    "invalid_relative_root_provider_accesses": 0,
+    "resolver_root_operations_inside_controlled_boundary": true
+  },
+  "scope": {
+    "context_production_changed": false,
+    "task_p1_t04_implemented": false,
+    "changed_production_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/source/SourceReference.java",
+      "dec-core-compiler/src/main/java/dec/core/compiler/source/MixSourceResolver.java"
+    ]
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "result": "PASSED"
+}
