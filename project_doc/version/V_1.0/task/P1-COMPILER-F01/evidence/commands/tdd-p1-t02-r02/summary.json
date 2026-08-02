@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_review_report",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I002",
+  "revision": "TDD-P1-T02-R02@33a00d364088",
+  "input_revisions": {
+    "business_model": "BM-R05@4ecb1f8c09f4",
+    "context_completion": "COMPLETION-P1-T01-R04@ee99223a243f",
+    "design": "DESIGN-R09@P1-T02-REWORK-I002",
+    "implementation_plan": "TP-P1-COMPILER-F01-R05@P1-T02-REWORK-I002"
+  },
+  "head_sha": "33a00d364088ab0edf3a365f05c784d40e713447",
+  "p0_run_id": 30730604783,
+  "compile": {
+    "java_release": 8,
+    "compiler_production_sources": 12,
+    "compiler_test_sources": 2,
+    "result": "PASSED"
+  },
+  "context_regression": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 11,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": [
+      "publishedResultRejectsEqualButDistinctModelInstance",
+      "publishedResultRejectsDiagnosticsOutsideModelFact"
+    ]
+  },
+  "valid_red": true,
+  "review_id": "REV-000112",
+  "reviewer": "TDDReviewAgent",
+  "evidence_id": "EVD-000361",
+  "result": "PASSED"
+}
