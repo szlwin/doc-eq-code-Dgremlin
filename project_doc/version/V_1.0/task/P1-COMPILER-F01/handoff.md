@@ -1,84 +1,72 @@
 # P1-COMPILER-F01 阶段交接
 
-> `TASK-P1-T01` 已通过 PR #16 合并，`TASK-P1-T02` 已通过 PR #17 合并。T03 Completion R01～R04 均被后续独立 Review 推翻并作为不可变历史保留；最新有效 iteration 为 `TASK-P1-T03 / I005`，Completion 为 `COMPLETION-P1-T03-R05@91271c9a1c20`。
+> T01、T02、T03 已合并到 `dev_all`。T03 的 R01～R04 Completion 均被后续独立 Review 推翻并作为不可变历史保留；T03 当前有效 Completion 为 `COMPLETION-P1-T03-R05@91271c9a1c20`，merge / T04 base 为 `df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`。T04 当前有效 iteration 为 `TASK-P1-T04 / I001`。
 
 ## 已合并前置任务
 
-- T01 Completion：`COMPLETION-P1-T01-R04@ee99223a243f`，merge `f88f45731e16868bfacb489b63e3086aae49d018`。
-- T02 Completion：`COMPLETION-P1-T02-R05@35376308b013`，merge / T03 base `370b72f4bf4ec9b3620586f26d13d95f611f3cc9`。
+- T01：`COMPLETION-P1-T01-R04@ee99223a243f`，merge `f88f45731e16868bfacb489b63e3086aae49d018`；
+- T02：`COMPLETION-P1-T02-R05@35376308b013`，merge `370b72f4bf4ec9b3620586f26d13d95f611f3cc9`；
+- T03：`COMPLETION-P1-T03-R05@91271c9a1c20`，merge `df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`。
 
-## T03 历史 Revision
+## T04 I001（当前有效）
 
-- I001 / R01：被 `REV-000152` 推翻，历史保留；
-- I002 / R02：被 `REV-000163` 推翻，历史保留；
-- I003 / R03：被 `REV-000174` 推翻，历史保留；
-- I004 / R04：被 `REV-000185` 的完整 XML 声明路径 P1 Finding 推翻，历史保留。
-
-## T03 I005（当前有效）
-
-- Design：`DESIGN-R17@P1-T03-REWORK-I005`；
-- Plan：`TP-P1-COMPILER-F01-R13@P1-T03-REWORK-I005`；
-- TDD：`TDD-P1-T03-R05@06bc2a0c0ebd`；
-- Architecture Skeleton：`DEVSKEL-P1-T03-R05@1d49bb2f1fa3`；
-- Development：`DEV-P1-T03-R05@91271c9a1c20`；
-- Code Review：`CODEREVIEW-P1-T03-R05@91271c9a1c20`；
-- Testing：`TESTING-P1-T03-R05@91271c9a1c20`；
-- Completion：`COMPLETION-P1-T03-R05@91271c9a1c20`；
-- Review：`REV-000185`～`REV-000195`；
-- Evidence：`EVD-000428`～`EVD-000438`；
-- Clean-code Head：`91271c9a1c2083c2843b7c2e69bb3570f9155d55`；
-- P0 Run：`30741699603`；
-- Artifact：`8831504648`；
-- Artifact SHA-256：`de9e07229c82374a5eb36cc4a5ca4b2c5df0f18e53de582a13b456cd1bc206f7`；
+- Design：`DESIGN-R18@P1-T04-I001`；
+- Plan：`TP-P1-COMPILER-F01-R14@P1-T04-I001`；
+- TDD：`TDD-P1-T04-R01@1b39f27b972e`；
+- Architecture Skeleton：`DEVSKEL-P1-T04-R01@70df083e1b8a`；
+- Development：`DEV-P1-T04-R01@ba472906c719`；
+- Code Review：`CODEREVIEW-P1-T04-R01@ba472906c719`；
+- Testing：`TESTING-P1-T04-R01@ba472906c719`；
+- Completion：`COMPLETION-P1-T04-R01@ba472906c719`；
+- Review：`REV-000196`～`REV-000206`；
+- Evidence：`EVD-000439`～`EVD-000450`；
+- Clean-code Head：`ba472906c719985b21cb6cbed70df5360a59fadc`；
+- P0 Run：`30743067868`；
+- Artifact：`8831948275`；
+- Artifact SHA-256：`0824424e712ff64af63736d0b6be0bddf5f2e372ca26bf8633ebb6f822d6eee3`；
 - Context：26 run / 0 failures / 0 errors / 0 skipped；
 - Compiler：83 run / 0 failures / 0 errors / 0 skipped；
-- I005 专项：5 run / 0 failures / 0 errors / 0 skipped；
-- 12 模块 Reactor、Java 8、故意失败阻断：PASSED；
+- XML T04：15 run / 0 failures / 0 errors / 0 skipped；
+- 12 模块 Reactor、Java release 8、故意失败阻断：PASSED；
 - MySQL：`SKIPPED_NOT_APPLICABLE`；
 - 开放 P0/P1：无。
 
-## T03 当前冻结合同
+## T04 冻结合同
 
-### SourceGraph
+### Canonical Frontend
 
-- 固定根入口 `classpath:mix/orm-config.xml`；
-- 精确 10 个唯一 Source、7 条真实声明边、8 次 Provider 调用；
-- data/view 文件集展开不伪造边；
-- 文件集顺序与主/测试资源镜像确定性保持；
-- sourceId 与 canonical reference 身份域分离；
-- 任何失败不发布部分 SourceGraph。
+- 实现类型：`dec.core.compiler.canonical.xml.SecureXmlDocumentFrontend`；
+- 通过 compiler-owned `DocumentFrontend`、`FrontendOptions`、`FrontendResult` 和 `CanonicalDocumentNode` API 工作；
+- 元素和属性使用 local-name，命名空间前缀不进入 Canonical 名称；
+- 属性按 key 稳定排序，子节点保持文档顺序；
+- 直接文本与 CDATA 形成可选标量，纯空白不发布标量；
+- schemaVersion 来自显式 FrontendOptions 并传递到所有节点；
+- 每个节点 SourceRef 指向 start tag 的 `<`，nodePath 为完整 local-name 路径；
+- LF、CRLF、CR 均已验证；
+- 完整根生成前不发布任何部分 Canonical。
 
-### 完整 XML 声明路径
+### XML 安全边界
 
-root 文档只允许：
+- DOCTYPE、内部实体、外部通用实体和外部参数实体均被拒绝；
+- 网络、根外文件和外部 schema 访问次数均为 0；
+- `xsi:schemaLocation` 与 `xsi:noNamespaceSchemaLocation` 直接失败，不创建 SchemaFactory；
+- XInclude 仅作为普通 Canonical 数据保留，不执行包含；
+- 关键 StAX 安全属性不受支持时 fail closed；
+- Malformed XML、错误 DocumentFormat 和重复 Canonical 属性 local-name 返回 `MIX_FRONTEND_XML_UNSAFE`，不携带部分根。
 
-- `/orm-config/orm-data-file-info/orm-file`
-- `/orm-config/orm-view-file-info/orm-file`
-- `/orm-config/system-file-info/system-file`
-- `/orm-config/business-file-info/business-file`
+### 架构和范围
 
-systems 文档只允许：
-
-- `/systems/system/rule-file-info/rule-file`
-
-文档根必须分别为 `orm-config` 与 `systems`。其它路径中的同名元素全部忽略；错误根、错误嵌套与不完整结构返回 `MIX_SOURCE_POLICY`，且不访问下游目标 Provider。发布 Edge 的 `nodePath` 只能来自上述五条路径。
-
-### Canonical、安全与位置
-
-- 相对/绝对 URI 类别保持；
-- 字面量和编码 `%2e` 当前目录段规范化保持；
-- 编码父目录、编码分隔符、query、fragment 安全证据不被隐藏；
-- Resolver 根操作处于统一受控失败边界；
-- LF、CRLF、CR 均验证七条边的 line、column、nodePath；
-- DTD、外部实体和外部资源解析关闭。
-
-## 编码、范围与下一步
-
-- `@Override` 独占一行，方法、构造器和关键逻辑使用中文注释；
-- Java release 8；
+- XML 模块单向依赖 compiler canonical API；compiler 不反向依赖 XML 模块；
+- Frontend 不持有 DOM、DOM4J、ConfigFactory、ConfigInfo、Registry 或 EngineContext；
+- 旧 XML API 和下游回归保持；
 - 未修改 `dec-core-context` 生产代码；
-- 未实现 T04 Canonical Frontend、RawDefinitionSet、Symbol 或 Compiler Pipeline；
-- 当前 PR：`#18`，分支 `feature/p1-t03-source-graph-20260802-1430`，目标 `dev_all`；
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r05_completion.json`；
-- 未经明确授权不得合并 PR #18；
-- PR #18 合并前 `TASK-P1-T04` 保持未启动和阻断。
+- 未实现 T05 YAML Frontend、RawDefinitionSet、Symbol 或 Compiler Pipeline。
+
+## 编码、PR 与下一步
+
+- `@Override` 独占一行；公共方法、构造器和关键安全、定位、状态转换逻辑使用中文注释；
+- 当前 PR：`#19`，分支 `feature/p1-t04-xml-canonical-20260802-1744`，目标 `dev_all`；
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t04-r01/completion-report.json`；
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t04_r01_completion.json`；
+- 未经明确授权不得合并 PR #19；
+- PR #19 合并前 `TASK-P1-T05` 保持未启动和阻断。
