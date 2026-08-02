@@ -40,26 +40,31 @@ class ContextReworkR04ContractTest {
     @DisplayName(CASE_ID + " 空 subList 的所有写入口必须稳定拒绝")
     void emptySubListMutationsUseStableRejection() {
         CoreConfigProjection projection = CoreConfigProjection.from(emptyModelSet());
-        List<CompiledDefinition> subList = projection.data().subList(0, 0);
+        List<CompiledDefinition> dataSubList = projection.data().subList(0, 0);
+        List<CompiledDefinition> viewSubList = projection.views().subList(0, 0);
+        List<CompiledDefinition> ruleSubList = projection.rules().subList(0, 0);
 
-        assertRejected(() -> subList.clear(), "data.subList.clear");
+        assertRejected(() -> dataSubList.clear(), "data.subList.clear");
         assertRejected(
-                () -> subList.removeAll(Collections.emptyList()),
+                () -> dataSubList.removeAll(Collections.emptyList()),
                 "data.subList.removeAll");
         assertRejected(
-                () -> subList.retainAll(Collections.emptyList()),
-                "data.subList.retainAll");
+                () -> viewSubList.retainAll(Collections.emptyList()),
+                "views.subList.retainAll");
         assertRejected(
-                () -> subList.removeIf(value -> true),
-                "data.subList.removeIf");
+                () -> viewSubList.removeIf(value -> true),
+                "views.subList.removeIf");
         assertRejected(
-                () -> subList.replaceAll(value -> value),
-                "data.subList.replaceAll");
-        assertRejected(() -> subList.sort(null), "data.subList.sort");
+                () -> ruleSubList.replaceAll(value -> value),
+                "rules.subList.replaceAll");
+        assertRejected(() -> ruleSubList.sort(null), "rules.subList.sort");
 
         assertSame(projection.data(), projection.data());
-        assertEquals(0, projection.data().size());
-        assertEquals(0, subList.size());
+        assertSame(projection.views(), projection.views());
+        assertSame(projection.rules(), projection.rules());
+        assertEquals(0, dataSubList.size());
+        assertEquals(0, viewSubList.size());
+        assertEquals(0, ruleSubList.size());
     }
 
     @Test
@@ -99,8 +104,8 @@ class ContextReworkR04ContractTest {
     }
 
     @Test
-    @DisplayName(CASE_ID + " Iterator 与 ListIterator 写入口必须稳定拒绝")
-    void iteratorMutationsUseStableRejection() {
+    @DisplayName(CASE_ID + " 根 Iterator 与 ListIterator 写入口必须稳定拒绝")
+    void rootIteratorMutationsUseStableRejection() {
         CoreConfigProjection emptyProjection = CoreConfigProjection.from(emptyModelSet());
         Iterator<CompiledDefinition> emptyIterator = emptyProjection.data().iterator();
         ListIterator<CompiledDefinition> emptyListIterator =
@@ -138,6 +143,45 @@ class ContextReworkR04ContractTest {
                 () -> listIterator.add(populatedProjection.data().get(0)),
                 "data.listIterator.add");
         assertEquals(1, populatedProjection.data().size());
+    }
+
+    @Test
+    @DisplayName(CASE_ID + " subList Iterator 与 ListIterator 继续稳定拒绝")
+    void subListIteratorMutationsUseStableRejection() {
+        CoreConfigProjection emptyProjection = CoreConfigProjection.from(emptyModelSet());
+        List<CompiledDefinition> emptySubList = emptyProjection.data().subList(0, 0);
+        Iterator<CompiledDefinition> emptyIterator = emptySubList.iterator();
+        ListIterator<CompiledDefinition> emptyListIterator = emptySubList.listIterator();
+
+        assertRejected(
+                () -> emptyIterator.remove(),
+                "data.subList.iterator.remove");
+        assertRejected(
+                () -> emptyListIterator.remove(),
+                "data.subList.listIterator.remove");
+        assertRejected(
+                () -> emptyListIterator.set(null),
+                "data.subList.listIterator.set");
+        assertRejected(
+                () -> emptyListIterator.add(null),
+                "data.subList.listIterator.add");
+
+        CoreConfigProjection populatedProjection =
+                CoreConfigProjection.from(modelSetWithData());
+        List<CompiledDefinition> subList = populatedProjection.data().subList(0, 1);
+        Iterator<CompiledDefinition> iterator = subList.iterator();
+        ListIterator<CompiledDefinition> listIterator = subList.listIterator();
+        iterator.next();
+        listIterator.next();
+
+        assertRejected(
+                () -> iterator.remove(),
+                "data.subList.iterator.remove");
+        assertRejected(
+                () -> listIterator.set(subList.get(0)),
+                "data.subList.listIterator.set");
+        assertEquals(1, populatedProjection.data().size());
+        assertEquals(1, subList.size());
     }
 
     /**
