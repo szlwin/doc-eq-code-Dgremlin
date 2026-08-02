@@ -24,7 +24,7 @@ class YamlFrontendArchitectureTest {
      */
     @Test
     void exposesDirectFinalDocumentFrontendApi() throws Exception {
-        Class<?> type = Class.forName(FRONTEND_CLASS);
+        Class<?> type = targetType();
         Constructor<?> constructor = type.getConstructor();
         Object instance = constructor.newInstance();
 
@@ -39,8 +39,8 @@ class YamlFrontendArchitectureTest {
      * Frontend 字段不得长期持有 SnakeYAML Node、旧 Config 或运行时 Context。
      */
     @Test
-    void doesNotHoldParserTreeOrRuntimeConfigurationState() throws Exception {
-        Class<?> type = Class.forName(FRONTEND_CLASS);
+    void doesNotHoldParserTreeOrRuntimeConfigurationState() {
+        Class<?> type = targetType();
         for (Field field : type.getDeclaredFields()) {
             assertAllowedPublishedType(field.getType());
         }
@@ -50,8 +50,8 @@ class YamlFrontendArchitectureTest {
      * 公共构造器和公共方法不得向调用方暴露 SnakeYAML 或旧运行时类型。
      */
     @Test
-    void publicApiDoesNotExposeParserTypes() throws Exception {
-        Class<?> type = Class.forName(FRONTEND_CLASS);
+    void publicApiDoesNotExposeParserTypes() {
+        Class<?> type = targetType();
         for (Constructor<?> constructor : type.getConstructors()) {
             for (Class<?> parameter : constructor.getParameterTypes()) {
                 assertAllowedPublishedType(parameter);
@@ -65,6 +65,19 @@ class YamlFrontendArchitectureTest {
             for (Class<?> parameter : method.getParameterTypes()) {
                 assertAllowedPublishedType(parameter);
             }
+        }
+    }
+
+    /**
+     * 将目标类缺失转换为明确的 TDD 断言失败，避免被误记为环境 Error。
+     */
+    private static Class<?> targetType() {
+        try {
+            return Class.forName(FRONTEND_CLASS);
+        } catch (ClassNotFoundException failure) {
+            throw new AssertionError(
+                    "T05 safe YAML Frontend must exist",
+                    failure);
         }
     }
 
