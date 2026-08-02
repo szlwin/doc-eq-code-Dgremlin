@@ -124,9 +124,15 @@ class CompilerSourceFrontendClosureBehaviorR04Test {
         Diagnostic warning = diagnostic(DiagnosticSeverity.WARNING);
         Diagnostic error = diagnostic(DiagnosticSeverity.ERROR);
 
-        FrontendResult parsed = FrontendResults.parsed(
-                canonicalRoot,
-                Collections.singletonList(warning));
+        FrontendResult parsed;
+        try {
+            parsed = FrontendResults.parsed(
+                    canonicalRoot,
+                    Collections.singletonList(warning));
+        } catch (UnsupportedOperationException exception) {
+            // 骨架阶段把显式未实现行为记录为单一受控断言失败，而不是测试错误。
+            throw new AssertionError("Architecture skeleton only", exception);
+        }
         assertEquals(FrontendStatus.PARSED, parsed.status());
         assertSame(canonicalRoot, parsed.canonicalRoot().get());
         assertEquals(Collections.singletonList(warning), parsed.diagnostics());
