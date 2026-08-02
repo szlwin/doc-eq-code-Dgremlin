@@ -3,30 +3,23 @@ package dec.core.compiler.api;
 import java.util.Objects;
 
 /**
- * 不可变的 Compiler 选项与单调时钟截止时间边界。
+ * 参与编译语义身份的不可变选项。
  */
 public final class CompilationOptions {
     private final String schemaVersion;
-    private final String optionsVersion;
-    private final long deadlineNanos;
+    private final String optionsDigest;
 
     /**
-     * 冻结 Schema、选项版本以及绝对单调时钟截止时间。
+     * 冻结 Schema 版本和规范化选项摘要。
+     *
+     * <p>Deadline 属于执行预算，不参与语义身份，必须由 CompilationRequest 单独持有。</p>
      *
      * @param schemaVersion 解释输入源时使用的 Schema 合同版本
-     * @param optionsVersion 参与语义身份计算的规范化选项版本
-     * @param deadlineNanos 绝对单调时钟截止时间，或 {@link Long#MAX_VALUE}
+     * @param optionsDigest 参与发布事实的规范化选项摘要
      */
-    public CompilationOptions(
-            String schemaVersion,
-            String optionsVersion,
-            long deadlineNanos) {
-        if (deadlineNanos < 0L) {
-            throw new IllegalArgumentException("deadlineNanos must be >= 0");
-        }
+    public CompilationOptions(String schemaVersion, String optionsDigest) {
         this.schemaVersion = ApiContracts.requireText(schemaVersion, "schemaVersion");
-        this.optionsVersion = ApiContracts.requireText(optionsVersion, "optionsVersion");
-        this.deadlineNanos = deadlineNanos;
+        this.optionsDigest = ApiContracts.requireText(optionsDigest, "optionsDigest");
     }
 
     /**
@@ -37,17 +30,10 @@ public final class CompilationOptions {
     }
 
     /**
-     * 返回参与语义身份计算的规范化选项版本。
+     * 返回参与语义身份和 Published 事实的规范化选项摘要。
      */
-    public String optionsVersion() {
-        return optionsVersion;
-    }
-
-    /**
-     * 返回注入单调时钟域中的绝对截止时间。
-     */
-    public long deadlineNanos() {
-        return deadlineNanos;
+    public String optionsDigest() {
+        return optionsDigest;
     }
 
     @Override
@@ -59,22 +45,20 @@ public final class CompilationOptions {
             return false;
         }
         CompilationOptions that = (CompilationOptions) other;
-        return deadlineNanos == that.deadlineNanos
-                && schemaVersion.equals(that.schemaVersion)
-                && optionsVersion.equals(that.optionsVersion);
+        return schemaVersion.equals(that.schemaVersion)
+                && optionsDigest.equals(that.optionsDigest);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(schemaVersion, optionsVersion, deadlineNanos);
+        return Objects.hash(schemaVersion, optionsDigest);
     }
 
     @Override
     public String toString() {
         return "CompilationOptions{"
                 + "schemaVersion='" + schemaVersion + '\''
-                + ", optionsVersion='" + optionsVersion + '\''
-                + ", deadlineNanos=" + deadlineNanos
+                + ", optionsDigest='" + optionsDigest + '\''
                 + '}';
     }
 }
