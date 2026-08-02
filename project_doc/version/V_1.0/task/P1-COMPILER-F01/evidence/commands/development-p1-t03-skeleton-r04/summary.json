@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I004",
+  "revision": "DEVSKEL-P1-T03-R04@01e8b7aa0e61",
+  "review_id": "REV-000178",
+  "evidence_id": "EVD-000419",
+  "head_sha": "01e8b7aa0e612244b8416302d570b9967bcb4a53",
+  "p0_run_id": 30740576933,
+  "artifact_id": 8831141381,
+  "artifact_sha256": "506b925e434e1737bb79f79819587e5a18bbc35b34150751901a0b3efa9e206c",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 78, "failures": 0, "errors": 0, "skipped": 0},
+  "i004_tests": {"run": 4, "failures": 0, "errors": 0, "skipped": 0},
+  "architecture_contracts": {
+    "relative_category_preserved": true,
+    "promotable_relative_roots_rejected_before_provider": true,
+    "provider_accesses_for_invalid_relative_roots": 0,
+    "resolver_root_boundary_controlled": true,
+    "source_reference_instance_fields": 1,
+    "absolute_uri_canonicalization_preserved": true
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "result": "PASSED"
+}
