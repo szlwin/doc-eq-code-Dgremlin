@@ -275,7 +275,7 @@ public final class CoreConfigProjection {
     }
 
     /**
-     * 冻结 Iterator/ListIterator 的公共结构；写入拒绝在 Development 阶段完成。
+     * 对 Iterator/ListIterator 的写方法提供统一的 Projection 专用拒绝语义。
      */
     private static final class ProjectionReadOnlyListIterator<E>
             implements ListIterator<E> {
@@ -323,28 +323,25 @@ public final class CoreConfigProjection {
 
         @Override
         public void remove() {
-            throw architectureSkeleton("remove");
+            throw rejected("remove");
         }
 
         @Override
         public void set(E element) {
-            throw architectureSkeleton("set");
+            throw rejected("set");
         }
 
         @Override
         public void add(E element) {
-            throw architectureSkeleton("add");
+            throw rejected("add");
         }
 
         /**
-         * 显式标记架构骨架尚未完成，禁止返回伪成功。
+         * 即使迭代器状态尚不允许写入，也优先返回稳定的 Projection 拒绝事实。
          */
-        private UnsupportedOperationException architectureSkeleton(String operation) {
-            return new UnsupportedOperationException(
-                    "Architecture skeleton only: "
-                            + operationPrefix
-                            + "."
-                            + operation);
+        private ProjectionWriteRejectedException rejected(String operation) {
+            return new ProjectionWriteRejectedException(
+                    operationPrefix + "." + operation);
         }
     }
 
