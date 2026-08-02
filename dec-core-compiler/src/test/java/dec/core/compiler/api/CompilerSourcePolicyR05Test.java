@@ -59,29 +59,28 @@ class CompilerSourcePolicyR05Test {
     }
 
     @Test
-    void exposesExplicitResolutionFactoriesAndRemovesAmbiguousFactory()
-            throws Exception {
+    void exposesExplicitResolutionFactoriesAndRemovesAmbiguousFactory() {
         assertEquals(
                 SourceResolutionResult.class,
-                SourceResolutionResults.class.getMethod(
+                frozenMethod(
                         "resolvedSingle",
                         DocumentSource.class,
                         List.class).getReturnType());
         assertEquals(
                 SourceResolutionResult.class,
-                SourceResolutionResults.class.getMethod(
+                frozenMethod(
                         "resolvedFileSet",
                         List.class,
                         List.class).getReturnType());
         assertEquals(
                 SourceResolutionResult.class,
-                SourceResolutionResults.class.getMethod(
+                frozenMethod(
                         "validateSingle",
                         SourceReference.class,
                         SourceResolutionResult.class).getReturnType());
         assertEquals(
                 SourceResolutionResult.class,
-                SourceResolutionResults.class.getMethod(
+                frozenMethod(
                         "validateFileSet",
                         SourceReference.class,
                         SourceResolutionResult.class).getReturnType());
@@ -152,17 +151,11 @@ class CompilerSourcePolicyR05Test {
 
     @Test
     void validatorsConvertSingleCardinalityViolationsToPolicyFailure() {
-        final DocumentSource first = source(
-                "source:first",
-                "first.xml",
-                "sha256:first");
-        final DocumentSource second = source(
-                "source:second",
-                "second.xml",
-                "sha256:second");
         SourceResolutionResult invalid = customResult(
                 SourceResolutionStatus.RESOLVED,
-                Arrays.asList(first, second),
+                Arrays.asList(
+                        source("source:first", "first.xml", "sha256:first"),
+                        source("source:second", "second.xml", "sha256:second")),
                 Collections.<Diagnostic>emptyList());
 
         SourceResolutionResult validated = invokeResult(
@@ -179,21 +172,17 @@ class CompilerSourcePolicyR05Test {
 
     @Test
     void validatorsConvertDuplicateFileSetAndPartialFailureToPolicyFailure() {
-        final DocumentSource first = source(
+        DocumentSource first = source(
                 "source:duplicate",
                 "first.xml",
                 "sha256:first");
-        final DocumentSource conflict = source(
+        DocumentSource conflict = source(
                 "source:duplicate",
                 "second.xml",
                 "sha256:second");
         SourceReference reference = new SourceReference(
                 "file:/workspace/config/");
 
-        SourceResolutionResult duplicate = customResult(
-                SourceResolutionStatus.RESOLVED,
-                Arrays.asList(first, conflict),
-                Collections.<Diagnostic>emptyList());
         SourceResolutionResult duplicateValidated = invokeResult(
                 "validateFileSet",
                 new Class<?>[] {
@@ -201,14 +190,12 @@ class CompilerSourcePolicyR05Test {
                     SourceResolutionResult.class
                 },
                 reference,
-                duplicate);
+                customResult(
+                        SourceResolutionStatus.RESOLVED,
+                        Arrays.asList(first, conflict),
+                        Collections.<Diagnostic>emptyList()));
         assertPolicyFailure(duplicateValidated);
 
-        SourceResolutionResult partialFailure = customResult(
-                SourceResolutionStatus.FAILED,
-                Collections.singletonList(first),
-                Collections.singletonList(
-                        diagnostic(DiagnosticSeverity.ERROR)));
         SourceResolutionResult failureValidated = invokeResult(
                 "validateFileSet",
                 new Class<?>[] {
@@ -216,13 +203,17 @@ class CompilerSourcePolicyR05Test {
                     SourceResolutionResult.class
                 },
                 reference,
-                partialFailure);
+                customResult(
+                        SourceResolutionStatus.FAILED,
+                        Collections.singletonList(first),
+                        Collections.singletonList(
+                                diagnostic(DiagnosticSeverity.ERROR))));
         assertPolicyFailure(failureValidated);
     }
 
     @Test
     void successfulFactoriesRejectErrorDiagnostics() {
-        final DocumentSource source = source(
+        DocumentSource source = source(
                 "source:error",
                 "error.xml",
                 "sha256:error");
@@ -237,21 +228,33 @@ class CompilerSourcePolicyR05Test {
     }
 
     /**
-     * 调用待冻结的公共工厂，并把反射目标异常恢复为原始运行时异常。
+     * 获取待冻结公共方法，并把缺少签名转换为断言失败而不是测试错误。
+     */
+    private static Method frozenMethod(
+            String methodName,
+            Class<?>... parameterTypes) {
+        try {
+            return SourceResolutionResults.class.getMethod(
+                    methodName,
+                    parameterTypes);
+        } catch (NoSuchMethodException exception) {
+            throw new AssertionError(
+                    "Missing frozen method: " + methodName,
+                    exception);
+        }
+    }
+
+    /**
+     * 调用待冻结公共方法，并把反射目标异常恢复为原始运行时异常。
      */
     private static SourceResolutionResult invokeResult(
             String methodName,
             Class<?>[] parameterTypes,
             Object... arguments) {
         try {
-            Method method = SourceResolutionResults.class.getMethod(
+            return (SourceResolutionResult) frozenMethod(
                     methodName,
-                    parameterTypes);
-            return (SourceResolutionResult) method.invoke(null, arguments);
-        } catch (NoSuchMethodException exception) {
-            throw new AssertionError(
-                    "Missing frozen method: " + methodName,
-                    exception);
+                    parameterTypes).invoke(null, arguments);
         } catch (IllegalAccessException exception) {
             throw new AssertionError(
                     "Frozen method is not accessible: " + methodName,
