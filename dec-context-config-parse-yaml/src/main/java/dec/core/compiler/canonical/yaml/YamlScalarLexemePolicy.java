@@ -1,5 +1,6 @@
 package dec.core.compiler.canonical.yaml;
 
+import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
@@ -19,19 +20,21 @@ final class YamlScalarLexemePolicy {
     private static final Pattern NULL = Pattern.compile(
             "^(?:~|null|Null|NULL|)$");
     private static final Pattern INT = Pattern.compile(
-            "^[-+]?(?:0b[0-1_]+|0[0-7_]+|[0-9][0-9_]*|"
-                    + "0x[0-9a-fA-F_]+|[1-9][0-9_]*(?::[0-5]?[0-9])+)$");
-    private static final Pattern FLOAT = Pattern.compile(
-            "^[-+]?(?:(?:[0-9][0-9_]*)?\\.[0-9_]*"
-                    + "(?:[eE][-+][0-9]+)?|"
-                    + "[0-9][0-9_]*(?:[eE][-+][0-9]+)|"
-                    + "\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN)|"
-                    + "[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*)$");
+            "^[-+]?(?:0|0b[0-1_]+|0[0-7_]+|0x[0-9a-fA-F_]+|"
+                    + "[1-9][0-9_]*|[1-9][0-9_]*(?::[0-5]?[0-9])+)$");
+    private static final Pattern DECIMAL_FLOAT = Pattern.compile(
+            "^[-+]?(?:(?:(?:[0-9][0-9_]*)?\\.[0-9_]+|"
+                    + "[0-9][0-9_]*\\.)(?:[eE][-+][0-9]+)?|"
+                    + "[0-9][0-9_]*(?:[eE][-+][0-9]+))$");
+    private static final Pattern SPECIAL_FLOAT = Pattern.compile(
+            "^[-+]?\\.(?:inf|Inf|INF|nan|NaN|NAN)$");
+    private static final Pattern SEXAGESIMAL_FLOAT = Pattern.compile(
+            "^[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]+$");
     private static final Pattern TIMESTAMP = Pattern.compile(
             "^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})"
                     + "(?:(?:[Tt]|[ \\t]+)"
                     + "([0-9]{1,2}):([0-9]{2}):([0-9]{2})"
-                    + "(?:\\.([0-9]*))?"
+                    + "(?:\\.([0-9]+))?"
                     + "(?:[ \\t]*(?:Z|([-+])([0-9]{1,2})"
                     + "(?::([0-9]{2}))?))?)?$");
 
@@ -60,7 +63,7 @@ final class YamlScalarLexemePolicy {
             return INT.matcher(value).matches();
         }
         if (Tag.FLOAT.equals(tag)) {
-            return FLOAT.matcher(value).matches();
+            return isValidFloat(value);
         }
         if (Tag.NULL.equals(tag)) {
             return NULL.matcher(value).matches();
@@ -69,6 +72,25 @@ final class YamlScalarLexemePolicy {
             return isValidTimestamp(value);
         }
         return false;
+    }
+
+    /**
+     * 校验普通、小数指数、特殊值和六十进制浮点词法。
+     */
+    private static boolean isValidFloat(String value) {
+        if (SPECIAL_FLOAT.matcher(value).matches()
+                || SEXAGESIMAL_FLOAT.matcher(value).matches()) {
+            return true;
+        }
+        if (!DECIMAL_FLOAT.matcher(value).matches()) {
+            return false;
+        }
+        try {
+            new BigDecimal(value.replace("_", ""));
+            return true;
+        } catch (NumberFormatException failure) {
+            return false;
+        }
     }
 
     /**
