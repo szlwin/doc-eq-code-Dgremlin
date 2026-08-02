@@ -21,11 +21,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * 验证成功结果精确复用 T01 模型中的 Diagnostic 发布事实。
+ * 验证成功结果精确复用最终 T01 模型中的发布事实。
  */
 class PublishedFactIdentityTest {
     @Test
-    void publishedResultReusesModelDiagnosticInstance() {
+    void publishedResultReusesModelAndDiagnosticInstances() {
         Diagnostic warning = new Diagnostic(
                 DiagnosticCode.MIX_PUBLICATION_BLOCKED,
                 DiagnosticSeverity.WARNING,
@@ -36,13 +36,21 @@ class PublishedFactIdentityTest {
                 "Review the warning before publication",
                 "PublicationPass");
         CompiledModelSet modelSet = modelSet(Collections.singletonList(warning));
-        PublishedCompilationResult result = new PublishedCompilationResult(
-                "session-published",
-                modelSet,
-                new EngineContext(modelSet),
-                modelSet.diagnostics());
+        EngineContext engineContext = new EngineContext(modelSet);
 
-        // 成功结果不得再复制一份等值列表，必须复用模型已经冻结的发布事实。
+        PublishedCompilationResult result = PublishedCompilationResult.published(
+                modelSet.diagnostics(),
+                modelSet,
+                engineContext,
+                modelSet.digestPair(),
+                modelSet.compilerVersion(),
+                modelSet.schemaVersion(),
+                modelSet.optionsVersion(),
+                "sha-256-v1");
+
+        // 成功结果必须复用模型和模型已冻结的 Diagnostic 单一事实源。
+        assertSame(modelSet, result.modelSet());
+        assertSame(engineContext, result.engineContext());
         assertSame(modelSet.diagnostics(), result.diagnostics());
     }
 
