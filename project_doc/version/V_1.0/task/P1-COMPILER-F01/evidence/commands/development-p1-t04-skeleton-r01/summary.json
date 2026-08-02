@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_evidence",
+  "task_id": "TASK-P1-T04",
+  "iteration": "I001",
+  "revision": "DEVSKEL-P1-T04-R01@70df083e1b8a",
+  "input_revisions": {
+    "design": "DESIGN-R18@P1-T04-I001",
+    "implementation_plan": "TP-P1-COMPILER-F01-R14@P1-T04-I001",
+    "tdd": "TDD-P1-T04-R01@1b39f27b972e"
+  },
+  "head_sha": "70df083e1b8aef99be089ca735670cca9b4a4cdb",
+  "p0_run_id": 30742910634,
+  "artifact_id": 8831899074,
+  "artifact_sha256": "fb87a715bb0a6bd6b2acb82fe3f494eff468d4bcd2e68f9daff7762340d579b4",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+  "xml_t04_tests": {"run": 10, "failures": 0, "errors": 0, "skipped": 0},
+  "public_frontend_type": "dec.core.compiler.canonical.xml.SecureXmlDocumentFrontend",
+  "implements_document_frontend": true,
+  "secure_stax_factory": true,
+  "partial_canonical_exposed": false,
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "review_id": "REV-000199",
+  "evidence_id": "EVD-000442",
+  "result": "PASSED"
+}
