@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
  */
 class CompilerSourceResolutionBehaviorR04Test {
     @Test
-    void resolvedResultSortsSourcesAndRejectsErrorDiagnostics() {
+    void resolvedFileSetSortsSourcesAndRejectsErrorDiagnostics() {
         DocumentSource later = source("source:z", "z.xml");
         DocumentSource earlier = source("source:a", "a.xml");
         Diagnostic warning = diagnostic(DiagnosticSeverity.WARNING);
 
-        SourceResolutionResult result = SourceResolutionResults.resolved(
+        SourceResolutionResult result = SourceResolutionResults.resolvedFileSet(
                 Arrays.asList(later, earlier),
                 Collections.singletonList(warning));
 
@@ -41,8 +41,8 @@ class CompilerSourceResolutionBehaviorR04Test {
                 () -> result.sources().add(later));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> SourceResolutionResults.resolved(
-                        Collections.singletonList(earlier),
+                () -> SourceResolutionResults.resolvedSingle(
+                        earlier,
                         Collections.singletonList(
                                 diagnostic(DiagnosticSeverity.ERROR))));
     }
@@ -64,15 +64,15 @@ class CompilerSourceResolutionBehaviorR04Test {
     }
 
     @Test
-    void resolvedResultRejectsEmptyOrNullSourceCandidates() {
+    void resolvedFileSetRejectsEmptyOrNullSourceCandidates() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> SourceResolutionResults.resolved(
+                () -> SourceResolutionResults.resolvedFileSet(
                         Collections.<DocumentSource>emptyList(),
                         Collections.<Diagnostic>emptyList()));
         assertThrows(
                 NullPointerException.class,
-                () -> SourceResolutionResults.resolved(
+                () -> SourceResolutionResults.resolvedFileSet(
                         Collections.<DocumentSource>singletonList(null),
                         Collections.<Diagnostic>emptyList()));
     }
