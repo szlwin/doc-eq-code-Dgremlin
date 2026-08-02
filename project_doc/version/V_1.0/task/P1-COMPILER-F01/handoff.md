@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 阶段交接
 
-> T01、T02、T03 已合并到 `dev_all`。T03 的 R01～R04 Completion 均被后续独立 Review 推翻并作为不可变历史保留；T03 当前有效 Completion 为 `COMPLETION-P1-T03-R05@91271c9a1c20`，merge / T04 base 为 `df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`。T04 当前有效 iteration 为 `TASK-P1-T04 / I001`。
+> T01、T02、T03 已合并到 `dev_all`。T03 当前有效 Completion 为 `COMPLETION-P1-T03-R05@91271c9a1c20`，T04 基线为 `dev_all@df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`。T04 I001 的 Completion R01 已被 `REV-000207` 推翻并作为不可变历史保留；当前有效 iteration 为 `TASK-P1-T04 / I002`。
 
 ## 已合并前置任务
 
@@ -8,65 +8,75 @@
 - T02：`COMPLETION-P1-T02-R05@35376308b013`，merge `370b72f4bf4ec9b3620586f26d13d95f611f3cc9`；
 - T03：`COMPLETION-P1-T03-R05@91271c9a1c20`，merge `df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`。
 
-## T04 I001（当前有效）
+## T04 历史 Revision
 
-- Design：`DESIGN-R18@P1-T04-I001`；
-- Plan：`TP-P1-COMPILER-F01-R14@P1-T04-I001`；
-- TDD：`TDD-P1-T04-R01@1b39f27b972e`；
-- Architecture Skeleton：`DEVSKEL-P1-T04-R01@70df083e1b8a`；
-- Development：`DEV-P1-T04-R01@ba472906c719`；
-- Code Review：`CODEREVIEW-P1-T04-R01@ba472906c719`；
-- Testing：`TESTING-P1-T04-R01@ba472906c719`；
-- Completion：`COMPLETION-P1-T04-R01@ba472906c719`；
-- Review：`REV-000196`～`REV-000206`；
-- Evidence：`EVD-000439`～`EVD-000450`；
-- Clean-code Head：`ba472906c719985b21cb6cbed70df5360a59fadc`；
-- P0 Run：`30743067868`；
-- Artifact：`8831948275`；
-- Artifact SHA-256：`0824424e712ff64af63736d0b6be0bddf5f2e372ca26bf8633ebb6f822d6eee3`；
-- Context：26 run / 0 failures / 0 errors / 0 skipped；
-- Compiler：83 run / 0 failures / 0 errors / 0 skipped；
-- XML T04：15 run / 0 failures / 0 errors / 0 skipped；
-- 12 模块 Reactor、Java release 8、故意失败阻断：PASSED；
+- I001：`COMPLETION-P1-T04-R01@ba472906c719`；
+- 推翻 Review：`REV-000207`；
+- 状态：不可变历史，不能作为当前 Completion 或 T05 前置输入。
+
+## T04 I002（当前有效）
+
+- Design：`DESIGN-R19@P1-T04-REWORK-I002`；
+- Plan：`TP-P1-COMPILER-F01-R15@P1-T04-REWORK-I002`；
+- TDD：`TDD-P1-T04-R02@e2033f2b249e`；
+- Architecture Skeleton：`DEVSKEL-P1-T04-R02@710d114248d0`；
+- Development：`DEV-P1-T04-R02@0699c6bc2ed4`；
+- Code Review：`CODEREVIEW-P1-T04-R02@0699c6bc2ed4`；
+- Testing：`TESTING-P1-T04-R02@0699c6bc2ed4`；
+- Completion：`COMPLETION-P1-T04-R02@0699c6bc2ed4`；
+- Review：`REV-000207`～`REV-000219`；
+- Evidence：`EVD-000451`～`EVD-000463`；
+- Clean-code Head：`0699c6bc2ed41100c3a4538b76a691b7757f683b`；
+- P0 Run：`30748395446`；
+- Artifact：`8833627854`；
+- Artifact SHA-256：`a7a7703c706e8bb3cadafb74366e13131ea63a37dd3bbf7f9446b3608ed7c97a`；
+- Context：26/26；Compiler：83/83；XML T04：30/30；Demo：4/4；
+- XML 资源预算专项：12/12；
+- 12 模块 Reactor、Java release 8、故意失败门禁：PASSED；
 - MySQL：`SKIPPED_NOT_APPLICABLE`；
 - 开放 P0/P1：无。
 
-## T04 冻结合同
+## 当前 XML 资源安全合同
 
-### Canonical Frontend
+生产 `XmlFrontendLimits` 冻结：
 
-- 实现类型：`dec.core.compiler.canonical.xml.SecureXmlDocumentFrontend`；
-- 通过 compiler-owned `DocumentFrontend`、`FrontendOptions`、`FrontendResult` 和 `CanonicalDocumentNode` API 工作；
-- 元素和属性使用 local-name，命名空间前缀不进入 Canonical 名称；
-- 属性按 key 稳定排序，子节点保持文档顺序；
-- 直接文本与 CDATA 形成可选标量，纯空白不发布标量；
-- schemaVersion 来自显式 FrontendOptions 并传递到所有节点；
-- 每个节点 SourceRef 指向 start tag 的 `<`，nodePath 为完整 local-name 路径；
-- LF、CRLF、CR 均已验证；
-- 完整根生成前不发布任何部分 Canonical。
+- `maxDocumentBytes = 1,048,576`；
+- `maxElementDepth = 256`；
+- `maxNodeCount = 65,536`；
+- `maxCumulativeNodePathChars = 4,194,304`；
+- `maxAttributesPerElement = 256`；
+- `maxDirectTextCharsPerElement = 262,144`；
+- `maxCumulativeDirectTextChars = 1,048,576`。
 
-### XML 安全边界
+执行边界：
 
-- DOCTYPE、内部实体、外部通用实体和外部参数实体均被拒绝；
-- 网络、根外文件和外部 schema 访问次数均为 0；
-- `xsi:schemaLocation` 与 `xsi:noNamespaceSchemaLocation` 直接失败，不创建 SchemaFactory；
-- XInclude 仅作为普通 Canonical 数据保留，不执行包含；
-- 关键 StAX 安全属性不受支持时 fail closed；
-- Malformed XML、错误 DocumentFormat 和重复 Canonical 属性 local-name 返回 `MIX_FRONTEND_XML_UNSAFE`，不携带部分根。
+- 文档字节在 reader 创建前检查；
+- START_ELEMENT 的深度、节点、属性和路径预算在 SourceRef、Map、NodeBuilder 分配前检查；
+- nodePath 只基于父路径进行一次拼接，不再遍历祖先栈；
+- 文本预算在 StringBuilder 追加前检查；
+- 计数溢出按预算失败；最大深度同时约束后续递归值操作；
+- 超限统一返回 `FAILED`、`MIX_FRONTEND_XML_UNSAFE`、空 root、外部访问 0；
+- 不捕获 `OutOfMemoryError`，不使用真实 OOM 测试。
 
-### 架构和范围
+## Canonical 与 XML 安全合同
 
-- XML 模块单向依赖 compiler canonical API；compiler 不反向依赖 XML 模块；
-- Frontend 不持有 DOM、DOM4J、ConfigFactory、ConfigInfo、Registry 或 EngineContext；
-- 旧 XML API 和下游回归保持；
+- 元素和属性使用 local-name，属性稳定排序，子节点保持文档顺序；
+- 普通文本与 CDATA 按文档顺序拼接并 trim；
+- schemaVersion 传递给根、子节点和孙节点；
+- SourceRef 指向 start tag `<`，nodePath 为完整 local-name 路径，LF/CRLF/CR 已验证；
+- null source、null options、错误格式和 malformed XML 稳定失败且无部分 root；
+- DOCTYPE、通用实体、参数实体和外部 schema 均拒绝；
+- `xsi:schemaLocation` 与 `xsi:noNamespaceSchemaLocation` 立即失败；
+- 网络、文件和 schema 外部访问为 0，XInclude 只作为数据保留。
+
+## 架构、PR 与下一步
+
+- XML 模块单向依赖 compiler canonical API；未修改 compiler canonical 公共 API；
 - 未修改 `dec-core-context` 生产代码；
-- 未实现 T05 YAML Frontend、RawDefinitionSet、Symbol 或 Compiler Pipeline。
-
-## 编码、PR 与下一步
-
-- `@Override` 独占一行；公共方法、构造器和关键安全、定位、状态转换逻辑使用中文注释；
+- 未实现 YAML Frontend、RawDefinitionSet、Symbol 或 Pipeline；
 - 当前 PR：`#19`，分支 `feature/p1-t04-xml-canonical-20260802-1744`，目标 `dev_all`；
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t04-r01/completion-report.json`；
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t04_r01_completion.json`；
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t04-r02/completion-report.json`；
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t04_r02_completion.json`；
+- 所有 `@Override` 独占一行，方法、构造器及关键逻辑使用中文注释；
 - 未经明确授权不得合并 PR #19；
 - PR #19 合并前 `TASK-P1-T05` 保持未启动和阻断。
