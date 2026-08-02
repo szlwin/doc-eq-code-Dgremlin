@@ -126,23 +126,25 @@ public final class MixSourceResolver {
             registerSource(rootSource, 0, rootRef);
 
             List<SourceGraphEdge> rootEdges = parseRoot(rootSource);
-            RootDeclarations rootDeclarations = RootDeclarations.from(
-                    rootEdges,
-                    rootRef);
+            // 先按 canonical target 登记边，确保等价文本优先映射为重复边。
             for (SourceGraphEdge edge : rootEdges) {
                 registerEdge(edge);
             }
+            RootDeclarations rootDeclarations = RootDeclarations.from(
+                    rootEdges,
+                    rootRef);
 
+            Set<String> rootAncestorReferences = singletonAncestor(root.value());
             resolveFileSet(
                     rootDeclarations.dataFileSet(),
                     1,
                     rootSource.sourceId(),
-                    singletonAncestor(rootSource.sourceId()));
+                    rootAncestorReferences);
             resolveFileSet(
                     rootDeclarations.viewFileSet(),
                     1,
                     rootSource.sourceId(),
-                    singletonAncestor(rootSource.sourceId()));
+                    rootAncestorReferences);
 
             SourceGraphEdge systemEdge = rootDeclarations.systemFile();
             DocumentSource systemsSource = resolveSingle(
@@ -150,7 +152,7 @@ public final class MixSourceResolver {
                     systemEdge.declarationSourceRef(),
                     1,
                     Optional.of(rootSource.sourceId()),
-                    singletonAncestor(rootSource.sourceId()));
+                    rootAncestorReferences);
             registerSource(
                     systemsSource,
                     1,
@@ -160,16 +162,16 @@ public final class MixSourceResolver {
             for (SourceGraphEdge edge : ruleEdges) {
                 registerEdge(edge);
             }
-            Set<String> ruleAncestors = new LinkedHashSet<String>();
-            ruleAncestors.add(rootSource.sourceId());
-            ruleAncestors.add(systemsSource.sourceId());
+            Set<String> ruleAncestorReferences = new LinkedHashSet<String>();
+            ruleAncestorReferences.add(root.value());
+            ruleAncestorReferences.add(systemEdge.targetReference().value());
             for (SourceGraphEdge ruleEdge : ruleEdges) {
                 DocumentSource ruleSource = resolveSingle(
                         ruleEdge.targetReference(),
                         ruleEdge.declarationSourceRef(),
                         2,
                         Optional.of(systemsSource.sourceId()),
-                        ruleAncestors);
+                        ruleAncestorReferences);
                 registerSource(
                         ruleSource,
                         2,
@@ -182,7 +184,7 @@ public final class MixSourceResolver {
                     businessEdge.declarationSourceRef(),
                     1,
                     Optional.of(rootSource.sourceId()),
-                    singletonAncestor(rootSource.sourceId()));
+                    rootAncestorReferences);
             registerSource(
                     businessSource,
                     1,
@@ -202,8 +204,12 @@ public final class MixSourceResolver {
                 SourceRef declarationRef,
                 int depth,
                 Optional<String> parentSourceId,
-                Set<String> ancestors) {
-            validateBeforeProvider(reference, declarationRef, depth, ancestors);
+                Set<String> ancestorReferenceKeys) {
+            validateBeforeProvider(
+                    reference,
+                    declarationRef,
+                    depth,
+                    ancestorReferenceKeys);
             SourceResolutionResult raw;
             try {
                 raw = provider.resolve(
@@ -238,13 +244,13 @@ public final class MixSourceResolver {
                 SourceGraphEdge edge,
                 int depth,
                 String parentSourceId,
-                Set<String> ancestors) {
+                Set<String> ancestorReferenceKeys) {
             SourceReference reference = edge.targetReference();
             validateBeforeProvider(
                     reference,
                     edge.declarationSourceRef(),
                     depth,
-                    ancestors);
+                    ancestorReferenceKeys);
             SourceResolutionResult raw;
             try {
                 raw = provider.resolveFileSet(
@@ -275,13 +281,13 @@ public final class MixSourceResolver {
         }
 
         /**
-         * 在 Provider 调用前执行路径、scheme、深度和环路验证。
+         * 在 Provider 调用前执行路径、scheme、深度和 canonical 引用环路验证。
          */
         private void validateBeforeProvider(
                 SourceReference reference,
                 SourceRef declarationRef,
                 int depth,
-                Set<String> ancestors) {
+                Set<String> ancestorReferenceKeys) {
             Optional<Diagnostic> violation = policy.validateReference(
                     reference,
                     depth,
@@ -289,7 +295,7 @@ public final class MixSourceResolver {
             if (violation.isPresent()) {
                 throw failure(violation.get());
             }
-            if (ancestors.contains(reference.value())) {
+            if (ancestorReferenceKeys.contains(reference.value())) {
                 throw failure(policyDiagnostic(
                         "source.graph.cycle",
                         declarationRef,
@@ -434,7 +440,7 @@ public final class MixSourceResolver {
         }
 
         /**
-         * 登记真实声明边，并拒绝相同 from/type/target 的重复声明。
+         * 登记真实声明边，并拒绝 canonical from/type/target 相同的重复声明。
          */
         private void registerEdge(SourceGraphEdge edge) {
             String key = edge.edgeType()
@@ -647,10 +653,10 @@ public final class MixSourceResolver {
     }
 
     /**
-     * 返回只有一个祖先 Source 的稳定集合。
+     * 返回只有一个祖先 canonical 引用键的稳定集合。
      */
-    private static Set<String> singletonAncestor(String sourceId) {
-        return Collections.singleton(sourceId);
+    private static Set<String> singletonAncestor(String referenceKey) {
+        return Collections.singleton(referenceKey);
     }
 
     /**
