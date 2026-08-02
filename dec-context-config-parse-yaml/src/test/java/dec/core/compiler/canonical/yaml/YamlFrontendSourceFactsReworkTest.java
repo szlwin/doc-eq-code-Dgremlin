@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.compiler.canonical.CanonicalDocumentNode;
 import dec.core.compiler.canonical.DocumentFormat;
-import dec.core.compiler.canonical.DocumentFrontend;
 import dec.core.compiler.canonical.FrontendResult;
 import dec.core.compiler.canonical.FrontendStatus;
 import dec.core.compiler.source.AllowedRoot;
@@ -40,30 +39,30 @@ class YamlFrontendSourceFactsReworkTest {
     }
 
     /**
-     * 普通节点不得接受显式非字符串 typed tag，即使 tag 名属于标准集合。
+     * 普通节点不得接受词法与标准 typed tag 不一致的 scalar。
      */
     @Test
-    void rejectsExplicitTypedTagsOnOrdinaryScalar() {
+    void rejectsInvalidTypedLexemesOnOrdinaryScalar() {
         for (String value : invalidTypedValues()) {
             assertUnsafe("root: " + value + "\n");
         }
     }
 
     /**
-     * `#text` 不得通过显式 typed tag 静默删除或伪造来源词法。
+     * `#text` 不得通过非法 typed 词法静默删除或伪造来源事实。
      */
     @Test
-    void rejectsExplicitTypedTagsOnTextScalar() {
+    void rejectsInvalidTypedLexemesOnTextScalar() {
         for (String value : invalidTypedValues()) {
             assertUnsafe("root:\n  \"#text\": " + value + "\n");
         }
     }
 
     /**
-     * `@attributes` value 也必须执行相同 typed tag 来源事实门禁。
+     * `@attributes` value 也必须执行相同 typed 词法门禁。
      */
     @Test
-    void rejectsExplicitTypedTagsOnAttributeScalar() {
+    void rejectsInvalidTypedLexemesOnAttributeScalar() {
         for (String value : invalidTypedValues()) {
             assertUnsafe(
                     "root:\n"
@@ -73,10 +72,10 @@ class YamlFrontendSourceFactsReworkTest {
     }
 
     /**
-     * Sequence item 形成普通子节点时不能绕过 typed tag 门禁。
+     * Sequence item 形成普通子节点时不能绕过 typed 词法门禁。
      */
     @Test
-    void rejectsExplicitTypedTagsOnSequenceItem() {
+    void rejectsInvalidTypedLexemesOnSequenceItem() {
         for (String value : invalidTypedValues()) {
             assertUnsafe(
                     "root:\n"
@@ -86,7 +85,7 @@ class YamlFrontendSourceFactsReworkTest {
     }
 
     /**
-     * 显式 `!!str` 是唯一允许的显式 scalar tag，并保留原始词法。
+     * 显式字符串 tag 必须保留原始词法且不触发对象构造。
      */
     @Test
     void acceptsExplicitStringTagWithoutObjectConstruction() {
@@ -94,6 +93,28 @@ class YamlFrontendSourceFactsReworkTest {
 
         assertEquals(FrontendStatus.PARSED, result.status());
         assertEquals("attacker-data", result.canonicalRoot().get().scalar().get());
+    }
+
+    /**
+     * 合法显式标准 typed tag 必须通过词法校验并继续保留原始文本。
+     */
+    @Test
+    void acceptsValidExplicitStandardTypedLexemes() {
+        FrontendResult result = parse(
+                "root:\n"
+                        + "  boolValue: !!bool true\n"
+                        + "  intValue: !!int 42\n"
+                        + "  floatValue: !!float 3.5\n"
+                        + "  timestampValue: !!timestamp 2026-08-02\n"
+                        + "  nullValue: !!null null\n");
+
+        assertEquals(FrontendStatus.PARSED, result.status());
+        List<CanonicalDocumentNode> children = result.canonicalRoot().get().children();
+        assertEquals("true", children.get(0).scalar().get());
+        assertEquals("42", children.get(1).scalar().get());
+        assertEquals("3.5", children.get(2).scalar().get());
+        assertEquals("2026-08-02", children.get(3).scalar().get());
+        assertFalse(children.get(4).scalar().isPresent());
     }
 
     /**
