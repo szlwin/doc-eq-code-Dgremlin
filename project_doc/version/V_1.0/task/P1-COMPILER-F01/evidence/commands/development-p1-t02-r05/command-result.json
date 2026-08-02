@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "kind": "development_command_result",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I005",
+  "revision": "DEV-P1-T02-R05@35376308b013",
+  "input_revisions": {
+    "design": "DESIGN-R12@P1-T02-REWORK-I005",
+    "implementation_plan": "TP-P1-COMPILER-F01-R08@P1-T02-REWORK-I005",
+    "tdd": "TDD-P1-T02-R05@0e2924d4f125",
+    "architecture_skeleton": "DEVSKEL-P1-T02-R05@2bda34e6eed1"
+  },
+  "clean_code_head_sha": "35376308b0133344ebddadc1bf45e07c11f7959c",
+  "p0_run_id": 30734789072,
+  "artifact_id": 8829179331,
+  "changes": [
+    "AllowedRoot validates original raw and decoded URI before normalization",
+    "AllowedRoot rejects hierarchical and opaque query or fragment",
+    "DocumentSource validates original URI before storing normalized URI",
+    "resolvedSingle freezes exactly-one-source semantics",
+    "resolvedFileSet freezes non-empty unique-sourceId semantics",
+    "validateSingle and validateFileSet normalize valid custom results",
+    "provider contract violations become MIX_SOURCE_POLICY FAILED without partial sources",
+    "ambiguous resolved(List,List) API removed"
+  ],
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 47,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "override_annotations_standalone": true,
+  "chinese_method_and_logic_comments": true,
+  "context_production_changed": false,
+  "t03_implementation_started": false,
+  "evidence_id": "EVD-000381",
+  "result": "PASSED"
+}
