@@ -31,6 +31,10 @@ class SourceReferenceRelativeCategoryReworkTest {
             assertFalse(
                     canonicalUri.isAbsolute(),
                     input + " -> " + canonical.value());
+            assertEquals(
+                    expectedRelativeCanonical(input),
+                    canonical.value(),
+                    input);
         }
     }
 
@@ -95,6 +99,15 @@ class SourceReferenceRelativeCategoryReworkTest {
         assertTrue(URI.create(input).isAbsolute(), input);
         assertTrue(URI.create(canonical.value()).isAbsolute(), canonical.value());
         assertEquals(expected, canonical.value());
+    }
+
+    /**
+     * 返回相对引用删除当前目录段后的冻结 canonical key。
+     */
+    private static String expectedRelativeCanonical(String input) {
+        return input.contains("classpath:")
+                ? "./classpath:mix/orm-config.xml"
+                : "./file:/mix/root.xml";
     }
 
     /**
