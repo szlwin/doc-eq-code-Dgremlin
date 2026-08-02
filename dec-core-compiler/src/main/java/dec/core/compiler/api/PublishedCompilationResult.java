@@ -210,12 +210,14 @@ public final class PublishedCompilationResult implements CompilationResult {
     @Override
     public String toString() {
         return "PublishedCompilationResult{"
-                + "semanticDigest='" + digests.semanticDigest() + '\''
+                + "diagnostics=" + diagnostics
+                + ", modelSet=" + modelSet
+                + ", engineContext=" + engineContext
+                + ", digests=" + digests
                 + ", compilerVersion='" + compilerVersion + '\''
                 + ", schemaVersion='" + schemaVersion + '\''
                 + ", optionsDigest='" + optionsDigest + '\''
                 + ", digestAlgorithmVersion='" + digestAlgorithmVersion + '\''
-                + ", diagnostics=" + diagnostics.size()
                 + '}';
     }
 }
