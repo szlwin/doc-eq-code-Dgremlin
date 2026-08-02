@@ -1,37 +1,35 @@
 # P1-COMPILER-F01 阶段交接
 
-> `TASK-P1-T01` 的 R01 与 R02 Completion 均因后续完整规格 Review 被重开；REWORK iteration `I009` 已以 `COMPLETION-P1-T01-R03@175b86e1e3ea` 完成全部流程。所有旧 Revision、Review 和 Evidence 作为历史保留。
+> `TASK-P1-T01` 的 R01、R02、R03 Completion 均因后续完整规格 Review 被重开；最新 REWORK iteration `I010` 已以 `COMPLETION-P1-T01-R04@ee99223a243f` 完成全部流程。所有旧 Revision、Review 和 Evidence 作为历史保留。
 
-## T01 REWORK I009 已完成
+## T01 REWORK I010 已完成
 
-- Design Revision：`DESIGN-R07@P1-T01-REWORK-I009`；
-- Implementation Plan：`TP-P1-COMPILER-F01-R03@P1-T01-REWORK-I009`；
-- TDD：`TDD-P1-T01-R03@81b071739b19`，P0 Run `30707008948` 形成有效 RED，`REV-000094` PASSED；
-- Architecture Skeleton：`DEVSKEL-P1-T01-R03@7f41cb0d06dd`，`REV-000095`、`REV-000096` PASSED；
-- Development：`DEV-P1-T01-R03@6c8a2d1a7cd5`；
-- Code Review：`CODEREVIEW-P1-T01-R03@175b86e1e3ea`，`REV-000097`～`REV-000100` PASSED；
-- Testing：`TESTING-P1-T01-R03@175b86e1e3ea`，`REV-000101` PASSED；
-- Completion：`COMPLETION-P1-T01-R03@175b86e1e3ea`，`REV-000102` PASSED；
-- Evidence：`EVD-000349`～`EVD-000354` ACTIVE；
-- 干净代码 Head：`6c8a2d1a7cd5a6b760a19598737b569bfe8de8b9`；
-- 代码与设计验证 Head：`175b86e1e3eabb718c7f3782ca6a794d6c381bfe`；
-- P0 Run：`30707306280`，完整 Reactor 与失败门禁均 PASSED；
-- Context 测试：21 run / 0 failures / 0 errors / 0 skipped；
+- Design Revision：`DESIGN-R08@P1-T01-REWORK-I010`；
+- Implementation Plan：`TP-P1-COMPILER-F01-R04@P1-T01-REWORK-I010`；
+- TDD：`TDD-P1-T01-R04@f87a3f96fcbb`，P0 Run `30729765475` 形成有效 RED，`REV-000103` PASSED；
+- Architecture Skeleton：`DEVSKEL-P1-T01-R04@1865378a29e3`，`REV-000104`、`REV-000105` PASSED；
+- Development：`DEV-P1-T01-R04@ee99223a243f`；
+- Code Review：`CODEREVIEW-P1-T01-R04@ee99223a243f`，`REV-000106`～`REV-000109` PASSED；
+- Testing：`TESTING-P1-T01-R04@ee99223a243f`，`REV-000110` PASSED；
+- Completion：`COMPLETION-P1-T01-R04@ee99223a243f`，`REV-000111` PASSED；
+- Evidence：`EVD-000355`～`EVD-000360` ACTIVE；
+- 干净代码 Head：`ee99223a243fd5f470e37e3e81b50c9980524ae4`；
+- P0 Run：`30729866803`，完整 Reactor 与失败门禁均 PASSED；
+- Context 测试：26 run / 0 failures / 0 errors / 0 skipped；
 - MySQL Job：T01 无数据库变更，`SKIPPED_NOT_APPLICABLE`；
-- I008 已关闭的五个 P1 Finding 保持 CLOSED；
-- I009 的三个 P1 Finding 全部 CLOSED；
+- I008、I009 已关闭的 Finding 保持 CLOSED；
+- I010 的 `FND-P1-T01-I010-001` CLOSED；
 - 开放 P0/P1 Finding：无。
 
-## 本轮冻结的补充合同
+## 最终 Projection 写入拒绝闭包
 
-- `ProjectionWriteRejectedException` 是 Projection 写入的稳定专用异常，并保持 `UnsupportedOperationException` 兼容性；
-- 异常携带 `MIX-PROJECTION-WRITE`、ERROR severity、稳定 SourceRef、messageKey、pass 与中文恢复建议；
-- `register`、`replace`、`remove`、`clear` 四个 deprecated 兼容入口只能拒绝，不能修改发布事实；
-- `data()`、`views()`、`rules()` 返回的 List 对 Java 8 变更方法统一产生相同专用拒绝语义；
-- 所有拒绝前后 `CompiledModelSet`、Projection 列表和值保持不变；
-- `PublishedSourceDependency` 要求 `declarationSourceRef.sourceId()` 等于 `fromSourceId`；
-- 普通依赖边与 synthetic root edge 均遵守相同来源身份；
-- `PublishedSourceManifest` 保留防御性二次校验。
+- `ProjectionWriteRejectedException` 保持 `UnsupportedOperationException` 兼容性并携带 `MIX-PROJECTION-WRITE` Diagnostic；
+- 四个 deprecated 兼容写入口只能拒绝，不能修改发布事实；
+- Data/View/Rule 根 List 的 Java 8 写入口统一拒绝；
+- 空、非空、嵌套 `subList` 均由防御性 `ProjectionReadOnlyList` 快照承载；
+- 根 List 和所有派生子列表的 Iterator/ListIterator 写方法均统一拒绝；
+- 即使列表为空或尚未执行 `next()`，也不会先返回普通集合异常或无操作成功；
+- 所有拒绝前后 `CompiledModelSet`、根 Projection 和派生快照保持不变。
 
 ## 下一步
 
