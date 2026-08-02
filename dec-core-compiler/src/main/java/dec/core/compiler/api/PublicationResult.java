@@ -1,9 +1,11 @@
 package dec.core.compiler.api;
 
 /**
- * 条件发布器返回的终态结果。
+ * ContextPublisher 返回的稳定结果合同。
  */
-public enum PublicationResult {
-    PUBLISHED,
-    CONFLICT
+public interface PublicationResult {
+    /**
+     * 返回发布成功或 compare-and-set 冲突状态。
+     */
+    PublicationStatus status();
 }
