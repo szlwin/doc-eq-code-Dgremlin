@@ -37,8 +37,7 @@ class YamlFrontendSecurityTest {
                 YamlFrontendTestSupport.yamlSource(
                         "root:\n  child: value\n"));
 
-        assertEquals(FrontendStatus.PARSED, result.status());
-        assertTrue(result.canonicalRoot().isPresent());
+        assertSafe(result);
         assertEquals(DocumentFormat.YAML, result.canonicalRoot().get().format());
         assertEquals(0, ExploitProbe.constructions());
     }
@@ -120,6 +119,9 @@ class YamlFrontendSecurityTest {
     void rejectsInvalidFrontendArguments() {
         DocumentFrontend frontend = YamlFrontendTestSupport.frontend();
 
+        assertSafe(YamlFrontendTestSupport.parse(
+                frontend,
+                YamlFrontendTestSupport.yamlSource("root: value\n")));
         assertFailure(frontend.parse(null, new FrontendOptions("1.0")));
         assertFailure(frontend.parse(
                 YamlFrontendTestSupport.yamlSource("root: value\n"),
@@ -144,14 +146,29 @@ class YamlFrontendSecurityTest {
     }
 
     /**
-     * 执行一次 YAML 并断言安全失败合同。
+     * 先证明同一 Frontend 能解析安全控制样本，再断言目标输入失败。
+     * 该控制样本防止“拒绝所有 YAML”的伪安全实现通过负向 Oracle。
      */
     private static void assertYamlFailure(String yaml) {
         DocumentFrontend frontend = YamlFrontendTestSupport.frontend();
+        assertSafe(YamlFrontendTestSupport.parse(
+                frontend,
+                YamlFrontendTestSupport.yamlSource("root: value\n")));
         FrontendResult result = YamlFrontendTestSupport.parse(
                 frontend,
                 YamlFrontendTestSupport.yamlSource(yaml));
         assertFailure(result);
+    }
+
+    /**
+     * 安全控制样本必须发布唯一 Canonical 根且不携带错误。
+     */
+    private static void assertSafe(FrontendResult result) {
+        assertEquals(FrontendStatus.PARSED, result.status());
+        assertTrue(result.canonicalRoot().isPresent());
+        assertTrue(result.diagnostics().stream()
+                .noneMatch(diagnostic -> diagnostic.code()
+                        == DiagnosticCode.MIX_FRONTEND_YAML_UNSAFE));
     }
 
     /**
