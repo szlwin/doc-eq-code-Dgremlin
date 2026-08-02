@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T03",
+  "iteration": "I005",
+  "revision": "TESTING-P1-T03-R05@91271c9a1c20",
+  "review_id": "REV-000194",
+  "reviewer": "TestingAgent",
+  "evidence_id": "EVD-000437",
+  "tested_head": "91271c9a1c2083c2843b7c2e69bb3570f9155d55",
+  "p0_run_id": 30741699603,
+  "artifact_id": 8831504648,
+  "artifact_sha256": "de9e07229c82374a5eb36cc4a5ca4b2c5df0f18e53de582a13b456cd1bc206f7",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+  "i005_tests": {"run": 5, "failures": 0, "errors": 0, "skipped": 0},
+  "negative_oracles": {
+    "wrong_root_failed": true,
+    "wrong_root_provider_accesses": 1,
+    "wrong_nesting_failed": true,
+    "wrong_nesting_provider_accesses": 1,
+    "wrong_systems_root_failed": true,
+    "wrong_systems_root_provider_accesses": 4,
+    "wrong_system_path_failed": true,
+    "wrong_system_path_provider_accesses": 4,
+    "failed_graph_present": false
+  },
+  "positive_oracles": {
+    "ignored_subtree_isolated": true,
+    "source_count": 10,
+    "edge_count": 7,
+    "provider_calls": 8,
+    "published_node_paths_frozen": true
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "result": "PASSED"
+}
