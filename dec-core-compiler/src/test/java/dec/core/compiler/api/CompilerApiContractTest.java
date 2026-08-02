@@ -4,24 +4,21 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dec.core.compiler.canonical.DocumentFormat;
+import dec.core.compiler.canonical.DocumentFrontend;
+import dec.core.compiler.canonical.FrontendRegistry;
+import dec.core.compiler.source.DocumentSourceProvider;
+import dec.core.compiler.source.SourceReference;
+import dec.core.compiler.source.SourceResolutionContext;
+import dec.core.compiler.source.SourceResolutionResult;
 import dec.core.context.EngineContext;
-import dec.core.context.model.CompiledDefinition;
-import dec.core.context.model.CompiledModelSet;
-import dec.core.context.model.DefinitionKey;
-import dec.core.context.model.DeferredDefinition;
-import dec.core.context.model.DeferredKey;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
-import dec.core.context.model.DigestPair;
-import dec.core.context.model.ImmutableDeferredRegistry;
-import dec.core.context.model.ImmutableRegistry;
-import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.SourceRef;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -30,11 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
- * 冻结 TASK-P1-T02 I002 的公共 API 与最终 T01 发布聚合合同。
+ * 冻结 TASK-P1-T02 I003 的公共 API、不可变性和 Session 注入边界。
  */
 class CompilerApiContractTest {
     private static final List<String> REQUIRED_TYPES = Arrays.asList(
@@ -45,9 +42,18 @@ class CompilerApiContractTest {
             "dec.core.compiler.api.PublishedCompilationResult",
             "dec.core.compiler.api.FailedCompilationResult",
             "dec.core.compiler.api.PublicationRequest",
+            "dec.core.compiler.api.PublicationResult",
+            "dec.core.compiler.api.PublicationStatus",
             "dec.core.compiler.api.CancellationToken",
             "dec.core.compiler.api.ContextPublisher",
-            "dec.core.compiler.api.PublicationResult");
+            "dec.core.compiler.api.Deadline",
+            "dec.core.compiler.api.MonotonicClock",
+            "dec.core.compiler.api.CompilationObserver",
+            "dec.core.compiler.api.CompilationTiming",
+            "dec.core.compiler.api.SessionStateTransition",
+            "dec.core.compiler.source.SourceReference",
+            "dec.core.compiler.source.DocumentSourceProvider",
+            "dec.core.compiler.canonical.FrontendRegistry");
 
     @Test
     void exposesAllFrozenPublicApiTypes() {
@@ -60,7 +66,7 @@ class CompilerApiContractTest {
     @Test
     void exposesCompileAndPublishAsTheOnlyPublicEntry() {
         Method[] methods = ModelCompiler.class.getDeclaredMethods();
-        assertEquals(1, methods.length, "ModelCompiler must expose exactly one declared method");
+        assertEquals(1, methods.length, "ModelCompiler must expose exactly one method");
 
         Method entry = methods[0];
         assertEquals("compileAndPublish", entry.getName());
@@ -72,11 +78,15 @@ class CompilerApiContractTest {
     }
 
     @Test
-    void keepsPublicValueObjectsFinalWithPrivateFinalState() {
+    void keepsValueObjectsFinalWithPrivateFinalState() {
         List<Class<?>> valueTypes = Arrays.asList(
                 CompilationOptions.class,
                 CompilationRequest.class,
                 PublicationRequest.class,
+                SourceReference.class,
+                Deadline.class,
+                CompilationTiming.class,
+                SessionStateTransition.class,
                 PublishedCompilationResult.class,
                 FailedCompilationResult.class);
 
@@ -84,45 +94,81 @@ class CompilerApiContractTest {
             assertTrue(Modifier.isFinal(valueType.getModifiers()), valueType.getName());
             assertPrivateFinalSourceFields(valueType);
         }
-        assertPrivateFinalSourceFields(CompilationResult.class);
+        assertTrue(CompilationResult.class.isInterface());
+        assertTrue(PublicationResult.class.isInterface());
     }
 
     @Test
-    void requestAndOptionsPreserveSessionBoundaries() {
+    void requestPreservesEveryInjectedSessionDependency() {
+        SourceReference root = new SourceReference("classpath:mix/orm-config.xml");
+        DocumentSourceProvider provider = provider();
+        FrontendRegistry frontends = format -> null;
+        CompilationOptions options = new CompilationOptions("schema-1", "options-1");
+        Deadline deadline = new Deadline(123L);
         CancellationToken token = () -> false;
-        CompilationOptions options = new CompilationOptions("mix-1", "strict-1", 123L);
+        MonotonicClock clock = () -> 100L;
+        CompilationObserver observer = observer();
+
         CompilationRequest request = new CompilationRequest(
-                "classpath:mix/orm-config.xml",
+                root,
+                provider,
+                frontends,
                 options,
-                token);
+                Optional.of(deadline),
+                token,
+                clock,
+                observer);
 
-        assertEquals("mix-1", options.schemaVersion());
-        assertEquals("strict-1", options.optionsVersion());
-        assertEquals(123L, options.deadlineNanos());
-        assertEquals("classpath:mix/orm-config.xml", request.rootSourceId());
+        assertSame(root, request.root());
+        assertSame(provider, request.sourceProvider());
+        assertSame(frontends, request.frontends());
         assertSame(options, request.options());
+        assertSame(deadline, request.deadline().get());
         assertSame(token, request.cancellationToken());
+        assertSame(clock, request.clock());
+        assertSame(observer, request.observer());
+        assertEquals("schema-1", options.schemaVersion());
+        assertEquals("options-1", options.optionsDigest());
+        assertFalse(Arrays.stream(CompilationOptions.class.getMethods())
+                .anyMatch(method -> method.getName().equals("deadlineNanos")));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new CompilationOptions(" ", "strict-1", 1L));
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new CompilationOptions("mix-1", "strict-1", -1L));
         assertThrows(
                 NullPointerException.class,
-                () -> new CompilationRequest("root", null, token));
+                () -> new CompilationRequest(
+                        root,
+                        provider,
+                        frontends,
+                        options,
+                        null,
+                        token,
+                        clock,
+                        observer));
     }
 
     @Test
-    void publicationRequestAllowsInitialPublicationButRequiresPublisher() {
-        ContextPublisher publisher = (expectedCurrent, candidate) ->
-                PublicationResult.PUBLISHED;
-        PublicationRequest request = new PublicationRequest(null, publisher);
+    void deadlineUsesTheInjectedMonotonicClockDomain() {
+        Deadline deadline = new Deadline(100L);
+        assertFalse(deadline.isExpired(99L));
+        assertTrue(deadline.isExpired(100L));
+        assertEquals(100L, deadline.deadlineNanos());
+        assertThrows(IllegalArgumentException.class, () -> new Deadline(-1L));
+    }
 
-        assertNull(request.expectedCurrent());
+    @Test
+    void publicationRequestUsesOptionalAndSeparateStatus() {
+        ContextPublisher publisher = (expectedCurrent, candidate) ->
+                () -> PublicationStatus.PUBLISHED;
+        PublicationRequest request = new PublicationRequest(Optional.empty(), publisher);
+
+        assertFalse(request.expectedCurrent().isPresent());
         assertSame(publisher, request.publisher());
-        assertThrows(NullPointerException.class, () -> new PublicationRequest(null, null));
+        assertEquals(
+                PublicationStatus.PUBLISHED,
+                publisher.publish(Optional.empty(), null).status());
+        assertThrows(NullPointerException.class, () -> new PublicationRequest(null, publisher));
+        assertThrows(
+                NullPointerException.class,
+                () -> new PublicationRequest(Optional.empty(), null));
     }
 
     @Test
@@ -130,105 +176,80 @@ class CompilerApiContractTest {
         List<Diagnostic> mutableDiagnostics = new ArrayList<Diagnostic>();
         mutableDiagnostics.add(publicationBlockedDiagnostic());
 
-        FailedCompilationResult result = new FailedCompilationResult(
-                "session-failed",
-                mutableDiagnostics);
+        FailedCompilationResult result = FailedCompilationResult.failed(mutableDiagnostics);
         mutableDiagnostics.clear();
 
-        assertEquals("session-failed", result.sessionId());
         assertEquals(CompilationStatus.FAILED, result.status());
-        assertFalse(result.isPublished());
         assertEquals(1, result.diagnostics().size());
         assertThrows(
                 UnsupportedOperationException.class,
                 () -> result.diagnostics().add(publicationBlockedDiagnostic()));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new FailedCompilationResult(
-                        "session-failed",
-                        Collections.<Diagnostic>emptyList()));
+                () -> FailedCompilationResult.failed(Collections.<Diagnostic>emptyList()));
         assertFalse(Arrays.stream(FailedCompilationResult.class.getMethods())
-                .anyMatch(method -> method.getName().equals("context")
-                        || method.getName().equals("compiledModelSet")
-                        || method.getName().equals("digests")));
+                .anyMatch(method -> method.getName().equals("engineContext")
+                        || method.getName().equals("modelSet")
+                        || method.getName().equals("digests")
+                        || method.getName().equals("compilerVersion")
+                        || method.getName().equals("schemaVersion")
+                        || method.getName().equals("optionsDigest")
+                        || method.getName().equals("digestAlgorithmVersion")));
     }
 
     @Test
-    void publishedResultExposesTheCompletePublishedFact() {
-        Diagnostic warning = publicationWarningDiagnostic();
-        CompiledModelSet modelSet = modelSet(
-                "semantic",
-                Collections.singletonList(warning));
-        EngineContext context = new EngineContext(modelSet);
-        PublishedCompilationResult result = new PublishedCompilationResult(
-                "session-published",
-                modelSet,
-                context,
-                modelSet.diagnostics());
-
-        assertEquals("session-published", result.sessionId());
-        assertEquals(CompilationStatus.PUBLISHED, result.status());
-        assertTrue(result.isPublished());
-        assertSame(modelSet, result.compiledModelSet());
-        assertSame(context, result.context());
-        assertSame(modelSet, result.context().compiledModelSet());
-        assertEquals(modelSet.diagnostics(), result.diagnostics());
-        assertEquals(modelSet.digestPair(), result.digests());
-        assertEquals("compiler-1", result.compilerVersion());
-        assertEquals("schema-1", result.schemaVersion());
-        assertEquals("options-1", result.optionsVersion());
-    }
-
-    @Test
-    void publishedResultRejectsMissingOrDifferentModelContext() {
-        CompiledModelSet modelSet = emptyModelSet();
-        assertThrows(
-                NullPointerException.class,
-                () -> new PublishedCompilationResult(
-                        "session-published",
-                        modelSet,
-                        null,
-                        Collections.<Diagnostic>emptyList()));
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new PublishedCompilationResult(
-                        "session-published",
-                        modelSet,
-                        new EngineContext(modelSet("other", Collections.<Diagnostic>emptyList())),
-                        Collections.<Diagnostic>emptyList()));
-    }
-
-    @Test
-    void publishedResultRejectsEqualButDistinctModelInstance() {
-        CompiledModelSet declaredModel = emptyModelSet();
-        CompiledModelSet contextModel = emptyModelSet();
-        assertEquals(declaredModel, contextModel);
-        assertFalse(declaredModel == contextModel);
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new PublishedCompilationResult(
-                        "session-published",
-                        declaredModel,
-                        new EngineContext(contextModel),
-                        declaredModel.diagnostics()));
-    }
-
-    @Test
-    void publishedResultRejectsDiagnosticsOutsideModelFact() {
-        CompiledModelSet modelSet = emptyModelSet();
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new PublishedCompilationResult(
-                        "session-published",
-                        modelSet,
-                        new EngineContext(modelSet),
-                        Collections.singletonList(publicationWarningDiagnostic())));
+    void resultInterfacesExposeOnlyTheFrozenTerminalContract() {
+        assertEquals(
+                Arrays.asList("diagnostics", "status"),
+                sortedDeclaredMethodNames(CompilationResult.class));
+        assertEquals(
+                Collections.singletonList("status"),
+                sortedDeclaredMethodNames(PublicationResult.class));
+        assertFalse(Arrays.stream(CompilationResult.class.getMethods())
+                .anyMatch(method -> method.getName().equals("sessionId")
+                        || method.getName().equals("isPublished")));
     }
 
     /**
-     * 只检查源码声明字段，忽略 JaCoCo 在 CI 中注入的 synthetic 状态。
+     * 创建只用于验证实例注入的 Source Provider。
+     */
+    private static DocumentSourceProvider provider() {
+        return new DocumentSourceProvider() {
+            @Override
+            public SourceResolutionResult resolve(
+                    SourceReference reference,
+                    SourceResolutionContext context) {
+                return null;
+            }
+
+            @Override
+            public SourceResolutionResult resolveFileSet(
+                    SourceReference reference,
+                    SourceResolutionContext context) {
+                return null;
+            }
+        };
+    }
+
+    /**
+     * 创建只用于验证实例注入的 Observer。
+     */
+    private static CompilationObserver observer() {
+        return new CompilationObserver() {
+            @Override
+            public void onTiming(CompilationTiming timing) {
+                // 测试替身不记录外部状态。
+            }
+
+            @Override
+            public void onStateTransition(SessionStateTransition transition) {
+                // 测试替身不记录外部状态。
+            }
+        };
+    }
+
+    /**
+     * 只检查源码声明字段，忽略 JaCoCo 注入的 synthetic 状态。
      */
     private static void assertPrivateFinalSourceFields(Class<?> valueType) {
         for (Field field : valueType.getDeclaredFields()) {
@@ -242,31 +263,17 @@ class CompilerApiContractTest {
     }
 
     /**
-     * 创建不包含定义和 Diagnostic 的最小 T01 发布模型。
+     * 返回按名称稳定排序的直接声明方法。
      */
-    private static CompiledModelSet emptyModelSet() {
-        return modelSet("semantic", Collections.<Diagnostic>emptyList());
-    }
-
-    /**
-     * 使用最终 T01 构造合同创建测试模型，确保 SourceManifest 也属于发布事实。
-     */
-    private static CompiledModelSet modelSet(
-            String semanticDigest,
-            List<Diagnostic> diagnostics) {
-        Map<DefinitionKey, CompiledDefinition> definitions =
-                Collections.<DefinitionKey, CompiledDefinition>emptyMap();
-        Map<DeferredKey, DeferredDefinition> deferred =
-                Collections.<DeferredKey, DeferredDefinition>emptyMap();
-        return new CompiledModelSet(
-                PublishedSourceManifest.empty(),
-                new ImmutableRegistry<DefinitionKey, CompiledDefinition>(definitions),
-                new ImmutableDeferredRegistry(deferred),
-                diagnostics,
-                new DigestPair("source", semanticDigest),
-                "compiler-1",
-                "schema-1",
-                "options-1");
+    private static List<String> sortedDeclaredMethodNames(Class<?> type) {
+        List<String> names = new ArrayList<String>();
+        for (Method method : type.getDeclaredMethods()) {
+            if (Modifier.isPublic(method.getModifiers())) {
+                names.add(method.getName());
+            }
+        }
+        Collections.sort(names);
+        return names;
     }
 
     /**
@@ -281,21 +288,6 @@ class CompilerApiContractTest {
                 new SourceRef("test:root", 1, 1, "/root"),
                 Collections.<SourceRef>emptyList(),
                 "Resolve compiler diagnostics before publication",
-                "PublicationPass");
-    }
-
-    /**
-     * 创建合法但必须属于 CompiledModelSet 的 WARNING Diagnostic。
-     */
-    private static Diagnostic publicationWarningDiagnostic() {
-        return new Diagnostic(
-                DiagnosticCode.MIX_PUBLICATION_BLOCKED,
-                DiagnosticSeverity.WARNING,
-                "publication.warning",
-                null,
-                new SourceRef("test:root", 1, 1, "/root"),
-                Collections.<SourceRef>emptyList(),
-                "Review the warning before publication",
                 "PublicationPass");
     }
 }
