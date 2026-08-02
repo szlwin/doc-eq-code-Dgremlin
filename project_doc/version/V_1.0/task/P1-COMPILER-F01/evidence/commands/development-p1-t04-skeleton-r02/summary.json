@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_evidence",
+  "task_id": "TASK-P1-T04",
+  "iteration": "I002",
+  "revision": "DEVSKEL-P1-T04-R02@710d114248d0",
+  "review_id": "REV-000211",
+  "evidence_id": "EVD-000455",
+  "head_sha": "710d114248d08eb7400b218719bc8c6a949cf59f",
+  "p0_run_id": 30745301018,
+  "artifact_id": 8832673062,
+  "artifact_sha256": "d1b7ee8e2b401a7dd472312019484407772b4a034164828b9f4627bae04608be",
+  "skeleton_contract": {
+    "package_private_immutable_limits": true,
+    "production_default_limits_entry": true,
+    "package_private_injectable_test_constructor": true,
+    "public_frontend_api_unchanged": true,
+    "java_release": 8
+  },
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_xml_tests": {"run": 18, "failures": 0, "errors": 0, "skipped": 0},
+  "resource_limit_oracles": {
+    "run": 8,
+    "passed": 1,
+    "expected_failures": 7,
+    "errors": 0,
+    "note": "The within-limit structural boundary passed; limit enforcement intentionally remained RED until Development."
+  },
+  "result": "PASSED"
+}

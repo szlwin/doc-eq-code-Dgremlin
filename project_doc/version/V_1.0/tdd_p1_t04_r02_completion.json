@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "kind": "machine_recovery_checkpoint",
+  "task_id": "TASK-P1-T04",
+  "iteration": "I002",
+  "status": "COMPLETED",
+  "branch": "feature/p1-t04-xml-canonical-20260802-1744",
+  "pr_number": 19,
+  "base": "dev_all@df5e8c057d9aa8e3e477c54325bc476e7fdc5bee",
+  "dependency_completion": "COMPLETION-P1-T03-R05@91271c9a1c20",
+  "historical_completion": {
+    "revision": "COMPLETION-P1-T04-R01@ba472906c719",
+    "invalidated_by": "REV-000207",
+    "preserved": true
+  },
+  "current_revisions": {
+    "design": "DESIGN-R19@P1-T04-REWORK-I002",
+    "plan": "TP-P1-COMPILER-F01-R15@P1-T04-REWORK-I002",
+    "tdd": "TDD-P1-T04-R02@e2033f2b249e",
+    "architecture_skeleton": "DEVSKEL-P1-T04-R02@710d114248d0",
+    "development": "DEV-P1-T04-R02@0699c6bc2ed4",
+    "code_review": "CODEREVIEW-P1-T04-R02@0699c6bc2ed4",
+    "testing": "TESTING-P1-T04-R02@0699c6bc2ed4",
+    "completion": "COMPLETION-P1-T04-R02@0699c6bc2ed4"
+  },
+  "review_range": "REV-000207..REV-000219",
+  "evidence_range": "EVD-000451..EVD-000463",
+  "clean_code_head": "0699c6bc2ed41100c3a4538b76a691b7757f683b",
+  "clean_code_p0": {
+    "run_id": 30748395446,
+    "artifact_id": 8833627854,
+    "artifact_sha256": "a7a7703c706e8bb3cadafb74366e13131ea63a37dd3bbf7f9446b3608ed7c97a",
+    "result": "PASSED"
+  },
+  "tests": {
+    "context": 26,
+    "compiler": 83,
+    "xml_t04": 30,
+    "xml_resource_limits": 12,
+    "demo": 4,
+    "reactor_modules": 12,
+    "java_release": 8,
+    "failure_gate": "PASSED",
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "production_limits": {
+    "maxDocumentBytes": 1048576,
+    "maxElementDepth": 256,
+    "maxNodeCount": 65536,
+    "maxCumulativeNodePathChars": 4194304,
+    "maxAttributesPerElement": 256,
+    "maxDirectTextCharsPerElement": 262144,
+    "maxCumulativeDirectTextChars": 1048576
+  },
+  "closed_findings": [
+    "FND-P1-T04-I002-001",
+    "FND-P2-T04-I002-002",
+    "FND-P2-T04-I002-003"
+  ],
+  "open_p0_p1_findings": [],
+  "completion_report": "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t04-r02/completion-report.json",
+  "handoff": "project_doc/version/V_1.0/task/P1-COMPILER-F01/handoff.md",
+  "resume_context": "project_doc/version/V_1.0/task/P1-COMPILER-F01/resume_context.md",
+  "next_task": "TASK-P1-T05",
+  "next_task_started": false,
+  "merge_authorized": false,
+  "next_action": "Run final documented-head P0, update PR #19 and restore Ready for review; do not merge."
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "kind": "development_verification_result",
+  "task_id": "TASK-P1-T04",
+  "iteration": "I002",
+  "revision": "DEV-P1-T04-R02@0699c6bc2ed4",
+  "review_id": "REV-000212",
+  "evidence_id": "EVD-000456",
+  "head_sha": "0699c6bc2ed41100c3a4538b76a691b7757f683b",
+  "p0_run_id": 30748395446,
+  "artifact_id": 8833627854,
+  "artifact_sha256": "a7a7703c706e8bb3cadafb74366e13131ea63a37dd3bbf7f9446b3608ed7c97a",
+  "production_limits": {
+    "maxDocumentBytes": 1048576,
+    "maxElementDepth": 256,
+    "maxNodeCount": 65536,
+    "maxCumulativeNodePathChars": 4194304,
+    "maxAttributesPerElement": 256,
+    "maxDirectTextCharsPerElement": 262144,
+    "maxCumulativeDirectTextChars": 1048576
+  },
+  "implementation_contract": {
+    "document_bytes_checked_before_reader": true,
+    "start_element_budgets_checked_before_source_ref_map_and_builder": true,
+    "node_path_uses_parent_path_single_append": true,
+    "ancestor_stack_path_rebuild_removed": true,
+    "counter_addition_overflow_checked": true,
+    "text_budgets_checked_before_builder_append": true,
+    "start_tag_located_once_per_element": true,
+    "line_lookup_uses_binary_search": true,
+    "budget_failure_status": "FAILED",
+    "budget_failure_diagnostic": "MIX_FRONTEND_XML_UNSAFE",
+    "failed_result_has_partial_root": false,
+    "external_access_attempts": 0,
+    "out_of_memory_error_caught": false,
+    "real_oom_test_used": false
+  },
+  "tests": {
+    "context": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+    "compiler": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+    "xml": {"run": 30, "failures": 0, "errors": 0, "skipped": 0},
+    "xml_resource_limits": {"run": 12, "failures": 0, "errors": 0, "skipped": 0},
+    "demo": {"run": 4, "failures": 0, "errors": 0, "skipped": 0}
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "result": "PASSED"
+}

@@ -1,49 +1,53 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T03 / I005` REWORK 已完成
-- 历史 Completion R01：`COMPLETION-P1-T03-R01@713848bfa65e`（`REV-000152` 推翻，历史保留）
-- 历史 Completion R02：`COMPLETION-P1-T03-R02@6af43b47f044`（`REV-000163` 推翻，历史保留）
-- 历史 Completion R03：`COMPLETION-P1-T03-R03@cedf22bb14ff`（`REV-000174` 推翻，历史保留）
-- 历史 Completion R04：`COMPLETION-P1-T03-R04@04bfb86c9bf1`（`REV-000185` 推翻，历史保留）
-- 当前 Completion Revision：`COMPLETION-P1-T03-R05@91271c9a1c20`
+- 当前逻辑任务：`TASK-P1-T04 / I002` 已完成
+- Dependency Completion：`COMPLETION-P1-T03-R05@91271c9a1c20`
+- 历史 Completion：`COMPLETION-P1-T04-R01@ba472906c719`，被 `REV-000207` 推翻并保留
+- 当前 Completion Revision：`COMPLETION-P1-T04-R02@0699c6bc2ed4`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
-- 基线：`dev_all@370b72f4bf4ec9b3620586f26d13d95f611f3cc9`
-- Rework base：`d41b4553189b4b9e80a7ca92c4acd34e4fc97e42`
-- 当前设计事实：`DESIGN-R17@P1-T03-REWORK-I005` + R16 + R15 + R14 + R13
+- 基线：`dev_all@df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`
+- Rework base：`7edf31fca334cdd7e6342ed31b80e40d5bacb68d`
+- 当前设计事实：`DESIGN-R19@P1-T04-REWORK-I002`
+- 当前实施计划：`TP-P1-COMPILER-F01-R15@P1-T04-REWORK-I002`
+- TDD：`TDD-P1-T04-R02@e2033f2b249e`
+- Architecture Skeleton：`DEVSKEL-P1-T04-R02@710d114248d0`
+- Development：`DEV-P1-T04-R02@0699c6bc2ed4`
+- Code Review：`CODEREVIEW-P1-T04-R02@0699c6bc2ed4`
+- Testing：`TESTING-P1-T04-R02@0699c6bc2ed4`
 - 开放 P0/P1：无
-- Review：`REV-000185`～`REV-000195`
-- Evidence：`EVD-000428`～`EVD-000438`
-- Clean-code Head：`91271c9a1c2083c2843b7c2e69bb3570f9155d55`
-- 验证 P0 Run：`30741699603`，结果 `PASSED`
-- Artifact：`8831504648`
-- Artifact SHA-256：`de9e07229c82374a5eb36cc4a5ca4b2c5df0f18e53de582a13b456cd1bc206f7`
-- Context：26 run / 0 failures / 0 errors / 0 skipped
-- Compiler：83 run / 0 failures / 0 errors / 0 skipped
-- I005 专项：5 run / 0 failures / 0 errors / 0 skipped
+- Review：`REV-000207`～`REV-000219`
+- Evidence：`EVD-000451`～`EVD-000463`
+- Clean-code Head：`0699c6bc2ed41100c3a4538b76a691b7757f683b`
+- 验证 P0 Run：`30748395446`，结果 `PASSED`
+- Artifact：`8833627854`
+- Artifact SHA-256：`a7a7703c706e8bb3cadafb74366e13131ea63a37dd3bbf7f9446b3608ed7c97a`
+- Context：26/26
+- Compiler：83/83
+- XML T04：30/30，其中资源预算 12/12
+- Demo：4/4
 - Reactor：12 modules / PASSED
 - Java release 8：PASSED
 - 故意失败阻断：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- SourceManifest：10 个唯一 Source
-- SourceGraph：7 条真实声明边
-- Provider 调用：8 次
-- root 元素：只接受 `orm-config`
-- systems 元素：只接受 `systems`
-- root 完整路径：四条冻结路径精确匹配
-- system 完整路径：`/systems/system/rule-file-info/rule-file`
-- suffix matching：已移除
-- wrong-root / wrong-nesting：`MIX_SOURCE_POLICY`、graph empty、只访问 root Provider
-- wrong-systems-root / wrong-system-path：`MIX_SOURCE_POLICY`、graph empty、不访问 rule/business Provider
-- ignored subtree：不创建 Edge、不改变 10 Source / 7 Edge / 8 Provider 调用
-- published nodePath：仅允许五条冻结完整路径
-- 相对 URI 类别保持、Resolver 根受控边界、编码点段和安全证据均保持
-- declaration origin：LF、CRLF、CR 均验证七条边 line、column、nodePath
-- 当前 PR：`#18`，目标 `dev_all`
-- 当前分支：`feature/p1-t03-source-graph-20260802-1430`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r05_completion.json`
-- 下一 Agent：`ProjectManagerAgent`
-- 下一动作：Review PR #18，并在明确授权后合并；合并后从最新 `dev_all` 启动 `TASK-P1-T04`
-- TASK-P1-T04：未启动且保持阻断
-- 注意：不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #18；不得在 PR #18 合并前启动或声明 T04。
+- 生产预算：文档 1,048,576 bytes；深度 256；节点 65,536；累计路径 4,194,304 chars；属性 256/element；直接文本 262,144/element；累计文本 1,048,576 chars
+- 预算顺序：reader 前检查文档；节点分配前检查深度/节点/属性/路径；文本追加前检查文本预算
+- nodePath：父路径单次拼接，不遍历祖先栈
+- 计数：long 溢出安全；SourceRef 定位每节点一次；行索引二分查找
+- 预算失败：`FAILED` + `MIX_FRONTEND_XML_UNSAFE` + 空 root + external I/O 0
+- OOM 边界：不捕获 `OutOfMemoryError`，不使用真实 OOM 测试
+- Canonical：文本—CDATA—文本顺序、所有后代 schemaVersion 已直接验证
+- 参数失败：null source、null options 均稳定失败
+- schemaLocation：按照 R18/R15 立即失败，R14 相反规则仅保留为历史
+- 安全：DOCTYPE、通用实体、参数实体、外部 schema 均拒绝；XInclude 不执行
+- 架构：XML 单向依赖 compiler；未修改 compiler canonical 公共 API或 Context 生产代码
+- 范围：未启动 YAML、RawDefinitionSet、Symbol、Pipeline 或 T05
+- 当前 PR：`#19`，目标 `dev_all`
+- 当前分支：`feature/p1-t04-xml-canonical-20260802-1744`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t04-r02/completion-report.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t04_r02_completion.json`
+- 下一 Agent：`IndependentReviewAgent`
+- 下一动作：复核 PR #19；仅在明确授权后合并；合并后才能从最新 `dev_all` 启动 `TASK-P1-T05`
+- TASK-P1-T05：未启动且保持阻断
+- 注意：不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #19；不得在 PR #19 合并前启动或声明 T05。

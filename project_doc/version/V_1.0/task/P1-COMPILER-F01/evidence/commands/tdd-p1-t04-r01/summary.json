@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_evidence",
+  "task_id": "TASK-P1-T04",
+  "iteration": "I001",
+  "revision": "TDD-P1-T04-R01@1b39f27b972e",
+  "design_revision": "DESIGN-R18@P1-T04-I001",
+  "plan_revision": "TP-P1-COMPILER-F01-R14@P1-T04-I001",
+  "head_sha": "1b39f27b972eb31bc74aa2deb26b23a3be4c8fea",
+  "p0_run_id": 30742806193,
+  "artifact_id": 8831862993,
+  "artifact_sha256": "2a8bc037df48fcfdba687bdfd78abaf1749a7ef7091a614aba56218defbc7ad6",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+  "xml_production_compile": "PASSED_JAVA_RELEASE_8",
+  "xml_test_compile": "PASSED_JAVA_RELEASE_8",
+  "t04_oracle": {
+    "run": 10,
+    "failures": 10,
+    "errors": 0,
+    "skipped": 0,
+    "failure_reason": "SecureXmlDocumentFrontend class absent",
+    "expected_red": true
+  },
+  "dependency_or_compile_failure": false,
+  "existing_regression_failure": false,
+  "review_id": "REV-000198",
+  "evidence_id": "EVD-000441",
+  "result": "VALID_RED"
+}
