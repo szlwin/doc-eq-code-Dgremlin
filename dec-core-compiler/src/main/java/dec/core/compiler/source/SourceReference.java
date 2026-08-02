@@ -1,32 +1,141 @@
 package dec.core.compiler.source;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
- * 调用方提供的不可变 Source 引用。
+ * 调用方提供的不可变 Source 引用及其统一 canonical key。
+ *
+ * <p>该值对象只消除独立的当前目录 {@code .} 段并统一 URI scheme 大小写，
+ * 不消除 {@code ..}、query、fragment 或非法 URI 文本。这样 Provider、声明边、
+ * 排序和环路检测可以共享同一身份，同时 SourcePolicy 仍能看到并拒绝原有的
+ * 父目录穿越和其它安全违规。</p>
  */
 public final class SourceReference {
     private final String value;
 
     /**
-     * 创建 Source 引用，并拒绝空值和空白文本。
+     * 创建 Source 引用，并冻结 Provider、图和解析路径共用的 canonical key。
      *
-     * @param value Provider 可解释的 Source 引用文本
+     * @param value Source 引用文本
      */
     public SourceReference(String value) {
         Objects.requireNonNull(value, "value");
-        String normalized = value.trim();
-        if (normalized.isEmpty()) {
+        String checked = value.trim();
+        if (checked.isEmpty()) {
             throw new IllegalArgumentException("value must not be blank");
         }
-        this.value = normalized;
+        this.value = canonicalize(checked);
     }
 
     /**
-     * 返回 Provider 可解释的规范化引用文本。
+     * 返回 Provider、SourceGraphEdge 和 ancestor stack 共用的规范引用键。
      */
     public String value() {
         return value;
+    }
+
+    /**
+     * 在不隐藏安全证据的前提下规范 URI 或相对路径中的独立点段。
+     */
+    private static String canonicalize(String input) {
+        try {
+            URI uri = URI.create(input);
+            if (uri.isOpaque()) {
+                return canonicalOpaque(uri);
+            }
+            return canonicalHierarchical(uri);
+        } catch (IllegalArgumentException invalidUri) {
+            // 非法 URI 仍原样交给 SourcePolicy 拒绝，值对象不提前改变错误类型。
+            return input;
+        }
+    }
+
+    /**
+     * 规范 opaque URI 的 scheme-specific part，例如 classpath:mix/./a.xml。
+     */
+    private static String canonicalOpaque(URI uri) {
+        String scheme = uri.getScheme() == null
+                ? ""
+                : uri.getScheme().toLowerCase(Locale.ROOT);
+        String rawPart = valueOrEmpty(uri.getRawSchemeSpecificPart());
+        int queryIndex = rawPart.indexOf('?');
+        String pathPart = queryIndex < 0
+                ? rawPart
+                : rawPart.substring(0, queryIndex);
+        String suffix = queryIndex < 0
+                ? ""
+                : rawPart.substring(queryIndex);
+        StringBuilder result = new StringBuilder();
+        if (!scheme.isEmpty()) {
+            result.append(scheme).append(':');
+        }
+        result.append(removeCurrentDirectorySegments(pathPart)).append(suffix);
+        if (uri.getRawFragment() != null) {
+            result.append('#').append(uri.getRawFragment());
+        }
+        return result.toString();
+    }
+
+    /**
+     * 规范 hierarchical URI 或相对路径，同时保留 authority、query 和 fragment。
+     */
+    private static String canonicalHierarchical(URI uri) {
+        StringBuilder result = new StringBuilder();
+        if (uri.getScheme() != null) {
+            result.append(uri.getScheme().toLowerCase(Locale.ROOT)).append(':');
+        }
+        if (uri.getRawAuthority() != null) {
+            result.append("//").append(uri.getRawAuthority());
+        }
+        result.append(removeCurrentDirectorySegments(
+                valueOrEmpty(uri.getRawPath())));
+        if (uri.getRawQuery() != null) {
+            result.append('?').append(uri.getRawQuery());
+        }
+        if (uri.getRawFragment() != null) {
+            result.append('#').append(uri.getRawFragment());
+        }
+        return result.toString();
+    }
+
+    /**
+     * 只移除独立 {@code .} 段；{@code ..} 和编码段必须保留给安全策略验证。
+     */
+    private static String removeCurrentDirectorySegments(String value) {
+        if (value.isEmpty() || value.indexOf('.') < 0) {
+            return value;
+        }
+        String[] segments = value.split("/", -1);
+        List<String> output = new ArrayList<String>(segments.length);
+        for (String segment : segments) {
+            if (!".".equals(segment)) {
+                output.add(segment);
+            }
+        }
+        if ((value.equals(".") || value.endsWith("/."))
+                && (output.isEmpty()
+                || !output.get(output.size() - 1).isEmpty())) {
+            output.add("");
+        }
+        StringBuilder result = new StringBuilder(value.length());
+        for (int index = 0; index < output.size(); index++) {
+            if (index > 0) {
+                result.append('/');
+            }
+            result.append(output.get(index));
+        }
+        return result.toString();
+    }
+
+    /**
+     * 将可空 URI 组件转换为空字符串。
+     */
+    private static String valueOrEmpty(String value) {
+        return value == null ? "" : value;
     }
 
     @Override
