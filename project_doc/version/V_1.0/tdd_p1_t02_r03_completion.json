@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "task_resume_checkpoint",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I003",
+  "task_status": "COMPLETED",
+  "completion_revision": "COMPLETION-P1-T02-R03@122ffc28165f",
+  "stage_statuses": {
+    "design_revision": "PASSED",
+    "implementation_plan": "PASSED",
+    "tdd": "PASSED",
+    "architecture_skeleton": "PASSED",
+    "development": "PASSED",
+    "code_review": "PASSED",
+    "testing": "PASSED",
+    "completion_verification": "PASSED"
+  },
+  "clean_code_head_sha": "122ffc28165ff33c5e75955bfbece9a23c6803d7",
+  "p0_run_id": 30732488810,
+  "p0_result": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 20,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "review_ids": [
+    "REV-000121",
+    "REV-000122",
+    "REV-000123",
+    "REV-000124",
+    "REV-000125",
+    "REV-000126",
+    "REV-000127",
+    "REV-000128"
+  ],
+  "evidence_ids": [
+    "EVD-000367",
+    "EVD-000368",
+    "EVD-000369",
+    "EVD-000370",
+    "EVD-000371",
+    "EVD-000372"
+  ],
+  "closed_findings": [
+    "FND-P1-T02-I003-001",
+    "FND-P1-T02-I003-002",
+    "FND-P1-T02-I003-003",
+    "FND-P1-T02-I003-004",
+    "FND-P2-T02-I003-005"
+  ],
+  "open_p0_p1_findings": [],
+  "current_pr": 17,
+  "current_branch": "feature/p1-t02-rework-i002-20260802-1116",
+  "base_branch": "dev_all",
+  "base_sha": "f88f45731e16868bfacb489b63e3086aae49d018",
+  "superseded_completion": "COMPLETION-P1-T02-R02@8847b3c7dfac",
+  "next_task": "TASK-P1-T03",
+  "next_task_started": false,
+  "claim_boundary": "TASK-P1-T02 I003 only"
+}
