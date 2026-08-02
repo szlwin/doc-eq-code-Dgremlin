@@ -2,6 +2,7 @@ package dec.core.compiler.source;
 
 import dec.core.context.model.SourceRef;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,10 +43,12 @@ final class SourceDeclarationParser {
         XMLInputFactory factory = secureFactory();
         List<SourceGraphEdge> edges = new ArrayList<SourceGraphEdge>();
         List<String> path = new ArrayList<String>();
+        byte[] content = source.content();
+        DeclarationLocator locator = new DeclarationLocator(content);
         XMLStreamReader reader = null;
         try {
             reader = factory.createXMLStreamReader(
-                    new ByteArrayInputStream(source.content()),
+                    new ByteArrayInputStream(content),
                     "UTF-8");
             while (reader.hasNext()) {
                 int event = reader.next();
@@ -65,7 +68,9 @@ final class SourceDeclarationParser {
                                 edgeType,
                                 requiredPath(reader),
                                 reader.getLocation(),
-                                path));
+                                localName,
+                                path,
+                                locator));
                     }
                 } else if (event == XMLStreamConstants.END_ELEMENT
                         && !path.isEmpty()) {
@@ -168,24 +173,25 @@ final class SourceDeclarationParser {
     }
 
     /**
-     * 创建带精确声明位置的不可变 SourceGraphEdge。
+     * 创建带声明元素 `<` 精确起始位置的不可变 SourceGraphEdge。
      */
     private static SourceGraphEdge edge(
             DocumentSource source,
             SourceEdgeType edgeType,
             String target,
             Location location,
-            List<String> path) {
-        int line = Math.max(1, location == null ? 1 : location.getLineNumber());
-        int column = Math.max(1, location == null ? 1 : location.getColumnNumber());
+            String localName,
+            List<String> path,
+            DeclarationLocator locator) {
+        Position position = locator.locate(location, localName);
         return new SourceGraphEdge(
                 edgeType,
                 source.sourceId(),
                 new SourceReference(target),
                 new SourceRef(
                         source.sourceId(),
-                        line,
-                        column,
+                        position.line(),
+                        position.column(),
                         nodePath(path)));
     }
 
@@ -224,6 +230,162 @@ final class SourceDeclarationParser {
             reader.close();
         } catch (XMLStreamException ignored) {
             // 关闭失败不改变已确定的 Source discovery 语义结果。
+        }
+    }
+
+    /**
+     * 基于原始 UTF-8 文本定位当前 start tag 的 `<`，不采用 StAX 标签末尾列号。
+     */
+    private static final class DeclarationLocator {
+        private final String source;
+        private final List<Integer> lineStarts;
+
+        private DeclarationLocator(byte[] content) {
+            this.source = new String(content, StandardCharsets.UTF_8);
+            this.lineStarts = lineStarts(source);
+        }
+
+        /**
+         * 以 StAX character offset 为上界反向寻找当前元素 start tag。
+         */
+        private Position locate(Location location, String localName) {
+            int upperBound = location == null
+                    ? source.length()
+                    : location.getCharacterOffset();
+            if (upperBound < 0 || upperBound > source.length()) {
+                upperBound = lineEnd(location == null
+                        ? lineStarts.size()
+                        : location.getLineNumber());
+            }
+            int offset = findStartTag(upperBound, localName);
+            if (offset < 0 && location != null) {
+                offset = findStartTag(lineEnd(location.getLineNumber()), localName);
+            }
+            if (offset < 0) {
+                throw new SourceDeclarationException(
+                        "Unable to locate declaration start tag: " + localName);
+            }
+            return position(offset);
+        }
+
+        /**
+         * 从上界向前查找名称匹配的最近 start tag。
+         */
+        private int findStartTag(int upperBound, String localName) {
+            int cursor = Math.min(Math.max(upperBound, 0), source.length()) - 1;
+            while (cursor >= 0) {
+                int candidate = source.lastIndexOf('<', cursor);
+                if (candidate < 0) {
+                    return -1;
+                }
+                if (matchesStartTag(candidate, localName)) {
+                    return candidate;
+                }
+                cursor = candidate - 1;
+            }
+            return -1;
+        }
+
+        /**
+         * 判断 `<` 后的 qualified name 是否对应当前 local name。
+         */
+        private boolean matchesStartTag(int offset, String localName) {
+            int nameStart = offset + 1;
+            if (nameStart >= source.length()) {
+                return false;
+            }
+            char first = source.charAt(nameStart);
+            if (first == '/' || first == '!' || first == '?') {
+                return false;
+            }
+            int nameEnd = nameStart;
+            while (nameEnd < source.length()) {
+                char current = source.charAt(nameEnd);
+                if (Character.isWhitespace(current)
+                        || current == '>'
+                        || current == '/') {
+                    break;
+                }
+                nameEnd++;
+            }
+            if (nameEnd <= nameStart) {
+                return false;
+            }
+            String qualifiedName = source.substring(nameStart, nameEnd);
+            int colon = qualifiedName.lastIndexOf(':');
+            String actualLocalName = colon < 0
+                    ? qualifiedName
+                    : qualifiedName.substring(colon + 1);
+            return localName.equals(actualLocalName);
+        }
+
+        /**
+         * 将字符偏移转换为 1-based 行、列。
+         */
+        private Position position(int offset) {
+            int lineIndex = 0;
+            for (int index = 1; index < lineStarts.size(); index++) {
+                if (lineStarts.get(index) > offset) {
+                    break;
+                }
+                lineIndex = index;
+            }
+            return new Position(
+                    lineIndex + 1,
+                    offset - lineStarts.get(lineIndex) + 1);
+        }
+
+        /**
+         * 返回指定 1-based 行的结束偏移。
+         */
+        private int lineEnd(int line) {
+            int checkedLine = Math.max(1, line);
+            if (checkedLine >= lineStarts.size()) {
+                return source.length();
+            }
+            return lineStarts.get(checkedLine);
+        }
+
+        /**
+         * 建立兼容 LF、CRLF 和 CR 的行首索引。
+         */
+        private static List<Integer> lineStarts(String source) {
+            List<Integer> starts = new ArrayList<Integer>();
+            starts.add(0);
+            for (int index = 0; index < source.length(); index++) {
+                char current = source.charAt(index);
+                if (current == '\r') {
+                    if (index + 1 < source.length()
+                            && source.charAt(index + 1) == '\n') {
+                        index++;
+                    }
+                    starts.add(index + 1);
+                } else if (current == '\n') {
+                    starts.add(index + 1);
+                }
+            }
+            return starts;
+        }
+    }
+
+    /**
+     * 声明元素起始位置值对象。
+     */
+    private static final class Position {
+        private final int line;
+        private final int column;
+
+        private Position(int line, int column) {
+            this.line = line;
+            this.column = column;
+        }
+
+        private int line() {
+            return line;
+        }
+
+        private int column() {
+            return column;
         }
     }
 
