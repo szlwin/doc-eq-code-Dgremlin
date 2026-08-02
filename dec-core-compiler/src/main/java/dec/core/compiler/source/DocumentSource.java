@@ -19,8 +19,11 @@ public final class DocumentSource {
     /**
      * 冻结稳定身份、规范化 URI、文档格式、安全根、内容和内容摘要。
      *
+     * <p>原始 URI 必须先通过 AllowedRoot 安全验证，再保存规范化结果。
+     * 如果先 normalize，显式父目录穿越可能在检查前消失。</p>
+     *
      * @param sourceId 用于排序、去重和 Diagnostic 的稳定 Source 身份
-     * @param uri Provider 已解析并规范化的绝对文档 URI
+     * @param uri Provider 已解析的绝对文档 URI
      * @param format 选择 Frontend 所需的显式文档格式
      * @param allowedRoot Provider 已验证的允许根事实
      * @param content 文档内容；构造器执行防御性复制
@@ -34,16 +37,16 @@ public final class DocumentSource {
             byte[] content,
             String contentDigest) {
         this.sourceId = requireText(sourceId, "sourceId");
-        URI normalizedUri = Objects.requireNonNull(uri, "uri").normalize();
-        if (!normalizedUri.isAbsolute()) {
+        URI originalUri = Objects.requireNonNull(uri, "uri");
+        if (!originalUri.isAbsolute()) {
             throw new IllegalArgumentException("uri must be absolute");
         }
         this.format = Objects.requireNonNull(format, "format");
         this.allowedRoot = Objects.requireNonNull(allowedRoot, "allowedRoot");
-        if (!allowedRoot.contains(normalizedUri)) {
+        if (!allowedRoot.contains(originalUri)) {
             throw new IllegalArgumentException("uri must be contained by allowedRoot");
         }
-        this.uri = normalizedUri;
+        this.uri = originalUri.normalize();
         this.content = Objects.requireNonNull(content, "content").clone();
         this.contentDigest = requireText(contentDigest, "contentDigest");
     }
