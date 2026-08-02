@@ -1,42 +1,49 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T05 / I002` 已完成
+- 当前逻辑任务：`TASK-P1-T05 / I003` 已完成
 - Dependency Completion：`COMPLETION-P1-T04-R02@0699c6bc2ed4`
-- 历史 Completion：`COMPLETION-P1-T05-R01@040f09b80463`，被 `REV-000231` 推翻并保留
-- 当前 Completion Revision：`COMPLETION-P1-T05-R02@27d566714f5c`
+- 历史 Completion：`COMPLETION-P1-T05-R01@040f09b80463`、`COMPLETION-P1-T05-R02@27d566714f5c`，均被后续 Review 推翻并保留
+- 当前 Completion Revision：`COMPLETION-P1-T05-R03@30529276cd8f`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@09edf814bdf0800e7e9633545ca743200169b377`
-- Rework Base：`52fe48d46dd2c4ac9c822d5be141d47c03ae955f`
-- 当前设计事实：`DESIGN-R21@P1-T05-REWORK-I002`
-- 当前实施计划：`TP-P1-COMPILER-F01-R17@P1-T05-REWORK-I002`
-- TDD：`TDD-P1-T05-R02@c362011eac56`
-- Architecture Skeleton：`DEVSKEL-P1-T05-R02@122f8ddc37df`
-- Development：`DEV-P1-T05-R02@27d566714f5c`
-- Code Review：`CODEREVIEW-P1-T05-R02@27d566714f5c`
-- Testing：`TESTING-P1-T05-R02@27d566714f5c`
-- Review：`REV-000231`～`REV-000243`
-- Evidence：`EVD-000475`～`EVD-000486`
+- Rework Base：`499b977a773da3e25b776d4debf7abb1391b5192`
+- 当前设计事实：`DESIGN-R22@P1-T05-REWORK-I003`
+- 当前实施计划：`TP-P1-COMPILER-F01-R18@P1-T05-REWORK-I003`
+- TDD：`TDD-P1-T05-R03@3deacf0aa036`
+- Architecture Skeleton：`DEVSKEL-P1-T05-R03@05873e286c2d`
+- Development：`DEV-P1-T05-R03@30529276cd8f`
+- Code Review：`CODEREVIEW-P1-T05-R03@30529276cd8f`
+- Testing：`TESTING-P1-T05-R03@30529276cd8f`
+- Review：`REV-000244`～`REV-000256`
+- Evidence：`EVD-000487`～`EVD-000498`
 - 开放 P0/P1/P2：无
-- Clean-code Head：`27d566714f5c4e521a969b92d4642111971bb96e`
-- Development P0 Run：`30752686888`，结果 `PASSED`
-- Artifact：`8834954051`
-- Artifact SHA-256：`44ca69b67e75e46278f8b622fe864293e7251154456f1809d75d97a44e7f0090`
-- Context：26/26
+- Clean-code Head：`30529276cd8fa35e0eeeafb1256b85cb99820afb`
+- Clean-code P0 Run：`30756293074`，结果 `PASSED`
+- Artifact：`8836020099`
+- Artifact SHA-256：`3362ee5de19129f0a819bb1587e42552077618f7bf43b3011e15540ec0bcd688`
+- Context 正常测试：26/26
 - Compiler：83/83
 - XML T04：30/30
-- YAML T05：45/45（I001 35、I002 Source Facts 9、Near-miss Review 1）
+- YAML T05：59/59（Existing 45、I003 Budget/Resolver 12、Architecture Review 2）
 - Demo：4/4
 - Legacy declaration：1/1
+- 故意失败门禁：1 项按预期失败并阻断
 - Reactor：12 modules / PASSED
 - Java release 8：PASSED
-- 故意失败阻断：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
+- Revision Lock：R22 `b8ffb41226866b0854def9d4ce12a6c68c150b3b`；R18 `26adb13c7192e5f7419c59acf445bf8b56b6ceb7`
+- Revision Integrity：R22/R18 在 RED 前创建，clean-code Head复核 blob不变；I003 未修改 R21/R17/R02
 - Frontend：`dec.core.compiler.canonical.yaml.SafeYamlDocumentFrontend`
+- Scalar 顺序：原始值读取一次 → 原始单值上限 → tag/Resolver词法 → null/trim → 累计 Canonical预算
+- Scalar 入口：普通 scalar、`#text`、属性 value、Sequence item共享统一验证
+- Resolver：固定 SnakeYAML 2.2 `BOOL/INT/FLOAT/NULL/EMPTY/TIMESTAMP`
+- 数值构造：无 BigDecimal、BigInteger或 Java 业务对象 construction
+- Float：`1e3`、`1.2e3`、显式 `!!float 1e3` 四位置通过
+- Int：显式 `!!int 0b_`、`0x_`、`0_` 四位置失败
+- 资源优先级：超限合法/非法 typed scalar四位置均先返回 `yaml.frontend.limit.scalar-per-node`
 - UTF-8：原始 byte[] 使用 `CharsetDecoder + REPORT`，禁止替换后解析
-- 词法策略：`YamlScalarLexemePolicy`，标准 tag 全量词法校验，不执行 Java 业务对象 construction
-- typed tag：合法显式/隐式值保留原词法；非法 null/int/bool/float/timestamp 在四位置稳定失败
 - 名称：根、子节点和属性名为 `[A-Za-z_][A-Za-z0-9._-]*`
 - nodePath：不接受 `/`、CR/LF、冒号、空白、非法首字符或非 ASCII segment
 - Parser：`SafeConstructor + composeAll`，无通用对象加载，任意用户类型构造计数 0
@@ -45,13 +52,13 @@
 - 安全：Java/object/local/custom、binary/set/omap/pairs、anchor、alias、共享/递归图、merge、duplicate/complex key均拒绝
 - 生产预算：文档/code point 1,048,576；深度 128；节点 65,536；累计路径 4,194,304；Mapping 256；Sequence 4,096；单 scalar 262,144；累计 scalar 1,048,576；alias 0
 - 预算失败：`FAILED` + `MIX_FRONTEND_YAML_UNSAFE` + 空 root
-- OOM 边界：不捕获 `OutOfMemoryError`，不使用真实 OOM 测试
-- 架构：YAML 单向依赖 compiler；未修改 compiler canonical 公共 API、Context 生产代码或 XML 生产语义
+- OOM 边界：不捕获 `OutOfMemoryError`，不使用真实 OOM 或性能阈值测试
+- 架构：YAML 单向依赖 compiler；未修改 compiler canonical 公共 API、Context 生产代码或 XML Frontend
 - 范围：未启动 RawDefinitionSet、TypedKey、Symbol、Pipeline 或 T06
 - 当前 PR：`#20`，目标 `dev_all`
 - 当前分支：`feature/p1-t05-yaml-canonical-20260802-2106`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t05-r02/completion-report.json`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t05_r02_completion.json`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t05-r03/completion-report.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t05_r03_completion.json`
 - 下一 Agent：`IndependentReviewAgent`
 - 下一动作：复核 PR #20；仅在明确授权后合并；合并后才能从最新 `dev_all` 启动 `TASK-P1-T06`
 - TASK-P1-T06：未启动且保持阻断
