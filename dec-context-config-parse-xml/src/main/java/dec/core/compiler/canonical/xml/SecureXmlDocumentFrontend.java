@@ -117,6 +117,7 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
         XMLStreamReader reader = null;
         try {
             byte[] content = source.content();
+            checkDocumentBytes(content.length, limits, fallback);
             XMLInputFactory factory = secureFactory();
             reader = factory.createXMLStreamReader(
                     new ByteArrayInputStream(content),
@@ -125,7 +126,8 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
                     reader,
                     source,
                     options,
-                    content);
+                    content,
+                    limits);
             return FrontendResults.parsed(
                     root,
                     Collections.<Diagnostic>emptyList());
@@ -146,6 +148,21 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
                     "检查 XML 内容、解析器安全能力和 Canonical 输入合同");
         } finally {
             close(reader);
+        }
+    }
+
+    /**
+     * 在创建解析器前检查文档字节预算。
+     */
+    private static void checkDocumentBytes(
+            int contentLength,
+            XmlFrontendLimits limits,
+            SourceRef sourceRef) {
+        if (contentLength > limits.maxDocumentBytes()) {
+            throw unsafe(
+                    "xml.frontend.limit.document-bytes",
+                    sourceRef,
+                    "缩小 XML 文档，使其不超过安全字节预算");
         }
     }
 
@@ -208,8 +225,10 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
             XMLStreamReader reader,
             DocumentSource source,
             FrontendOptions options,
-            byte[] content) throws XMLStreamException {
+            byte[] content,
+            XmlFrontendLimits limits) throws XMLStreamException {
         List<NodeBuilder> stack = new ArrayList<NodeBuilder>();
+        ResourceUsage usage = new ResourceUsage();
         CanonicalDocumentNode root = null;
         StartTagLocator locator = new StartTagLocator(content);
         while (reader.hasNext()) {
@@ -228,21 +247,42 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
             }
             if (event == XMLStreamConstants.START_ELEMENT) {
                 String localName = reader.getLocalName();
+                SourceRef eventRef = streamRef(source, reader.getLocation());
+                String parentPath = stack.isEmpty()
+                        ? ""
+                        : stack.get(stack.size() - 1).sourceRef().nodePath();
+                int pathLength = checkedPathLength(
+                        parentPath.length(),
+                        localName.length(),
+                        eventRef);
+                usage.acceptStartElement(
+                        stack.size() + 1,
+                        reader.getAttributeCount(),
+                        pathLength,
+                        limits,
+                        eventRef);
+
                 Position position = locator.locate(reader.getLocation(), localName);
+                String nodePath = parentPath + '/' + localName;
                 SourceRef sourceRef = new SourceRef(
                         source.sourceId(),
                         position.line(),
                         position.column(),
-                        nodePath(stack, localName));
-                stack.add(new NodeBuilder(
-                        localName,
-                        attributes(reader, sourceRef),
-                        sourceRef));
+                        nodePath);
+                Map<String, String> attributes = attributes(reader, sourceRef);
+                stack.add(new NodeBuilder(localName, attributes, sourceRef));
             } else if ((event == XMLStreamConstants.CHARACTERS
                     || event == XMLStreamConstants.CDATA
                     || event == XMLStreamConstants.SPACE)
                     && !stack.isEmpty()) {
-                stack.get(stack.size() - 1).appendText(reader.getText());
+                NodeBuilder current = stack.get(stack.size() - 1);
+                String text = reader.getText();
+                usage.acceptText(
+                        current.textLength(),
+                        text.length(),
+                        limits,
+                        current.sourceRef());
+                current.appendText(text);
             } else if (event == XMLStreamConstants.END_ELEMENT) {
                 if (stack.isEmpty()) {
                     throw unsafe(
@@ -275,6 +315,23 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
     }
 
     /**
+     * 在字符串分配前计算当前绝对 nodePath 长度，并拒绝整数溢出。
+     */
+    private static int checkedPathLength(
+            int parentLength,
+            int localNameLength,
+            SourceRef sourceRef) {
+        long pathLength = (long) parentLength + 1L + localNameLength;
+        if (pathLength > Integer.MAX_VALUE) {
+            throw unsafe(
+                    "xml.frontend.limit.node-path-chars",
+                    sourceRef,
+                    "缩短 XML 元素名称或嵌套路径");
+        }
+        return (int) pathLength;
+    }
+
+    /**
      * 读取业务属性并拒绝外部 Schema 指示与 local-name 冲突。
      */
     private static Map<String, String> attributes(
@@ -301,17 +358,6 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
             attributes.put(localName, reader.getAttributeValue(index));
         }
         return attributes;
-    }
-
-    /**
-     * 根据当前未闭合节点和新节点名称生成完整 local-name 路径。
-     */
-    private static String nodePath(List<NodeBuilder> stack, String localName) {
-        StringBuilder path = new StringBuilder();
-        for (NodeBuilder node : stack) {
-            path.append('/').append(node.name());
-        }
-        return path.append('/').append(localName).toString();
     }
 
     /**
@@ -379,6 +425,103 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
     }
 
     /**
+     * 单次解析的资源使用计数器，在危险分配前执行所有预算门禁。
+     */
+    private static final class ResourceUsage {
+        private int nodeCount;
+        private long cumulativeNodePathChars;
+        private long cumulativeDirectTextChars;
+
+        /**
+         * 在创建 SourceRef、属性 Map 和 NodeBuilder 前校验结构预算。
+         */
+        private void acceptStartElement(
+                int depth,
+                int attributeCount,
+                int pathLength,
+                XmlFrontendLimits limits,
+                SourceRef sourceRef) {
+            if (depth > limits.maxElementDepth()) {
+                throw unsafe(
+                        "xml.frontend.limit.element-depth",
+                        sourceRef,
+                        "减少 XML 元素嵌套深度");
+            }
+            if (nodeCount >= limits.maxNodeCount()) {
+                throw unsafe(
+                        "xml.frontend.limit.node-count",
+                        sourceRef,
+                        "减少 XML 元素节点数量");
+            }
+            if (attributeCount > limits.maxAttributesPerElement()) {
+                throw unsafe(
+                        "xml.frontend.limit.attributes-per-element",
+                        sourceRef,
+                        "减少单个 XML 元素的属性数量");
+            }
+            long nextPathChars = checkedAdd(
+                    cumulativeNodePathChars,
+                    pathLength,
+                    "xml.frontend.limit.node-path-chars",
+                    sourceRef,
+                    "缩短 XML 元素路径或减少节点数量");
+            if (nextPathChars > limits.maxCumulativeNodePathChars()) {
+                throw unsafe(
+                        "xml.frontend.limit.node-path-chars",
+                        sourceRef,
+                        "缩短 XML 元素路径或减少节点数量");
+            }
+            nodeCount++;
+            cumulativeNodePathChars = nextPathChars;
+        }
+
+        /**
+         * 在 StringBuilder 追加前校验当前节点和全文件直接文本预算。
+         */
+        private void acceptText(
+                int currentTextLength,
+                int addedTextLength,
+                XmlFrontendLimits limits,
+                SourceRef sourceRef) {
+            long nextElementText = (long) currentTextLength + addedTextLength;
+            if (nextElementText > limits.maxDirectTextCharsPerElement()) {
+                throw unsafe(
+                        "xml.frontend.limit.direct-text-per-element",
+                        sourceRef,
+                        "缩短单个 XML 元素的直接文本内容");
+            }
+            long nextCumulativeText = checkedAdd(
+                    cumulativeDirectTextChars,
+                    addedTextLength,
+                    "xml.frontend.limit.cumulative-direct-text",
+                    sourceRef,
+                    "缩短 XML 文档的累计直接文本内容");
+            if (nextCumulativeText > limits.maxCumulativeDirectTextChars()) {
+                throw unsafe(
+                        "xml.frontend.limit.cumulative-direct-text",
+                        sourceRef,
+                        "缩短 XML 文档的累计直接文本内容");
+            }
+            cumulativeDirectTextChars = nextCumulativeText;
+        }
+
+        /**
+         * 执行 long 加法并在溢出时按同一预算失败处理。
+         */
+        private static long checkedAdd(
+                long current,
+                long added,
+                String messageKey,
+                SourceRef sourceRef,
+                String recoveryHint) {
+            if (added > Long.MAX_VALUE - current) {
+                throw unsafe(messageKey, sourceRef, recoveryHint);
+            }
+            return current + added;
+        }
+    }
+
+    /**
      * 未完成元素的隔离可变构建器，只在完整关闭后生成不可变节点。
      */
     private static final class NodeBuilder {
@@ -398,12 +541,12 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
             this.sourceRef = sourceRef;
         }
 
-        private String name() {
-            return name;
-        }
-
         private SourceRef sourceRef() {
             return sourceRef;
+        }
+
+        private int textLength() {
+            return text.length();
         }
 
         private void appendText(String value) {
@@ -522,15 +665,20 @@ public final class SecureXmlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * 将字符偏移转换为 1-based 行、列。
+         * 使用二分查找将字符偏移转换为 1-based 行、列。
          */
         private Position position(int offset) {
+            int low = 0;
+            int high = lineStarts.size() - 1;
             int lineIndex = 0;
-            for (int index = 1; index < lineStarts.size(); index++) {
-                if (lineStarts.get(index) > offset) {
-                    break;
+            while (low <= high) {
+                int middle = low + (high - low) / 2;
+                if (lineStarts.get(middle) <= offset) {
+                    lineIndex = middle;
+                    low = middle + 1;
+                } else {
+                    high = middle - 1;
                 }
-                lineIndex = index;
             }
             return new Position(
                     lineIndex + 1,
