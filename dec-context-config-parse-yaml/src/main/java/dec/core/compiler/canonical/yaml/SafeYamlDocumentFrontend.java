@@ -54,7 +54,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
     private final YamlFrontendLimits limits;
 
     /**
-     * 使用 Design R20/R21 冻结的生产预算创建 YAML Frontend。
+     * 使用 Design R20/R22 冻结的生产预算创建 YAML Frontend。
      */
     public SafeYamlDocumentFrontend() {
         this(YamlFrontendLimits.production());
@@ -198,7 +198,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                 null,
                 sourceRef,
                 Collections.<SourceRef>emptyList(),
-                "请提供符合 Design R21 来源事实与安全合同的 YAML 文档",
+                "请提供符合 Design R22 来源事实与资源顺序合同的 YAML 文档",
                 PASS);
         return FrontendResults.failed(Collections.singletonList(diagnostic));
     }
@@ -561,15 +561,20 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         private Optional<String> readScalarEntered(
                 ScalarNode node,
                 String nodePath) {
-            requireAllowedScalarTag(node, nodePath);
+            String rawValue = validateScalarBeforeCanonicalization(
+                    node,
+                    nodePath);
             if (Tag.NULL.equals(node.getTag())) {
                 return Optional.empty();
             }
-            String value = node.getValue().trim();
+            String value = rawValue.trim();
             if (value.isEmpty()) {
                 return Optional.empty();
             }
-            reserveScalar(value.length(), node.getStartMark(), nodePath);
+            reserveCumulativeScalar(
+                    value.length(),
+                    node.getStartMark(),
+                    nodePath);
             return Optional.of(value);
         }
 
@@ -586,18 +591,59 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                             nodePath);
                 }
                 ScalarNode scalar = (ScalarNode) node;
-                requireAllowedScalarTag(scalar, nodePath);
+                String rawValue = validateScalarBeforeCanonicalization(
+                        scalar,
+                        nodePath);
                 if (Tag.NULL.equals(scalar.getTag())) {
                     return "";
                 }
-                String value = scalar.getValue().trim();
-                reserveScalar(
+                String value = rawValue.trim();
+                reserveCumulativeScalar(
                         value.length(),
                         scalar.getStartMark(),
                         nodePath);
                 return value;
             } finally {
                 leave(node);
+            }
+        }
+
+        /**
+         * 按固定顺序执行原始单值长度门禁，再执行 tag 与词法校验。
+         *
+         * <p>该入口由普通 scalar、`#text`、属性 value 和 Sequence item共享，
+         * 保证任何正则、日期或数值处理都发生在廉价长度检查之后。</p>
+         */
+        private String validateScalarBeforeCanonicalization(
+                ScalarNode node,
+                String nodePath) {
+            String rawValue = node.getValue();
+            if (rawValue == null) {
+                throw unsafe(
+                        "yaml.frontend.scalar.required",
+                        node.getStartMark(),
+                        nodePath);
+            }
+            requireScalarLength(
+                    rawValue,
+                    node.getStartMark(),
+                    nodePath);
+            requireAllowedScalarTag(node, rawValue, nodePath);
+            return rawValue;
+        }
+
+        /**
+         * 在任何词法处理前检查未经 trim 的原始 scalar 单值长度。
+         */
+        private void requireScalarLength(
+                String rawValue,
+                Mark mark,
+                String nodePath) {
+            if (rawValue.length() > limits.maxScalarCharsPerNode()) {
+                throw unsafe(
+                        "yaml.frontend.limit.scalar-per-node",
+                        mark,
+                        nodePath);
             }
         }
 
@@ -628,21 +674,15 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
         }
 
         /**
-         * 在保存 scalar 前预留单值和累计字符预算。
+         * 在 Canonical 值确定后更新累计 scalar 字符预算。
          */
-        private void reserveScalar(
-                int length,
+        private void reserveCumulativeScalar(
+                int canonicalLength,
                 Mark mark,
                 String nodePath) {
-            if (length > limits.maxScalarCharsPerNode()) {
-                throw unsafe(
-                        "yaml.frontend.limit.scalar-per-node",
-                        mark,
-                        nodePath);
-            }
             long total = checkedAdd(
                     cumulativeScalarChars,
-                    length,
+                    canonicalLength,
                     "yaml.frontend.limit.scalar-total",
                     mark,
                     nodePath);
@@ -690,6 +730,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
          */
         private static void requireAllowedScalarTag(
                 ScalarNode node,
+                String rawValue,
                 String nodePath) {
             Tag tag = node.getTag();
             if (!Tag.STR.equals(tag)
@@ -703,7 +744,7 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                         node.getStartMark(),
                         nodePath);
             }
-            if (!YamlScalarLexemePolicy.isValid(tag, node.getValue())) {
+            if (!YamlScalarLexemePolicy.isValid(tag, rawValue)) {
                 throw unsafe(
                         "yaml.frontend.scalar.invalid-lexeme",
                         node.getStartMark(),
