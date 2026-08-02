@@ -8,13 +8,19 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dec.core.compiler.canonical.CanonicalDocumentNode;
 import dec.core.compiler.canonical.DocumentFormat;
 import dec.core.compiler.canonical.DocumentFrontend;
 import dec.core.compiler.canonical.FrontendRegistry;
+import dec.core.compiler.canonical.FrontendResult;
+import dec.core.compiler.canonical.FrontendStatus;
+import dec.core.compiler.source.AllowedRoot;
+import dec.core.compiler.source.DocumentSource;
 import dec.core.compiler.source.DocumentSourceProvider;
 import dec.core.compiler.source.SourceReference;
 import dec.core.compiler.source.SourceResolutionContext;
 import dec.core.compiler.source.SourceResolutionResult;
+import dec.core.compiler.source.SourceResolutionStatus;
 import dec.core.context.EngineContext;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
@@ -23,6 +29,7 @@ import dec.core.context.model.SourceRef;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +38,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
- * 冻结 TASK-P1-T02 I003 的公共 API、不可变性和 Session 注入边界。
+ * 冻结 TASK-P1-T02 I004 的公共 API、不可变性和 Session 注入边界。
  */
 class CompilerApiContractTest {
     private static final List<String> REQUIRED_TYPES = Arrays.asList(
@@ -52,8 +59,13 @@ class CompilerApiContractTest {
             "dec.core.compiler.api.CompilationTiming",
             "dec.core.compiler.api.SessionStateTransition",
             "dec.core.compiler.source.SourceReference",
+            "dec.core.compiler.source.DocumentSource",
+            "dec.core.compiler.source.AllowedRoot",
             "dec.core.compiler.source.DocumentSourceProvider",
-            "dec.core.compiler.canonical.FrontendRegistry");
+            "dec.core.compiler.canonical.FrontendRegistry",
+            "dec.core.compiler.canonical.FrontendResult",
+            "dec.core.compiler.canonical.FrontendStatus",
+            "dec.core.compiler.canonical.CanonicalDocumentNode");
 
     @Test
     void exposesAllFrozenPublicApiTypes() {
@@ -84,6 +96,9 @@ class CompilerApiContractTest {
                 CompilationRequest.class,
                 PublicationRequest.class,
                 SourceReference.class,
+                DocumentSource.class,
+                AllowedRoot.class,
+                CanonicalDocumentNode.class,
                 Deadline.class,
                 CompilationTiming.class,
                 SessionStateTransition.class,
@@ -96,6 +111,8 @@ class CompilerApiContractTest {
         }
         assertTrue(CompilationResult.class.isInterface());
         assertTrue(PublicationResult.class.isInterface());
+        assertTrue(FrontendResult.class.isInterface());
+        assertTrue(FrontendStatus.class.isEnum());
     }
 
     @Test
@@ -143,6 +160,17 @@ class CompilerApiContractTest {
                         token,
                         clock,
                         observer));
+    }
+
+    @Test
+    void sourceProviderReturnsTypedResolutionInsteadOfNull() {
+        SourceReference root = new SourceReference("file:/workspace/config/mix.xml");
+        SourceResolutionResult result = provider().resolve(root, sourceContext(root));
+
+        assertEquals(SourceResolutionStatus.RESOLVED, result.status());
+        assertEquals(1, result.sources().size());
+        assertEquals(DocumentFormat.XML, result.sources().get(0).format());
+        assertTrue(result.diagnostics().isEmpty());
     }
 
     @Test
@@ -205,28 +233,85 @@ class CompilerApiContractTest {
         assertEquals(
                 Collections.singletonList("status"),
                 sortedDeclaredMethodNames(PublicationResult.class));
+        assertEquals(
+                Arrays.asList("canonicalRoot", "diagnostics", "status"),
+                sortedDeclaredMethodNames(FrontendResult.class));
         assertFalse(Arrays.stream(CompilationResult.class.getMethods())
                 .anyMatch(method -> method.getName().equals("sessionId")
                         || method.getName().equals("isPublished")));
     }
 
     /**
-     * 创建只用于验证实例注入的 Source Provider。
+     * 创建返回真实 RESOLVED 数据事实的 Source Provider 测试替身。
      */
     private static DocumentSourceProvider provider() {
+        final SourceResolutionResult resolved = resolvedSourceResult();
         return new DocumentSourceProvider() {
             @Override
             public SourceResolutionResult resolve(
                     SourceReference reference,
                     SourceResolutionContext context) {
-                return null;
+                return resolved;
             }
 
             @Override
             public SourceResolutionResult resolveFileSet(
                     SourceReference reference,
                     SourceResolutionContext context) {
-                return null;
+                return resolved;
+            }
+        };
+    }
+
+    /**
+     * 创建包含完整 URI、格式和允许根事实的解析成功结果。
+     */
+    private static SourceResolutionResult resolvedSourceResult() {
+        AllowedRoot allowedRoot = new AllowedRoot(
+                URI.create("file:///workspace/config/"));
+        final DocumentSource source = new DocumentSource(
+                "source:mix",
+                URI.create("file:///workspace/config/mix.xml"),
+                DocumentFormat.XML,
+                allowedRoot,
+                new byte[] {1, 2, 3},
+                "sha256:abc");
+        return new SourceResolutionResult() {
+            @Override
+            public SourceResolutionStatus status() {
+                return SourceResolutionStatus.RESOLVED;
+            }
+
+            @Override
+            public List<DocumentSource> sources() {
+                return Collections.singletonList(source);
+            }
+
+            @Override
+            public List<Diagnostic> diagnostics() {
+                return Collections.emptyList();
+            }
+        };
+    }
+
+    /**
+     * 创建根 Source 使用的不可变解析上下文测试替身。
+     */
+    private static SourceResolutionContext sourceContext(final SourceReference root) {
+        return new SourceResolutionContext() {
+            @Override
+            public SourceReference root() {
+                return root;
+            }
+
+            @Override
+            public Optional<String> parentSourceId() {
+                return Optional.empty();
+            }
+
+            @Override
+            public int depth() {
+                return 0;
             }
         };
     }
