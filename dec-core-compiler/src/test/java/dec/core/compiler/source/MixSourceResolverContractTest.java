@@ -1,5 +1,6 @@
 package dec.core.compiler.source;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,17 +46,19 @@ class MixSourceResolverContractTest {
             assertTrue(edge.declarationSourceRef().line() > 0);
             assertTrue(edge.declarationSourceRef().column() > 0);
         }
-        assertEquals(10, provider.accessCount());
+
+        // Provider 按声明解析：root、两个文件集、system、三个 rule、business。
+        assertEquals(8, provider.accessCount());
     }
 
     @Test
     void remainsStableAcrossFileSetEnumerationOrders() {
         MixSourceGraph forward = resolve(
-                SourceTestFixture.FileSetOrder.FORWARD);
+                SourceTestFixture.provider(SourceTestFixture.FileSetOrder.FORWARD));
         MixSourceGraph reversed = resolve(
-                SourceTestFixture.FileSetOrder.REVERSED);
+                SourceTestFixture.provider(SourceTestFixture.FileSetOrder.REVERSED));
         MixSourceGraph shuffled = resolve(
-                SourceTestFixture.FileSetOrder.SHUFFLED);
+                SourceTestFixture.provider(SourceTestFixture.FileSetOrder.SHUFFLED));
 
         assertEquals(forward, reversed);
         assertEquals(forward, shuffled);
@@ -67,27 +70,38 @@ class MixSourceResolverContractTest {
 
     @Test
     void independentlyResolvesEquivalentMainAndTestMirrors() {
-        MixSourceGraph mainGraph = resolve(
-                SourceTestFixture.FileSetOrder.FORWARD);
-        MixSourceGraph testGraph = resolve(
-                SourceTestFixture.FileSetOrder.FORWARD);
+        MixSourceGraph mainGraph = resolve(SourceTestFixture.providerFromClasspath(
+                "main-fixture/",
+                SourceTestFixture.FileSetOrder.REVERSED));
+        MixSourceGraph testGraph = resolve(SourceTestFixture.providerFromClasspath(
+                "test-fixture/",
+                SourceTestFixture.FileSetOrder.SHUFFLED));
 
         assertEquals(mainGraph, testGraph);
         assertEquals(
                 mainGraph.manifest().totalBytes(),
                 testGraph.manifest().totalBytes());
+        assertEquals(10, mainGraph.manifest().sources().size());
+        for (int index = 0; index < mainGraph.manifest().sources().size(); index++) {
+            DocumentSource mainSource = mainGraph.manifest().sources().get(index);
+            DocumentSource testSource = testGraph.manifest().sources().get(index);
+            assertEquals(mainSource.sourceId(), testSource.sourceId());
+            assertArrayEquals(mainSource.content(), testSource.content());
+        }
     }
 
     /**
-     * 使用指定枚举顺序解析固定 fixture，并要求成功图存在。
+     * 使用指定 Provider 解析固定 fixture，并要求成功图存在。
      */
-    private static MixSourceGraph resolve(
-            SourceTestFixture.FileSetOrder order) {
+    private static MixSourceGraph resolve(DocumentSourceProvider provider) {
         SourceGraphResolutionResult result = new MixSourceResolver().resolve(
                 new SourceReference(SourceTestFixture.ROOT),
-                SourceTestFixture.provider(order),
+                provider,
                 SourceTestFixture.policy());
-        assertEquals(SourceGraphResolutionStatus.RESOLVED, result.status());
+        assertEquals(
+                SourceGraphResolutionStatus.RESOLVED,
+                result.status(),
+                result.diagnostics().toString());
         assertTrue(result.graph().isPresent());
         return result.graph().get();
     }
