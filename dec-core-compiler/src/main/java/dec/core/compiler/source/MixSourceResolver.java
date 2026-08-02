@@ -42,7 +42,8 @@ public final class MixSourceResolver {
      *
      * <p>所有引用在调用 Provider 前执行 SourcePolicy；Provider typed-result
      * 在登记 Source 前执行防御性验证。目录展开项只进入 Manifest，不伪造
-     * 声明边。</p>
+     * 声明边。除显式的 root、policy 参数校验外，根 SourceRef、策略验证、
+     * Provider 判空和 Discovery 全部位于统一受控失败边界内。</p>
      */
     public SourceGraphResolutionResult resolve(
             SourceReference root,
@@ -50,24 +51,25 @@ public final class MixSourceResolver {
             SourcePolicy policy) {
         Objects.requireNonNull(root, "root");
         Objects.requireNonNull(policy, "policy");
-        SourceRef rootRef = new SourceRef(root.value(), 0, 0, "/root");
-        Optional<Diagnostic> violation = policy.validateReference(
-                root,
-                0,
-                rootRef);
-        if (violation.isPresent()) {
-            return SourceGraphResolutionResults.failed(
-                    Collections.singletonList(violation.get()));
-        }
-        if (provider == null) {
-            return SourceGraphResolutionResults.failed(Collections.singletonList(
-                    policyDiagnostic(
-                            "source.provider.missing",
-                            rootRef,
-                            "注入非空 DocumentSourceProvider")));
-        }
-
+        SourceRef rootRef = null;
         try {
+            rootRef = new SourceRef(root.value(), 0, 0, "/root");
+            Optional<Diagnostic> violation = policy.validateReference(
+                    root,
+                    0,
+                    rootRef);
+            if (violation.isPresent()) {
+                return SourceGraphResolutionResults.failed(
+                        Collections.singletonList(violation.get()));
+            }
+            if (provider == null) {
+                return SourceGraphResolutionResults.failed(Collections.singletonList(
+                        policyDiagnostic(
+                                "source.provider.missing",
+                                rootRef,
+                                "注入非空 DocumentSourceProvider")));
+            }
+
             Discovery discovery = new Discovery(
                     root,
                     provider,
@@ -80,7 +82,7 @@ public final class MixSourceResolver {
             return SourceGraphResolutionResults.failed(Collections.singletonList(
                     policyDiagnostic(
                             "source.discovery.unexpected",
-                            rootRef,
+                            diagnosticRootRef(rootRef),
                             "检查 Source 声明格式和 Provider 返回合同")));
         }
     }
@@ -650,6 +652,15 @@ public final class MixSourceResolver {
         private List<Diagnostic> diagnostics() {
             return diagnostics;
         }
+    }
+
+    /**
+     * 根 SourceRef 尚未成功创建时，返回不会再次触发值对象异常的稳定诊断位置。
+     */
+    private static SourceRef diagnosticRootRef(SourceRef rootRef) {
+        return rootRef == null
+                ? new SourceRef("source-root", 0, 0, "/root")
+                : rootRef;
     }
 
     /**
