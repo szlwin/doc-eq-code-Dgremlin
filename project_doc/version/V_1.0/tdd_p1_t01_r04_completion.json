@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "kind": "task_resume_checkpoint",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I010",
+  "task_status": "COMPLETED",
+  "completion_revision": "COMPLETION-P1-T01-R04@ee99223a243f",
+  "stage_statuses": {
+    "design_revision": "PASSED",
+    "implementation_plan": "PASSED",
+    "tdd": "PASSED",
+    "architecture_skeleton": "PASSED",
+    "development": "PASSED",
+    "code_review": "PASSED",
+    "testing": "PASSED",
+    "completion_verification": "PASSED"
+  },
+  "clean_code_head_sha": "ee99223a243fd5f470e37e3e81b50c9980524ae4",
+  "p0_run_id": 30729866803,
+  "p0_result": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "review_ids": [
+    "REV-000103",
+    "REV-000104",
+    "REV-000105",
+    "REV-000106",
+    "REV-000107",
+    "REV-000108",
+    "REV-000109",
+    "REV-000110",
+    "REV-000111"
+  ],
+  "evidence_ids": [
+    "EVD-000355",
+    "EVD-000356",
+    "EVD-000357",
+    "EVD-000358",
+    "EVD-000359",
+    "EVD-000360"
+  ],
+  "closed_findings": ["FND-P1-T01-I010-001"],
+  "open_p0_p1_findings": [],
+  "current_pr": 16,
+  "current_branch": "feature/p1-t01-rework-i008-20260801-2251",
+  "base_branch": "dev_all",
+  "next_task": "TASK-P1-T02_REBASE_AND_REVALIDATION",
+  "next_task_started": false,
+  "task_p1_t03_started": false,
+  "claim_boundary": "TASK-P1-T01 I010 only"
+}

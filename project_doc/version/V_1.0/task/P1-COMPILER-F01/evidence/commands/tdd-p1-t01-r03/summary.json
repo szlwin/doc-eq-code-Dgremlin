@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_red_summary",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I009",
+  "revision": "TDD-P1-T01-R03@81b071739b19",
+  "input_revisions": {
+    "business_model": "BM-R05@4ecb1f8c09f4",
+    "design": "DESIGN-R07@P1-T01-REWORK-I009",
+    "implementation_plan": "TP-P1-COMPILER-F01-R03@P1-T01-REWORK-I009"
+  },
+  "head_sha": "81b071739b1915f95964ac57ce7e8d1a0afacb04",
+  "p0_run_id": 30707008948,
+  "production_sources_compiled": 101,
+  "test_sources_compiled": 8,
+  "java_release": 8,
+  "tests": {
+    "run": 19,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  "existing_context_tests": {
+    "run": 17,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failure_causes": [
+    "ProjectionWriteRejectedException contract was absent",
+    "PublishedSourceDependency accepted declarationSourceRef.sourceId different from fromSourceId"
+  ],
+  "invalid_red_causes_absent": [
+    "production compilation failure",
+    "test compilation failure",
+    "dependency failure",
+    "test selection failure",
+    "environment failure"
+  ],
+  "review_id": "REV-000094",
+  "reviewer": "TDDReviewAgent",
+  "review_result": "PASSED",
+  "evidence_id": "EVD-000349",
+  "result": "PASSED"
+}

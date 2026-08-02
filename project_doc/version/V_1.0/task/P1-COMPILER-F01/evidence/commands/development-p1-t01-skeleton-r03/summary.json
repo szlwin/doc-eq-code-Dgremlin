@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_summary",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I009",
+  "revision": "DEVSKEL-P1-T01-R03@7f41cb0d06dd",
+  "input_revision": "TDD-P1-T01-R03@81b071739b19",
+  "head_sha": "7f41cb0d06dd86f158b5c8203ba0e65c73c44f93",
+  "p0_run_id": 30707072717,
+  "java_release": 8,
+  "production_sources_compiled": 102,
+  "test_sources_compiled": 8,
+  "tests": {
+    "run": 19,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0
+  },
+  "existing_context_tests": {
+    "run": 17,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "skeleton_contracts": [
+    "ProjectionWriteRejectedException extends UnsupportedOperationException",
+    "CoreConfigProjection exposes only deprecated compatibility write entries that always reject",
+    "Projection remains derived from one CompiledModelSet and owns no second Registry",
+    "PublishedSourceDependency owns declaration-source consistency validation",
+    "PublishedSourceManifest retains a defensive validation boundary"
+  ],
+  "explicitly_unimplemented": [
+    "Projection rejection Diagnostic construction",
+    "Dependency declaration source consistency enforcement"
+  ],
+  "reviews": [
+    {
+      "review_id": "REV-000095",
+      "reviewer": "ArchitectureReviewAgent",
+      "result": "PASSED"
+    },
+    {
+      "review_id": "REV-000096",
+      "reviewer": "SpecComplianceReviewAgent",
+      "result": "PASSED"
+    }
+  ],
+  "evidence_id": "EVD-000350",
+  "result": "PASSED"
+}

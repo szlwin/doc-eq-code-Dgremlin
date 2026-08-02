@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "testing_command_result",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I009",
+  "revision": "TESTING-P1-T01-R03@175b86e1e3ea",
+  "input_revisions": {
+    "development": "DEV-P1-T01-R03@6c8a2d1a7cd5",
+    "code_review": "CODEREVIEW-P1-T01-R03@175b86e1e3ea"
+  },
+  "head_sha": "175b86e1e3eabb718c7f3782ca6a794d6c381bfe",
+  "p0_run_id": 30707306280,
+  "workflow": "P0 Build Gate",
+  "jobs": {
+    "core-verify": "PASSED",
+    "mysql-it": "SKIPPED_NOT_APPLICABLE_T01_NO_DB_CHANGE"
+  },
+  "steps": {
+    "maven_wrapper": "PASSED",
+    "legacy_dependency_bootstrap": "PASSED",
+    "full_reactor_clean_verify": "PASSED",
+    "intentional_failure_blocks_build": "PASSED",
+    "test_report_upload": "PASSED"
+  },
+  "reactor_modules": 11,
+  "java_release": 8,
+  "context_tests": {
+    "run": 21,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "r03_contract_tests": {
+    "run": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "i008_rework_tests": {
+    "run": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "review_id": "REV-000101",
+  "reviewer": "TestEvidenceReviewAgent",
+  "review_result": "PASSED",
+  "evidence_id": "EVD-000353",
+  "result": "PASSED"
+}

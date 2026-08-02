@@ -1,14 +1,16 @@
 package dec.core.context.tdd;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+/**
+ * 冻结 Compiler 与运行上下文共享的中立不可变类型闭包。
+ */
 class ContextValueContractTest {
     private static final String CASE_ID = "CASE-P1-T01-CONTEXT-VALUE-RED-001";
 
@@ -33,29 +35,55 @@ class ContextValueContractTest {
                 "dec.core.context.model.ProduceKey",
                 "dec.core.context.model.DeferredKind",
                 "dec.core.context.model.RequiredStage",
+                "dec.core.context.model.DeferredKey",
                 "dec.core.context.model.DeferredDefinition",
                 "dec.core.context.model.CompiledDefinition",
+                "dec.core.context.model.PublishedSourceDescriptor",
+                "dec.core.context.model.PublishedSourceDependency",
+                "dec.core.context.model.PublishedSourceManifest",
+                "dec.core.context.model.TypedDefinitionRegistries",
                 "dec.core.context.model.DigestPair",
-                "dec.core.context.model.CompiledModelSet"
-        );
+                "dec.core.context.model.CompiledModelSet");
 
         for (String typeName : requiredTypes) {
             Class<?> type = ContractReflectionAssertions.requireType(CASE_ID, typeName);
             ContractReflectionAssertions.assertStableValueShape(CASE_ID, type);
         }
 
+        Class<?> projectionWriteException = ContractReflectionAssertions.requireType(
+                CASE_ID,
+                "dec.core.context.ProjectionWriteRejectedException");
+        ContractReflectionAssertions.assertStableValueShape(CASE_ID, projectionWriteException);
+        assertTrue(
+                UnsupportedOperationException.class.isAssignableFrom(projectionWriteException),
+                "Projection 写入异常必须保持 UnsupportedOperationException 兼容性");
+
         Class<?> definitionKey = ContractReflectionAssertions.requireType(
-                CASE_ID, "dec.core.context.model.DefinitionKey");
-        assertTrue(definitionKey.isInterface(),
+                CASE_ID,
+                "dec.core.context.model.DefinitionKey");
+        assertTrue(
+                definitionKey.isInterface(),
                 "TDD RED [" + CASE_ID + "]: DefinitionKey must be an interface");
-        ContractReflectionAssertions.requirePublicMethod(CASE_ID, definitionKey, "canonical", String.class);
+        ContractReflectionAssertions.requirePublicMethod(
+                CASE_ID,
+                definitionKey,
+                "canonical",
+                String.class);
 
         Class<?> informationKey = ContractReflectionAssertions.requireType(
-                CASE_ID, "dec.core.context.model.InformationKey");
-        assertTrue(definitionKey.isAssignableFrom(informationKey),
+                CASE_ID,
+                "dec.core.context.model.InformationKey");
+        assertTrue(
+                definitionKey.isAssignableFrom(informationKey),
                 "TDD RED [" + CASE_ID + "]: InformationKey must implement DefinitionKey");
-        ContractReflectionAssertions.requirePublicMethod(CASE_ID, informationKey, "canonical", String.class);
-        assertEquals("dec.core.context.model", informationKey.getPackage().getName(),
+        ContractReflectionAssertions.requirePublicMethod(
+                CASE_ID,
+                informationKey,
+                "canonical",
+                String.class);
+        assertEquals(
+                "dec.core.context.model",
+                informationKey.getPackage().getName(),
                 "TDD RED [" + CASE_ID + "]: context values must stay in the neutral model package");
     }
 }

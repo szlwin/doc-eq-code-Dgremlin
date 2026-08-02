@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "development_evidence",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I010",
+  "revision": "DEV-P1-T01-R04@ee99223a243f",
+  "clean_code_head_sha": "ee99223a243fd5f470e37e3e81b50c9980524ae4",
+  "p0_run_id": 30729866803,
+  "result": "PASSED",
+  "implemented_contracts": [
+    "empty and non-empty subList mutations reject with ProjectionWriteRejectedException",
+    "nested subList mutations retain stable MIX_PROJECTION_WRITE semantics",
+    "data, views and rules derived sublists use defensive snapshots",
+    "root and subList iterator/listIterator mutations reject before delegate state checks",
+    "all rejection diagnostics use DiagnosticCode.MIX_PROJECTION_WRITE"
+  ],
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "r04_contract_tests": {
+    "run": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "full_reactor": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql": "SKIPPED_NOT_APPLICABLE",
+  "coding_standards": {
+    "override_on_separate_line": true,
+    "method_comments_language": "zh-CN",
+    "important_logic_comments_language": "zh-CN"
+  },
+  "evidence_id": "EVD-000357"
+}

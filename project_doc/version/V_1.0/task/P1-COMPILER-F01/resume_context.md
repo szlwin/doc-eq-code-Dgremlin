@@ -1,15 +1,21 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T01` 已完成
-- Completion Revision：`COMPLETION-P1-T01-R01@7be02cd9af4c`
+- 当前逻辑任务：`TASK-P1-T01` REWORK iteration `I010` 已完成
+- 历史 Completion：`COMPLETION-P1-T01-R01@7be02cd9af4c`、`COMPLETION-P1-T01-R02@a0daaf94f74b`、`COMPLETION-P1-T01-R03@175b86e1e3ea`（均被后续 Review 重开，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T01-R04@ee99223a243f`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 开放 P0/P1：无
-- Completion Evidence：`EVD-000333`、`EVD-000334`、`EVD-000335`、`EVD-000336`
-- 最终代码 Head：`a3c584de3a4d08378706e101af27bdad82976629`
-- 最终 P0 Run：`30695457680`，结果 `PASSED`
-- 下一 Agent：`TddAgent`
-- 下一任务：`TASK-P1-T02` 的 TDD RED
-- 下一任务状态：未启动
-- 注意：T02 必须在 PR #14 合并 `dev_all` 后，从最新 `dev_all` 建立新分支；不得继续在 T01 分支实现。
+- Completion Evidence：`EVD-000355`、`EVD-000356`、`EVD-000357`、`EVD-000358`、`EVD-000359`、`EVD-000360`
+- Review：`REV-000103`～`REV-000111` 全部 PASSED
+- 干净代码 Head：`ee99223a243fd5f470e37e3e81b50c9980524ae4`
+- 验证 P0 Run：`30729866803`，结果 `PASSED`
+- Context 测试：26 run / 0 failures / 0 errors / 0 skipped
+- 当前 PR：`#16`，目标分支 `dev_all`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t01_r04_completion.json`
+- 下一 Agent：`ProjectManagerAgent`
+- 下一动作：PR #16 合并后，rebase、适配并重新验证 PR #15 的 `TASK-P1-T02`
+- TASK-P1-T02 状态：实现 PR 已存在，但受最终 T01 合同变化影响，当前不得合并
+- TASK-P1-T03 状态：未启动且保持阻断
+- 注意：不得继续在 T01 分支实现 T02/T03；T02 适配必须从 PR #16 合并后的最新 `dev_all` 执行。

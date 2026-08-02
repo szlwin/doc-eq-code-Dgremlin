@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_evidence",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I010",
+  "revision": "TDD-P1-T01-R04@f87a3f96fcbb",
+  "head_sha": "f87a3f96fcbbfc1a95efffdac863ca70fee7c3c7",
+  "p0_run_id": 30729765475,
+  "result": "PASSED",
+  "red_valid": true,
+  "java_release": 8,
+  "production_sources_compiled": 102,
+  "test_sources_compiled": 9,
+  "tests": {
+    "run": 25,
+    "failures": 4,
+    "errors": 0,
+    "skipped": 0,
+    "existing_tests_passed": 21
+  },
+  "failure_reasons": [
+    "empty subList mutation completed without ProjectionWriteRejectedException",
+    "nested subList mutation completed without ProjectionWriteRejectedException",
+    "non-empty subList operation fell back to root data.remove semantics",
+    "iterator remove threw IllegalStateException instead of ProjectionWriteRejectedException"
+  ],
+  "invalid_red_causes": [],
+  "review_id": "REV-000103",
+  "reviewer": "TDDReviewAgent",
+  "evidence_id": "EVD-000355"
+}

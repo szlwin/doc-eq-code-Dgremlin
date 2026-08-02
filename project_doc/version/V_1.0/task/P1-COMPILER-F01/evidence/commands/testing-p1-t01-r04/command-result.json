@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "kind": "testing_evidence",
+  "task_id": "TASK-P1-T01",
+  "iteration": "I010",
+  "revision": "TESTING-P1-T01-R04@ee99223a243f",
+  "head_sha": "ee99223a243fd5f470e37e3e81b50c9980524ae4",
+  "p0_run_id": 30729866803,
+  "result": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "test_groups": {
+    "r04_derived_view_contracts": 5,
+    "r03_projection_and_dependency_contracts": 4,
+    "r02_rework_contracts": 8,
+    "other_context_contracts": 9
+  },
+  "coverage_summary": [
+    "empty subList mutations across data, views and rules",
+    "non-empty and nested subList mutations",
+    "root iterator and listIterator mutations in empty and populated states",
+    "subList iterator and listIterator mutations in empty and populated states",
+    "exact operation path and MIX_PROJECTION_WRITE diagnostic code",
+    "source model and snapshot contents remain unchanged"
+  ],
+  "full_maven_reactor_modules": 11,
+  "full_maven_reactor": "PASSED",
+  "java_release": 8,
+  "failure_gate_proof": "PASSED",
+  "mysql": "SKIPPED_NOT_APPLICABLE",
+  "review_id": "REV-000110",
+  "reviewer": "TestEvidenceReviewAgent",
+  "evidence_id": "EVD-000359"
+}

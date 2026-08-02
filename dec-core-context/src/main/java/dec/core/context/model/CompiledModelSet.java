@@ -7,8 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Compiler 发布给运行上下文的完整、不可变模型事实集合。
+ */
 public final class CompiledModelSet {
+    private final PublishedSourceManifest sourceManifest;
     private final ImmutableRegistry<DefinitionKey, CompiledDefinition> definitions;
+    private final TypedDefinitionRegistries typedRegistries;
     private final ImmutableDeferredRegistry deferred;
     private final List<Diagnostic> diagnostics;
     private final DigestPair digestPair;
@@ -16,53 +21,214 @@ public final class CompiledModelSet {
     private final String schemaVersion;
     private final String optionsVersion;
 
-    public CompiledModelSet(Registry<DefinitionKey, CompiledDefinition> definitions,
-                            DeferredRegistry deferred, List<Diagnostic> diagnostics,
-                            DigestPair digestPair, String compilerVersion,
-                            String schemaVersion, String optionsVersion) {
-        this.definitions = snapshotDefinitions(Objects.requireNonNull(definitions, "definitions"));
+    /**
+     * 一次性冻结发布事实闭包。任何 ERROR 或身份错配都必须在此边界失败。
+     *
+     * @param sourceManifest Context 中立 SourceManifest 发布视图
+     * @param definitions 已编译定义 Registry
+     * @param deferred Deferred Registry
+     * @param diagnostics 无 ERROR 的稳定诊断集合
+     * @param digestPair 源摘要和语义摘要
+     * @param compilerVersion Compiler 版本
+     * @param schemaVersion Schema 版本
+     * @param optionsVersion 编译选项版本
+     */
+    public CompiledModelSet(
+            PublishedSourceManifest sourceManifest,
+            Registry<DefinitionKey, CompiledDefinition> definitions,
+            DeferredRegistry deferred,
+            List<Diagnostic> diagnostics,
+            DigestPair digestPair,
+            String compilerVersion,
+            String schemaVersion,
+            String optionsVersion) {
+        this.sourceManifest = Objects.requireNonNull(sourceManifest, "sourceManifest");
+        this.definitions = snapshotDefinitions(
+                Objects.requireNonNull(definitions, "definitions"));
         this.deferred = snapshotDeferred(Objects.requireNonNull(deferred, "deferred"));
-        List<Diagnostic> diagnosticCopy = new ArrayList<Diagnostic>(Objects.requireNonNull(diagnostics, "diagnostics"));
-        if (diagnosticCopy.contains(null)) throw new NullPointerException("diagnostics contains null");
-        Collections.sort(diagnosticCopy);
-        this.diagnostics = Collections.unmodifiableList(diagnosticCopy);
+        this.diagnostics = immutablePublishedDiagnostics(diagnostics);
         this.digestPair = Objects.requireNonNull(digestPair, "digestPair");
-        this.compilerVersion = AbstractDefinitionKey.requireText(compilerVersion, "compilerVersion");
-        this.schemaVersion = AbstractDefinitionKey.requireText(schemaVersion, "schemaVersion");
-        this.optionsVersion = AbstractDefinitionKey.requireText(optionsVersion, "optionsVersion");
+        this.compilerVersion = AbstractDefinitionKey.requireText(
+                compilerVersion,
+                "compilerVersion");
+        this.schemaVersion = AbstractDefinitionKey.requireText(
+                schemaVersion,
+                "schemaVersion");
+        this.optionsVersion = AbstractDefinitionKey.requireText(
+                optionsVersion,
+                "optionsVersion");
+        this.typedRegistries = TypedDefinitionRegistries.from(this.definitions);
+    }
+
+    /**
+     * 返回 Context 中立 SourceManifest 发布视图。
+     */
+    public PublishedSourceManifest sourceManifest() {
+        return sourceManifest;
+    }
+
+    /**
+     * 返回完整 Definition Registry，供统一遍历和兼容读取使用。
+     */
+    public Registry<DefinitionKey, CompiledDefinition> definitions() {
+        return definitions;
+    }
+
+    /**
+     * 返回按 TypedKey 类型拆分的正式发布 Registry。
+     */
+    public TypedDefinitionRegistries typedRegistries() {
+        return typedRegistries;
+    }
+
+    /**
+     * 返回不可变 Deferred Registry。
+     */
+    public DeferredRegistry deferred() {
+        return deferred;
+    }
+
+    /**
+     * 返回无 ERROR 的稳定诊断集合。
+     */
+    public List<Diagnostic> diagnostics() {
+        return diagnostics;
+    }
+
+    /**
+     * 返回源摘要和语义摘要。
+     */
+    public DigestPair digestPair() {
+        return digestPair;
+    }
+
+    /**
+     * 返回 Compiler 版本。
+     */
+    public String compilerVersion() {
+        return compilerVersion;
+    }
+
+    /**
+     * 返回 Schema 版本。
+     */
+    public String schemaVersion() {
+        return schemaVersion;
+    }
+
+    /**
+     * 返回编译选项版本。
+     */
+    public String optionsVersion() {
+        return optionsVersion;
     }
 
     private static ImmutableRegistry<DefinitionKey, CompiledDefinition> snapshotDefinitions(
             Registry<DefinitionKey, CompiledDefinition> source) {
-        Map<DefinitionKey, CompiledDefinition> copy = new LinkedHashMap<DefinitionKey, CompiledDefinition>();
-        for (DefinitionKey key : source.keys()) copy.put(key, source.require(key));
+        Map<DefinitionKey, CompiledDefinition> copy =
+                new LinkedHashMap<DefinitionKey, CompiledDefinition>();
+        for (DefinitionKey key : source.keys()) {
+            DefinitionKey nonNullKey = Objects.requireNonNull(key, "definitions contains null key");
+            CompiledDefinition definition = Objects.requireNonNull(
+                    source.require(nonNullKey),
+                    "definitions contains null value");
+            // Registry 外部身份必须和 Definition 内部身份完全一致。
+            if (!nonNullKey.equals(definition.key())) {
+                throw new IllegalArgumentException(
+                        "Definition registry identity mismatch: map key="
+                                + nonNullKey
+                                + ", definition key="
+                                + definition.key());
+            }
+            copy.put(nonNullKey, definition);
+        }
         return new ImmutableRegistry<DefinitionKey, CompiledDefinition>(copy);
     }
 
     private static ImmutableDeferredRegistry snapshotDeferred(DeferredRegistry source) {
-        Map<DeferredKey, DeferredDefinition> copy = new LinkedHashMap<DeferredKey, DeferredDefinition>();
-        for (DeferredKey key : source.keys()) copy.put(key, source.find(key).orElseThrow(
-                () -> new IllegalArgumentException("Deferred registry key has no definition: " + key)));
+        Map<DeferredKey, DeferredDefinition> copy =
+                new LinkedHashMap<DeferredKey, DeferredDefinition>();
+        for (DeferredKey key : source.keys()) {
+            DeferredKey nonNullKey = Objects.requireNonNull(
+                    key,
+                    "deferred contains null key");
+            DeferredDefinition definition = source.find(nonNullKey).orElseThrow(
+                    () -> new IllegalArgumentException(
+                            "Deferred registry key has no definition: " + nonNullKey));
+            // DeferredKey 同时冻结 owner、kind 和 ordinal，禁止 Map key 与值身份分裂。
+            if (!nonNullKey.equals(definition.key())) {
+                throw new IllegalArgumentException(
+                        "Deferred registry identity mismatch: map key="
+                                + nonNullKey
+                                + ", definition key="
+                                + definition.key());
+            }
+            copy.put(nonNullKey, definition);
+        }
         return new ImmutableDeferredRegistry(copy);
     }
 
-    public Registry<DefinitionKey, CompiledDefinition> definitions() { return definitions; }
-    public DeferredRegistry deferred() { return deferred; }
-    public List<Diagnostic> diagnostics() { return diagnostics; }
-    public DigestPair digestPair() { return digestPair; }
-    public String compilerVersion() { return compilerVersion; }
-    public String schemaVersion() { return schemaVersion; }
-    public String optionsVersion() { return optionsVersion; }
+    private static List<Diagnostic> immutablePublishedDiagnostics(
+            List<Diagnostic> values) {
+        Objects.requireNonNull(values, "diagnostics");
+        List<Diagnostic> copy = new ArrayList<Diagnostic>(values.size());
+        for (Diagnostic diagnostic : values) {
+            Diagnostic nonNullDiagnostic = Objects.requireNonNull(
+                    diagnostic,
+                    "diagnostics contains null");
+            // CompiledModelSet 代表可发布聚合，任何 ERROR 都必须在构造前阻断。
+            if (nonNullDiagnostic.severity() == DiagnosticSeverity.ERROR) {
+                throw new IllegalArgumentException(
+                        "CompiledModelSet must not contain ERROR diagnostic: "
+                                + nonNullDiagnostic.code().code());
+            }
+            copy.add(nonNullDiagnostic);
+        }
+        Collections.sort(copy);
+        return Collections.unmodifiableList(copy);
+    }
 
-    @Override public boolean equals(Object other) {
-        if (this == other) return true;
-        if (!(other instanceof CompiledModelSet)) return false;
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof CompiledModelSet)) {
+            return false;
+        }
         CompiledModelSet that = (CompiledModelSet) other;
-        return definitions.equals(that.definitions) && deferred.equals(that.deferred)
-                && diagnostics.equals(that.diagnostics) && digestPair.equals(that.digestPair)
-                && compilerVersion.equals(that.compilerVersion) && schemaVersion.equals(that.schemaVersion)
+        return sourceManifest.equals(that.sourceManifest)
+                && definitions.equals(that.definitions)
+                && typedRegistries.equals(that.typedRegistries)
+                && deferred.equals(that.deferred)
+                && diagnostics.equals(that.diagnostics)
+                && digestPair.equals(that.digestPair)
+                && compilerVersion.equals(that.compilerVersion)
+                && schemaVersion.equals(that.schemaVersion)
                 && optionsVersion.equals(that.optionsVersion);
     }
-    @Override public int hashCode() { return Objects.hash(definitions, deferred, diagnostics, digestPair, compilerVersion, schemaVersion, optionsVersion); }
-    @Override public String toString() { return "CompiledModelSet{" + definitions.size() + "," + deferred.size() + "," + digestPair + "}"; }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                sourceManifest,
+                definitions,
+                typedRegistries,
+                deferred,
+                diagnostics,
+                digestPair,
+                compilerVersion,
+                schemaVersion,
+                optionsVersion);
+    }
+
+    @Override
+    public String toString() {
+        return "CompiledModelSet{"
+                + "sources=" + sourceManifest.sources().size()
+                + ", definitions=" + definitions.size()
+                + ", deferred=" + deferred.size()
+                + ", digestPair=" + digestPair
+                + '}';
+    }
 }
