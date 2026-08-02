@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_red_evidence",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I003",
+  "revision": "TDD-P1-T03-R03@d5b42e9eb166",
+  "head_sha": "d5b42e9eb166f8adc67e6e871e6089fdbb7e6e53",
+  "p0_run_id": 30739308832,
+  "artifact_id": 8830723761,
+  "artifact_sha256": "70ebc53fa4bc19f077f50242193f15a5f08f6c458dcaeac884f2f5a6b282f641",
+  "java_release": 8,
+  "production_compile": "PASSED",
+  "test_compile": "PASSED",
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_compiler_tests": {"run": 68, "failures": 0, "errors": 0, "skipped": 0},
+  "new_rework_oracle": {"run": 6, "passed": 1, "failures": 5, "errors": 0, "skipped": 0},
+  "green_contracts": [
+    "CRLF and CR documents already preserve all seven start-tag line, column and nodePath values"
+  ],
+  "red_reasons": [
+    "current-directory-only references canonicalize to an empty key",
+    "empty root key leaks SourceRef IllegalArgumentException before policy classification",
+    "opaque percent-encoded current-directory segment is not canonicalized",
+    "canonical-only Provider lookup and encoded duplicate detection fail",
+    "encoded equivalent cycle is not recognized by the canonical ancestor identity"
+  ],
+  "class_or_method_missing": false,
+  "fixture_missing": false,
+  "result": "PASSED_VALID_RED",
+  "review_id": "REV-000164",
+  "evidence_id": "EVD-000405"
+}
