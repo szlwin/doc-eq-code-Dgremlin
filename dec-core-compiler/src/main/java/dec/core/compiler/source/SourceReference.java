@@ -84,6 +84,7 @@ public final class SourceReference {
      * 规范 hierarchical URI 或相对路径，同时保留 authority、query 和 fragment。
      */
     private static String canonicalHierarchical(URI uri) {
+        boolean originallyAbsolute = uri.isAbsolute();
         StringBuilder result = new StringBuilder();
         if (uri.getScheme() != null) {
             result.append(uri.getScheme().toLowerCase(Locale.ROOT)).append(':');
@@ -99,7 +100,28 @@ public final class SourceReference {
         if (uri.getRawFragment() != null) {
             result.append('#').append(uri.getRawFragment());
         }
-        return result.toString();
+        return preserveReferenceCategory(result.toString(), originallyAbsolute);
+    }
+
+    /**
+     * 保持 canonicalization 前后的 URI 相对或绝对类别一致。
+     *
+     * <p>相对引用删除前导点段后，首个剩余 segment 可能包含冒号并被
+     * {@link URI} 重新解释为 scheme。此时重新添加 {@code ./}，让
+     * SourcePolicy 仍能把原始相对引用作为非绝对 URI 在 Provider 前拒绝。</p>
+     */
+    private static String preserveReferenceCategory(
+            String canonical,
+            boolean originallyAbsolute) {
+        URI canonicalUri = URI.create(canonical);
+        if (canonicalUri.isAbsolute() == originallyAbsolute) {
+            return canonical;
+        }
+        if (!originallyAbsolute) {
+            return "./" + canonical;
+        }
+        throw new IllegalArgumentException(
+                "canonicalization changed absolute URI category");
     }
 
     /**
