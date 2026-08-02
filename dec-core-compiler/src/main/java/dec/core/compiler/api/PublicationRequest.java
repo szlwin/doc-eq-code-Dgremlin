@@ -65,7 +65,7 @@ public final class PublicationRequest {
     public String toString() {
         return "PublicationRequest{"
                 + "expectedCurrent=" + expectedCurrent
-                + ", publisher=" + publisher.getClass().getName()
+                + ", publisher=" + publisher
                 + '}';
     }
 }
