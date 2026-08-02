@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "completion_verification_report",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I002",
+  "revision": "COMPLETION-P1-T02-R02@8847b3c7dfac",
+  "input_revisions": {
+    "business_model": "BM-R05@4ecb1f8c09f4",
+    "context_completion": "COMPLETION-P1-T01-R04@ee99223a243f",
+    "design": "DESIGN-R09@P1-T02-REWORK-I002",
+    "implementation_plan": "TP-P1-COMPILER-F01-R05@P1-T02-REWORK-I002",
+    "tdd": "TDD-P1-T02-R02@33a00d364088",
+    "architecture_skeleton": "DEVSKEL-P1-T02-R02@881facd9fad2",
+    "development": "DEV-P1-T02-R02@8847b3c7dfac",
+    "code_review": "CODEREVIEW-P1-T02-R02@8847b3c7dfac",
+    "testing": "TESTING-P1-T02-R02@8847b3c7dfac"
+  },
+  "stage_statuses": {
+    "design_revision": "PASSED",
+    "implementation_plan": "PASSED",
+    "tdd": "PASSED",
+    "architecture_skeleton": "PASSED",
+    "development": "PASSED",
+    "code_review": "PASSED",
+    "testing": "PASSED",
+    "completion_verification": "PASSED"
+  },
+  "review_ids": [
+    "REV-000112",
+    "REV-000113",
+    "REV-000114",
+    "REV-000115",
+    "REV-000116",
+    "REV-000117",
+    "REV-000118",
+    "REV-000119",
+    "REV-000120"
+  ],
+  "evidence_ids": [
+    "EVD-000361",
+    "EVD-000362",
+    "EVD-000363",
+    "EVD-000364",
+    "EVD-000365",
+    "EVD-000366"
+  ],
+  "clean_code_head_sha": "8847b3c7dfaca3e5e99030b15f456ff13d9cb5d4",
+  "p0_run_id": 30730762775,
+  "p0_result": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "closed_findings": [
+    "FND-P1-T02-I002-001",
+    "FND-P1-T02-I002-002",
+    "FND-P1-T02-I002-003"
+  ],
+  "open_p0_p1_findings": [],
+  "database_change": false,
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "task_status": "PASSED",
+  "current_pr": 17,
+  "superseded_pr": 15,
+  "next_task": "TASK-P1-T03",
+  "next_task_started": false,
+  "claim_boundary": "TASK-P1-T02 I002 only; TASK-P1-T03 is not started or claimed.",
+  "review_id": "REV-000120",
+  "reviewer": "CompletionVerificationAgent",
+  "evidence_id": "EVD-000366",
+  "result": "PASSED"
+}

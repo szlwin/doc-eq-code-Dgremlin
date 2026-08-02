@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_review_report",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I004",
+  "revision": "TDD-P1-T02-R04@b0502ee13dba",
+  "input_revisions": {
+    "business_model": "BM-R05@4ecb1f8c09f4",
+    "base_design": "DESIGN-R05@0b37a9b4dd48",
+    "api_contract": "DEC_COMPILER_api_contract.md",
+    "session_design": "DESIGN-R10@P1-T02-REWORK-I003",
+    "design": "DESIGN-R11@P1-T02-REWORK-I004",
+    "implementation_plan": "TP-P1-COMPILER-F01-R07@P1-T02-REWORK-I004",
+    "context_completion": "COMPLETION-P1-T01-R04@ee99223a243f"
+  },
+  "head_sha": "b0502ee13dbae7d5065e78494c75ee679927d01e",
+  "p0_run_id": 30733257810,
+  "compile": {
+    "java_release": 8,
+    "context_production_sources": 102,
+    "compiler_production_sources": 31,
+    "compiler_test_sources": 7,
+    "result": "PASSED"
+  },
+  "context_regression": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "existing_compiler_tests": {
+    "run": 20,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "new_contract_tests": {
+    "class": "CompilerSourceFrontendClosureContractR04Test",
+    "run": 4,
+    "failures": 4,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": [
+      "DocumentSource lacks the complete URI/format/AllowedRoot constructor and accessors",
+      "CanonicalDocumentNode is missing",
+      "FrontendStatus and Canonical FrontendResult closure are missing",
+      "Provider to Frontend to Canonical flow cannot use DocumentSource.format"
+    ]
+  },
+  "valid_red": true,
+  "review_id": "REV-000129",
+  "reviewer": "TDDReviewAgent",
+  "evidence_id": "EVD-000373",
+  "result": "PASSED"
+}

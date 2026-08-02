@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_skeleton_summary",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I005",
+  "revision": "DEVSKEL-P1-T02-R05@2bda34e6eed1",
+  "input_revisions": {
+    "design": "DESIGN-R12@P1-T02-REWORK-I005",
+    "implementation_plan": "TP-P1-COMPILER-F01-R08@P1-T02-REWORK-I005",
+    "tdd": "TDD-P1-T02-R05@0e2924d4f125"
+  },
+  "head_sha": "2bda34e6eed1a394833781db9719d4fc923a9957",
+  "p0_run_id": 30734683602,
+  "artifact_id": 8829139311,
+  "java_release": 8,
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 43,
+    "failures": 4,
+    "errors": 0,
+    "skipped": 0
+  },
+  "established_contracts": [
+    "resolvedSingle(DocumentSource,List<Diagnostic>)",
+    "resolvedFileSet(List<DocumentSource>,List<Diagnostic>)",
+    "validateSingle(SourceReference,SourceResolutionResult)",
+    "validateFileSet(SourceReference,SourceResolutionResult)",
+    "ambiguous resolved(List,List) removed",
+    "file-set sourceId duplicate rejection skeleton complete"
+  ],
+  "controlled_red": [
+    "AllowedRoot original traversal rejection",
+    "AllowedRoot opaque URI query rejection",
+    "validateSingle Architecture skeleton only",
+    "validateFileSet Architecture skeleton only"
+  ],
+  "evidence_id": "EVD-000380",
+  "result": "PASSED"
+}

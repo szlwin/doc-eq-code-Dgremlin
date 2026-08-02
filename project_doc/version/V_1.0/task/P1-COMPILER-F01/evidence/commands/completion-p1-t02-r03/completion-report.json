@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "kind": "completion_verification_report",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I003",
+  "revision": "COMPLETION-P1-T02-R03@122ffc28165f",
+  "input_revisions": {
+    "business_model": "BM-R05@4ecb1f8c09f4",
+    "base_design": "DESIGN-R05@0b37a9b4dd48",
+    "api_contract": "DEC_COMPILER_api_contract.md",
+    "context_completion": "COMPLETION-P1-T01-R04@ee99223a243f",
+    "design": "DESIGN-R10@P1-T02-REWORK-I003",
+    "implementation_plan": "TP-P1-COMPILER-F01-R06@P1-T02-REWORK-I003",
+    "tdd": "TDD-P1-T02-R03@925b53f4d709",
+    "architecture_skeleton": "DEVSKEL-P1-T02-R03@35d1d76f007d",
+    "development": "DEV-P1-T02-R03@122ffc28165f",
+    "code_review": "CODEREVIEW-P1-T02-R03@122ffc28165f",
+    "testing": "TESTING-P1-T02-R03@122ffc28165f"
+  },
+  "stage_statuses": {
+    "design_revision": "PASSED",
+    "implementation_plan": "PASSED",
+    "tdd": "PASSED",
+    "architecture_skeleton": "PASSED",
+    "development": "PASSED",
+    "code_review": "PASSED",
+    "testing": "PASSED",
+    "completion_verification": "PASSED"
+  },
+  "review_ids": [
+    "REV-000121",
+    "REV-000122",
+    "REV-000123",
+    "REV-000124",
+    "REV-000125",
+    "REV-000126",
+    "REV-000127",
+    "REV-000128"
+  ],
+  "evidence_ids": [
+    "EVD-000367",
+    "EVD-000368",
+    "EVD-000369",
+    "EVD-000370",
+    "EVD-000371",
+    "EVD-000372"
+  ],
+  "clean_code_head_sha": "122ffc28165ff33c5e75955bfbece9a23c6803d7",
+  "p0_run_id": 30732488810,
+  "p0_result": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 20,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "closed_findings": [
+    "FND-P1-T02-I003-001",
+    "FND-P1-T02-I003-002",
+    "FND-P1-T02-I003-003",
+    "FND-P1-T02-I003-004",
+    "FND-P2-T02-I003-005"
+  ],
+  "open_p0_p1_findings": [],
+  "database_change": false,
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "task_status": "PASSED",
+  "current_pr": 17,
+  "superseded_completion": "COMPLETION-P1-T02-R02@8847b3c7dfac",
+  "next_task": "TASK-P1-T03",
+  "next_task_started": false,
+  "claim_boundary": "TASK-P1-T02 I003 only; TASK-P1-T03 is not started or claimed.",
+  "review_id": "REV-000128",
+  "reviewer": "CompletionVerificationAgent",
+  "evidence_id": "EVD-000372",
+  "result": "PASSED"
+}

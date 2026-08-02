@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "testing_command_result",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I005",
+  "revision": "TESTING-P1-T02-R05@35376308b013",
+  "input_revisions": {
+    "development": "DEV-P1-T02-R05@35376308b013",
+    "code_review": "CODEREVIEW-P1-T02-R05@35376308b013"
+  },
+  "tested_head_sha": "35376308b0133344ebddadc1bf45e07c11f7959c",
+  "p0_run_id": 30734789072,
+  "artifact_id": 8829179331,
+  "artifact_sha256": "a86582dce412bbdfcc42ad8bd6d3f1f26a95bc1ff771f32527b63934efdef34e",
+  "maven_wrapper": "PASSED",
+  "legacy_dependency_bootstrap": "PASSED",
+  "core_build_and_tests": "PASSED",
+  "failure_gate_proof": "PASSED",
+  "test_report_upload": "PASSED",
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 47,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_test_distribution": {
+    "CompilerSourcePolicyR05Test": 8,
+    "CompilerSourcePolicyNegativeR05Test": 4,
+    "preexisting_compiler_tests": 35
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "java_release": 8,
+  "intentional_failure_test": {
+    "run": 1,
+    "expected_failures": 1,
+    "gate_result": "PASSED"
+  },
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "review_id": "REV-000143",
+  "reviewer": "TestingAgent",
+  "evidence_id": "EVD-000384",
+  "result": "PASSED"
+}

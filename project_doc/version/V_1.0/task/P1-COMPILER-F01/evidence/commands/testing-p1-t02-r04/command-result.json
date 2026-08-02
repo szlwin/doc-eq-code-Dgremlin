@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "testing_result",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I004",
+  "revision": "TESTING-P1-T02-R04@8b3e716a9730",
+  "tested_head_sha": "8b3e716a9730d12fe84c6efd3fb8481998e335e0",
+  "p0_run_id": 30733616822,
+  "artifact_id": 8828769318,
+  "artifact_sha256": "8febbe6dc80ae1ea00c89bccbf625aec63f147b8ba6cfe935b3c9eb61aab4d70",
+  "toolchain": {
+    "maven_wrapper": "PASSED",
+    "java_runtime": "17.0.19",
+    "maven_compiler_release": 8,
+    "legacy_dependency_bootstrap": "PASSED"
+  },
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 35,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "classes": {
+      "CompilerApiContractTest": 9,
+      "CompilerFullApiBehaviorR03Test": 4,
+      "CompilerFullApiContractR03Test": 4,
+      "CompilerValueSemanticsR03Test": 2,
+      "ModuleDependencyTest": 1,
+      "PublishedFactIdentityTest": 1,
+      "CompilerSourceFrontendClosureContractR04Test": 4,
+      "CompilerSourceFrontendClosureBehaviorR04Test": 4,
+      "CompilerSourceResolutionBehaviorR04Test": 3,
+      "CompilerSourceSecurityR04Test": 2,
+      "CompilerFrontendIsolationR04Test": 1
+    }
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "review_ids": ["REV-000135", "REV-000136"],
+  "reviewers": ["TDDReviewAgent", "TestEvidenceReviewAgent"],
+  "evidence_id": "EVD-000377",
+  "result": "PASSED"
+}
