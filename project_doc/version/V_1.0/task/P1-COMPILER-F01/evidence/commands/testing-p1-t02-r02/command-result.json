@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "testing_result",
+  "task_id": "TASK-P1-T02",
+  "iteration": "I002",
+  "revision": "TESTING-P1-T02-R02@8847b3c7dfac",
+  "tested_head_sha": "8847b3c7dfaca3e5e99030b15f456ff13d9cb5d4",
+  "p0_run_id": 30730762775,
+  "toolchain": {
+    "maven_wrapper": "PASSED",
+    "java_runtime": "17.0.19",
+    "maven_compiler_release": 8,
+    "legacy_dependency_bootstrap": "PASSED"
+  },
+  "context_tests": {
+    "run": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "compiler_tests": {
+    "run": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "classes": [
+      "CompilerApiContractTest",
+      "ModuleDependencyTest",
+      "PublishedFactIdentityTest"
+    ]
+  },
+  "reactor_modules": 12,
+  "reactor_result": "PASSED",
+  "failure_gate_proof": "PASSED",
+  "mysql_job": "SKIPPED_NOT_APPLICABLE",
+  "review_ids": ["REV-000118", "REV-000119"],
+  "reviewers": ["TDDReviewAgent", "TestEvidenceReviewAgent"],
+  "evidence_id": "EVD-000365",
+  "result": "PASSED"
+}
