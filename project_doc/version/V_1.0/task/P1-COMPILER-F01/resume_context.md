@@ -1,26 +1,27 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T03 / I004` REWORK 已完成
+- 当前逻辑任务：`TASK-P1-T03 / I005` REWORK 已完成
 - 历史 Completion R01：`COMPLETION-P1-T03-R01@713848bfa65e`（`REV-000152` 推翻，历史保留）
 - 历史 Completion R02：`COMPLETION-P1-T03-R02@6af43b47f044`（`REV-000163` 推翻，历史保留）
 - 历史 Completion R03：`COMPLETION-P1-T03-R03@cedf22bb14ff`（`REV-000174` 推翻，历史保留）
-- 当前 Completion Revision：`COMPLETION-P1-T03-R04@04bfb86c9bf1`
+- 历史 Completion R04：`COMPLETION-P1-T03-R04@04bfb86c9bf1`（`REV-000185` 推翻，历史保留）
+- 当前 Completion Revision：`COMPLETION-P1-T03-R05@91271c9a1c20`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@370b72f4bf4ec9b3620586f26d13d95f611f3cc9`
-- Rework base：`0a845817c90d201b834df6f581c5461b3ebac880`
-- 当前设计事实：`DESIGN-R16@P1-T03-REWORK-I004` + `DESIGN-R15@P1-T03-REWORK-I003` + `DESIGN-R14@P1-T03-REWORK-I002` + `DESIGN-R13@P1-T03-I001`
+- Rework base：`d41b4553189b4b9e80a7ca92c4acd34e4fc97e42`
+- 当前设计事实：`DESIGN-R17@P1-T03-REWORK-I005` + R16 + R15 + R14 + R13
 - 开放 P0/P1：无
-- Review：`REV-000174`～`REV-000184`
-- Evidence：`EVD-000415`～`EVD-000427`
-- Clean-code Head：`04bfb86c9bf1accf879a729b3ceb04e1eee46f86`
-- 验证 P0 Run：`30740667853`，结果 `PASSED`
-- Artifact：`8831175314`
-- Artifact SHA-256：`af2820e792436d885d24ca91fbae7318445d0d22d64a84fda317e7442fd2ce6f`
+- Review：`REV-000185`～`REV-000195`
+- Evidence：`EVD-000428`～`EVD-000438`
+- Clean-code Head：`91271c9a1c2083c2843b7c2e69bb3570f9155d55`
+- 验证 P0 Run：`30741699603`，结果 `PASSED`
+- Artifact：`8831504648`
+- Artifact SHA-256：`de9e07229c82374a5eb36cc4a5ca4b2c5df0f18e53de582a13b456cd1bc206f7`
 - Context：26 run / 0 failures / 0 errors / 0 skipped
-- Compiler：78 run / 0 failures / 0 errors / 0 skipped
-- I004 专项：4 run / 0 failures / 0 errors / 0 skipped
+- Compiler：83 run / 0 failures / 0 errors / 0 skipped
+- I005 专项：5 run / 0 failures / 0 errors / 0 skipped
 - Reactor：12 modules / PASSED
 - Java release 8：PASSED
 - 故意失败阻断：PASSED
@@ -28,20 +29,20 @@
 - SourceManifest：10 个唯一 Source
 - SourceGraph：7 条真实声明边
 - Provider 调用：8 次
-- canonical 非空：`.`、`./`、`./.` 均为 `.`
-- 绝对编码点段：opaque/hierarchical `%2e/%2E` 与字面量点段统一
-- 相对类别保持：删除前导点段不会把相对 URI 提升为绝对 URI
-- classpath 相对 key：字面量和编码形式均为 `./classpath:mix/orm-config.xml`
-- file 相对 key：字面量和编码形式均为 `./file:/mix/root.xml`
-- 可提升相对根：`MIX_SOURCE_PATH_ESCAPE`、graph empty、Provider access 0
-- Resolver 边界：根 SourceRef、策略验证、Provider 判空和 Discovery 均在受控边界内
-- 安全保留：`%2e%2e`、混合双点、`%2F`、query、fragment 不被隐藏或重分段
-- 身份域：sourceId 与 canonical reference 分离
-- cycle：编码等价引用在递归 Provider 前返回 `MIX_SOURCE_POLICY`
-- declaration origin：LF、CRLF、CR 均直接验证 7 条边的 line、column、nodePath
+- root 元素：只接受 `orm-config`
+- systems 元素：只接受 `systems`
+- root 完整路径：四条冻结路径精确匹配
+- system 完整路径：`/systems/system/rule-file-info/rule-file`
+- suffix matching：已移除
+- wrong-root / wrong-nesting：`MIX_SOURCE_POLICY`、graph empty、只访问 root Provider
+- wrong-systems-root / wrong-system-path：`MIX_SOURCE_POLICY`、graph empty、不访问 rule/business Provider
+- ignored subtree：不创建 Edge、不改变 10 Source / 7 Edge / 8 Provider 调用
+- published nodePath：仅允许五条冻结完整路径
+- 相对 URI 类别保持、Resolver 根受控边界、编码点段和安全证据均保持
+- declaration origin：LF、CRLF、CR 均验证七条边 line、column、nodePath
 - 当前 PR：`#18`，目标 `dev_all`
 - 当前分支：`feature/p1-t03-source-graph-20260802-1430`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r04_completion.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t03_r05_completion.json`
 - 下一 Agent：`ProjectManagerAgent`
 - 下一动作：Review PR #18，并在明确授权后合并；合并后从最新 `dev_all` 启动 `TASK-P1-T04`
 - TASK-P1-T04：未启动且保持阻断
