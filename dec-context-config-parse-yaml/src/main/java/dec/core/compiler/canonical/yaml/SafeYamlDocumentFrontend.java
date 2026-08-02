@@ -148,7 +148,6 @@ public final class SafeYamlDocumentFrontend implements DocumentFrontend {
                 limits.maxAliasesForCollections());
         options.setNestingDepthLimit(limits.maxNestingDepth());
         options.setCodePointLimit(limits.maxCodePoints());
-        options.setMergeOnCompose(false);
         options.setTagInspector(new UnTrustedTagInspector());
         return options;
     }
