@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -160,6 +162,44 @@ public final class CoreConfigProjection {
             return values.size();
         }
 
+        /**
+         * 返回继续保持 Projection 写入拒绝语义的防御性子列表快照。
+         */
+        @Override
+        public List<E> subList(int fromIndex, int toIndex) {
+            return new ProjectionReadOnlyList<E>(
+                    projectionName + ".subList",
+                    values.subList(fromIndex, toIndex));
+        }
+
+        /**
+         * 返回受控 Iterator，避免空列表 remove 先抛出普通状态异常。
+         */
+        @Override
+        public Iterator<E> iterator() {
+            return new ProjectionReadOnlyListIterator<E>(
+                    projectionName + ".iterator",
+                    values.listIterator());
+        }
+
+        /**
+         * 返回从起点开始的受控 ListIterator。
+         */
+        @Override
+        public ListIterator<E> listIterator() {
+            return listIterator(0);
+        }
+
+        /**
+         * 返回指定位置开始的受控 ListIterator，并保留标准索引校验。
+         */
+        @Override
+        public ListIterator<E> listIterator(int index) {
+            return new ProjectionReadOnlyListIterator<E>(
+                    projectionName + ".listIterator",
+                    values.listIterator(index));
+        }
+
         @Override
         public E set(int index, E element) {
             throw rejected("set");
@@ -231,6 +271,80 @@ public final class CoreConfigProjection {
         private ProjectionWriteRejectedException rejected(String operation) {
             return new ProjectionWriteRejectedException(
                     projectionName + "." + operation);
+        }
+    }
+
+    /**
+     * 冻结 Iterator/ListIterator 的公共结构；写入拒绝在 Development 阶段完成。
+     */
+    private static final class ProjectionReadOnlyListIterator<E>
+            implements ListIterator<E> {
+        private final String operationPrefix;
+        private final ListIterator<E> delegate;
+
+        private ProjectionReadOnlyListIterator(
+                String operationPrefix,
+                ListIterator<E> delegate) {
+            this.operationPrefix = Objects.requireNonNull(
+                    operationPrefix,
+                    "operationPrefix");
+            this.delegate = Objects.requireNonNull(delegate, "delegate");
+        }
+
+        @Override
+        public boolean hasNext() {
+            return delegate.hasNext();
+        }
+
+        @Override
+        public E next() {
+            return delegate.next();
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return delegate.hasPrevious();
+        }
+
+        @Override
+        public E previous() {
+            return delegate.previous();
+        }
+
+        @Override
+        public int nextIndex() {
+            return delegate.nextIndex();
+        }
+
+        @Override
+        public int previousIndex() {
+            return delegate.previousIndex();
+        }
+
+        @Override
+        public void remove() {
+            throw architectureSkeleton("remove");
+        }
+
+        @Override
+        public void set(E element) {
+            throw architectureSkeleton("set");
+        }
+
+        @Override
+        public void add(E element) {
+            throw architectureSkeleton("add");
+        }
+
+        /**
+         * 显式标记架构骨架尚未完成，禁止返回伪成功。
+         */
+        private UnsupportedOperationException architectureSkeleton(String operation) {
+            return new UnsupportedOperationException(
+                    "Architecture skeleton only: "
+                            + operationPrefix
+                            + "."
+                            + operation);
         }
     }
 
