@@ -1,7 +1,6 @@
 package dec.core.compiler.source;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.context.model.SourceRef;
@@ -22,7 +21,7 @@ class SourceReferenceIdentityReviewTest {
         SourceTestFixture.InMemoryProvider provider =
                 SourceTestFixture.providerFromClasspath(
                         "main-fixture/",
-                        SourceTestFixture.FileSetOrder.NATURAL);
+                        SourceTestFixture.FileSetOrder.FORWARD);
         SourceGraphResolutionResult result = new MixSourceResolver().resolve(
                 new SourceReference(SourceTestFixture.ROOT),
                 provider,
@@ -64,14 +63,15 @@ class SourceReferenceIdentityReviewTest {
         assertTrue(query.value().contains("?variant=1"));
 
         SourceTestFixture.InMemoryProvider provider =
-                SourceTestFixture.provider(SourceTestFixture.FileSetOrder.NATURAL);
+                SourceTestFixture.provider(SourceTestFixture.FileSetOrder.FORWARD);
+        int accessCountBefore = provider.accessCount();
         assertEquals(
                 SourceGraphResolutionStatus.FAILED,
                 new MixSourceResolver().resolve(
                         traversal,
                         provider,
                         SourceTestFixture.policy()).status());
-        assertFalse(provider.accesses().contains(traversal.value()));
+        assertEquals(accessCountBefore, provider.accessCount());
     }
 
     /**
