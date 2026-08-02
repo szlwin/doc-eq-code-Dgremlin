@@ -147,8 +147,13 @@ public final class CompilationRequest {
     public String toString() {
         return "CompilationRequest{"
                 + "root=" + root
+                + ", sourceProvider=" + sourceProvider
+                + ", frontends=" + frontends
                 + ", options=" + options
                 + ", deadline=" + deadline
+                + ", cancellationToken=" + cancellationToken
+                + ", clock=" + clock
+                + ", observer=" + observer
                 + '}';
     }
 }
