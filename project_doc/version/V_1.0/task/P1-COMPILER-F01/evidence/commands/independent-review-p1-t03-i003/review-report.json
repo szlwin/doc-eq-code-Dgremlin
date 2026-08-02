@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "kind": "independent_review_report",
+  "task_id": "TASK-P1-T03",
+  "iteration": "I003",
+  "review_id": "REV-000163",
+  "reviewed_head_sha": "4f218f5dbf329949b8f7b3d7396668919482d198",
+  "reviewed_completion": "COMPLETION-P1-T03-R02@6af43b47f044",
+  "result": "NEEDS_CHANGES",
+  "findings": [
+    {
+      "id": "FND-P1-T03-I003-001",
+      "severity": "P1",
+      "status": "OPEN",
+      "title": "Current-directory-only references canonicalize to an empty key"
+    },
+    {
+      "id": "FND-P1-T03-I003-002",
+      "severity": "P1",
+      "status": "OPEN",
+      "title": "Percent-encoded current-directory segment is not canonicalized"
+    },
+    {
+      "id": "FND-P1-T03-I003-003",
+      "severity": "P2",
+      "status": "OPEN",
+      "title": "CRLF and CR declaration location support lacks direct executable evidence"
+    }
+  ],
+  "confirmed_closed_previous_findings": {
+    "literal_dot_segment": true,
+    "source_id_reference_identity_separation": true,
+    "pre_provider_cycle_detection": true,
+    "exact_declaration_start_position": true
+  },
+  "confirmed_existing_contracts": {
+    "source_count": 10,
+    "edge_count": 7,
+    "fileset_does_not_create_edges": true,
+    "provider_contract_defense": true,
+    "source_policy_security": true,
+    "failed_result_has_partial_graph": false,
+    "context_production_changed": false,
+    "t04_started": false
+  },
+  "gate": "REWORK_REQUIRED",
+  "previous_completion_status": "STALE_BY_REVIEW",
+  "evidence_id": "EVD-000404"
+}
