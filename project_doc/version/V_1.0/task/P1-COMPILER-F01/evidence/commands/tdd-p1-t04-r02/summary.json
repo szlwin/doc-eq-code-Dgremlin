@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "tdd_red_evidence",
+  "task_id": "TASK-P1-T04",
+  "iteration": "I002",
+  "revision": "TDD-P1-T04-R02@e2033f2b249e",
+  "review_id": "REV-000210",
+  "evidence_id": "EVD-000454",
+  "input_revisions": {
+    "independent_review": "REV-000207",
+    "design": "DESIGN-R19@P1-T04-REWORK-I002",
+    "implementation_plan": "TP-P1-COMPILER-F01-R15@P1-T04-REWORK-I002"
+  },
+  "head_sha": "e2033f2b249ef8067f4ff0b1908ab808bd2f37a2",
+  "p0_run_id": 30745207949,
+  "artifact_id": 8832642225,
+  "artifact_sha256": "72d42e0ccce9ee88e108a9e6a0054bfe30c728c5e23da9002e18fd977f10a427",
+  "java_release": 8,
+  "context_tests": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+  "compiler_tests": {"run": 83, "failures": 0, "errors": 0, "skipped": 0},
+  "existing_xml_tests": {"run": 18, "failures": 0, "errors": 0, "skipped": 0},
+  "new_resource_limit_oracles": {
+    "run": 8,
+    "expected_failures": 8,
+    "errors": 0,
+    "failure_reason": "XmlFrontendLimits and the injectable limits constructor did not yet exist"
+  },
+  "oracle_scope": [
+    "document byte limit",
+    "element depth limit",
+    "node count limit",
+    "cumulative nodePath character limit",
+    "attributes per element limit",
+    "direct text per element limit",
+    "cumulative direct text limit",
+    "within-limit success boundary",
+    "text-CDATA-text ordering",
+    "descendant schemaVersion propagation",
+    "null source and null options stable failure"
+  ],
+  "valid_red": true,
+  "result": "PASSED"
+}
