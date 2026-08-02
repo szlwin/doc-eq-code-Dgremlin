@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 final class XmlFrontendTestSupport {
     private static final String FRONTEND_CLASS =
             "dec.core.compiler.canonical.xml.SecureXmlDocumentFrontend";
+    private static final String LIMITS_CLASS =
+            "dec.core.compiler.canonical.xml.XmlFrontendLimits";
 
     private XmlFrontendTestSupport() {
         throw new AssertionError("No instances");
@@ -29,12 +31,7 @@ final class XmlFrontendTestSupport {
     static FrontendHarness frontend() {
         try {
             AtomicInteger attempts = new AtomicInteger();
-            Consumer<String> observer = new Consumer<String>() {
-                @Override
-                public void accept(String location) {
-                    attempts.incrementAndGet();
-                }
-            };
+            Consumer<String> observer = observer(attempts);
             Class<?> type = Class.forName(FRONTEND_CLASS);
             Constructor<?> constructor = type.getDeclaredConstructor(Consumer.class);
             constructor.setAccessible(true);
@@ -45,6 +42,66 @@ final class XmlFrontendTestSupport {
                     "T04 secure XML Frontend must exist with the probe constructor",
                     failure);
         }
+    }
+
+    /**
+     * 使用小型可注入预算构造 Frontend，避免通过真实 OOM 验证资源门禁。
+     */
+    static FrontendHarness frontendWithLimits(
+            int maxDocumentBytes,
+            int maxElementDepth,
+            int maxNodeCount,
+            long maxCumulativeNodePathChars,
+            int maxAttributesPerElement,
+            int maxDirectTextCharsPerElement,
+            long maxCumulativeDirectTextChars) {
+        try {
+            AtomicInteger attempts = new AtomicInteger();
+            Consumer<String> observer = observer(attempts);
+            Class<?> frontendType = Class.forName(FRONTEND_CLASS);
+            Class<?> limitsType = Class.forName(LIMITS_CLASS);
+            Constructor<?> limitsConstructor = limitsType.getDeclaredConstructor(
+                    int.class,
+                    int.class,
+                    int.class,
+                    long.class,
+                    int.class,
+                    int.class,
+                    long.class);
+            limitsConstructor.setAccessible(true);
+            Object limits = limitsConstructor.newInstance(
+                    maxDocumentBytes,
+                    maxElementDepth,
+                    maxNodeCount,
+                    maxCumulativeNodePathChars,
+                    maxAttributesPerElement,
+                    maxDirectTextCharsPerElement,
+                    maxCumulativeDirectTextChars);
+            Constructor<?> frontendConstructor = frontendType.getDeclaredConstructor(
+                    Consumer.class,
+                    limitsType);
+            frontendConstructor.setAccessible(true);
+            DocumentFrontend frontend = (DocumentFrontend) frontendConstructor.newInstance(
+                    observer,
+                    limits);
+            return new FrontendHarness(frontend, attempts);
+        } catch (ReflectiveOperationException failure) {
+            throw new AssertionError(
+                    "T04 XML resource limits and injectable constructor must exist",
+                    failure);
+        }
+    }
+
+    /**
+     * 创建只记录外部资源解析尝试次数的测试探针。
+     */
+    private static Consumer<String> observer(final AtomicInteger attempts) {
+        return new Consumer<String>() {
+            @Override
+            public void accept(String location) {
+                attempts.incrementAndGet();
+            }
+        };
     }
 
     /**
@@ -73,7 +130,17 @@ final class XmlFrontendTestSupport {
      * 使用固定 schemaVersion 执行一次解析。
      */
     static FrontendResult parse(FrontendHarness harness, DocumentSource source) {
-        return harness.frontend().parse(source, new FrontendOptions("1.0"));
+        return parse(harness, source, new FrontendOptions("1.0"));
+    }
+
+    /**
+     * 使用显式 FrontendOptions 执行一次解析，支持 null 选项负向 Oracle。
+     */
+    static FrontendResult parse(
+            FrontendHarness harness,
+            DocumentSource source,
+            FrontendOptions options) {
+        return harness.frontend().parse(source, options);
     }
 
     /**
