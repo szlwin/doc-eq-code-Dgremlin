@@ -1,33 +1,34 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T06 / I003` 已完成
+- 当前逻辑任务：`TASK-P1-T06 / I004` 已完成
 - Dependency Completion：`COMPLETION-P1-T05-R03@30529276cd8f`
-- 历史 Completion：`COMPLETION-P1-T06-R01@90d483290cf3`、`COMPLETION-P1-T06-R02@aec3cd105b15`，均被后续独立 Review 推翻并不可变保留
-- 当前 Completion Revision：`COMPLETION-P1-T06-R03@432ccdc1103f`
+- 历史 Completion：R01、R02、R03 均被后续独立 Review 推翻并不可变保留
+- 当前 Completion Revision：`COMPLETION-P1-T06-R04@242db638c61d`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@17ce0834b947a75ff3ccbd24c7b1332fb93e8941`
-- Rework Base：`3884f331dd066da1ff556f9b0544716d7ca3502c`
-- Design：`DESIGN-R25@P1-T06-REWORK-I003`
-- Plan：`TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003`
-- TDD：`TDD-P1-T06-R03@ea1701deb923`
-- Architecture Skeleton：`DEVSKEL-P1-T06-R03@35357c213fdc`
-- Development：`DEV-P1-T06-R03@432ccdc1103f`
-- Code Review：`CODEREVIEW-P1-T06-R03@432ccdc1103f`
-- Testing：`TESTING-P1-T06-R03@432ccdc1103f`
-- Review：`REV-000283`～`REV-000295`
-- Evidence：`EVD-000525`～`EVD-000537`
-- Finding：`FND-P1-T06-I003-001` CLOSED
+- Rework Base：`36b223e0f50fe090031b499366eb6ff5844b05d3`
+- Design：`DESIGN-R26@P1-T06-REWORK-I004`
+- Plan：`TP-P1-COMPILER-F01-R22@P1-T06-REWORK-I004`
+- TDD：`TDD-P1-T06-R04@e2e41dac48fe`
+- Architecture Skeleton：`DEVSKEL-P1-T06-R04@2d78c2290498`
+- Development：`DEV-P1-T06-R04@242db638c61d`
+- Code Review：`CODEREVIEW-P1-T06-R04@242db638c61d`
+- Testing：`TESTING-P1-T06-R04@242db638c61d`
+- Review：`REV-000296`～`REV-000308`
+- Evidence：`EVD-000538`～`EVD-000550`
+- Finding：`FND-P1-T06-I004-001` CLOSED；I003 与 I002 Findings 保持 CLOSED
 - 开放 P0/P1/P2：无
-- Clean-code Head：`432ccdc1103f0119230858e7ae2343529af6c294`
-- P0 Run：`30801214669`，结果 `PASSED`
-- Artifact：`8850875201`
-- Artifact SHA-256：`eadc28a2db03ff23405869712aefa84398cf1b9b37f9408b20d348af67d783b7`
-- Artifact 独立校验：实际 ZIP SHA-256 与 GitHub digest 一致；55 个 Surefire XML 已解析
+- Clean-code Head：`242db638c61d58eb70e452c1ac08668b6d738b0a`
+- P0 Run：`30810370900`，结果 `PASSED`
+- Artifact：`8854512655`
+- Artifact SHA-256：`4472e3cd084eadc18e6b47af19738f9f227834d0a5217caac29b0529ee1aeb33`
+- Artifact 独立校验：实际 ZIP SHA-256 与 GitHub digest 一致；56 个 Surefire XML 已解析
+- I004 snapshot budget：8/8
 - I003 snapshot：7/7
-- T06 Raw：38/38
-- Compiler total：121/121
+- T06 Raw：46/46
+- Compiler total：129/129
 - XML：30/30
 - YAML：59/59
 - Context 正常测试：26/26
@@ -37,19 +38,22 @@
 - Reactor：12 modules / PASSED
 - Java release 8：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- Revision Lock：R25 `6715d7b217e01801f5ff1c26ba67c34c8e65f39d`；R21 `9293a04977f80b3e1ffa7499cdbc1e4081ca9a1c`
-- Revision Integrity：R25/R21 在 RED 前创建，clean-code Head 复核 blob 不变
-- 输入边界：调用方 List 只迭代一次，复制结果逐项校验并冻结为不可变 snapshot
-- 两阶段：validate、extract、ordinal 和失败定位只消费同一 snapshot
-- 异常边界：snapshot 读取 RuntimeException 返回 `raw.build.failed`，不再次访问原始 List，不发布部分集合
-- Grammar：unsupported root/unknown child 无法通过批次变化绕过验证
-- 上一轮 I002 五项 Finding：保持 CLOSED
-- Scope：未修改 Context、Source Graph、Canonical API、XML/YAML Frontend 生产代码
+- Revision Lock：R26 `d970a04534306fd6e02e0c26ec43947a8375bb61`；R22 `5028129d2b43dd0ae9ed2679240a656ec5ab4a92`
+- Revision Integrity：R26/R22 在 RED 前创建，clean-code Head 复核 blob 不变
+- Snapshot 分配：每个文档加入 ArrayList 前先执行 `maxCanonicalNodeCount` 硬上限
+- SourceRef：第 N+1 个超限文档是 `raw.limit.node-count` 的精确位置
+- Iterator：达到限制后立即退出，不请求后续文档；调用方 List 只创建一次 iterator
+- List 入口：不调用 size/isEmpty/get/toArray/stream/parallelStream/spliterator
+- 完整树预算：后续 ValidationBudget 保持不变，继续检查所有根和后代节点
+- 两阶段：validate、extract、ordinal 和失败定位只消费同一不可变 snapshot
+- Failure：任何 snapshot/验证失败均不发布部分 RawDefinitionSet
+- Scope：未修改 RawBuilderLimits 生产值、Context、Source Graph、Canonical API、XML/YAML Frontend 生产代码
+- 临时 Workflow：已删除，未作为有效证据
 - 未启动：TypedKey、SymbolTable、引用解析、Deferred、Pipeline、Digest、Publication、TASK-P1-T07
 - 当前 PR：`#21`，目标 `dev_all`
 - 当前分支：`feature/p1-t06-raw-definition-20260803-1334`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t06-r03/completion-report.json`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t06_r03_completion.json`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t06-r04/completion-report.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t06_r04_completion.json`
 - 下一 Agent：`IndependentReviewAgent`
 - 下一动作：复核最新 PR #21；仅在用户明确授权后合并；合并后才能从最新 `dev_all` 启动 `TASK-P1-T07`
 - TASK-P1-T07：未启动且保持阻断
