@@ -29,7 +29,7 @@ import java.util.TreeMap;
  * 将 T06 RawDefinitionSet 转换为强类型 SymbolTable 的无状态 Builder。
  *
  * <p>Builder 先登记顶层和 owner TypedKey，再在同一不可变 RawDefinitionSet 上
- * 登记 Information 与 Produce。只有两遍全部成功后才发布完整 SymbolTable。</p>
+ * 登记 Information 与 Produce。只有两遍全部完成且无错误时才发布完整表。</p>
  */
 public final class SymbolTableBuilder {
     private static final String PASS = "symbol-registration";
@@ -77,9 +77,7 @@ public final class SymbolTableBuilder {
 
         RegistrationState state = new RegistrationState();
         firstPass(ordered, state);
-        if (state.diagnostics.isEmpty()) {
-            secondPass(ordered, state);
-        }
+        secondPass(ordered, state);
         if (!state.diagnostics.isEmpty()) {
             return failed(state.diagnostics);
         }
@@ -165,7 +163,7 @@ public final class SymbolTableBuilder {
                 case MODEL_ACCESS:
                     break;
                 default:
-                    state.diagnostics.add(ownerDiagnostic(definition));
+                    addDiagnostic(state, ownerDiagnostic(definition));
                     break;
             }
         }
@@ -226,7 +224,7 @@ public final class SymbolTableBuilder {
                             state);
                     break;
                 default:
-                    state.diagnostics.add(ownerDiagnostic(definition));
+                    addDiagnostic(state, ownerDiagnostic(definition));
                     break;
             }
         }
@@ -263,7 +261,7 @@ public final class SymbolTableBuilder {
         }
         long ordinal = definition.sourceOrdinal();
         if (ordinal < 0 || ordinal > Integer.MAX_VALUE) {
-            state.diagnostics.add(singleDiagnostic(
+            addDiagnostic(state, singleDiagnostic(
                     DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
                     "symbol.source-ordinal.out-of-range",
                     null,
@@ -285,7 +283,7 @@ public final class SymbolTableBuilder {
             RegistrationState state) {
         DefinitionKey key = state.keysByOrdinal.get(definition.sourceOrdinal());
         if (!expectedType.isInstance(key)) {
-            state.diagnostics.add(ownerDiagnostic(definition));
+            addDiagnostic(state, ownerDiagnostic(definition));
             return null;
         }
         return expectedType.cast(key);
@@ -314,7 +312,7 @@ public final class SymbolTableBuilder {
         if (expectedOwner == null
                 || !definition.ownerToken().isPresent()
                 || !expectedOwner.equals(definition.ownerToken().get())) {
-            state.diagnostics.add(ownerDiagnostic(definition));
+            addDiagnostic(state, ownerDiagnostic(definition));
             return false;
         }
         return true;
@@ -329,7 +327,7 @@ public final class SymbolTableBuilder {
             RegistrationState state) {
         RawDefinition first = state.entries.get(key);
         if (first != null) {
-            state.diagnostics.add(duplicateDiagnostic(
+            addDiagnostic(state, duplicateDiagnostic(
                     key,
                     first,
                     definition));
@@ -337,6 +335,17 @@ public final class SymbolTableBuilder {
             state.entries.put(key, definition);
         }
         state.keysByOrdinal.put(definition.sourceOrdinal(), key);
+    }
+
+    /**
+     * 向当前调用的 Diagnostic 集合加入新事实，并去除完全相同的重复诊断。
+     */
+    private static void addDiagnostic(
+            RegistrationState state,
+            Diagnostic diagnostic) {
+        if (!state.diagnostics.contains(diagnostic)) {
+            state.diagnostics.add(diagnostic);
+        }
     }
 
     /**
