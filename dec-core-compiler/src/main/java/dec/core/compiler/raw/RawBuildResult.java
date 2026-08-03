@@ -1,6 +1,8 @@
 package dec.core.compiler.raw;
 
 import dec.core.context.model.Diagnostic;
+import dec.core.context.model.DiagnosticCode;
+import dec.core.context.model.DiagnosticSeverity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.Optional;
  * RawDefinitionSet 成功结果或稳定失败 Diagnostic 的不可变边界。
  */
 public final class RawBuildResult {
+    private static final String RAW_BUILDER_PASS = "raw-definition-builder";
+
     private final RawBuildStatus status;
     private final Optional<RawDefinitionSet> rawDefinitionSet;
     private final List<Diagnostic> diagnostics;
@@ -32,6 +36,9 @@ public final class RawBuildResult {
                 && (rawDefinitionSet.isPresent() || this.diagnostics.isEmpty())) {
             throw new IllegalArgumentException("FAILED result contract violated");
         }
+        if (status == RawBuildStatus.FAILED) {
+            requireFailedDiagnostics(this.diagnostics);
+        }
     }
 
     /**
@@ -45,7 +52,7 @@ public final class RawBuildResult {
     }
 
     /**
-     * 创建不携带部分集合、Diagnostic 已稳定排序的失败结果。
+     * 创建不携带部分集合且严格符合 Raw Builder 失败合同的结果。
      */
     public static RawBuildResult failed(List<Diagnostic> diagnostics) {
         return new RawBuildResult(
@@ -89,6 +96,26 @@ public final class RawBuildResult {
         }
         Collections.sort(copy);
         return Collections.unmodifiableList(copy);
+    }
+
+    /**
+     * 强制 FAILED 结果只携带 Raw Build 冻结的 ERROR Diagnostic。
+     */
+    private static void requireFailedDiagnostics(List<Diagnostic> diagnostics) {
+        for (Diagnostic diagnostic : diagnostics) {
+            if (diagnostic.code() != DiagnosticCode.MIX_STRUCTURE_UNKNOWN) {
+                throw new IllegalArgumentException(
+                        "FAILED diagnostic code must be MIX_STRUCTURE_UNKNOWN");
+            }
+            if (diagnostic.severity() != DiagnosticSeverity.ERROR) {
+                throw new IllegalArgumentException(
+                        "FAILED diagnostic severity must be ERROR");
+            }
+            if (!RAW_BUILDER_PASS.equals(diagnostic.pass())) {
+                throw new IllegalArgumentException(
+                        "FAILED diagnostic pass must be " + RAW_BUILDER_PASS);
+            }
+        }
     }
 
     @Override
