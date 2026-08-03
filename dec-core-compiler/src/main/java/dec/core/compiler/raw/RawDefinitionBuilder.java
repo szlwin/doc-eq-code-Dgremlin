@@ -19,8 +19,8 @@ import java.util.Set;
 /**
  * 将 Canonical 文档转换为 RawDefinitionSet 的无状态 Builder。
  *
- * <p>Builder 先验证整批文档的结构和必填 lexical 事实，只有全部通过后才提取并
- * 冻结 RawDefinitionSet。任何失败都只返回 Diagnostic，不暴露部分集合。</p>
+ * <p>Builder 先验证整批文档的结构、资源边界和必填 lexical 事实，只有全部通过后
+ * 才提取并冻结 RawDefinitionSet。任何失败都只返回 Diagnostic，不暴露部分集合。</p>
  */
 public final class RawDefinitionBuilder {
     private static final String PASS = "raw-definition-builder";
@@ -54,10 +54,22 @@ public final class RawDefinitionBuilder {
     private static final Map<String, Set<String>> BUSINESS_GRAMMAR =
             businessGrammar();
 
+    private final RawBuilderLimits limits;
+
     /**
-     * 创建无跨调用可变状态的 Builder。
+     * 创建使用 Design R24 冻结生产预算的无状态 Builder。
      */
     public RawDefinitionBuilder() {
+        this(RawBuilderLimits.production());
+    }
+
+    /**
+     * 创建使用显式小型预算的同包测试 Builder。
+     *
+     * @param limits Canonical 输入深度与节点数预算
+     */
+    RawDefinitionBuilder(RawBuilderLimits limits) {
+        this.limits = Objects.requireNonNull(limits, "limits");
     }
 
     /**
@@ -91,10 +103,11 @@ public final class RawDefinitionBuilder {
     /**
      * 第一阶段验证全部输入，避免边验证边发布部分 RawDefinition。
      */
-    private static void validateDocuments(List<CanonicalDocumentNode> documents) {
+    private void validateDocuments(List<CanonicalDocumentNode> documents) {
         if (documents == null || documents.isEmpty()) {
             throw failure("raw.input.required", UNKNOWN_SOURCE);
         }
+        ValidationBudget budget = new ValidationBudget(limits);
         for (CanonicalDocumentNode document : documents) {
             if (document == null) {
                 throw failure("raw.document.required", UNKNOWN_SOURCE);
@@ -105,19 +118,29 @@ public final class RawDefinitionBuilder {
                         "raw.document.root.unsupported",
                         document.sourceRef());
             }
-            validateNode(document.name(), document, grammar, null);
+            validateNode(
+                    document.name(),
+                    document,
+                    grammar,
+                    null,
+                    1,
+                    budget);
         }
     }
 
     /**
-     * 递归校验父子白名单，并在同一遍历中校验定义必填 lexical 事实。
+     * 递归校验资源、父子白名单和全部 lexical 事实。
      */
     private static void validateNode(
             String rootName,
             CanonicalDocumentNode node,
             Map<String, Set<String>> grammar,
-            CanonicalDocumentNode parent) {
+            CanonicalDocumentNode parent,
+            int depth,
+            ValidationBudget budget) {
+        budget.reserve(node, depth);
         validateDefinitionFacts(rootName, node, parent);
+        validateReferenceFacts(node);
         Set<String> allowedChildren = grammar.get(node.name());
         if (allowedChildren == null) {
             throw failure("raw.structure.unknown", node.sourceRef());
@@ -126,7 +149,13 @@ public final class RawDefinitionBuilder {
             if (!allowedChildren.contains(child.name())) {
                 throw failure("raw.structure.unknown", child.sourceRef());
             }
-            validateNode(rootName, child, grammar, node);
+            validateNode(
+                    rootName,
+                    child,
+                    grammar,
+                    node,
+                    depth + 1,
+                    budget);
         }
     }
 
@@ -171,6 +200,23 @@ public final class RawDefinitionBuilder {
                 && (parent == null
                 || !"rule-view-info".equals(parent.name()))) {
             throw failure("raw.definition.owner.required", node.sourceRef());
+        }
+    }
+
+    /**
+     * 第一阶段验证当前节点声明的全部未解析 reference target。
+     */
+    private static void validateReferenceFacts(CanonicalDocumentNode node) {
+        for (Map.Entry<String, String> entry : node.attributes().entrySet()) {
+            if (!isReferenceAttribute(entry.getKey())) {
+                continue;
+            }
+            String target = entry.getValue();
+            if (target == null || target.trim().isEmpty()) {
+                throw failure(
+                        "raw.reference.target.required",
+                        node.sourceRef());
+            }
         }
     }
 
@@ -226,7 +272,7 @@ public final class RawDefinitionBuilder {
     }
 
     /**
-     * 按 R23 冻结规则返回定义 owner lexical token。
+     * 按 R24 冻结规则返回未经规范化的 owner lexical token。
      */
     private static Optional<String> ownerToken(
             RawDefinitionKind kind,
@@ -273,7 +319,7 @@ public final class RawDefinitionBuilder {
     }
 
     /**
-     * 按 Kind 从冻结属性中读取 definition name。
+     * 按 Kind 从冻结属性中读取未经规范化的 definition name。
      */
     private static Optional<String> definitionName(
             RawDefinitionKind kind,
@@ -443,18 +489,18 @@ public final class RawDefinitionBuilder {
     }
 
     /**
-     * 读取必填属性；空白属性与缺失属性使用同一稳定失败边界。
+     * 读取必填属性；只用 trim 判断空白并返回原始 lexical token。
      */
     private static String attribute(CanonicalDocumentNode node, String name) {
         String value = node.attributes().get(name);
         if (value == null || value.trim().isEmpty()) {
             throw failure("raw.definition.attribute.required", node.sourceRef());
         }
-        return value.trim();
+        return value;
     }
 
     /**
-     * 读取可选属性并规范化空白。
+     * 读取可选属性；纯空白视为 absent，其他值保持原始 lexical token。
      */
     private static Optional<String> optionalAttribute(
             CanonicalDocumentNode node,
@@ -463,11 +509,11 @@ public final class RawDefinitionBuilder {
         if (value == null || value.trim().isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(value.trim());
+        return Optional.of(value);
     }
 
     /**
-     * 使用指定 messageKey 校验属性存在。
+     * 使用指定 messageKey 校验属性存在，验证阶段不改变原值。
      */
     private static void requireAttribute(
             CanonicalDocumentNode node,
@@ -479,6 +525,9 @@ public final class RawDefinitionBuilder {
         }
     }
 
+    /**
+     * 将必填 owner 上下文转换为保留原值的 Optional。
+     */
     private static Optional<String> requiredOptional(
             String value,
             CanonicalDocumentNode node,
@@ -489,6 +538,9 @@ public final class RawDefinitionBuilder {
         return Optional.of(value);
     }
 
+    /**
+     * 读取必填 owner 上下文并保留原始 lexical token。
+     */
     private static String required(String value, CanonicalDocumentNode node) {
         if (value == null || value.trim().isEmpty()) {
             throw failure("raw.definition.owner.required", node.sourceRef());
@@ -508,7 +560,7 @@ public final class RawDefinitionBuilder {
                 null,
                 stableRef,
                 Collections.<SourceRef>emptyList(),
-                "请修复 Canonical 结构或补齐 RawDefinition 必填 lexical 事实",
+                "请修复 Canonical 结构、资源边界或 RawDefinition lexical 事实",
                 PASS);
         return RawBuildResult.failed(Collections.singletonList(diagnostic));
     }
@@ -638,6 +690,31 @@ public final class RawDefinitionBuilder {
     }
 
     /**
+     * 单次验证使用的节点与深度预算。
+     */
+    private static final class ValidationBudget {
+        private final RawBuilderLimits limits;
+        private int nodeCount;
+
+        private ValidationBudget(RawBuilderLimits limits) {
+            this.limits = limits;
+        }
+
+        /**
+         * 在进入节点的其他递归逻辑前预留深度和节点数。
+         */
+        private void reserve(CanonicalDocumentNode node, int depth) {
+            if (depth > limits.maxCanonicalDepth()) {
+                throw failure("raw.limit.depth", node.sourceRef());
+            }
+            if (nodeCount >= limits.maxCanonicalNodeCount()) {
+                throw failure("raw.limit.node-count", node.sourceRef());
+            }
+            nodeCount++;
+        }
+    }
+
+    /**
      * 单次构建的连续 ordinal 计数器，只存在于 build 调用栈内。
      */
     private static final class Ordinal {
@@ -682,7 +759,7 @@ public final class RawDefinitionBuilder {
         }
 
         /**
-         * 进入当前节点并冻结后代所需 owner lexical token。
+         * 进入当前节点并冻结后代所需的原始 owner lexical token。
          */
         private LexicalContext enter(
                 String rootName,
@@ -730,6 +807,8 @@ public final class RawDefinitionBuilder {
      * 内部受控失败，只保存稳定 messageKey 和 SourceRef。
      */
     private static final class RawBuildFailure extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+
         private final String messageKey;
         private final SourceRef sourceRef;
 
