@@ -1,82 +1,84 @@
 # P1-COMPILER-F01 阶段交接
 
-> T01、T02、T03 已合并到 `dev_all`。T03 当前有效 Completion 为 `COMPLETION-P1-T03-R05@91271c9a1c20`，T04 基线为 `dev_all@df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`。T04 I001 的 Completion R01 已被 `REV-000207` 推翻并作为不可变历史保留；当前有效 iteration 为 `TASK-P1-T04 / I002`。
+> T01～T04 已合并到 `dev_all`。T04 当前有效 Completion 为 `COMPLETION-P1-T04-R02@0699c6bc2ed4`，merge / T05 base 为 `09edf814bdf0800e7e9633545ca743200169b377`。T05 I001、I002 Completion 已被后续独立 Review 推翻并作为不可变历史保留；当前有效任务为 `TASK-P1-T05 / I003`。
 
 ## 已合并前置任务
 
 - T01：`COMPLETION-P1-T01-R04@ee99223a243f`，merge `f88f45731e16868bfacb489b63e3086aae49d018`；
 - T02：`COMPLETION-P1-T02-R05@35376308b013`，merge `370b72f4bf4ec9b3620586f26d13d95f611f3cc9`；
-- T03：`COMPLETION-P1-T03-R05@91271c9a1c20`，merge `df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`。
+- T03：`COMPLETION-P1-T03-R05@91271c9a1c20`，merge `df5e8c057d9aa8e3e477c54325bc476e7fdc5bee`；
+- T04：`COMPLETION-P1-T04-R02@0699c6bc2ed4`，merge `09edf814bdf0800e7e9633545ca743200169b377`。
 
-## T04 历史 Revision
+## T05 历史 Revision
 
-- I001：`COMPLETION-P1-T04-R01@ba472906c719`；
-- 推翻 Review：`REV-000207`；
-- 状态：不可变历史，不能作为当前 Completion 或 T05 前置输入。
+- I001 Completion：`COMPLETION-P1-T05-R01@040f09b80463`，被 `REV-000231` 推翻；
+- I002 Completion：`COMPLETION-P1-T05-R02@27d566714f5c`，被 `REV-000244` 推翻；
+- R20/R21、R16/R17、R01/R02 及全部 Review/Evidence 均保留，不能作为当前 Completion 或 T06 前置输入。
 
-## T04 I002（当前有效）
+## T05 I003（当前有效）
 
-- Design：`DESIGN-R19@P1-T04-REWORK-I002`；
-- Plan：`TP-P1-COMPILER-F01-R15@P1-T04-REWORK-I002`；
-- TDD：`TDD-P1-T04-R02@e2033f2b249e`；
-- Architecture Skeleton：`DEVSKEL-P1-T04-R02@710d114248d0`；
-- Development：`DEV-P1-T04-R02@0699c6bc2ed4`；
-- Code Review：`CODEREVIEW-P1-T04-R02@0699c6bc2ed4`；
-- Testing：`TESTING-P1-T04-R02@0699c6bc2ed4`；
-- Completion：`COMPLETION-P1-T04-R02@0699c6bc2ed4`；
-- Review：`REV-000207`～`REV-000219`；
-- Evidence：`EVD-000451`～`EVD-000463`；
-- Clean-code Head：`0699c6bc2ed41100c3a4538b76a691b7757f683b`；
-- P0 Run：`30748395446`；
-- Artifact：`8833627854`；
-- Artifact SHA-256：`a7a7703c706e8bb3cadafb74366e13131ea63a37dd3bbf7f9446b3608ed7c97a`；
-- Context：26/26；Compiler：83/83；XML T04：30/30；Demo：4/4；
-- XML 资源预算专项：12/12；
+- Design：`DESIGN-R22@P1-T05-REWORK-I003`；
+- Plan：`TP-P1-COMPILER-F01-R18@P1-T05-REWORK-I003`；
+- TDD：`TDD-P1-T05-R03@3deacf0aa036`；
+- Architecture Skeleton：`DEVSKEL-P1-T05-R03@05873e286c2d`；
+- Development：`DEV-P1-T05-R03@30529276cd8f`；
+- Code Review：`CODEREVIEW-P1-T05-R03@30529276cd8f`；
+- Testing：`TESTING-P1-T05-R03@30529276cd8f`；
+- Completion：`COMPLETION-P1-T05-R03@30529276cd8f`；
+- Review：`REV-000244`～`REV-000256`；
+- Evidence：`EVD-000487`～`EVD-000498`；
+- Clean-code Head：`30529276cd8fa35e0eeeafb1256b85cb99820afb`；
+- P0 Run：`30756293074`；
+- Artifact：`8836020099`；
+- Artifact SHA-256：`3362ee5de19129f0a819bb1587e42552077618f7bf43b3011e15540ec0bcd688`；
+- YAML 59/59；XML 30/30；Compiler 83/83；Context 正常测试 26/26；Demo 4/4；legacy declaration 1/1；
 - 12 模块 Reactor、Java release 8、故意失败门禁：PASSED；
 - MySQL：`SKIPPED_NOT_APPLICABLE`；
-- 开放 P0/P1：无。
+- 开放 P0/P1/P2：无。
 
-## 当前 XML 资源安全合同
+## Revision Integrity
 
-生产 `XmlFrontendLimits` 冻结：
+- R22 first commit：`ab9ca21cf668aba03f030129022458bbd46304fc`；
+- R22 blob：`b8ffb41226866b0854def9d4ce12a6c68c150b3b`；
+- R18 first commit：`a2283a8661210e0ebda26a67fad05a60d770a89b`；
+- R18 blob：`26adb13c7192e5f7419c59acf445bf8b56b6ceb7`；
+- R22/R18 在 I003 RED 前创建，clean-code Head复核 blob 不变；
+- I003 未修改 R21/R17/R02 历史。
 
-- `maxDocumentBytes = 1,048,576`；
-- `maxElementDepth = 256`；
-- `maxNodeCount = 65,536`；
-- `maxCumulativeNodePathChars = 4,194,304`；
-- `maxAttributesPerElement = 256`；
-- `maxDirectTextCharsPerElement = 262,144`；
-- `maxCumulativeDirectTextChars = 1,048,576`。
+## I003 Scalar 合同
 
-执行边界：
+- 原始 scalar 值只读取一次；
+- 未经 trim 的单值长度门禁先于任何 Resolver regex、timestamp 语义或数值派生；
+- 单值预算与最终 Canonical 累计预算分离；
+- 普通 scalar、`#text`、属性 value 和 Sequence item共享同一入口；
+- bool/int/float/null/timestamp 直接使用 SnakeYAML 2.2 `Resolver` 公开 Pattern；
+- 不复制数字接受正则，不构造 `BigDecimal` / `BigInteger`；
+- timestamp 在官方 Pattern 后校验真实日期、时间和时区范围；
+- `1e3`、`1.2e3`、显式 `!!float 1e3` 四位置通过；
+- 显式 `!!int 0b_`、`0x_`、`0_` 四位置失败；
+- 超限合法和非法 typed scalar均优先返回 `yaml.frontend.limit.scalar-per-node`；
+- 失败保持 `FAILED / MIX_FRONTEND_YAML_UNSAFE / empty root`。
 
-- 文档字节在 reader 创建前检查；
-- START_ELEMENT 的深度、节点、属性和路径预算在 SourceRef、Map、NodeBuilder 分配前检查；
-- nodePath 只基于父路径进行一次拼接，不再遍历祖先栈；
-- 文本预算在 StringBuilder 追加前检查；
-- 计数溢出按预算失败；最大深度同时约束后续递归值操作；
-- 超限统一返回 `FAILED`、`MIX_FRONTEND_XML_UNSAFE`、空 root、外部访问 0；
-- 不捕获 `OutOfMemoryError`，不使用真实 OOM 测试。
+## 保持的安全与 Canonical 合同
 
-## Canonical 与 XML 安全合同
-
-- 元素和属性使用 local-name，属性稳定排序，子节点保持文档顺序；
-- 普通文本与 CDATA 按文档顺序拼接并 trim；
-- schemaVersion 传递给根、子节点和孙节点；
-- SourceRef 指向 start tag `<`，nodePath 为完整 local-name 路径，LF/CRLF/CR 已验证；
-- null source、null options、错误格式和 malformed XML 稳定失败且无部分 root；
-- DOCTYPE、通用实体、参数实体和外部 schema 均拒绝；
-- `xsi:schemaLocation` 与 `xsi:noNamespaceSchemaLocation` 立即失败；
-- 网络、文件和 schema 外部访问为 0，XInclude 只作为数据保留。
+- 原始 byte[] 严格 UTF-8 decoder，malformed/unmappable 均 REPORT；
+- 根、子节点和属性名使用 `[A-Za-z_][A-Za-z0-9._-]*`；
+- nodePath 无路径分隔符或换行歧义；
+- `SafeConstructor + composeAll`，不调用 `load` / `loadAs`；
+- Java/object/local/custom、binary/set/omap/pairs tag拒绝；
+- anchor、alias、共享/递归图、merge、duplicate/complex key拒绝；
+- 单 Mapping root、`@attributes`、`#text`、Sequence 重复子节点映射不变；
+- 属性排序、子节点顺序、schemaVersion 和一基 SourceRef不变；
+- R20 生产预算值不变，累计计数继续溢出安全；
+- 不捕获 `OutOfMemoryError`，不使用真实 OOM 或耗时阈值测试。
 
 ## 架构、PR 与下一步
 
-- XML 模块单向依赖 compiler canonical API；未修改 compiler canonical 公共 API；
-- 未修改 `dec-core-context` 生产代码；
-- 未实现 YAML Frontend、RawDefinitionSet、Symbol 或 Pipeline；
-- 当前 PR：`#19`，分支 `feature/p1-t04-xml-canonical-20260802-1744`，目标 `dev_all`；
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t04-r02/completion-report.json`；
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t04_r02_completion.json`；
-- 所有 `@Override` 独占一行，方法、构造器及关键逻辑使用中文注释；
-- 未经明确授权不得合并 PR #19；
-- PR #19 合并前 `TASK-P1-T05` 保持未启动和阻断。
+- YAML 模块单向依赖 compiler canonical API；
+- 未修改 `dec-core-context` 生产代码、compiler canonical 公共 API或 XML Frontend；
+- 当前 PR：`#20`，分支 `feature/p1-t05-yaml-canonical-20260802-2106`，目标 `dev_all`；
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t05-r03/completion-report.json`；
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t05_r03_completion.json`；
+- `@Override` 独占一行，方法、构造器及关键逻辑使用中文注释；
+- 未经明确授权不得合并 PR #20；
+- PR #20 合并前 `TASK-P1-T06` 保持未启动和阻断。

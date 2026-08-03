@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "kind": "revision_integrity_lock",
+  "task_id": "TASK-P1-T05",
+  "iteration": "I003",
+  "review_id": "REV-000244",
+  "evidence_id": "EVD-000487",
+  "rework_base_sha": "499b977a773da3e25b776d4debf7abb1391b5192",
+  "design": {
+    "revision": "DESIGN-R22@P1-T05-REWORK-I003",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R22_t05_yaml_scalar_budget_resolver_rework.md",
+    "first_commit_sha": "ab9ca21cf668aba03f030129022458bbd46304fc",
+    "blob_sha": "b8ffb41226866b0854def9d4ce12a6c68c150b3b"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R18@P1-T05-REWORK-I003",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R18_t05_yaml_scalar_budget_resolver_rework.md",
+    "first_commit_sha": "a2283a8661210e0ebda26a67fad05a60d770a89b",
+    "blob_sha": "26adb13c7192e5f7419c59acf445bf8b56b6ceb7"
+  },
+  "resolver_source": {
+    "repository": "snakeyaml/snakeyaml",
+    "version": "2.2",
+    "release_commit_sha": "a34989252e6f59e36a3aaf788a903b7a37a73d33",
+    "path": "src/main/java/org/yaml/snakeyaml/resolver/Resolver.java",
+    "blob_sha": "b641960b3669991b555159fd85ce2fba42f76f53"
+  },
+  "rules": {
+    "design_may_change": false,
+    "plan_may_change": false,
+    "new_revision_required_on_contract_change": true,
+    "verify_at_clean_code_head": true,
+    "verify_at_final_documented_head": true
+  },
+  "status": "LOCKED_BEFORE_TDD"
+}
