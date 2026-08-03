@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T06",
+  "iteration": "I001",
+  "dependency_completion": "COMPLETION-P1-T05-R03@30529276cd8f",
+  "base_branch": "dev_all",
+  "base_sha": "17ce0834b947a75ff3ccbd24c7b1332fb93e8941",
+  "design": {
+    "revision": "DESIGN-R23@P1-T06-I001",
+    "first_commit_sha": "8a6cadfbb35f82820dd077a44033c6ba179ad77c",
+    "blob_sha": "f7eb09ff6291c3f84bb93ace88a6d301d9ef73ad",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R23_t06_raw_definition_set.md"
+  },
+  "implementation_plan": {
+    "revision": "TP-P1-COMPILER-F01-R19@P1-T06-I001",
+    "first_commit_sha": "5bab7c508e27762d306d672fd925f2c743fbd245",
+    "blob_sha": "e5e65b495ffe01c8265061d975f2264d31b761e7",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R19_t06_raw_definition_set.md"
+  },
+  "locked_before_tdd": true,
+  "core_contract_change_requires_new_revision": true,
+  "t05_history_mutated": false
+}
