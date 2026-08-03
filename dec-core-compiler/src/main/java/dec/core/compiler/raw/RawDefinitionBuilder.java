@@ -98,20 +98,33 @@ public final class RawDefinitionBuilder {
         } catch (RawBuildFailure failure) {
             return failed(failure.messageKey(), failure.sourceRef());
         } catch (RuntimeException failure) {
-            return failed("raw.build.failed", firstSourceRef(snapshot));
+            return failed("raw.build.failed", firstSourceRef(documents));
         }
     }
 
     /**
-     * 单次读取调用方输入并冻结验证与提取共享的批次快照。
+     * 单次遍历调用方输入，为验证与提取建立共享批次副本。
      *
-     * <p>I003 Architecture Skeleton 先固定调用位置、共享变量与失败路径；
-     * 具体复制算法在 Development 阶段实现。</p>
+     * <p>I003 Skeleton 已冻结单遍历和同一批次消费主线；失败定位仍保留原入口访问，
+     * 由受控 RED 证明后在 Development 阶段关闭。</p>
      */
     private static List<CanonicalDocumentNode> snapshotDocuments(
             List<CanonicalDocumentNode> documents) {
-        throw new UnsupportedOperationException(
-                "TASK-P1-T06 I003 snapshot implementation pending");
+        if (documents == null) {
+            throw failure("raw.input.required", UNKNOWN_SOURCE);
+        }
+        List<CanonicalDocumentNode> snapshot =
+                new ArrayList<CanonicalDocumentNode>();
+        for (CanonicalDocumentNode document : documents) {
+            if (document == null) {
+                throw failure("raw.document.required", UNKNOWN_SOURCE);
+            }
+            snapshot.add(document);
+        }
+        if (snapshot.isEmpty()) {
+            throw failure("raw.input.required", UNKNOWN_SOURCE);
+        }
+        return snapshot;
     }
 
     /**
