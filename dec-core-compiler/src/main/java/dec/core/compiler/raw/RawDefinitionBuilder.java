@@ -98,15 +98,15 @@ public final class RawDefinitionBuilder {
         } catch (RawBuildFailure failure) {
             return failed(failure.messageKey(), failure.sourceRef());
         } catch (RuntimeException failure) {
-            return failed("raw.build.failed", firstSourceRef(documents));
+            return failed("raw.build.failed", firstSourceRef(snapshot));
         }
     }
 
     /**
-     * 单次遍历调用方输入，为验证与提取建立共享批次副本。
+     * 单次遍历调用方输入，冻结验证与提取共享的不可变批次快照。
      *
-     * <p>I003 Skeleton 已冻结单遍历和同一批次消费主线；失败定位仍保留原入口访问，
-     * 由受控 RED 证明后在 Development 阶段关闭。</p>
+     * <p>方法不调用原始 List 的 size、isEmpty 或 get；迭代完成后只返回不可变副本，
+     * 后续验证、提取、ordinal 和失败定位均不得再次访问调用方容器。</p>
      */
     private static List<CanonicalDocumentNode> snapshotDocuments(
             List<CanonicalDocumentNode> documents) {
@@ -124,7 +124,7 @@ public final class RawDefinitionBuilder {
         if (snapshot.isEmpty()) {
             throw failure("raw.input.required", UNKNOWN_SOURCE);
         }
-        return snapshot;
+        return Collections.unmodifiableList(snapshot);
     }
 
     /**
@@ -623,6 +623,9 @@ public final class RawDefinitionBuilder {
         return RawBuildResult.failed(Collections.singletonList(diagnostic));
     }
 
+    /**
+     * 只从已经冻结的局部快照读取稳定失败位置。
+     */
     private static SourceRef firstSourceRef(
             List<CanonicalDocumentNode> documents) {
         return documents != null
