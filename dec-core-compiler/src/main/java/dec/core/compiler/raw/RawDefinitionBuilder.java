@@ -79,12 +79,14 @@ public final class RawDefinitionBuilder {
      * @return BUILT 或不携带部分集合的 FAILED 结果
      */
     public RawBuildResult build(List<CanonicalDocumentNode> documents) {
+        List<CanonicalDocumentNode> snapshot = null;
         try {
-            validateDocuments(documents);
+            snapshot = snapshotDocuments(documents);
+            validateDocuments(snapshot);
             List<RawDefinition> definitions =
                     new ArrayList<RawDefinition>();
             Ordinal ordinal = new Ordinal();
-            for (CanonicalDocumentNode document : documents) {
+            for (CanonicalDocumentNode document : snapshot) {
                 extractDefinitions(
                         document.name(),
                         document,
@@ -96,8 +98,20 @@ public final class RawDefinitionBuilder {
         } catch (RawBuildFailure failure) {
             return failed(failure.messageKey(), failure.sourceRef());
         } catch (RuntimeException failure) {
-            return failed("raw.build.failed", firstSourceRef(documents));
+            return failed("raw.build.failed", firstSourceRef(snapshot));
         }
+    }
+
+    /**
+     * 单次读取调用方输入并冻结验证与提取共享的批次快照。
+     *
+     * <p>I003 Architecture Skeleton 先固定调用位置、共享变量与失败路径；
+     * 具体复制算法在 Development 阶段实现。</p>
+     */
+    private static List<CanonicalDocumentNode> snapshotDocuments(
+            List<CanonicalDocumentNode> documents) {
+        throw new UnsupportedOperationException(
+                "TASK-P1-T06 I003 snapshot implementation pending");
     }
 
     /**
