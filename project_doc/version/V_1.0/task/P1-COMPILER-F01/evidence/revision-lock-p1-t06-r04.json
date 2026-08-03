@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P1-T06",
+  "iteration": "I004",
+  "design_revision": "DESIGN-R26@P1-T06-REWORK-I004",
+  "design_first_commit": "06ca3ed8241f2f2cd337c852504e5c9912a86b1e",
+  "design_blob": "d970a04534306fd6e02e0c26ec43947a8375bb61",
+  "plan_revision": "TP-P1-COMPILER-F01-R22@P1-T06-REWORK-I004",
+  "plan_first_commit": "4dfe138fe613837bf4fc7797ef47d9242f733762",
+  "plan_blob": "5028129d2b43dd0ae9ed2679240a656ec5ab4a92",
+  "red_head": "e2e41dac48fe3ccef948efb333443de81d3466ca",
+  "skeleton_revision": "DEVSKEL-P1-T06-R04@2d78c2290498",
+  "clean_code_head": "242db638c61d58eb70e452c1ac08668b6d738b0a",
+  "verified_unchanged_at_clean_code_head": true
+}
