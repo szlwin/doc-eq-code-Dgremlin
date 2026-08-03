@@ -22,13 +22,12 @@ jobs:
 
       - name: Package repository source
         run: |
-          tar --exclude=.git --exclude='t08-source-snapshot.tar.gz' \
-            -czf t08-source-snapshot.tar.gz .
+          tar --exclude=.git -czf /tmp/t08-source-snapshot.tar.gz .
 
       - name: Upload repository source
         uses: actions/upload-artifact@v6
         with:
           name: t08-source-snapshot
-          path: t08-source-snapshot.tar.gz
+          path: /tmp/t08-source-snapshot.tar.gz
           if-no-files-found: error
           retention-days: 1
