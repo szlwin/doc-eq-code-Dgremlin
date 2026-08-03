@@ -139,8 +139,8 @@ public final class RawDefinitionBuilder {
             int depth,
             ValidationBudget budget) {
         budget.reserve(node, depth);
+        validateReferenceFacts(rootName, node);
         validateDefinitionFacts(rootName, node, parent);
-        validateReferenceFacts(node);
         Set<String> allowedChildren = grammar.get(node.name());
         if (allowedChildren == null) {
             throw failure("raw.structure.unknown", node.sourceRef());
@@ -205,19 +205,42 @@ public final class RawDefinitionBuilder {
 
     /**
      * 第一阶段验证当前节点声明的全部未解析 reference target。
+     *
+     * <p>PRODUCE 的 `ref` 同时承担可选 name；R24 明确纯空白时映射为 absent，
+     * 因此只有该精确位置跳过通用 reference 必填规则。</p>
      */
-    private static void validateReferenceFacts(CanonicalDocumentNode node) {
+    private static void validateReferenceFacts(
+            String rootName,
+            CanonicalDocumentNode node) {
         for (Map.Entry<String, String> entry : node.attributes().entrySet()) {
             if (!isReferenceAttribute(entry.getKey())) {
                 continue;
             }
             String target = entry.getValue();
             if (target == null || target.trim().isEmpty()) {
+                if (isOptionalBlankProduceReference(
+                        rootName,
+                        node,
+                        entry.getKey())) {
+                    continue;
+                }
                 throw failure(
                         "raw.reference.target.required",
                         node.sourceRef());
             }
         }
+    }
+
+    /**
+     * 判断当前空白引用是否为 PRODUCE 可选 `ref` 的精确例外。
+     */
+    private static boolean isOptionalBlankProduceReference(
+            String rootName,
+            CanonicalDocumentNode node,
+            String attributeName) {
+        return "business-config".equals(rootName)
+                && "produce".equals(node.name())
+                && "ref".equals(attributeName);
     }
 
     /**
@@ -361,10 +384,18 @@ public final class RawDefinitionBuilder {
             List<RawReference> references) {
         for (Map.Entry<String, String> entry : current.attributes().entrySet()) {
             if (isReferenceAttribute(entry.getKey())) {
+                String target = entry.getValue();
+                if ((target == null || target.trim().isEmpty())
+                        && isOptionalBlankProduceReference(
+                                rootName,
+                                current,
+                                entry.getKey())) {
+                    continue;
+                }
                 String role = relativePath + "@" + entry.getKey();
                 references.add(new RawReference(
                         role,
-                        entry.getValue(),
+                        target,
                         current.sourceRef()));
             }
         }
