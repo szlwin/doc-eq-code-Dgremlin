@@ -131,7 +131,6 @@ public final class SymbolTableBuilder {
                     register(definition, context.systemKey, state);
                     break;
                 case RULE_VIEW:
-                    context.clear();
                     state.deferredRuleViews.add(definition);
                     break;
                 case BUSINESS_SCOPE:
@@ -243,8 +242,6 @@ public final class SymbolTableBuilder {
                 case CONNECTION:
                 case DATA:
                 case VIEW:
-                case RULE_VIEW:
-                case RULE:
                     context.clear();
                     break;
                 case SYSTEM:
@@ -260,6 +257,10 @@ public final class SymbolTableBuilder {
                     break;
                 case INFORMATION:
                     registerInformation(definition, context, state);
+                    break;
+                case RULE_VIEW:
+                case RULE:
+                case MODEL_ACCESS:
                     break;
                 case BUSINESS_SCOPE:
                     BusinessScopeKey scopeKey = keyAtOrdinal(
@@ -297,8 +298,6 @@ public final class SymbolTableBuilder {
                 case PRODUCE:
                     registerProduce(definition, context, state);
                     break;
-                case MODEL_ACCESS:
-                    break;
                 default:
                     addDiagnostic(state, ownerDiagnostic(definition));
                     break;
@@ -314,10 +313,14 @@ public final class SymbolTableBuilder {
             OwnerContext context,
             RegistrationState state) {
         if (context.systemKey == null
-                || !requireOwner(
-                        definition,
-                        context.systemLexicalName,
-                        state)) {
+                || context.systemLexicalName == null) {
+            addDiagnostic(state, ownerDiagnostic(definition));
+            return;
+        }
+        if (!requireOwner(
+                definition,
+                context.systemLexicalName,
+                state)) {
             return;
         }
         register(definition,
