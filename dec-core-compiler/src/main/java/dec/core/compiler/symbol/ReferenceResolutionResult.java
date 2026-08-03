@@ -83,6 +83,32 @@ public final class ReferenceResolutionResult {
         }
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof ReferenceResolutionResult)) {
+            return false;
+        }
+        ReferenceResolutionResult that = (ReferenceResolutionResult) other;
+        return status == that.status
+                && resolvedReferences.equals(that.resolvedReferences)
+                && diagnostics.equals(that.diagnostics);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(status, resolvedReferences, diagnostics);
+    }
+
+    @Override
+    public String toString() {
+        return "ReferenceResolutionResult{" + status
+                + ", references=" + resolvedReferences
+                + ", diagnostics=" + diagnostics + '}';
+    }
+
     /** 防御复制、稳定排序并冻结 Diagnostic。 */
     private static List<Diagnostic> immutableDiagnostics(
             List<Diagnostic> diagnostics) {
