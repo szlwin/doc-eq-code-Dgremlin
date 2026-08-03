@@ -27,6 +27,9 @@ public final class RawDefinition {
 
     /**
      * 冻结一个 RawDefinition 的全部 lexical 与来源事实。
+     *
+     * <p>公开构造器同时强制 R24 的 Kind/owner/name 矩阵，避免调用方绕过
+     * RawDefinitionBuilder 构造下游无法解释的非法状态。</p>
      */
     public RawDefinition(
             RawDefinitionKind kind,
@@ -47,6 +50,7 @@ public final class RawDefinition {
         this.sourceRef = Objects.requireNonNull(sourceRef, "sourceRef");
         this.ownerToken = immutableOptional(ownerToken, "ownerToken");
         this.name = immutableOptional(name, "name");
+        requireKindMatrix(this.kind, this.ownerToken, this.name);
         this.attributes = immutableAttributes(attributes);
         this.references = immutableReferences(references);
         this.body = Objects.requireNonNull(body, "body");
@@ -76,14 +80,14 @@ public final class RawDefinition {
     }
 
     /**
-     * 返回尚未解析的 owner lexical token。
+     * 返回尚未解析且未规范化的 owner lexical token。
      */
     public Optional<String> ownerToken() {
         return ownerToken;
     }
 
     /**
-     * 返回定义名称；允许无显式名称的 PRODUCE 为空。
+     * 返回尚未规范化的定义名称；PRODUCE 允许没有显式名称。
      */
     public Optional<String> name() {
         return name;
@@ -125,7 +129,7 @@ public final class RawDefinition {
     }
 
     /**
-     * 复制可选文本并拒绝 present-but-blank 值。
+     * 复制可选文本；只使用 trim 判断空白，保存时保留原始 lexical token。
      */
     private static Optional<String> immutableOptional(
             Optional<String> value,
@@ -134,6 +138,47 @@ public final class RawDefinition {
         return value.isPresent()
                 ? Optional.of(requireText(value.get(), name))
                 : Optional.<String>empty();
+    }
+
+    /**
+     * 强制 R24 冻结的 14 Kind owner/name 公开构造矩阵。
+     */
+    private static void requireKindMatrix(
+            RawDefinitionKind kind,
+            Optional<String> ownerToken,
+            Optional<String> name) {
+        boolean ownerRequired;
+        boolean nameRequired = kind != RawDefinitionKind.PRODUCE;
+        switch (kind) {
+            case DATA_SOURCE:
+            case CONNECTION:
+            case INFORMATION:
+            case MODEL_ACCESS:
+            case RULE_VIEW:
+            case RULE:
+            case DIRECTORY:
+            case ACTION:
+            case PRODUCE:
+                ownerRequired = true;
+                break;
+            case ROOT_CONFIG:
+            case DATA:
+            case VIEW:
+            case SYSTEM:
+            case BUSINESS_SCOPE:
+                ownerRequired = false;
+                break;
+            default:
+                throw new IllegalStateException("unexpected RawDefinitionKind: " + kind);
+        }
+        if (ownerToken.isPresent() != ownerRequired) {
+            throw new IllegalArgumentException(
+                    "ownerToken contract violated for kind " + kind);
+        }
+        if (nameRequired && !name.isPresent()) {
+            throw new IllegalArgumentException(
+                    "name contract violated for kind " + kind);
+        }
     }
 
     /**
@@ -164,14 +209,14 @@ public final class RawDefinition {
     }
 
     /**
-     * 规范化必填文本并拒绝空白。
+     * 校验必填文本非空白并保留原始 lexical 值。
      */
     private static String requireText(String value, String name) {
-        String normalized = Objects.requireNonNull(value, name).trim();
-        if (normalized.isEmpty()) {
+        String required = Objects.requireNonNull(value, name);
+        if (required.trim().isEmpty()) {
             throw new IllegalArgumentException(name + " must not be blank");
         }
-        return normalized;
+        return required;
     }
 
     @Override
@@ -201,10 +246,22 @@ public final class RawDefinition {
                 attributes, references, body, format, schemaVersion);
     }
 
+    /**
+     * 输出与 equals/hashCode 完全相同的全部语义字段。
+     */
     @Override
     public String toString() {
-        return "RawDefinition{" + kind + "#" + sourceOrdinal
-                + ", owner=" + ownerToken + ", name=" + name
-                + ", sourceRef=" + sourceRef + '}';
+        return "RawDefinition{"
+                + "kind=" + kind
+                + ", sourceOrdinal=" + sourceOrdinal
+                + ", sourceRef=" + sourceRef
+                + ", ownerToken=" + ownerToken
+                + ", name=" + name
+                + ", attributes=" + attributes
+                + ", references=" + references
+                + ", body=" + body
+                + ", format=" + format
+                + ", schemaVersion=" + schemaVersion
+                + '}';
     }
 }
