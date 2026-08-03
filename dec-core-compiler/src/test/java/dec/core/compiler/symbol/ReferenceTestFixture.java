@@ -76,10 +76,10 @@ final class ReferenceTestFixture {
         values.add(view(6, "OtherView", "user", "id"));
         values.add(ruleView(7, "user", "check", "OtherView"));
         values.add(system(8, "user", "user", "UserInfo"));
-        values.add(ruleView(9, "order", "orderOnly", "OtherView"));
-        values.add(system(10, "order", "user", "OtherView"));
-        values.add(definition(RawDefinitionKind.INFORMATION, 11, "user", "active",
+        values.add(definition(RawDefinitionKind.INFORMATION, 9, "user", "active",
                 attrs("name", "active"), refs(), body("information", attrs("name", "active"), ref("systems.xml", 20))));
+        values.add(ruleView(10, "order", "orderOnly", "OtherView"));
+        values.add(system(11, "order", "user", "OtherView"));
         values.add(definition(RawDefinitionKind.BUSINESS_SCOPE, 12, null, "scope",
                 attrs("name", "scope"), refs(), body("business-config", attrs("name", "scope"), ref("business.xml", 1))));
         values.add(directory(13, "scope", "start", "active"));
