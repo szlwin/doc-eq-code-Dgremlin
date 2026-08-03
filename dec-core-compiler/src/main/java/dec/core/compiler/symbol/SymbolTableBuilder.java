@@ -1,7 +1,6 @@
 package dec.core.compiler.symbol;
 
 import dec.core.compiler.raw.RawDefinition;
-import dec.core.compiler.raw.RawDefinitionKind;
 import dec.core.compiler.raw.RawDefinitionSet;
 import dec.core.context.model.ActionKey;
 import dec.core.context.model.BusinessScopeKey;
@@ -29,8 +28,8 @@ import java.util.TreeMap;
 /**
  * 将 T06 RawDefinitionSet 转换为强类型 SymbolTable 的无状态 Builder。
  *
- * <p>Architecture Skeleton 已冻结调用级状态、第一遍 owner 注册、重复诊断和
- * 第二遍接缝；第二遍行为暂时保持受控 RED，待独立 Skeleton Review 通过后实现。</p>
+ * <p>Builder 先登记顶层和 owner TypedKey，再在同一不可变 RawDefinitionSet 上
+ * 登记 Information 与 Produce。只有两遍全部成功后才发布完整 SymbolTable。</p>
  */
 public final class SymbolTableBuilder {
     private static final String PASS = "symbol-registration";
@@ -97,7 +96,7 @@ public final class SymbolTableBuilder {
         for (RawDefinition definition : definitions) {
             switch (definition.kind()) {
                 case ROOT_CONFIG:
-                    context.rootConfigName = requiredName(definition);
+                    context.enterRoot(requiredName(definition));
                     break;
                 case DATA_SOURCE:
                     registerRootOwned(
@@ -114,15 +113,17 @@ public final class SymbolTableBuilder {
                             state);
                     break;
                 case DATA:
+                    context.leaveOwnedDocuments();
                     register(definition,
                             new DataKey(requiredName(definition)), state);
                     break;
                 case VIEW:
+                    context.leaveOwnedDocuments();
                     register(definition,
                             new ViewKey(requiredName(definition)), state);
                     break;
                 case SYSTEM:
-                    context.system = new SystemKey(requiredName(definition));
+                    context.enterSystem(new SystemKey(requiredName(definition)));
                     register(definition, context.system, state);
                     break;
                 case RULE_VIEW:
@@ -136,27 +137,25 @@ public final class SymbolTableBuilder {
                     }
                     break;
                 case BUSINESS_SCOPE:
-                    context.scope = new BusinessScopeKey(requiredName(definition));
-                    context.directory = null;
-                    context.action = null;
+                    context.enterBusinessScope(
+                            new BusinessScopeKey(requiredName(definition)));
                     register(definition, context.scope, state);
                     break;
                 case DIRECTORY:
                     if (requireOwner(definition, context.scope == null
                             ? null : context.scope.name(), state)) {
-                        context.directory = new DirectoryKey(
+                        context.enterDirectory(new DirectoryKey(
                                 context.scope,
-                                requiredName(definition));
-                        context.action = null;
+                                requiredName(definition)));
                         register(definition, context.directory, state);
                     }
                     break;
                 case ACTION:
                     if (requireOwner(definition, context.directory == null
                             ? null : context.directory.name(), state)) {
-                        context.action = new ActionKey(
+                        context.enterAction(new ActionKey(
                                 context.directory,
-                                requiredName(definition));
+                                requiredName(definition)));
                         register(definition, context.action, state);
                     }
                     break;
@@ -173,25 +172,123 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 第二遍接缝将在 GREEN 阶段登记 Information 与 Produce。
-     *
-     * <p>Skeleton 保留显式失败，证明结构存在但行为尚未被伪造为完成。</p>
+     * 第二遍恢复第一遍登记的 owner Key，并登记 Information 与 Produce。
      */
     private static void secondPass(
             List<RawDefinition> definitions,
             RegistrationState state) {
-        SourceRef sourceRef = definitions.isEmpty()
-                ? UNKNOWN_SOURCE
-                : definitions.get(0).sourceRef();
-        state.diagnostics.add(new Diagnostic(
-                DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
-                DiagnosticSeverity.ERROR,
-                "symbol.second-pass.not-implemented",
-                null,
-                sourceRef,
-                Collections.<SourceRef>emptyList(),
-                "请在 Architecture Skeleton Review 通过后实现第二遍注册",
-                PASS));
+        SecondPassContext context = new SecondPassContext();
+        for (RawDefinition definition : definitions) {
+            switch (definition.kind()) {
+                case ROOT_CONFIG:
+                case DATA_SOURCE:
+                case CONNECTION:
+                case DATA:
+                case VIEW:
+                    context.leaveOwnedDocuments();
+                    break;
+                case SYSTEM:
+                    context.enterSystem(keyAtOrdinal(
+                            definition,
+                            SystemKey.class,
+                            state));
+                    break;
+                case INFORMATION:
+                    registerInformation(definition, context.system, state);
+                    break;
+                case RULE_VIEW:
+                case RULE:
+                case MODEL_ACCESS:
+                    break;
+                case BUSINESS_SCOPE:
+                    context.enterBusinessScope(keyAtOrdinal(
+                            definition,
+                            BusinessScopeKey.class,
+                            state));
+                    break;
+                case DIRECTORY:
+                    context.enterDirectory(keyAtOrdinal(
+                            definition,
+                            DirectoryKey.class,
+                            state));
+                    break;
+                case ACTION:
+                    context.enterAction(keyAtOrdinal(
+                            definition,
+                            ActionKey.class,
+                            state));
+                    break;
+                case PRODUCE:
+                    registerProduce(
+                            definition,
+                            context.directory,
+                            context.action,
+                            state);
+                    break;
+                default:
+                    state.diagnostics.add(ownerDiagnostic(definition));
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 在当前 System owner 下登记 InformationKey。
+     */
+    private static void registerInformation(
+            RawDefinition definition,
+            SystemKey system,
+            RegistrationState state) {
+        if (requireOwner(definition,
+                system == null ? null : system.name(), state)) {
+            register(definition,
+                    new InformationKey(system, requiredName(definition)),
+                    state);
+        }
+    }
+
+    /**
+     * 在当前 Action owner 下登记以 sourceOrdinal 区分的 ProduceKey。
+     */
+    private static void registerProduce(
+            RawDefinition definition,
+            DirectoryKey directory,
+            ActionKey action,
+            RegistrationState state) {
+        String expectedOwner = directory == null || action == null
+                ? null
+                : directory.name() + "/" + action.actionName();
+        if (!requireOwner(definition, expectedOwner, state)) {
+            return;
+        }
+        long ordinal = definition.sourceOrdinal();
+        if (ordinal < 0 || ordinal > Integer.MAX_VALUE) {
+            state.diagnostics.add(singleDiagnostic(
+                    DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
+                    "symbol.source-ordinal.out-of-range",
+                    null,
+                    definition.sourceRef(),
+                    Collections.<SourceRef>emptyList()).get(0));
+            return;
+        }
+        register(definition,
+                new ProduceKey(action, (int) ordinal),
+                state);
+    }
+
+    /**
+     * 从第一遍 ordinal 映射恢复精确类型的 owner Key。
+     */
+    private static <T extends DefinitionKey> T keyAtOrdinal(
+            RawDefinition definition,
+            Class<T> expectedType,
+            RegistrationState state) {
+        DefinitionKey key = state.keysByOrdinal.get(definition.sourceOrdinal());
+        if (!expectedType.isInstance(key)) {
+            state.diagnostics.add(ownerDiagnostic(definition));
+            return null;
+        }
+        return expectedType.cast(key);
     }
 
     /**
@@ -331,5 +428,86 @@ public final class SymbolTableBuilder {
         private BusinessScopeKey scope;
         private DirectoryKey directory;
         private ActionKey action;
+
+        private void enterRoot(String name) {
+            rootConfigName = name;
+            system = null;
+            scope = null;
+            directory = null;
+            action = null;
+        }
+
+        private void enterSystem(SystemKey key) {
+            rootConfigName = null;
+            system = key;
+            scope = null;
+            directory = null;
+            action = null;
+        }
+
+        private void enterBusinessScope(BusinessScopeKey key) {
+            rootConfigName = null;
+            system = null;
+            scope = key;
+            directory = null;
+            action = null;
+        }
+
+        private void enterDirectory(DirectoryKey key) {
+            directory = key;
+            action = null;
+        }
+
+        private void enterAction(ActionKey key) {
+            action = key;
+        }
+
+        private void leaveOwnedDocuments() {
+            rootConfigName = null;
+            system = null;
+            scope = null;
+            directory = null;
+            action = null;
+        }
+    }
+
+    /**
+     * 第二遍恢复的 System 与 Business owner 上下文。
+     */
+    private static final class SecondPassContext {
+        private SystemKey system;
+        private BusinessScopeKey scope;
+        private DirectoryKey directory;
+        private ActionKey action;
+
+        private void enterSystem(SystemKey key) {
+            system = key;
+            scope = null;
+            directory = null;
+            action = null;
+        }
+
+        private void enterBusinessScope(BusinessScopeKey key) {
+            system = null;
+            scope = key;
+            directory = null;
+            action = null;
+        }
+
+        private void enterDirectory(DirectoryKey key) {
+            directory = key;
+            action = null;
+        }
+
+        private void enterAction(ActionKey key) {
+            action = key;
+        }
+
+        private void leaveOwnedDocuments() {
+            system = null;
+            scope = null;
+            directory = null;
+            action = null;
+        }
     }
 }
