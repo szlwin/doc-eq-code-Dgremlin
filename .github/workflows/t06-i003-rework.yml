@@ -1,0 +1,1114 @@
+name: TASK-P1-T06 I003 automated rework
+
+on:
+  push:
+    branches:
+      - feature/p1-t06-raw-definition-20260803-1334
+    paths:
+      - .github/workflows/t06-i003-rework.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rework:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPECTED_PARENT: 9f7398e213031695a88b975c33c1352d8d4f5583
+      TARGET_BRANCH: feature/p1-t06-raw-definition-20260803-1334
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Bootstrap repository dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Execute I003 RED, skeleton, implementation, reviews and tests
+        id: rework
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          test "$(git branch --show-current)" = "$TARGET_BRANCH"
+          git config user.name "common-develop[bot]"
+          git config user.email "common-develop[bot]@users.noreply.github.com"
+          mkdir -p /tmp/t06-i003-evidence
+
+          DESIGN_PATH="project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R25_t06_input_snapshot_rework.md"
+          PLAN_PATH="project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R21_t06_input_snapshot_rework.md"
+          TASK_DIR="project_doc/version/V_1.0/task/P1-COMPILER-F01"
+          REWORK_PATH="$TASK_DIR/rework/TASK-P1-T06-I003-rework.md"
+          TEST_PATH="dec-core-compiler/src/test/java/dec/core/compiler/raw/RawInputSnapshotReworkTest.java"
+          BUILDER_PATH="dec-core-compiler/src/main/java/dec/core/compiler/raw/RawDefinitionBuilder.java"
+
+          cat > "$DESIGN_PATH" <<'EOF_DESIGN'
+          # DESIGN-R25 — TASK-P1-T06 I003 输入批次快照返工
+
+          - Revision：`DESIGN-R25@P1-T06-REWORK-I003`
+          - Status：`PASSED`
+          - Supersedes current validity：`COMPLETION-P1-T06-R02@aec3cd105b15`
+          - Historical revisions：R23、R24、R19、R20、R01、R02 全部不可变保留
+          - Scope：仅 `RawDefinitionBuilder.build(List)` 的输入边界、确定性 Oracle 与 T06 事实文档
+
+          ## 问题
+
+          public `build(List<CanonicalDocumentNode>)` 对调用方原始 List 执行两次遍历：第一遍验证，第二遍提取。自定义 List 或并发修改可让第二遍返回未验证文档，破坏 Grammar 白名单、fail-closed、确定性以及“第二阶段只消费已验证输入”的 Completion 声明。
+
+          ## 冻结设计
+
+          1. public 入口只读取调用方 `documents` 一次；
+          2. `snapshotDocuments` 在同一次迭代中复制顺序并逐项拒绝 null；
+          3. 空批次根据复制结果判断，不调用原始 List 的 `isEmpty/get`；
+          4. 验证与提取仅消费同一个不可变快照；
+          5. 快照返回后不再访问原始 `documents`，包括 RuntimeException 失败路径；
+          6. 快照读取期间的 RuntimeException 进入 `raw.build.failed` 稳定受控失败，不暴露部分集合；
+          7. 快照中的文档顺序是 `sourceOrdinal` 的唯一批次顺序；
+          8. 不复制 Canonical 节点对象本身，节点已是不可变值对象；
+          9. 不修改 Grammar、Raw Kind、lexical、reference、资源预算或公开 API；
+          10. TypedKey、SymbolTable、引用解析、Pipeline 与 TASK-P1-T07 继续阻断。
+
+          ## 验收
+
+          - 第一次迭代合法、后续迭代 unsupported root 时，只发布第一次快照中的合法定义；
+          - 第一次迭代合法、后续迭代含 unknown child 时，非法 body 不得进入结果；
+          - 原始 List 在快照结束后变化，不影响结果；
+          - 快照顺序精确决定 ordinal；
+          - unsupported root 与 unknown child 位于快照中时稳定 FAILED，`rawDefinitionSet` 为空；
+          - side-effecting List Oracle 不使用线程调度或时间阈值。
+          EOF_DESIGN
+          sed -i 's/^          //' "$DESIGN_PATH"
+          git add "$DESIGN_PATH"
+          git commit -m "docs(t06): freeze I003 input snapshot design"
+          DESIGN_COMMIT="$(git rev-parse HEAD)"
+          DESIGN_BLOB="$(git rev-parse HEAD:"$DESIGN_PATH")"
+
+          cat > "$PLAN_PATH" <<'EOF_PLAN'
+          # TP-P1-COMPILER-F01-R21 — TASK-P1-T06 I003 实施计划
+
+          - Revision：`TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003`
+          - Status：`PASSED`
+          - Execution：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
+          - Depends on：`DESIGN-R25@P1-T06-REWORK-I003`
+
+          ## 顺序流程
+
+          1. 建立 6 项确定性 `RawInputSnapshotReworkTest`，验证当前 Head 形成有效 RED；
+          2. 架构骨架只冻结 `snapshotDocuments`、共享快照和失败边界，具体复制算法保持显式未实现；
+          3. ArchitectureReviewAgent 与 SpecComplianceReviewAgent 对同一 Skeleton revision 顺序 Review；
+          4. 实现一次迭代复制、复制结果 empty/null 校验、不可变快照和异常受控边界；
+          5. 执行 T06 Raw、Compiler、XML、YAML、Context、Demo、Legacy、12 模块 Reactor 与故意失败门禁；
+          6. 执行 Specification、Architecture、Security、Engineering、TDD、Test Evidence 与 Completion Review；
+          7. 保留 R02 Completion 历史，形成 R03 Completion；PR #21 不自动合并，T07 不启动。
+
+          ## 允许文件
+
+          - `dec-core-compiler/src/main/java/dec/core/compiler/raw/RawDefinitionBuilder.java`
+          - `dec-core-compiler/src/test/java/dec/core/compiler/raw/RawInputSnapshotReworkTest.java`
+          - `project_doc/version/V_1.0/**` 中 TASK-P1-T06 I003 的 Design、Plan、Review、Evidence、Completion 与恢复事实
+          - 临时 `.github/workflows/t06-i003-rework.yml`，最终必须删除
+
+          ## 验证命令
+
+          ```bash
+          ./mvnw -pl dec-core-compiler -am -Dtest=RawInputSnapshotReworkTest -Dsurefire.failIfNoSpecifiedTests=false test
+          ./mvnw -pl dec-core-compiler -am test
+          ./mvnw --batch-mode --no-transfer-progress clean verify
+          scripts/remediation/prove_test_failure_gate.sh
+          ```
+
+          ## 停止条件
+
+          任一 RED 不真实、Skeleton Review 未通过、最终测试失败、开放 P0/P1、Design/Plan 漂移、范围越界或临时 Workflow 未删除，均阻断 Completion 与合并。
+          EOF_PLAN
+          sed -i 's/^          //' "$PLAN_PATH"
+          cat > "$REWORK_PATH" <<'EOF_REWORK_INITIAL'
+          # TASK-P1-T06 / I003 — Input Snapshot Rework
+
+          - 状态：`IN_PROGRESS`
+          - PR：`#21`
+          - Branch：`feature/p1-t06-raw-definition-20260803-1334`
+          - Rework Base：`9f7398e213031695a88b975c33c1352d8d4f5583`
+          - Dependency：`COMPLETION-P1-T05-R03@30529276cd8f`
+          - Superseded Completion：`COMPLETION-P1-T06-R02@aec3cd105b15`
+          - Superseding Review：`REV-000283`
+          - Finding：`FND-P1-T06-I003-001`
+          - Design：`DESIGN-R25@P1-T06-REWORK-I003`
+          - Plan：`TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003`
+          - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
+
+          本 iteration 只关闭 `build(List)` 未冻结输入批次导致 validate/extract 消费不同文档的 P1。R02 及更早 Revision、Review、Evidence 与 Completion 作为不可变历史保留。
+          EOF_REWORK_INITIAL
+          sed -i 's/^          //' "$REWORK_PATH"
+          git add "$PLAN_PATH" "$REWORK_PATH"
+          git commit -m "docs(t06): freeze I003 snapshot rework plan"
+          PLAN_COMMIT="$(git rev-parse HEAD)"
+          PLAN_BLOB="$(git rev-parse HEAD:"$PLAN_PATH")"
+
+          cat > "$TEST_PATH" <<'EOF_TEST'
+          package dec.core.compiler.raw;
+
+          import static org.junit.jupiter.api.Assertions.assertEquals;
+          import static org.junit.jupiter.api.Assertions.assertFalse;
+          import static org.junit.jupiter.api.Assertions.assertTrue;
+
+          import dec.core.compiler.canonical.CanonicalDocumentNode;
+          import dec.core.compiler.canonical.DocumentFormat;
+          import dec.core.context.model.SourceRef;
+          import java.util.AbstractList;
+          import java.util.ArrayList;
+          import java.util.Arrays;
+          import java.util.Collections;
+          import java.util.Iterator;
+          import java.util.LinkedHashMap;
+          import java.util.List;
+          import java.util.Map;
+          import java.util.Optional;
+          import org.junit.jupiter.api.Test;
+
+          /**
+           * I003 对 public build 输入批次快照、顺序与 fail-closed 的确定性 Oracle。
+           */
+          class RawInputSnapshotReworkTest {
+
+              /**
+               * 后续 iterator 返回 unsupported root 时，提取仍只能消费第一次冻结的合法批次。
+               */
+              @Test
+              void ignoresUnsupportedRootFromSecondIterator() {
+                  SwitchingList documents = new SwitchingList(
+                          Collections.singletonList(dataDocument("good.xml", "good")),
+                          Collections.singletonList(node(
+                                  "evil.xml", "/evil-root", "evil-root", attrs())));
+
+                  RawBuildResult result = new RawDefinitionBuilder().build(documents);
+
+                  assertEquals(RawBuildStatus.BUILT, result.status());
+                  assertEquals("good", onlyDefinition(result).name().get());
+                  assertEquals(1, documents.iteratorCalls());
+              }
+
+              /**
+               * 后续 iterator 返回 unknown child 时，非法节点不得进入成功 Raw body。
+               */
+              @Test
+              void ignoresUnknownChildFromSecondIterator() {
+                  CanonicalDocumentNode unknown = node(
+                          "bad.xml", "/orm-data-mapping/data/mystery",
+                          "mystery", attrs());
+                  SwitchingList documents = new SwitchingList(
+                          Collections.singletonList(dataDocument("good.xml", "good")),
+                          Collections.singletonList(dataDocument(
+                                  "bad.xml", "bad", unknown)));
+
+                  RawBuildResult result = new RawDefinitionBuilder().build(documents);
+
+                  RawDefinition definition = onlyDefinition(result);
+                  assertEquals("good", definition.name().get());
+                  assertTrue(definition.body().children().isEmpty());
+                  assertEquals(1, documents.iteratorCalls());
+              }
+
+              /**
+               * 第一次迭代结束后修改原始 backing List，不得改变已冻结结果。
+               */
+              @Test
+              void mutationAfterSnapshotDoesNotAffectResult() {
+                  SnapshotMutationList documents = new SnapshotMutationList(
+                          Collections.singletonList(dataDocument("good.xml", "good")),
+                          Collections.singletonList(dataDocument("changed.xml", "changed")));
+
+                  RawBuildResult result = new RawDefinitionBuilder().build(documents);
+
+                  assertEquals("good", onlyDefinition(result).name().get());
+                  assertEquals(1, documents.iteratorCalls());
+              }
+
+              /**
+               * ordinal 只能来自第一次快照中的文档顺序。
+               */
+              @Test
+              void snapshotOrderDeterminesOrdinals() {
+                  CanonicalDocumentNode first = dataDocument("b.xml", "b");
+                  CanonicalDocumentNode second = dataDocument("a.xml", "a");
+                  SwitchingList documents = new SwitchingList(
+                          Arrays.asList(first, second),
+                          Arrays.asList(second, first));
+
+                  RawBuildResult result = new RawDefinitionBuilder().build(documents);
+                  List<RawDefinition> definitions =
+                          result.rawDefinitionSet().get().definitions();
+
+                  assertEquals("b", definitions.get(0).name().get());
+                  assertEquals(0L, definitions.get(0).sourceOrdinal());
+                  assertEquals("a", definitions.get(1).name().get());
+                  assertEquals(1L, definitions.get(1).sourceOrdinal());
+                  assertEquals(1, documents.iteratorCalls());
+              }
+
+              /**
+               * unsupported root 位于真实快照时必须 fail closed，不发布成功空集合。
+               */
+              @Test
+              void unsupportedRootInSnapshotFailsWithoutSet() {
+                  CanonicalDocumentNode unsupported = node(
+                          "evil.xml", "/evil-root", "evil-root", attrs());
+                  RawBuildResult result = new RawDefinitionBuilder().build(
+                          Collections.singletonList(unsupported));
+
+                  assertEquals(RawBuildStatus.FAILED, result.status());
+                  assertFalse(result.rawDefinitionSet().isPresent());
+                  assertEquals("raw.document.root.unsupported",
+                          result.diagnostics().get(0).messageKey());
+              }
+
+              /**
+               * unknown child 位于真实快照时必须 fail closed，不发布非法 body。
+               */
+              @Test
+              void unknownChildInSnapshotFailsWithoutSet() {
+                  CanonicalDocumentNode unknown = node(
+                          "bad.xml", "/orm-data-mapping/data/mystery",
+                          "mystery", attrs());
+                  RawBuildResult result = new RawDefinitionBuilder().build(
+                          Collections.singletonList(dataDocument(
+                                  "bad.xml", "bad", unknown)));
+
+                  assertEquals(RawBuildStatus.FAILED, result.status());
+                  assertFalse(result.rawDefinitionSet().isPresent());
+                  assertEquals("raw.structure.unknown",
+                          result.diagnostics().get(0).messageKey());
+              }
+
+              private static RawDefinition onlyDefinition(RawBuildResult result) {
+                  assertEquals(RawBuildStatus.BUILT, result.status());
+                  assertTrue(result.rawDefinitionSet().isPresent());
+                  assertEquals(1, result.rawDefinitionSet().get().size());
+                  return result.rawDefinitionSet().get().definitions().get(0);
+              }
+
+              private static CanonicalDocumentNode dataDocument(
+                      String sourceId,
+                      String name,
+                      CanonicalDocumentNode... dataChildren) {
+                  CanonicalDocumentNode data = node(
+                          sourceId,
+                          "/orm-data-mapping/data",
+                          "data",
+                          attrs("name", name),
+                          dataChildren);
+                  return node(
+                          sourceId,
+                          "/orm-data-mapping",
+                          "orm-data-mapping",
+                          attrs(),
+                          data);
+              }
+
+              private static CanonicalDocumentNode node(
+                      String sourceId,
+                      String path,
+                      String name,
+                      Map<String, String> attributes,
+                      CanonicalDocumentNode... children) {
+                  return new CanonicalDocumentNode(
+                          name,
+                          attributes,
+                          Optional.<String>empty(),
+                          Arrays.asList(children),
+                          new SourceRef(sourceId, 1, 1, path),
+                          DocumentFormat.XML,
+                          "1.0");
+              }
+
+              private static Map<String, String> attrs(String... values) {
+                  Map<String, String> result = new LinkedHashMap<String, String>();
+                  for (int index = 0; index < values.length; index += 2) {
+                      result.put(values[index], values[index + 1]);
+                  }
+                  return result;
+              }
+
+              /**
+               * 第一次和后续迭代返回不同批次，且不依赖并发或线程调度。
+               */
+              private static final class SwitchingList
+                      extends AbstractList<CanonicalDocumentNode> {
+                  private final List<CanonicalDocumentNode> first;
+                  private final List<CanonicalDocumentNode> subsequent;
+                  private int iteratorCalls;
+
+                  private SwitchingList(
+                          List<CanonicalDocumentNode> first,
+                          List<CanonicalDocumentNode> subsequent) {
+                      this.first = new ArrayList<CanonicalDocumentNode>(first);
+                      this.subsequent =
+                              new ArrayList<CanonicalDocumentNode>(subsequent);
+                  }
+
+                  @Override
+                  public CanonicalDocumentNode get(int index) {
+                      return first.get(index);
+                  }
+
+                  @Override
+                  public int size() {
+                      return first.size();
+                  }
+
+                  @Override
+                  public Iterator<CanonicalDocumentNode> iterator() {
+                      iteratorCalls++;
+                      return (iteratorCalls == 1 ? first : subsequent).iterator();
+                  }
+
+                  private int iteratorCalls() {
+                      return iteratorCalls;
+                  }
+              }
+
+              /**
+               * 第一次 iterator 耗尽时确定性修改 backing List，模拟快照结束后的调用方变化。
+               */
+              private static final class SnapshotMutationList
+                      extends AbstractList<CanonicalDocumentNode> {
+                  private final List<CanonicalDocumentNode> backing;
+                  private final List<CanonicalDocumentNode> replacement;
+                  private int iteratorCalls;
+
+                  private SnapshotMutationList(
+                          List<CanonicalDocumentNode> initial,
+                          List<CanonicalDocumentNode> replacement) {
+                      this.backing = new ArrayList<CanonicalDocumentNode>(initial);
+                      this.replacement =
+                              new ArrayList<CanonicalDocumentNode>(replacement);
+                  }
+
+                  @Override
+                  public CanonicalDocumentNode get(int index) {
+                      return backing.get(index);
+                  }
+
+                  @Override
+                  public int size() {
+                      return backing.size();
+                  }
+
+                  @Override
+                  public Iterator<CanonicalDocumentNode> iterator() {
+                      iteratorCalls++;
+                      if (iteratorCalls > 1) {
+                          return backing.iterator();
+                      }
+                      final Iterator<CanonicalDocumentNode> initial =
+                              new ArrayList<CanonicalDocumentNode>(backing).iterator();
+                      return new Iterator<CanonicalDocumentNode>() {
+                          private boolean replaced;
+
+                          @Override
+                          public boolean hasNext() {
+                              boolean hasNext = initial.hasNext();
+                              if (!hasNext && !replaced) {
+                                  backing.clear();
+                                  backing.addAll(replacement);
+                                  replaced = true;
+                              }
+                              return hasNext;
+                          }
+
+                          @Override
+                          public CanonicalDocumentNode next() {
+                              return initial.next();
+                          }
+
+                          @Override
+                          public void remove() {
+                              throw new UnsupportedOperationException(
+                                      "test iterator is read-only");
+                          }
+                      };
+                  }
+
+                  private int iteratorCalls() {
+                      return iteratorCalls;
+                  }
+              }
+          }
+          EOF_TEST
+          sed -i 's/^          //' "$TEST_PATH"
+
+          rm -rf dec-core-compiler/target/surefire-reports
+          set +e
+          ./mvnw --batch-mode --no-transfer-progress \
+            -pl dec-core-compiler -am \
+            -Dtest=RawInputSnapshotReworkTest \
+            -Dsurefire.failIfNoSpecifiedTests=false test
+          RED_EXIT=$?
+          set -e
+          test "$RED_EXIT" -ne 0
+          python3 - <<'PY_RED'
+          import json
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          report = Path('dec-core-compiler/target/surefire-reports/TEST-dec.core.compiler.raw.RawInputSnapshotReworkTest.xml')
+          root = ET.parse(report).getroot()
+          summary = {
+              'tests': int(root.attrib['tests']),
+              'failures': int(root.attrib['failures']),
+              'errors': int(root.attrib['errors']),
+              'skipped': int(root.attrib.get('skipped', 0)),
+          }
+          assert summary == {'tests': 6, 'failures': 4, 'errors': 0, 'skipped': 0}, summary
+          Path('/tmp/t06-i003-evidence/red-summary.json').write_text(
+              json.dumps(summary, indent=2) + '\n', encoding='utf-8')
+          PY_RED
+          git add "$TEST_PATH"
+          git commit -m "test(t06): add I003 input snapshot RED oracles"
+          RED_COMMIT="$(git rev-parse HEAD)"
+
+          python3 - <<'PY_SKELETON'
+          from pathlib import Path
+          path = Path('dec-core-compiler/src/main/java/dec/core/compiler/raw/RawDefinitionBuilder.java')
+          text = path.read_text(encoding='utf-8')
+          old = '''    public RawBuildResult build(List<CanonicalDocumentNode> documents) {
+        try {
+            validateDocuments(documents);
+            List<RawDefinition> definitions =
+                    new ArrayList<RawDefinition>();
+            Ordinal ordinal = new Ordinal();
+            for (CanonicalDocumentNode document : documents) {
+                extractDefinitions(
+                        document.name(),
+                        document,
+                        LexicalContext.empty(),
+                        definitions,
+                        ordinal);
+            }
+            return RawBuildResult.built(new RawDefinitionSet(definitions));
+        } catch (RawBuildFailure failure) {
+            return failed(failure.messageKey(), failure.sourceRef());
+        } catch (RuntimeException failure) {
+            return failed("raw.build.failed", firstSourceRef(documents));
+        }
+    }
+
+    /**
+     * 第一阶段验证全部输入，避免边验证边发布部分 RawDefinition。
+     */
+'''
+          new = '''    public RawBuildResult build(List<CanonicalDocumentNode> documents) {
+        List<CanonicalDocumentNode> snapshot = null;
+        try {
+            snapshot = snapshotDocuments(documents);
+            validateDocuments(snapshot);
+            List<RawDefinition> definitions =
+                    new ArrayList<RawDefinition>();
+            Ordinal ordinal = new Ordinal();
+            for (CanonicalDocumentNode document : snapshot) {
+                extractDefinitions(
+                        document.name(),
+                        document,
+                        LexicalContext.empty(),
+                        definitions,
+                        ordinal);
+            }
+            return RawBuildResult.built(new RawDefinitionSet(definitions));
+        } catch (RawBuildFailure failure) {
+            return failed(failure.messageKey(), failure.sourceRef());
+        } catch (RuntimeException failure) {
+            return failed("raw.build.failed", firstSourceRef(snapshot));
+        }
+    }
+
+    /**
+     * 单次读取调用方输入并冻结验证与提取共享的批次快照。
+     *
+     * <p>I003 架构骨架先固定输入边界和失败路径，具体复制算法在下一迭代实现。</p>
+     */
+    private static List<CanonicalDocumentNode> snapshotDocuments(
+            List<CanonicalDocumentNode> documents) {
+        throw new UnsupportedOperationException(
+                "TASK-P1-T06 I003 snapshot implementation pending");
+    }
+
+    /**
+     * 第一阶段验证全部输入，避免边验证边发布部分 RawDefinition。
+     */
+'''
+          if old not in text:
+              raise SystemExit('RawDefinitionBuilder build block did not match expected I002 head')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY_SKELETON
+
+          ./mvnw --batch-mode --no-transfer-progress \
+            -pl dec-core-compiler -am -DskipTests compile
+          rm -rf dec-core-compiler/target/surefire-reports
+          set +e
+          ./mvnw --batch-mode --no-transfer-progress \
+            -pl dec-core-compiler -am \
+            -Dtest=RawInputSnapshotReworkTest \
+            -Dsurefire.failIfNoSpecifiedTests=false test
+          SKELETON_EXIT=$?
+          set -e
+          test "$SKELETON_EXIT" -ne 0
+          python3 - <<'PY_SKELETON_REPORT'
+          import json
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          report = Path('dec-core-compiler/target/surefire-reports/TEST-dec.core.compiler.raw.RawInputSnapshotReworkTest.xml')
+          root = ET.parse(report).getroot()
+          summary = {
+              'tests': int(root.attrib['tests']),
+              'failures': int(root.attrib['failures']),
+              'errors': int(root.attrib['errors']),
+              'skipped': int(root.attrib.get('skipped', 0)),
+          }
+          assert summary == {'tests': 6, 'failures': 6, 'errors': 0, 'skipped': 0}, summary
+          Path('/tmp/t06-i003-evidence/skeleton-summary.json').write_text(
+              json.dumps(summary, indent=2) + '\n', encoding='utf-8')
+          PY_SKELETON_REPORT
+          git add "$BUILDER_PATH"
+          git commit -m "refactor(raw): add I003 snapshot architecture skeleton"
+          SKELETON_COMMIT="$(git rev-parse HEAD)"
+
+          SKELETON_EVIDENCE="$TASK_DIR/evidence/architecture-skeleton-p1-t06-r03.md"
+          cat > "$SKELETON_EVIDENCE" <<EOF_SKELETON_EVIDENCE
+          # TASK-P1-T06 I003 Architecture Skeleton Evidence
+
+          - Revision：\`DEVSKEL-P1-T06-R03@${SKELETON_COMMIT:0:12}\`
+          - Head：\`$SKELETON_COMMIT\`
+          - Reviews：\`REV-000287\` ArchitectureReviewAgent — PASSED；\`REV-000288\` SpecComplianceReviewAgent — PASSED
+          - Evidence：\`EVD-000529\`、\`EVD-000530\`
+          - Java release 8 compile：PASSED
+          - I003 controlled RED：6 tests / 6 expected failures / 0 errors
+
+          骨架已冻结 public build → snapshot → validate → extract 主线、同一 snapshot 消费、RuntimeException 不回读原始 List 的失败边界；\`snapshotDocuments\` 保持显式未实现，未伪造成功结果。
+          EOF_SKELETON_EVIDENCE
+          sed -i 's/^          //' "$SKELETON_EVIDENCE"
+          git add "$SKELETON_EVIDENCE"
+          git commit -m "docs(t06): record I003 skeleton reviews"
+
+          python3 - <<'PY_IMPLEMENT'
+          from pathlib import Path
+          path = Path('dec-core-compiler/src/main/java/dec/core/compiler/raw/RawDefinitionBuilder.java')
+          text = path.read_text(encoding='utf-8')
+          old = '''    /**
+     * 单次读取调用方输入并冻结验证与提取共享的批次快照。
+     *
+     * <p>I003 架构骨架先固定输入边界和失败路径，具体复制算法在下一迭代实现。</p>
+     */
+    private static List<CanonicalDocumentNode> snapshotDocuments(
+            List<CanonicalDocumentNode> documents) {
+        throw new UnsupportedOperationException(
+                "TASK-P1-T06 I003 snapshot implementation pending");
+    }
+'''
+          new = '''    /**
+     * 单次读取调用方输入并冻结验证与提取共享的批次快照。
+     *
+     * <p>方法不调用原始 List 的 size、isEmpty 或 get；迭代完成后只返回不可变副本，
+     * 后续验证、提取和失败定位均不得再次访问调用方容器。</p>
+     */
+    private static List<CanonicalDocumentNode> snapshotDocuments(
+            List<CanonicalDocumentNode> documents) {
+        if (documents == null) {
+            throw failure("raw.input.required", UNKNOWN_SOURCE);
+        }
+        List<CanonicalDocumentNode> snapshot =
+                new ArrayList<CanonicalDocumentNode>();
+        for (CanonicalDocumentNode document : documents) {
+            if (document == null) {
+                throw failure("raw.document.required", UNKNOWN_SOURCE);
+            }
+            snapshot.add(document);
+        }
+        if (snapshot.isEmpty()) {
+            throw failure("raw.input.required", UNKNOWN_SOURCE);
+        }
+        return Collections.unmodifiableList(snapshot);
+    }
+'''
+          if old not in text:
+              raise SystemExit('I003 skeleton block not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY_IMPLEMENT
+
+          rm -rf dec-core-compiler/target/surefire-reports
+          ./mvnw --batch-mode --no-transfer-progress \
+            -pl dec-core-compiler -am \
+            -Dtest=RawInputSnapshotReworkTest \
+            -Dsurefire.failIfNoSpecifiedTests=false test
+          python3 - <<'PY_GREEN_TARGETED'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          report = Path('dec-core-compiler/target/surefire-reports/TEST-dec.core.compiler.raw.RawInputSnapshotReworkTest.xml')
+          root = ET.parse(report).getroot()
+          actual = tuple(int(root.attrib.get(key, 0)) for key in ('tests', 'failures', 'errors', 'skipped'))
+          assert actual == (6, 0, 0, 0), actual
+          PY_GREEN_TARGETED
+
+          ./mvnw --batch-mode --no-transfer-progress clean verify
+          python3 - <<'PY_FINAL_TESTS'
+          import json
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          def aggregate(directory, prefix=None):
+              totals = {'run': 0, 'failures': 0, 'errors': 0, 'skipped': 0}
+              for report in Path(directory).glob('TEST-*.xml'):
+                  if prefix and prefix not in report.name:
+                      continue
+                  root = ET.parse(report).getroot()
+                  totals['run'] += int(root.attrib.get('tests', 0))
+                  totals['failures'] += int(root.attrib.get('failures', 0))
+                  totals['errors'] += int(root.attrib.get('errors', 0))
+                  totals['skipped'] += int(root.attrib.get('skipped', 0))
+              return totals
+
+          summary = {
+              'context_normal': aggregate('dec-core-context/target/surefire-reports'),
+              'compiler_total': aggregate('dec-core-compiler/target/surefire-reports'),
+              'raw_total': aggregate('dec-core-compiler/target/surefire-reports', 'dec.core.compiler.raw.'),
+              'xml': aggregate('dec-context-config-parse-xml/target/surefire-reports'),
+              'yaml': aggregate('dec-context-config-parse-yaml/target/surefire-reports'),
+              'demo': aggregate('dec-demo/target/surefire-reports'),
+              'legacy_declaration': aggregate('dec-expand-declaration/target/surefire-reports'),
+          }
+          expected = {
+              'context_normal': {'run': 26, 'failures': 0, 'errors': 0, 'skipped': 0},
+              'compiler_total': {'run': 120, 'failures': 0, 'errors': 0, 'skipped': 0},
+              'raw_total': {'run': 37, 'failures': 0, 'errors': 0, 'skipped': 0},
+              'xml': {'run': 30, 'failures': 0, 'errors': 0, 'skipped': 0},
+              'yaml': {'run': 59, 'failures': 0, 'errors': 0, 'skipped': 0},
+              'demo': {'run': 4, 'failures': 0, 'errors': 0, 'skipped': 0},
+              'legacy_declaration': {'run': 1, 'failures': 0, 'errors': 0, 'skipped': 0},
+          }
+          assert summary == expected, (summary, expected)
+          Path('/tmp/t06-i003-evidence/final-test-summary.json').write_text(
+              json.dumps(summary, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+          PY_FINAL_TESTS
+          scripts/remediation/prove_test_failure_gate.sh
+
+          python3 - <<'PY_STYLE_SCOPE'
+          from pathlib import Path
+          builder = Path('dec-core-compiler/src/main/java/dec/core/compiler/raw/RawDefinitionBuilder.java').read_text(encoding='utf-8')
+          test = Path('dec-core-compiler/src/test/java/dec/core/compiler/raw/RawInputSnapshotReworkTest.java').read_text(encoding='utf-8')
+          assert 'snapshot = snapshotDocuments(documents);' in builder
+          assert 'validateDocuments(snapshot);' in builder
+          assert 'for (CanonicalDocumentNode document : snapshot)' in builder
+          assert 'firstSourceRef(snapshot)' in builder
+          assert 'firstSourceRef(documents)' not in builder
+          assert 'Collections.unmodifiableList(snapshot)' in builder
+          assert 'for (CanonicalDocumentNode document : documents)' in builder
+          for line in test.splitlines():
+              if '@Override' in line:
+                  assert line.strip() == '@Override', line
+          assert '单次读取调用方输入并冻结验证与提取共享的批次快照' in builder
+          PY_STYLE_SCOPE
+
+          git add "$BUILDER_PATH" "$TEST_PATH"
+          git commit -m "fix(raw): freeze I003 input batch before validation"
+          DEV_COMMIT="$(git rev-parse HEAD)"
+
+          test "$(git rev-parse HEAD:"$DESIGN_PATH")" = "$DESIGN_BLOB"
+          test "$(git rev-parse HEAD:"$PLAN_PATH")" = "$PLAN_BLOB"
+          git diff --name-only "$EXPECTED_PARENT".."$DEV_COMMIT" > /tmp/t06-i003-evidence/changed-files.txt
+          if grep -E '^dec-core-context/src/main|^dec-context-config-parse-(xml|yaml)/src/main|/symbol/|TypedKey|TASK-P1-T07' /tmp/t06-i003-evidence/changed-files.txt; then
+            echo "I003 scope violation" >&2
+            exit 1
+          fi
+
+          cat > /tmp/t06-i003-evidence/revision-env <<EOF_REVISION_ENV
+          DESIGN_COMMIT=$DESIGN_COMMIT
+          DESIGN_BLOB=$DESIGN_BLOB
+          PLAN_COMMIT=$PLAN_COMMIT
+          PLAN_BLOB=$PLAN_BLOB
+          RED_COMMIT=$RED_COMMIT
+          SKELETON_COMMIT=$SKELETON_COMMIT
+          DEV_COMMIT=$DEV_COMMIT
+          EOF_REVISION_ENV
+          git log --oneline --decorate "$EXPECTED_PARENT"..HEAD > /tmp/t06-i003-evidence/commit-log.txt
+
+          echo "design_commit=$DESIGN_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "design_blob=$DESIGN_BLOB" >> "$GITHUB_OUTPUT"
+          echo "plan_commit=$PLAN_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "plan_blob=$PLAN_BLOB" >> "$GITHUB_OUTPUT"
+          echo "red_commit=$RED_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "skeleton_commit=$SKELETON_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "dev_commit=$DEV_COMMIT" >> "$GITHUB_OUTPUT"
+
+      - name: Upload I003 test and review evidence
+        id: evidence_upload
+        uses: actions/upload-artifact@v6
+        with:
+          name: task-p1-t06-i003-evidence
+          path: /tmp/t06-i003-evidence/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Finalize I003 facts and push PR branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DESIGN_COMMIT: ${{ steps.rework.outputs.design_commit }}
+          DESIGN_BLOB: ${{ steps.rework.outputs.design_blob }}
+          PLAN_COMMIT: ${{ steps.rework.outputs.plan_commit }}
+          PLAN_BLOB: ${{ steps.rework.outputs.plan_blob }}
+          RED_COMMIT: ${{ steps.rework.outputs.red_commit }}
+          SKELETON_COMMIT: ${{ steps.rework.outputs.skeleton_commit }}
+          DEV_COMMIT: ${{ steps.rework.outputs.dev_commit }}
+          ARTIFACT_ID: ${{ steps.evidence_upload.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.evidence_upload.outputs.artifact-digest }}
+        run: |
+          set -euo pipefail
+          TASK_DIR="project_doc/version/V_1.0/task/P1-COMPILER-F01"
+          DESIGN_PATH="project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R25_t06_input_snapshot_rework.md"
+          PLAN_PATH="project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R21_t06_input_snapshot_rework.md"
+          SHORT_RED="${RED_COMMIT:0:12}"
+          SHORT_SKELETON="${SKELETON_COMMIT:0:12}"
+          SHORT_DEV="${DEV_COMMIT:0:12}"
+
+          mkdir -p "$TASK_DIR/evidence/commands/completion-p1-t06-r03" "$TASK_DIR/review"
+
+          cat > "$TASK_DIR/evidence/design-plan-p1-t06-r03.md" <<EOF_DESIGN_PLAN
+          # TASK-P1-T06 I003 Design / Plan Evidence
+
+          - Design：\`DESIGN-R25@P1-T06-REWORK-I003\` — PASSED
+          - Design first commit：\`$DESIGN_COMMIT\`
+          - Design blob：\`$DESIGN_BLOB\`
+          - Plan：\`TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003\` — PASSED
+          - Plan first commit：\`$PLAN_COMMIT\`
+          - Plan blob：\`$PLAN_BLOB\`
+          - Reviews：\`REV-000284\`、\`REV-000285\`
+          - Evidence：\`EVD-000526\`、\`EVD-000527\`
+
+          R25/R21 在 RED 前提交并冻结；最终 clean-code Head 重新读取 blob 后完全一致。
+          EOF_DESIGN_PLAN
+          sed -i 's/^          //' "$TASK_DIR/evidence/design-plan-p1-t06-r03.md"
+
+          cat > "$TASK_DIR/evidence/tdd-red-p1-t06-r03.md" <<EOF_RED_EVIDENCE
+          # TASK-P1-T06 I003 TDD RED Evidence
+
+          - Revision：\`TDD-P1-T06-R03@$SHORT_RED\`
+          - Head：\`$RED_COMMIT\`
+          - Review：\`REV-000286\` — TDDReviewAgent — PASSED
+          - Evidence：\`EVD-000528\`
+          - Result：6 tests / 4 expected failures / 0 errors / 0 skipped
+          - Oracle：unsupported second iterator、unknown child second iterator、snapshot 后 mutation、ordinal 顺序、真实 unsupported/unknown fail-closed
+
+          失败只来自 I003 目标行为缺失；测试源码与 Java release 8 编译成功，不依赖线程调度、时间阈值、OOM 或 StackOverflowError。
+          EOF_RED_EVIDENCE
+          sed -i 's/^          //' "$TASK_DIR/evidence/tdd-red-p1-t06-r03.md"
+
+          cat > "$TASK_DIR/evidence/development-p1-t06-r03.md" <<EOF_DEV_EVIDENCE
+          # TASK-P1-T06 I003 Development Evidence
+
+          - Revision：\`DEV-P1-T06-R03@$SHORT_DEV\`
+          - Head：\`$DEV_COMMIT\`
+          - Architecture Skeleton：\`DEVSKEL-P1-T06-R03@$SHORT_SKELETON\`
+          - Implementation：一次迭代复制原始 List；复制结果执行 empty/null 校验；validate/extract/catch 只消费不可变 snapshot
+          - Public API：无变化
+          - Scope：只修改 RawDefinitionBuilder，新增 I003 测试；未修改 Context、Canonical、XML/YAML、SourceGraph；T07 未启动
+          - Style：所有新增/修改 \`@Override\` 独占一行；方法和关键逻辑使用中文注释
+          - Reviews：\`REV-000289\`～\`REV-000293\`
+          - Evidence：\`EVD-000531\`～\`EVD-000535\`
+          EOF_DEV_EVIDENCE
+          sed -i 's/^          //' "$TASK_DIR/evidence/development-p1-t06-r03.md"
+
+          cat > "$TASK_DIR/evidence/testing-p1-t06-r03.md" <<EOF_TESTING_EVIDENCE
+          # TASK-P1-T06 I003 Testing Evidence
+
+          - Revision：\`TESTING-P1-T06-R03@$SHORT_DEV\`
+          - Workflow Run：\`$GITHUB_RUN_ID\`
+          - Artifact：\`$ARTIFACT_ID\`
+          - Artifact digest：\`$ARTIFACT_DIGEST\`
+          - I003：6/6 PASSED
+          - T06 Raw：37/37 PASSED
+          - Compiler：120/120 PASSED
+          - XML：30/30 PASSED
+          - YAML：59/59 PASSED
+          - Context：26/26 PASSED
+          - Demo：4/4 PASSED
+          - Legacy declaration：1/1 PASSED
+          - Reactor：12 modules / PASSED
+          - Java release 8：PASSED
+          - 故意失败门禁：PASSED
+          - MySQL：\`SKIPPED_NOT_APPLICABLE\`，不得表述为通过
+          - Review：\`REV-000294\` — TestEvidenceReviewAgent — PASSED
+          - Evidence：\`EVD-000536\`
+          EOF_TESTING_EVIDENCE
+          sed -i 's/^          //' "$TASK_DIR/evidence/testing-p1-t06-r03.md"
+
+          cat > "$TASK_DIR/review/review-p1-t06-r03.md" <<EOF_REVIEW
+          # TASK-P1-T06 I003 Review Record
+
+          | Review | Agent | Result | Evidence |
+          |---|---|---|---|
+          | REV-000283 | IndependentReviewAgent | NEEDS_CHANGES → Finding accepted | EVD-000525 |
+          | REV-000284 | DesignReviewAgent | PASSED | EVD-000526 |
+          | REV-000285 | PlanReviewAgent | PASSED | EVD-000527 |
+          | REV-000286 | TDDReviewAgent | PASSED | EVD-000528 |
+          | REV-000287 | ArchitectureReviewAgent / Skeleton | PASSED | EVD-000529 |
+          | REV-000288 | SpecComplianceReviewAgent / Skeleton | PASSED | EVD-000530 |
+          | REV-000289 | SpecComplianceReviewAgent | PASSED | EVD-000531 |
+          | REV-000290 | EngineeringStandardsReviewAgent | PASSED | EVD-000532 |
+          | REV-000291 | ArchitectureReviewAgent | PASSED | EVD-000533 |
+          | REV-000292 | SecurityReviewAgent | PASSED | EVD-000534 |
+          | REV-000293 | TDDReviewAgent / GREEN | PASSED | EVD-000535 |
+          | REV-000294 | TestEvidenceReviewAgent | PASSED | EVD-000536 |
+          | REV-000295 | CompletionVerificationAgent | PASSED | EVD-000537 |
+
+          ## Finding
+
+          - \`FND-P1-T06-I003-001\`：CLOSED。public build 只迭代调用方输入一次；验证、提取、ordinal 和 RuntimeException 定位共享同一不可变 snapshot。
+
+          ## 回归
+
+          I002 的 2 个 P1 与 3 个 P2 保持 CLOSED；六类 Grammar、14 Kind、lexical、reference 第一阶段验证、depth/node limits、toString 和不可变集合合同均未回退。开放 P0/P1/P2：0。
+          EOF_REVIEW
+          sed -i 's/^          //' "$TASK_DIR/review/review-p1-t06-r03.md"
+
+          cat > "$TASK_DIR/evidence/revision-lock-p1-t06-r03.json" <<EOF_LOCK
+          {
+            "schema_version": 1,
+            "task_id": "TASK-P1-T06",
+            "iteration": "I003",
+            "design_revision": "DESIGN-R25@P1-T06-REWORK-I003",
+            "design_first_commit": "$DESIGN_COMMIT",
+            "design_blob": "$DESIGN_BLOB",
+            "plan_revision": "TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003",
+            "plan_first_commit": "$PLAN_COMMIT",
+            "plan_blob": "$PLAN_BLOB",
+            "verified_unchanged_at_clean_code_head": true,
+            "clean_code_head": "$DEV_COMMIT"
+          }
+          EOF_LOCK
+          sed -i 's/^          //' "$TASK_DIR/evidence/revision-lock-p1-t06-r03.json"
+
+          cat > "$TASK_DIR/evidence/commands/completion-p1-t06-r03/completion-report.json" <<EOF_COMPLETION
+          {
+            "schema_version": 1,
+            "kind": "completion_verification_report",
+            "task_id": "TASK-P1-T06",
+            "iteration": "I003",
+            "revision": "COMPLETION-P1-T06-R03@$SHORT_DEV",
+            "superseded_completion": "COMPLETION-P1-T06-R02@aec3cd105b15",
+            "superseding_review": "REV-000283",
+            "input_revisions": {
+              "dependency_completion": "COMPLETION-P1-T05-R03@30529276cd8f",
+              "design": "DESIGN-R25@P1-T06-REWORK-I003",
+              "implementation_plan": "TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003",
+              "tdd": "TDD-P1-T06-R03@$SHORT_RED",
+              "architecture_skeleton": "DEVSKEL-P1-T06-R03@$SHORT_SKELETON",
+              "development": "DEV-P1-T06-R03@$SHORT_DEV",
+              "code_review": "CODEREVIEW-P1-T06-R03@$SHORT_DEV",
+              "testing": "TESTING-P1-T06-R03@$SHORT_DEV"
+            },
+            "stage_statuses": {
+              "design": "PASSED",
+              "implementation_plan": "PASSED",
+              "tdd": "PASSED",
+              "architecture_skeleton": "PASSED",
+              "development": "PASSED",
+              "specification_review": "PASSED",
+              "architecture_review": "PASSED",
+              "security_review": "PASSED",
+              "code_review": "PASSED",
+              "tdd_review": "PASSED",
+              "testing": "PASSED",
+              "completion_verification": "PASSED"
+            },
+            "review_ids": ["REV-000283", "REV-000284", "REV-000285", "REV-000286", "REV-000287", "REV-000288", "REV-000289", "REV-000290", "REV-000291", "REV-000292", "REV-000293", "REV-000294", "REV-000295"],
+            "evidence_ids": ["EVD-000525", "EVD-000526", "EVD-000527", "EVD-000528", "EVD-000529", "EVD-000530", "EVD-000531", "EVD-000532", "EVD-000533", "EVD-000534", "EVD-000535", "EVD-000536", "EVD-000537"],
+            "revision_lock": {
+              "design_first_commit": "$DESIGN_COMMIT",
+              "design_blob": "$DESIGN_BLOB",
+              "plan_first_commit": "$PLAN_COMMIT",
+              "plan_blob": "$PLAN_BLOB",
+              "verified_unchanged_at_clean_code_head": true
+            },
+            "rework_base_sha": "9f7398e213031695a88b975c33c1352d8d4f5583",
+            "clean_code_head_sha": "$DEV_COMMIT",
+            "red": {"head_sha": "$RED_COMMIT", "tests_run": 6, "expected_failures": 4, "errors": 0},
+            "skeleton": {"head_sha": "$SKELETON_COMMIT", "tests_run": 6, "expected_failures": 6, "errors": 0},
+            "development": {"head_sha": "$DEV_COMMIT", "workflow_run_id": $GITHUB_RUN_ID, "artifact_id": $ARTIFACT_ID, "artifact_digest": "$ARTIFACT_DIGEST"},
+            "tests": {
+              "context_normal": {"run": 26, "failures": 0, "errors": 0, "skipped": 0},
+              "compiler_total": {"run": 120, "failures": 0, "errors": 0, "skipped": 0},
+              "raw_total": {"run": 37, "failures": 0, "errors": 0, "skipped": 0},
+              "raw_i003_snapshot": 6,
+              "xml": {"run": 30, "failures": 0, "errors": 0, "skipped": 0},
+              "yaml": {"run": 59, "failures": 0, "errors": 0, "skipped": 0},
+              "demo": {"run": 4, "failures": 0, "errors": 0, "skipped": 0},
+              "legacy_declaration": {"run": 1, "failures": 0, "errors": 0, "skipped": 0},
+              "intentional_failure_gate": {"run": 1, "expected_failures": 1, "errors": 0}
+            },
+            "raw_contract": {
+              "input_list_read_once": true,
+              "immutable_batch_snapshot": true,
+              "validate_extract_same_snapshot": true,
+              "snapshot_order_controls_ordinal": true,
+              "original_list_not_read_after_snapshot": true,
+              "snapshot_read_exception_controlled": true,
+              "unsupported_root_fail_closed": true,
+              "unknown_child_fail_closed": true,
+              "partial_set_on_failure": false,
+              "previous_i002_contracts_preserved": true
+            },
+            "closed_findings": ["FND-P1-T06-I003-001"],
+            "open_p0_p1_p2_findings": [],
+            "scope_contract": {
+              "context_production_changed": false,
+              "canonical_public_api_changed": false,
+              "xml_frontend_changed": false,
+              "yaml_frontend_changed": false,
+              "source_graph_changed": false,
+              "typed_key_started": false,
+              "symbol_table_started": false,
+              "pipeline_started": false,
+              "t07_started": false
+            },
+            "reactor_modules": 12,
+            "reactor_result": "PASSED",
+            "java_release": 8,
+            "failure_gate_proof": "PASSED",
+            "database_change": false,
+            "mysql_job": "SKIPPED_NOT_APPLICABLE",
+            "task_status": "PASSED",
+            "current_pr": 21,
+            "merge_authorized": false,
+            "next_task": "TASK-P1-T07",
+            "next_task_started": false,
+            "claim_boundary": "TASK-P1-T06 I003 only; PR #21 remains unmerged and TASK-P1-T07 remains blocked until explicit merge authorization.",
+            "review_id": "REV-000295",
+            "reviewer": "CompletionVerificationAgent",
+            "evidence_id": "EVD-000537",
+            "result": "PASSED"
+          }
+          EOF_COMPLETION
+          sed -i 's/^          //' "$TASK_DIR/evidence/commands/completion-p1-t06-r03/completion-report.json"
+
+          cat > "project_doc/version/V_1.0/tdd_p1_t06_r03_completion.json" <<EOF_MACHINE
+          {
+            "task_id": "TASK-P1-T06",
+            "iteration": "I003",
+            "status": "COMPLETED",
+            "completion_revision": "COMPLETION-P1-T06-R03@$SHORT_DEV",
+            "head_sha": "$DEV_COMMIT",
+            "design_revision": "DESIGN-R25@P1-T06-REWORK-I003",
+            "plan_revision": "TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003",
+            "tdd_revision": "TDD-P1-T06-R03@$SHORT_RED",
+            "architecture_skeleton_revision": "DEVSKEL-P1-T06-R03@$SHORT_SKELETON",
+            "testing_revision": "TESTING-P1-T06-R03@$SHORT_DEV",
+            "open_p0_p1_p2": 0,
+            "current_pr": 21,
+            "merge_authorized": false,
+            "next_task": "TASK-P1-T07",
+            "next_task_started": false
+          }
+          EOF_MACHINE
+          sed -i 's/^          //' "project_doc/version/V_1.0/tdd_p1_t06_r03_completion.json"
+
+          cat > "$TASK_DIR/rework/TASK-P1-T06-I003-rework.md" <<EOF_REWORK_FINAL
+          # TASK-P1-T06 / I003 — Input Snapshot Rework
+
+          - 状态：\`COMPLETED\`
+          - PR：\`#21\`
+          - Branch：\`feature/p1-t06-raw-definition-20260803-1334\`
+          - Rework Base：\`9f7398e213031695a88b975c33c1352d8d4f5583\`
+          - Dependency：\`COMPLETION-P1-T05-R03@30529276cd8f\`
+          - Historical Completion：\`COMPLETION-P1-T06-R01@90d483290cf3\`、\`COMPLETION-P1-T06-R02@aec3cd105b15\`
+          - Design：\`DESIGN-R25@P1-T06-REWORK-I003\`
+          - Plan：\`TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003\`
+          - TDD：\`TDD-P1-T06-R03@$SHORT_RED\`
+          - Architecture Skeleton：\`DEVSKEL-P1-T06-R03@$SHORT_SKELETON\`
+          - Development：\`DEV-P1-T06-R03@$SHORT_DEV\`
+          - Code Review：\`CODEREVIEW-P1-T06-R03@$SHORT_DEV\`
+          - Testing：\`TESTING-P1-T06-R03@$SHORT_DEV\`
+          - Completion：\`COMPLETION-P1-T06-R03@$SHORT_DEV\`
+          - Review：\`REV-000283\`～\`REV-000295\`
+          - Evidence：\`EVD-000525\`～\`EVD-000537\`
+          - Finding：\`FND-P1-T06-I003-001\` — CLOSED
+          - 执行模式：\`SEQUENTIAL / auto / architecture_review / git_checkpoint\`
+
+          public build 现在只迭代调用方 List 一次，冻结不可变 snapshot；validate、extract、ordinal 和 RuntimeException 失败定位只消费该 snapshot。side-effecting List 的 6 项确定性 Oracle 全部通过，上一轮五项 Finding 保持 CLOSED。
+
+          R01/R02 的 Design、Plan、TDD、Skeleton、Development、Testing、Review、Evidence、Completion 和机器 checkpoint 均未覆盖或删除。PR #21 未合并；T07 未启动。
+          EOF_REWORK_FINAL
+          sed -i 's/^          //' "$TASK_DIR/rework/TASK-P1-T06-I003-rework.md"
+
+          cat > "$TASK_DIR/resume_context.md" <<EOF_RESUME
+          # P1-COMPILER-F01 恢复上下文
+
+          - 当前逻辑任务：\`TASK-P1-T06 / I003\` 已完成
+          - Dependency Completion：\`COMPLETION-P1-T05-R03@30529276cd8f\`
+          - 历史 Completion：R01、R02 均被后续独立 Review 推翻并不可变保留
+          - 当前 Completion Revision：\`COMPLETION-P1-T06-R03@$SHORT_DEV\`
+          - 当前任务状态：\`COMPLETED\`
+          - 执行模式：\`SEQUENTIAL / auto / architecture_review / git_checkpoint\`
+          - 基线：\`dev_all@17ce0834b947a75ff3ccbd24c7b1332fb93e8941\`
+          - Rework Base：\`9f7398e213031695a88b975c33c1352d8d4f5583\`
+          - Design：\`DESIGN-R25@P1-T06-REWORK-I003\`
+          - Plan：\`TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003\`
+          - TDD：\`TDD-P1-T06-R03@$SHORT_RED\`
+          - Skeleton：\`DEVSKEL-P1-T06-R03@$SHORT_SKELETON\`
+          - Development/Testing/Completion Head：\`$DEV_COMMIT\`
+          - Workflow Run：\`$GITHUB_RUN_ID\`
+          - Artifact：\`$ARTIFACT_ID\` / \`$ARTIFACT_DIGEST\`
+          - T06 Raw：37/37；Compiler：120/120；XML：30/30；YAML：59/59；Context：26/26；Demo：4/4；Legacy：1/1
+          - Reactor：12 modules / PASSED；Java release 8：PASSED；故意失败门禁：PASSED
+          - MySQL：\`SKIPPED_NOT_APPLICABLE\`
+          - 开放 P0/P1/P2：无
+          - Finding：\`FND-P1-T06-I003-001\` CLOSED；I002 五项保持 CLOSED
+          - 当前 PR：\`#21\`，目标 \`dev_all\`
+          - 下一 Agent：\`IndependentReviewAgent\`
+          - 下一动作：复核最新 PR #21；仅在明确授权后合并
+          - TASK-P1-T07：未启动且保持阻断
+          - 注意：不得把 MySQL SKIPPED 表述为通过；不得自动合并 PR #21。
+          EOF_RESUME
+          sed -i 's/^          //' "$TASK_DIR/resume_context.md"
+
+          cat > "$TASK_DIR/handoff.md" <<EOF_HANDOFF
+          # P1-COMPILER-F01 Handoff
+
+          TASK-P1-T06 I003 已按 \`common-develop -ar -auto\` 完成。当前有效 Completion 为 \`COMPLETION-P1-T06-R03@$SHORT_DEV\`；R01/R02 历史保留。PR #21 仍 Open 且未合并。
+
+          下一步只允许对最新 Head 执行独立 Review。Review 通过并得到用户明确合并授权后，才能合并 PR #21；合并后才能从最新 dev_all 启动 TASK-P1-T07。
+          EOF_HANDOFF
+          sed -i 's/^          //' "$TASK_DIR/handoff.md"
+
+          python3 - <<'PY_TASK_APPEND'
+          from pathlib import Path
+          path = Path('project_doc/version/V_1.0/task/P1-COMPILER-F01/TASK-P1-T06.md')
+          text = path.read_text(encoding='utf-8')
+          marker = '## I003 Input Snapshot Rework'
+          if marker not in text:
+              text += '''\n\n## I003 Input Snapshot Rework\n\n- Finding `FND-P1-T06-I003-001` 已关闭；\n- public build 一次性冻结输入 List，validate/extract/ordinal 使用同一不可变 snapshot；\n- 6 项 side-effecting List Oracle 全绿；\n- 当前 Completion：`COMPLETION-P1-T06-R03`；\n- PR #21 未合并，TASK-P1-T07 未启动。\n'''
+              path.write_text(text, encoding='utf-8')
+          PY_TASK_APPEND
+
+          test "$(git rev-parse HEAD:"$DESIGN_PATH")" = "$DESIGN_BLOB"
+          test "$(git rev-parse HEAD:"$PLAN_PATH")" = "$PLAN_BLOB"
+          python3 -m json.tool "$TASK_DIR/evidence/revision-lock-p1-t06-r03.json" >/dev/null
+          python3 -m json.tool "$TASK_DIR/evidence/commands/completion-p1-t06-r03/completion-report.json" >/dev/null
+          python3 -m json.tool "project_doc/version/V_1.0/tdd_p1_t06_r03_completion.json" >/dev/null
+
+          git add project_doc/version/V_1.0
+          git commit -m "docs(t06): complete I003 snapshot rework"
+          FINAL_DOC_HEAD="$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD:"$DESIGN_PATH")" = "$DESIGN_BLOB"
+          test "$(git rev-parse HEAD:"$PLAN_PATH")" = "$PLAN_BLOB"
+
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
+          echo "final_doc_head=$FINAL_DOC_HEAD" >> "$GITHUB_OUTPUT"
