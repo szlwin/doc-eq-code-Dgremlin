@@ -1,33 +1,35 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T06 / I002` 已完成
+- 当前逻辑任务：`TASK-P1-T06 / I003` 已完成
 - Dependency Completion：`COMPLETION-P1-T05-R03@30529276cd8f`
-- 历史 Completion：`COMPLETION-P1-T06-R01@90d483290cf3`，被 `REV-000270` 推翻并保留
-- 当前 Completion Revision：`COMPLETION-P1-T06-R02@aec3cd105b15`
+- 历史 Completion：`COMPLETION-P1-T06-R01@90d483290cf3`、`COMPLETION-P1-T06-R02@aec3cd105b15`，均被后续独立 Review 推翻并不可变保留
+- 当前 Completion Revision：`COMPLETION-P1-T06-R03@432ccdc1103f`
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@17ce0834b947a75ff3ccbd24c7b1332fb93e8941`
-- Rework Base：`1247c024b38e1affe35f38671446187df98f5c34`
-- 当前设计事实：`DESIGN-R24@P1-T06-REWORK-I002`
-- 当前实施计划：`TP-P1-COMPILER-F01-R20@P1-T06-REWORK-I002`
-- TDD：`TDD-P1-T06-R02@895d907b1980`
-- Architecture Skeleton：`DEVSKEL-P1-T06-R02@a90d4cf220d0`
-- Development：`DEV-P1-T06-R02@aec3cd105b15`
-- Code Review：`CODEREVIEW-P1-T06-R02@aec3cd105b15`
-- Testing：`TESTING-P1-T06-R02@aec3cd105b15`
-- Review：`REV-000270`～`REV-000282`
-- Evidence：`EVD-000512`～`EVD-000524`
+- Rework Base：`3884f331dd066da1ff556f9b0544716d7ca3502c`
+- Design：`DESIGN-R25@P1-T06-REWORK-I003`
+- Plan：`TP-P1-COMPILER-F01-R21@P1-T06-REWORK-I003`
+- TDD：`TDD-P1-T06-R03@ea1701deb923`
+- Architecture Skeleton：`DEVSKEL-P1-T06-R03@35357c213fdc`
+- Development：`DEV-P1-T06-R03@432ccdc1103f`
+- Code Review：`CODEREVIEW-P1-T06-R03@432ccdc1103f`
+- Testing：`TESTING-P1-T06-R03@432ccdc1103f`
+- Review：`REV-000283`～`REV-000295`
+- Evidence：`EVD-000525`～`EVD-000537`
+- Finding：`FND-P1-T06-I003-001` CLOSED
 - 开放 P0/P1/P2：无
-- Clean-code Head：`aec3cd105b15a302d8c1c91014c6c16529ef8c6a`
-- Clean-code P0 Run：`30793559695`，结果 `PASSED`
-- Artifact：`8847970363`
-- Artifact SHA-256：`922f8b7dc26245d6f0001ea1b6da86be05aed68ec21c1504634ec9f28ad64ae9`
-- Artifact 独立校验：ZIP SHA-256 与 GitHub digest 一致，55 个 Surefire XML 已解析
-- T06 Raw：31/31
-- Compiler total：114/114
-- XML T04：30/30
-- YAML T05：59/59
+- Clean-code Head：`432ccdc1103f0119230858e7ae2343529af6c294`
+- P0 Run：`30801214669`，结果 `PASSED`
+- Artifact：`8850875201`
+- Artifact SHA-256：`eadc28a2db03ff23405869712aefa84398cf1b9b37f9408b20d348af67d783b7`
+- Artifact 独立校验：实际 ZIP SHA-256 与 GitHub digest 一致；55 个 Surefire XML 已解析
+- I003 snapshot：7/7
+- T06 Raw：38/38
+- Compiler total：121/121
+- XML：30/30
+- YAML：59/59
 - Context 正常测试：26/26
 - Demo：4/4
 - Legacy declaration：1/1
@@ -35,33 +37,20 @@
 - Reactor：12 modules / PASSED
 - Java release 8：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- Revision Lock：R24 `ff669cc0cf4182a8ec2bf6a7b47389709c8695d8`；R20 `7969acbfc877277c7bc605c4b311ce8fa4014e01`
-- Revision Integrity：R24/R20 在 RED 前创建，clean-code Head 复核 blob 不变
-- 生产包：`dec.core.compiler.raw`
-- 新增策略：`RawBuilderLimits`，production depth 256 / node count 65,536
-- 构建顺序：整批 depth/node/Grammar/definition/reference 验证 → 定义提取 → 不可变集合发布
-- Lexical：owner/name/reference 仅判空白并保留原值
-- Composite owner：RULE 使用原始 system/ruleView；PRODUCE 使用原始 directory/action
-- PRODUCE optional ref：缺失或纯空白映射为 empty，不创建 RawReference
-- Public RawDefinition：14 Kind owner/name matrix
-- Public RawBuildResult.failed：ERROR + MIX_STRUCTURE_UNKNOWN + `raw-definition-builder`
-- Reference validation：第一阶段，当前节点精确 SourceRef；MODEL_ACCESS 双重事实优先 reference failure
-- Limits：进入其他递归逻辑前检查；整批节点累计；不捕获 StackOverflowError
-- toString：RawDefinition 全语义字段；RawDefinitionSet 可表现 definition 差异
-- Ordinal：输入文档顺序 + 定义先序，严格 `0..size-1`
-- References：role + lexical target + SourceRef；不解析、不执行 I/O
-- Reference scope：进入嵌套语义定义前停止父定义引用遍历
-- Body：递归保存 name、稳定 attributes、可选 scalar、有序 children、SourceRef
-- Failure：`FAILED` + `MIX_STRUCTURE_UNKNOWN` + empty RawDefinitionSet
-- 架构隔离：无 parser 类型、无 static 可变业务 registry、无 public mutator、无跨调用状态
-- Finding：I002 五项全部 CLOSED
+- Revision Lock：R25 `6715d7b217e01801f5ff1c26ba67c34c8e65f39d`；R21 `9293a04977f80b3e1ffa7499cdbc1e4081ca9a1c`
+- Revision Integrity：R25/R21 在 RED 前创建，clean-code Head 复核 blob 不变
+- 输入边界：调用方 List 只迭代一次，复制结果逐项校验并冻结为不可变 snapshot
+- 两阶段：validate、extract、ordinal 和失败定位只消费同一 snapshot
+- 异常边界：snapshot 读取 RuntimeException 返回 `raw.build.failed`，不再次访问原始 List，不发布部分集合
+- Grammar：unsupported root/unknown child 无法通过批次变化绕过验证
+- 上一轮 I002 五项 Finding：保持 CLOSED
 - Scope：未修改 Context、Source Graph、Canonical API、XML/YAML Frontend 生产代码
-- 未启动：TypedKey、SymbolTable、引用解析、Deferred、Pipeline、Digest、Publication、T07
+- 未启动：TypedKey、SymbolTable、引用解析、Deferred、Pipeline、Digest、Publication、TASK-P1-T07
 - 当前 PR：`#21`，目标 `dev_all`
 - 当前分支：`feature/p1-t06-raw-definition-20260803-1334`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t06-r02/completion-report.json`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t06_r02_completion.json`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t06-r03/completion-report.json`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t06_r03_completion.json`
 - 下一 Agent：`IndependentReviewAgent`
-- 下一动作：复核 PR #21；仅在明确授权后合并；合并后才能从最新 `dev_all` 启动 `TASK-P1-T07`
+- 下一动作：复核最新 PR #21；仅在用户明确授权后合并；合并后才能从最新 `dev_all` 启动 `TASK-P1-T07`
 - TASK-P1-T07：未启动且保持阻断
 - 注意：不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #21。
