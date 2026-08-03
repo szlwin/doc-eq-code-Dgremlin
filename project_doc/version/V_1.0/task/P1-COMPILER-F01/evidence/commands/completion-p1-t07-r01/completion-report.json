@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T07",
+  "iteration": "I001",
+  "completion_revision": "COMPLETION-P1-T07-R01@7f4ee8a0ee5a",
+  "status": "PASSED",
+  "base": {
+    "branch": "dev_all",
+    "sha": "3e0492b0319173c87abff6952d4dad0f5507c31c"
+  },
+  "branch": "feature/p1-t07-symbol-table-20260803-1958",
+  "clean_code_head": "7f4ee8a0ee5a8be84e8edfe715a85189858ac425",
+  "dependency": "COMPLETION-P1-T06-R04@242db638c61d",
+  "revisions": {
+    "design": "DESIGN-R27@P1-T07-I001",
+    "plan": "TP-P1-COMPILER-F01-R23@P1-T07-I001",
+    "tdd": "TDD-P1-T07-R01@9e7dbc1bb451",
+    "architecture_skeleton": "DEVSKEL-P1-T07-R01@c4d33f9ec8e9",
+    "development": "DEV-P1-T07-R01@7f4ee8a0ee5a",
+    "code_review": "CODEREVIEW-P1-T07-R01@7f4ee8a0ee5a",
+    "testing": "TESTING-P1-T07-R01@7f4ee8a0ee5a",
+    "completion": "COMPLETION-P1-T07-R01@7f4ee8a0ee5a"
+  },
+  "revision_integrity": {
+    "design_blob": "613edfdc133fa68aa12ae3adc31eb8ae23058d9c",
+    "plan_blob": "840989a6119e7e5f99981957614806c2152ea56d",
+    "created_before_red": true,
+    "unchanged_at_clean_code_head": true
+  },
+  "tdd_red": {
+    "head": "9e7dbc1bb451c5298fa6b7ea5f354ae000619111",
+    "run_id": 30813248674,
+    "artifact_id": 8855634753,
+    "artifact_sha256": "ff21e56d18678c923bd340e2c4ac887df763874b6dfc74e870cc4aa2dcc5d7ea",
+    "typed_key": {"tests": 5, "failures": 0, "errors": 0},
+    "symbol_registration": {"tests": 11, "failures": 11, "errors": 0},
+    "java_release_8_compiled": true,
+    "red_reason": "symbol.registration.not-implemented"
+  },
+  "architecture_skeleton": {
+    "head": "c4d33f9ec8e9b47ec3980f52e49b37e979d66ee5",
+    "run_id": 30813513010,
+    "artifact_id": 8855741148,
+    "artifact_sha256": "54354b82bf424f66d5967c7862101ead87b161724eb23de1584929799c546458",
+    "controlled_failures": 10,
+    "errors": 0,
+    "first_pass_and_resource_seams_active": true,
+    "second_pass_controlled_red": true
+  },
+  "superseded_green_attempt": {
+    "head": "7612ebc81c6bb45b85a997723c41f85bd16a7207",
+    "run_id": 30813780829,
+    "result": "SUCCESS",
+    "superseded_by_review": true,
+    "finding": "FND-P1-T07-I001-001"
+  },
+  "review_reproduction": {
+    "head": "0aefe724a1b1d09d10ee665f2c8f08b308fe017f",
+    "run_id": 30814139674,
+    "artifact_id": 8855995704,
+    "artifact_sha256": "6b98ce449c41b3c1d639d30ee0295f6357365f1633776c974b1cc73ec3b92a3b",
+    "tests": 4,
+    "failures": 1,
+    "errors": 0,
+    "finding": "first-pass diagnostics short-circuited second-pass finding collection"
+  },
+  "final_testing": {
+    "run_id": 30814383829,
+    "result": "SUCCESS",
+    "artifact_id": 8856098502,
+    "artifact_sha256": "1f71fb0f3f2615dfc599792e5760993048f832a085bdfed965b44b0f13acfdf8",
+    "artifact_independent_sha256_match": true,
+    "surefire_xml_count": 60,
+    "symbol": {"tests": 23, "failures": 0, "errors": 0, "skipped": 0},
+    "compiler": {"tests": 152, "failures": 0, "errors": 0, "skipped": 0},
+    "xml": {"tests": 30, "failures": 0, "errors": 0, "skipped": 0},
+    "yaml": {"tests": 59, "failures": 0, "errors": 0, "skipped": 0},
+    "context_normal": {"tests": 26, "failures": 0, "errors": 0, "skipped": 0},
+    "demo": {"tests": 4, "failures": 0, "errors": 0, "skipped": 0},
+    "legacy_declaration": {"tests": 1, "failures": 0, "errors": 0, "skipped": 0},
+    "intentional_failure_gate": {"tests": 1, "expected_failures": 1, "recognized": true},
+    "reactor_modules": 12,
+    "java_release_8": "PASSED",
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "contracts": {
+    "published_typed_key_kinds": 11,
+    "two_pass_registration": true,
+    "both_passes_complete_before_failure": true,
+    "duplicate_last_write_wins": false,
+    "duplicate_first_definition_preserved": true,
+    "duplicate_diagnostic_has_both_source_refs": true,
+    "information_system_owner": true,
+    "produce_source_ordinal_identity": true,
+    "owner_context_fail_closed": true,
+    "ordered_immutable_registry": true,
+    "partial_table_on_failure": false,
+    "raw_reference_resolution": false,
+    "definition_count_limit": 65536
+  },
+  "scope": {
+    "context_production_modified": false,
+    "raw_production_modified": false,
+    "frontend_production_modified": false,
+    "compiler_api_modified": false,
+    "t08_started": false,
+    "override_annotation_own_line": true,
+    "chinese_method_and_logic_comments": true
+  },
+  "reviews": {
+    "ids": [
+      "REV-000309", "REV-000310", "REV-000311", "REV-000312",
+      "REV-000313", "REV-000314", "REV-000315", "REV-000316",
+      "REV-000317", "REV-000318", "REV-000319", "REV-000320",
+      "REV-000321", "REV-000322", "REV-000323"
+    ],
+    "evidence_range": "EVD-000551..EVD-000566",
+    "open_p0": 0,
+    "open_p1": 0,
+    "open_p2": 0
+  },
+  "next": {
+    "agent": "IndependentReviewAgent",
+    "action": "Review PR #22 at final documented head; merge only with explicit user authorization",
+    "task_p1_t08": "BLOCKED_UNTIL_PR_MERGE"
+  }
+}
