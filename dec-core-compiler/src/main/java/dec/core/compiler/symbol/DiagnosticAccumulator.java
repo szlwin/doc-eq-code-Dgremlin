@@ -3,35 +3,32 @@ package dec.core.compiler.symbol;
 import dec.core.context.model.Diagnostic;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
- * 单次 Symbol 构建使用的 Diagnostic 去重接缝。
+ * 单次 Symbol 构建使用的稳定 Diagnostic 去重器。
  *
- * <p>当前 TDD seam 故意保留线性扫描，用于形成复杂度 Review 的真实 RED；
- * Architecture Skeleton Review 通过后再替换为哈希集合实现。</p>
+ * <p>使用 LinkedHashSet 保持首次报告顺序，并把每次去重降为一次哈希集合 add。
+ * 最终稳定排序仍由 SymbolBuildResult 按 Diagnostic.compareTo 完成。</p>
  */
 final class DiagnosticAccumulator {
-    private final List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
+    private final Set<Diagnostic> diagnostics =
+            new LinkedHashSet<Diagnostic>();
     private long deduplicationSteps;
 
     /**
-     * 通过显式线性比较加入 Diagnostic；完全相同的事实只保留一次。
+     * 每次报告只执行一次哈希集合插入尝试；完全相同的事实只保留一次。
      */
     void add(Diagnostic diagnostic) {
-        Diagnostic required = Objects.requireNonNull(diagnostic, "diagnostic");
-        for (Diagnostic existing : diagnostics) {
-            deduplicationSteps++;
-            if (existing.equals(required)) {
-                return;
-            }
-        }
-        diagnostics.add(required);
+        deduplicationSteps++;
+        diagnostics.add(Objects.requireNonNull(diagnostic, "diagnostic"));
     }
 
     /**
-     * 返回当前 Diagnostic 的不可变 defensive copy。
+     * 返回保持首次报告顺序的不可变 defensive copy。
      */
     List<Diagnostic> values() {
         return Collections.unmodifiableList(
@@ -39,7 +36,7 @@ final class DiagnosticAccumulator {
     }
 
     /**
-     * 返回本 seam 执行的去重比较步骤数，仅供同包确定性测试使用。
+     * 返回集合 add 的尝试次数，仅供同包确定性测试验证线性步骤。
      */
     long deduplicationSteps() {
         return deduplicationSteps;
