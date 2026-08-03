@@ -13,6 +13,9 @@ public final class RawReference {
 
     /**
      * 创建一个只保存 lexical role、target 和来源位置的引用。
+     *
+     * <p>role 与 target 只使用 trim 判断空白，保存时保留原始字符串，
+     * 避免 T06 在 TypedKey 阶段前提前规范化来源事实。</p>
      */
     public RawReference(String role, String target, SourceRef sourceRef) {
         this.role = requireText(role, "role");
@@ -25,7 +28,7 @@ public final class RawReference {
         return role;
     }
 
-    /** 返回尚未解析的目标文本。 */
+    /** 返回尚未解析且未经规范化的目标文本。 */
     public String target() {
         return target;
     }
@@ -35,12 +38,15 @@ public final class RawReference {
         return sourceRef;
     }
 
+    /**
+     * 校验文本非空白并返回原始 lexical 值。
+     */
     private static String requireText(String value, String name) {
-        String normalized = Objects.requireNonNull(value, name).trim();
-        if (normalized.isEmpty()) {
+        String required = Objects.requireNonNull(value, name);
+        if (required.trim().isEmpty()) {
             throw new IllegalArgumentException(name + " must not be blank");
         }
-        return normalized;
+        return required;
     }
 
     @Override
