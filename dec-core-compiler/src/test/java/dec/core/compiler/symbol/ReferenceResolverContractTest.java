@@ -55,10 +55,12 @@ class ReferenceResolverContractTest {
     @Test
     void resolvesForwardRuleViewWithoutDiscoveryOrderDependency() {
         RawDefinitionSet definitions = ReferenceTestFixture.legalDefinitions();
-        ResolvedReferenceSet references = new ReferenceResolver().resolve(
+        ReferenceResolutionResult result = new ReferenceResolver().resolve(
                 definitions,
-                ReferenceTestFixture.symbols(definitions))
-                .resolvedReferences().get();
+                ReferenceTestFixture.symbols(definitions));
+        assertEquals(ReferenceResolutionStatus.RESOLVED, result.status());
+        assertTrue(result.resolvedReferences().isPresent());
+        ResolvedReferenceSet references = result.resolvedReferences().get();
 
         List<ResolvedReference> ruleReferences = references.referencesFrom(
                 new RuleViewKey(new SystemKey("user"), "check"));
@@ -113,10 +115,12 @@ class ReferenceResolverContractTest {
     @Test
     void resolvesQualifiedInformationAndSameScopeDirectory() {
         RawDefinitionSet definitions = ReferenceTestFixture.legalDefinitions();
-        ResolvedReferenceSet references = new ReferenceResolver().resolve(
+        ReferenceResolutionResult result = new ReferenceResolver().resolve(
                 definitions,
-                ReferenceTestFixture.symbols(definitions))
-                .resolvedReferences().get();
+                ReferenceTestFixture.symbols(definitions));
+        assertEquals(ReferenceResolutionStatus.RESOLVED, result.status());
+        assertTrue(result.resolvedReferences().isPresent());
+        ResolvedReferenceSet references = result.resolvedReferences().get();
 
         assertTrue(references.references().stream().anyMatch(reference ->
                 reference.targetKey() instanceof InformationKey));
@@ -141,10 +145,12 @@ class ReferenceResolverContractTest {
     @Test
     void publishesImmutableResolvedReferences() {
         RawDefinitionSet definitions = ReferenceTestFixture.legalDefinitions();
-        ResolvedReferenceSet references = new ReferenceResolver().resolve(
+        ReferenceResolutionResult result = new ReferenceResolver().resolve(
                 definitions,
-                ReferenceTestFixture.symbols(definitions))
-                .resolvedReferences().get();
+                ReferenceTestFixture.symbols(definitions));
+        assertEquals(ReferenceResolutionStatus.RESOLVED, result.status());
+        assertTrue(result.resolvedReferences().isPresent());
+        ResolvedReferenceSet references = result.resolvedReferences().get();
 
         assertThrows(UnsupportedOperationException.class,
                 () -> references.references().clear());
