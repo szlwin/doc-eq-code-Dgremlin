@@ -1,42 +1,61 @@
 # TASK-P1-T07 / I002 — owner identity 与 Diagnostic 聚合 Rework
 
-- 状态：`IN_PROGRESS`
-- PR：`#22`（Draft）
+- 状态：`COMPLETED`
+- Result：`PASSED`
+- PR：`#22`
 - Branch：`feature/p1-t07-symbol-table-20260803-1958`
 - Base：`dev_all@3e0492b0319173c87abff6952d4dad0f5507c31c`
 - Rework Base：`43846e2d2e2c8b174fb87cdeb15e16c37392f505`
 - Superseded Completion：`COMPLETION-P1-T07-R01@7f4ee8a0ee5a`
+- Current Completion：`COMPLETION-P1-T07-R02@ffe544e3060d`
 - Dependency：`COMPLETION-P1-T06-R04@242db638c61d`
 - Design：`DESIGN-R28@P1-T07-REWORK-I002`
 - Plan：`TP-P1-COMPILER-F01-R24@P1-T07-REWORK-I002`
+- TDD：`TDD-P1-T07-R02@619714e24fd5`
+- Clean-code Head：`ffe544e3060dd15b82a73677b30147aaa4b360af`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 
-## Review Finding
+## Finding Closure
 
-- `FND-P1-T07-I002-001` `[P1][OPEN]`：结构 owner 错误地使用 trim 后 TypedKey name 与 Raw lexical token 比较；
-- `FND-P1-T07-I002-002` `[P1][OPEN]`：RuleView 错误依赖最近扫描 System，不能支持独立文档顺序；
-- `FND-P1-T07-I002-003` `[P2][OPEN]`：Diagnostic 去重使用 `ArrayList.contains`，最坏 O(n²)。
+- `FND-P1-T07-I002-001` `[P1][CLOSED]`：Raw lexical owner 与 canonical TypedKey context 已分离；
+- `FND-P1-T07-I002-002` `[P1][CLOSED]`：RuleView 按自身 ownerToken 在完整 System 集合登记；
+- `FND-P1-T07-I002-003` `[P2][CLOSED]`：Diagnostic 使用 LinkedHashSet 单次 add 去重。
 
-## 冻结决策
+## 实现结果
 
-- 结构 owner 使用原始 lexical parent name 做精确 equals；
-- TypedKey 构造独立执行 Context canonical trim；
-- RuleView 根据自身 ownerToken 构造 SystemKey，并在完整 System 集合中做 canonical 存在性校验；
-- missing System 使用 `symbol.owner.system.missing` fail closed；
-- Diagnostic 使用哈希集合线性聚合，最终由 SymbolBuildResult 稳定排序；
-- R01、R27、R23、既有 Review/Evidence/Completion 全部不可变保留。
+- System/Information、Scope/Directory、Directory/Action、Action/Produce 使用原始 lexical parent 校验；
+- TypedKey 继续使用 Context 已冻结的 trim canonical；
+- RawDefinition 的 owner/name lexical 原样保留；
+- RuleView 支持位于 System 前后、非最近 System、多 System、多 RuleView 和同名 owner 隔离；
+- RuleView owner 不存在时产生 `symbol.owner.system.missing`，且不发布部分表；
+- Diagnostic N 次报告固定为 N 次哈希集合 add 尝试；
+- 无效 owner 上下文不泄漏到后续 Information/Produce；
+- 未修改 Context、Raw、Frontend、Compiler API；未启动 T08。
 
-## 编码规则
+## 流程证据
 
-- Java release 8；
-- `@Override` 注解独占一行；
-- 方法、构造器和重要 owner、RuleView、Diagnostic、资源、失败逻辑添加中文注释；
-- 不修改 Context、Raw、Frontend 或 Compiler API 生产合同；
-- 不实现 T08，不合并 PR #22。
+- 有效 RED Run：`30818564155`，9 failures / 0 errors；
+- Skeleton A01：`15f6e0e8ef9b`，REJECTED；
+- GREEN A02：`a74fa3962641`，REJECTED；
+- Final P0 Run：`30819541292`，SUCCESS；
+- Artifact：`8858227740`；
+- SHA-256：`e976842a19ff208a951e143e0e66e90a2c2fb75d4782c1c26850f133cde15356`，独立比对一致；
+- Symbol：32/32；Compiler：161/161；XML：30/30；YAML：59/59；Context 正常：26/26；Demo：4/4；Legacy：1/1；
+- 故意失败门禁：1 项按预期失败；
+- Java release 8、12 模块 Reactor：PASSED；
+- MySQL：`SKIPPED_NOT_APPLICABLE`。
 
-## 当前 Gate
+## Revision Integrity
 
-- Design R28：PASSED；
-- Plan R24：PASSED；
-- Open P0/P1/P2：`0 / 2 / 1`；
-- 下一阶段：建立可编译 TDD seam 与有效 RED。
+- R28 blob：`142ec612eb5658f41108330a4ca5b545521fd85c`；
+- R24 blob：`7a041c5c3811c1725482ee0b5ad288428c745a4e`；
+- 均在 RED 前创建，clean-code Head 复核未变化。
+
+## Final Gate
+
+- Review：`REV-000324`～`REV-000338`；
+- Evidence：`EVD-000567`～`EVD-000585`；
+- Open P0/P1/P2：`0 / 0 / 0`；
+- 下一 Agent：`IndependentReviewAgent`；
+- PR #22 未经用户明确授权不得合并；
+- TASK-P1-T08：`BLOCKED_UNTIL_PR_MERGE`。
