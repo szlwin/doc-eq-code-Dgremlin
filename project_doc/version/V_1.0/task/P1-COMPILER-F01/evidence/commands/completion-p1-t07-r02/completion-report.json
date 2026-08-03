@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T07",
+  "iteration": "I002",
+  "completion_revision": "COMPLETION-P1-T07-R02@ffe544e3060d",
+  "status": "PASSED",
+  "base": {
+    "branch": "dev_all",
+    "sha": "3e0492b0319173c87abff6952d4dad0f5507c31c"
+  },
+  "branch": "feature/p1-t07-symbol-table-20260803-1958",
+  "pr": 22,
+  "rework_base": "43846e2d2e2c8b174fb87cdeb15e16c37392f505",
+  "clean_code_head": "ffe544e3060dd15b82a73677b30147aaa4b360af",
+  "dependency": "COMPLETION-P1-T06-R04@242db638c61d",
+  "superseded_completion": "COMPLETION-P1-T07-R01@7f4ee8a0ee5a",
+  "revisions": {
+    "design": "DESIGN-R28@P1-T07-REWORK-I002",
+    "plan": "TP-P1-COMPILER-F01-R24@P1-T07-REWORK-I002",
+    "tdd": "TDD-P1-T07-R02@619714e24fd5",
+    "rejected_skeleton": "DEVSKEL-P1-T07-R02-A01@15f6e0e8ef9b",
+    "architecture_skeleton": "DEVSKEL-P1-T07-R02@ffe544e3060d",
+    "development": "DEV-P1-T07-R02@ffe544e3060d",
+    "code_review": "CODEREVIEW-P1-T07-R02@ffe544e3060d",
+    "testing": "TESTING-P1-T07-R02@ffe544e3060d",
+    "completion": "COMPLETION-P1-T07-R02@ffe544e3060d"
+  },
+  "revision_integrity": {
+    "design_first_commit": "b717288297a5c78a79584412909f7e74550f7beb",
+    "design_blob": "142ec612eb5658f41108330a4ca5b545521fd85c",
+    "plan_first_commit": "577c68cb5b79993909660485110f11f4f8495f7a",
+    "plan_blob": "7a041c5c3811c1725482ee0b5ad288428c745a4e",
+    "created_before_red": true,
+    "unchanged_at_clean_code_head": true
+  },
+  "tdd_red": {
+    "head": "619714e24fd5e37fc186897485aef1f9039c6209",
+    "run_id": 30818564155,
+    "artifact_id": 8857812598,
+    "artifact_sha256": "d584ce9118363c6cb36d39812d0de7b8b6a733e668a0d92b791a1c46aa50c163",
+    "new_tests": 9,
+    "failures": 9,
+    "errors": 0,
+    "existing_symbol_tests": 23,
+    "existing_symbol_failures": 0,
+    "java_release_8_compiled": true
+  },
+  "attempts": [
+    {
+      "head": "15f6e0e8ef9b238e8f4936c453f8bd5ca991966f",
+      "type": "ARCHITECTURE_SKELETON_A01",
+      "run_id": 30818790734,
+      "artifact_id": 8857911802,
+      "artifact_sha256": "b485ecfc40d33a685ca6ac0cc8d8a5a12319ad6838f692fbe0e595171f62f288",
+      "result": "REJECTED",
+      "reason": "RuleView not-implemented seam regressed four existing contracts"
+    },
+    {
+      "head": "a74fa39626417f913c08c82e9dc59c00e5ad9f1f",
+      "type": "GREEN_A02",
+      "run_id": 30819131805,
+      "artifact_id": 8858051077,
+      "artifact_sha256": "b91705661c932c7c2009a31af90c72e562789031ad3db53f5bd53f39a79c0e46",
+      "result": "REJECTED",
+      "reason": "missing System context was not diagnosed and RuleView cleared valid System context"
+    }
+  ],
+  "final_testing": {
+    "run_id": 30819541292,
+    "result": "SUCCESS",
+    "artifact_id": 8858227740,
+    "artifact_size": 1809247,
+    "artifact_sha256": "e976842a19ff208a951e143e0e66e90a2c2fb75d4782c1c26850f133cde15356",
+    "artifact_independent_sha256_match": true,
+    "surefire_xml_count": 62,
+    "symbol": {"tests": 32, "failures": 0, "errors": 0, "skipped": 0},
+    "compiler": {"tests": 161, "failures": 0, "errors": 0, "skipped": 0},
+    "xml": {"tests": 30, "failures": 0, "errors": 0, "skipped": 0},
+    "yaml": {"tests": 59, "failures": 0, "errors": 0, "skipped": 0},
+    "context_normal": {"tests": 26, "failures": 0, "errors": 0, "skipped": 0},
+    "demo": {"tests": 4, "failures": 0, "errors": 0, "skipped": 0},
+    "legacy_declaration": {"tests": 1, "failures": 0, "errors": 0, "skipped": 0},
+    "intentional_failure_gate": {"tests": 1, "expected_failures": 1, "recognized": true},
+    "reactor_modules": 12,
+    "java_release_8": "PASSED",
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "findings": {
+    "FND-P1-T07-I002-001": "CLOSED",
+    "FND-P1-T07-I002-002": "CLOSED",
+    "FND-P1-T07-I002-003": "CLOSED"
+  },
+  "contracts": {
+    "raw_lexical_context_separate_from_typed_key": true,
+    "structural_owner_compares_raw_lexical": true,
+    "typed_key_canonicalization_preserved": true,
+    "raw_definition_lexical_preserved": true,
+    "rule_view_uses_explicit_owner_token": true,
+    "rule_view_order_independent": true,
+    "rule_view_owner_must_exist": true,
+    "missing_system_message_key": "symbol.owner.system.missing",
+    "diagnostic_hash_deduplication": true,
+    "diagnostic_add_steps_linear": true,
+    "partial_table_on_failure": false,
+    "raw_reference_resolution": false,
+    "t08_started": false
+  },
+  "scope": {
+    "context_production_modified": false,
+    "raw_production_modified": false,
+    "frontend_production_modified": false,
+    "compiler_api_modified": false,
+    "override_annotation_own_line": true,
+    "chinese_method_and_logic_comments": true
+  },
+  "reviews": {
+    "ids": [
+      "REV-000324", "REV-000325", "REV-000326", "REV-000327",
+      "REV-000328", "REV-000329", "REV-000330", "REV-000331",
+      "REV-000332", "REV-000333", "REV-000334", "REV-000335",
+      "REV-000336", "REV-000337", "REV-000338"
+    ],
+    "evidence_range": "EVD-000567..EVD-000585",
+    "open_p0": 0,
+    "open_p1": 0,
+    "open_p2": 0
+  },
+  "next": {
+    "agent": "IndependentReviewAgent",
+    "action": "Review PR #22 at final documented head; merge only with explicit user authorization",
+    "task_p1_t08": "BLOCKED_UNTIL_PR_MERGE"
+  }
+}
