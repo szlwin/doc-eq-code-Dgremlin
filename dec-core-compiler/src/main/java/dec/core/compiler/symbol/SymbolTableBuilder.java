@@ -1,6 +1,7 @@
 package dec.core.compiler.symbol;
 
 import dec.core.compiler.raw.RawDefinition;
+import dec.core.compiler.raw.RawDefinitionKind;
 import dec.core.compiler.raw.RawDefinitionSet;
 import dec.core.context.model.ActionKey;
 import dec.core.context.model.BusinessScopeKey;
@@ -28,9 +29,9 @@ import java.util.TreeMap;
 /**
  * 将 T06 RawDefinitionSet 转换为强类型 SymbolTable 的无状态 Builder。
  *
- * <p>Builder 同时维护 Raw lexical owner 与 canonical TypedKey。第一遍登记
- * 顶层和结构 owner，并延迟 RuleView；第二遍登记 Information 与 Produce。
- * 只有所有步骤完成且无错误时才发布完整表。</p>
+ * <p>结构 owner 使用 T06 保留的原始 lexical name 校验，TypedKey 独立执行
+ * Context canonical 规则。RuleView 根据自身显式 ownerToken 在完整 System
+ * 集合中登记，不依赖文档扫描顺序。</p>
  */
 public final class SymbolTableBuilder {
     private static final String PASS = "symbol-registration";
@@ -54,7 +55,7 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 按两遍结构登记 TypedKey；任一失败都不发布部分 SymbolTable。
+     * 完成两遍 Symbol 注册；任一 ERROR 都不发布部分 SymbolTable。
      */
     public SymbolBuildResult build(RawDefinitionSet definitions) {
         if (definitions == null) {
@@ -87,12 +88,12 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 第一遍登记顶层和结构 owner TypedKey，并暂存显式 owner 的 RuleView。
+     * 第一遍登记顶层与结构 owner Key，并收集待显式解析 owner 的 RuleView。
      */
     private static void firstPass(
             List<RawDefinition> definitions,
             RegistrationState state) {
-        FirstPassContext context = new FirstPassContext();
+        OwnerContext context = new OwnerContext();
         for (RawDefinition definition : definitions) {
             switch (definition.kind()) {
                 case ROOT_CONFIG:
@@ -101,24 +102,24 @@ public final class SymbolTableBuilder {
                 case DATA_SOURCE:
                     registerRootOwned(
                             definition,
-                            context.rootConfigLexicalName,
+                            context.rootLexicalName,
                             new DataSourceKey(requiredName(definition)),
                             state);
                     break;
                 case CONNECTION:
                     registerRootOwned(
                             definition,
-                            context.rootConfigLexicalName,
+                            context.rootLexicalName,
                             new ConnectionKey(requiredName(definition)),
                             state);
                     break;
                 case DATA:
-                    context.leaveOwnedDocuments();
+                    context.clear();
                     register(definition,
                             new DataKey(requiredName(definition)), state);
                     break;
                 case VIEW:
-                    context.leaveOwnedDocuments();
+                    context.clear();
                     register(definition,
                             new ViewKey(requiredName(definition)), state);
                     break;
@@ -130,42 +131,21 @@ public final class SymbolTableBuilder {
                     register(definition, context.systemKey, state);
                     break;
                 case RULE_VIEW:
+                    context.clear();
                     state.deferredRuleViews.add(definition);
                     break;
                 case BUSINESS_SCOPE:
                     String scopeLexicalName = requiredName(definition);
-                    context.enterBusinessScope(
+                    context.enterScope(
                             new BusinessScopeKey(scopeLexicalName),
                             scopeLexicalName);
                     register(definition, context.scopeKey, state);
                     break;
                 case DIRECTORY:
-                    String directoryLexicalName = requiredName(definition);
-                    if (requireOwner(
-                            definition,
-                            context.scopeLexicalName,
-                            state)) {
-                        context.enterDirectory(
-                                new DirectoryKey(
-                                        context.scopeKey,
-                                        directoryLexicalName),
-                                directoryLexicalName);
-                        register(definition, context.directoryKey, state);
-                    }
+                    registerDirectory(definition, context, state);
                     break;
                 case ACTION:
-                    String actionLexicalName = requiredName(definition);
-                    if (requireOwner(
-                            definition,
-                            context.directoryLexicalName,
-                            state)) {
-                        context.enterAction(
-                                new ActionKey(
-                                        context.directoryKey,
-                                        actionLexicalName),
-                                actionLexicalName);
-                        register(definition, context.actionKey, state);
-                    }
+                    registerAction(definition, context, state);
                     break;
                 case INFORMATION:
                 case PRODUCE:
@@ -180,32 +160,82 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * RuleView 延迟登记接缝。
-     *
-     * <p>Skeleton 已确保 RuleView 不再读取最近 System，但显式 owner 的存在性
-     * 查找仍保持受控 RED，待独立 Skeleton Review 通过后实现。</p>
+     * 使用原始 Scope lexical 校验并登记 Directory，同时阻止无效上下文泄漏。
+     */
+    private static void registerDirectory(
+            RawDefinition definition,
+            OwnerContext context,
+            RegistrationState state) {
+        String lexicalName = requiredName(definition);
+        if (!requireOwner(definition, context.scopeLexicalName, state)
+                || context.scopeKey == null) {
+            context.clearDirectory();
+            return;
+        }
+        DirectoryKey key = new DirectoryKey(
+                context.scopeKey,
+                lexicalName);
+        context.enterDirectory(key, lexicalName);
+        register(definition, key, state);
+    }
+
+    /**
+     * 使用原始 Directory lexical 校验并登记 Action，同时阻止无效上下文泄漏。
+     */
+    private static void registerAction(
+            RawDefinition definition,
+            OwnerContext context,
+            RegistrationState state) {
+        String lexicalName = requiredName(definition);
+        if (!requireOwner(
+                definition,
+                context.directoryLexicalName,
+                state)
+                || context.directoryKey == null) {
+            context.clearAction();
+            return;
+        }
+        ActionKey key = new ActionKey(
+                context.directoryKey,
+                lexicalName);
+        context.enterAction(key, lexicalName);
+        register(definition, key, state);
+    }
+
+    /**
+     * 在全部 System 登记完成后，根据 RuleView 自身 ownerToken 登记身份。
      */
     private static void registerRuleViews(RegistrationState state) {
         for (RawDefinition definition : state.deferredRuleViews) {
-            addDiagnostic(state, new Diagnostic(
-                    DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
-                    DiagnosticSeverity.ERROR,
-                    "symbol.rule-view.registration.not-implemented",
-                    null,
-                    definition.sourceRef(),
-                    Collections.<SourceRef>emptyList(),
-                    "请在 Architecture Skeleton Review 后实现 RuleView 显式 owner 登记",
-                    PASS));
+            if (!definition.ownerToken().isPresent()) {
+                addDiagnostic(state, ownerDiagnostic(definition));
+                continue;
+            }
+            SystemKey targetSystem = new SystemKey(
+                    definition.ownerToken().get());
+            RawDefinition ownerDefinition = state.entries.get(targetSystem);
+            if (ownerDefinition == null
+                    || ownerDefinition.kind() != RawDefinitionKind.SYSTEM) {
+                addDiagnostic(state, missingSystemDiagnostic(
+                        definition,
+                        targetSystem));
+                continue;
+            }
+            register(definition,
+                    new RuleViewKey(
+                            targetSystem,
+                            requiredName(definition)),
+                    state);
         }
     }
 
     /**
-     * 第二遍恢复第一遍登记的 owner Key，并使用原始 lexical 登记子定义。
+     * 第二遍恢复 Key 与同一 RawDefinition 的 lexical name，登记 Information/Produce。
      */
     private static void secondPass(
             List<RawDefinition> definitions,
             RegistrationState state) {
-        SecondPassContext context = new SecondPassContext();
+        OwnerContext context = new OwnerContext();
         for (RawDefinition definition : definitions) {
             switch (definition.kind()) {
                 case ROOT_CONFIG:
@@ -213,59 +243,61 @@ public final class SymbolTableBuilder {
                 case CONNECTION:
                 case DATA:
                 case VIEW:
-                    context.leaveOwnedDocuments();
-                    break;
-                case SYSTEM:
-                    context.enterSystem(
-                            keyAtOrdinal(
-                                    definition,
-                                    SystemKey.class,
-                                    state),
-                            requiredName(definition));
-                    break;
-                case INFORMATION:
-                    registerInformation(
-                            definition,
-                            context.systemKey,
-                            context.systemLexicalName,
-                            state);
-                    break;
                 case RULE_VIEW:
                 case RULE:
-                case MODEL_ACCESS:
+                    context.clear();
+                    break;
+                case SYSTEM:
+                    SystemKey systemKey = keyAtOrdinal(
+                            definition,
+                            SystemKey.class,
+                            state);
+                    context.enterSystem(
+                            systemKey,
+                            systemKey == null
+                                    ? null
+                                    : requiredName(definition));
+                    break;
+                case INFORMATION:
+                    registerInformation(definition, context, state);
                     break;
                 case BUSINESS_SCOPE:
-                    context.enterBusinessScope(
-                            keyAtOrdinal(
-                                    definition,
-                                    BusinessScopeKey.class,
-                                    state),
-                            requiredName(definition));
+                    BusinessScopeKey scopeKey = keyAtOrdinal(
+                            definition,
+                            BusinessScopeKey.class,
+                            state);
+                    context.enterScope(
+                            scopeKey,
+                            scopeKey == null
+                                    ? null
+                                    : requiredName(definition));
                     break;
                 case DIRECTORY:
+                    DirectoryKey directoryKey = keyAtOrdinal(
+                            definition,
+                            DirectoryKey.class,
+                            state);
                     context.enterDirectory(
-                            keyAtOrdinal(
-                                    definition,
-                                    DirectoryKey.class,
-                                    state),
-                            requiredName(definition));
+                            directoryKey,
+                            directoryKey == null
+                                    ? null
+                                    : requiredName(definition));
                     break;
                 case ACTION:
+                    ActionKey actionKey = keyAtOrdinal(
+                            definition,
+                            ActionKey.class,
+                            state);
                     context.enterAction(
-                            keyAtOrdinal(
-                                    definition,
-                                    ActionKey.class,
-                                    state),
-                            requiredName(definition));
+                            actionKey,
+                            actionKey == null
+                                    ? null
+                                    : requiredName(definition));
                     break;
                 case PRODUCE:
-                    registerProduce(
-                            definition,
-                            context.directoryKey,
-                            context.directoryLexicalName,
-                            context.actionKey,
-                            context.actionLexicalName,
-                            state);
+                    registerProduce(definition, context, state);
+                    break;
+                case MODEL_ACCESS:
                     break;
                 default:
                     addDiagnostic(state, ownerDiagnostic(definition));
@@ -275,38 +307,41 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 在当前 System 下使用原始 lexical owner 校验并登记 InformationKey。
+     * 使用原始 System lexical owner 校验并创建 canonical InformationKey。
      */
     private static void registerInformation(
             RawDefinition definition,
-            SystemKey systemKey,
-            String systemLexicalName,
+            OwnerContext context,
             RegistrationState state) {
-        if (requireOwner(definition, systemLexicalName, state)) {
-            register(definition,
-                    new InformationKey(
-                            systemKey,
-                            requiredName(definition)),
-                    state);
+        if (context.systemKey == null
+                || !requireOwner(
+                        definition,
+                        context.systemLexicalName,
+                        state)) {
+            return;
         }
+        register(definition,
+                new InformationKey(
+                        context.systemKey,
+                        requiredName(definition)),
+                state);
     }
 
     /**
-     * 使用原始 Directory/Action lexical composite 校验并登记 ProduceKey。
+     * 使用原始 Directory/Action composite owner 校验并登记 ProduceKey。
      */
     private static void registerProduce(
             RawDefinition definition,
-            DirectoryKey directoryKey,
-            String directoryLexicalName,
-            ActionKey actionKey,
-            String actionLexicalName,
+            OwnerContext context,
             RegistrationState state) {
-        String expectedOwner = directoryKey == null
-                || actionKey == null
-                || directoryLexicalName == null
-                || actionLexicalName == null
+        String expectedOwner = context.directoryKey == null
+                || context.actionKey == null
+                || context.directoryLexicalName == null
+                || context.actionLexicalName == null
                 ? null
-                : directoryLexicalName + "/" + actionLexicalName;
+                : context.directoryLexicalName
+                        + "/"
+                        + context.actionLexicalName;
         if (!requireOwner(definition, expectedOwner, state)) {
             return;
         }
@@ -321,12 +356,14 @@ public final class SymbolTableBuilder {
             return;
         }
         register(definition,
-                new ProduceKey(actionKey, (int) ordinal),
+                new ProduceKey(
+                        context.actionKey,
+                        (int) ordinal),
                 state);
     }
 
     /**
-     * 从第一遍 ordinal 映射恢复精确类型的 owner Key。
+     * 从第一遍 ordinal 映射恢复精确类型的 TypedKey。
      */
     private static <T extends DefinitionKey> T keyAtOrdinal(
             RawDefinition definition,
@@ -341,14 +378,14 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 登记需要 ROOT_CONFIG lexical owner 的定义。
+     * 登记需要 ROOT_CONFIG 原始 lexical owner 的定义。
      */
     private static void registerRootOwned(
             RawDefinition definition,
-            String rootConfigLexicalName,
+            String rootLexicalName,
             DefinitionKey key,
             RegistrationState state) {
-        if (requireOwner(definition, rootConfigLexicalName, state)) {
+        if (requireOwner(definition, rootLexicalName, state)) {
             register(definition, key, state);
         }
     }
@@ -371,7 +408,7 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 在写入 TreeMap 前检查重复，首定义永不被后写覆盖。
+     * 在 TreeMap 写入前检查重复，首定义永不被后写覆盖。
      */
     private static void register(
             RawDefinition definition,
@@ -390,7 +427,7 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 向当前调用的 DiagnosticAccumulator 报告新事实。
+     * 以一次哈希集合 add 向当前调用报告 Diagnostic。
      */
     private static void addDiagnostic(
             RegistrationState state,
@@ -399,7 +436,7 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 读取 T06 已强制存在且保留原始 lexical 的 definition name。
+     * 读取 T06 已强制存在并保留原始 lexical 的 definition name。
      */
     private static String requiredName(RawDefinition definition) {
         if (!definition.name().isPresent()) {
@@ -439,7 +476,24 @@ public final class SymbolTableBuilder {
                 null,
                 definition.sourceRef(),
                 Collections.<SourceRef>emptyList(),
-                "请修复 RawDefinition ownerToken 与原始父定义 lexical name 的对应关系",
+                "请修复 ownerToken 与原始父定义 lexical name 的对应关系",
+                PASS);
+    }
+
+    /**
+     * 创建 RuleView 显式 System owner 不存在的稳定诊断。
+     */
+    private static Diagnostic missingSystemDiagnostic(
+            RawDefinition definition,
+            SystemKey targetSystem) {
+        return new Diagnostic(
+                DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
+                DiagnosticSeverity.ERROR,
+                "symbol.owner.system.missing",
+                targetSystem,
+                definition.sourceRef(),
+                Collections.<SourceRef>emptyList(),
+                "请声明 RuleView ownerToken 指向的 System",
                 PASS);
     }
 
@@ -485,10 +539,10 @@ public final class SymbolTableBuilder {
     }
 
     /**
-     * 第一遍维护的 canonical Key 与原始 lexical owner 上下文。
+     * 同时保存 canonical TypedKey 与原始 lexical owner 的调用级上下文。
      */
-    private static final class FirstPassContext {
-        private String rootConfigLexicalName;
+    private static final class OwnerContext {
+        private String rootLexicalName;
         private SystemKey systemKey;
         private String systemLexicalName;
         private BusinessScopeKey scopeKey;
@@ -499,163 +553,74 @@ public final class SymbolTableBuilder {
         private String actionLexicalName;
 
         /**
-         * 进入 ROOT_CONFIG 文档并清空其他 owner 上下文。
+         * 进入 ROOT_CONFIG 并清空其他结构 owner。
          */
         private void enterRoot(String lexicalName) {
-            rootConfigLexicalName = lexicalName;
-            systemKey = null;
-            systemLexicalName = null;
-            scopeKey = null;
-            scopeLexicalName = null;
-            directoryKey = null;
-            directoryLexicalName = null;
-            actionKey = null;
-            actionLexicalName = null;
+            clear();
+            rootLexicalName = lexicalName;
         }
 
         /**
-         * 进入 System，并同时保存 canonical Key 与原始 lexical name。
+         * 进入 System 并同时保存 Key 与原始 lexical name。
          */
-        private void enterSystem(
-                SystemKey key,
-                String lexicalName) {
-            rootConfigLexicalName = null;
+        private void enterSystem(SystemKey key, String lexicalName) {
+            clear();
             systemKey = key;
             systemLexicalName = lexicalName;
-            scopeKey = null;
-            scopeLexicalName = null;
-            directoryKey = null;
-            directoryLexicalName = null;
-            actionKey = null;
-            actionLexicalName = null;
         }
 
         /**
-         * 进入 BusinessScope，并同时保存 Key 与原始 lexical name。
+         * 进入 BusinessScope 并同时保存 Key 与原始 lexical name。
          */
-        private void enterBusinessScope(
+        private void enterScope(
                 BusinessScopeKey key,
                 String lexicalName) {
-            rootConfigLexicalName = null;
-            systemKey = null;
-            systemLexicalName = null;
+            clear();
             scopeKey = key;
             scopeLexicalName = lexicalName;
-            directoryKey = null;
-            directoryLexicalName = null;
-            actionKey = null;
-            actionLexicalName = null;
         }
 
         /**
-         * 进入 Directory，并保存供 Action/Produce 使用的原始 lexical name。
+         * 进入 Directory，并清空旧 Action 上下文。
          */
         private void enterDirectory(
                 DirectoryKey key,
                 String lexicalName) {
             directoryKey = key;
             directoryLexicalName = lexicalName;
-            actionKey = null;
-            actionLexicalName = null;
+            clearAction();
         }
 
         /**
-         * 进入 Action，并保存供 Produce composite owner 使用的 lexical name。
+         * 进入 Action 并保存 Produce 所需的原始 lexical name。
          */
-        private void enterAction(
-                ActionKey key,
-                String lexicalName) {
+        private void enterAction(ActionKey key, String lexicalName) {
             actionKey = key;
             actionLexicalName = lexicalName;
         }
 
         /**
-         * 离开任何有结构 owner 的文档上下文。
+         * 清空 Directory 与其下游 Action，阻止无效 owner 泄漏。
          */
-        private void leaveOwnedDocuments() {
-            rootConfigLexicalName = null;
-            systemKey = null;
-            systemLexicalName = null;
-            scopeKey = null;
-            scopeLexicalName = null;
+        private void clearDirectory() {
             directoryKey = null;
             directoryLexicalName = null;
-            actionKey = null;
-            actionLexicalName = null;
+            clearAction();
         }
-    }
-
-    /**
-     * 第二遍恢复的 canonical Key 与原始 lexical owner 上下文。
-     */
-    private static final class SecondPassContext {
-        private SystemKey systemKey;
-        private String systemLexicalName;
-        private BusinessScopeKey scopeKey;
-        private String scopeLexicalName;
-        private DirectoryKey directoryKey;
-        private String directoryLexicalName;
-        private ActionKey actionKey;
-        private String actionLexicalName;
 
         /**
-         * 恢复 System Key 和同一 RawDefinition 的原始 lexical name。
+         * 清空 Action 上下文，阻止后续 Produce 使用陈旧 owner。
          */
-        private void enterSystem(
-                SystemKey key,
-                String lexicalName) {
-            systemKey = key;
-            systemLexicalName = lexicalName;
-            scopeKey = null;
-            scopeLexicalName = null;
-            directoryKey = null;
-            directoryLexicalName = null;
+        private void clearAction() {
             actionKey = null;
             actionLexicalName = null;
         }
 
         /**
-         * 恢复 BusinessScope Key 和原始 lexical name。
+         * 清空全部 owner 上下文，避免跨独立文档状态泄漏。
          */
-        private void enterBusinessScope(
-                BusinessScopeKey key,
-                String lexicalName) {
-            systemKey = null;
-            systemLexicalName = null;
-            scopeKey = key;
-            scopeLexicalName = lexicalName;
-            directoryKey = null;
-            directoryLexicalName = null;
-            actionKey = null;
-            actionLexicalName = null;
-        }
-
-        /**
-         * 恢复 Directory Key 和原始 lexical name。
-         */
-        private void enterDirectory(
-                DirectoryKey key,
-                String lexicalName) {
-            directoryKey = key;
-            directoryLexicalName = lexicalName;
-            actionKey = null;
-            actionLexicalName = null;
-        }
-
-        /**
-         * 恢复 Action Key 和原始 lexical name。
-         */
-        private void enterAction(
-                ActionKey key,
-                String lexicalName) {
-            actionKey = key;
-            actionLexicalName = lexicalName;
-        }
-
-        /**
-         * 清空所有 owner 上下文，避免跨独立文档泄漏。
-         */
-        private void leaveOwnedDocuments() {
+        private void clear() {
+            rootLexicalName = null;
             systemKey = null;
             systemLexicalName = null;
             scopeKey = null;
