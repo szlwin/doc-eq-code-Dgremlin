@@ -218,11 +218,12 @@ class SymbolRegistrationTest {
         RawDefinitionSet definitions = new RawDefinitionSet(completeDefinitions());
         SymbolBuildResult first = new SymbolTableBuilder().build(definitions);
         SymbolBuildResult second = new SymbolTableBuilder().build(definitions);
+        SymbolTable firstTable = assertBuilt(first);
+        SymbolTable secondTable = assertBuilt(second);
 
         assertEquals(first, second);
-        assertEquals(first.symbolTable().get().keys(), second.symbolTable().get().keys());
-        assertEquals(first.symbolTable().get().definitions(),
-                second.symbolTable().get().definitions());
+        assertEquals(firstTable.keys(), secondTable.keys());
+        assertEquals(firstTable.definitions(), secondTable.definitions());
     }
 
     /**
