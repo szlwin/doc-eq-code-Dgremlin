@@ -105,10 +105,10 @@ public final class RawDefinitionBuilder {
     /**
      * 单次遍历调用方输入，冻结验证与提取共享的不可变批次快照。
      *
-     * <p>方法不调用原始 List 的 size、isEmpty 或 get；迭代完成后只返回不可变副本，
-     * 后续验证、提取、ordinal 和失败定位均不得再次访问调用方容器。</p>
+     * <p>方法不调用原始 List 的 size、isEmpty 或 get；每个文档加入快照前先应用
+     * 节点预算硬上限，后续验证、提取、ordinal 和失败定位均只访问局部快照。</p>
      */
-    private static List<CanonicalDocumentNode> snapshotDocuments(
+    private List<CanonicalDocumentNode> snapshotDocuments(
             List<CanonicalDocumentNode> documents) {
         if (documents == null) {
             throw failure("raw.input.required", UNKNOWN_SOURCE);
@@ -119,12 +119,27 @@ public final class RawDefinitionBuilder {
             if (document == null) {
                 throw failure("raw.document.required", UNKNOWN_SOURCE);
             }
+            checkSnapshotDocumentLimit(snapshot.size(), document);
             snapshot.add(document);
         }
         if (snapshot.isEmpty()) {
             throw failure("raw.input.required", UNKNOWN_SOURCE);
         }
         return Collections.unmodifiableList(snapshot);
+    }
+
+    /**
+     * 在加入当前文档前执行 snapshot 文档数硬上限。
+     *
+     * <p>每个 Canonical 文档至少包含一个根节点，因此文档数不能超过完整树节点预算。
+     * 该前置检查只限制容器分配，后续 ValidationBudget 仍负责统计全部后代节点。</p>
+     */
+    private void checkSnapshotDocumentLimit(
+            int documentCount,
+            CanonicalDocumentNode document) {
+        if (documentCount >= limits.maxCanonicalNodeCount()) {
+            throw failure("raw.limit.node-count", document.sourceRef());
+        }
     }
 
     /**
