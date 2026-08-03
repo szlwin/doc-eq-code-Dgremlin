@@ -54,46 +54,79 @@ public final class RawDefinition {
         this.schemaVersion = requireText(schemaVersion, "schemaVersion");
     }
 
+    /**
+     * 返回冻结的定义类别。
+     */
     public RawDefinitionKind kind() {
         return kind;
     }
 
+    /**
+     * 返回从 0 开始的稳定来源顺序号。
+     */
     public long sourceOrdinal() {
         return sourceOrdinal;
     }
 
+    /**
+     * 返回语义定义节点的 Canonical 来源位置。
+     */
     public SourceRef sourceRef() {
         return sourceRef;
     }
 
+    /**
+     * 返回尚未解析的 owner lexical token。
+     */
     public Optional<String> ownerToken() {
         return ownerToken;
     }
 
+    /**
+     * 返回定义名称；允许无显式名称的 PRODUCE 为空。
+     */
     public Optional<String> name() {
         return name;
     }
 
+    /**
+     * 返回稳定排序且不可变的定义节点属性。
+     */
     public Map<String, String> attributes() {
         return attributes;
     }
 
+    /**
+     * 返回保持 Canonical 遍历顺序的未解析引用。
+     */
     public List<RawReference> references() {
         return references;
     }
 
+    /**
+     * 返回完整的格式中立 normalized body。
+     */
     public RawNodeBody body() {
         return body;
     }
 
+    /**
+     * 返回原始文档格式来源事实。
+     */
     public DocumentFormat format() {
         return format;
     }
 
+    /**
+     * 返回 Frontend 传播的 schemaVersion。
+     */
     public String schemaVersion() {
         return schemaVersion;
     }
 
+    /**
+     * 复制可选文本并拒绝 present-but-blank 值。
+     */
     private static Optional<String> immutableOptional(
             Optional<String> value,
             String name) {
@@ -103,6 +136,9 @@ public final class RawDefinition {
                 : Optional.<String>empty();
     }
 
+    /**
+     * 复制并按 key 排序属性，阻断调用方后续修改。
+     */
     private static Map<String, String> immutableAttributes(
             Map<String, String> attributes) {
         Objects.requireNonNull(attributes, "attributes");
@@ -114,6 +150,9 @@ public final class RawDefinition {
         return Collections.unmodifiableMap(copy);
     }
 
+    /**
+     * 复制引用列表并逐项拒绝 null。
+     */
     private static List<RawReference> immutableReferences(
             List<RawReference> references) {
         Objects.requireNonNull(references, "references");
@@ -124,6 +163,9 @@ public final class RawDefinition {
         return Collections.unmodifiableList(copy);
     }
 
+    /**
+     * 规范化必填文本并拒绝空白。
+     */
     private static String requireText(String value, String name) {
         String normalized = Objects.requireNonNull(value, name).trim();
         if (normalized.isEmpty()) {
