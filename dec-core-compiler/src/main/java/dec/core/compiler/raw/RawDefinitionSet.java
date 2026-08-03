@@ -19,6 +19,9 @@ public final class RawDefinitionSet {
 
     /**
      * 复制、校验并冻结定义；同名定义在 T06 不覆盖、不去重。
+     *
+     * <p>sourceOrdinal 必须在排序后严格等于 0..size-1，防止调用方构造缺口、
+     * 非零起始或重复 ordinal 的伪稳定集合。</p>
      */
     public RawDefinitionSet(List<RawDefinition> definitions) {
         Objects.requireNonNull(definitions, "definitions");
@@ -36,16 +39,21 @@ public final class RawDefinitionSet {
         }
         Collections.sort(copy, Comparator.comparingLong(
                 RawDefinition::sourceOrdinal));
+        requireContinuousOrdinals(copy);
         this.definitions = Collections.unmodifiableList(copy);
         this.byKind = indexByKind(copy);
     }
 
-    /** 返回按 sourceOrdinal 升序的全部定义。 */
+    /**
+     * 返回按 sourceOrdinal 升序的全部定义。
+     */
     public List<RawDefinition> definitions() {
         return definitions;
     }
 
-    /** 返回指定 Kind 的不可变定义子列表。 */
+    /**
+     * 返回指定 Kind 的不可变定义子列表。
+     */
     public List<RawDefinition> definitions(RawDefinitionKind kind) {
         List<RawDefinition> values = byKind.get(
                 Objects.requireNonNull(kind, "kind"));
@@ -54,11 +62,31 @@ public final class RawDefinitionSet {
                 : values;
     }
 
-    /** 返回定义数量。 */
+    /**
+     * 返回定义数量。
+     */
     public int size() {
         return definitions.size();
     }
 
+    /**
+     * 校验排序后的 ordinal 从 0 开始连续，避免缺口破坏确定性合同。
+     */
+    private static void requireContinuousOrdinals(
+            List<RawDefinition> definitions) {
+        for (int index = 0; index < definitions.size(); index++) {
+            long actual = definitions.get(index).sourceOrdinal();
+            if (actual != index) {
+                throw new IllegalArgumentException(
+                        "sourceOrdinal must be continuous: expected "
+                                + index + " but was " + actual);
+            }
+        }
+    }
+
+    /**
+     * 按 Kind 建立只读索引，不改变 definitions 的 ordinal 顺序。
+     */
     private static Map<RawDefinitionKind, List<RawDefinition>> indexByKind(
             List<RawDefinition> definitions) {
         Map<RawDefinitionKind, List<RawDefinition>> mutable =
