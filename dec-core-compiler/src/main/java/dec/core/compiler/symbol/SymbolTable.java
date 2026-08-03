@@ -1,0 +1,87 @@
+package dec.core.compiler.symbol;
+
+import dec.core.compiler.raw.RawDefinition;
+import dec.core.context.model.DefinitionKey;
+import dec.core.context.model.ImmutableRegistry;
+import dec.core.context.model.Registry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * T07 发布的强类型、稳定有序且只读的符号表。
+ */
+public final class SymbolTable {
+    private final Registry<DefinitionKey, RawDefinition> registry;
+    private final List<RawDefinition> definitions;
+
+    /**
+     * 根据完整定义映射构造不可变 SymbolTable。
+     *
+     * @param entries TypedKey 到 RawDefinition 的完整映射
+     */
+    SymbolTable(Map<DefinitionKey, RawDefinition> entries) {
+        this.registry = new ImmutableRegistry<DefinitionKey, RawDefinition>(
+                Objects.requireNonNull(entries, "entries"));
+        List<RawDefinition> ordered = new ArrayList<RawDefinition>();
+        for (DefinitionKey key : registry.keys()) {
+            ordered.add(registry.require(key));
+        }
+        this.definitions = Collections.unmodifiableList(ordered);
+    }
+
+    /**
+     * 按精确 TypedKey 查询定义。
+     */
+    public Optional<RawDefinition> find(DefinitionKey key) {
+        return registry.find(Objects.requireNonNull(key, "key"));
+    }
+
+    /**
+     * 按精确 TypedKey 返回定义；不存在时由 Registry 抛出稳定异常。
+     */
+    public RawDefinition require(DefinitionKey key) {
+        return registry.require(Objects.requireNonNull(key, "key"));
+    }
+
+    /**
+     * 返回按 DefinitionKey 自然顺序冻结的 Key。
+     */
+    public List<DefinitionKey> keys() {
+        return registry.keys();
+    }
+
+    /**
+     * 返回与 keys 一一对应的不可变 RawDefinition 快照。
+     */
+    public List<RawDefinition> definitions() {
+        return definitions;
+    }
+
+    /**
+     * 返回已登记符号数量。
+     */
+    public int size() {
+        return registry.size();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return this == other
+                || other instanceof SymbolTable
+                && registry.equals(((SymbolTable) other).registry);
+    }
+
+    @Override
+    public int hashCode() {
+        return registry.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "SymbolTable" + registry;
+    }
+}
