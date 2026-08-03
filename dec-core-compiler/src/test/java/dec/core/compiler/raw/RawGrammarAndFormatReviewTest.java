@@ -26,7 +26,8 @@ class RawGrammarAndFormatReviewTest {
      */
     @Test
     void acceptsEveryFrozenGrammarEdge() {
-        RawBuildResult result = new RawDefinitionBuilder().build(fullGrammarDocuments());
+        RawBuildResult result = new RawDefinitionBuilder().build(
+                fullGrammarDocuments());
 
         assertEquals(RawBuildStatus.BUILT, result.status());
         assertTrue(result.rawDefinitionSet().isPresent());
@@ -50,6 +51,14 @@ class RawGrammarAndFormatReviewTest {
                 "information",
                 attrs("name", "misplaced"),
                 null);
+        CanonicalDocumentNode system = node(
+                DocumentFormat.XML,
+                "systems.xml",
+                "/systems/system",
+                "system",
+                attrs("name", "user"),
+                null,
+                misplaced);
         CanonicalDocumentNode document = node(
                 DocumentFormat.XML,
                 "systems.xml",
@@ -57,13 +66,7 @@ class RawGrammarAndFormatReviewTest {
                 "systems",
                 attrs(),
                 null,
-                node(DocumentFormat.XML,
-                        "systems.xml",
-                        "/systems/system",
-                        "system",
-                        attrs("name", "user"),
-                        null,
-                        misplaced));
+                system);
 
         RawBuildResult result = new RawDefinitionBuilder().build(
                 Collections.singletonList(document));
@@ -103,170 +106,305 @@ class RawGrammarAndFormatReviewTest {
      * 构造覆盖六类根全部冻结 Grammar edge 的 Canonical 文档集合。
      */
     private static List<CanonicalDocumentNode> fullGrammarDocuments() {
-        CanonicalDocumentNode rootConfig = node(
+        return Arrays.asList(
+                rootConfigDocument(),
+                dataDocument(),
+                viewDocument(),
+                systemsDocument(),
+                ruleDocument(),
+                businessDocument());
+    }
+
+    /**
+     * 构造覆盖 orm-config 全部父子边的文档。
+     */
+    private static CanonicalDocumentNode rootConfigDocument() {
+        CanonicalDocumentNode dataSource = node(
+                DocumentFormat.XML,
+                "root.xml",
+                "/orm-config/orm-datasource-info/orm-datasource",
+                "orm-datasource",
+                attrs("name", "ds"),
+                null,
+                scalar("root.xml",
+                        "/orm-config/orm-datasource-info/orm-datasource/name",
+                        "name",
+                        "MySQL"));
+        CanonicalDocumentNode connectionDataSource = leaf(
+                "root.xml",
+                "/orm-config/orm-connection-info/orm-connection/data-source-info/data-source",
+                "data-source",
+                attrs("ref", "ds"));
+        CanonicalDocumentNode connection = node(
+                DocumentFormat.XML,
+                "root.xml",
+                "/orm-config/orm-connection-info/orm-connection",
+                "orm-connection",
+                attrs("name", "con"),
+                null,
+                container("root.xml",
+                        "/orm-config/orm-connection-info/orm-connection/data-source-info",
+                        "data-source-info",
+                        connectionDataSource));
+
+        return node(
                 DocumentFormat.XML,
                 "root.xml",
                 "/orm-config",
                 "orm-config",
                 attrs("name", "mix"),
                 null,
-                container("root.xml", "/orm-config/orm-datasource-info",
+                container("root.xml",
+                        "/orm-config/orm-datasource-info",
                         "orm-datasource-info",
-                        node(DocumentFormat.XML, "root.xml",
-                                "/orm-config/orm-datasource-info/orm-datasource",
-                                "orm-datasource", attrs("name", "ds"), null,
-                                scalar("root.xml",
-                                        "/orm-config/orm-datasource-info/orm-datasource/name",
-                                        "name", "MySQL"))),
-                container("root.xml", "/orm-config/orm-data-file-info",
+                        dataSource),
+                container("root.xml",
+                        "/orm-config/orm-data-file-info",
                         "orm-data-file-info",
                         leaf("root.xml",
                                 "/orm-config/orm-data-file-info/orm-file",
-                                "orm-file", attrs("path", "data.xml"))),
-                container("root.xml", "/orm-config/orm-view-file-info",
+                                "orm-file",
+                                attrs("path", "data.xml"))),
+                container("root.xml",
+                        "/orm-config/orm-view-file-info",
                         "orm-view-file-info",
                         leaf("root.xml",
                                 "/orm-config/orm-view-file-info/orm-file",
-                                "orm-file", attrs("path", "view.xml"))),
-                container("root.xml", "/orm-config/system-file-info",
+                                "orm-file",
+                                attrs("path", "view.xml"))),
+                container("root.xml",
+                        "/orm-config/system-file-info",
                         "system-file-info",
                         leaf("root.xml",
                                 "/orm-config/system-file-info/system-file",
-                                "system-file", attrs("path", "systems.xml"))),
-                container("root.xml", "/orm-config/business-file-info",
+                                "system-file",
+                                attrs("path", "systems.xml"))),
+                container("root.xml",
+                        "/orm-config/business-file-info",
                         "business-file-info",
                         leaf("root.xml",
                                 "/orm-config/business-file-info/business-file",
-                                "business-file", attrs("path", "business.xml"))),
-                container("root.xml", "/orm-config/orm-connection-info",
+                                "business-file",
+                                attrs("path", "business.xml"))),
+                container("root.xml",
+                        "/orm-config/orm-connection-info",
                         "orm-connection-info",
-                        node(DocumentFormat.XML, "root.xml",
-                                "/orm-config/orm-connection-info/orm-connection",
-                                "orm-connection", attrs("name", "con"), null,
-                                container("root.xml",
-                                        "/orm-config/orm-connection-info/orm-connection/data-source-info",
-                                        "data-source-info",
-                                        leaf("root.xml",
-                                                "/orm-config/orm-connection-info/orm-connection/data-source-info/data-source",
-                                                "data-source", attrs("ref", "ds"))))));
+                        connection));
+    }
 
+    /**
+     * 构造覆盖 data/property/table/column 的文档。
+     */
+    private static CanonicalDocumentNode dataDocument() {
+        CanonicalDocumentNode propertyInfo = container(
+                "data.xml",
+                "/orm-data-mapping/data/property-info",
+                "property-info",
+                leaf("data.xml",
+                        "/orm-data-mapping/data/property-info/property",
+                        "property",
+                        attrs("name", "id")));
+        CanonicalDocumentNode table = node(
+                DocumentFormat.XML,
+                "data.xml",
+                "/orm-data-mapping/data/table-info/table",
+                "table",
+                attrs("name", "users"),
+                null,
+                leaf("data.xml",
+                        "/orm-data-mapping/data/table-info/table/column",
+                        "column",
+                        attrs("name", "id")));
         CanonicalDocumentNode data = node(
+                DocumentFormat.XML,
+                "data.xml",
+                "/orm-data-mapping/data",
+                "data",
+                attrs("name", "user"),
+                null,
+                propertyInfo,
+                container("data.xml",
+                        "/orm-data-mapping/data/table-info",
+                        "table-info",
+                        table));
+        return node(
                 DocumentFormat.XML,
                 "data.xml",
                 "/orm-data-mapping",
                 "orm-data-mapping",
                 attrs(),
                 null,
-                node(DocumentFormat.XML, "data.xml",
-                        "/orm-data-mapping/data",
-                        "data", attrs("name", "user"), null,
-                        container("data.xml",
-                                "/orm-data-mapping/data/property-info",
-                                "property-info",
-                                leaf("data.xml",
-                                        "/orm-data-mapping/data/property-info/property",
-                                        "property", attrs("name", "id"))),
-                        container("data.xml",
-                                "/orm-data-mapping/data/table-info",
-                                "table-info",
-                                node(DocumentFormat.XML, "data.xml",
-                                        "/orm-data-mapping/data/table-info/table",
-                                        "table", attrs("name", "users"), null,
-                                        leaf("data.xml",
-                                                "/orm-data-mapping/data/table-info/table/column",
-                                                "column", attrs("name", "id"))))));
+                data);
+    }
 
+    /**
+     * 构造覆盖递归 view property 的文档。
+     */
+    private static CanonicalDocumentNode viewDocument() {
+        CanonicalDocumentNode nestedProperty = leaf(
+                "view.xml",
+                "/orm-view-mapping/view/property-info/property/property",
+                "property",
+                attrs("name", "id"));
+        CanonicalDocumentNode property = node(
+                DocumentFormat.XML,
+                "view.xml",
+                "/orm-view-mapping/view/property-info/property",
+                "property",
+                attrs("name", "user"),
+                null,
+                nestedProperty);
         CanonicalDocumentNode view = node(
+                DocumentFormat.XML,
+                "view.xml",
+                "/orm-view-mapping/view",
+                "view",
+                attrs("name", "UserInfo"),
+                null,
+                container("view.xml",
+                        "/orm-view-mapping/view/property-info",
+                        "property-info",
+                        property));
+        return node(
                 DocumentFormat.XML,
                 "view.xml",
                 "/orm-view-mapping",
                 "orm-view-mapping",
                 attrs(),
                 null,
-                node(DocumentFormat.XML, "view.xml",
-                        "/orm-view-mapping/view",
-                        "view", attrs("name", "UserInfo"), null,
-                        container("view.xml",
-                                "/orm-view-mapping/view/property-info",
-                                "property-info",
-                                node(DocumentFormat.XML, "view.xml",
-                                        "/orm-view-mapping/view/property-info/property",
-                                        "property", attrs("name", "user"), null,
-                                        leaf("view.xml",
-                                                "/orm-view-mapping/view/property-info/property/property",
-                                                "property", attrs("name", "id"))))));
+                view);
+    }
 
-        CanonicalDocumentNode systems = node(
+    /**
+     * 构造覆盖 systems 全部容器、Information 和 ModelAccess 的文档。
+     */
+    private static CanonicalDocumentNode systemsDocument() {
+        CanonicalDocumentNode information = node(
+                DocumentFormat.XML,
+                "systems.xml",
+                "/systems/system/information-info/information",
+                "information",
+                attrs("name", "active", "view-ref", "UserInfo"),
+                null,
+                leaf("systems.xml",
+                        "/systems/system/information-info/information/change-data",
+                        "change-data",
+                        attrs("property", "status")));
+        CanonicalDocumentNode read = node(
+                DocumentFormat.XML,
+                "systems.xml",
+                "/systems/system/model-access-info/model-access/read",
+                "read",
+                attrs("path", "user"),
+                null,
+                leaf("systems.xml",
+                        "/systems/system/model-access-info/model-access/read/ref",
+                        "ref",
+                        attrs("view", "UserInfo")));
+        CanonicalDocumentNode write = node(
+                DocumentFormat.XML,
+                "systems.xml",
+                "/systems/system/model-access-info/model-access/write",
+                "write",
+                attrs("path", "user"),
+                null,
+                leaf("systems.xml",
+                        "/systems/system/model-access-info/model-access/write/ref",
+                        "ref",
+                        attrs("view", "UserInfo")));
+        CanonicalDocumentNode modelAccess = node(
+                DocumentFormat.XML,
+                "systems.xml",
+                "/systems/system/model-access-info/model-access",
+                "model-access",
+                attrs("model-ref", "Model"),
+                null,
+                read,
+                write);
+        CanonicalDocumentNode system = node(
+                DocumentFormat.XML,
+                "systems.xml",
+                "/systems/system",
+                "system",
+                attrs("name", "user"),
+                null,
+                container("systems.xml",
+                        "/systems/system/data-info",
+                        "data-info",
+                        leaf("systems.xml",
+                                "/systems/system/data-info/data-ref",
+                                "data-ref",
+                                attrs("ref", "user"))),
+                container("systems.xml",
+                        "/systems/system/view-info",
+                        "view-info",
+                        leaf("systems.xml",
+                                "/systems/system/view-info/view-ref",
+                                "view-ref",
+                                attrs("ref", "UserInfo"))),
+                container("systems.xml",
+                        "/systems/system/rule-file-info",
+                        "rule-file-info",
+                        leaf("systems.xml",
+                                "/systems/system/rule-file-info/rule-file",
+                                "rule-file",
+                                attrs("path", "rule.xml"))),
+                container("systems.xml",
+                        "/systems/system/information-info",
+                        "information-info",
+                        information),
+                container("systems.xml",
+                        "/systems/system/model-access-info",
+                        "model-access-info",
+                        modelAccess));
+        return node(
                 DocumentFormat.XML,
                 "systems.xml",
                 "/systems",
                 "systems",
                 attrs(),
                 null,
-                node(DocumentFormat.XML, "systems.xml",
-                        "/systems/system",
-                        "system", attrs("name", "user"), null,
-                        container("systems.xml", "/systems/system/data-info",
-                                "data-info",
-                                leaf("systems.xml", "/systems/system/data-info/data-ref",
-                                        "data-ref", attrs("ref", "user"))),
-                        container("systems.xml", "/systems/system/view-info",
-                                "view-info",
-                                leaf("systems.xml", "/systems/system/view-info/view-ref",
-                                        "view-ref", attrs("ref", "UserInfo"))),
-                        container("systems.xml", "/systems/system/rule-file-info",
-                                "rule-file-info",
-                                leaf("systems.xml",
-                                        "/systems/system/rule-file-info/rule-file",
-                                        "rule-file", attrs("path", "rule.xml"))),
-                        container("systems.xml", "/systems/system/information-info",
-                                "information-info",
-                                node(DocumentFormat.XML, "systems.xml",
-                                        "/systems/system/information-info/information",
-                                        "information",
-                                        attrs("name", "active", "view-ref", "UserInfo"),
-                                        null,
-                                        leaf("systems.xml",
-                                                "/systems/system/information-info/information/change-data",
-                                                "change-data", attrs("property", "status")))),
-                        container("systems.xml", "/systems/system/model-access-info",
-                                "model-access-info",
-                                node(DocumentFormat.XML, "systems.xml",
-                                        "/systems/system/model-access-info/model-access",
-                                        "model-access", attrs("model-ref", "Model"), null,
-                                        node(DocumentFormat.XML, "systems.xml",
-                                                "/systems/system/model-access-info/model-access/read",
-                                                "read", attrs("path", "user"), null,
-                                                leaf("systems.xml",
-                                                        "/systems/system/model-access-info/model-access/read/ref",
-                                                        "ref", attrs("view", "UserInfo"))),
-                                        node(DocumentFormat.XML, "systems.xml",
-                                                "/systems/system/model-access-info/model-access/write",
-                                                "write", attrs("path", "user"), null,
-                                                leaf("systems.xml",
-                                                        "/systems/system/model-access-info/model-access/write/ref",
-                                                        "ref", attrs("view", "UserInfo"))))))));
+                system);
+    }
 
+    /**
+     * 构造覆盖 rule-view/rule/customer-process 的文档。
+     */
+    private static CanonicalDocumentNode ruleDocument() {
         CanonicalDocumentNode rule = node(
+                DocumentFormat.XML,
+                "rule.xml",
+                "/orm-rule-mapping/rule-view-info/rule",
+                "rule",
+                attrs("name", "check"),
+                null,
+                leaf("rule.xml",
+                        "/orm-rule-mapping/rule-view-info/rule/customer-process",
+                        "customer-process",
+                        attrs("ref", "custom")));
+        CanonicalDocumentNode ruleView = node(
+                DocumentFormat.XML,
+                "rule.xml",
+                "/orm-rule-mapping/rule-view-info",
+                "rule-view-info",
+                attrs("system", "user", "name", "active",
+                        "view-ref", "UserInfo"),
+                null,
+                rule);
+        return node(
                 DocumentFormat.XML,
                 "rule.xml",
                 "/orm-rule-mapping",
                 "orm-rule-mapping",
                 attrs(),
                 null,
-                node(DocumentFormat.XML, "rule.xml",
-                        "/orm-rule-mapping/rule-view-info",
-                        "rule-view-info",
-                        attrs("system", "user", "name", "active",
-                                "view-ref", "UserInfo"),
-                        null,
-                        node(DocumentFormat.XML, "rule.xml",
-                                "/orm-rule-mapping/rule-view-info/rule",
-                                "rule", attrs("name", "check"), null,
-                                leaf("rule.xml",
-                                        "/orm-rule-mapping/rule-view-info/rule/customer-process",
-                                        "customer-process", attrs("ref", "custom"))))));
+                ruleView);
+    }
 
+    /**
+     * 构造覆盖 directory/subdirectory/back/dependency/action/produce/change 的文档。
+     */
+    private static CanonicalDocumentNode businessDocument() {
         CanonicalDocumentNode backAction = node(
                 DocumentFormat.XML,
                 "business.xml",
@@ -274,6 +412,30 @@ class RawGrammarAndFormatReviewTest {
                 "action",
                 attrs("name", "backAction"),
                 null);
+        CanonicalDocumentNode back = node(
+                DocumentFormat.XML,
+                "business.xml",
+                "/business-config/directory-info/directory/subdirectory-info/subdirectory/back",
+                "back",
+                attrs("name", "back"),
+                null,
+                container("business.xml",
+                        "/business-config/directory-info/directory/subdirectory-info/subdirectory/back/action-info",
+                        "action-info",
+                        backAction));
+        CanonicalDocumentNode subdirectory = node(
+                DocumentFormat.XML,
+                "business.xml",
+                "/business-config/directory-info/directory/subdirectory-info/subdirectory",
+                "subdirectory",
+                attrs("rel", "child"),
+                null,
+                back);
+        CanonicalDocumentNode produce = leaf(
+                "business.xml",
+                "/business-config/directory-info/directory/action-info/action/produce-info/produce",
+                "produce",
+                attrs("ref", "Model"));
         CanonicalDocumentNode directAction = node(
                 DocumentFormat.XML,
                 "business.xml",
@@ -284,55 +446,57 @@ class RawGrammarAndFormatReviewTest {
                 container("business.xml",
                         "/business-config/directory-info/directory/action-info/action/produce-info",
                         "produce-info",
+                        produce));
+        CanonicalDocumentNode directory = node(
+                DocumentFormat.XML,
+                "business.xml",
+                "/business-config/directory-info/directory",
+                "directory",
+                attrs("name", "dir"),
+                null,
+                container("business.xml",
+                        "/business-config/directory-info/directory/subdirectory-info",
+                        "subdirectory-info",
+                        subdirectory),
+                container("business.xml",
+                        "/business-config/directory-info/directory/dependency-info",
+                        "dependency-info",
                         leaf("business.xml",
-                                "/business-config/directory-info/directory/action-info/action/produce-info/produce",
-                                "produce", attrs("ref", "Model"))));
-        CanonicalDocumentNode business = node(
+                                "/business-config/directory-info/directory/dependency-info/dependency",
+                                "dependency",
+                                attrs("information-ref", "user.active"))),
+                container("business.xml",
+                        "/business-config/directory-info/directory/action-info",
+                        "action-info",
+                        directAction),
+                leaf("business.xml",
+                        "/business-config/directory-info/directory/change-info",
+                        "change-info",
+                        attrs("information-ref", "user.active")));
+        return node(
                 DocumentFormat.XML,
                 "business.xml",
                 "/business-config",
                 "business-config",
                 attrs("name", "scope"),
                 null,
-                container("business.xml", "/business-config/directory-info",
+                container("business.xml",
+                        "/business-config/directory-info",
                         "directory-info",
-                        node(DocumentFormat.XML, "business.xml",
-                                "/business-config/directory-info/directory",
-                                "directory", attrs("name", "dir"), null,
-                                container("business.xml",
-                                        "/business-config/directory-info/directory/subdirectory-info",
-                                        "subdirectory-info",
-                                        node(DocumentFormat.XML, "business.xml",
-                                                "/business-config/directory-info/directory/subdirectory-info/subdirectory",
-                                                "subdirectory", attrs("rel", "child"), null,
-                                                node(DocumentFormat.XML, "business.xml",
-                                                        "/business-config/directory-info/directory/subdirectory-info/subdirectory/back",
-                                                        "back", attrs("name", "back"), null,
-                                                        container("business.xml",
-                                                                "/business-config/directory-info/directory/subdirectory-info/subdirectory/back/action-info",
-                                                                "action-info", backAction))))),
-                                container("business.xml",
-                                        "/business-config/directory-info/directory/dependency-info",
-                                        "dependency-info",
-                                        leaf("business.xml",
-                                                "/business-config/directory-info/directory/dependency-info/dependency",
-                                                "dependency",
-                                                attrs("information-ref", "user.active"))),
-                                container("business.xml",
-                                        "/business-config/directory-info/directory/action-info",
-                                        "action-info", directAction),
-                                leaf("business.xml",
-                                        "/business-config/directory-info/directory/change-info",
-                                        "change-info",
-                                        attrs("information-ref", "user.active")))));
-
-        return Arrays.asList(rootConfig, data, view, systems, rule, business);
+                        directory));
     }
 
     /**
      * 以指定 format 构建单个 DATA 定义。
      */
     private static RawDefinition buildSingleData(DocumentFormat format) {
+        CanonicalDocumentNode data = node(
+                format,
+                "data.source",
+                "/orm-data-mapping/data",
+                "data",
+                attrs("name", "user"),
+                null);
         CanonicalDocumentNode document = node(
                 format,
                 "data.source",
@@ -340,12 +504,7 @@ class RawGrammarAndFormatReviewTest {
                 "orm-data-mapping",
                 attrs(),
                 null,
-                node(format,
-                        "data.source",
-                        "/orm-data-mapping/data",
-                        "data",
-                        attrs("name", "user"),
-                        null));
+                data);
         RawBuildResult result = new RawDefinitionBuilder().build(
                 Collections.singletonList(document));
         assertEquals(RawBuildStatus.BUILT, result.status());
@@ -360,7 +519,14 @@ class RawGrammarAndFormatReviewTest {
             String path,
             String name,
             CanonicalDocumentNode... children) {
-        return node(DocumentFormat.XML, sourceId, path, name, attrs(), null, children);
+        return node(
+                DocumentFormat.XML,
+                sourceId,
+                path,
+                name,
+                attrs(),
+                null,
+                children);
     }
 
     /**
@@ -371,7 +537,13 @@ class RawGrammarAndFormatReviewTest {
             String path,
             String name,
             Map<String, String> attributes) {
-        return node(DocumentFormat.XML, sourceId, path, name, attributes, null);
+        return node(
+                DocumentFormat.XML,
+                sourceId,
+                path,
+                name,
+                attributes,
+                null);
     }
 
     /**
@@ -382,7 +554,13 @@ class RawGrammarAndFormatReviewTest {
             String path,
             String name,
             String value) {
-        return node(DocumentFormat.XML, sourceId, path, name, attrs(), value);
+        return node(
+                DocumentFormat.XML,
+                sourceId,
+                path,
+                name,
+                attrs(),
+                value);
     }
 
     /**
