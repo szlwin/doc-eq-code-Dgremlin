@@ -1,31 +1,35 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T07 / I001` 已完成
+- 当前逻辑任务：`TASK-P1-T07 / I002` 已完成
 - Dependency Completion：`COMPLETION-P1-T06-R04@242db638c61d`
-- 当前 Completion Revision：`COMPLETION-P1-T07-R01@7f4ee8a0ee5a`
+- 当前 Completion：`COMPLETION-P1-T07-R02@ffe544e3060d`
+- 被推翻 Completion：`COMPLETION-P1-T07-R01@7f4ee8a0ee5a`，不可变历史保留
 - 当前任务状态：`COMPLETED`
 - 最近通过阶段：`completion_verification`
 - 执行模式：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
 - 基线：`dev_all@3e0492b0319173c87abff6952d4dad0f5507c31c`
+- Rework Base：`43846e2d2e2c8b174fb87cdeb15e16c37392f505`
 - 分支：`feature/p1-t07-symbol-table-20260803-1958`
-- Design：`DESIGN-R27@P1-T07-I001`
-- Plan：`TP-P1-COMPILER-F01-R23@P1-T07-I001`
-- TDD：`TDD-P1-T07-R01@9e7dbc1bb451`
-- Architecture Skeleton：`DEVSKEL-P1-T07-R01@c4d33f9ec8e9`
-- Development：`DEV-P1-T07-R01@7f4ee8a0ee5a`
-- Code Review：`CODEREVIEW-P1-T07-R01@7f4ee8a0ee5a`
-- Testing：`TESTING-P1-T07-R01@7f4ee8a0ee5a`
-- Review：`REV-000309`～`REV-000323`
-- Evidence：`EVD-000551`～`EVD-000566`
-- Finding：`FND-P1-T07-I001-001` CLOSED
-- 开放 P0/P1/P2：无
-- Clean-code Head：`7f4ee8a0ee5a8be84e8edfe715a85189858ac425`
-- P0 Run：`30814383829`，结果 `PASSED`
-- Artifact：`8856098502`
-- Artifact SHA-256：`1f71fb0f3f2615dfc599792e5760993048f832a085bdfed965b44b0f13acfdf8`
-- Artifact 独立校验：实际 ZIP SHA-256 与 GitHub digest 一致；60 个 Surefire XML 已解析
-- Symbol：23/23
-- Compiler total：152/152
+- PR：`#22`
+- Design：`DESIGN-R28@P1-T07-REWORK-I002`
+- Plan：`TP-P1-COMPILER-F01-R24@P1-T07-REWORK-I002`
+- TDD：`TDD-P1-T07-R02@619714e24fd5`
+- Rejected Skeleton：`DEVSKEL-P1-T07-R02-A01@15f6e0e8ef9b`
+- Architecture：`DEVSKEL-P1-T07-R02@ffe544e3060d`
+- Development：`DEV-P1-T07-R02@ffe544e3060d`
+- Code Review：`CODEREVIEW-P1-T07-R02@ffe544e3060d`
+- Testing：`TESTING-P1-T07-R02@ffe544e3060d`
+- Review：`REV-000324`～`REV-000338`
+- Evidence：`EVD-000567`～`EVD-000585`
+- Findings：`FND-P1-T07-I002-001/002/003` 全部 CLOSED
+- 开放 P0/P1/P2：`0 / 0 / 0`
+- Clean-code Head：`ffe544e3060dd15b82a73677b30147aaa4b360af`
+- P0 Run：`30819541292`，结果 `PASSED`
+- Artifact：`8858227740`
+- Artifact SHA-256：`e976842a19ff208a951e143e0e66e90a2c2fb75d4782c1c26850f133cde15356`
+- Artifact 独立校验：实际 ZIP SHA-256 与 GitHub digest 一致；62 个 Surefire XML 已解析
+- Symbol：32/32
+- Compiler total：161/161
 - XML：30/30
 - YAML：59/59
 - Context 正常测试：26/26
@@ -35,24 +39,24 @@
 - Reactor：12 modules / PASSED
 - Java release 8：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- Revision Lock：R27 `613edfdc133fa68aa12ae3adc31eb8ae23058d9c`；R23 `840989a6119e7e5f99981957614806c2152ea56d`
-- Revision Integrity：R27/R23 在 RED 前创建，clean-code Head 复核 blob 不变
-- TypedKey：复用 Context 已发布的 11 类 Key，不新增平行 Key
-- 第一遍：DataSource、Connection、Data、View、System、RuleView、BusinessScope、Directory、Action
-- 第二遍：Information、Produce
-- Produce：使用 ActionKey 与 Raw sourceOrdinal 形成身份
-- Duplicate：首定义不覆盖；重复产生 MIX_SYMBOL_DUPLICATE，并关联双方 SourceRef
-- Failure：两遍完整扫描后统一失败；任何错误都不发布部分 SymbolTable
-- Registry：Context ImmutableRegistry，keys 与 definitions 稳定有序且不可变
-- Owner：System 与 Business owner 上下文严格隔离，token 不匹配 fail closed
-- Resource：Map 分配前定义数量上限 65,536
+- Revision Lock：R28 `142ec612eb5658f41108330a4ca5b545521fd85c`；R24 `7a041c5c3811c1725482ee0b5ad288428c745a4e`
+- Revision Integrity：R28/R24 在 RED 前创建，clean-code Head 复核 blob 不变
+- Raw lexical：结构 owner 精确比较原始 parent name，不 trim、不改写
+- TypedKey：继续执行 Context canonical trim，复用已发布 11 类 Key
+- RuleView：按自身 ownerToken 在完整 System 集合中查找，顺序独立
+- RuleView missing owner：`symbol.owner.system.missing`
+- Diagnostic：LinkedHashSet 单次 add 聚合，最终稳定排序
+- Duplicate：首定义不覆盖，双方 SourceRef 完整保留
+- Failure：两遍完成后统一失败，任何错误不发布部分 SymbolTable
+- Registry：Context ImmutableRegistry，keys/definitions 稳定、有序、不可变
+- Resource：Map 分配前 definition count 上限 65,536；Diagnostic 聚合无 O(n²) List.contains
 - Reference：RawReference 原样保留，未解析、不执行 I/O
 - Scope：未修改 Context、Raw、Source Graph、Compiler API、XML/YAML Frontend 生产代码
 - 未启动：ReferenceResolver、Information、ModelAccess、Deferred、Pipeline、Digest、Publication、TASK-P1-T08
-- 当前 PR：`#22`，目标 `dev_all`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t07-r01/completion-report.json`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t07_r01_completion.json`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t07-r02/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t07-r02.md`
+- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t07_r02_completion.json`
 - 下一 Agent：`IndependentReviewAgent`
-- 下一动作：复核 PR #22 最终 Head；仅在用户明确授权后合并；合并后才能从最新 dev_all 启动 TASK-P1-T08
-- TASK-P1-T08：未启动且保持阻断
+- 下一动作：复核 PR #22 最终文档化 Head；仅在用户明确授权后合并
+- TASK-P1-T08：`BLOCKED_UNTIL_PR_MERGE`
 - 注意：不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #22。
