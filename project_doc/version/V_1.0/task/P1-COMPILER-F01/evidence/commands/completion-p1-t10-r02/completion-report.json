@@ -1,0 +1,66 @@
+{
+  "completion": "COMPLETION-P1-T10-R02@6f4c7b6f3ec3",
+  "task": "TASK-P1-T10",
+  "iteration": "I002",
+  "status": "PASSED",
+  "parentCompletion": {
+    "id": "COMPLETION-P1-T10-R01@9e94bc68d9a8",
+    "status": "INVALIDATED_PRESERVE_HISTORY"
+  },
+  "base": "dev_all@4fe0f6def8581e5c7234d86dfa0aafae794db15f",
+  "branch": "feature/p1-t10-rule-dag-20260804-1428",
+  "pullRequest": 25,
+  "design": "DESIGN-R34@P1-T10-REWORK-I002",
+  "plan": "TP-P1-COMPILER-F01-R30@P1-T10-REWORK-I002",
+  "tdd": "TDD-P1-T10-R02@d671185a9b70",
+  "architecture": "DEVSKEL-P1-T10-R02@fab05f78900b",
+  "development": "DEV-P1-T10-R02@6f4c7b6f3ec3",
+  "codeReview": "CODEREVIEW-P1-T10-R02@6f4c7b6f3ec3",
+  "testing": "TESTING-P1-T10-R02@6f4c7b6f3ec3",
+  "cleanCodeHead": "6f4c7b6f3ec3173c6f4eaa282e2cba6d07092082",
+  "validRed": {
+    "head": "d671185a9b702e995735bbbf74dd48bda4096128",
+    "run": 30895118673,
+    "artifact": 8886679959,
+    "sha256": "6b38a552290598fd5fb427445efe891f90e81263d35a5d2bbaeb251eedb29523",
+    "result": "13 failures / 0 errors"
+  },
+  "architectureEvidence": {
+    "head": "fab05f78900bd093ad48e24d48f0d62f6c632158",
+    "run": 30895265395,
+    "artifact": 8886744777,
+    "sha256": "09ab7e79c0a2bbf7eaf618d4b4619990d2972fcf4d9f899ab12502d898113fd6",
+    "result": "12 controlled failures / 0 errors"
+  },
+  "cleanCodeValidation": {
+    "run": 30896483663,
+    "artifact": 8887247782,
+    "sha256": "516f007eafcf47332b26bf52d4d20fe60f1721e4daa13a587db9143fbe26172d",
+    "surefireXml": 76,
+    "normalTests": "393/393",
+    "t10": "42/42",
+    "compilerModule": "273/273",
+    "intentionalFailureGate": "recognized",
+    "reactor": "12 modules / PASSED",
+    "javaRelease": 8,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "findings": {
+    "FND-P1-T10-I002-001": "CLOSED",
+    "FND-P1-T10-I002-002": "CLOSED",
+    "FND-P1-T10-I002-003": "CLOSED",
+    "FND-P1-T10-I002-004": "CLOSED",
+    "FND-P1-T10-I002-005": "CLOSED"
+  },
+  "openFindings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "reviewRange": "REV-000425..REV-000444",
+  "evidenceRange": "EVD-000692..EVD-000718",
+  "temporaryWorkflow": "DELETED",
+  "temporaryPublishTrigger": "DELETED",
+  "merged": false,
+  "nextTask": "TASK-P1-T11 BLOCKED_UNTIL_PR_25_MERGED"
+}

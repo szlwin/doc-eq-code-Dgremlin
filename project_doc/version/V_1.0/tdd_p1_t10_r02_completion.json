@@ -1,0 +1,23 @@
+{
+  "task": "TASK-P1-T10",
+  "iteration": "I002",
+  "completion": "COMPLETION-P1-T10-R02@6f4c7b6f3ec3",
+  "status": "PASSED",
+  "design": "DESIGN-R34@P1-T10-REWORK-I002",
+  "plan": "TP-P1-COMPILER-F01-R30@P1-T10-REWORK-I002",
+  "validRed": "d671185a9b702e995735bbbf74dd48bda4096128",
+  "architecture": "fab05f78900bd093ad48e24d48f0d62f6c632158",
+  "cleanCodeHead": "6f4c7b6f3ec3173c6f4eaa282e2cba6d07092082",
+  "p0Run": 30896483663,
+  "artifact": 8887247782,
+  "sha256": "516f007eafcf47332b26bf52d4d20fe60f1721e4daa13a587db9143fbe26172d",
+  "normalTests": 393,
+  "t10Tests": 42,
+  "openP0": 0,
+  "openP1": 0,
+  "openP2": 0,
+  "mysql": "SKIPPED_NOT_APPLICABLE",
+  "pullRequest": 25,
+  "merged": false,
+  "nextTaskGate": "TASK-P1-T11 BLOCKED_UNTIL_PR_25_MERGED"
+}

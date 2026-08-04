@@ -1,0 +1,29 @@
+{
+  "task": "TASK-P1-T10",
+  "iteration": "I003",
+  "completion": "COMPLETION-P1-T10-R03@336d309f3748",
+  "status": "PASSED",
+  "design": "DESIGN-R35@P1-T10-REWORK-I003",
+  "plan": "TP-P1-COMPILER-F01-R31@P1-T10-REWORK-I003",
+  "valid_red_head": "b16d5ee9f9f1f1a95446c6d96803dd35beae0a9b",
+  "architecture_head": "d3f7225b4ee9412f5d6c91b82a5a8db04e4ae70e",
+  "clean_code_head": "336d309f3748328ba4dea18be9944a95751ccc29",
+  "p0_run": 30906761804,
+  "artifact": 8891365180,
+  "artifact_sha256": "62aea0ce1ed32917e7c6dcdd8ae5c60fc0f627db90335cbbddb0c84c1f3e1915",
+  "tests": {
+    "i003": "12/12",
+    "t10": "54/54",
+    "compiler": "285/285",
+    "normal": "405/405"
+  },
+  "open_findings": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "mysql": "SKIPPED_NOT_APPLICABLE",
+  "pr": 25,
+  "merged": false,
+  "t11_blocked": true
+}

@@ -1,0 +1,65 @@
+{
+  "task": "TASK-P1-T10",
+  "iteration": "I003",
+  "status": "COMPLETED",
+  "outcome": "PASSED",
+  "completion": "COMPLETION-P1-T10-R03@336d309f3748",
+  "invalidates": "COMPLETION-P1-T10-R02@6f4c7b6f3ec3",
+  "preserved_history": [
+    "COMPLETION-P1-T10-R01@9e94bc68d9a8",
+    "COMPLETION-P1-T10-R02@6f4c7b6f3ec3"
+  ],
+  "design": "DESIGN-R35@P1-T10-REWORK-I003",
+  "plan": "TP-P1-COMPILER-F01-R31@P1-T10-REWORK-I003",
+  "tdd": "TDD-P1-T10-R03@b16d5ee9f9f1",
+  "architecture": "DEVSKEL-P1-T10-R03@d3f7225b4ee9",
+  "development": "DEV-P1-T10-R03@bc056b7ed1da",
+  "code_review": "CODEREVIEW-P1-T10-R03@336d309f3748",
+  "testing": "TESTING-P1-T10-R03@336d309f3748",
+  "clean_code_head": "336d309f3748328ba4dea18be9944a95751ccc29",
+  "review_range": {
+    "first": "REV-000445",
+    "last": "REV-000458"
+  },
+  "evidence_range": {
+    "first": "EVD-000719",
+    "last": "EVD-000739"
+  },
+  "findings": {
+    "open_p0": 0,
+    "open_p1": 0,
+    "open_p2": 0,
+    "closed": [
+      "FND-P1-T10-I003-001",
+      "FND-P1-T10-I003-002"
+    ]
+  },
+  "validation": {
+    "p0_run": 30906761804,
+    "artifact": 8891365180,
+    "sha256": "62aea0ce1ed32917e7c6dcdd8ae5c60fc0f627db90335cbbddb0c84c1f3e1915",
+    "surefire_xml": 78,
+    "normal_tests": 405,
+    "normal_failures": 0,
+    "normal_errors": 0,
+    "normal_skipped": 0,
+    "intentional_failure_gate": 1,
+    "t10_tests": 54,
+    "i003_tests": 12,
+    "compiler_tests": 285,
+    "java_release_8": "PASSED",
+    "reactor_modules": 12,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "scope": {
+    "production_files_modified_in_i003": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/modelaccess/ModelAccessStructureValidator.java"
+    ],
+    "temporary_workflow_present": false,
+    "compiler_api_changed": false,
+    "t06_t07_t08_contract_changed": false,
+    "deployment_performed": false,
+    "pr_merged": false,
+    "next_task": "TASK-P1-T11_BLOCKED_UNTIL_PR25_MERGED"
+  }
+}

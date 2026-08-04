@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T10",
+  "iteration": "I001",
+  "completion_revision": "COMPLETION-P1-T10-R01@9e94bc68d9a8",
+  "status": "PASSED",
+  "base": {
+    "branch": "dev_all",
+    "sha": "4fe0f6def8581e5c7234d86dfa0aafae794db15f"
+  },
+  "branch": "feature/p1-t10-rule-dag-20260804-1428",
+  "pr": 25,
+  "dependency": "COMPLETION-P1-T09-R02@95b08223083f",
+  "clean_code_head": "9e94bc68d9a8c25351213bb46a6cafa5702105d9",
+  "revisions": {
+    "design": "DESIGN-R33@P1-T10-I001",
+    "plan": "TP-P1-COMPILER-F01-R29@P1-T10-I001",
+    "tdd": "TDD-P1-T10-R01@f1ff4c03ece8",
+    "architecture_skeleton": "DEVSKEL-P1-T10-R01@6db11965ec79",
+    "development": "DEV-P1-T10-R01@9e94bc68d9a8",
+    "code_review": "CODEREVIEW-P1-T10-R01@9e94bc68d9a8",
+    "testing": "TESTING-P1-T10-R01@9e94bc68d9a8",
+    "completion": "COMPLETION-P1-T10-R01@9e94bc68d9a8"
+  },
+  "revision_integrity": {
+    "design_first_commit": "a637633b0bb2796beda3e1ef9b31f4dbbd27dafe",
+    "design_blob": "b359b87c2228d475d77c2ced6194caa0ade5cbcf",
+    "plan_first_commit": "09a069982b74718b8275150a82e177aeb6a5650f",
+    "plan_blob": "719503b12088ca1c971e7e7299adcb92e9d5c7fd",
+    "created_before_red": true,
+    "unchanged_at_clean_code_head": true
+  },
+  "tdd_red": {
+    "head": "f1ff4c03ece86a4c65eee5531ac6e1c89cbe8d3d",
+    "run_id": 30885614810,
+    "artifact_id": 8882952382,
+    "artifact_sha256": "fc3259c077bff4ded98e0f700a9462658ad9de62191502495337e891845b0f44",
+    "new_tests": 17,
+    "failures": 17,
+    "errors": 0,
+    "existing_normal_tests": "351/351",
+    "java_release_8_compiled": true
+  },
+  "architecture_skeleton": {
+    "head": "6db11965ec79a721a65a75532dabc812f16cc236",
+    "trigger_head": "617664fc149586c3586873ac20de94e635c8b5c1",
+    "run_id": 30886407036,
+    "artifact_id": 8883253634,
+    "artifact_sha256": "b65dbe96019fe16c5a4a7fd43b30b1aa35564e9b65273c51335dc2a2b11d3655",
+    "controlled_failures": 14,
+    "errors": 0
+  },
+  "development": {
+    "concrete_head": "60370e9e9e289db8b223cd0d9f38d322ff9a1052",
+    "review_fix_head": "6a4c6aaead711c199181115b3c6bb8e615cbdbaa",
+    "temporary_workflow_removed": true
+  },
+  "clean_code_testing": {
+    "run_id": 30888758375,
+    "result": "SUCCESS",
+    "artifact_id": 8884155225,
+    "artifact_sha256": "f7dbad60dd352535113f7a8fa74f85a475e7cc3bf40dc9aa29acdc074f11fb24",
+    "surefire_xml": 73,
+    "t10": "24/24",
+    "t09": "36/36",
+    "symbol": "66/66",
+    "compiler": "255/255",
+    "xml": "30/30",
+    "yaml": "59/59",
+    "context_normal": "26/26",
+    "demo": "4/4",
+    "legacy": "1/1",
+    "normal_tests": "375/375",
+    "intentional_failure_gate": "recognized",
+    "reactor_modules": 12,
+    "java_release_8": "PASSED",
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "findings": {
+    "FND-P1-T10-I001-001": "CLOSED",
+    "FND-P1-T10-I001-002": "CLOSED"
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "contracts": {
+    "snapshot_gate": "exclusive before all semantic work",
+    "selection": "target-main exact first, then same-view exact property traversal",
+    "fallback": "no fuzzy, case-fold, root, cross-view or cross-system fallback",
+    "write_overlap": "same, ancestor, descendant and wildcard overlap rejected",
+    "publication": "all-or-nothing",
+    "deferred": "MODEL_ACCESS / P2 / model-access-selector-binding",
+    "runtime_execution": false,
+    "t11": "BLOCKED_UNTIL_PR_MERGE"
+  },
+  "reviews": "REV-000408..REV-000424",
+  "evidence": "EVD-000669..EVD-000691",
+  "merge_performed": false
+}

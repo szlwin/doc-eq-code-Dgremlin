@@ -241,7 +241,6 @@
             <model-access model-ref="OrderInfo">
                 <read path="*"/>
                 <write path="payInfo"/>
-                <write path="payInfo.payDetailList"/>
             </model-access>
         </model-access-info>
 
