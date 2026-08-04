@@ -1,0 +1,27 @@
+{
+  "task": "TASK-P1-T10",
+  "iteration": "I003",
+  "reviewed_base": "7e466e7cf0f28aa4062294923c27b5f59cbd355d",
+  "clean_code_head": "336d309f3748328ba4dea18be9944a95751ccc29",
+  "design": {
+    "revision": "DESIGN-R35@P1-T10-REWORK-I003",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R35_t10_typedkey_lexical.md",
+    "first_commit": "2693dc6b0b608d72f30e76b8b4e8279cfbf9d023",
+    "blob": "dd468eb6a66cb9fc281c08adfccd04d30212ed38"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R31@P1-T10-REWORK-I003",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R31_t10_typedkey_lexical.md",
+    "first_commit": "06dd22b9dbfcd25b17dd2e8fd00195880a121ef8",
+    "blob": "4fcfc0d2992de3cfd337b1938206d452ea323e9b"
+  },
+  "valid_red": "b16d5ee9f9f1f1a95446c6d96803dd35beae0a9b",
+  "architecture": "d3f7225b4ee9412f5d6c91b82a5a8db04e4ae70e",
+  "production": "bc056b7ed1da2cf2d47c8a3e66c24947f5cc695c",
+  "first_green": "33a536d5a574e738e65d041ecd21a403145a2c7e",
+  "independent_review_green": "336d309f3748328ba4dea18be9944a95751ccc29",
+  "history_preserved": [
+    "COMPLETION-P1-T10-R01@9e94bc68d9a8",
+    "COMPLETION-P1-T10-R02@6f4c7b6f3ec3"
+  ]
+}
