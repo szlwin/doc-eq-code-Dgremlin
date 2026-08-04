@@ -1,0 +1,21 @@
+{
+  "task": "TASK-P1-T10",
+  "iteration": "I002",
+  "status": "PASSED",
+  "design": {
+    "revision": "DESIGN-R34@P1-T10-REWORK-I002",
+    "firstCommit": "eb72ef6c4487ac67cef4f814a55cadce4413c8c3",
+    "blob": "194e9983cc6fe7a687a9920566fce932bc2d2a10"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R30@P1-T10-REWORK-I002",
+    "firstCommit": "eb72ef6c4487ac67cef4f814a55cadce4413c8c3",
+    "blob": "27ed4337192980507ceeb6b1e8be9eae5831875e"
+  },
+  "validRed": "d671185a9b702e995735bbbf74dd48bda4096128",
+  "architecture": "fab05f78900bd093ad48e24d48f0d62f6c632158",
+  "cleanCodeHead": "6f4c7b6f3ec3173c6f4eaa282e2cba6d07092082",
+  "parentCompletion": "COMPLETION-P1-T10-R01@9e94bc68d9a8",
+  "parentStatus": "INVALIDATED_PRESERVE_HISTORY",
+  "integrity": "R34/R30 created before valid RED and unchanged at clean-code head"
+}
