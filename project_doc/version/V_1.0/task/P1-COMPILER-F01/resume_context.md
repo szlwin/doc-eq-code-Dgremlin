@@ -1,49 +1,52 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T11 / I001` 已完成
-- 当前有效 Completion：`COMPLETION-P1-T11-R01@f09d9786fad8`
+- 当前逻辑任务：`TASK-P1-T11 / I002` 已完成
+- 当前有效 Completion：`COMPLETION-P1-T11-R02@86b55b45d1cd`
+- 失效但保留：`COMPLETION-P1-T11-R01@f09d9786fad8`
 - Dependency：`COMPLETION-P1-T10-R03@336d309f3748`
 - 状态：`COMPLETED / PASSED`
 - Base：`dev_all@f97b7e47ac0fb40209c4dc512aa15d67c19be44b`
 - Branch：`feature/p1-t11-deferred-classification-20260804-2058`
 - PR：`#26`
-- Design：`DESIGN-R36@P1-T11-I001`
-- Plan：`TP-P1-COMPILER-F01-R32@P1-T11-I001`
-- TDD：`TDD-P1-T11-R01@7fd853fca405`
-- Architecture：`DEVSKEL-P1-T11-R01@7fd853fca405`
-- Development：`DEV-P1-T11-R01@f09d9786fad8`
-- Code Review：`CODEREVIEW-P1-T11-R01@f09d9786fad8`
-- Testing：`TESTING-P1-T11-R01@f09d9786fad8`
-- Reviews：`REV-000459`～`REV-000475`
-- Evidence：`EVD-000740`～`EVD-000765`
+- Design：`DESIGN-R37@P1-T11-REWORK-I002`
+- Plan：`TP-P1-COMPILER-F01-R33@P1-T11-REWORK-I002`
+- TDD：`TDD-P1-T11-R02@1297a9dd947f`
+- Architecture：`DEVSKEL-P1-T11-R02@86013589b65d`
+- Development：`DEV-P1-T11-R02@1f9f887837bd`
+- Code Review：`CODEREVIEW-P1-T11-R02@86b55b45d1cd`
+- Testing：`TESTING-P1-T11-R02@86b55b45d1cd`
+- Reviews：`REV-000476`～`REV-000489`
+- Evidence：`EVD-000766`～`EVD-000786`
 - Open P0/P1/P2：`0 / 0 / 0`
 
 ## Current contract
 
 - 八种 DeferredKind 固定映射至 P2-P7 和稳定 reasonCode；
 - 分类输入必须冻结 owner、kind、ordinal、SourceRef、NormalizedBody 和强类型引用；
-- 缺字段、reason-policy、null typed ref、unresolved lexical、null input 与 duplicate key 统一使用 `MIX-DEFERRED-INCOMPLETE`；
+- null `resolvedReferences` 容器是未提供，显式空列表是已提供；
+- 批次在任何元素读取前形成局部不可变快照，复制失败使用 `inputs-snapshot`；
+- 缺字段、reason-policy、null typed ref、unresolved lexical、null input 与 duplicate key 使用 `MIX-DEFERRED-INCOMPLETE`；
 - 任一错误不发布部分 Registry；空批次发布不可变空 Registry；
-- 输入乱序不影响 Registry，引用列表防御性复制；
 - P1 不执行 P2-P7 runtime、SQL、事务、I/O、网络、DAG 或缓存。
 
 ## Validation
 
-- Valid RED：`7fd853fca4055c7bf4f3049443d594b286d597fa` / Run `30913711698` / `18 failures, 0 errors`
-- Clean-code Head：`f09d9786fad8974bdbe8c37704d44ee4466da862`
-- P0 Run：`30914377427` — SUCCESS
-- Artifact：`8894415605`
-- SHA-256：`702bd6c66b0debfaca9c7dd91c6b00baf971e114779d4c252f014ba867cfa315`
-- T11：`26/26`；Compiler：`311/311`；Normal：`431/431`
-- Surefire XML：`81`；12 modules / Java release 8：PASSED
+- Valid RED：`1297a9dd947fedc3683d2eff1d61d6484e73a351` / Run `30919478960` / `5 failures, 0 errors`
+- Architecture：`86013589b65da324d1e237e593b681c482cb6c4c` / Run `30919667799` / `2 controlled failures, 0 errors`
+- Clean-code Head：`86b55b45d1cd658401ec541fa12bfd868ef5fadc`
+- P0 Run：`30919883791` — SUCCESS
+- Artifact：`8896619234`
+- SHA-256：`1e37ba710cf47c7f8ff22c1d2e8d7509cadbcc0172c7ed28a30924fcaf9f2294`
+- I002：`8/8`；T11：`34/34`；Compiler：`319/319`；Normal：`439/439`
+- Surefire XML：`83`；12 modules / Java release 8：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
 
 ## Recovery
 
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t11-r01/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t11-r01.md`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t11-r01.json`
-- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t11_r01_completion.json`
-- `@Override` 独占一行，公开方法、构造器和重要逻辑均有中文注释；
-- 下一动作：Independent Review PR #26；仅在用户明确授权后合并；
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t11-r02/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t11-r02.md`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t11-r02.json`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t11_r02_completion.json`
+- 重要逻辑使用中文注释，所有 `@Override` 独占一行；
+- 下一动作：对最终文档化 Head 执行 P0，并更新 PR #26；仅在用户明确授权后合并；
 - TASK-P1-T12：`BLOCKED_UNTIL_PR_26_MERGE`。
