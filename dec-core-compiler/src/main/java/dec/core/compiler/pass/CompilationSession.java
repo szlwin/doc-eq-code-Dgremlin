@@ -97,8 +97,10 @@ public final class CompilationSession {
         return Optional.of(type.cast(value));
     }
 
-    /** 仅允许 Pipeline 按冻结状态机推进状态。 */
-    void transitionTo(CompilationSessionState next) {
+    /**
+     * 按冻结状态机推进状态，并返回可直接交给 Observer 的不可变转换事实。
+     */
+    SessionStateTransition transitionTo(CompilationSessionState next) {
         Objects.requireNonNull(next, "next");
         if (isTerminal(state)) {
             throw new IllegalStateException("terminal session cannot transition");
@@ -111,6 +113,7 @@ public final class CompilationSession {
         SessionStateTransition transition = new SessionStateTransition(state, next);
         transitions.add(transition);
         state = next;
+        return transition;
     }
 
     /** 仅允许 Pipeline 登记本次实际执行的 Pass。 */
