@@ -1,63 +1,75 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T08 / I002` 已完成
-- Dependency：`COMPLETION-P1-T07-R02@ffe544e3060d`
-- 当前有效 Completion：`COMPLETION-P1-T08-R02@bab0993ecfd8`
-- 被推翻 Completion：`COMPLETION-P1-T08-R01@ab432a3189f4`，不可变历史保留
+- 当前逻辑任务：`TASK-P1-T09 / I002` 已完成
+- 当前有效 Completion：`COMPLETION-P1-T09-R02@95b08223083f`
+- 被推翻 Completion：`COMPLETION-P1-T09-R01@ecfe3f53bde7`，不可变历史保留
+- Dependency：`COMPLETION-P1-T08-R02@bab0993ecfd8`
 - 状态：`COMPLETED / PASSED`
-- Base：`dev_all@c6cd8ec156563480ec30989cdd358d4979a8599b`
-- Rework Base：`9ece664412ee947f536e2de73f20b5c7b9790bf1`
-- Branch：`feature/p1-t08-reference-resolution-20260803-2254`
-- PR：`#23`
-- Design：`DESIGN-R30@P1-T08-REWORK-I002`
-- Plan：`TP-P1-COMPILER-F01-R26@P1-T08-REWORK-I002`
-- TDD：`TDD-P1-T08-R02@bfc8e4df822a`
-- Architecture：`DEVSKEL-P1-T08-R02@3e85814d5cf5`
-- Development：`DEV-P1-T08-R02@bab0993ecfd8`
-- Code Review：`CODEREVIEW-P1-T08-R02@bab0993ecfd8`
-- Testing：`TESTING-P1-T08-R02@bab0993ecfd8`
-- Reviews：`REV-000353`～`REV-000373`
-- Evidence：`EVD-000600`～`EVD-000622`
-- Findings：`FND-P1-T08-I002-001/002/003/004` 全部 CLOSED
+- Base：`dev_all@e47551e0c79984d8f3fafc0ce379da76ad0d5593`
+- Rework Base：`19b14487646c66ab1d7a386e96fc4876581b214c`
+- Branch：`feature/p1-t09-engine-context-20260804-1040`
+- PR：`#24`
+- Design：`DESIGN-R32@P1-T09-REWORK-I002`
+- Plan：`TP-P1-COMPILER-F01-R28@P1-T09-REWORK-I002`
+- TDD：`TDD-P1-T09-R02@002594d2cba2`
+- Architecture：`DEVSKEL-P1-T09-R02@3efb2d1f0c97`
+- Development：`DEV-P1-T09-R02@95b08223083f`
+- Code Review：`CODEREVIEW-P1-T09-R02@95b08223083f`
+- Testing：`TESTING-P1-T09-R02@95b08223083f`
+- Reviews：`REV-000391`～`REV-000407`
+- Evidence：`EVD-000646`～`EVD-000668`
+- Findings：`FND-P1-T09-I002-001/002/003/004` 全部 CLOSED
 - Open P0/P1/P2：`0 / 0 / 0`
-- Clean-code Head：`bab0993ecfd8c344beead62712ba8dc02621038d`
-- P0 Run：`30871077040`，结果 `PASSED`
-- Artifact：`8877900378`
-- Artifact SHA-256：`a6eed26d25e9962a28d79abc4108fc61992d5d43eae7c70261c38403a8a3d68c`
-- Artifact 独立校验：实际 ZIP SHA-256 与 GitHub digest 一致；66 个 Surefire XML 已解析
-- I002：22/22
-- I001 T08：12/12
-- T08 total：34/34
-- Symbol：66/66
-- Compiler：195/195
-- XML：30/30
-- YAML：59/59
-- Context 正常测试：26/26
-- Demo：4/4
-- Legacy declaration：1/1
-- 正常测试合计：315/315
-- 故意失败门禁：1 项按预期失败并被识别
-- Reactor：12 modules / PASSED
-- Java release 8：PASSED
+
+## Revision Integrity
+
+- R32 first commit：`d6099f1ab502bfc2e7ee0d81da8010a40c6da0e0`
+- R32 blob：`645dae1f3d065e910160fa70e615810cdb9e1ce9`
+- R28 first commit：`4b489d32aa123ce0d9dd0854eec9c2b5389be599`
+- R28 blob：`3f4004e5913ee19f49394e5c637923c0d4a87880`
+- R32/R28 在有效 I002 RED 前创建，clean-code Head blob 不变。
+- R27 原无效 SHA：`4483ce64...`；正确 first commit：`e7713c4499271b79b958d0c0e0793c02e6be5428`；blob `20a16d1e...8dca`；位于 R01 RED 前 7 个 commit。
+
+## Current Contract
+
+- common 权限和 Information/System/ModelAccess 限制只根据 canonical SystemKey 判定；raw lexical 保留；
+- `SymbolTable.isBuiltFrom` 只返回完整快照一致性 boolean，不暴露内部快照；
+- Compiler 在所有 semantic work 前执行门禁；失配只返回 `information.input.snapshot-mismatch`；
+- 快照失败 parser/resolver 调用数为 0，且不发布 AST、依赖或 Deferred；
+- 128 层括号通过，129 层返回 limit Diagnostic；
+- 原 T09 AST、owner、common、P3 Deferred、稳定依赖和全批原子发布合同保持不变；
+- 无求值、DAG、循环检测、缓存、I/O、网络、模糊查询或全局状态。
+
+## Validation
+
+- Clean-code Head：`95b08223083f9d6b8573e96cdd12364334c0f234`
+- P0 Run：`30882162374` — SUCCESS
+- Artifact：`8881702632`
+- SHA-256：`2f09baf88333eeff96e34ac7ab6be840c0aba4bfffd20309d9afe6bfad64ce4f`
+- Surefire XML：`70`
+- I002：`12/12`
+- T09：`36/36`
+- Symbol：`66/66`
+- Compiler：`231/231`
+- XML：`30/30`
+- YAML：`59/59`
+- Context normal：`26/26`
+- Demo：`4/4`
+- Legacy：`1/1`
+- Normal tests：`351/351`
+- Intentional failure gate：`recognized`
+- Reactor：`12 modules / PASSED`
+- Java release 8：`PASSED`
 - MySQL：`SKIPPED_NOT_APPLICABLE`
-- Revision Lock：R30 `5f392e855b5f5e3a3dc93e19f02c03db57cebe11`；R26 `6ab25d67c788933d12e76206636590880c0c3598`
-- Revision Integrity：R30/R26 在有效 RED 前创建，clean-code Head 复核 blob 不变
-- Snapshot：SymbolTable package-private 保存完整 RawDefinitionSet；Resolver 在全部索引前执行完整值语义绑定校验
-- Snapshot Diagnostic：`reference.input.snapshot-mismatch`
-- Lexical：simple target trim/nonblank；qualified Information 恰好一个点、两段均非空
-- TypedKey：全部输入构造失败转换为 `reference.owner.invalid`，不允许输入异常逃逸
-- System declaration：data-ref/view-ref 缺失 ref/name 或空白值 fail-closed
-- Complexity：lexical → CandidateSummary，不保存候选 List；12 candidates × 9 refs = 9 summary lookups
-- Canonical Integration：真实 CanonicalDocumentNode → RawDefinitionBuilder → SymbolTableBuilder → ReferenceResolver 已覆盖
-- Success：继续精确构造 TypedKey 并调用 SymbolTable.find，lexical 摘要不参与成功替代
-- Failure：快照失配入口阻断；普通引用错误完整聚合；任何失败不发布部分 ResolvedReferenceSet
-- Scope：未修改 Context、T06 Raw、T07 Symbol 公共合同或 Compiler API；未启动 T09/T10/P2～P7
-- Coding：`@Override` 独占一行，方法和关键逻辑使用中文注释
-- Temporary workflow：已删除，不存在最终 PR 文件树
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t08-r02/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t08-r02.md`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t08_r02_completion.json`
-- 下一 Agent：`IndependentReviewAgent`
-- 下一动作：复核 PR #23 最终文档化 Head；仅在用户明确授权后合并
-- TASK-P1-T09：`BLOCKED_UNTIL_PR_MERGE`
-- 注意：不得把 MySQL 的 `SKIPPED_NOT_APPLICABLE` 表述为测试通过；未经明确授权不得合并 PR #23。
+
+## Recovery
+
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t09-r02/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t09-r02.md`
+- Revision correction：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-correction-p1-t09-r02.md`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t09_r02_completion.json`
+- 临时 workflow：已删除；
+- `@Override` 独占一行，方法与重要逻辑使用中文注释；
+- 下一 Agent：`IndependentReviewAgent`；
+- 下一动作：复核 PR #24 最终文档化 Head；仅在用户明确授权后合并；
+- TASK-P1-T10：`BLOCKED_UNTIL_PR_MERGE`。

@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T09",
+  "iteration": "I002",
+  "completion_revision": "COMPLETION-P1-T09-R02@95b08223083f",
+  "status": "PASSED",
+  "base": {
+    "branch": "dev_all",
+    "sha": "e47551e0c79984d8f3fafc0ce379da76ad0d5593"
+  },
+  "rework_base": "19b14487646c66ab1d7a386e96fc4876581b214c",
+  "branch": "feature/p1-t09-engine-context-20260804-1040",
+  "pr": 24,
+  "dependency": "COMPLETION-P1-T08-R02@bab0993ecfd8",
+  "invalidated_completion": "COMPLETION-P1-T09-R01@ecfe3f53bde7",
+  "clean_code_head": "95b08223083f9d6b8573e96cdd12364334c0f234",
+  "revisions": {
+    "design": "DESIGN-R32@P1-T09-REWORK-I002",
+    "plan": "TP-P1-COMPILER-F01-R28@P1-T09-REWORK-I002",
+    "tdd": "TDD-P1-T09-R02@002594d2cba2",
+    "architecture_skeleton": "DEVSKEL-P1-T09-R02@3efb2d1f0c97",
+    "development": "DEV-P1-T09-R02@95b08223083f",
+    "code_review": "CODEREVIEW-P1-T09-R02@95b08223083f",
+    "testing": "TESTING-P1-T09-R02@95b08223083f",
+    "completion": "COMPLETION-P1-T09-R02@95b08223083f"
+  },
+  "revision_integrity": {
+    "design_first_commit": "d6099f1ab502bfc2e7ee0d81da8010a40c6da0e0",
+    "design_blob": "645dae1f3d065e910160fa70e615810cdb9e1ce9",
+    "plan_first_commit": "4b489d32aa123ce0d9dd0854eec9c2b5389be599",
+    "plan_blob": "3f4004e5913ee19f49394e5c637923c0d4a87880",
+    "created_before_red": true,
+    "unchanged_at_clean_code_head": true,
+    "r27_historical_invalid_sha": "4483ce64c6ecffc989e3adcbd3a8178d301cace9",
+    "r27_correct_first_commit": "e7713c4499271b79b958d0c0e0793c02e6be5428",
+    "r27_blob": "20a16d1e7b199088086f496fe94aeb8b8684d8ca",
+    "r27_commits_before_r01_red": 7,
+    "correction_evidence": "revision-correction-p1-t09-r02.md"
+  },
+  "tdd_red": {
+    "head": "002594d2cba2f507888ddccea7095c38fd6ae672",
+    "run_id": 30881613463,
+    "artifact_id": 8881499301,
+    "artifact_sha256": "0b8524f6a0ebb61f750db4cd471a462475e0d2d5bbfe9b43c1e96a87bcd5cc3c",
+    "new_tests": 12,
+    "failures": 10,
+    "errors": 0,
+    "existing_t09_passed": 24,
+    "java_release_8_compiled": true
+  },
+  "architecture_skeleton": {
+    "head": "3efb2d1f0c9790fdae0da6c17398efbf0e6957b9",
+    "run_id": 30881802750,
+    "artifact_id": 8881567148,
+    "artifact_sha256": "bfbb5a5957190390e56008998c8255469079b1e6bcd85863440778240b9a9be2",
+    "controlled_failures": 10,
+    "errors": 0
+  },
+  "clean_code_testing": {
+    "run_id": 30882162374,
+    "result": "SUCCESS",
+    "artifact_id": 8881702632,
+    "artifact_sha256": "2f09baf88333eeff96e34ac7ab6be840c0aba4bfffd20309d9afe6bfad64ce4f",
+    "surefire_xml": 70,
+    "i002": "12/12",
+    "original_t09": "24/24",
+    "t09_total": "36/36",
+    "symbol": "66/66",
+    "compiler": "231/231",
+    "xml": "30/30",
+    "yaml": "59/59",
+    "context_normal": "26/26",
+    "demo": "4/4",
+    "legacy": "1/1",
+    "normal_tests": "351/351",
+    "intentional_failure_gate": "recognized",
+    "reactor_modules": 12,
+    "java_release_8": "PASSED",
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "findings": {
+    "FND-P1-T09-I002-001": "CLOSED",
+    "FND-P1-T09-I002-002": "CLOSED",
+    "FND-P1-T09-I002-003": "CLOSED",
+    "FND-P1-T09-I002-004": "CLOSED"
+  },
+  "open_findings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "contracts": {
+    "common_identity": "canonical SystemKey only; raw lexical preserved",
+    "snapshot_gate": "exclusive information.input.snapshot-mismatch before all semantic work",
+    "snapshot_exposure": "boolean predicate only",
+    "depth": "128 parentheses pass; 129 fail",
+    "publication": "all-or-nothing",
+    "temporary_workflow_removed": true,
+    "t10": "BLOCKED_UNTIL_PR_MERGE"
+  },
+  "reviews": "REV-000391..REV-000407",
+  "evidence": "EVD-000646..EVD-000668",
+  "merge_performed": false
+}

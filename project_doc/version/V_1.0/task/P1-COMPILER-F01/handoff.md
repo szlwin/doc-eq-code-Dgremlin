@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 阶段交接
 
-> T01～T07 已合并到 `dev_all`。当前完成任务为 `TASK-P1-T08 / I002`，有效 Completion 为 `COMPLETION-P1-T08-R02@bab0993ecfd8`。R01 已被独立 Review 推翻并作为不可变历史保留。PR #23 尚未合并，T09 保持阻断。
+> T01～T08 已合并到 `dev_all`。当前完成任务为 `TASK-P1-T09 / I002`，有效 Completion 为 `COMPLETION-P1-T09-R02@95b08223083f`。R01 已被独立 Review 推翻并作为不可变历史保留。PR #24 尚未合并，T10 保持阻断。
 
 ## 已合并前置任务
 
@@ -10,74 +10,71 @@
 - T04：`COMPLETION-P1-T04-R02@0699c6bc2ed4`
 - T05：`COMPLETION-P1-T05-R03@30529276cd8f`
 - T06：`COMPLETION-P1-T06-R04@242db638c61d`
-- T07：`COMPLETION-P1-T07-R02@ffe544e3060d`，通过 PR #22 合并；
-- T08 Base：`dev_all@c6cd8ec156563480ec30989cdd358d4979a8599b`。
+- T07：`COMPLETION-P1-T07-R02@ffe544e3060d`
+- T08：`COMPLETION-P1-T08-R02@bab0993ecfd8`，通过 PR #23 合并；
+- T09 Base：`dev_all@e47551e0c79984d8f3fafc0ce379da76ad0d5593`。
 
-## T08 Completion 历史
+## T09 Completion history
 
-- R01 / I001：`COMPLETION-P1-T08-R01@ab432a3189f4`；独立 Review 发现 3 个 P1 与 1 个 P2，当前有效性失效但所有文档、Evidence、P0、Artifact 和失败 attempt 不可变保留；
-- R02 / I002：`COMPLETION-P1-T08-R02@bab0993ecfd8`；当前有效。
+- R01 / I001：`COMPLETION-P1-T09-R01@ecfe3f53bde7`；独立 Review 发现 3 个 P1 与 1 个 P2，当前失效但所有文档、Evidence、测试和失败 attempt 不可变保留；
+- R02 / I002：`COMPLETION-P1-T09-R02@95b08223083f`；当前有效。
 
-## T08 I002（当前有效）
+## T09 I002
 
-- Design：`DESIGN-R30@P1-T08-REWORK-I002`
-- Plan：`TP-P1-COMPILER-F01-R26@P1-T08-REWORK-I002`
-- TDD：`TDD-P1-T08-R02@bfc8e4df822a`
-- Architecture：`DEVSKEL-P1-T08-R02@3e85814d5cf5`
-- Development：`DEV-P1-T08-R02@bab0993ecfd8`
-- Code Review：`CODEREVIEW-P1-T08-R02@bab0993ecfd8`
-- Testing：`TESTING-P1-T08-R02@bab0993ecfd8`
-- Completion：`COMPLETION-P1-T08-R02@bab0993ecfd8`
-- Reviews：`REV-000353`～`REV-000373`
-- Evidence：`EVD-000600`～`EVD-000622`
-- Findings：`FND-P1-T08-I002-001/002/003/004` CLOSED
-- Clean-code Head：`bab0993ecfd8c344beead62712ba8dc02621038d`
-- P0 Run：`30871077040`
-- Artifact：`8877900378`
-- Artifact SHA-256：`a6eed26d25e9962a28d79abc4108fc61992d5d43eae7c70261c38403a8a3d68c`
-- Artifact 独立校验：实际 ZIP SHA-256 与 GitHub digest 一致
-- I002 22/22；I001 T08 12/12；T08 34/34；Symbol 66/66；Compiler 195/195
-- XML 30/30；YAML 59/59；Context 正常 26/26；Demo 4/4；Legacy 1/1
-- 正常测试 315/315；故意失败门禁 1 项按预期失败并被识别
-- 12 模块 Reactor、Java release 8、故意失败阻断：PASSED
-- MySQL：`SKIPPED_NOT_APPLICABLE`
+- Design：`DESIGN-R32@P1-T09-REWORK-I002`
+- Plan：`TP-P1-COMPILER-F01-R28@P1-T09-REWORK-I002`
+- TDD：`TDD-P1-T09-R02@002594d2cba2`
+- Architecture：`DEVSKEL-P1-T09-R02@3efb2d1f0c97`
+- Development：`DEV-P1-T09-R02@95b08223083f`
+- Code Review：`CODEREVIEW-P1-T09-R02@95b08223083f`
+- Testing：`TESTING-P1-T09-R02@95b08223083f`
+- Completion：`COMPLETION-P1-T09-R02@95b08223083f`
+- Reviews：`REV-000391`～`REV-000407`
+- Evidence：`EVD-000646`～`EVD-000668`
+- Findings：`FND-P1-T09-I002-001/002/003/004` CLOSED
 - Open P0/P1/P2：`0 / 0 / 0`
 
-## 当前发布合同
+## Published contract
 
-- Resolver 输入必须与 SymbolTable 的完整 RawDefinitionSet 构建快照一致；
-- 快照不一致在任何索引前返回 `reference.input.snapshot-mismatch`；
-- qualified Information 必须严格为 `system.name` 两段，禁止多段、未限定和空白 segment；
-- simple target、View target-main、System ref/name、RuleView、Action、Directory rel 与 property 均在 TypedKey 构造前 fail-closed；
-- System data-ref/view-ref 节点缺失 ref/name 返回 `reference.owner.invalid`；
-- 输入相关 IllegalArgumentException 不得越过 ReferenceResolutionResult；
-- lexical 失败分类使用预聚合 CandidateSummary，不保存或扫描候选 List；
-- 小预算证明 12 个同名 owner 候选与 9 个失败引用只执行 9 次摘要查询；
-- 成功路径始终构造精确 TypedKey 并调用 SymbolTable.find，lexical 摘要不参与成功目标替代；
-- 快照失败入口阻断；普通引用错误完整聚合、稳定排序；任一失败不发布部分集合；
-- 真实 Canonical → T06 → T07 → T08 集成矩阵覆盖 ref/name、nested owner、前向 RuleView、qualified Information 与 malformed lexical；
-- 无模糊匹配、大小写降级、跨类型 fallback、I/O、网络、反射执行或 static mutable state。
+- common 身份、权限和所有限制只根据 canonical SystemKey 判定；padded raw lexical 保持原值；
+- `SymbolTable.isBuiltFrom` 只提供完整快照一致性 boolean，不暴露内部 snapshot；
+- T09 在 common validation、parser、owner lookup、resolver、Deferred 之前执行入口门禁；
+- 失配只返回 `information.input.snapshot-mismatch`，不调用 parser/resolver，不发布部分结果；
+- 128 层括号通过，129 层返回 limit Diagnostic；
+- 原 AST、普通同 System、exact InformationKey、common qualified 引用、P3 Deferred、依赖排序去重和原子发布合同保持有效；
+- 无求值、DAG、循环检测、缓存、I/O、网络、模糊 fallback 或全局状态。
 
 ## Revision Integrity
 
-- R30 first commit：`04c590caba096b999d2320e364b464143f24f3e0`
-- R30 blob：`5f392e855b5f5e3a3dc93e19f02c03db57cebe11`
-- R26 first commit：`dbea77b8698648acc35cbdb947687c58597d6612`
-- R26 blob：`6ab25d67c788933d12e76206636590880c0c3598`
-- R30/R26 在有效 RED 前创建，clean-code Head 复核 blob 未变化
+- R32 first commit/blob：`d6099f1a...` / `645dae1f...`
+- R28 first commit/blob：`4b489d32...` / `3f4004e5...`
+- R27 原无效 SHA：`4483ce64...`
+- R27 正确 first commit/blob：`e7713c4499271b79b958d0c0e0793c02e6be5428` / `20a16d1e7b199088086f496fe94aeb8b8684d8ca`
+- 正确 R27 commit 位于有效 R01 RED 前 7 个 commit；correction Evidence 已新增，R01 未覆盖。
 
-## PR、恢复与下一步
+## Validation
 
-- 当前 PR：`#23`
-- Branch：`feature/p1-t08-reference-resolution-20260803-2254`
-- Base：`dev_all@c6cd8ec156563480ec30989cdd358d4979a8599b`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t08-r02/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t08-r02.md`
-- 机器恢复入口：`project_doc/version/V_1.0/tdd_p1_t08_r02_completion.json`
-- `@Override` 独占一行，方法和关键逻辑使用中文注释
-- 未修改 Context、T06 Raw、T07 Symbol 公共合同或 Compiler API
-- 临时源码快照 workflow 已删除，不存在最终 PR 文件树
-- 未启动 Information expression、ModelAccess、Deferred、Pipeline、Digest、Publication 或 T09/T10/P2～P7
-- 下一 Agent：`IndependentReviewAgent`
-- 未经用户明确授权不得合并 PR #23
-- PR #23 合并前 `TASK-P1-T09` 保持未启动和阻断。
+- Valid I002 RED：`002594d2...` / Run `30881613463` / `10 failures, 0 errors`
+- Architecture：`3efb2d1f...` / Run `30881802750` / `10 controlled failures, 0 errors`
+- Clean-code Head：`95b08223083f9d6b8573e96cdd12364334c0f234`
+- P0 Run：`30882162374`
+- Artifact：`8881702632`
+- SHA-256：`2f09baf88333eeff96e34ac7ab6be840c0aba4bfffd20309d9afe6bfad64ce4f`
+- I002 12/12；T09 36/36；Symbol 66/66；Compiler 231/231；正常测试 351/351
+- XML 30/30；YAML 59/59；Context 26/26；Demo 4/4；Legacy 1/1
+- 故意失败门禁 1 项按预期失败并被识别
+- 12 模块 Reactor、Java release 8：PASSED
+- MySQL：`SKIPPED_NOT_APPLICABLE`
+
+## Recovery and next step
+
+- 当前 PR：`#24`
+- Branch：`feature/p1-t09-engine-context-20260804-1040`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t09-r02/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t09-r02.md`
+- Revision correction：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-correction-p1-t09-r02.md`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t09_r02_completion.json`
+- 临时 workflow 已删除；`@Override` 独占一行，方法和重要逻辑使用中文注释；
+- 下一 Agent：`IndependentReviewAgent`；
+- 未经用户明确授权不得合并 PR #24；
+- PR #24 合并前 `TASK-P1-T10` 保持阻断。
