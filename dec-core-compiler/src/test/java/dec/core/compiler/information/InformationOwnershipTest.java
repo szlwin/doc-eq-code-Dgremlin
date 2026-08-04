@@ -168,6 +168,9 @@ class InformationOwnershipTest {
         assertTrue(Modifier.isFinal(compiler.getModifiers()));
         assertTrue(Modifier.isFinal(ast.getModifiers()));
         for (Field field : compiler.getDeclaredFields()) {
+            if (field.isSynthetic() || field.getName().startsWith("$jacoco")) {
+                continue;
+            }
             assertFalse(Modifier.isStatic(field.getModifiers())
                     && !Modifier.isFinal(field.getModifiers()),
                     "InformationCompiler 不得包含 static mutable state");
