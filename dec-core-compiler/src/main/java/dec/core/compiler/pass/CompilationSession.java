@@ -3,7 +3,6 @@ package dec.core.compiler.pass;
 import dec.core.compiler.api.CompilationRequest;
 import dec.core.compiler.api.CompilationSessionState;
 import dec.core.compiler.api.CompilationTiming;
-import dec.core.compiler.api.PublicationRequest;
 import dec.core.compiler.api.SessionStateTransition;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticSeverity;
@@ -16,11 +15,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 单次 Pipeline 调用专属的可变构建状态；对外只暴露不可变快照。
+ * 单次 Pipeline 调用专属的语义构建状态；终态后语义事实不可修改。
  */
 public final class CompilationSession {
     private final CompilationRequest request;
-    private final PublicationRequest publicationRequest;
     private CompilationSessionState state = CompilationSessionState.CREATED;
     private final List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
     private final List<String> executedPasses = new ArrayList<String>();
@@ -30,25 +28,16 @@ public final class CompilationSession {
             new ArrayList<CompilationTiming>();
     private final Map<String, Object> artifacts =
             new LinkedHashMap<String, Object>();
+    private boolean sealed;
 
     /** 创建一个完全隔离、初始状态为 CREATED 的 Session。 */
-    CompilationSession(
-            CompilationRequest request,
-            PublicationRequest publicationRequest) {
+    CompilationSession(CompilationRequest request) {
         this.request = Objects.requireNonNull(request, "request");
-        this.publicationRequest = Objects.requireNonNull(
-                publicationRequest,
-                "publicationRequest");
     }
 
     /** 返回当前 Session 的不可变编译请求。 */
     public CompilationRequest request() {
         return request;
-    }
-
-    /** 返回当前 Session 的条件发布请求。 */
-    public PublicationRequest publicationRequest() {
-        return publicationRequest;
     }
 
     /** 返回当前状态。 */
@@ -81,7 +70,7 @@ public final class CompilationSession {
                 new ArrayList<CompilationTiming>(timings));
     }
 
-    /** 返回 Session-local artifact 的不可变浅快照。 */
+    /** 返回 Session-local artifact 的不可变快照。 */
     public Map<String, Object> artifacts() {
         return Collections.unmodifiableMap(
                 new LinkedHashMap<String, Object>(artifacts));
@@ -101,10 +90,8 @@ public final class CompilationSession {
      * 按冻结状态机推进状态，并返回可直接交给 Observer 的不可变转换事实。
      */
     SessionStateTransition transitionTo(CompilationSessionState next) {
+        requireSemanticMutationAllowed();
         Objects.requireNonNull(next, "next");
-        if (isTerminal(state)) {
-            throw new IllegalStateException("terminal session cannot transition");
-        }
         if (next != CompilationSessionState.FAILED
                 && next != expectedNext(state)) {
             throw new IllegalStateException(
@@ -116,18 +103,25 @@ public final class CompilationSession {
         return transition;
     }
 
-    /** 仅允许 Pipeline 登记本次实际执行的 Pass。 */
+    /** 仅允许 Pipeline 在真实调用 Pass 前登记执行事实。 */
     void recordPass(String passName) {
+        requireSemanticMutationAllowed();
         executedPasses.add(requireKey(passName));
     }
 
-    /** 仅允许 Pipeline 登记单调时钟计时。 */
+    /**
+     * 记录 Pipeline 独占的观察 timing。
+     *
+     * <p>Publication commit 后可在 Result 封闭前尽力补充 timing；Context 无此能力。</p>
+     */
     void recordTiming(CompilationTiming timing) {
+        requireNotSealed();
         timings.add(Objects.requireNonNull(timing, "timing"));
     }
 
-    /** 仅允许当前 Pass 向 Session 聚合 Diagnostic。 */
+    /** 仅允许 ACTIVE Context 向非终态 Session 聚合 Diagnostic。 */
     void addDiagnostics(List<Diagnostic> values) {
+        requireSemanticMutationAllowed();
         List<Diagnostic> copy = new ArrayList<Diagnostic>(
                 Objects.requireNonNull(values, "values"));
         if (copy.contains(null)) {
@@ -146,15 +140,41 @@ public final class CompilationSession {
         return false;
     }
 
-    /** 仅允许当前 Pass 写入 Session-local artifact。 */
+    /** 仅允许 ACTIVE Context 写入受控不可变 artifact。 */
     void putArtifact(String key, Object value) {
-        artifacts.put(requireKey(key), Objects.requireNonNull(value, "value"));
+        requireSemanticMutationAllowed();
+        artifacts.put(requireKey(key), ArtifactSnapshots.freeze(value));
+    }
+
+    /**
+     * 在构造 Result 前最终封闭 Session，后续任何内部写入均拒绝。
+     */
+    void seal() {
+        if (!isTerminal(state)) {
+            throw new IllegalStateException("only terminal session can be sealed");
+        }
+        sealed = true;
     }
 
     /** 判断状态是否为不可继续推进的终态。 */
-    private static boolean isTerminal(CompilationSessionState value) {
+    static boolean isTerminal(CompilationSessionState value) {
         return value == CompilationSessionState.PUBLISHED
                 || value == CompilationSessionState.FAILED;
+    }
+
+    /** 拒绝终态或已封闭 Session 的语义写入。 */
+    private void requireSemanticMutationAllowed() {
+        requireNotSealed();
+        if (isTerminal(state)) {
+            throw new IllegalStateException("terminal session is immutable");
+        }
+    }
+
+    /** 拒绝 Result 已冻结后的任何内部写入。 */
+    private void requireNotSealed() {
+        if (sealed) {
+            throw new IllegalStateException("session is sealed");
+        }
     }
 
     /** 返回冻结成功路径中的唯一下一状态。 */
