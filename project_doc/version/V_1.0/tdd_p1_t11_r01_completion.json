@@ -1,0 +1,23 @@
+{
+  "task": "TASK-P1-T11",
+  "iteration": "I001",
+  "completion": "COMPLETION-P1-T11-R01@f09d9786fad8",
+  "status": "COMPLETED",
+  "result": "PASSED",
+  "base": "f97b7e47ac0fb40209c4dc512aa15d67c19be44b",
+  "branch": "feature/p1-t11-deferred-classification-20260804-2058",
+  "pr": 26,
+  "design": "DESIGN-R36@P1-T11-I001",
+  "plan": "TP-P1-COMPILER-F01-R32@P1-T11-I001",
+  "red": "7fd853fca4055c7bf4f3049443d594b286d597fa",
+  "cleanCode": "f09d9786fad8974bdbe8c37704d44ee4466da862",
+  "p0Run": 30914377427,
+  "artifact": 8894415605,
+  "artifactSha256": "702bd6c66b0debfaca9c7dd91c6b00baf971e114779d4c252f014ba867cfa315",
+  "normalTests": 431,
+  "t11Tests": 26,
+  "openP0P1P2": "0/0/0",
+  "mysql": "SKIPPED_NOT_APPLICABLE",
+  "merge": false,
+  "next": "TASK-P1-T12 BLOCKED_UNTIL_PR_26_MERGE"
+}

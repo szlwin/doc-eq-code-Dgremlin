@@ -1,0 +1,79 @@
+{
+  "task": "TASK-P1-T11",
+  "iteration": "I002",
+  "status": "COMPLETED",
+  "outcome": "PASSED",
+  "completion": "COMPLETION-P1-T11-R02@86b55b45d1cd",
+  "invalidates": "COMPLETION-P1-T11-R01@f09d9786fad8",
+  "preserved_history": [
+    "COMPLETION-P1-T11-R01@f09d9786fad8"
+  ],
+  "design": "DESIGN-R37@P1-T11-REWORK-I002",
+  "plan": "TP-P1-COMPILER-F01-R33@P1-T11-REWORK-I002",
+  "tdd": "TDD-P1-T11-R02@1297a9dd947f",
+  "architecture": "DEVSKEL-P1-T11-R02@86013589b65d",
+  "development": "DEV-P1-T11-R02@1f9f887837bd",
+  "code_review": "CODEREVIEW-P1-T11-R02@86b55b45d1cd",
+  "testing": "TESTING-P1-T11-R02@86b55b45d1cd",
+  "clean_code_head": "86b55b45d1cd658401ec541fa12bfd868ef5fadc",
+  "review_range": {
+    "first": "REV-000476",
+    "last": "REV-000489"
+  },
+  "evidence_range": {
+    "first": "EVD-000766",
+    "last": "EVD-000786"
+  },
+  "findings": {
+    "open_p0": 0,
+    "open_p1": 0,
+    "open_p2": 0,
+    "closed": [
+      "FND-P1-T11-I002-001",
+      "FND-P1-T11-I002-002"
+    ]
+  },
+  "validation": {
+    "red_run": 30919478960,
+    "red_artifact": 8896452496,
+    "red_sha256": "c9e14d66f0150a2eb5ca2b2658adf3c4835c8a88f0271595ece97dadbf6c944b",
+    "red_i002_tests": 7,
+    "red_failures": 5,
+    "red_errors": 0,
+    "architecture_run": 30919667799,
+    "architecture_artifact": 8896527869,
+    "architecture_failures": 2,
+    "p0_run": 30919883791,
+    "artifact": 8896619234,
+    "sha256": "1e37ba710cf47c7f8ff22c1d2e8d7509cadbcc0172c7ed28a30924fcaf9f2294",
+    "surefire_xml": 83,
+    "normal_tests": 439,
+    "normal_failures": 0,
+    "normal_errors": 0,
+    "normal_skipped": 0,
+    "intentional_failure_gate": 1,
+    "t11_tests": 34,
+    "i002_tests": 8,
+    "compiler_tests": 319,
+    "java_release_8": "PASSED",
+    "reactor_modules": 12,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "scope": {
+    "production_files_modified_in_i002": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/deferred/DeferredClassificationInput.java",
+      "dec-core-compiler/src/main/java/dec/core/compiler/deferred/DeferredDefinitionBuilder.java"
+    ],
+    "test_files_added_in_i002": [
+      "dec-core-compiler/src/test/java/dec/core/compiler/deferred/DeferredI002ReworkTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/deferred/DeferredI002SnapshotFailureReviewTest.java"
+    ],
+    "temporary_workflow_present": false,
+    "compiler_api_changed": false,
+    "context_contract_changed": false,
+    "t06_t07_t08_t09_t10_contract_changed": false,
+    "deployment_performed": false,
+    "pr_merged": false,
+    "next_task": "TASK-P1-T12_BLOCKED_UNTIL_PR26_MERGED"
+  }
+}
