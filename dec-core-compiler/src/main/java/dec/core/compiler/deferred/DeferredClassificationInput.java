@@ -25,6 +25,7 @@ public final class DeferredClassificationInput {
     private final List<String> unresolvedReferences;
     private final boolean resolvedReferencesProvided;
 
+    /** 从 Builder 防御性复制所有分类字段。 */
     private DeferredClassificationInput(Builder builder) {
         this.ownerKey = builder.ownerKey;
         this.kind = builder.kind;
@@ -42,26 +43,32 @@ public final class DeferredClassificationInput {
         return new Builder();
     }
 
+    /** 返回后续语义的强类型 owner。 */
     public Optional<DefinitionKey> ownerKey() {
         return Optional.ofNullable(ownerKey);
     }
 
+    /** 返回后续语义类别。 */
     public Optional<DeferredKind> kind() {
         return Optional.ofNullable(kind);
     }
 
+    /** 返回同一 owner/kind 下的稳定序号。 */
     public Optional<Integer> ordinal() {
         return Optional.ofNullable(ordinal);
     }
 
+    /** 返回调用方声明的稳定原因码。 */
     public Optional<String> reasonCode() {
         return Optional.ofNullable(reasonCode);
     }
 
+    /** 返回原始配置位置。 */
     public Optional<SourceRef> sourceRef() {
         return Optional.ofNullable(sourceRef);
     }
 
+    /** 返回冻结的规范化语义体。 */
     public Optional<NormalizedBody> body() {
         return Optional.ofNullable(body);
     }
@@ -71,6 +78,7 @@ public final class DeferredClassificationInput {
         return resolvedReferences;
     }
 
+    /** 判断调用方是否显式完成强类型引用收集。 */
     public boolean resolvedReferencesProvided() {
         return resolvedReferencesProvided;
     }
@@ -80,6 +88,7 @@ public final class DeferredClassificationInput {
         return unresolvedReferences;
     }
 
+    /** 防御性复制强类型引用，并冻结集合。 */
     private static List<DefinitionKey> immutableCopy(List<DefinitionKey> values) {
         if (values == null) {
             return Collections.emptyList();
@@ -87,6 +96,7 @@ public final class DeferredClassificationInput {
         return Collections.unmodifiableList(new ArrayList<DefinitionKey>(values));
     }
 
+    /** 防御性复制未解析 lexical，并冻结集合。 */
     private static List<String> immutableTextCopy(List<String> values) {
         if (values == null) {
             return Collections.emptyList();
@@ -108,47 +118,56 @@ public final class DeferredClassificationInput {
         private List<String> unresolvedReferences = Collections.emptyList();
         private boolean resolvedReferencesProvided;
 
+        /** 设置强类型 owner。 */
         public Builder ownerKey(DefinitionKey value) {
             this.ownerKey = value;
             return this;
         }
 
+        /** 设置 Deferred 类别。 */
         public Builder kind(DeferredKind value) {
             this.kind = value;
             return this;
         }
 
+        /** 设置同类语义的稳定序号。 */
         public Builder ordinal(Integer value) {
             this.ordinal = value;
             return this;
         }
 
+        /** 设置必须与分类策略一致的原因码。 */
         public Builder reasonCode(String value) {
             this.reasonCode = value;
             return this;
         }
 
+        /** 设置原始配置位置。 */
         public Builder sourceRef(SourceRef value) {
             this.sourceRef = value;
             return this;
         }
 
+        /** 设置规范化语义体。 */
         public Builder body(NormalizedBody value) {
             this.body = value;
             return this;
         }
 
+        /** 设置已完成类型化的引用列表，并记录容器已显式提供。 */
         public Builder resolvedReferences(List<DefinitionKey> values) {
             this.resolvedReferences = values;
             this.resolvedReferencesProvided = true;
             return this;
         }
 
+        /** 设置仍未类型化的 lexical 引用列表。 */
         public Builder unresolvedReferences(List<String> values) {
             this.unresolvedReferences = values;
             return this;
         }
 
+        /** 构造不可变分类输入快照。 */
         public DeferredClassificationInput build() {
             return new DeferredClassificationInput(this);
         }
