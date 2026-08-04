@@ -1,0 +1,52 @@
+{
+  "task": "TASK-P1-T11",
+  "iteration": "I001",
+  "status": "COMPLETED",
+  "outcome": "PASSED",
+  "completion": "COMPLETION-P1-T11-R01@f09d9786fad8",
+  "base": "dev_all@f97b7e47ac0fb40209c4dc512aa15d67c19be44b",
+  "dependency": "COMPLETION-P1-T10-R03@336d309f3748",
+  "design": "DESIGN-R36@P1-T11-I001",
+  "plan": "TP-P1-COMPILER-F01-R32@P1-T11-I001",
+  "tdd": "TDD-P1-T11-R01@7fd853fca405",
+  "architecture": "DEVSKEL-P1-T11-R01@7fd853fca405",
+  "development": "DEV-P1-T11-R01@f09d9786fad8",
+  "codeReview": "CODEREVIEW-P1-T11-R01@f09d9786fad8",
+  "testing": "TESTING-P1-T11-R01@f09d9786fad8",
+  "reviews": "REV-000459..REV-000475",
+  "evidence": "EVD-000740..EVD-000765",
+  "findings": {
+    "FND-P1-T11-I001-001": "CLOSED",
+    "FND-P1-T11-I001-002": "CLOSED"
+  },
+  "open": {"p0": 0, "p1": 0, "p2": 0},
+  "validRed": {
+    "head": "7fd853fca4055c7bf4f3049443d594b286d597fa",
+    "run": 30913711698,
+    "artifact": 8894144140,
+    "sha256": "48512b0edbfe1eb40bf883aea1a4d77d6fd36db40e765a67235e16478258eb61",
+    "failures": 18,
+    "errors": 0
+  },
+  "cleanCode": {
+    "head": "f09d9786fad8974bdbe8c37704d44ee4466da862",
+    "run": 30914377427,
+    "artifact": 8894415605,
+    "sha256": "702bd6c66b0debfaca9c7dd91c6b00baf971e114779d4c252f014ba867cfa315"
+  },
+  "tests": {
+    "t11": 26,
+    "compiler": 311,
+    "normal": 431,
+    "surefireXml": 81,
+    "intentionalFailureGate": "RECOGNIZED",
+    "errors": 0,
+    "skipped": 0,
+    "reactorModules": 12,
+    "javaRelease8": "PASSED",
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "merge": "NOT_PERFORMED",
+  "nextTask": "TASK-P1-T12",
+  "nextGate": "BLOCKED_UNTIL_PR_26_MERGE"
+}
