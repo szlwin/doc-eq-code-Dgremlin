@@ -1,0 +1,20 @@
+{
+  "task": "TASK-P1-T11",
+  "iteration": "I001",
+  "base": "f97b7e47ac0fb40209c4dc512aa15d67c19be44b",
+  "dependency": "COMPLETION-P1-T10-R03@336d309f3748",
+  "design": {
+    "revision": "DESIGN-R36@P1-T11-I001",
+    "firstCommit": "6fbbe7b459ba977ac61252195e2b5fab1baea501",
+    "blob": "c3099aada1a7b35045a7cb6ba5d1b2221bb577f1"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R32@P1-T11-I001",
+    "firstCommit": "cc34673d14849841143ef1aa52983f5003aa03e9",
+    "blob": "0244a3239ff71db197e25c5ccd95fcbf2b829b06"
+  },
+  "validRed": "7fd853fca4055c7bf4f3049443d594b286d597fa",
+  "cleanCode": "f09d9786fad8974bdbe8c37704d44ee4466da862",
+  "designAndPlanPrecedeRed": true,
+  "historyImmutable": true
+}
