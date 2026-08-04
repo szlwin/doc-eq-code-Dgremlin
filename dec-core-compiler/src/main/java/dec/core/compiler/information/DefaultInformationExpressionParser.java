@@ -27,7 +27,8 @@ final class DefaultInformationExpressionParser
         }
         try {
             ParserState state = new ParserState(tokenize(expression));
-            InformationExpressionAst ast = state.parseExpression(1);
+            /* 根表达式不计入括号嵌套深度，只有进入左括号时才递增。 */
+            InformationExpressionAst ast = state.parseExpression(0);
             if (state.hasNext()) {
                 throw new ParseFailure("unexpected trailing token");
             }
@@ -176,7 +177,7 @@ final class DefaultInformationExpressionParser
             return index < tokens.size();
         }
 
-        /** 在递归前执行硬深度预算。 */
+        /** 在进入下一层括号前执行硬深度预算。 */
         private static void checkDepth(int depth) {
             if (depth > MAX_DEPTH) {
                 throw new LimitFailure();
