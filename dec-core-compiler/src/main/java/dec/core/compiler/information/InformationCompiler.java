@@ -62,6 +62,14 @@ public final class InformationCompiler {
                             "请提供完整 RawDefinitionSet 与 SymbolTable")));
         }
 
+        /*
+         * 快照门禁必须位于所有语义工作之前，避免旧 SymbolTable 提供当前批次不存在的依赖。
+         */
+        if (!symbols.isBuiltFrom(definitions)) {
+            return InformationCompilationResult.failed(Collections.singletonList(
+                    InformationDiagnostics.snapshotMismatch(definitions)));
+        }
+
         Set<Diagnostic> diagnostics = new LinkedHashSet<Diagnostic>();
         InformationCommonValidator.validateSystem(definitions, diagnostics);
         List<ResolvedInformationExpression> expressions =
@@ -120,7 +128,7 @@ public final class InformationCompiler {
         }
 
         String expression = definition.attributes().get("expression");
-        boolean common = "common".equals(ownerToken);
+        boolean common = InformationIdentity.isCommon(ownerKey.owner());
         if (common) {
             InformationCommonValidator.validInformation(
                     definition,
