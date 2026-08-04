@@ -14,15 +14,15 @@ permissions:
 
 jobs:
   seed-red-tests:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout exact branch head
+      - name: Checkout exact head branch
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Restore T10 RED oracle
         shell: bash
@@ -38,7 +38,7 @@ jobs:
             exit 0
           fi
           git commit -m 'test(modelaccess): add T10 RED oracle'
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}
 
   snapshot:
     runs-on: ubuntu-latest
