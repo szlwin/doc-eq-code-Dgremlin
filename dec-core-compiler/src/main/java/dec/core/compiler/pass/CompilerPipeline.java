@@ -7,6 +7,7 @@ import dec.core.compiler.api.CompilationTiming;
 import dec.core.compiler.api.PublicationRequest;
 import dec.core.compiler.api.SessionStateTransition;
 import dec.core.compiler.api.TimingPhase;
+import dec.core.context.model.Diagnostic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,7 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 按 DESIGN-R38 固定顺序协调十个 CompilerPass。
+ * 按 DESIGN-R39 固定顺序协调九个普通 Pass 和最终 Publication Pass。
  */
 public final class CompilerPipeline {
     public static final String SOURCE_GRAPH_VALIDATION_PASS =
@@ -37,6 +38,7 @@ public final class CompilerPipeline {
     public static final String DIGEST_PASS = "DigestPass";
     public static final String PUBLICATION_PASS = "PublicationPass";
 
+    private static final int PUBLICATION_INDEX = 9;
     private static final List<String> FIXED_PASS_ORDER =
             Collections.unmodifiableList(Arrays.asList(
                     SOURCE_GRAPH_VALIDATION_PASS,
@@ -53,7 +55,7 @@ public final class CompilerPipeline {
     private final List<CompilerPass> passes;
 
     /**
-     * 防御性复制并验证十个 Pass 的数量、名称和顺序。
+     * 防御性复制并验证十个 Pass 的名称、顺序和 capability 类型。
      */
     public CompilerPipeline(List<CompilerPass> passes) {
         List<CompilerPass> copy = new ArrayList<CompilerPass>(
@@ -62,7 +64,7 @@ public final class CompilerPipeline {
         this.passes = Collections.unmodifiableList(copy);
     }
 
-    /** 返回 DESIGN-R38 冻结的 Pass 名称顺序。 */
+    /** 返回 DESIGN-R39 冻结的 Pass 名称顺序。 */
     public static List<String> fixedPassOrder() {
         return FIXED_PASS_ORDER;
     }
@@ -73,7 +75,7 @@ public final class CompilerPipeline {
     }
 
     /**
-     * 创建新 Session，并按固定顺序执行全部 Pass。
+     * 创建新 Session，并在 execute 栈上局部持有 PublicationRequest。
      *
      * <p>该方法保持包内可见，避免形成绕过 {@code ModelCompiler.compileAndPublish}
      * 的公共 compile-only 成功入口。</p>
@@ -84,65 +86,139 @@ public final class CompilerPipeline {
         CompilationRequest checkedRequest = Objects.requireNonNull(
                 request,
                 "request");
-        CompilationSession session = new CompilationSession(
-                checkedRequest,
-                Objects.requireNonNull(publicationRequest, "publicationRequest"));
-        PassContext context = new PassContext(session);
+        PublicationRequest checkedPublication = Objects.requireNonNull(
+                publicationRequest,
+                "publicationRequest");
+        CompilationSession session = new CompilationSession(checkedRequest);
 
-        for (int index = 0; index < passes.size(); index++) {
-            CompilerPass pass = passes.get(index);
-            String passName = FIXED_PASS_ORDER.get(index);
-            long startedNanos = 0L;
-            boolean timingStarted = false;
-            try {
-                // Pass 开始前先处理取消和 Deadline，确保零副作用停止。
-                if (stopRequested(session, passName)) {
-                    return new PipelineExecutionResult(session);
-                }
-
-                session.recordPass(passName);
-                startedNanos = checkedRequest.clock().nanoTime();
-                timingStarted = true;
-                PassResult passResult = Objects.requireNonNull(
-                        pass.execute(context),
-                        "pass result");
-                recordTiming(session, passName, startedNanos);
-                timingStarted = false;
-
-                session.addDiagnostics(passResult.diagnostics());
-                if (session.hasErrors()) {
-                    fail(session);
-                    return new PipelineExecutionResult(session);
-                }
-
-                // Pass 执行后再次检查，阻止状态推进和后续 Publication。
-                if (stopRequested(session, passName)) {
-                    return new PipelineExecutionResult(session);
-                }
-
-                advanceState(session, index);
-            } catch (RuntimeException failure) {
-                if (timingStarted) {
-                    recordTimingSafely(session, passName, startedNanos);
-                }
-                session.addDiagnostics(Collections.singletonList(
-                        PUBLICATION_PASS.equals(passName)
-                                ? PipelineDiagnostics.publicationFailure()
-                                : PipelineDiagnostics.passFailure(passName)));
-                fail(session);
+        for (int index = 0; index < PUBLICATION_INDEX; index++) {
+            if (!executeOrdinaryPass(session, passes.get(index), index)) {
                 return new PipelineExecutionResult(session);
             }
         }
-
-        if (session.state() != CompilationSessionState.PUBLISHED) {
-            session.addDiagnostics(Collections.singletonList(
-                    PipelineDiagnostics.passFailure("CompilerPipeline")));
-            fail(session);
-        }
+        executePublicationPass(
+                session,
+                (PublicationCompilerPass) passes.get(PUBLICATION_INDEX),
+                checkedPublication);
         return new PipelineExecutionResult(session);
     }
 
-    /** 在执行任何 Pass 前验证完整固定顺序和逐字符精确名称。 */
+    /** 执行一个不持有 Publication capability 的普通 Pass。 */
+    private static boolean executeOrdinaryPass(
+            CompilationSession session,
+            CompilerPass pass,
+            int index) {
+        String passName = FIXED_PASS_ORDER.get(index);
+        if (!preflight(session, passName)) {
+            return false;
+        }
+        Long startedNanos = readClockOrFail(session, passName);
+        if (startedNanos == null) {
+            return false;
+        }
+
+        session.recordPass(passName);
+        PassContext context = new PassContext(session);
+        PassResult passResult;
+        try {
+            passResult = Objects.requireNonNull(
+                    pass.execute(context),
+                    "pass result");
+        } catch (RuntimeException failure) {
+            addFailureAndStop(session, PipelineDiagnostics.passFailure(passName));
+            return false;
+        } finally {
+            context.close();
+        }
+
+        Long endedNanos = readClockOrFail(session, passName);
+        if (endedNanos == null) {
+            return false;
+        }
+        recordTiming(session, passName, startedNanos.longValue(), endedNanos.longValue());
+        session.addDiagnostics(passResult.diagnostics());
+        if (session.hasErrors()) {
+            fail(session);
+            return false;
+        }
+        if (!preflight(session, passName)) {
+            return false;
+        }
+        advanceOrdinaryState(session, index);
+        return true;
+    }
+
+    /**
+     * 执行最终 Publication Pass；提交成功后任何后置故障都不得降级状态。
+     */
+    private static void executePublicationPass(
+            CompilationSession session,
+            PublicationCompilerPass pass,
+            PublicationRequest publicationRequest) {
+        String passName = PUBLICATION_PASS;
+        if (!preflight(session, passName)) {
+            return;
+        }
+        Long startedNanos = readClockOrFail(session, passName);
+        if (startedNanos == null) {
+            return;
+        }
+
+        session.recordPass(passName);
+        PublicationPassContext context = new PublicationPassContext(
+                session,
+                publicationRequest);
+        PassResult passResult = null;
+        RuntimeException passFailure = null;
+        try {
+            passResult = pass.execute(context);
+        } catch (RuntimeException failure) {
+            passFailure = failure;
+        } finally {
+            context.close();
+        }
+
+        if (context.publicationSucceeded()
+                || session.state() == CompilationSessionState.PUBLISHED) {
+            // 外部提交已经成功：timing 只做尽力记录，任何后置故障均不改变语义终态。
+            recordCommittedTimingSafely(
+                    session,
+                    passName,
+                    startedNanos.longValue());
+            return;
+        }
+
+        Long endedNanos = readClockOrFail(session, passName);
+        if (endedNanos == null) {
+            return;
+        }
+        recordTiming(session, passName, startedNanos.longValue(), endedNanos.longValue());
+
+        if (passFailure != null) {
+            if (!session.hasErrors()) {
+                session.addDiagnostics(Collections.singletonList(
+                        PipelineDiagnostics.publicationFailure()));
+            }
+            fail(session);
+            return;
+        }
+        if (passResult == null) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+            return;
+        }
+        session.addDiagnostics(passResult.diagnostics());
+        if (session.hasErrors()) {
+            fail(session);
+            return;
+        }
+        if (!context.publishAttempted()) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationBlocked());
+            return;
+        }
+        addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+    }
+
+    /** 在执行任何 Pass 前验证完整固定顺序和 capability 类型。 */
     private static void validateFixedOrder(List<CompilerPass> values) {
         if (values.size() != FIXED_PASS_ORDER.size()) {
             throw new IllegalArgumentException("pipeline requires exactly ten passes");
@@ -159,33 +235,68 @@ public final class CompilerPipeline {
                 throw new IllegalArgumentException(
                         "unexpected pass at index " + index + ": " + actual);
             }
+            if (index < PUBLICATION_INDEX && pass instanceof PublicationCompilerPass) {
+                throw new IllegalArgumentException(
+                        "ordinary pass must not implement PublicationCompilerPass");
+            }
+            if (index == PUBLICATION_INDEX
+                    && !(pass instanceof PublicationCompilerPass)) {
+                throw new IllegalArgumentException(
+                        "final pass must implement PublicationCompilerPass");
+            }
         }
     }
 
-    /** 检查取消和 Deadline，并在命中时稳定进入 FAILED。 */
-    private static boolean stopRequested(
+    /**
+     * 在 Pass 前或普通 Pass 后检查 token 与 Deadline，并准确分类基础设施异常。
+     */
+    private static boolean preflight(
             CompilationSession session,
             String passName) {
         CompilationRequest request = session.request();
-        if (request.cancellationToken().isCancellationRequested()) {
-            session.addDiagnostics(Collections.singletonList(
-                    PipelineDiagnostics.cancelled(passName)));
-            fail(session);
-            return true;
+        try {
+            if (request.cancellationToken().isCancellationRequested()) {
+                addFailureAndStop(session, PipelineDiagnostics.cancelled(passName));
+                return false;
+            }
+        } catch (RuntimeException failure) {
+            addFailureAndStop(
+                    session,
+                    PipelineDiagnostics.cancellationTokenFailure(passName));
+            return false;
         }
-        if (request.deadline().isPresent()
-                && request.deadline().get().isExpired(
-                        request.clock().nanoTime())) {
-            session.addDiagnostics(Collections.singletonList(
-                    PipelineDiagnostics.timedOut(passName)));
-            fail(session);
-            return true;
+        if (request.deadline().isPresent()) {
+            long now;
+            try {
+                now = request.clock().nanoTime();
+            } catch (RuntimeException failure) {
+                addFailureAndStop(session, PipelineDiagnostics.clockFailure(passName));
+                return false;
+            }
+            if (request.deadline().get().isExpired(now)) {
+                addFailureAndStop(session, PipelineDiagnostics.timedOut(passName));
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
-    /** 按 Pass 索引推进 DESIGN-R38 冻结的唯一成功状态路径。 */
-    private static void advanceState(CompilationSession session, int index) {
+    /** 读取 start/end clock；失败时形成独立 Diagnostic 并停止。 */
+    private static Long readClockOrFail(
+            CompilationSession session,
+            String passName) {
+        try {
+            return Long.valueOf(session.request().clock().nanoTime());
+        } catch (RuntimeException failure) {
+            addFailureAndStop(session, PipelineDiagnostics.clockFailure(passName));
+            return null;
+        }
+    }
+
+    /** 按 Pass 索引推进前九阶段的唯一成功状态路径。 */
+    private static void advanceOrdinaryState(
+            CompilationSession session,
+            int index) {
         switch (index) {
             case 0:
                 transition(session, CompilationSessionState.SOURCES_DISCOVERED);
@@ -216,11 +327,8 @@ public final class CompilerPipeline {
             case 8:
                 // Digest 属于已验证候选事实，不新增 DESIGN-R05 之外的状态。
                 break;
-            case 9:
-                transition(session, CompilationSessionState.PUBLISHED);
-                break;
             default:
-                throw new IllegalStateException("unexpected pass index: " + index);
+                throw new IllegalStateException("unexpected ordinary pass index: " + index);
         }
     }
 
@@ -232,10 +340,19 @@ public final class CompilerPipeline {
         notifyTransition(session.request().observer(), transition);
     }
 
+    /** 在非终态添加 Diagnostic 并进入 FAILED。 */
+    private static void addFailureAndStop(
+            CompilationSession session,
+            Diagnostic diagnostic) {
+        if (!CompilationSession.isTerminal(session.state())) {
+            session.addDiagnostics(Collections.singletonList(diagnostic));
+            fail(session);
+        }
+    }
+
     /** 将当前非终态 Session 统一推进到 FAILED。 */
     private static void fail(CompilationSession session) {
-        if (session.state() != CompilationSessionState.FAILED
-                && session.state() != CompilationSessionState.PUBLISHED) {
+        if (!CompilationSession.isTerminal(session.state())) {
             transition(session, CompilationSessionState.FAILED);
         }
     }
@@ -244,8 +361,8 @@ public final class CompilerPipeline {
     private static void recordTiming(
             CompilationSession session,
             String passName,
-            long startedNanos) {
-        long endedNanos = session.request().clock().nanoTime();
+            long startedNanos,
+            long endedNanos) {
         long elapsedNanos = endedNanos >= startedNanos
                 ? endedNanos - startedNanos
                 : 0L;
@@ -257,15 +374,16 @@ public final class CompilerPipeline {
         notifyTiming(session.request().observer(), timing);
     }
 
-    /** 异常路径尽力记录 timing；Clock 再次失败时不覆盖原始业务失败。 */
-    private static void recordTimingSafely(
+    /** 发布成功后尽力补充 timing，任何异常均不得否定提交。 */
+    private static void recordCommittedTimingSafely(
             CompilationSession session,
             String passName,
             long startedNanos) {
         try {
-            recordTiming(session, passName, startedNanos);
+            long endedNanos = session.request().clock().nanoTime();
+            recordTiming(session, passName, startedNanos, endedNanos);
         } catch (RuntimeException ignored) {
-            // T12 保持原始 Pass 失败为主事实；T13 再补 Observer/Clock 诊断策略。
+            // post-commit timing 是非语义观察事实；失败时允许缺失，不降级 PUBLISHED。
         }
     }
 
@@ -276,7 +394,7 @@ public final class CompilerPipeline {
         try {
             observer.onTiming(timing);
         } catch (RuntimeException ignored) {
-            // T13 将把观察失败转换为非 ERROR；T12 先保证不改变编译事实。
+            // T13 将补充 Observer Failure Diagnostic；T12 只保证不改变语义事实。
         }
     }
 
