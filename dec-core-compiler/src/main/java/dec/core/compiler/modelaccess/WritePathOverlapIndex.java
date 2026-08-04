@@ -1,30 +1,66 @@
 package dec.core.compiler.modelaccess;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
- * TASK-P1-T10 / I002 WRITE 路径重叠索引 Architecture seam。
+ * 使用路径段 trie 检测同一 ModelAccess 内的 WRITE 路径重叠。
  *
- * <p>本阶段只冻结按路径段工作的局部索引入口和资源计数接口，真实祖先、后代、
- * 重复与通配冲突语义在 Development 阶段实现。</p>
+ * <p>索引仅在单次 definition 编译期间存在，不跨调用保存状态。每个路径只按其
+ * segment 数遍历一次，避免合法节点预算下的两两比较放大。</p>
  */
 final class WritePathOverlapIndex {
+    private final Node root = new Node();
+    private boolean wildcard;
+    private boolean concretePath;
     private int operationCount;
 
     /**
-     * 接收一个 WRITE 路径并返回是否与已登记路径重叠。
-     *
-     * <p>Architecture Skeleton 只记录常数次结构操作，暂不判断业务重叠，
-     * 以保持 Review Oracle 的受控 RED。</p>
+     * 登记一个 WRITE 路径，并返回它是否与已登记路径相同或形成祖先/后代关系。
      */
     boolean add(SharedModelPath path) {
         if (path == null) {
             throw new NullPointerException("path");
         }
         operationCount++;
-        return false;
+        if ("*".equals(path.value())) {
+            boolean overlap = wildcard || concretePath;
+            wildcard = true;
+            return overlap;
+        }
+
+        boolean overlap = wildcard;
+        concretePath = true;
+        Node current = root;
+        for (String segment : path.segments()) {
+            operationCount++;
+            // 插入途中遇到 terminal，说明已有路径是当前路径的祖先。
+            if (current.terminal) {
+                overlap = true;
+            }
+            Node child = current.children.get(segment);
+            if (child == null) {
+                child = new Node();
+                current.children.put(segment, child);
+            }
+            current = child;
+        }
+        // terminal 表示完全重复；已有 child 表示当前路径是既有路径的祖先。
+        if (current.terminal || !current.children.isEmpty()) {
+            overlap = true;
+        }
+        current.terminal = true;
+        return overlap;
     }
 
     /** 返回本次局部 compilation 已执行的结构查询次数。 */
     int operationCount() {
         return operationCount;
+    }
+
+    /** trie 节点只保存直接子 segment 与路径终止标记。 */
+    private static final class Node {
+        private final Map<String, Node> children = new TreeMap<String, Node>();
+        private boolean terminal;
     }
 }
