@@ -1,71 +1,62 @@
 # P1-COMPILER-F01 阶段交接
 
-> T01～T10 已合并到 `dev_all`。TASK-P1-T11 独立 Review 返工 I002 已完成，当前有效 Completion 为 `COMPLETION-P1-T11-R02@86b55b45d1cd`。R01 已失效但全部历史保留。PR #26 尚未合并，T12 保持阻断。
+> T01～T11 已合并到 `dev_all`。TASK-P1-T12 / I001 已完成，当前有效 Completion 为 `COMPLETION-P1-T12-R01@c6a515820972`。PR #27 尚未合并，T13 保持阻断。
 
-## T11 Completion history
+## T12 I001
 
-- R01 / I001：`COMPLETION-P1-T11-R01@f09d9786fad8`；被 I002 独立 Review 推翻，历史不可变保留；
-- R02 / I002：`COMPLETION-P1-T11-R02@86b55b45d1cd`；当前有效。
-
-## T11 I002
-
-- Base：`dev_all@f97b7e47ac0fb40209c4dc512aa15d67c19be44b`
-- Dependency：`COMPLETION-P1-T10-R03@336d309f3748`
-- Design：`DESIGN-R37@P1-T11-REWORK-I002`
-- Plan：`TP-P1-COMPILER-F01-R33@P1-T11-REWORK-I002`
-- TDD：`TDD-P1-T11-R02@1297a9dd947f`
-- Architecture：`DEVSKEL-P1-T11-R02@86013589b65d`
-- Development：`DEV-P1-T11-R02@1f9f887837bd`
-- Code Review：`CODEREVIEW-P1-T11-R02@86b55b45d1cd`
-- Testing：`TESTING-P1-T11-R02@86b55b45d1cd`
-- Completion：`COMPLETION-P1-T11-R02@86b55b45d1cd`
-- Reviews：`REV-000476`～`REV-000489`
-- Evidence：`EVD-000766`～`EVD-000786`
-- Findings：`FND-P1-T11-I002-001/002` CLOSED
+- Base：`dev_all@3f53ea4a31b0b1366aad383f665736b0487d4d00`
+- Dependency：`COMPLETION-P1-T11-R02@86b55b45d1cd`
+- Design：`DESIGN-R38@P1-T12-I001`
+- Plan：`TP-P1-COMPILER-F01-R34@P1-T12-I001`
+- TDD：`TDD-P1-T12-R01@99d00b20397f`
+- Architecture：`DEVSKEL-P1-T12-R01@d1c23e2c2d0c`
+- Development：`DEV-P1-T12-R01@8b60fa1ea89f`
+- Code Review：`CODEREVIEW-P1-T12-R01@c6a515820972`
+- Testing：`TESTING-P1-T12-R01@c6a515820972`
+- Completion：`COMPLETION-P1-T12-R01@c6a515820972`
+- Reviews：`REV-000490`～`REV-000503`
+- Evidence：`EVD-000787`～`EVD-000807`
+- Findings：`FND-P1-T12-I001-001/002` CLOSED
 - Open P0/P1/P2：`0 / 0 / 0`
 
 ## Published contract
 
-- `SYSTEM_PERMISSION/MODEL_ACCESS → P2`；`INFORMATION → P3`；`ACTION/PRODUCE → P4`；`DIRECTORY → P5`；`QUERY → P6`；`TRANSACTION → P7`；
-- 每个 Deferred 必须具备强类型 owner、kind、ordinal、稳定 reason、SourceRef、NormalizedBody 与 typed references；
-- null `resolvedReferences` 容器与显式空列表严格区分；
-- 批次在任何元素读取前形成快照，后续不再读取调用方 List；
-- 快照复制异常使用 `deferred.incomplete.inputs-snapshot`；
-- 缺字段、reason-policy、null typed ref、unresolved lexical、null input、duplicate key 使用 `MIX-DEFERRED-INCOMPLETE`；
-- 任一 ERROR 阻断整批 Registry，空批次发布不可变空 Registry；
-- P1 不执行任何 P2-P7 runtime、SQL、事务、I/O、网络、DAG 或缓存。
+- 十 Pass 固定逐字符精确名称和顺序；
+- 唯一成功路径：`CREATED → SOURCES_DISCOVERED → PARSED → RAW_BUILT → STRUCTURALLY_VALIDATED → SYMBOLS_REGISTERED → REFERENCES_RESOLVED → GRAPH_PREPARED → SEMANTICALLY_VALIDATED → PUBLISHED`；
+- 任一 ERROR、null PassResult、RuntimeException、cancel 或 timeout 进入 FAILED；
+- 失败后停止后续 Pass，PublicationPass 不执行；
+- PUBLISHED/FAILED 是终态；
+- Session-local artifact、Diagnostic、timing、transition 和执行记录完全隔离；
+- FAILED 不暴露 artifact；
+- compile-only execute 和内部 Session 不属于公共 API；
+- 不执行 P2～P7 runtime，不实现 T13/T14/T15。
 
 ## Revision Integrity
 
-- R37 first commit/blob：`3582ac636607dee1221b450af0368a7377723e26` / `ad2ebbd1277202bf8faa97033dc67d7f3dc6488f`
-- R33 first commit/blob：`1998c716b9ab9e1b38df4896aed5fdfd853c54f0` / `dad61bfa9ffaa76e9e2af996f5f32a04820fcae1`
-- R37/R33 均早于有效 I002 RED；I001 R36/R32 与全部历史未覆盖。
+- R38 first commit/blob：`898b290bc58c0a7bd69a1a8197647e3e25a58834` / `a0fa7dab6fed54f256a74df33081715d2328bab0`
+- R34 first commit/blob：`77b15f4ad42d471e0edde098c8df6c5856f3d3fc` / `4edf06f057e3e833a26e9695da9c07f5ce464f8d`
+- R38/R34 均早于有效 RED，T01～T11 历史未覆盖。
 
 ## Validation
 
-- Valid RED：`1297a9dd...` / Run `30919478960` / `5 failures, 0 errors`
-- Architecture：`86013589...` / Run `30919667799` / `2 controlled failures, 0 errors`
-- Production GREEN：`1f9f8878...` / Run `30919711140` — SUCCESS
-- Independent Review GREEN：`86b55b45...` / Run `30919883791` — SUCCESS
-- Clean-code Artifact：`8896619234`
-- Clean-code SHA-256：`1e37ba710cf47c7f8ff22c1d2e8d7509cadbcc0172c7ed28a30924fcaf9f2294`
-- Documented Head：`5d8fbe86d633f9189b7abd8aa4dcab0021b20f14`
-- Documented P0 Run：`30920489277` — SUCCESS
-- Documented Artifact：`8896877544`
-- Documented SHA-256：`57b51013c448fac6d497fb211d8ebee4f1a28c4d88953e5f8492be502726b1f7`
-- I002 `8/8`；T11 `34/34`；Compiler `319/319`；正常测试 `439/439`；Surefire XML `83`
-- 故意失败门禁、12 模块 Reactor、Java release 8：PASSED
-- MySQL：`SKIPPED_NOT_APPLICABLE`
+- Valid RED：`99d00b20...` / Run `30926007586` / 9 failures / 0 errors；
+- First GREEN：`8b60fa1e...` / Run `30926375945` — SUCCESS；
+- Clean-code Head：`c6a5158209726dd9c803487993079121262a434a`；
+- P0 Run：`30926775878` — SUCCESS；
+- Artifact：`8899433428`；
+- SHA-256：`880af265f04c42906e1c64eef2c29ad80135bb73d7d49899c465a6d2105f41e8`；
+- T12 20/20；Compiler 339/339；正常测试 459/459；Surefire XML 87；
+- 故意失败门禁、12 模块 Reactor、Java release 8：PASSED；
+- MySQL：`SKIPPED_NOT_APPLICABLE`。
 
 ## Recovery and next step
 
-- 当前 PR：`#26`
-- Branch：`feature/p1-t11-deferred-classification-20260804-2058`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t11-r02/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t11-r02.md`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t11-r02.json`
-- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t11_r02_completion.json`
-- 重要逻辑使用中文注释，所有 `@Override` 独占一行；
-- 本交接事实更新后的最终 PR Head 再执行一次 P0，结果记录到 PR #26 描述；
-- 未经用户明确授权不得合并 PR #26；
-- PR #26 合并前 `TASK-P1-T12` 保持阻断。
+- 当前 PR：`#27`
+- Branch：`feature/p1-t12-compiler-pipeline-20260804-2331`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t12-r01/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t12-r01.md`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t12-r01.json`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t12_r01_completion.json`
+- 所有 `@Override` 独占一行，方法和重要逻辑使用中文注释；
+- 未经用户明确授权不得合并 PR #27；
+- PR #27 合并前 `TASK-P1-T13` 保持阻断。
