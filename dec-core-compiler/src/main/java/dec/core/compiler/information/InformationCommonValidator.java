@@ -15,14 +15,13 @@ final class InformationCommonValidator {
     private InformationCommonValidator() {
     }
 
-    /** 验证 common System 的 data/view/rule-file section 不携带成员。 */
+    /** 验证 canonical common System 的 data/view/rule-file section 不携带成员。 */
     static void validateSystem(
             RawDefinitionSet definitions,
             Set<Diagnostic> diagnostics) {
         for (RawDefinition definition
                 : definitions.definitions(RawDefinitionKind.SYSTEM)) {
-            if (!definition.name().isPresent()
-                    || !"common".equals(definition.name().get())) {
+            if (!InformationIdentity.isCommonSystemName(definition.name())) {
                 continue;
             }
             for (RawNodeBody child : definition.body().children()) {
@@ -38,14 +37,13 @@ final class InformationCommonValidator {
         }
     }
 
-    /** common 不允许 ModelAccess，避免 P1 引入运行时读取。 */
+    /** canonical common 不允许 ModelAccess，避免 P1 引入运行时读取。 */
     static void validateModelAccess(
             RawDefinitionSet definitions,
             Set<Diagnostic> diagnostics) {
         for (RawDefinition definition
                 : definitions.definitions(RawDefinitionKind.MODEL_ACCESS)) {
-            if (definition.ownerToken().isPresent()
-                    && "common".equals(definition.ownerToken().get())) {
+            if (InformationIdentity.isCommonOwner(definition.ownerToken())) {
                 diagnostics.add(InformationDiagnostics.commonMember(
                         definition,
                         null));
