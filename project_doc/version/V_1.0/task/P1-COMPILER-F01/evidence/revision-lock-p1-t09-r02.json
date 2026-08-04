@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T09",
+  "iteration": "I002",
+  "status": "PASSED",
+  "design": {
+    "revision": "DESIGN-R32@P1-T09-REWORK-I002",
+    "first_commit": "d6099f1ab502bfc2e7ee0d81da8010a40c6da0e0",
+    "blob": "645dae1f3d065e910160fa70e615810cdb9e1ce9"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R28@P1-T09-REWORK-I002",
+    "first_commit": "4b489d32aa123ce0d9dd0854eec9c2b5389be599",
+    "blob": "3f4004e5913ee19f49394e5c637923c0d4a87880"
+  },
+  "created_before_valid_red": true,
+  "unchanged_at_clean_code_head": true,
+  "valid_red_head": "002594d2cba2f507888ddccea7095c38fd6ae672",
+  "clean_code_head": "95b08223083f9d6b8573e96cdd12364334c0f234",
+  "r27_correction": {
+    "historical_invalid_sha": "4483ce64c6ecffc989e3adcbd3a8178d301cace9",
+    "correct_first_commit": "e7713c4499271b79b958d0c0e0793c02e6be5428",
+    "blob": "20a16d1e7b199088086f496fe94aeb8b8684d8ca",
+    "commits_before_r01_red": 7,
+    "evidence": "revision-correction-p1-t09-r02.md"
+  }
+}
