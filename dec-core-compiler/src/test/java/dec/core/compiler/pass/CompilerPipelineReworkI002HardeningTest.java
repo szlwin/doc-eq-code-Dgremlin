@@ -208,7 +208,7 @@ class CompilerPipelineReworkI002HardeningTest {
         }
 
         /** 返回真实外部调用次数。 */
-        private int calls() {
+        int calls() {
             return calls;
         }
     }
