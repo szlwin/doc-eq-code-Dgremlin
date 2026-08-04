@@ -10,6 +10,7 @@ import dec.core.compiler.api.Deadline;
 import dec.core.compiler.api.MonotonicClock;
 import dec.core.compiler.api.PublicationRequest;
 import dec.core.compiler.api.PublicationResult;
+import dec.core.compiler.api.PublicationStatus;
 import dec.core.compiler.api.SessionStateTransition;
 import dec.core.compiler.canonical.DocumentFormat;
 import dec.core.compiler.canonical.DocumentFrontend;
@@ -19,9 +20,18 @@ import dec.core.compiler.source.SourceReference;
 import dec.core.compiler.source.SourceResolutionContext;
 import dec.core.compiler.source.SourceResolutionResult;
 import dec.core.context.EngineContext;
+import dec.core.context.model.CompiledDefinition;
+import dec.core.context.model.CompiledModelSet;
+import dec.core.context.model.DefinitionKey;
+import dec.core.context.model.DeferredDefinition;
+import dec.core.context.model.DeferredKey;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
+import dec.core.context.model.DigestPair;
+import dec.core.context.model.ImmutableDeferredRegistry;
+import dec.core.context.model.ImmutableRegistry;
+import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.SourceRef;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +45,7 @@ final class PipelineTestSupport {
     private PipelineTestSupport() {
     }
 
-    /** 创建不触发真实 Source、Frontend 或发布副作用的完整请求。 */
+    /** 创建不触发真实 Source 或 Frontend 的完整请求。 */
     static CompilationRequest request(
             MutableClock clock,
             MutableCancellation cancellation,
@@ -73,7 +83,7 @@ final class PipelineTestSupport {
                 observer);
     }
 
-    /** 创建无真实 Context 发布副作用的 PublicationRequest。 */
+    /** 创建返回 PUBLISHED 的无外部存储测试发布边界。 */
     static PublicationRequest publicationRequest() {
         return new PublicationRequest(
                 Optional.<EngineContext>empty(),
@@ -82,17 +92,20 @@ final class PipelineTestSupport {
                     public PublicationResult publish(
                             Optional<EngineContext> expectedCurrent,
                             EngineContext candidate) {
-                        return null;
+                        return publishedResult();
                     }
                 });
     }
 
-    /** 创建十个按固定顺序返回成功的记录 Pass。 */
+    /** 创建九个普通成功 Pass 和一个最终发布 Pass。 */
     static List<CompilerPass> successfulPasses(List<String> executions) {
         List<CompilerPass> result = new ArrayList<CompilerPass>();
-        for (String name : CompilerPipeline.fixedPassOrder()) {
-            result.add(new RecordingPass(name, executions));
+        for (int index = 0; index < 9; index++) {
+            result.add(new RecordingPass(
+                    CompilerPipeline.fixedPassOrder().get(index),
+                    executions));
         }
+        result.add(new RecordingPublicationPass(executions, null, false));
         return result;
     }
 
@@ -101,11 +114,19 @@ final class PipelineTestSupport {
             List<String> executions,
             int failureIndex) {
         List<CompilerPass> result = successfulPasses(executions);
-        result.set(failureIndex, new RecordingPass(
-                CompilerPipeline.fixedPassOrder().get(failureIndex),
-                executions,
-                error("test.pass.error", failureIndex),
-                false));
+        Diagnostic diagnostic = error("test.pass.error", failureIndex);
+        if (failureIndex == 9) {
+            result.set(9, new RecordingPublicationPass(
+                    executions,
+                    diagnostic,
+                    false));
+        } else {
+            result.set(failureIndex, new RecordingPass(
+                    CompilerPipeline.fixedPassOrder().get(failureIndex),
+                    executions,
+                    diagnostic,
+                    false));
+        }
         return result;
     }
 
@@ -114,11 +135,18 @@ final class PipelineTestSupport {
             List<String> executions,
             int failureIndex) {
         List<CompilerPass> result = successfulPasses(executions);
-        result.set(failureIndex, new RecordingPass(
-                CompilerPipeline.fixedPassOrder().get(failureIndex),
-                executions,
-                null,
-                true));
+        if (failureIndex == 9) {
+            result.set(9, new RecordingPublicationPass(
+                    executions,
+                    null,
+                    true));
+        } else {
+            result.set(failureIndex, new RecordingPass(
+                    CompilerPipeline.fixedPassOrder().get(failureIndex),
+                    executions,
+                    null,
+                    true));
+        }
         return result;
     }
 
@@ -135,6 +163,32 @@ final class PipelineTestSupport {
                 Collections.<SourceRef>emptyList(),
                 null,
                 "PipelineTestPass");
+    }
+
+    /** 创建最小、不可变的发布候选 Context。 */
+    static EngineContext candidate() {
+        CompiledModelSet modelSet = new CompiledModelSet(
+                PublishedSourceManifest.empty(),
+                new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
+                        Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
+                new ImmutableDeferredRegistry(
+                        Collections.<DeferredKey, DeferredDefinition>emptyMap()),
+                Collections.<Diagnostic>emptyList(),
+                new DigestPair("source-t12", "semantic-t12"),
+                "compiler-t12",
+                "schema-t12",
+                "options-t12");
+        return new EngineContext(modelSet);
+    }
+
+    /** 创建稳定的发布成功结果。 */
+    static PublicationResult publishedResult() {
+        return new PublicationResult() {
+            @Override
+            public PublicationStatus status() {
+                return PublicationStatus.PUBLISHED;
+            }
+        };
     }
 
     /** 可由测试精确推进的单调时钟。 */
@@ -203,7 +257,7 @@ final class PipelineTestSupport {
         }
     }
 
-    /** 可配置成功、ERROR 或 RuntimeException 的确定性 Pass。 */
+    /** 可配置成功、ERROR 或 RuntimeException 的普通 Pass。 */
     static class RecordingPass implements CompilerPass {
         private final String name;
         private final List<String> executions;
@@ -240,6 +294,41 @@ final class PipelineTestSupport {
             if (diagnostic != null) {
                 return PassResult.of(Collections.singletonList(diagnostic));
             }
+            return PassResult.passed();
+        }
+    }
+
+    /** 可配置发布前 ERROR 或异常的最终 Publication Pass。 */
+    private static final class RecordingPublicationPass
+            implements PublicationCompilerPass {
+        private final List<String> executions;
+        private final Diagnostic diagnostic;
+        private final boolean throwsFailure;
+
+        private RecordingPublicationPass(
+                List<String> executions,
+                Diagnostic diagnostic,
+                boolean throwsFailure) {
+            this.executions = executions;
+            this.diagnostic = diagnostic;
+            this.throwsFailure = throwsFailure;
+        }
+
+        @Override
+        public String name() {
+            return CompilerPipeline.PUBLICATION_PASS;
+        }
+
+        @Override
+        public PassResult execute(PublicationPassContext context) {
+            executions.add(name());
+            if (throwsFailure) {
+                throw new IllegalStateException("controlled-publication-failure");
+            }
+            if (diagnostic != null) {
+                return PassResult.of(Collections.singletonList(diagnostic));
+            }
+            context.publish(candidate());
             return PassResult.passed();
         }
     }
