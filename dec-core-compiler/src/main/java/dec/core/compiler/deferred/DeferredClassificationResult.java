@@ -16,6 +16,7 @@ public final class DeferredClassificationResult {
     private final DeferredRegistry registry;
     private final List<Diagnostic> diagnostics;
 
+    /** 防御性复制并稳定排序 Diagnostic，冻结成功或失败结果。 */
     private DeferredClassificationResult(
             DeferredClassificationStatus status,
             DeferredRegistry registry,
@@ -44,14 +45,17 @@ public final class DeferredClassificationResult {
                 diagnostics);
     }
 
+    /** 返回批量分类终态。 */
     public DeferredClassificationStatus status() {
         return status;
     }
 
+    /** 返回成功发布的 Registry；失败结果始终为空。 */
     public Optional<DeferredRegistry> registry() {
         return Optional.ofNullable(registry);
     }
 
+    /** 返回稳定排序且不可变的 Diagnostic。 */
     public List<Diagnostic> diagnostics() {
         return diagnostics;
     }
