@@ -32,7 +32,8 @@ final class ModelAccessStructureValidator {
                 || body.scalar().isPresent()
                 || !hasExactKeys(definition.attributes(), MODEL_REF)
                 || !definition.attributes().equals(body.attributes())
-                || !hasRequiredLexical(definition.attributes().get(MODEL_REF))
+                || !hasTypedKeyReferenceLexical(
+                        definition.attributes().get(MODEL_REF))
                 || !definition.name().isPresent()
                 || !definition.name().get().equals(
                         definition.attributes().get(MODEL_REF))) {
@@ -54,7 +55,7 @@ final class ModelAccessStructureValidator {
         if (!("read".equals(access.name()) || "write".equals(access.name()))
                 || access.scalar().isPresent()
                 || !hasExactKeys(access.attributes(), PATH)
-                || !hasRequiredLexical(access.attributes().get(PATH))) {
+                || !hasExactPathLexical(access.attributes().get(PATH))) {
             diagnostics.add(ModelAccessDiagnostics.structureInvalid(
                     access.sourceRef()));
             return;
@@ -72,8 +73,8 @@ final class ModelAccessStructureValidator {
                 || ref.scalar().isPresent()
                 || !ref.children().isEmpty()
                 || !hasExactKeys(ref.attributes(), VIEW, PROPERTY)
-                || !hasRequiredLexical(ref.attributes().get(VIEW))
-                || !hasRequiredLexical(ref.attributes().get(PROPERTY))) {
+                || !hasTypedKeyReferenceLexical(ref.attributes().get(VIEW))
+                || !hasExactPathLexical(ref.attributes().get(PROPERTY))) {
             diagnostics.add(ModelAccessDiagnostics.structureInvalid(
                     ref.sourceRef()));
         }
@@ -94,8 +95,18 @@ final class ModelAccessStructureValidator {
         return true;
     }
 
-    /** lexical 必须存在、非空白且不依赖隐式 trim 修复。 */
-    private static boolean hasRequiredLexical(String lexical) {
+    /**
+     * TypedKey reference 的独立策略 seam。
+     *
+     * <p>Architecture 阶段暂时沿用旧严格行为，以保持 I003 正向 Oracle 受控 RED；
+     * Development 阶段只在此处放宽为 nonblank，并继续保留 Raw lexical。</p>
+     */
+    private static boolean hasTypedKeyReferenceLexical(String lexical) {
+        return hasExactPathLexical(lexical);
+    }
+
+    /** 精确 path/selector 必须存在、非空白且不依赖隐式 trim 修复。 */
+    private static boolean hasExactPathLexical(String lexical) {
         return lexical != null
                 && !lexical.trim().isEmpty()
                 && lexical.equals(lexical.trim());
