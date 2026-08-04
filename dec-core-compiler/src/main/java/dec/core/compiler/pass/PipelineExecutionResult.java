@@ -4,6 +4,7 @@ import dec.core.compiler.api.CompilationSessionState;
 import dec.core.compiler.api.CompilationTiming;
 import dec.core.compiler.api.SessionStateTransition;
 import dec.core.context.model.Diagnostic;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,8 +54,13 @@ public final class PipelineExecutionResult {
         return session.timings();
     }
 
-    /** 返回成功路径形成的 Session-local artifact 只读快照。 */
+    /**
+     * 仅成功结果暴露 Session-local artifact；失败结果始终返回不可变空 Map。
+     */
     public Map<String, Object> artifacts() {
+        if (state() == CompilationSessionState.FAILED) {
+            return Collections.emptyMap();
+        }
         return session.artifacts();
     }
 }
