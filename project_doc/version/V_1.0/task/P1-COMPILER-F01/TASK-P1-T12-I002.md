@@ -1,6 +1,6 @@
 # TASK-P1-T12 / I002 — Publication 原子性与 Session 冻结返工
 
-- Status：`IN_PROGRESS / DESIGN_PASSED`
+- Status：`COMPLETED / PASSED`
 - Base：`PR27@49b9beee65dbc5e5db77302a7128a34a2ab77386`
 - Dependency：`COMPLETION-P1-T11-R02@86b55b45d1cd`
 - Invalidated History：`COMPLETION-P1-T12-R01@c6a515820972`
@@ -8,32 +8,45 @@
 - PR：`#27`
 - Design：`DESIGN-R39@P1-T12-REWORK-I002`
 - Plan：`TP-P1-COMPILER-F01-R35@P1-T12-REWORK-I002`
-- Review：`NEEDS_CHANGES / REWORK`
-- Open P0/P1/P2：`0 / 3 / 2`
+- TDD：`TDD-P1-T12-R02@a958141d0465`
+- Architecture：`DEVSKEL-P1-T12-R02@a7f8d99b1afe`
+- Development：`DEV-P1-T12-R02@4499bd90849d`
+- Code Review：`CODEREVIEW-P1-T12-R03@5d5a7d72119b`
+- Testing：`TESTING-P1-T12-R02@5d5a7d72119b`
+- Completion：`COMPLETION-P1-T12-R02@5d5a7d72119b`
+- Reviews：`REV-000504`～`REV-000535`
+- Evidence：`EVD-000808`～`EVD-000837`
+- Findings：`FND-P1-T12-I002-001`～`008` CLOSED
+- Open P0/P1/P2：`0 / 0 / 0`
 
-## Findings
+## Delivered contract
 
-- `FND-P1-T12-I002-001` `[P1][BLOCKER]`：普通 Pass 持有 Publication capability；
-- `FND-P1-T12-I002-002` `[P1][BLOCKER]`：Context 逃逸、终态 Session 和结果仍可变；
-- `FND-P1-T12-I002-003` `[P1][BLOCKER]`：publish 成功后 clock/token 等可降级为 FAILED；
-- `FND-P1-T12-I002-004` `[P2]`：start-clock 失败仍记录 Pass 已执行；
-- `FND-P1-T12-I002-005` `[P2]`：缺少对应负向 Oracle。
+- 前九 Pass 不持有 Publication capability；
+- 第十 Pass 独占 `PublicationPassContext`，publisher 成功路径精确调用一次；
+- 所有发布前失败路径 publisher 调用数为 0；
+- 每 Pass Context 生命周期为 ACTIVE → CLOSED，retained Context 全部读写拒绝；
+- PUBLISHED/FAILED 后 Session 语义事实冻结；
+- Result 构造时复制并冻结全部事实，不持有 Session；
+- artifact 容器递归快照，未知对象和循环图稳定拒绝；
+- start-clock 成功后才记录 executedPass；
+- clock/token 基础设施失败独立诊断；
+- publish 前即时重查 ERROR/token/Deadline；
+- publisher PUBLISHED 后立即形成不可逆终态，任何 post-commit 故障不降级；
+- conflict、null result/status、publisher exception、重复 publish 均稳定处理；
+- PublicationStatus 只读取一次。
 
-## Goal
+## Validation
 
-交付 Publication capability 隔离、每 Pass Context 生命周期、Session 终态封闭、不可变结果快照、Publication commit 不可降级和真实 executedPass 记录，并关闭全部五项 Findings。
+- Valid RED：`a958141d0465ef7b5b279551116d69fc463d230e` / Run `30932917420` / 12 failures / 0 errors；
+- First GREEN：`4499bd90849d93c9863ea3b63277994e8f15652e` / Run `30933625327` — SUCCESS；
+- Independent Review GREEN：`6130712b246de2b54716dce78bd367144b7bc280` / Run `30933942414` — SUCCESS；
+- Clean-code Head：`5d5a7d72119b5a36a38b19cda44186de70911912`；
+- P0 Run：`30934448175` — SUCCESS；
+- Artifact：`8902515127`；
+- SHA-256：`2203b46ba83ad9c5a8784741efc1edef658feae77b91ea2f4cef383ca3569914`；
+- I002：34/34；I001：20/20；T12：54/54；Compiler：373/373；正常测试：493/493；
+- Surefire XML：90；Errors/Skipped：0/0；
+- 12 模块 Reactor、Java release 8、故意失败门禁：PASSED；
+- MySQL：`SKIPPED_NOT_APPLICABLE`。
 
-## History preservation
-
-R38、R34、I001 RED、Architecture、Development、Review、Testing、Completion、CI、Artifact 和最终 documented Head 均保持原文件及原 SHA，不回写为通过。I002 使用新的 Revision、Evidence、Review 和 Completion。
-
-## Stop conditions
-
-- R39/R35 未早于 I002 RED；
-- 任何普通 Pass 仍可获得 publisher；
-- publish 成功后仍存在 FAILED 路径；
-- 结果仍从可变 Session 动态读取；
-- retained Context 可在关闭或终态后读写；
-- Open P0/P1 未清零；
-- 未完成最终 P0、Artifact、Revision Integrity 和独立 Review；
-- 用户未授权时合并 PR #27 或启动 T13。
+PR #27 未经用户明确授权不得合并；PR #27 合并前 `TASK-P1-T13` 保持阻断。
