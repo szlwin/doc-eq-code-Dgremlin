@@ -51,7 +51,7 @@ final class InformationDiagnostics {
                 ? new SourceRef("<information-input>", 0, 0, "/")
                 : definitions.definitions().get(0).sourceRef();
         return create(
-                DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
+                DiagnosticCode.MIX_INFORMATION_OWNER,
                 "information.input.snapshot-mismatch",
                 null,
                 sourceRef,
