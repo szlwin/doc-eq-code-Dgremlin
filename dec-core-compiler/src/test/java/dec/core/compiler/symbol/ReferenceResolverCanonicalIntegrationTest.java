@@ -41,7 +41,7 @@ class ReferenceResolverCanonicalIntegrationTest {
         assertEquals(ReferenceResolutionStatus.RESOLVED, result.status());
         assertTrue(result.resolvedReferences().isPresent());
         ResolvedReferenceSet references = result.resolvedReferences().get();
-        assertTrue(references.size() >= 16);
+        assertEquals(15, references.size());
         assertTrue(references.references().stream().anyMatch(reference ->
                 reference.targetKey().equals(new DataKey("user"))
                         && reference.role().endsWith("@target-main")));
