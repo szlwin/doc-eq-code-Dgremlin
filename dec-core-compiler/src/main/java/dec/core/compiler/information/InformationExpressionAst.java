@@ -23,10 +23,8 @@ public final class InformationExpressionAst {
     private final String canonical;
     private final List<String> references;
 
-    /**
-     * 冻结一个 AST 节点；具体 parser 负责保证节点组合合法。
-     */
-    InformationExpressionAst(
+    /** 冻结一个经过 parser 校验的 AST 节点。 */
+    private InformationExpressionAst(
             Kind kind,
             String reference,
             InformationExpressionAst left,
@@ -39,6 +37,56 @@ public final class InformationExpressionAst {
         this.right = right;
         this.canonical = Objects.requireNonNull(canonical, "canonical");
         this.references = immutableReferences(references);
+    }
+
+    /** 创建一个尚未解析为 TypedKey 的限定引用节点。 */
+    static InformationExpressionAst reference(String target) {
+        String required = requireText(target, "target");
+        return new InformationExpressionAst(
+                Kind.REFERENCE,
+                required,
+                null,
+                null,
+                "ref(" + required + ")",
+                Collections.singletonList(required));
+    }
+
+    /** 创建保持左结合顺序的 and 节点。 */
+    static InformationExpressionAst and(
+            InformationExpressionAst left,
+            InformationExpressionAst right) {
+        return binary(Kind.AND, "and", left, right);
+    }
+
+    /** 创建保持左结合顺序的 or 节点。 */
+    static InformationExpressionAst or(
+            InformationExpressionAst left,
+            InformationExpressionAst right) {
+        return binary(Kind.OR, "or", left, right);
+    }
+
+    /** 创建二元节点并冻结前序引用顺序。 */
+    private static InformationExpressionAst binary(
+            Kind kind,
+            String operator,
+            InformationExpressionAst left,
+            InformationExpressionAst right) {
+        InformationExpressionAst requiredLeft =
+                Objects.requireNonNull(left, "left");
+        InformationExpressionAst requiredRight =
+                Objects.requireNonNull(right, "right");
+        List<String> references = new ArrayList<String>(
+                requiredLeft.references.size() + requiredRight.references.size());
+        references.addAll(requiredLeft.references);
+        references.addAll(requiredRight.references);
+        return new InformationExpressionAst(
+                kind,
+                null,
+                requiredLeft,
+                requiredRight,
+                operator + "(" + requiredLeft.canonical
+                        + "," + requiredRight.canonical + ")",
+                references);
     }
 
     /** 返回节点类别。 */
@@ -76,9 +124,18 @@ public final class InformationExpressionAst {
         Objects.requireNonNull(values, "references");
         List<String> copy = new ArrayList<String>(values.size());
         for (String value : values) {
-            copy.add(Objects.requireNonNull(value, "references contains null"));
+            copy.add(requireText(value, "reference"));
         }
         return Collections.unmodifiableList(copy);
+    }
+
+    /** 校验文本非空白并保留 parser 已切分的 lexical 值。 */
+    private static String requireText(String value, String name) {
+        String required = Objects.requireNonNull(value, name);
+        if (required.trim().isEmpty()) {
+            throw new IllegalArgumentException(name + " must not be blank");
+        }
+        return required;
     }
 
     @Override
