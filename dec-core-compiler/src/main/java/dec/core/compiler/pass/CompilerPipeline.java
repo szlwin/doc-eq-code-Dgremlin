@@ -142,7 +142,7 @@ public final class CompilerPipeline {
         return new PipelineExecutionResult(session);
     }
 
-    /** 在执行任何 Pass 前验证完整固定顺序。 */
+    /** 在执行任何 Pass 前验证完整固定顺序和逐字符精确名称。 */
     private static void validateFixedOrder(List<CompilerPass> values) {
         if (values.size() != FIXED_PASS_ORDER.size()) {
             throw new IllegalArgumentException("pipeline requires exactly ten passes");
@@ -151,7 +151,10 @@ public final class CompilerPipeline {
             CompilerPass pass = Objects.requireNonNull(
                     values.get(index),
                     "passes contains null");
-            String actual = Objects.requireNonNull(pass.name(), "pass name").trim();
+            String actual = Objects.requireNonNull(pass.name(), "pass name");
+            if (actual.trim().isEmpty()) {
+                throw new IllegalArgumentException("pass name must not be blank");
+            }
             if (!FIXED_PASS_ORDER.get(index).equals(actual)) {
                 throw new IllegalArgumentException(
                         "unexpected pass at index " + index + ": " + actual);
