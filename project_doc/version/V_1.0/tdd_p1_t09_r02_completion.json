@@ -1,0 +1,28 @@
+{
+  "task": "TASK-P1-T09",
+  "iteration": "I002",
+  "status": "COMPLETED",
+  "completion": "COMPLETION-P1-T09-R02@95b08223083f",
+  "branch": "feature/p1-t09-engine-context-20260804-1040",
+  "pr": 24,
+  "clean_code_head": "95b08223083f9d6b8573e96cdd12364334c0f234",
+  "design": "DESIGN-R32@P1-T09-REWORK-I002",
+  "plan": "TP-P1-COMPILER-F01-R28@P1-T09-REWORK-I002",
+  "tdd": "TDD-P1-T09-R02@002594d2cba2",
+  "architecture": "DEVSKEL-P1-T09-R02@3efb2d1f0c97",
+  "p0_run": 30882162374,
+  "artifact": 8881702632,
+  "artifact_sha256": "2f09baf88333eeff96e34ac7ab6be840c0aba4bfffd20309d9afe6bfad64ce4f",
+  "tests": {
+    "i002": "12/12",
+    "t09_total": "36/36",
+    "compiler": "231/231",
+    "normal": "351/351"
+  },
+  "open_p0_p1_p2": "0/0/0",
+  "r27_correct_first_commit": "e7713c4499271b79b958d0c0e0793c02e6be5428",
+  "mysql": "SKIPPED_NOT_APPLICABLE",
+  "merge_performed": false,
+  "next_gate": "Independent Review then explicit user-authorized PR merge",
+  "t10": "BLOCKED_UNTIL_PR_MERGE"
+}
