@@ -37,7 +37,7 @@ class ModelAccessTypedKeyLexicalReworkTest {
     void compilesPaddedModelRefAndPreservesRawLexical() {
         Pipeline pipeline = compilePipeline(
                 "order",
-                "OrderInfo",
+                "UserInfo",
                 " OrderInfo ",
                 "UserInfo",
                 "UserInfo",
@@ -60,7 +60,7 @@ class ModelAccessTypedKeyLexicalReworkTest {
     void compilesPaddedTargetViewAndPreservesRawLexical() {
         Pipeline pipeline = compilePipeline(
                 "order",
-                "OrderInfo",
+                "UserInfo",
                 "OrderInfo",
                 "UserInfo",
                 " UserInfo ",
