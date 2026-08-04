@@ -30,18 +30,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 在完整 T07 SymbolTable 上执行 P1 精确强类型引用解析。
  *
- * <p>Resolver 先建立全部只读索引，再扫描 RawDefinitionSet，因此支持跨文件
- * 前向引用。成功解析只使用构造出的期望 TypedKey 调用 SymbolTable.find；
- * lexical 索引只用于区分 unknown 与 type mismatch，绝不参与成功匹配。</p>
+ * <p>Resolver 先校验 RawDefinitionSet 与 SymbolTable 属于同一完整快照，
+ * 再建立只读索引并扫描全部定义。成功路径始终构造期望 TypedKey 后调用
+ * SymbolTable.find；lexical 摘要只用于失败分类，不参与成功目标替代。</p>
  */
 public final class ReferenceResolver {
     private static final String PASS = "reference-resolution";
     private static final SourceRef UNKNOWN_SOURCE =
             new SourceRef("<unknown-reference-source>", 0, 0, "/");
+
+    private final LookupObserver lookupObserver;
+
+    /** 创建使用无副作用查询观察器的生产 Resolver。 */
+    public ReferenceResolver() {
+        this(NoOpLookupObserver.INSTANCE);
+    }
+
+    /** 创建使用显式观察器的小预算复杂度测试 Resolver。 */
+    ReferenceResolver(LookupObserver lookupObserver) {
+        this.lookupObserver = Objects.requireNonNull(
+                lookupObserver,
+                "lookupObserver");
+    }
 
     /**
      * 解析全部 T08 范围引用；任一 ERROR 都不发布部分引用集合。
@@ -60,12 +76,33 @@ public final class ReferenceResolver {
                             "请提供完整 RawDefinitionSet 与 SymbolTable")));
         }
 
-        ResolutionState state = new ResolutionState(symbolTable);
+        // 快照身份是所有 ordinal/sourceKey 恢复的前置门禁，必须早于任何索引。
+        RawDefinitionSet symbolSnapshot = symbolTable.sourceSnapshot();
+        if (!ReferenceSnapshotBinding.matches(definitions, symbolSnapshot)) {
+            return ReferenceResolutionResult.failed(Collections.singletonList(
+                    ReferenceSnapshotBinding.mismatch(
+                            definitions,
+                            symbolSnapshot)));
+        }
+
+        ResolutionState state = new ResolutionState(
+                symbolTable,
+                lookupObserver);
         indexSymbols(state);
         indexDataProperties(state);
         indexSystemViewDeclarations(definitions, state);
         for (RawDefinition definition : definitions.definitions()) {
-            resolveDefinition(definition, state);
+            try {
+                resolveDefinition(definition, state);
+            } catch (IllegalArgumentException inputFailure) {
+                // 最后一层输入防线：T06 合法对象不得让 TypedKey 异常越过结果边界。
+                DefinitionKey sourceKey = state.sourceKeys.get(
+                        definition.sourceOrdinal());
+                addOwnerDiagnostic(
+                        sourceKey,
+                        definition.sourceRef(),
+                        state);
+            }
         }
         if (!state.diagnostics.isEmpty()) {
             return ReferenceResolutionResult.failed(
@@ -89,18 +126,13 @@ public final class ReferenceResolver {
             state.definitionsByKey.put(key, definition);
             String lexical = lexicalName(key);
             if (lexical != null) {
-                List<DefinitionKey> values = state.keysByLexical.get(lexical);
-                if (values == null) {
-                    values = new ArrayList<DefinitionKey>();
-                    state.keysByLexical.put(lexical, values);
-                }
-                values.add(key);
+                state.lexicalIndex.add(lexical, key);
             }
         }
     }
 
     /**
-     * 从 Data Raw body 收集区分大小写的属性名称，供 View 精确校验。
+     * 从 Data Raw body 收集区分大小写的规范化属性名称，供 View 精确校验。
      */
     private static void indexDataProperties(ResolutionState state) {
         for (Map.Entry<DefinitionKey, RawDefinition> entry
@@ -114,12 +146,13 @@ public final class ReferenceResolver {
         }
     }
 
-    /** 递归收集 Data body 内所有 property@name。 */
+    /** 递归收集 Data body 内所有非空 property@name。 */
     private static void collectPropertyNames(
             RawNodeBody node,
             Set<String> properties) {
         if ("property".equals(node.name())) {
-            String name = node.attributes().get("name");
+            String name = ReferenceTargetParser.parseSimple(
+                    node.attributes().get("name"));
             if (name != null) {
                 properties.add(name);
             }
@@ -142,11 +175,23 @@ public final class ReferenceResolver {
                 continue;
             }
             Set<ViewKey> views = new HashSet<ViewKey>();
-            collectSystemViews(definition.body(), views);
-            if (views.isEmpty()) {
+            boolean bodyHasViewDeclarations = collectSystemViews(
+                    definition.body(),
+                    key,
+                    views,
+                    state);
+            if (!bodyHasViewDeclarations) {
                 for (RawReference reference : definition.references()) {
                     if (isViewReference(reference.role())) {
-                        views.add(new ViewKey(reference.target()));
+                        ViewKey viewKey = createSimpleKey(
+                                key,
+                                reference.target(),
+                                reference.sourceRef(),
+                                ViewKey::new,
+                                state);
+                        if (viewKey != null) {
+                            views.add(viewKey);
+                        }
                     }
                 }
             }
@@ -154,19 +199,35 @@ public final class ReferenceResolver {
         }
     }
 
-    /** 递归收集 System body 中 view-ref 的 name/ref lexical。 */
-    private static void collectSystemViews(
+    /**
+     * 递归收集 System body 中 view-ref；节点存在但缺失 ref/name 也算已声明。
+     */
+    private static boolean collectSystemViews(
             RawNodeBody node,
-            Set<ViewKey> views) {
+            DefinitionKey sourceKey,
+            Set<ViewKey> views,
+            ResolutionState state) {
+        boolean found = false;
         if ("view-ref".equals(node.name())) {
-            String target = referenceTarget(node);
-            if (target != null) {
-                views.add(new ViewKey(target));
+            found = true;
+            ViewKey viewKey = createSimpleKey(
+                    sourceKey,
+                    referenceTarget(node),
+                    node.sourceRef(),
+                    ViewKey::new,
+                    state);
+            if (viewKey != null) {
+                views.add(viewKey);
             }
         }
         for (RawNodeBody child : node.children()) {
-            collectSystemViews(child, views);
+            found = collectSystemViews(
+                    child,
+                    sourceKey,
+                    views,
+                    state) || found;
         }
+        return found;
     }
 
     /** 按 RawDefinitionKind 派发冻结的 T08 引用策略。 */
@@ -225,12 +286,12 @@ public final class ReferenceResolver {
         for (RawReference reference : definition.references()) {
             if (reference.role().contains("data-source")
                     && reference.role().endsWith("@ref")) {
-                resolveExact(
+                resolveSimple(
                         sourceKey,
                         reference.role(),
                         reference.target(),
-                        new DataSourceKey(reference.target()),
                         reference.sourceRef(),
+                        DataSourceKey::new,
                         state);
             }
         }
@@ -246,12 +307,12 @@ public final class ReferenceResolver {
         String targetMain = definition.attributes().get("target-main");
         DataKey rootData = null;
         if (targetMain != null) {
-            rootData = (DataKey) resolveExact(
+            rootData = resolveSimple(
                     sourceKey,
                     "@target-main",
                     targetMain,
-                    new DataKey(targetMain),
                     definition.sourceRef(),
+                    DataKey::new,
                     state);
         }
         boolean bodyHasPropertyReference = containsAttribute(
@@ -284,12 +345,12 @@ public final class ReferenceResolver {
         DataKey currentData = inheritedData;
         String dataTarget = node.attributes().get("data");
         if (dataTarget != null) {
-            currentData = (DataKey) resolveExact(
+            currentData = resolveSimple(
                     sourceKey,
                     node.sourceRef().nodePath() + "@data",
                     dataTarget,
-                    new DataKey(dataTarget),
                     node.sourceRef(),
+                    DataKey::new,
                     state);
         }
         String propertyTarget = node.attributes().get("ref-property");
@@ -311,10 +372,15 @@ public final class ReferenceResolver {
     private static void resolveProperty(
             DefinitionKey sourceKey,
             String role,
-            String property,
+            String propertyToken,
             DataKey dataKey,
             SourceRef sourceRef,
             ResolutionState state) {
+        String property = ReferenceTargetParser.parseSimple(propertyToken);
+        if (property == null) {
+            addOwnerDiagnostic(sourceKey, sourceRef, state);
+            return;
+        }
         if (dataKey == null) {
             addDiagnostic(state, diagnostic(
                     DiagnosticCode.MIX_REF_UNKNOWN,
@@ -339,7 +405,7 @@ public final class ReferenceResolver {
         addReference(state, new ResolvedReference(
                 sourceKey,
                 role,
-                property,
+                propertyToken,
                 dataKey,
                 sourceRef));
     }
@@ -356,43 +422,56 @@ public final class ReferenceResolver {
         if (!bodyHasTargets) {
             for (RawReference reference : definition.references()) {
                 if (isDataReference(reference.role())) {
-                    resolveExact(sourceKey, reference.role(), reference.target(),
-                            new DataKey(reference.target()), reference.sourceRef(), state);
+                    resolveSimple(
+                            sourceKey,
+                            reference.role(),
+                            reference.target(),
+                            reference.sourceRef(),
+                            DataKey::new,
+                            state);
                 } else if (isViewReference(reference.role())) {
-                    resolveExact(sourceKey, reference.role(), reference.target(),
-                            new ViewKey(reference.target()), reference.sourceRef(), state);
+                    resolveSimple(
+                            sourceKey,
+                            reference.role(),
+                            reference.target(),
+                            reference.sourceRef(),
+                            ViewKey::new,
+                            state);
                 }
             }
         }
     }
 
-    /** 递归解析 System body 中 data-ref/view-ref。 */
+    /**
+     * 递归解析 System body 中 data-ref/view-ref；缺失 ref/name 时也返回 found。
+     */
     private static boolean resolveSystemNode(
             RawNodeBody node,
             DefinitionKey sourceKey,
             ResolutionState state) {
         boolean found = false;
         if ("data-ref".equals(node.name()) || "view-ref".equals(node.name())) {
+            found = true;
             String target = referenceTarget(node);
-            if (target != null) {
-                String attribute = node.attributes().containsKey("ref")
-                        ? "ref" : "name";
-                if ("data-ref".equals(node.name())) {
-                    resolveExact(sourceKey,
-                            node.sourceRef().nodePath() + "@" + attribute,
-                            target,
-                            new DataKey(target),
-                            node.sourceRef(),
-                            state);
-                } else {
-                    resolveExact(sourceKey,
-                            node.sourceRef().nodePath() + "@" + attribute,
-                            target,
-                            new ViewKey(target),
-                            node.sourceRef(),
-                            state);
-                }
-                found = true;
+            String attribute = node.attributes().containsKey("ref")
+                    ? "ref" : "name";
+            String role = node.sourceRef().nodePath() + "@" + attribute;
+            if ("data-ref".equals(node.name())) {
+                resolveSimple(
+                        sourceKey,
+                        role,
+                        target,
+                        node.sourceRef(),
+                        DataKey::new,
+                        state);
+            } else {
+                resolveSimple(
+                        sourceKey,
+                        role,
+                        target,
+                        node.sourceRef(),
+                        ViewKey::new,
+                        state);
             }
         }
         for (RawNodeBody child : node.children()) {
@@ -408,24 +487,14 @@ public final class ReferenceResolver {
             RawDefinition definition,
             DefinitionKey sourceKey,
             ResolutionState state) {
-        if (!definition.ownerToken().isPresent()) {
-            addDiagnostic(state, diagnostic(
-                    DiagnosticCode.MIX_REF_RULE_SYSTEM_MISMATCH,
-                    "reference.rule-system.mismatch",
-                    sourceKey,
-                    definition.sourceRef(),
-                    Collections.<SourceRef>emptyList(),
-                    "请声明 RuleView 所属 System"));
-            return;
-        }
-        String ownerToken = definition.ownerToken().get();
-        SystemKey systemKey = new SystemKey(ownerToken);
-        DefinitionKey resolvedSystem = resolveExact(
+        String ownerToken = definition.ownerToken().isPresent()
+                ? definition.ownerToken().get() : null;
+        SystemKey systemKey = resolveSimple(
                 sourceKey,
                 "@system-owner",
                 ownerToken,
-                systemKey,
                 definition.sourceRef(),
+                SystemKey::new,
                 state);
 
         String viewToken = definition.attributes().get("view-ref");
@@ -439,16 +508,22 @@ public final class ReferenceResolver {
                 }
             }
         }
-        if (viewToken == null) {
+        ViewKey viewKey = createSimpleKey(
+                sourceKey,
+                viewToken,
+                viewSource,
+                ViewKey::new,
+                state);
+        if (viewKey == null) {
             return;
         }
-        ViewKey viewKey = new ViewKey(viewToken);
         if (!state.symbolTable.find(viewKey).isPresent()) {
             addMissingDiagnostic(sourceKey, viewToken, viewKey, viewSource, state);
             return;
         }
-        Set<ViewKey> declared = state.systemViews.get(systemKey);
-        if (resolvedSystem == null || declared == null || !declared.contains(viewKey)) {
+        Set<ViewKey> declared = systemKey == null
+                ? null : state.systemViews.get(systemKey);
+        if (systemKey == null || declared == null || !declared.contains(viewKey)) {
             addDiagnostic(state, diagnostic(
                     DiagnosticCode.MIX_REF_RULE_SYSTEM_MISMATCH,
                     "reference.rule-system.mismatch",
@@ -475,18 +550,21 @@ public final class ReferenceResolver {
         RawReference ruleReference = findReference(definition, "@rule-ref");
         SystemKey systemKey = null;
         if (systemReference != null) {
-            systemKey = new SystemKey(systemReference.target());
-            if (resolveExact(
+            systemKey = resolveSimple(
                     sourceKey,
                     systemReference.role(),
                     systemReference.target(),
-                    systemKey,
                     systemReference.sourceRef(),
-                    state) == null) {
-                systemKey = null;
-            }
+                    SystemKey::new,
+                    state);
         }
         if (ruleReference == null) {
+            return;
+        }
+        String ruleName = ReferenceTargetParser.parseSimple(
+                ruleReference.target());
+        if (ruleName == null) {
+            addOwnerDiagnostic(sourceKey, ruleReference.sourceRef(), state);
             return;
         }
         if (systemKey == null) {
@@ -499,9 +577,16 @@ public final class ReferenceResolver {
                     "请先声明可解析的 Action system-ref"));
             return;
         }
-        RuleViewKey expected = new RuleViewKey(
-                systemKey,
-                ruleReference.target());
+        final SystemKey resolvedSystem = systemKey;
+        final String resolvedRuleName = ruleName;
+        RuleViewKey expected = safeTypedKey(
+                sourceKey,
+                ruleReference.sourceRef(),
+                () -> new RuleViewKey(resolvedSystem, resolvedRuleName),
+                state);
+        if (expected == null) {
+            return;
+        }
         if (state.symbolTable.find(expected).isPresent()) {
             addReference(state, new ResolvedReference(
                     sourceKey,
@@ -509,7 +594,7 @@ public final class ReferenceResolver {
                     ruleReference.target(),
                     expected,
                     ruleReference.sourceRef()));
-        } else if (hasRuleViewName(ruleReference.target(), state)) {
+        } else if (hasRuleViewName(ruleName, state)) {
             addDiagnostic(state, diagnostic(
                     DiagnosticCode.MIX_REF_RULE_SYSTEM_MISMATCH,
                     "reference.rule-system.mismatch",
@@ -540,12 +625,30 @@ public final class ReferenceResolver {
                     addOwnerDiagnostic(sourceKey, reference.sourceRef(), state);
                     continue;
                 }
-                DirectoryKey sourceDirectory = (DirectoryKey) sourceKey;
-                DirectoryKey target = new DirectoryKey(
-                        sourceDirectory.owner(),
+                String targetName = ReferenceTargetParser.parseSimple(
                         reference.target());
-                resolveExact(sourceKey, reference.role(), reference.target(),
-                        target, reference.sourceRef(), state);
+                if (targetName == null) {
+                    addOwnerDiagnostic(sourceKey, reference.sourceRef(), state);
+                    continue;
+                }
+                DirectoryKey sourceDirectory = (DirectoryKey) sourceKey;
+                final String resolvedName = targetName;
+                DirectoryKey target = safeTypedKey(
+                        sourceKey,
+                        reference.sourceRef(),
+                        () -> new DirectoryKey(
+                                sourceDirectory.owner(),
+                                resolvedName),
+                        state);
+                if (target != null) {
+                    resolveExact(
+                            sourceKey,
+                            reference.role(),
+                            reference.target(),
+                            target,
+                            reference.sourceRef(),
+                            state);
+                }
             }
         }
     }
@@ -562,27 +665,106 @@ public final class ReferenceResolver {
         }
     }
 
-    /** 将 system.name 精确转换为 InformationKey。 */
+    /** 将严格的 system.name 转换为 InformationKey。 */
     private static void resolveInformation(
             DefinitionKey sourceKey,
             RawReference reference,
             ResolutionState state) {
-        int separator = reference.target().indexOf('.');
-        if (separator <= 0 || separator == reference.target().length() - 1) {
+        ReferenceTargetParser.QualifiedInformationTarget target =
+                ReferenceTargetParser.parseQualifiedInformation(
+                        reference.target());
+        if (target == null) {
             addOwnerDiagnostic(sourceKey, reference.sourceRef(), state);
             return;
         }
-        String system = reference.target().substring(0, separator);
-        String information = reference.target().substring(separator + 1);
-        InformationKey expected = new InformationKey(
-                new SystemKey(system),
-                information);
-        resolveExact(sourceKey, reference.role(), reference.target(),
-                expected, reference.sourceRef(), state);
+        final String systemName = target.system();
+        final String informationName = target.information();
+        InformationKey expected = safeTypedKey(
+                sourceKey,
+                reference.sourceRef(),
+                () -> new InformationKey(
+                        new SystemKey(systemName),
+                        informationName),
+                state);
+        if (expected != null) {
+            resolveExact(
+                    sourceKey,
+                    reference.role(),
+                    reference.target(),
+                    expected,
+                    reference.sourceRef(),
+                    state);
+        }
     }
 
     /**
-     * 使用精确 TypedKey 查询目标；缺失时只用 lexical 索引分类失败原因。
+     * 解析简单 lexical、构造 TypedKey 并执行精确 SymbolTable 查询。
+     */
+    private static <T extends DefinitionKey> T resolveSimple(
+            DefinitionKey sourceKey,
+            String role,
+            String targetToken,
+            SourceRef sourceRef,
+            Function<String, T> keyFactory,
+            ResolutionState state) {
+        T expected = createSimpleKey(
+                sourceKey,
+                targetToken,
+                sourceRef,
+                keyFactory,
+                state);
+        if (expected == null) {
+            return null;
+        }
+        return resolveExact(
+                sourceKey,
+                role,
+                targetToken,
+                expected,
+                sourceRef,
+                state) == null ? null : expected;
+    }
+
+    /**
+     * 在调用 TypedKey 构造器前统一执行 trim/nonblank lexical 校验。
+     */
+    private static <T extends DefinitionKey> T createSimpleKey(
+            DefinitionKey sourceKey,
+            String targetToken,
+            SourceRef sourceRef,
+            Function<String, T> keyFactory,
+            ResolutionState state) {
+        String normalized = ReferenceTargetParser.parseSimple(targetToken);
+        if (normalized == null) {
+            addOwnerDiagnostic(sourceKey, sourceRef, state);
+            return null;
+        }
+        final String required = normalized;
+        return safeTypedKey(
+                sourceKey,
+                sourceRef,
+                () -> keyFactory.apply(required),
+                state);
+    }
+
+    /**
+     * 将输入相关 TypedKey 构造异常转换为稳定 owner Diagnostic。
+     */
+    private static <T extends DefinitionKey> T safeTypedKey(
+            DefinitionKey sourceKey,
+            SourceRef sourceRef,
+            Supplier<T> keyFactory,
+            ResolutionState state) {
+        try {
+            return keyFactory.get();
+        } catch (IllegalArgumentException invalidInput) {
+            addOwnerDiagnostic(sourceKey, sourceRef, state);
+            return null;
+        }
+    }
+
+    /**
+     * 使用精确 TypedKey 查询目标；缺失时只用 lexical 摘要分类失败原因。
      */
     private static DefinitionKey resolveExact(
             DefinitionKey sourceKey,
@@ -613,7 +795,7 @@ public final class ReferenceResolver {
         return null;
     }
 
-    /** 根据现有同 lexical Key 区分 unknown、type mismatch 与 owner mismatch。 */
+    /** 根据预聚合摘要区分 unknown、type mismatch 与 owner mismatch。 */
     private static void addMissingDiagnostic(
             DefinitionKey sourceKey,
             String targetToken,
@@ -621,29 +803,33 @@ public final class ReferenceResolver {
             SourceRef sourceRef,
             ResolutionState state) {
         String lexical = lexicalName(expectedKey);
-        List<DefinitionKey> candidates = state.keysByLexical.get(
-                lexical == null ? targetToken : lexical);
+        String lookup = lexical == null
+                ? ReferenceTargetParser.parseSimple(targetToken)
+                : lexical;
+        if (lookup == null) {
+            addOwnerDiagnostic(sourceKey, sourceRef, state);
+            return;
+        }
+        state.lookupObserver.onLexicalLookup(lookup);
+        ReferenceLexicalIndex.CandidateSummary summary =
+                state.lexicalIndex.find(lookup);
         String messageKey = "reference.unknown";
-        if (candidates != null && !candidates.isEmpty()) {
-            boolean sameType = false;
-            for (DefinitionKey candidate : candidates) {
-                if (candidate.getClass().equals(expectedKey.getClass())) {
-                    sameType = true;
-                    break;
-                }
-            }
+        DefinitionKey representative = null;
+        if (summary != null && summary.hasAny()) {
+            boolean sameType = summary.hasType(expectedKey.getClass());
             messageKey = sameType
                     ? "reference.owner.invalid"
                     : "reference.type.mismatch";
+            representative = summary.representative(expectedKey.getClass());
         }
         addDiagnostic(state, diagnostic(
                 DiagnosticCode.MIX_REF_UNKNOWN,
                 messageKey,
                 expectedKey,
                 sourceRef,
-                candidates == null || candidates.isEmpty()
+                representative == null
                         ? Collections.<SourceRef>emptyList()
-                        : relatedRef(candidates.get(0), state),
+                        : relatedRef(representative, state),
                 "请使用精确存在且类型与 owner 一致的 TypedKey"));
     }
 
@@ -671,20 +857,18 @@ public final class ReferenceResolver {
                 : Collections.singletonList(definition.sourceRef());
     }
 
-    /** 判断是否存在其他 System 下同名 RuleView。 */
+    /** 平均 O(1) 判断是否存在其他 System 下同名 RuleView。 */
     private static boolean hasRuleViewName(
             String name,
             ResolutionState state) {
-        List<DefinitionKey> values = state.keysByLexical.get(name.trim());
-        if (values == null) {
+        String normalized = ReferenceTargetParser.parseSimple(name);
+        if (normalized == null) {
             return false;
         }
-        for (DefinitionKey value : values) {
-            if (value instanceof RuleViewKey) {
-                return true;
-            }
-        }
-        return false;
+        state.lookupObserver.onLexicalLookup(normalized);
+        ReferenceLexicalIndex.CandidateSummary summary =
+                state.lexicalIndex.find(normalized);
+        return summary != null && summary.hasRuleView();
     }
 
     /** 查找定义中的第一个精确后缀引用。 */
@@ -711,7 +895,7 @@ public final class ReferenceResolver {
                 || role.endsWith("/view-ref@name");
     }
 
-    /** 从 data-ref/view-ref 节点读取 ref 或 name。 */
+    /** 从 data-ref/view-ref 节点读取 ref 或 name，保留原始 lexical。 */
     private static String referenceTarget(RawNodeBody node) {
         String target = node.attributes().get("ref");
         return target == null ? node.attributes().get("name") : target;
@@ -806,15 +990,31 @@ public final class ReferenceResolver {
                 PASS);
     }
 
+    /** package-private 查询观察 seam，只用于确定性复杂度 Oracle。 */
+    interface LookupObserver {
+        void onLexicalLookup(String lexical);
+    }
+
+    /** 生产默认观察器不保存状态，也不影响解析结果。 */
+    private enum NoOpLookupObserver implements LookupObserver {
+        INSTANCE;
+
+        @Override
+        public void onLexicalLookup(String lexical) {
+            // 生产路径故意无副作用。
+        }
+    }
+
     /** 单次 resolve 私有状态，不跨调用或线程共享。 */
     private static final class ResolutionState {
         private final SymbolTable symbolTable;
+        private final LookupObserver lookupObserver;
         private final Map<Long, DefinitionKey> sourceKeys =
                 new HashMap<Long, DefinitionKey>();
         private final Map<DefinitionKey, RawDefinition> definitionsByKey =
                 new HashMap<DefinitionKey, RawDefinition>();
-        private final Map<String, List<DefinitionKey>> keysByLexical =
-                new HashMap<String, List<DefinitionKey>>();
+        private final ReferenceLexicalIndex lexicalIndex =
+                new ReferenceLexicalIndex();
         private final Map<SystemKey, Set<ViewKey>> systemViews =
                 new HashMap<SystemKey, Set<ViewKey>>();
         private final Map<DataKey, Set<String>> dataProperties =
@@ -824,8 +1024,15 @@ public final class ReferenceResolver {
         private final Set<Diagnostic> diagnostics =
                 new LinkedHashSet<Diagnostic>();
 
-        private ResolutionState(SymbolTable symbolTable) {
-            this.symbolTable = Objects.requireNonNull(symbolTable, "symbolTable");
+        private ResolutionState(
+                SymbolTable symbolTable,
+                LookupObserver lookupObserver) {
+            this.symbolTable = Objects.requireNonNull(
+                    symbolTable,
+                    "symbolTable");
+            this.lookupObserver = Objects.requireNonNull(
+                    lookupObserver,
+                    "lookupObserver");
         }
     }
 }
