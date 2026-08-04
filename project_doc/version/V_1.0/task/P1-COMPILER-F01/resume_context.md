@@ -1,58 +1,49 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T10 / I003` 已完成
-- 当前有效 Completion：`COMPLETION-P1-T10-R03@336d309f3748`
-- 已失效 Completion：`COMPLETION-P1-T10-R01@9e94bc68d9a8`、`COMPLETION-P1-T10-R02@6f4c7b6f3ec3`，全部不可变历史保留
-- Dependency：`COMPLETION-P1-T09-R02@95b08223083f`
+- 当前逻辑任务：`TASK-P1-T11 / I001` 已完成
+- 当前有效 Completion：`COMPLETION-P1-T11-R01@f09d9786fad8`
+- Dependency：`COMPLETION-P1-T10-R03@336d309f3748`
 - 状态：`COMPLETED / PASSED`
-- Base：`dev_all@4fe0f6def8581e5c7234d86dfa0aafae794db15f`
-- Branch：`feature/p1-t10-rule-dag-20260804-1428`
-- PR：`#25`
-- Design：`DESIGN-R35@P1-T10-REWORK-I003`
-- Plan：`TP-P1-COMPILER-F01-R31@P1-T10-REWORK-I003`
-- TDD：`TDD-P1-T10-R03@b16d5ee9f9f1`
-- Architecture：`DEVSKEL-P1-T10-R03@d3f7225b4ee9`
-- Development：`DEV-P1-T10-R03@bc056b7ed1da`
-- Code Review：`CODEREVIEW-P1-T10-R03@336d309f3748`
-- Testing：`TESTING-P1-T10-R03@336d309f3748`
-- Reviews：`REV-000445`～`REV-000458`
-- Evidence：`EVD-000719`～`EVD-000739`
-- Findings：`FND-P1-T10-I003-001..002` 全部 CLOSED
+- Base：`dev_all@f97b7e47ac0fb40209c4dc512aa15d67c19be44b`
+- Branch：`feature/p1-t11-deferred-classification-20260804-2058`
+- PR：`#26`
+- Design：`DESIGN-R36@P1-T11-I001`
+- Plan：`TP-P1-COMPILER-F01-R32@P1-T11-I001`
+- TDD：`TDD-P1-T11-R01@7fd853fca405`
+- Architecture：`DEVSKEL-P1-T11-R01@7fd853fca405`
+- Development：`DEV-P1-T11-R01@f09d9786fad8`
+- Code Review：`CODEREVIEW-P1-T11-R01@f09d9786fad8`
+- Testing：`TESTING-P1-T11-R01@f09d9786fad8`
+- Reviews：`REV-000459`～`REV-000475`
+- Evidence：`EVD-000740`～`EVD-000765`
 - Open P0/P1/P2：`0 / 0 / 0`
 
-## Current Contract
+## Current contract
 
-- `model-ref/ref@view` 是 TypedKey reference：Raw lexical 只要求 nonblank，保留原值并由 `ViewKey` canonicalize；
-- `read/write@path` 与 `ref@property` 是精确 lexical：继续要求已经 trim，并执行既有 path/selector grammar；
-- `definition.name` 与 `model-ref` 按原始 lexical 完全一致；
-- Binding 只发布 canonical `SystemKey/ViewKey`；
-- I002 的完整 wildcard、全部 property-info 聚合、严格 root 门禁和 WRITE segment trie 合同继续有效；
-- 任一 ERROR 不发布部分 Binding 或 Deferred；
-- 无权限执行、SQL、I/O、网络、缓存、DAG 或全局状态。
+- 八种 DeferredKind 固定映射至 P2-P7 和稳定 reasonCode；
+- 分类输入必须冻结 owner、kind、ordinal、SourceRef、NormalizedBody 和强类型引用；
+- 缺字段、reason-policy、null typed ref、unresolved lexical、null input 与 duplicate key 统一使用 `MIX-DEFERRED-INCOMPLETE`；
+- 任一错误不发布部分 Registry；空批次发布不可变空 Registry；
+- 输入乱序不影响 Registry，引用列表防御性复制；
+- P1 不执行 P2-P7 runtime、SQL、事务、I/O、网络、DAG 或缓存。
 
 ## Validation
 
-- Clean-code Head：`336d309f3748328ba4dea18be9944a95751ccc29`
-- P0 Run：`30906761804` — SUCCESS
-- Artifact：`8891365180`
-- SHA-256：`62aea0ce1ed32917e7c6dcdd8ae5c60fc0f627db90335cbbddb0c84c1f3e1915`
-- Surefire XML：`78`
-- I003：`12/12`
-- T10：`54/54`
-- Compiler module：`285/285`
-- Normal tests：`405/405`
-- Intentional failure gate：`recognized`
-- Reactor：`12 modules / PASSED`
-- Java release 8：`PASSED`
+- Valid RED：`7fd853fca4055c7bf4f3049443d594b286d597fa` / Run `30913711698` / `18 failures, 0 errors`
+- Clean-code Head：`f09d9786fad8974bdbe8c37704d44ee4466da862`
+- P0 Run：`30914377427` — SUCCESS
+- Artifact：`8894415605`
+- SHA-256：`702bd6c66b0debfaca9c7dd91c6b00baf971e114779d4c252f014ba867cfa315`
+- T11：`26/26`；Compiler：`311/311`；Normal：`431/431`
+- Surefire XML：`81`；12 modules / Java release 8：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
 
 ## Recovery
 
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t10-r03/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t10-r03.md`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t10-r03.json`
-- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t10_r03_completion.json`
-- 临时 workflow 与 publish trigger：不存在；
-- `@Override` 独占一行规则未破坏，方法和重要逻辑使用中文注释；
-- 下一动作：复核 PR #25 final documented Head；仅在用户明确授权后合并；
-- TASK-P1-T11：`BLOCKED_UNTIL_PR_25_MERGE`。
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t11-r01/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t11-r01.md`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t11-r01.json`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t11_r01_completion.json`
+- `@Override` 独占一行，公开方法、构造器和重要逻辑均有中文注释；
+- 下一动作：Independent Review PR #26；仅在用户明确授权后合并；
+- TASK-P1-T12：`BLOCKED_UNTIL_PR_26_MERGE`。
