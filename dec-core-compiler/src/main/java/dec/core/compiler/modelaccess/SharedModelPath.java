@@ -31,7 +31,9 @@ public final class SharedModelPath implements Comparable<SharedModelPath> {
     /** 判断当前路径是否与另一 WRITE 路径相同或形成祖先/后代关系。 */
     public boolean overlaps(SharedModelPath other) {
         Objects.requireNonNull(other, "other");
-        return value.equals(other.value)
+        return "*".equals(value)
+                || "*".equals(other.value)
+                || value.equals(other.value)
                 || value.startsWith(other.value + ".")
                 || other.value.startsWith(value + ".");
     }
