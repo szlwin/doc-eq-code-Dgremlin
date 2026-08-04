@@ -13,6 +13,34 @@ permissions:
   contents: read
 
 jobs:
+  seed-red:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout exact branch head
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: feature/p1-t10-rule-dag-20260804-1428
+      - name: Restore I002 blocking oracle
+        shell: bash
+        run: |
+          echo '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' | base64 -d > /tmp/t10-i002-red-tests.tar.gz
+          echo '75a1a4094660dedd32f071f3fb16d325e74a636faf37b4aed8747ae52dc9f24a  /tmp/t10-i002-red-tests.tar.gz' | sha256sum -c -
+          tar -xzf /tmp/t10-i002-red-tests.tar.gz
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dec-core-compiler/src/test/java/dec/core/compiler/modelaccess/ModelAccessReworkBoundaryTest.java \
+                  dec-core-compiler/src/test/java/dec/core/compiler/modelaccess/ModelAccessReworkResourceTest.java
+          if git diff --cached --quiet; then
+            echo 'I002 RED tests already present'
+            exit 0
+          fi
+          git commit -m 'test(modelaccess): add I002 blocking review oracle'
+          git push origin HEAD:feature/p1-t10-rule-dag-20260804-1428
+
   snapshot:
     runs-on: ubuntu-latest
     steps:
@@ -21,14 +49,12 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref || github.ref_name }}
-
       - name: Package repository source and git history
         shell: bash
         run: |
           tar -czf /tmp/t10-i002-source-snapshot.tar.gz \
             --exclude='./.git/objects/pack/*.keep' \
             .
-
       - name: Upload repository source
         uses: actions/upload-artifact@v4
         with:
