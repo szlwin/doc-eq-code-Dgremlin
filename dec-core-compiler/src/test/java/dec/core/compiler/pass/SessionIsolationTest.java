@@ -13,7 +13,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -22,9 +21,9 @@ import org.junit.jupiter.api.Test;
  */
 class SessionIsolationTest {
 
-    /** 连续执行必须创建不同 Session，且各自保留独立 artifact、timing 和转换。 */
+    /** 连续执行必须形成不同且稳定的结果快照。 */
     @Test
-    void createsIsolatedSessionForEveryExecution() {
+    void createsIsolatedResultForEveryExecution() {
         CompilerPipeline pipeline = new CompilerPipeline(
                 PipelineTestSupport.successfulPasses(new ArrayList<String>()));
 
@@ -35,16 +34,16 @@ class SessionIsolationTest {
                 first.diagnostics().toString());
         assertEquals(CompilationSessionState.PUBLISHED, second.state(),
                 second.diagnostics().toString());
-        assertNotSame(first.session(), second.session());
+        assertNotSame(first, second);
         assertNotSame(first.artifacts(), second.artifacts());
         assertEquals(first.executedPasses(), second.executedPasses());
         assertEquals(first.transitions(), second.transitions());
         assertEquals(first.timings().size(), second.timings().size());
     }
 
-    /** 一个失败 Session 的 Diagnostic 不得污染下一次成功 Session。 */
+    /** 一个失败 Session 的 Diagnostic 不得污染下一次成功结果。 */
     @Test
-    void failureDiagnosticsDoNotLeakIntoNextSession() {
+    void failureDiagnosticsDoNotLeakIntoNextResult() {
         CompilerPipeline failing = new CompilerPipeline(
                 PipelineTestSupport.failingPasses(
                         new ArrayList<String>(), 2));
@@ -88,9 +87,11 @@ class SessionIsolationTest {
                 CompilerPipeline.class,
                 CompilationSession.class,
                 PassContext.class,
+                PublicationPassContext.class,
                 PassResult.class,
                 PipelineExecutionResult.class,
-                PipelineDiagnostics.class);
+                PipelineDiagnostics.class,
+                ArtifactSnapshots.class);
 
         for (Class<?> type : types) {
             for (Field field : type.getDeclaredFields()) {
