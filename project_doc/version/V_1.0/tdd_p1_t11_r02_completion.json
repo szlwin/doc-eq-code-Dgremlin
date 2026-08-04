@@ -1,0 +1,35 @@
+{
+  "task": "TASK-P1-T11",
+  "iteration": "I002",
+  "completion": "COMPLETION-P1-T11-R02@86b55b45d1cd",
+  "status": "PASSED",
+  "base": "f97b7e47ac0fb40209c4dc512aa15d67c19be44b",
+  "branch": "feature/p1-t11-deferred-classification-20260804-2058",
+  "pr": 26,
+  "invalidated_completion": "COMPLETION-P1-T11-R01@f09d9786fad8",
+  "design": "DESIGN-R37@P1-T11-REWORK-I002",
+  "plan": "TP-P1-COMPILER-F01-R33@P1-T11-REWORK-I002",
+  "red_head": "1297a9dd947fedc3683d2eff1d61d6484e73a351",
+  "architecture_head": "86013589b65da324d1e237e593b681c482cb6c4c",
+  "development_head": "1f9f887837bd2b3bdfc506f772f34f3a6b79abc2",
+  "clean_code_head": "86b55b45d1cd658401ec541fa12bfd868ef5fadc",
+  "p0_run": 30919883791,
+  "artifact": 8896619234,
+  "sha256": "1e37ba710cf47c7f8ff22c1d2e8d7509cadbcc0172c7ed28a30924fcaf9f2294",
+  "tests": {
+    "i002": 8,
+    "t11": 34,
+    "compiler": 319,
+    "normal": 439,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "open_findings": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "next": "PR_26_REVIEW_AND_USER_AUTHORIZED_MERGE",
+  "t12": "BLOCKED_UNTIL_PR_26_MERGE"
+}
