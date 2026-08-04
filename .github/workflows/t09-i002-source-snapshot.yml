@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feature/p1-t09-engine-context-20260804-1040
+  pull_request:
+    branches:
+      - dev_all
   workflow_dispatch:
 
 permissions:
@@ -13,14 +16,14 @@ jobs:
   snapshot:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout exact branch head
+      - name: Checkout exact branch head with history
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Package repository source and git history
         run: |
-          tar -czf /tmp/t09-i002-source-snapshot.tar.gz --exclude=.git/objects/pack .
+          tar -czf /tmp/t09-i002-source-snapshot.tar.gz .
 
       - name: Upload repository source
         uses: actions/upload-artifact@v6
