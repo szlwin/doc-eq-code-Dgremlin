@@ -1,65 +1,55 @@
-# TASK-P1-T08 / I001 — P1 强类型引用解析
+# TASK-P1-T08 / I002 — P1 强类型引用解析返工
 
-- 状态：`COMPLETED / PASSED`
-- Base：`dev_all@c6cd8ec156563480ec30989cdd358d4979a8599b`
+- 状态：`REWORK / IN_PROGRESS`
+- Base：`PR-23@9ece664412ee947f536e2de73f20b5c7b9790bf1`
 - Dependency：`COMPLETION-P1-T07-R02@ffe544e3060d`
 - Branch：`feature/p1-t08-reference-resolution-20260803-2254`
-- PR：`#23`
-- Design：`DESIGN-R29@P1-T08-I001`
-- Plan：`TP-P1-COMPILER-F01-R25@P1-T08-I001`
-- TDD：`TDD-P1-T08-R01@d7155c4f0bb1`
-- Architecture Skeleton：`DEVSKEL-P1-T08-R01@a063504eb209`
-- Development：`DEV-P1-T08-R01@ab432a3189f4`
-- Code Review：`CODEREVIEW-P1-T08-R01@ab432a3189f4`
-- Testing：`TESTING-P1-T08-R01@ab432a3189f4`
-- Completion：`COMPLETION-P1-T08-R01@ab432a3189f4`
+- PR：`#23`（Draft）
+- Design：`DESIGN-R30@P1-T08-REWORK-I002`
+- Plan：`TP-P1-COMPILER-F01-R26@P1-T08-REWORK-I002`
+- Invalidated Completion：`COMPLETION-P1-T08-R01@ab432a3189f4`
 - Execution：`SEQUENTIAL / auto / architecture_review / git_checkpoint`
+- Review Input：`REV-000353 / NEEDS_CHANGES`
 
-## 交付结果
+## I001 历史
 
-在 T07 完整 SymbolTable 上实现 P1 强类型引用解析：Connection、View、System、RuleView、Action、Directory、Produce 均使用精确 TypedKey 查询；支持跨文件前向引用；unknown、type mismatch、owner mismatch 与 rule-system mismatch 完整聚合并稳定排序；失败不发布部分 ResolvedReferenceSet。
+`TASK-P1-T08 / I001`、R29/R25、R01 Completion、Review、Evidence、P0、Artifact 和失败 attempt 全部作为不可变历史保留。独立 Review 发现 3 个 P1 与 1 个 P2 后，R01 不再是当前有效 Completion，但不得覆盖或删除。
 
-View property 只在当前 Data 内区分大小写精确校验，不创建 PropertyKey。Information expression、ModelAccess、Rule property、Produce 模型输出以及 P2～P7 均未启动。
+## 当前 Findings
 
-## 流程证据
+- `FND-P1-T08-I002-001`：非法或不完整 lexical 未 fail-closed；
+- `FND-P1-T08-I002-002`：lexical 失败分类存在 O(N×M) 候选扫描；
+- `FND-P1-T08-I002-003`：RawDefinitionSet 与 SymbolTable 未绑定同一完整快照；
+- `FND-P1-T08-I002-004`：缺少 Canonical → T06 → T07 → T08 真实 body 集成 Oracle。
 
-- 首个测试设计 attempt：Run `30827030425`，9 failures / 3 errors，REJECTED；
-- 有效 RED：Head `d7155c4f0bb1...`，Run `30827276340`，9 failures / 0 errors；
-- Skeleton：Head `a063504eb209...`，Run `30827946835`，9 controlled failures / 0 errors；
-- First GREEN：Head `82acc9a4350b...`，Run `30828282846`，SUCCESS；
-- Clean-code：Head `ab432a3189f4...`，Run `30828498760`，SUCCESS；
-- Clean-code Artifact：`8861902903`；
-- SHA-256：`0f506c50e3a1e0d4cc25da4ea5da4ef064404d5c8628686739906af08069f244`，独立比对一致；
-- 临时 snapshot workflow 已删除，最终树不包含该文件。
+Open P0/P1/P2：`0 / 3 / 1`。
 
-## 测试
+## I002 冻结目标
 
-- T08：12/12；
-- Symbol：44/44；
-- Compiler：173/173；
-- XML：30/30；YAML：59/59；Context 正常：26/26；Demo：4/4；Legacy：1/1；
-- 12 模块 Reactor、Java release 8、故意失败门禁：PASSED；
-- MySQL：`SKIPPED_NOT_APPLICABLE`。
+- qualified Information 严格为两段 `system.name`；
+- 所有 TypedKey 输入先经过统一 lexical fail-closed 边界；
+- System data-ref/view-ref 缺失 ref/name 必须返回 `reference.owner.invalid`；
+- SymbolTable package-private 保存完整 RawDefinitionSet 输入快照；
+- Resolver 在任何索引前验证快照，不一致返回 `reference.input.snapshot-mismatch`；
+- lexical 失败分类使用预聚合摘要，查询平均 O(1) 或 O(log n)；
+- 使用可计数小预算 Oracle 验证查询次数不随同名候选数放大；
+- 增加真实 CanonicalDocumentNode → RawDefinitionBuilder → SymbolTableBuilder → ReferenceResolver 集成测试；
+- 保持 R29 正常引用矩阵、精确 TypedKey 成功查询和失败不发布部分结果。
 
-## Review 与 Gate
+## 当前 Gate
 
-- Review：`REV-000339`～`REV-000352`；
-- Evidence：`EVD-000586`～`EVD-000599`；
-- `FND-P1-T08-I001-001`：CLOSED；
-- `FND-P1-T08-I001-002`：CLOSED；
-- Open P0/P1/P2：`0 / 0 / 0`；
-- R29 blob：`ebd57d33a1f389cbfb0d08624c580ac22cec085d`；
-- R25 blob：`af0d65fb3ab92ffede7c49d55682ef03eb1a2af5`；
-- Revision Integrity：PASSED。
+- PR #23：Draft、未合并；
+- R30：PASSED；
+- R26：PASSED；
+- 下一阶段：新增 I002 Oracle 并取得 Java 8 编译成功、errors=0 的有效 RED；
+- Architecture Skeleton 双 Review 未通过前不得进入具体实现；
+- PR #23 合并前 TASK-P1-T09 继续阻断。
 
-## 编码与范围
+## 编码规范
 
-- 所有新增/修改 `@Override` 独占一行；
-- 方法、构造器和重要索引、解析、owner、Diagnostic、资源与失败逻辑使用中文注释；
-- 未修改 Context、T06 Raw、T07 Symbol 或 Compiler API 公共合同；
-- 无模糊搜索、I/O、反射、运行时执行或 static mutable registry；
-- 未启动 TASK-P1-T09。
-
-## 下一步
-
-PR #23 最终文档化验证通过后转为 Ready for Review。未经用户明确授权不得合并；PR #23 合并前 TASK-P1-T09 保持阻断。
+- Java release 8；
+- 所有 `@Override` 注解独占一行；
+- 方法、构造器和重要快照、lexical、复杂度、owner、Diagnostic、资源与失败逻辑使用中文注释；
+- 不修改 Context、T06 Raw 或 T07 Symbol 公共合同；
+- 不引入模糊搜索、跨类型降级、I/O、运行时执行或 static mutable registry；
+- 不启动 T09/T10/P2～P7。
