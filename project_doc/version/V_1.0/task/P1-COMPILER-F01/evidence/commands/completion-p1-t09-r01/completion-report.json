@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T09",
+  "iteration": "I001",
+  "completion_revision": "COMPLETION-P1-T09-R01@ecfe3f53bde7",
+  "status": "PASSED",
+  "base": {
+    "branch": "dev_all",
+    "sha": "e47551e0c79984d8f3fafc0ce379da76ad0d5593"
+  },
+  "branch": "feature/p1-t09-engine-context-20260804-1040",
+  "pr": 24,
+  "dependency": "COMPLETION-P1-T08-R02@bab0993ecfd8",
+  "clean_code_head": "ecfe3f53bde72e055c97886aef20712f6a42fea3",
+  "revisions": {
+    "design": "DESIGN-R31@P1-T09-I001",
+    "plan": "TP-P1-COMPILER-F01-R27@P1-T09-I001",
+    "tdd": "TDD-P1-T09-R01@404105e89485",
+    "architecture_skeleton": "DEVSKEL-P1-T09-R01@8ae3f86316fa",
+    "development": "DEV-P1-T09-R01@ecfe3f53bde7",
+    "code_review": "CODEREVIEW-P1-T09-R01@ecfe3f53bde7",
+    "testing": "TESTING-P1-T09-R01@ecfe3f53bde7",
+    "completion": "COMPLETION-P1-T09-R01@ecfe3f53bde7"
+  },
+  "revision_integrity": {
+    "design_first_commit": "f2ab328f67b03f710abafc85a9e1616ebe23f298",
+    "design_blob": "539b8603efba73b45547a4602c9b14e2b523c2e4",
+    "plan_first_commit": "4483ce64c6ecffc989e3adcbd3a8178d301cace9",
+    "plan_blob": "20a16d1e7b199088086f496fe94aeb8b8684d8ca",
+    "created_before_red": true,
+    "unchanged_at_clean_code_head": true
+  },
+  "rejected_attempts": [
+    {
+      "type": "TDD_RED_A01",
+      "head": "cf8c8b6f6b4bc8b6016eb81478eb12a29448842f",
+      "run_id": 30873531942,
+      "artifact_id": 8878689025,
+      "result": "REJECTED",
+      "reason": "reflection structure test produced one uncaught ClassNotFoundException error"
+    },
+    {
+      "type": "GREEN_A01",
+      "head": "b37c07065d2f74bffbc9b8e48883e01c5305bd39",
+      "run_id": 30874625185,
+      "artifact_id": 8879083391,
+      "result": "REJECTED",
+      "reason": "JaCoCo synthetic Compiler field was misclassified as production static mutable state"
+    },
+    {
+      "type": "GREEN_A02",
+      "head": "83b616d233e1f553a1c224bee9db70a8819be769",
+      "run_id": 30874740506,
+      "artifact_id": 8879123713,
+      "result": "REJECTED",
+      "reason": "JaCoCo synthetic AST field was misclassified as a non-final business field"
+    }
+  ],
+  "tdd_red": {
+    "head": "404105e894853b36b0788ed40ac65d23d6ee8899",
+    "run_id": 30873857907,
+    "artifact_id": 8878801137,
+    "artifact_sha256": "dd49874403e63c11082f0c037ff6d8705cc8f096bb43062261e06f1e33fc20b4",
+    "failures": 18,
+    "errors": 0,
+    "existing_compiler_tests": 195,
+    "existing_compiler_failures": 0,
+    "java_release_8_compiled": true
+  },
+  "architecture_skeleton": {
+    "head": "8ae3f86316fad55349e7d76fed71336dc32c5292",
+    "run_id": 30874099740,
+    "artifact_id": 8878893760,
+    "artifact_sha256": "04a755e8abb63120117d7421920cf773c21bff1033c0e147c1b48272a004a400",
+    "controlled_failures": 17,
+    "errors": 0
+  },
+  "clean_code_testing": {
+    "run_id": 30874981158,
+    "result": "SUCCESS",
+    "artifact_id": 8879210068,
+    "artifact_size": 1938368,
+    "artifact_sha256": "faeb4b46c1325fe50edbe90dc2d89098ded105fd683d994160da025bda244fb3",
+    "artifact_independent_sha256_match": true,
+    "surefire_xml_count": 69,
+    "t09": {"tests": 24, "failures": 0, "errors": 0, "skipped": 0},
+    "symbol": {"tests": 66, "failures": 0, "errors": 0, "skipped": 0},
+    "compiler": {"tests": 219, "failures": 0, "errors": 0, "skipped": 0},
+    "xml": {"tests": 30, "failures": 0, "errors": 0, "skipped": 0},
+    "yaml": {"tests": 59, "failures": 0, "errors": 0, "skipped": 0},
+    "context_normal": {"tests": 26, "failures": 0, "errors": 0, "skipped": 0},
+    "demo": {"tests": 4, "failures": 0, "errors": 0, "skipped": 0},
+    "legacy_declaration": {"tests": 1, "failures": 0, "errors": 0, "skipped": 0},
+    "normal_tests": {"tests": 339, "failures": 0, "errors": 0, "skipped": 0},
+    "intentional_failure_gate": {"tests": 1, "expected_failures": 1, "recognized": true},
+    "reactor_modules": 12,
+    "java_release_8": "PASSED",
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "contracts": {
+    "immutable_ast": true,
+    "and_precedence_over_or": true,
+    "strict_lowercase_operators": true,
+    "strict_two_segment_information_reference": true,
+    "ordinary_same_system_only": true,
+    "common_fully_qualified_cross_system": true,
+    "common_indirect_cycle_deferred": true,
+    "common_member_restrictions": true,
+    "exact_information_key_lookup": true,
+    "p3_information_deferred": true,
+    "dependency_deduplication": true,
+    "diagnostic_full_collection": true,
+    "diagnostic_stable_order": true,
+    "failure_partial_result": false,
+    "evaluation_implemented": false,
+    "dag_implemented": false,
+    "cycle_detection_implemented": false,
+    "cache_implemented": false,
+    "t10_started": false
+  },
+  "scope": {
+    "context_modified": false,
+    "raw_modified": false,
+    "symbol_modified": false,
+    "reference_t08_modified": false,
+    "compiler_api_modified": false,
+    "systems_fixture_modified": false,
+    "temporary_workflow_present": false,
+    "override_annotation_own_line": true,
+    "chinese_method_and_logic_comments": true
+  },
+  "findings": {
+    "FND-P1-T09-I001-001": "CLOSED",
+    "FND-P1-T09-I001-002": "CLOSED",
+    "FND-P1-T09-I001-003": "CLOSED"
+  },
+  "reviews": {
+    "range": "REV-000374..REV-000390",
+    "evidence_range": "EVD-000623..EVD-000645",
+    "open_p0": 0,
+    "open_p1": 0,
+    "open_p2": 0
+  },
+  "next": {
+    "agent": "IndependentReviewAgent",
+    "action": "Review PR #24 at final documented head; merge only with explicit user authorization",
+    "task_p1_t10": "BLOCKED_UNTIL_PR_MERGE"
+  }
+}
