@@ -100,33 +100,48 @@ class CompilationSessionStateTest {
                 diagnostic.code() == DiagnosticCode.MIX_COMPILATION_TIMED_OUT));
     }
 
-    /** PUBLISHED 和 FAILED 都是终态，不能继续转换。 */
+    /** PUBLISHED 和 FAILED 都是终态，所有语义写入必须拒绝。 */
     @Test
-    void terminalStatesRejectFurtherTransition() {
-        PipelineExecutionResult published = execute(
-                new CompilerPipeline(PipelineTestSupport.successfulPasses(
-                        new ArrayList<String>())),
-                new PipelineTestSupport.MutableClock(),
-                new PipelineTestSupport.MutableCancellation(),
-                Optional.<Deadline>empty());
+    void terminalStatesRejectFurtherMutation() {
+        CompilationSession published = newSession();
+        transitionSuccessPath(published);
         assertEquals(CompilationSessionState.PUBLISHED, published.state());
         assertThrows(IllegalStateException.class,
-                () -> published.session().transitionTo(
-                        CompilationSessionState.FAILED));
-
-        PipelineTestSupport.MutableCancellation cancelled =
-                new PipelineTestSupport.MutableCancellation();
-        cancelled.cancel();
-        PipelineExecutionResult failed = execute(
-                new CompilerPipeline(PipelineTestSupport.successfulPasses(
-                        new ArrayList<String>())),
-                new PipelineTestSupport.MutableClock(),
-                cancelled,
-                Optional.<Deadline>empty());
-        assertEquals(CompilationSessionState.FAILED, failed.state());
+                () -> published.transitionTo(CompilationSessionState.FAILED));
         assertThrows(IllegalStateException.class,
-                () -> failed.session().transitionTo(
-                        CompilationSessionState.PUBLISHED));
+                () -> published.putArtifact("late", "mutation"));
+        assertThrows(IllegalStateException.class,
+                () -> published.addDiagnostics(java.util.Collections.singletonList(
+                        PipelineTestSupport.error("late.error", 1))));
+
+        CompilationSession failed = newSession();
+        failed.transitionTo(CompilationSessionState.FAILED);
+        assertThrows(IllegalStateException.class,
+                () -> failed.transitionTo(CompilationSessionState.PUBLISHED));
+        assertThrows(IllegalStateException.class,
+                () -> failed.putArtifact("late", "mutation"));
+    }
+
+    /** 创建测试专用非终态 Session。 */
+    private static CompilationSession newSession() {
+        return new CompilationSession(PipelineTestSupport.request(
+                new PipelineTestSupport.MutableClock(),
+                new PipelineTestSupport.MutableCancellation(),
+                Optional.<Deadline>empty(),
+                new PipelineTestSupport.RecordingObserver()));
+    }
+
+    /** 沿唯一成功状态路径推进到 PUBLISHED。 */
+    private static void transitionSuccessPath(CompilationSession session) {
+        session.transitionTo(CompilationSessionState.SOURCES_DISCOVERED);
+        session.transitionTo(CompilationSessionState.PARSED);
+        session.transitionTo(CompilationSessionState.RAW_BUILT);
+        session.transitionTo(CompilationSessionState.STRUCTURALLY_VALIDATED);
+        session.transitionTo(CompilationSessionState.SYMBOLS_REGISTERED);
+        session.transitionTo(CompilationSessionState.REFERENCES_RESOLVED);
+        session.transitionTo(CompilationSessionState.GRAPH_PREPARED);
+        session.transitionTo(CompilationSessionState.SEMANTICALLY_VALIDATED);
+        session.transitionTo(CompilationSessionState.PUBLISHED);
     }
 
     /** 执行指定 Pipeline。 */
