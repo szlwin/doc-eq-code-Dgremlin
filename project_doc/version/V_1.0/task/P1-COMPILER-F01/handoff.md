@@ -47,8 +47,12 @@
 - Architecture：`86013589...` / Run `30919667799` / `2 controlled failures, 0 errors`
 - Production GREEN：`1f9f8878...` / Run `30919711140` — SUCCESS
 - Independent Review GREEN：`86b55b45...` / Run `30919883791` — SUCCESS
-- Artifact：`8896619234`
-- SHA-256：`1e37ba710cf47c7f8ff22c1d2e8d7509cadbcc0172c7ed28a30924fcaf9f2294`
+- Clean-code Artifact：`8896619234`
+- Clean-code SHA-256：`1e37ba710cf47c7f8ff22c1d2e8d7509cadbcc0172c7ed28a30924fcaf9f2294`
+- Documented Head：`5d8fbe86d633f9189b7abd8aa4dcab0021b20f14`
+- Documented P0 Run：`30920489277` — SUCCESS
+- Documented Artifact：`8896877544`
+- Documented SHA-256：`57b51013c448fac6d497fb211d8ebee4f1a28c4d88953e5f8492be502726b1f7`
 - I002 `8/8`；T11 `34/34`；Compiler `319/319`；正常测试 `439/439`；Surefire XML `83`
 - 故意失败门禁、12 模块 Reactor、Java release 8：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
@@ -61,7 +65,7 @@
 - Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t11-r02.md`
 - Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t11-r02.json`
 - Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t11_r02_completion.json`
-- 最终文档化 Head 需再执行 P0 与 Artifact 校验；
 - 重要逻辑使用中文注释，所有 `@Override` 独占一行；
+- 本交接事实更新后的最终 PR Head 再执行一次 P0，结果记录到 PR #26 描述；
 - 未经用户明确授权不得合并 PR #26；
 - PR #26 合并前 `TASK-P1-T12` 保持阻断。
