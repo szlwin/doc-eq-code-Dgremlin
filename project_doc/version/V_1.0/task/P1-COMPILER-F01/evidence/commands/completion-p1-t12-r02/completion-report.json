@@ -1,0 +1,77 @@
+{
+  "task": "TASK-P1-T12",
+  "iteration": "I002",
+  "status": "COMPLETED",
+  "outcome": "PASSED",
+  "completion": "COMPLETION-P1-T12-R02@5d5a7d72119b",
+  "base": "PR27@49b9beee65dbc5e5db77302a7128a34a2ab77386",
+  "dependency": "COMPLETION-P1-T11-R02@86b55b45d1cd",
+  "invalidated_history": "COMPLETION-P1-T12-R01@c6a515820972",
+  "design": "DESIGN-R39@P1-T12-REWORK-I002",
+  "plan": "TP-P1-COMPILER-F01-R35@P1-T12-REWORK-I002",
+  "tdd": "TDD-P1-T12-R02@a958141d0465",
+  "architecture": "DEVSKEL-P1-T12-R02@a7f8d99b1afe",
+  "development": "DEV-P1-T12-R02@4499bd90849d",
+  "code_review": "CODEREVIEW-P1-T12-R03@5d5a7d72119b",
+  "testing": "TESTING-P1-T12-R02@5d5a7d72119b",
+  "clean_code_head": "5d5a7d72119b5a36a38b19cda44186de70911912",
+  "review_range": {
+    "first": "REV-000504",
+    "last": "REV-000535"
+  },
+  "evidence_range": {
+    "first": "EVD-000808",
+    "last": "EVD-000837"
+  },
+  "findings": {
+    "open_p0": 0,
+    "open_p1": 0,
+    "open_p2": 0,
+    "closed": [
+      "FND-P1-T12-I002-001",
+      "FND-P1-T12-I002-002",
+      "FND-P1-T12-I002-003",
+      "FND-P1-T12-I002-004",
+      "FND-P1-T12-I002-005",
+      "FND-P1-T12-I002-006",
+      "FND-P1-T12-I002-007",
+      "FND-P1-T12-I002-008"
+    ]
+  },
+  "validation": {
+    "red_run": 30932917420,
+    "red_artifact": 8901892983,
+    "red_sha256": "9c2e29ea09b9faa0d41194adf91cbb2e0d434770d17224e42432edd522fa724f",
+    "red_tests": 12,
+    "red_failures": 12,
+    "red_errors": 0,
+    "first_green_run": 30933625327,
+    "independent_review_run": 30933942414,
+    "clean_code_run": 30934448175,
+    "artifact": 8902515127,
+    "sha256": "2203b46ba83ad9c5a8784741efc1edef658feae77b91ea2f4cef383ca3569914",
+    "surefire_xml": 90,
+    "i002_tests": 34,
+    "t12_tests": 54,
+    "compiler_tests": 373,
+    "normal_tests": 493,
+    "normal_failures": 0,
+    "normal_errors": 0,
+    "normal_skipped": 0,
+    "intentional_failure_gate": 1,
+    "java_release_8": "PASSED",
+    "reactor_modules": 12,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "scope": {
+    "production_package": "dec.core.compiler.pass",
+    "compiler_api_changed": false,
+    "t01_t11_contract_changed": false,
+    "t13_t15_implemented": false,
+    "runtime_semantics_executed": false,
+    "temporary_workflow_present": false,
+    "deployment_performed": false,
+    "pr_merged": false,
+    "next_task": "TASK-P1-T13_BLOCKED_UNTIL_PR27_MERGED"
+  }
+}
