@@ -70,6 +70,17 @@ public final class SymbolTable {
     }
 
     /**
+     * 判断给定完整 RawDefinitionSet 是否正是构建当前 SymbolTable 的输入快照。
+     *
+     * <p>该只读谓词不暴露内部快照，也不改变现有 Registry、equals 或 hashCode 合同。</p>
+     */
+    public boolean isBuiltFrom(RawDefinitionSet definitions) {
+        return sourceSnapshot.equals(Objects.requireNonNull(
+                definitions,
+                "definitions"));
+    }
+
+    /**
      * 返回构建该符号表的完整不可变 Raw 输入快照，仅供同包阶段绑定校验。
      */
     RawDefinitionSet sourceSnapshot() {
