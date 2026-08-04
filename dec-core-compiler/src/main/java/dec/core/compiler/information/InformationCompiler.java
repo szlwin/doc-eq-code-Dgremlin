@@ -1,60 +1,179 @@
 package dec.core.compiler.information;
 
+import dec.core.compiler.raw.RawDefinition;
+import dec.core.compiler.raw.RawDefinitionKind;
 import dec.core.compiler.raw.RawDefinitionSet;
 import dec.core.compiler.symbol.SymbolTable;
+import dec.core.context.model.DeferredDefinition;
+import dec.core.context.model.DeferredKey;
+import dec.core.context.model.DeferredKind;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
-import dec.core.context.model.DiagnosticSeverity;
+import dec.core.context.model.ImmutableDeferredRegistry;
+import dec.core.context.model.InformationKey;
+import dec.core.context.model.NormalizedBody;
+import dec.core.context.model.RequiredStage;
 import dec.core.context.model.SourceRef;
+import dec.core.context.model.SystemKey;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
- * T09 Information expression 全批编译协调器 Architecture Skeleton。
+ * 将 System-owned Information expression 编译为强类型 P3 Deferred 的无状态协调器。
  */
 public final class InformationCompiler {
-    private static final String PASS = "information-compilation";
-    private static final SourceRef UNKNOWN_SOURCE =
-            new SourceRef("<unknown-information-source>", 0, 0, "/");
-
     private final InformationExpressionParser parser;
     private final InformationReferenceResolver resolver;
 
-    /**
-     * 创建尚未接入具体 parser/resolver 的 Architecture Skeleton。
-     */
+    /** 创建使用生产预算 parser 和精确 TypedKey resolver 的编译器。 */
     public InformationCompiler() {
-        this(null, null);
+        this(new DefaultInformationExpressionParser(),
+                new DefaultInformationReferenceResolver());
     }
 
-    /**
-     * 创建显式注入 parser/resolver 的编译器边界。
-     */
+    /** 创建使用显式 seam 的编译器，供独立测试替换 parser/resolver。 */
     public InformationCompiler(
             InformationExpressionParser parser,
             InformationReferenceResolver resolver) {
-        this.parser = parser;
-        this.resolver = resolver;
+        this.parser = Objects.requireNonNull(parser, "parser");
+        this.resolver = Objects.requireNonNull(resolver, "resolver");
     }
 
     /**
-     * 当前 Skeleton 只验证输入边界并返回稳定未实现 Diagnostic。
+     * 编译完整 RawDefinitionSet；任一 ERROR 都不发布部分 AST、依赖或 Deferred。
      */
     public InformationCompilationResult compile(
             RawDefinitionSet definitions,
             SymbolTable symbols) {
-        Objects.requireNonNull(definitions, "definitions");
-        Objects.requireNonNull(symbols, "symbols");
-        Diagnostic diagnostic = new Diagnostic(
-                DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
-                DiagnosticSeverity.ERROR,
-                "information.not-implemented",
-                null,
-                UNKNOWN_SOURCE,
-                Collections.<SourceRef>emptyList(),
-                "请完成 T09 Information expression 编译实现",
-                PASS);
-        return InformationCompilationResult.failed(
-                Collections.singletonList(diagnostic));
+        if (definitions == null || symbols == null) {
+            return InformationCompilationResult.failed(Collections.singletonList(
+                    InformationDiagnostics.create(
+                            DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
+                            "information.input.required",
+                            null,
+                            new SourceRef("<unknown-information-source>", 0, 0, "/"),
+                            "请提供完整 RawDefinitionSet 与 SymbolTable")));
+        }
+
+        Set<Diagnostic> diagnostics = new LinkedHashSet<Diagnostic>();
+        InformationCommonValidator.validateSystem(definitions, diagnostics);
+        List<ResolvedInformationExpression> expressions =
+                new ArrayList<ResolvedInformationExpression>();
+        Map<DeferredKey, DeferredDefinition> deferred =
+                new TreeMap<DeferredKey, DeferredDefinition>();
+
+        for (RawDefinition definition
+                : definitions.definitions(RawDefinitionKind.INFORMATION)) {
+            compileInformation(
+                    definition,
+                    symbols,
+                    diagnostics,
+                    expressions,
+                    deferred);
+        }
+        InformationCommonValidator.validateModelAccess(definitions, diagnostics);
+
+        if (!diagnostics.isEmpty()) {
+            return InformationCompilationResult.failed(
+                    InformationDiagnostics.sorted(diagnostics));
+        }
+        return InformationCompilationResult.compiled(new InformationCompilation(
+                expressions,
+                new ImmutableDeferredRegistry(deferred)));
+    }
+
+    /**
+     * 编译单个 Information；普通无 expression 定义在 T09 保持非 Deferred。
+     */
+    private void compileInformation(
+            RawDefinition definition,
+            SymbolTable symbols,
+            Set<Diagnostic> diagnostics,
+            List<ResolvedInformationExpression> expressions,
+            Map<DeferredKey, DeferredDefinition> deferred) {
+        if (!definition.ownerToken().isPresent()
+                || !definition.name().isPresent()) {
+            diagnostics.add(InformationDiagnostics.owner(definition, null));
+            return;
+        }
+        String ownerToken = definition.ownerToken().get();
+        String name = definition.name().get();
+        InformationKey ownerKey;
+        try {
+            ownerKey = new InformationKey(new SystemKey(ownerToken), name);
+        } catch (IllegalArgumentException failure) {
+            diagnostics.add(InformationDiagnostics.owner(definition, null));
+            return;
+        }
+
+        Optional<RawDefinition> registered = symbols.find(ownerKey);
+        if (!registered.isPresent() || !registered.get().equals(definition)) {
+            diagnostics.add(InformationDiagnostics.owner(definition, ownerKey));
+            return;
+        }
+
+        String expression = definition.attributes().get("expression");
+        boolean common = "common".equals(ownerToken);
+        if (common) {
+            InformationCommonValidator.validInformation(
+                    definition,
+                    ownerKey,
+                    diagnostics);
+        }
+        if (expression == null || expression.trim().isEmpty()) {
+            if (common) {
+                diagnostics.add(InformationDiagnostics.commonMember(
+                        definition,
+                        ownerKey));
+            }
+            return;
+        }
+
+        InformationExpressionParseResult parsed =
+                parser.parse(expression, definition.sourceRef());
+        diagnostics.addAll(parsed.diagnostics());
+        if (!parsed.ast().isPresent()) {
+            return;
+        }
+
+        InformationReferenceResolutionResult resolved = resolver.resolve(
+                ownerKey,
+                parsed.ast().get(),
+                symbols,
+                definition.sourceRef());
+        diagnostics.addAll(resolved.diagnostics());
+        if (!resolved.diagnostics().isEmpty()) {
+            return;
+        }
+
+        ResolvedInformationExpression resolvedExpression =
+                new ResolvedInformationExpression(
+                        ownerKey,
+                        parsed.ast().get(),
+                        resolved.references(),
+                        definition.sourceRef());
+        expressions.add(resolvedExpression);
+        DeferredKey deferredKey = new DeferredKey(
+                ownerKey,
+                DeferredKind.INFORMATION,
+                0);
+        DeferredDefinition deferredDefinition = new DeferredDefinition(
+                deferredKey,
+                RequiredStage.P3,
+                "information-expression-evaluation",
+                definition.sourceRef(),
+                new NormalizedBody(
+                        "information-expression-ast/v1",
+                        parsed.ast().get().canonical()),
+                new ArrayList<dec.core.context.model.DefinitionKey>(
+                        resolved.references()));
+        deferred.put(deferredKey, deferredDefinition);
     }
 }
