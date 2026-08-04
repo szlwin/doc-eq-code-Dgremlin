@@ -47,10 +47,10 @@ final class PipelineTestSupport {
 
     /** 创建不触发真实 Source 或 Frontend 的完整请求。 */
     static CompilationRequest request(
-            MutableClock clock,
-            MutableCancellation cancellation,
+            MonotonicClock clock,
+            CancellationToken cancellation,
             Optional<Deadline> deadline,
-            RecordingObserver observer) {
+            CompilationObserver observer) {
         DocumentSourceProvider provider = new DocumentSourceProvider() {
             @Override
             public SourceResolutionResult resolve(
@@ -85,16 +85,21 @@ final class PipelineTestSupport {
 
     /** 创建返回 PUBLISHED 的无外部存储测试发布边界。 */
     static PublicationRequest publicationRequest() {
+        return publicationRequest(new ContextPublisher() {
+            @Override
+            public PublicationResult publish(
+                    Optional<EngineContext> expectedCurrent,
+                    EngineContext candidate) {
+                return publishedResult();
+            }
+        });
+    }
+
+    /** 使用指定 Publisher 创建条件发布请求。 */
+    static PublicationRequest publicationRequest(ContextPublisher publisher) {
         return new PublicationRequest(
                 Optional.<EngineContext>empty(),
-                new ContextPublisher() {
-                    @Override
-                    public PublicationResult publish(
-                            Optional<EngineContext> expectedCurrent,
-                            EngineContext candidate) {
-                        return publishedResult();
-                    }
-                });
+                publisher);
     }
 
     /** 创建九个普通成功 Pass 和一个最终发布 Pass。 */
