@@ -24,8 +24,8 @@ public final class PipelineExecutionResult {
         }
     }
 
-    /** 返回本次执行的独立 Session，公开方法均只读。 */
-    public CompilationSession session() {
+    /** 仅向同包 Pipeline 与测试接缝返回内部 Session。 */
+    CompilationSession session() {
         return session;
     }
 
@@ -54,9 +54,7 @@ public final class PipelineExecutionResult {
         return session.timings();
     }
 
-    /**
-     * 仅成功结果暴露 Session-local artifact；失败结果始终返回不可变空 Map。
-     */
+    /** 仅成功结果暴露 artifact；失败结果返回不可变空 Map。 */
     public Map<String, Object> artifacts() {
         if (state() == CompilationSessionState.FAILED) {
             return Collections.emptyMap();
