@@ -40,11 +40,22 @@ public final class DeferredDefinitionBuilder {
                     DeferredDiagnostics.incomplete(null, "inputs")));
         }
 
+        List<DeferredClassificationInput> snapshot;
+        try {
+            // 在读取任何元素前冻结批次，后续分类不再依赖调用方可变 List。
+            snapshot = Collections.unmodifiableList(
+                    new ArrayList<DeferredClassificationInput>(inputs));
+        } catch (RuntimeException exception) {
+            // 自定义或并发变化的 List 也必须收敛为业务失败，不能泄露运行时异常。
+            return DeferredClassificationResult.failed(Collections.singletonList(
+                    DeferredDiagnostics.incomplete(null, "inputs-snapshot")));
+        }
+
         List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
         Map<DeferredKey, DeferredDefinition> definitions =
                 new TreeMap<DeferredKey, DeferredDefinition>();
 
-        for (DeferredClassificationInput input : inputs) {
+        for (DeferredClassificationInput input : snapshot) {
             if (input == null) {
                 diagnostics.add(DeferredDiagnostics.incomplete(
                         null, "input-null"));
