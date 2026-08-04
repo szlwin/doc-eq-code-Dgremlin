@@ -5,12 +5,15 @@
 - Clean-code P0 Run：`30896483663` — SUCCESS
 - Clean-code Artifact：`8887247782`
 - Clean-code SHA-256：`516f007eafcf47332b26bf52d4d20fe60f1721e4daa13a587db9143fbe26172d`
-- Final documented Head：`cd8c5f81a11992215f70c606c9359f8ae20e1a6c`
-- Final P0 Run：`30897103886` — SUCCESS
-- Final Artifact：`8887484529`
-- Final GitHub digest：`sha256:852cedb6b3928124668e173cec82353ed80c0d5f066e8a525990aede18a0d0b5`
-- Final independent ZIP SHA-256：`852cedb6b3928124668e173cec82353ed80c0d5f066e8a525990aede18a0d0b5`
-- Clean-code 后仅 11 个 `project_doc` 文件变化，无生产或测试漂移。
+- Final documented validation Head：`cd8c5f81a11992215f70c606c9359f8ae20e1a6c`
+- Final documented P0 Run：`30897103886` — SUCCESS
+- Final documented Artifact：`8887484529`
+- Final documented SHA-256：`852cedb6b3928124668e173cec82353ed80c0d5f066e8a525990aede18a0d0b5`
+- Post-validation evidence Head：`4e22949b06fe7f58320821a9b267bec17f848bc8`
+- Post-validation P0 Run：`30897346216` — SUCCESS
+- Post-validation Artifact：`8887593213`
+- Post-validation SHA-256：`f17c5ac898f2e5d3626e8276268b8443a885d29294d8938edf19281c45aa751f`
+- Clean-code 后只有 `project_doc` 变化，无生产或测试漂移。
 
 ## TDD History
 
