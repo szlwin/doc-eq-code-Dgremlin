@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T08",
+  "iteration": "I002",
+  "status": "PASSED",
+  "design": {
+    "revision": "DESIGN-R30@P1-T08-REWORK-I002",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R30_t08_reference_resolution_rework.md",
+    "first_commit": "04c590caba096b999d2320e364b464143f24f3e0",
+    "blob_sha": "5f392e855b5f5e3a3dc93e19f02c03db57cebe11"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R26@P1-T08-REWORK-I002",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R26_t08_reference_resolution_rework.md",
+    "first_commit": "dbea77b8698648acc35cbdb947687c58597d6612",
+    "blob_sha": "6ab25d67c788933d12e76206636590880c0c3598"
+  },
+  "effective_red": "bfc8e4df822a54e072e2c3c79c011adee204a6ab",
+  "architecture_skeleton": "3e85814d5cf5c64be04646ed6dfb23c0e182ebf8",
+  "clean_code_head": "bab0993ecfd8c344beead62712ba8dc02621038d",
+  "created_before_red": true,
+  "unchanged_at_clean_code_head": true,
+  "i001_history_preserved": true,
+  "invalidated_completion_preserved": "COMPLETION-P1-T08-R01@ab432a3189f4"
+}
