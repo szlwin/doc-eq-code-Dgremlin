@@ -110,12 +110,9 @@ class CommonInformationExpressionTest {
     void rejectsCommonSystemDataMember() {
         RawDefinitionSet invalid =
                 InformationTestFixture.commonSystemWithDataMember();
-        RawDefinitionSet valid = InformationTestFixture.commonDefinitions(
-                "payment.success",
-                "payment.error");
         Object result = InformationTestFixture.compile(
                 invalid,
-                InformationTestFixture.symbols(valid));
+                InformationTestFixture.symbols(invalid));
 
         assertEquals("FAILED", InformationTestFixture.status(result));
         assertEquals(null, InformationTestFixture.compilation(result));
