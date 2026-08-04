@@ -128,14 +128,15 @@ final class DefaultModelAccessSelectorResolver
         return false;
     }
 
-    /** 返回 View 根 property 候选。 */
+    /** 按文档顺序聚合同一 View 全部 property-info 的根 property 候选。 */
     private static List<RawNodeBody> rootProperties(RawNodeBody view) {
+        List<RawNodeBody> properties = new ArrayList<RawNodeBody>();
         for (RawNodeBody section : view.children()) {
             if ("property-info".equals(section.name())) {
-                return directProperties(section);
+                properties.addAll(directProperties(section));
             }
         }
-        return Collections.emptyList();
+        return properties;
     }
 
     /** 返回当前节点的直接 property 子节点。 */
