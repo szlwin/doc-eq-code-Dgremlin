@@ -84,7 +84,7 @@ public final class SymbolTableBuilder {
         if (!state.diagnostics.isEmpty()) {
             return failed(state.diagnostics.values());
         }
-        return SymbolBuildResult.built(new SymbolTable(state.entries));
+        return SymbolBuildResult.built(new SymbolTable(state.entries, definitions));
     }
 
     /**

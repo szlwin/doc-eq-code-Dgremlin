@@ -1,6 +1,7 @@
 package dec.core.compiler.symbol;
 
 import dec.core.compiler.raw.RawDefinition;
+import dec.core.compiler.raw.RawDefinitionSet;
 import dec.core.context.model.DefinitionKey;
 import dec.core.context.model.ImmutableRegistry;
 import dec.core.context.model.Registry;
@@ -17,15 +18,22 @@ import java.util.Optional;
 public final class SymbolTable {
     private final Registry<DefinitionKey, RawDefinition> registry;
     private final List<RawDefinition> definitions;
+    private final RawDefinitionSet sourceSnapshot;
 
     /**
-     * 根据完整定义映射构造不可变 SymbolTable。
+     * 根据完整定义映射和原始输入快照构造不可变 SymbolTable。
      *
      * @param entries TypedKey 到 RawDefinition 的完整映射
+     * @param sourceSnapshot 生成当前符号表的完整 RawDefinitionSet
      */
-    SymbolTable(Map<DefinitionKey, RawDefinition> entries) {
+    SymbolTable(
+            Map<DefinitionKey, RawDefinition> entries,
+            RawDefinitionSet sourceSnapshot) {
         this.registry = new ImmutableRegistry<DefinitionKey, RawDefinition>(
                 Objects.requireNonNull(entries, "entries"));
+        this.sourceSnapshot = Objects.requireNonNull(
+                sourceSnapshot,
+                "sourceSnapshot");
         List<RawDefinition> ordered = new ArrayList<RawDefinition>();
         for (DefinitionKey key : registry.keys()) {
             ordered.add(registry.require(key));
@@ -59,6 +67,13 @@ public final class SymbolTable {
      */
     public List<RawDefinition> definitions() {
         return definitions;
+    }
+
+    /**
+     * 返回构建该符号表的完整不可变 Raw 输入快照，仅供同包阶段绑定校验。
+     */
+    RawDefinitionSet sourceSnapshot() {
+        return sourceSnapshot;
     }
 
     /**

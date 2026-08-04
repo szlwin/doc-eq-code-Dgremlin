@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T08",
+  "iteration": "I001",
+  "design": {
+    "revision": "DESIGN-R29@P1-T08-I001",
+    "first_commit": "df34b7b10def8d6d0cb832b83c481f3d4eb073cb",
+    "blob": "ebd57d33a1f389cbfb0d08624c580ac22cec085d"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R25@P1-T08-I001",
+    "first_commit": "406f8cbac28548030c5ac50cae61d2559999103b",
+    "blob": "af0d65fb3ab92ffede7c49d55682ef03eb1a2af5"
+  },
+  "red_head": "d7155c4f0bb1c930231671fa3041d532bd17a97f",
+  "clean_code_head": "ab432a3189f45c4267ce32af2e104bd39a8c79d1",
+  "created_before_red": true,
+  "unchanged_at_clean_code_head": true,
+  "status": "PASSED"
+}
