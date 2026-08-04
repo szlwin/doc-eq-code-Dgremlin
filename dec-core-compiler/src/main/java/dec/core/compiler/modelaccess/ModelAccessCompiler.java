@@ -13,7 +13,6 @@ import dec.core.context.model.Diagnostic;
 import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.NormalizedBody;
 import dec.core.context.model.RequiredStage;
-import dec.core.context.model.SourceRef;
 import dec.core.context.model.SystemKey;
 import dec.core.context.model.ViewKey;
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import java.util.TreeSet;
  */
 public final class ModelAccessCompiler {
     private final ModelAccessSelectorResolver resolver;
+    private final ModelAccessStructureValidator structureValidator;
 
     /** 创建使用生产 selector seam 的编译器。 */
     public ModelAccessCompiler() {
@@ -42,6 +42,7 @@ public final class ModelAccessCompiler {
     /** 创建可注入 selector 的编译器，供门禁和边界测试使用。 */
     public ModelAccessCompiler(ModelAccessSelectorResolver resolver) {
         this.resolver = Objects.requireNonNull(resolver, "resolver");
+        this.structureValidator = new ModelAccessStructureValidator();
     }
 
     /**
@@ -101,13 +102,21 @@ public final class ModelAccessCompiler {
             Set<BindingIdentity> bindingIdentities,
             Map<DeferredKey, DeferredDefinition> deferred,
             Map<SystemKey, Integer> ordinals) {
+        // 根结构门禁必须先于 owner、source View、resolver 与 Deferred 工作。
+        List<Diagnostic> structureDiagnostics =
+                structureValidator.validate(definition);
+        if (!structureDiagnostics.isEmpty()) {
+            diagnostics.addAll(structureDiagnostics);
+            return;
+        }
+
         SystemKey owner = ownerKey(definition, symbols, diagnostics);
         ViewKey sourceView = sourceViewKey(definition, symbols, diagnostics);
         if (owner == null || sourceView == null) {
             return;
         }
 
-        List<SharedModelPath> writePaths = new ArrayList<SharedModelPath>();
+        WritePathOverlapIndex writePathIndex = new WritePathOverlapIndex();
         Set<DefinitionKey> resolvedReferences = new TreeSet<DefinitionKey>();
         resolvedReferences.add(sourceView);
         StringBuilder normalized = new StringBuilder();
@@ -125,10 +134,9 @@ public final class ModelAccessCompiler {
                     bindings,
                     bindingIdentities,
                     resolvedReferences,
-                    writePaths,
+                    writePathIndex,
                     normalized);
         }
-        detectWriteOverlaps(writePaths, definition.sourceRef(), diagnostics);
 
         int ordinal = nextOrdinal(owner, ordinals);
         DeferredKey key = new DeferredKey(
@@ -158,15 +166,16 @@ public final class ModelAccessCompiler {
             List<ModelAccessBinding> bindings,
             Set<BindingIdentity> bindingIdentities,
             Set<DefinitionKey> resolvedReferences,
-            List<SharedModelPath> writePaths,
+            WritePathOverlapIndex writePathIndex,
             StringBuilder normalized) {
         AccessMode mode = accessMode(access, diagnostics);
         SharedModelPath sourcePath = sourcePath(access, diagnostics);
         if (mode == null || sourcePath == null) {
             return;
         }
-        if (mode == AccessMode.WRITE) {
-            writePaths.add(sourcePath);
+        if (mode == AccessMode.WRITE && writePathIndex.add(sourcePath)) {
+            diagnostics.add(ModelAccessDiagnostics.writeOverlap(
+                    definition.sourceRef()));
         }
 
         normalized.append(';')
@@ -267,9 +276,6 @@ public final class ModelAccessCompiler {
             SymbolTable symbols,
             Set<Diagnostic> diagnostics) {
         String lexical = definition.attributes().get("model-ref");
-        if (lexical == null && definition.name().isPresent()) {
-            lexical = definition.name().get();
-        }
         ViewKey key = safeViewKey(lexical);
         if (key == null) {
             diagnostics.add(ModelAccessDiagnostics.sourceViewNotFound(
@@ -347,20 +353,6 @@ public final class ModelAccessCompiler {
             return lexical == null ? null : new ViewKey(lexical);
         } catch (IllegalArgumentException failure) {
             return null;
-        }
-    }
-
-    /** 检查同一 ModelAccess 内 WRITE path 的相同、祖先和后代重叠。 */
-    private static void detectWriteOverlaps(
-            List<SharedModelPath> paths,
-            SourceRef sourceRef,
-            Set<Diagnostic> diagnostics) {
-        for (int left = 0; left < paths.size(); left++) {
-            for (int right = left + 1; right < paths.size(); right++) {
-                if (paths.get(left).overlaps(paths.get(right))) {
-                    diagnostics.add(ModelAccessDiagnostics.writeOverlap(sourceRef));
-                }
-            }
         }
     }
 
