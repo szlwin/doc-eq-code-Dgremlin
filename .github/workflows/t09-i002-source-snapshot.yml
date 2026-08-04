@@ -1,0 +1,31 @@
+name: T09 I002 Source Snapshot
+
+on:
+  push:
+    branches:
+      - feature/p1-t09-engine-context-20260804-1040
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch head
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Package repository source and git history
+        run: |
+          tar -czf /tmp/t09-i002-source-snapshot.tar.gz --exclude=.git/objects/pack .
+
+      - name: Upload repository source
+        uses: actions/upload-artifact@v6
+        with:
+          name: t09-i002-source-snapshot
+          path: /tmp/t09-i002-source-snapshot.tar.gz
+          if-no-files-found: error
+          retention-days: 1
