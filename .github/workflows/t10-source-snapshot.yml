@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feature/p1-t10-rule-dag-20260804-1428
+  pull_request:
+    branches:
+      - dev_all
   workflow_dispatch:
 
 permissions:
