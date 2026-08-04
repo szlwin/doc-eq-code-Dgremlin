@@ -104,6 +104,9 @@ class DeferredIndependentReviewTest {
                 DeferredDiagnostics.class);
         for (Class<?> type : types) {
             for (Field field : type.getDeclaredFields()) {
+                if (field.isSynthetic()) {
+                    continue;
+                }
                 if (Modifier.isStatic(field.getModifiers())) {
                     assertTrue(Modifier.isFinal(field.getModifiers()),
                             type.getName() + "#" + field.getName());
