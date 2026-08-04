@@ -26,15 +26,42 @@ public final class ModelAccessCompilation {
                 "deferredRegistry");
     }
 
+    /** 返回稳定排序且不可修改的 Binding。 */
     public List<ModelAccessBinding> bindings() {
         return bindings;
     }
 
+    /** 返回本批 ModelAccess 的 P2 Deferred Registry。 */
     public DeferredRegistry deferredRegistry() {
         return deferredRegistry;
     }
 
+    /** 返回成功发布的 Binding 数量。 */
     public int size() {
         return bindings.size();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof ModelAccessCompilation)) {
+            return false;
+        }
+        ModelAccessCompilation that = (ModelAccessCompilation) other;
+        return bindings.equals(that.bindings)
+                && deferredRegistry.equals(that.deferredRegistry);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bindings, deferredRegistry);
+    }
+
+    @Override
+    public String toString() {
+        return "ModelAccessCompilation{bindings=" + bindings
+                + ", deferredRegistry=" + deferredRegistry + '}';
     }
 }

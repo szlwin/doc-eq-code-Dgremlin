@@ -258,6 +258,57 @@ final class ModelAccessTestFixture {
                         access("read", "missing", ref("UserInfo", "missing"))));
     }
 
+    /** 通配 WRITE 与任意具体 WRITE 都必须视为重叠。 */
+    static RawDefinitionSet wildcardOverlappingWrite() {
+        return definitions(
+                view(0, "OrderInfo", "order", property("id")),
+                system(1, "payment", Arrays.asList("OrderInfo")),
+                modelAccess(2, "payment", "OrderInfo",
+                        access("write", "*"),
+                        access("write", "payInfo")));
+    }
+
+    /** 目标 View 缺失 selector 时不得到另一已声明 View 搜索。 */
+    static RawDefinitionSet crossViewFallbackCandidate() {
+        return definitions(
+                view(0, "OrderInfo", "order", property("orderOnly")),
+                view(1, "UserInfo", "user", property("shared")),
+                system(2, "payment", Arrays.asList("OrderInfo", "UserInfo")),
+                modelAccess(3, "payment", "OrderInfo",
+                        access("read", "shared",
+                                ref("OrderInfo", "shared"))));
+    }
+
+    /** 不同 SourceRef 的语义重复 ref 仍必须视为同一 Binding。 */
+    static RawDefinitionSet duplicateReferenceWithDifferentSources() {
+        RawNodeBody first = body(
+                "ref",
+                attrs("view", "UserInfo", "property", "user"),
+                Collections.<RawNodeBody>emptyList(),
+                source("systems.xml", 41));
+        RawNodeBody second = body(
+                "ref",
+                attrs("view", "UserInfo", "property", "user"),
+                Collections.<RawNodeBody>emptyList(),
+                source("systems.xml", 42));
+        return definitions(
+                view(0, "OrderInfo", "order", property("user")),
+                view(1, "UserInfo", "user", property("id")),
+                system(2, "user", Arrays.asList("UserInfo")),
+                modelAccess(3, "user", "OrderInfo",
+                        access("read", "user", first, second)));
+    }
+
+    /** 非法前导空白 path 必须转换为稳定结构错误。 */
+    static RawDefinitionSet malformedSourcePath() {
+        return definitions(
+                view(0, "OrderInfo", "order", property("user")),
+                view(1, "UserInfo", "user", property("id")),
+                system(2, "user", Arrays.asList("UserInfo")),
+                modelAccess(3, "user", "OrderInfo",
+                        access("read", " user", ref("UserInfo", "user"))));
+    }
+
     /** 创建相同 key 但 body 改变的输入快照。 */
     static RawDefinitionSet changedSnapshot(RawDefinitionSet original) {
         List<RawDefinition> values = new ArrayList<RawDefinition>(original.definitions());

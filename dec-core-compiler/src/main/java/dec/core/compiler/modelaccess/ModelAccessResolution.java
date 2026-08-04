@@ -39,11 +39,37 @@ public final class ModelAccessResolution {
         return new ModelAccessResolution(null, diagnostics);
     }
 
+    /** 成功时返回唯一目标，失败时为空。 */
     public Optional<TargetPropertyPath> target() {
         return Optional.ofNullable(target);
     }
 
+    /** 返回稳定排序且不可修改的解析 Diagnostic。 */
     public List<Diagnostic> diagnostics() {
         return diagnostics;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof ModelAccessResolution)) {
+            return false;
+        }
+        ModelAccessResolution that = (ModelAccessResolution) other;
+        return Objects.equals(target, that.target)
+                && diagnostics.equals(that.diagnostics);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(target, diagnostics);
+    }
+
+    @Override
+    public String toString() {
+        return "ModelAccessResolution{target=" + target
+                + ", diagnostics=" + diagnostics + '}';
     }
 }

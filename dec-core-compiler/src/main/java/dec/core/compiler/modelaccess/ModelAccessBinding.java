@@ -38,34 +38,42 @@ public final class ModelAccessBinding implements Comparable<ModelAccessBinding> 
         this.sourceRef = Objects.requireNonNull(sourceRef, "sourceRef");
     }
 
+    /** 返回拥有该 ModelAccess 的当前 System。 */
     public SystemKey ownerSystem() {
         return ownerSystem;
     }
 
+    /** 返回共享模型来源 View。 */
     public ViewKey sourceModel() {
         return sourceModel;
     }
 
+    /** 返回共享模型中的精确源路径。 */
     public SharedModelPath sourcePath() {
         return sourcePath;
     }
 
+    /** 返回 READ 或 WRITE 结构事实。 */
     public AccessMode accessMode() {
         return accessMode;
     }
 
+    /** 返回当前 System 已声明的目标 View。 */
     public ViewKey targetView() {
         return targetView;
     }
 
+    /** 返回未经模糊修复的精确 selector。 */
     public SystemViewSelector selector() {
         return selector;
     }
 
+    /** 返回 target-main 或 property path 唯一解析结果。 */
     public TargetPropertyPath resolvedTarget() {
         return resolvedTarget;
     }
 
+    /** 返回声明该 Binding 的来源位置。 */
     public SourceRef sourceRef() {
         return sourceRef;
     }
@@ -94,8 +102,12 @@ public final class ModelAccessBinding implements Comparable<ModelAccessBinding> 
             return comparison;
         }
         comparison = selector.compareTo(other.selector);
+        if (comparison != 0) {
+            return comparison;
+        }
+        comparison = resolvedTarget.compareTo(other.resolvedTarget);
         return comparison == 0
-                ? resolvedTarget.compareTo(other.resolvedTarget)
+                ? sourceRef.compareTo(other.sourceRef)
                 : comparison;
     }
 
@@ -127,6 +139,7 @@ public final class ModelAccessBinding implements Comparable<ModelAccessBinding> 
     @Override
     public String toString() {
         return ownerSystem + ":" + accessMode + ":" + sourcePath
-                + "->" + targetView + "#" + resolvedTarget;
+                + "->" + targetView + "#" + resolvedTarget
+                + "@" + sourceRef;
     }
 }

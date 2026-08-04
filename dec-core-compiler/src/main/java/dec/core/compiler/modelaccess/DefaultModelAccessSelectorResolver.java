@@ -111,9 +111,13 @@ final class DefaultModelAccessSelectorResolver
                 if (!"view-ref".equals(declaration.name())) {
                     continue;
                 }
-                String name = declaration.attributes().get("name");
+                String lexical = declaration.attributes().get("ref");
+                if (lexical == null) {
+                    lexical = declaration.attributes().get("name");
+                }
                 try {
-                    if (name != null && targetView.equals(new ViewKey(name))) {
+                    if (lexical != null
+                            && targetView.equals(new ViewKey(lexical))) {
                         return true;
                     }
                 } catch (IllegalArgumentException failure) {
