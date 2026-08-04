@@ -41,6 +41,22 @@ final class PipelineDiagnostics {
                 pass);
     }
 
+    /** 创建单调 Clock 读取失败 Diagnostic。 */
+    static Diagnostic clockFailure(String pass) {
+        return error(
+                DiagnosticCode.MIX_OBSERVER_FAILURE,
+                "pipeline.clock.failure",
+                pass);
+    }
+
+    /** 创建 CancellationToken 基础设施失败 Diagnostic。 */
+    static Diagnostic cancellationTokenFailure(String pass) {
+        return error(
+                DiagnosticCode.MIX_OBSERVER_FAILURE,
+                "pipeline.cancellation-token.failure",
+                pass);
+    }
+
     /** 创建非 Publication Pass 的受控异常 Diagnostic。 */
     static Diagnostic passFailure(String pass) {
         return error(
@@ -49,7 +65,23 @@ final class PipelineDiagnostics {
                 pass);
     }
 
-    /** 创建 Publication Pass 异常 Diagnostic。 */
+    /** 创建最终门禁尚未允许发布 Diagnostic。 */
+    static Diagnostic publicationBlocked() {
+        return error(
+                DiagnosticCode.MIX_PUBLICATION_BLOCKED,
+                "pipeline.publication.blocked",
+                CompilerPipeline.PUBLICATION_PASS);
+    }
+
+    /** 创建 compare-and-set 冲突 Diagnostic。 */
+    static Diagnostic publicationConflict() {
+        return error(
+                DiagnosticCode.MIX_PUBLICATION_CONFLICT,
+                "pipeline.publication.conflict",
+                CompilerPipeline.PUBLICATION_PASS);
+    }
+
+    /** 创建 publisher 调用或结果合同异常 Diagnostic。 */
     static Diagnostic publicationFailure() {
         return error(
                 DiagnosticCode.MIX_PUBLICATION_FAILURE,
