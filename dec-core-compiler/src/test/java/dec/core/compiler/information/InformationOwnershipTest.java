@@ -176,6 +176,9 @@ class InformationOwnershipTest {
                     "InformationCompiler 不得包含 static mutable state");
         }
         for (Field field : ast.getDeclaredFields()) {
+            if (field.isSynthetic() || field.getName().startsWith("$jacoco")) {
+                continue;
+            }
             assertTrue(Modifier.isFinal(field.getModifiers()),
                     "AST 字段必须全部 final: " + field.getName());
         }
