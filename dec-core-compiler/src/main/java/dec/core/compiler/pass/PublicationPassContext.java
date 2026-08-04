@@ -60,8 +60,10 @@ public final class PublicationPassContext {
     /**
      * 原子发布候选 Context，并在 PUBLISHED 结果返回后立即锁定终态。
      *
-     * <p>该方法只能调用一次。发布成功后 Context 立即关闭，之后的取消、
-     * Clock、Observer 或 Pass 异常都不能否定已经发生的外部提交。</p>
+     * <p>该方法只能调用一次。真正调用 publisher 前重新检查 token、Deadline
+     * 和 ERROR，消除 PublicationPass 进入与外部提交之间的 TOCTOU 窗口。
+     * 发布成功后 Context 立即关闭，之后的取消、Clock、Observer 或 Pass 异常
+     * 都不能否定已经发生的外部提交。</p>
      */
     public PublicationResult publish(EngineContext candidate) {
         requireActive();
@@ -70,12 +72,8 @@ public final class PublicationPassContext {
         }
         publishAttempted = true;
         Objects.requireNonNull(candidate, "candidate");
-        if (session.state() != CompilationSessionState.SEMANTICALLY_VALIDATED
-                || session.hasErrors()) {
-            addPublicationFailure(PipelineDiagnostics.publicationBlocked());
-            throw new IllegalStateException(
-                    "publication requires a validated error-free session");
-        }
+        requireValidatedSession();
+        requirePrecommitInfrastructure();
 
         PublicationResult result;
         try {
@@ -86,15 +84,28 @@ public final class PublicationPassContext {
             addPublicationFailure(PipelineDiagnostics.publicationFailure());
             throw new IllegalStateException("publication failed", failure);
         }
-        if (result == null || result.status() == null) {
+        if (result == null) {
             addPublicationFailure(PipelineDiagnostics.publicationFailure());
-            throw new IllegalStateException("publisher returned an invalid result");
+            throw new IllegalStateException("publisher returned null result");
         }
-        if (result.status() == PublicationStatus.CONFLICT) {
+
+        PublicationStatus status;
+        try {
+            // PublicationStatus 只读取一次，避免不稳定实现产生分裂判断。
+            status = result.status();
+        } catch (RuntimeException failure) {
+            addPublicationFailure(PipelineDiagnostics.publicationFailure());
+            throw new IllegalStateException("publication status failed", failure);
+        }
+        if (status == null) {
+            addPublicationFailure(PipelineDiagnostics.publicationFailure());
+            throw new IllegalStateException("publisher returned null status");
+        }
+        if (status == PublicationStatus.CONFLICT) {
             addPublicationFailure(PipelineDiagnostics.publicationConflict());
             return result;
         }
-        if (result.status() != PublicationStatus.PUBLISHED) {
+        if (status != PublicationStatus.PUBLISHED) {
             addPublicationFailure(PipelineDiagnostics.publicationFailure());
             throw new IllegalStateException("unsupported publication status");
         }
@@ -120,6 +131,52 @@ public final class PublicationPassContext {
     /** 关闭 Context，防止 Pass 保留引用后继续使用。 */
     void close() {
         active = false;
+    }
+
+    /** 确认 Session 已完成语义门禁且没有 ERROR。 */
+    private void requireValidatedSession() {
+        if (session.state() != CompilationSessionState.SEMANTICALLY_VALIDATED
+                || session.hasErrors()) {
+            addPublicationFailure(PipelineDiagnostics.publicationBlocked());
+            throw new IllegalStateException(
+                    "publication requires a validated error-free session");
+        }
+    }
+
+    /**
+     * 在外部提交的最后一刻检查取消和 Deadline，并准确分类基础设施异常。
+     */
+    private void requirePrecommitInfrastructure() {
+        CompilationRequest request = session.request();
+        boolean cancelled;
+        try {
+            cancelled = request.cancellationToken().isCancellationRequested();
+        } catch (RuntimeException failure) {
+            addPublicationFailure(PipelineDiagnostics.cancellationTokenFailure(
+                    CompilerPipeline.PUBLICATION_PASS));
+            throw new IllegalStateException("cancellation token failed", failure);
+        }
+        if (cancelled) {
+            addPublicationFailure(PipelineDiagnostics.cancelled(
+                    CompilerPipeline.PUBLICATION_PASS));
+            throw new IllegalStateException("publication cancelled");
+        }
+
+        if (request.deadline().isPresent()) {
+            long now;
+            try {
+                now = request.clock().nanoTime();
+            } catch (RuntimeException failure) {
+                addPublicationFailure(PipelineDiagnostics.clockFailure(
+                        CompilerPipeline.PUBLICATION_PASS));
+                throw new IllegalStateException("publication clock failed", failure);
+            }
+            if (request.deadline().get().isExpired(now)) {
+                addPublicationFailure(PipelineDiagnostics.timedOut(
+                        CompilerPipeline.PUBLICATION_PASS));
+                throw new IllegalStateException("publication timed out");
+            }
+        }
     }
 
     /** 在发布提交前登记稳定失败 Diagnostic。 */
