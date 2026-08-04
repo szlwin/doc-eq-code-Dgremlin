@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T10",
+  "iteration": "I001",
+  "base": "4fe0f6def8581e5c7234d86dfa0aafae794db15f",
+  "dependency": "COMPLETION-P1-T09-R02@95b08223083f",
+  "design": {
+    "revision": "DESIGN-R33@P1-T10-I001",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R33_t10_model_access_selector.md",
+    "first_commit": "a637633b0bb2796beda3e1ef9b31f4dbbd27dafe",
+    "blob": "b359b87c2228d475d77c2ced6194caa0ade5cbcf"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R29@P1-T10-I001",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R29_t10_model_access_selector.md",
+    "first_commit": "09a069982b74718b8275150a82e177aeb6a5650f",
+    "blob": "719503b12088ca1c971e7e7299adcb92e9d5c7fd"
+  },
+  "valid_red": "f1ff4c03ece86a4c65eee5531ac6e1c89cbe8d3d",
+  "created_before_red": true,
+  "clean_code_head": "9e94bc68d9a8c25351213bb46a6cafa5702105d9",
+  "unchanged_at_clean_code_head": true
+}
