@@ -28,7 +28,7 @@ final class DefaultInformationReferenceResolver
             SourceRef sourceRef) {
         Set<InformationKey> resolved = new TreeSet<InformationKey>();
         Set<Diagnostic> diagnostics = new LinkedHashSet<Diagnostic>();
-        boolean common = "common".equals(owner.owner().name());
+        boolean common = InformationIdentity.isCommon(owner.owner());
         for (String target : ast.references()) {
             Target parsed = Target.parse(target);
             if (parsed == null) {
