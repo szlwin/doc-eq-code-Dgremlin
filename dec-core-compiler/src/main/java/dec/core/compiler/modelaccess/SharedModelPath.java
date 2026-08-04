@@ -73,6 +73,10 @@ public final class SharedModelPath implements Comparable<SharedModelPath> {
             if (value.trim().isEmpty() || !value.equals(value.trim())) {
                 throw new IllegalArgumentException(field + " contains blank segment");
             }
+            if ("*".equals(value)) {
+                throw new IllegalArgumentException(
+                        field + " wildcard must be the complete path");
+            }
         }
         return raw;
     }
