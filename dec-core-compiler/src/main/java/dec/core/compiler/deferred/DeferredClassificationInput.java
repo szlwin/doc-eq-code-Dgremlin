@@ -154,10 +154,14 @@ public final class DeferredClassificationInput {
             return this;
         }
 
-        /** 设置已完成类型化的引用列表，并记录容器已显式提供。 */
+        /**
+         * 设置已完成类型化的引用列表。
+         *
+         * <p>null 表示容器未提供，必须与显式空列表区分；后续分类器据此产生稳定 Diagnostic。</p>
+         */
         public Builder resolvedReferences(List<DefinitionKey> values) {
             this.resolvedReferences = values;
-            this.resolvedReferencesProvided = true;
+            this.resolvedReferencesProvided = values != null;
             return this;
         }
 
