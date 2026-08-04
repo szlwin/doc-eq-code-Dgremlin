@@ -2,10 +2,15 @@
 
 - Revision：`TESTING-P1-T10-R02@6f4c7b6f3ec3`
 - Clean-code Head：`6f4c7b6f3ec3173c6f4eaa282e2cba6d07092082`
-- P0 Run：`30896483663` — SUCCESS
-- Artifact：`8887247782`
-- GitHub digest：`sha256:516f007eafcf47332b26bf52d4d20fe60f1721e4daa13a587db9143fbe26172d`
-- Independent ZIP SHA-256：`516f007eafcf47332b26bf52d4d20fe60f1721e4daa13a587db9143fbe26172d`
+- Clean-code P0 Run：`30896483663` — SUCCESS
+- Clean-code Artifact：`8887247782`
+- Clean-code SHA-256：`516f007eafcf47332b26bf52d4d20fe60f1721e4daa13a587db9143fbe26172d`
+- Final documented Head：`cd8c5f81a11992215f70c606c9359f8ae20e1a6c`
+- Final P0 Run：`30897103886` — SUCCESS
+- Final Artifact：`8887484529`
+- Final GitHub digest：`sha256:852cedb6b3928124668e173cec82353ed80c0d5f066e8a525990aede18a0d0b5`
+- Final independent ZIP SHA-256：`852cedb6b3928124668e173cec82353ed80c0d5f066e8a525990aede18a0d0b5`
+- Clean-code 后仅 11 个 `project_doc` 文件变化，无生产或测试漂移。
 
 ## TDD History
 
