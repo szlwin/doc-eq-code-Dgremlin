@@ -1,0 +1,30 @@
+name: T08 I002 Source Snapshot
+
+on:
+  push:
+    branches:
+      - feature/p1-t08-reference-resolution-20260803-2254
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch head
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Package repository source
+        run: |
+          tar --exclude=.git -czf /tmp/t08-i002-source-snapshot.tar.gz .
+
+      - name: Upload repository source
+        uses: actions/upload-artifact@v6
+        with:
+          name: t08-i002-source-snapshot
+          path: /tmp/t08-i002-source-snapshot.tar.gz
+          if-no-files-found: error
+          retention-days: 1
