@@ -2,6 +2,7 @@ package dec.core.compiler.information;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -159,10 +160,10 @@ class InformationOwnershipTest {
     /** T09 类型必须不可变且不得暴露求值、缓存或全局 current 状态。 */
     @Test
     void keepsAstAndCompilerImmutableWithoutEvaluationState() throws Exception {
-        Class<?> compiler = Class.forName(
-                "dec.core.compiler.information.InformationCompiler");
-        Class<?> ast = Class.forName(
-                "dec.core.compiler.information.InformationExpressionAst");
+        Class<?> compiler = assertDoesNotThrow(() -> Class.forName(
+                "dec.core.compiler.information.InformationCompiler"));
+        Class<?> ast = assertDoesNotThrow(() -> Class.forName(
+                "dec.core.compiler.information.InformationExpressionAst"));
 
         assertTrue(Modifier.isFinal(compiler.getModifiers()));
         assertTrue(Modifier.isFinal(ast.getModifiers()));
