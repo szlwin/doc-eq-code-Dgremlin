@@ -96,13 +96,13 @@ final class ModelAccessStructureValidator {
     }
 
     /**
-     * TypedKey reference 的独立策略 seam。
+     * TypedKey reference 只要求存在且 trim 后非空。
      *
-     * <p>Architecture 阶段暂时沿用旧严格行为，以保持 I003 正向 Oracle 受控 RED；
-     * Development 阶段只在此处放宽为 nonblank，并继续保留 Raw lexical。</p>
+     * <p>这里不改写 Raw lexical，也不要求输入预先 trim；后续统一由 ViewKey
+     * 进行安全规范化，从而保持 T06 Raw 快照与 T07 TypedKey 的职责分离。</p>
      */
     private static boolean hasTypedKeyReferenceLexical(String lexical) {
-        return hasExactPathLexical(lexical);
+        return lexical != null && !lexical.trim().isEmpty();
     }
 
     /** 精确 path/selector 必须存在、非空白且不依赖隐式 trim 修复。 */
