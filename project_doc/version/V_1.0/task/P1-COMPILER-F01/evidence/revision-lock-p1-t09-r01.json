@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "TASK-P1-T09",
+  "iteration": "I001",
+  "base": "dev_all@e47551e0c79984d8f3fafc0ce379da76ad0d5593",
+  "dependency": "COMPLETION-P1-T08-R02@bab0993ecfd8",
+  "design": {
+    "revision": "DESIGN-R31@P1-T09-I001",
+    "first_commit": "f2ab328f67b03f710abafc85a9e1616ebe23f298",
+    "blob": "539b8603efba73b45547a4602c9b14e2b523c2e4"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R27@P1-T09-I001",
+    "first_commit": "4483ce64c6ecffc989e3adcbd3a8178d301cace9",
+    "blob": "20a16d1e7b199088086f496fe94aeb8b8684d8ca"
+  },
+  "valid_red_head": "404105e894853b36b0788ed40ac65d23d6ee8899",
+  "architecture_head": "8ae3f86316fad55349e7d76fed71336dc32c5292",
+  "clean_code_head": "ecfe3f53bde72e055c97886aef20712f6a42fea3",
+  "created_before_red": true,
+  "unchanged_at_clean_code_head": true,
+  "scope_review": "PASSED"
+}
