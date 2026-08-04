@@ -1,0 +1,35 @@
+name: T10 I002 Source Snapshot
+
+on:
+  push:
+    branches:
+      - feature/p1-t10-rule-dag-20260804-1428
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch head with history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: feature/p1-t10-rule-dag-20260804-1428
+
+      - name: Package repository source and git history
+        shell: bash
+        run: |
+          tar -czf /tmp/t10-i002-source-snapshot.tar.gz \
+            --exclude='./.git/objects/pack/*.keep' \
+            .
+
+      - name: Upload repository source
+        uses: actions/upload-artifact@v4
+        with:
+          name: t10-i002-source-snapshot
+          path: /tmp/t10-i002-source-snapshot.tar.gz
+          if-no-files-found: error
+          retention-days: 1
