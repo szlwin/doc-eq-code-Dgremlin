@@ -164,6 +164,7 @@ class CommonInformationExpressionTest {
         Object result = InformationTestFixture.compile(
                 definitions,
                 InformationTestFixture.symbols(definitions));
+        assertEquals("COMPILED", InformationTestFixture.status(result));
         DeferredRegistry registry = (DeferredRegistry) InformationTestFixture.call(
                 InformationTestFixture.compilation(result), "deferredRegistry");
         DeferredDefinition deferred = registry.find(registry.keys().get(0)).get();
