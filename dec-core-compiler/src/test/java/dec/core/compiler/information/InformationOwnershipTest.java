@@ -189,6 +189,7 @@ class InformationOwnershipTest {
         Object result = InformationTestFixture.compile(
                 definitions,
                 InformationTestFixture.symbols(definitions));
+        assertEquals("COMPILED", InformationTestFixture.status(result));
         Object compilation = InformationTestFixture.compilation(result);
         @SuppressWarnings("unchecked")
         List<Object> expressions = (List<Object>) InformationTestFixture.call(
