@@ -1,6 +1,7 @@
 package dec.core.compiler.information;
 
 import dec.core.compiler.raw.RawDefinition;
+import dec.core.compiler.raw.RawDefinitionSet;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
@@ -40,6 +41,21 @@ final class InformationDiagnostics {
                 key,
                 definition.sourceRef(),
                 "common 仅允许 name 与 expression，且 data/view/rule/model 成员必须为空");
+    }
+
+    /**
+     * 创建完整输入快照失配 Diagnostic；入口失败只发布这一项错误。
+     */
+    static Diagnostic snapshotMismatch(RawDefinitionSet definitions) {
+        SourceRef sourceRef = definitions.definitions().isEmpty()
+                ? new SourceRef("<information-input>", 0, 0, "/")
+                : definitions.definitions().get(0).sourceRef();
+        return create(
+                DiagnosticCode.MIX_STRUCTURE_UNKNOWN,
+                "information.input.snapshot-mismatch",
+                null,
+                sourceRef,
+                "RawDefinitionSet 必须与生成 SymbolTable 的完整输入快照一致");
     }
 
     /** 创建稳定 T09 Diagnostic。 */
