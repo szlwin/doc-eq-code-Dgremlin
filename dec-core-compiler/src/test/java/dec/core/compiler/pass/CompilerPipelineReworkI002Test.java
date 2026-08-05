@@ -32,6 +32,7 @@ import dec.core.context.model.DefinitionKey;
 import dec.core.context.model.DeferredDefinition;
 import dec.core.context.model.DeferredKey;
 import dec.core.context.model.Diagnostic;
+import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DigestPair;
 import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.ImmutableRegistry;
@@ -259,9 +260,9 @@ class CompilerPipelineReworkI002Test {
                 result.artifacts().get("mutable"));
     }
 
-    /** publish 已成功后 end-clock 失败不得降级为 FAILED。 */
+    /** candidate 准备后的 end-clock 失败必须阻断外部提交。 */
     @Test
-    void publicationCommitSurvivesEndClockFailure() {
+    void publicationPreparationClockFailureBlocksCommit() {
         CountingPublisher publisher = new CountingPublisher(PublicationStatus.PUBLISHED);
         ThrowingClock clock = new ThrowingClock(20);
 
@@ -272,14 +273,17 @@ class CompilerPipelineReworkI002Test {
                 clock,
                 new MutableCancellation());
 
-        assertEquals(1, publisher.calls());
-        assertEquals(CompilationSessionState.PUBLISHED, result.state(),
-                result.diagnostics().toString());
+        assertEquals(0, publisher.calls());
+        assertEquals(CompilationSessionState.FAILED, result.state());
+        assertTrue(result.diagnostics().stream().anyMatch(diagnostic ->
+                diagnostic.code() == DiagnosticCode.MIX_OBSERVER_FAILURE
+                        && "pipeline.clock.failure".equals(
+                                diagnostic.messageKey())));
     }
 
-    /** publish 已成功后 token 变化不得降级为 FAILED。 */
+    /** candidate 准备后的取消必须在 commit 前生效。 */
     @Test
-    void publicationCommitSurvivesCancellationAfterCommit() {
+    void cancellationAfterPreparationBlocksCommit() {
         CountingPublisher publisher = new CountingPublisher(PublicationStatus.PUBLISHED);
         MutableCancellation cancellation = new MutableCancellation();
 
@@ -294,14 +298,15 @@ class CompilerPipelineReworkI002Test {
                 new StableClock(),
                 cancellation);
 
-        assertEquals(1, publisher.calls());
-        assertEquals(CompilationSessionState.PUBLISHED, result.state(),
-                result.diagnostics().toString());
+        assertEquals(0, publisher.calls());
+        assertEquals(CompilationSessionState.FAILED, result.state());
+        assertTrue(result.diagnostics().stream().anyMatch(diagnostic ->
+                diagnostic.code() == DiagnosticCode.MIX_COMPILATION_CANCELLED));
     }
 
-    /** publish 已成功后 PublicationPass 抛异常也不得否定已提交事实。 */
+    /** candidate 准备后的 Pass 异常必须阻断外部提交。 */
     @Test
-    void publicationCommitSurvivesPassFailureAfterCommit() {
+    void publicationPassFailureAfterPreparationBlocksCommit() {
         CountingPublisher publisher = new CountingPublisher(PublicationStatus.PUBLISHED);
 
         PipelineExecutionResult result = execute(
@@ -311,9 +316,10 @@ class CompilerPipelineReworkI002Test {
                 new StableClock(),
                 new MutableCancellation());
 
-        assertEquals(1, publisher.calls());
-        assertEquals(CompilationSessionState.PUBLISHED, result.state(),
-                result.diagnostics().toString());
+        assertEquals(0, publisher.calls());
+        assertEquals(CompilationSessionState.FAILED, result.state());
+        assertTrue(result.diagnostics().stream().anyMatch(diagnostic ->
+                diagnostic.code() == DiagnosticCode.MIX_PUBLICATION_FAILURE));
     }
 
     /** start-clock 失败时不得声称 Pass 已执行。 */
@@ -335,7 +341,7 @@ class CompilerPipelineReworkI002Test {
         assertEquals(0, publisher.calls());
     }
 
-    /** 创建可在 I001 和 I002 Pipeline 上运行的十阶段 Pass 列表。 */
+    /** 创建可在 I001、I002 与 I003 Pipeline 上运行的十阶段 Pass 列表。 */
     private static List<CompilerPass> compatiblePasses(
             List<String> executions,
             CountingPublisher publisher,
@@ -445,7 +451,7 @@ class CompilerPipelineReworkI002Test {
                 observer);
     }
 
-    /** 反射调用 I001 普通 Context 暴露的 publisher；I002 中方法不存在。 */
+    /** 反射调用 I001 普通 Context 暴露的 publisher；I002 后方法不存在。 */
     private static void invokeLegacyPublisherIfPresent(
             PassContext context,
             CountingPublisher publisher) {
@@ -501,7 +507,7 @@ class CompilerPipelineReworkI002Test {
         }
     }
 
-    /** 同时兼容 I001 普通调用和 I002 Publication 专用调用的测试 Pass。 */
+    /** 同时兼容旧普通调用和 Publication 专用调用的测试 Pass。 */
     private static final class CompatiblePublicationPass
             implements PublicationCompilerPass {
         private final List<String> executions;
@@ -546,13 +552,13 @@ class CompilerPipelineReworkI002Test {
             return PassResult.passed();
         }
 
-        /** 在发布后模拟 token 变化或 Pass 自身异常。 */
+        /** 在候选准备后模拟 token 变化或 Pass 自身异常。 */
         private void afterPublicationAction() {
             if (afterPublish != null) {
                 afterPublish.run();
             }
             if (throwAfterPublish) {
-                throw new IllegalStateException("failure-after-publication");
+                throw new IllegalStateException("failure-after-publication-preparation");
             }
         }
     }
