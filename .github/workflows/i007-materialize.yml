@@ -24,88 +24,120 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
 
-          snapshots = Path('dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactSnapshots.java')
+          snapshots = Path(
+              'dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactSnapshots.java')
           text = snapshots.read_text(encoding='utf-8')
-          marker = '''    /** source identity 当前遍历状态。 */
-              private enum VisitState {'''.replace('              ', '')
+          marker = (
+              '    /** source identity 当前遍历状态。 */\n'
+              '    private enum VisitState {')
           addition = '''    /** comparison canonical key/element 冲突的稳定内部异常。 */
-              static final class CanonicalCollisionException
-                      extends IllegalArgumentException {
-                  private static final long serialVersionUID = 1L;
+          static final class CanonicalCollisionException
+                  extends IllegalArgumentException {
+              private static final long serialVersionUID = 1L;
 
-                  /** 记录冲突维度，供同包调用方稳定识别 fail-closed 原因。 */
-                  CanonicalCollisionException(String dimension) {
-                      super("artifact comparison canonical collision: " + dimension);
-                  }
+              /** 记录冲突维度，供同包调用方稳定识别 fail-closed 原因。 */
+              CanonicalCollisionException(String dimension) {
+                  super("artifact comparison canonical collision: " + dimension);
               }
+          }
 
-              /** source identity 当前遍历状态。 */
-              private enum VisitState {'''.replace('              ', '')
+          /** source identity 当前遍历状态。 */
+          private enum VisitState {'''
+          # YAML block indentation is removed by the runner before Python sees it.
+          addition = '\n'.join(
+              line[6:] if line.startswith('      ') else line
+              for line in addition.splitlines())
           if marker not in text:
               raise SystemExit('ArtifactSnapshots insertion marker not found')
           text = text.replace(marker, addition, 1)
           snapshots.write_text(text, encoding='utf-8')
 
-          operation = Path('dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactComparisonOperation.java')
+          operation = Path(
+              'dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactComparisonOperation.java')
           text = operation.read_text(encoding='utf-8')
 
-          pattern = re.compile(
-              r'\n    /\*\* 只有父聚合器仍相等时才继续执行后续子比较。 \*/\n'
-              r'    private static final class ConditionalCompareTask.*?'
-              r'\n    /\*\* 比较一个 identity pair，并按容器类型调度非递归子任务。 \*/',
-              re.S)
-          text, count = pattern.subn(
-              '\n    /** 比较一个 identity pair，并按容器类型调度非递归子任务。 */',
-              text,
-              count=1)
-          if count != 1:
-              raise SystemExit('ConditionalCompareTask removal marker not found')
+          dead_start_marker = (
+              '    /** 只有父聚合器仍相等时才继续执行后续子比较。 */')
+          next_class_marker = (
+              '    /** 比较一个 identity pair，并按容器类型调度非递归子任务。 */')
+          dead_start = text.find(dead_start_marker)
+          dead_end = text.find(next_class_marker, dead_start)
+          if dead_start < 0 or dead_end < 0:
+              raise SystemExit('ConditionalCompareTask boundaries not found')
+          text = text[:dead_start] + text[dead_end:]
 
+          sequence_start = text.find(
+              '    private static final class FinishSequenceTask')
+          sequence_end = text.find(
+              '    /** 完成 Map 或 Entry canonical 节点。 */',
+              sequence_start)
+          if sequence_start < 0 or sequence_end < 0:
+              raise SystemExit('FinishSequenceTask boundaries not found')
+          sequence = text[sequence_start:sequence_end]
           old_sequence = '''            if (unordered) {
-                  Arrays.sort(parts);
-              }
-              session.complete(
-                      source,
-                      session.nodeId(type, parts),
-                      target);'''.replace('              ', '')
+              Arrays.sort(parts);
+          }
+          session.complete(
+                  source,
+                  session.nodeId(type, parts),
+                  target);'''
+          old_sequence = '\n'.join(
+              line[6:] if line.startswith('      ') else line
+              for line in old_sequence.splitlines())
           new_sequence = '''            if (unordered) {
-                  Arrays.sort(parts);
-                  if (type == CanonicalType.SET) {
-                      // 排序后相邻 ID 相同表示 identity-backed Set 含 equality 重复元素。
-                      for (int index = 1; index < parts.length; index++) {
-                          if (parts[index - 1] == parts[index]) {
-                              throw new ArtifactSnapshots.CanonicalCollisionException(
-                                      "set-element");
-                          }
-                      }
-                  }
-              }
-              session.complete(
-                      source,
-                      session.nodeId(type, parts),
-                      target);'''.replace('              ', '')
-          if old_sequence not in text:
-              raise SystemExit('FinishSequenceTask marker not found')
-          text = text.replace(old_sequence, new_sequence, 1)
-
-          old_pairs = '''            }
-              int[] parts = new int[ordered.size() * 2];'''.replace('              ', '')
-          new_pairs = '''            }
-              if (unordered && type == CanonicalType.MAP) {
-                  // 相邻 canonical key 相同表示 Map 含 equality 重复 key，禁止形成合法节点。
-                  for (int index = 1; index < ordered.size(); index++) {
-                      if (ordered.get(index - 1).key == ordered.get(index).key) {
+              Arrays.sort(parts);
+              if (type == CanonicalType.SET) {
+                  // 排序后相邻 ID 相同表示 identity-backed Set 含 equality 重复元素。
+                  for (int index = 1; index < parts.length; index++) {
+                      if (parts[index - 1] == parts[index]) {
                           throw new ArtifactSnapshots.CanonicalCollisionException(
-                                  "map-key");
+                                  "set-element");
                       }
                   }
               }
-              int[] parts = new int[ordered.size() * 2];'''.replace('              ', '')
-          if old_pairs not in text:
-              raise SystemExit('FinishPairsTask marker not found')
-          text = text.replace(old_pairs, new_pairs, 1)
+          }
+          session.complete(
+                  source,
+                  session.nodeId(type, parts),
+                  target);'''
+          new_sequence = '\n'.join(
+              line[6:] if line.startswith('      ') else line
+              for line in new_sequence.splitlines())
+          if old_sequence not in sequence:
+              raise SystemExit('FinishSequenceTask body marker not found')
+          sequence = sequence.replace(old_sequence, new_sequence, 1)
+          text = text[:sequence_start] + sequence + text[sequence_end:]
+
+          pairs_start = text.find(
+              '    private static final class FinishPairsTask')
+          pairs_end = text.find(
+              '    /** 标量 equals/hash 的稳定 key；hash 只计算一次。 */',
+              pairs_start)
+          if pairs_start < 0 or pairs_end < 0:
+              raise SystemExit('FinishPairsTask boundaries not found')
+          pairs = text[pairs_start:pairs_end]
+          parts_marker = '            int[] parts = new int[ordered.size() * 2];'
+          collision_gate = '''            if (unordered && type == CanonicalType.MAP) {
+              // 相邻 canonical key 相同表示 Map 含 equality 重复 key，禁止形成合法节点。
+              for (int index = 1; index < ordered.size(); index++) {
+                  if (ordered.get(index - 1).key == ordered.get(index).key) {
+                      throw new ArtifactSnapshots.CanonicalCollisionException(
+                              "map-key");
+                  }
+              }
+          }
+'''
+          collision_gate = '\n'.join(
+              line[6:] if line.startswith('      ') else line
+              for line in collision_gate.splitlines()) + '\n'
+          if parts_marker not in pairs:
+              raise SystemExit('FinishPairsTask parts marker not found')
+          pairs = pairs.replace(
+              parts_marker,
+              collision_gate + parts_marker,
+              1)
+          text = text[:pairs_start] + pairs + text[pairs_end:]
           operation.write_text(text, encoding='utf-8')
           PY
 
