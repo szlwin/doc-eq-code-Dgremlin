@@ -10,7 +10,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -68,7 +67,7 @@ class CompilerPipelineReworkI005Test {
         CountingLeaf.reset(300);
         Map<Object, Object> source = new IdentityHashMap<Object, Object>();
         source.put(sharedDag(24, new CountingLeaf("map")), "value");
-        Map<?, ?> frozen = (Map<?, ?> ArtifactSnapshots.freeze(source);
+        Map<?, ?> frozen = (Map<?, ?>) ArtifactSnapshots.freeze(source);
         Object query = ArtifactSnapshots.freeze(
                 sharedDag(24, new CountingLeaf("map")));
 
