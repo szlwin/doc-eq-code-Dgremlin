@@ -1,0 +1,26 @@
+{
+  "task": "TASK-P1-T12",
+  "iteration": "I005",
+  "completion": "COMPLETION-P1-T12-R05@304a2156ff5e",
+  "status": "PASSED",
+  "design": "DESIGN-R42@P1-T12-REWORK-I005",
+  "plan": "TP-P1-COMPILER-F01-R38@P1-T12-REWORK-I005",
+  "valid_red_head": "c3a78498e595d0006334c8ec382c72c830142d19",
+  "clean_code_head": "304a2156ff5e86c2a45213d4e917f17b9a172831",
+  "p0_run": 30984394393,
+  "artifact": 8921466813,
+  "sha256": "3a2002648c03c082f649991317e5ef3abbb167df6d99327dfa23c9e787d2fe6d",
+  "tests": {
+    "i005": 16,
+    "t12": 99,
+    "compiler": 418,
+    "normal": 538,
+    "intentional_failure": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "open_p0_p1_p2": [0, 0, 0],
+  "pr": 27,
+  "merged": false,
+  "t13": "BLOCKED_UNTIL_PR_27_MERGE"
+}
