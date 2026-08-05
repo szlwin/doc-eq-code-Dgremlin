@@ -66,29 +66,30 @@ public final class PublicationPassContext {
     }
 
     /**
-     * I002 测试兼容入口；只准备 candidate，不再具备外部发布副作用。
+     * I002 包内兼容入口；只准备 candidate，不具备外部发布副作用。
      */
-    @Deprecated
     void publish(EngineContext preparedCandidate) {
         prepare(preparedCandidate);
     }
 
-    /** 返回是否已经准备候选 Context。 */
+    /** 返回是否已经准备候选 Context；关闭后同样拒绝读取。 */
     boolean candidatePrepared() {
+        requireActive();
         return candidatePrepared;
     }
 
-    /** 返回已准备候选；仅供关闭 Context 后的 Pipeline commit 阶段读取。 */
+    /** 返回已准备候选；Pipeline 必须在关闭 Context 前生成局部快照。 */
     Optional<EngineContext> preparedCandidate() {
+        requireActive();
         return Optional.ofNullable(candidate);
     }
 
-    /** 关闭 Context，防止 Pass 保留引用后继续读写或替换 candidate。 */
+    /** 关闭 Context，防止 Pass 保留引用后继续读写或读取 candidate。 */
     void close() {
         active = false;
     }
 
-    /** 拒绝关闭后的任何公开访问。 */
+    /** 拒绝关闭后的任何公开或包内访问。 */
     private void requireActive() {
         if (!active) {
             throw new IllegalStateException("publication context is closed");
