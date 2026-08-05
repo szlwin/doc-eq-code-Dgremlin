@@ -1,43 +1,36 @@
 # TASK-P1-T13 / I001 — 确定性 Digest、Deadline 与 Observer
 
-- Status：`IN_PROGRESS / INDEPENDENT_REVIEW_PENDING`
+- Status：`COMPLETED / PASSED`
 - Base：`dev_all@659fb74563bbe1fa1daaf4d3a0e868f702daaec6`
 - Dependency：`COMPLETION-P1-T12-R07@74f402287bc4`
 - Branch：`feature/p1-t13-semantic-digest-20260805-2005`
-- PR：`#28 / WORKING`
+- PR：`#28 / OPEN / READY_FOR_REVIEW`
 - Design：`DESIGN-R45@P1-T13-I001`
 - Plan：`TP-P1-COMPILER-F01-R41@P1-T13-I001`
 - TDD：`TDD-P1-T13-R01@4f3d444f779f`
 - Architecture：`DEVSKEL-P1-T13-R01@4f3d444f779f`
-- Production Revision：`65f96c71ae0560f375d402b586125ad4879dde4b`
-- Independent Review Test Revision：`74672ee1367bab9de75b4028cd4578b6118f96f0`
+- Development：`DEV-P1-T13-R01@74672ee1367b`
+- Code Review：`CODEREVIEW-P1-T13-R01@74672ee1367b`
+- Testing：`TESTING-P1-T13-R01@74672ee1367b`
+- Completion：`COMPLETION-P1-T13-R01@74672ee1367b`
+- Reviews：`REV-000653`～`REV-000671`
+- Evidence：`EVD-001003`～`EVD-001018`
 - Open P0/P1/P2：`0 / 0 / 0`
 
-## Goal
+## Delivered contract
 
-实现 `DEC-SEMANTIC-DIGEST-V1`、Source Digest、canonical JSON、同一 MonotonicClock 域的 Timing/Deadline，以及 fail-open 的只读 Observer Warning。相同语义输入在 Source 枚举、Map 插入、重复运行和 SourceRef 物理行列变化下必须生成一致 semantic digest。
-
-## Scope
-
-- `dec-core-compiler/src/main/java/dec/core/compiler/compiled`
-- `CompilationSession` observation diagnostic 边界
-- `PipelineDiagnostics` Observer Warning
-- `CompilerPipeline` DISCOVERY/PARSE/PASS/DIGEST Timing 与 Observer failure handling
-
-## Excluded
-
-- T14：CompiledModelSet/EngineContext 候选构造、CAS 发布扩展
-- T15：Starter 接入、CoreConfigProjection、旧 Declaration 模块退役
-- P2～P7 runtime
-
-## Acceptance
-
-- `AC-P1-T13-001`：同语义输入在乱序、重复运行和 SourceRef line/column 变化下产生完全一致 semanticDigest；原始 Source 内容变化改变 sourceDigest。
-- `AC-P1-T13-002`：deadline、cancel 与 Observer 异常产生稳定结果；Observer 失败不得改变原 status、context、artifact 或 digest。
-- canonical JSON 符合 Unicode code point key order、标准 escaping、canonical decimal 和版本域闭包。
-- 完整成功 Pipeline Timing 为 DISCOVERY=1、PARSE=1、PASS=10、DIGEST=1，额外 phase 不额外读取 Clock。
-- Observer failure 产生非 ERROR `MIX-OBSERVER-FAILURE`，不静默吞掉。
-- 所有 `@Override` 独占一行；方法与重要逻辑使用中文注释。
+- `SemanticDigestInput` 在构造时冻结 PublishedSourceManifest、Definition、Deferred 与 compiler/schema/options 版本域；
+- `CanonicalJsonWriter` 使用 Unicode code point object-key 顺序、标准 JSON escaping 与 canonical decimal；
+- NaN、Infinity、未知对象、循环结构和重复 object key 稳定拒绝；
+- `CompilerDigestService` 生成长度前缀 Source SHA-256 与 canonical semantic SHA-256；
+- sourceDigest 对 Source 输入顺序稳定，原始内容变化必然改变；
+- semanticDigest 排除 SourceRef line/column、Source format/content digest、Timing、Observer、DigestPair 和 Publication 状态；
+- 完整成功 Pipeline 记录 PASS=10、DISCOVERY=1、PARSE=1、DIGEST=1，共 13 个 Timing；
+- supplemental timing 复用同一 elapsed，完整成功路径仍只读取 Clock 20 次；
+- Observer RuntimeException 逐次转换为 `MIX-OBSERVER-FAILURE / WARNING`；
+- Observer Warning 不改变 PUBLISHED/FAILED、artifact、Context、publisher 次数或 digest；
+- Deadline、Cancel、Clock overflow、十 Pass 固定顺序、prepare/commit 与 commit-wins 合同保持；
+- T14 候选 Context/CAS 扩展、T15 Starter/旧模块退役和 P2～P7 runtime 未实现。
 
 ## TDD RED
 
@@ -55,36 +48,32 @@
 - Artifact：`8930962119`
 - SHA-256：`e42468dc2480a7e103aa511c41518fcb692b996f3547cc7374e143226f1c6e88`
 
-## Production delivery
+## Clean-code validation
 
-- `CanonicalJsonWriter`：Unicode code point object-key 顺序、标准 escaping、canonical decimal、cycle/unknown/duplicate-key fail-closed；
-- `SemanticDigestInput`：在构造时形成不可变 canonical semantic snapshot，排除 line/column、format、source content digest、Timing 与 DigestPair；
-- `CompilerDigestService`：Source ID/内容长度前缀 SHA-256 与 canonical JSON SHA-256；
-- Pipeline：复用原 Pass 时钟读数记录 DISCOVERY/PARSE/PASS/DIGEST；
-- Observer：RuntimeException 转换为 `MIX-OBSERVER-FAILURE / WARNING`，不能改变 Session 终态或发布结果；
-- T14/T15 范围未实现；
-- 所有传输辅助 payload 与 Workflow 已从最终代码树删除。
+- Code/Test Revision：`74672ee1367bab9de75b4028cd4578b6118f96f0`
+- Validation Head：`eadeeffba4a947b1f400890fffbeafc30803ef1a`
+- P0 Run：`31008161016` — SUCCESS
+- Artifact：`8931238649`
+- SHA-256：`57c6b57716f52e0c86ace7daf221fb51b8c88a5c7af5e2396a8d690c9f4dfed4`
+- Surefire XML：`105`
+- T13：`25/25`
+- T12：`133/133`
+- Compiler：`477/477`
+- 正常测试：`597/597`
+- 全部测试记录：`598`
+- 故意失败门禁：1 项按预期失败并被识别
+- Errors / Skipped：`0 / 0`
+- Java release 8、12 模块 Reactor：PASSED
+- MySQL：`SKIPPED_NOT_APPLICABLE`
 
-## Independent Review matrix
+## Revision integrity and style
 
-- Unicode supplementary code point key 顺序；
-- quote/backslash/control escaping 与 canonical decimal；
-- NaN/Infinity/未知对象/循环/重复 object key fail-closed；
-- 空输入与版本域；
-- SemanticDigestInput 防御性快照；
-- Source length-prefix 与 Unicode sourceId 顺序；
-- 每次 Timing/Transition Observer 失败均形成 Warning；
-- supplemental timing elapsed 与 Clock 读取次数；
-- observation diagnostic code/severity/seal 边界。
+- R45 first commit/blob：`ef33ccf6f8fb7c4b2c76a4b137344cd5cb479858` / `ef0afc35234292a9c8e21a862af62eb91a100056`
+- R41 first commit/blob：`392a8a40d3a390b6b8faae4e6e7d3af19df70091` / `6a5216718681d6f14ffe9ae9cfa56eb0a4d57cfa`
+- R45/R41 均早于有效 RED，最终 blob 未变化；
+- Code/Test Revision 后只允许 `project_doc` 更新；
+- 所有传输 payload 与临时 Workflow 已删除；
+- 所有 `@Override` 独占一行；
+- 方法与排序、encoding、digest、Clock、Observer failure boundary 均使用中文注释。
 
-## Stop conditions
-
-- semantic digest 含 DigestPair、Timing、SourceRef line/column 或 Source content digest；
-- Map/filesystem/线程顺序影响摘要；
-- Observer 失败改变 Session 终态或发布结果；
-- supplemental timing 增加 Clock 读取；
-- T12 的 Deadline/Cancel/Publication 原子性回归；
-- 出现未关闭 P0/P1/P2；
-- 实现 T14/T15 范围；
-- final P0、Artifact 独立解析、Revision Integrity 未完成；
-- 未经用户授权合并 PR。
+PR #28 未执行合并；未经用户明确授权不得合并。PR #28 合并前 `TASK-P1-T14` 保持 `BLOCKED_UNTIL_PR_28_MERGE`。
