@@ -69,9 +69,13 @@ final class ArtifactSnapshots {
             try {
                 Set<Object> copy = new LinkedHashSet<Object>();
                 for (Object item : (Set<?>) checked) {
-                    copy.add(freeze(
+                    Object frozen = freeze(
                             Objects.requireNonNull(item, "artifact set item"),
-                            activePath));
+                            activePath);
+                    if (!copy.add(frozen)) {
+                        throw new IllegalArgumentException(
+                                "artifact set elements collide after freezing");
+                    }
                 }
                 return Collections.unmodifiableSet(copy);
             } finally {
@@ -86,10 +90,14 @@ final class ArtifactSnapshots {
                     Object key = freeze(
                             Objects.requireNonNull(entry.getKey(), "artifact map key"),
                             activePath);
-                    Object value = freeze(
+                    Object frozenValue = freeze(
                             Objects.requireNonNull(entry.getValue(), "artifact map value"),
                             activePath);
-                    copy.put(key, value);
+                    if (copy.containsKey(key)) {
+                        throw new IllegalArgumentException(
+                                "artifact map keys collide after freezing");
+                    }
+                    copy.put(key, frozenValue);
                 }
                 return Collections.unmodifiableMap(copy);
             } finally {
