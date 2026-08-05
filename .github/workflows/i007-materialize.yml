@@ -1,0 +1,117 @@
+name: I007 Materialize Canonical Collision Fix
+
+on:
+  push:
+    branches:
+      - feature/p1-t12-compiler-pipeline-20260804-2331
+    paths:
+      - .github/workflows/i007-materialize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feature/p1-t12-compiler-pipeline-20260804-2331
+          fetch-depth: 0
+
+      - name: Apply I007 production fix
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          snapshots = Path('dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactSnapshots.java')
+          text = snapshots.read_text(encoding='utf-8')
+          marker = '''    /** source identity 当前遍历状态。 */
+              private enum VisitState {'''.replace('              ', '')
+          addition = '''    /** comparison canonical key/element 冲突的稳定内部异常。 */
+              static final class CanonicalCollisionException
+                      extends IllegalArgumentException {
+                  private static final long serialVersionUID = 1L;
+
+                  /** 记录冲突维度，供同包调用方稳定识别 fail-closed 原因。 */
+                  CanonicalCollisionException(String dimension) {
+                      super("artifact comparison canonical collision: " + dimension);
+                  }
+              }
+
+              /** source identity 当前遍历状态。 */
+              private enum VisitState {'''.replace('              ', '')
+          if marker not in text:
+              raise SystemExit('ArtifactSnapshots insertion marker not found')
+          text = text.replace(marker, addition, 1)
+          snapshots.write_text(text, encoding='utf-8')
+
+          operation = Path('dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactComparisonOperation.java')
+          text = operation.read_text(encoding='utf-8')
+
+          pattern = re.compile(
+              r'\n    /\*\* 只有父聚合器仍相等时才继续执行后续子比较。 \*/\n'
+              r'    private static final class ConditionalCompareTask.*?'
+              r'\n    /\*\* 比较一个 identity pair，并按容器类型调度非递归子任务。 \*/',
+              re.S)
+          text, count = pattern.subn(
+              '\n    /** 比较一个 identity pair，并按容器类型调度非递归子任务。 */',
+              text,
+              count=1)
+          if count != 1:
+              raise SystemExit('ConditionalCompareTask removal marker not found')
+
+          old_sequence = '''            if (unordered) {
+                  Arrays.sort(parts);
+              }
+              session.complete(
+                      source,
+                      session.nodeId(type, parts),
+                      target);'''.replace('              ', '')
+          new_sequence = '''            if (unordered) {
+                  Arrays.sort(parts);
+                  if (type == CanonicalType.SET) {
+                      // 排序后相邻 ID 相同表示 identity-backed Set 含 equality 重复元素。
+                      for (int index = 1; index < parts.length; index++) {
+                          if (parts[index - 1] == parts[index]) {
+                              throw new ArtifactSnapshots.CanonicalCollisionException(
+                                      "set-element");
+                          }
+                      }
+                  }
+              }
+              session.complete(
+                      source,
+                      session.nodeId(type, parts),
+                      target);'''.replace('              ', '')
+          if old_sequence not in text:
+              raise SystemExit('FinishSequenceTask marker not found')
+          text = text.replace(old_sequence, new_sequence, 1)
+
+          old_pairs = '''            }
+              int[] parts = new int[ordered.size() * 2];'''.replace('              ', '')
+          new_pairs = '''            }
+              if (unordered && type == CanonicalType.MAP) {
+                  // 相邻 canonical key 相同表示 Map 含 equality 重复 key，禁止形成合法节点。
+                  for (int index = 1; index < ordered.size(); index++) {
+                      if (ordered.get(index - 1).key == ordered.get(index).key) {
+                          throw new ArtifactSnapshots.CanonicalCollisionException(
+                                  "map-key");
+                      }
+                  }
+              }
+              int[] parts = new int[ordered.size() * 2];'''.replace('              ', '')
+          if old_pairs not in text:
+              raise SystemExit('FinishPairsTask marker not found')
+          text = text.replace(old_pairs, new_pairs, 1)
+          operation.write_text(text, encoding='utf-8')
+          PY
+
+          git config user.name "szlwin"
+          git config user.email "szlwin@163.com"
+          git add dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactSnapshots.java
+          git add dec-core-compiler/src/main/java/dec/core/compiler/pass/ArtifactComparisonOperation.java
+          git commit -m "fix(pipeline): reject canonical map and set collisions"
+          git push origin HEAD:feature/p1-t12-compiler-pipeline-20260804-2331
