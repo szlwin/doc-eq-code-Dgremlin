@@ -1,13 +1,15 @@
 # TASK-P1-T13 / I001 — 确定性 Digest、Deadline 与 Observer
 
-- Status：`IN_PROGRESS / TDD_RED_PENDING`
+- Status：`IN_PROGRESS / DEVELOPMENT_IMPLEMENTED_PENDING_GREEN`
 - Base：`dev_all@659fb74563bbe1fa1daaf4d3a0e868f702daaec6`
 - Dependency：`COMPLETION-P1-T12-R07@74f402287bc4`
 - Branch：`feature/p1-t13-semantic-digest-20260805-2005`
 - PR：`#28 / WORKING`
 - Design：`DESIGN-R45@P1-T13-I001`
 - Plan：`TP-P1-COMPILER-F01-R41@P1-T13-I001`
-- RED Test Revision：`307ffc222e9644a9640d4b9b97d6f8d37e51dbbc`
+- TDD：`TDD-P1-T13-R01@4f3d444f779f`
+- Architecture：`DEVSKEL-P1-T13-R01@4f3d444f779f`
+- Production Revision：`65f96c71ae0560f375d402b586125ad4879dde4b`
 - Open P0/P1/P2：`0 / 0 / 0`
 
 ## Goal
@@ -36,17 +38,26 @@
 - Observer failure 产生非 ERROR `MIX-OBSERVER-FAILURE`，不静默吞掉。
 - 所有 `@Override` 独占一行；方法与重要逻辑使用中文注释。
 
-## TDD RED matrix
+## TDD RED
 
-- `SemanticDigestDeterminismTest`：6 项；
-- `CompilationObserverTest`：4 项；
-- `CompilationDeadlineTest`：3 项；
-- 首次 Actions 推送产生的 Run `31005605957` 为 `action_required / no jobs`，不计入 RED Evidence；
-- 由本用户提交触发的新 P0 才可作为有效 RED。
+- Head：`4f3d444f779f5c1f69a5b61751cbd00b4a9a528b`
+- P0 Run：`31005889102` — `FAILURE / EXPECTED_RED`
+- Artifact：`8930284340`
+- SHA-256：`fe03a8fea61ff6ecbcd2a45f8ddba3f91ac37629cf8c9ff1a583777dc5fa5946`
+- Result：`13 tests / 11 expected failures / 2 passing controls / 0 errors`
+
+## Production delivery
+
+- `CanonicalJsonWriter`：Unicode code point object-key 顺序、标准 escaping、canonical decimal、cycle/unknown/duplicate-key fail-closed；
+- `SemanticDigestInput`：在构造时形成不可变 canonical semantic snapshot，排除 line/column、format、source content digest、Timing 与 DigestPair；
+- `CompilerDigestService`：Source ID/内容长度前缀 SHA-256 与 canonical JSON SHA-256；
+- Pipeline：复用原 Pass 时钟读数记录 DISCOVERY/PARSE/PASS/DIGEST；
+- Observer：RuntimeException 转换为 `MIX-OBSERVER-FAILURE / WARNING`，不能改变 Session 终态或发布结果；
+- T14/T15 范围未实现；
+- 传输辅助 payload 与 Workflow 已从 Production Revision 文件树删除。
 
 ## Stop conditions
 
-- Design/Plan 晚于 RED；
 - semantic digest 含 DigestPair、Timing、SourceRef line/column 或 Source content digest；
 - Map/filesystem/线程顺序影响摘要；
 - Observer 失败改变 Session 终态或发布结果；
