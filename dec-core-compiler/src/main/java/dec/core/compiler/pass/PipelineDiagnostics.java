@@ -65,6 +65,14 @@ final class PipelineDiagnostics {
                 pass);
     }
 
+    /** 创建 artifact snapshot 资源预算超限 Diagnostic。 */
+    static Diagnostic artifactResourceExceeded(String pass) {
+        return error(
+                DiagnosticCode.MIX_PUBLICATION_BLOCKED,
+                "pipeline.artifact.resource-exceeded",
+                pass);
+    }
+
     /** 创建最终门禁尚未允许发布 Diagnostic。 */
     static Diagnostic publicationBlocked() {
         return error(
