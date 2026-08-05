@@ -1,0 +1,68 @@
+{
+  "taskId": "TASK-P1-T13",
+  "iteration": "I001",
+  "status": "PASSED",
+  "completion": "COMPLETION-P1-T13-R01@74672ee1367b",
+  "base": "dev_all@659fb74563bbe1fa1daaf4d3a0e868f702daaec6",
+  "dependency": "COMPLETION-P1-T12-R07@74f402287bc4",
+  "revisions": {
+    "design": "DESIGN-R45@P1-T13-I001",
+    "plan": "TP-P1-COMPILER-F01-R41@P1-T13-I001",
+    "tdd": "TDD-P1-T13-R01@4f3d444f779f",
+    "architecture": "DEVSKEL-P1-T13-R01@4f3d444f779f",
+    "development": "DEV-P1-T13-R01@74672ee1367b",
+    "codeReview": "CODEREVIEW-P1-T13-R01@74672ee1367b",
+    "testing": "TESTING-P1-T13-R01@74672ee1367b"
+  },
+  "commits": {
+    "production": "65f96c71ae0560f375d402b586125ad4879dde4b",
+    "codeTest": "74672ee1367bab9de75b4028cd4578b6118f96f0",
+    "cleanCodeValidation": "eadeeffba4a947b1f400890fffbeafc30803ef1a"
+  },
+  "validRed": {
+    "run": 31005889102,
+    "artifact": 8930284340,
+    "sha256": "fe03a8fea61ff6ecbcd2a45f8ddba3f91ac37629cf8c9ff1a583777dc5fa5946",
+    "tests": 13,
+    "expectedFailures": 11,
+    "passingControls": 2,
+    "errors": 0
+  },
+  "cleanCodeValidation": {
+    "run": 31008161016,
+    "artifact": 8931238649,
+    "sha256": "57c6b57716f52e0c86ace7daf221fb51b8c88a5c7af5e2396a8d690c9f4dfed4",
+    "surefireXml": 105,
+    "t13": "25/25",
+    "t12": "133/133",
+    "compiler": "477/477",
+    "normal": "597/597",
+    "allRecords": 598,
+    "intentionalFailureGate": "PASSED",
+    "errors": 0,
+    "skipped": 0,
+    "javaRelease8": "PASSED",
+    "reactorModules": 12,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "delivered": [
+    "DEC-SEMANTIC-DIGEST-V1 canonical semantic digest",
+    "length-prefixed Source SHA-256 digest",
+    "immutable SemanticDigestInput snapshot",
+    "Unicode code-point canonical JSON",
+    "DISCOVERY/PARSE/PASS/DIGEST monotonic timings",
+    "fail-open observer warning diagnostics"
+  ],
+  "scopeNotImplemented": [
+    "TASK-P1-T14 candidate EngineContext and CAS publication extension",
+    "TASK-P1-T15 Starter integration and legacy retirement",
+    "P2-P7 runtime"
+  ],
+  "style": {
+    "overrideOwnLine": true,
+    "importantCommentsChinese": true
+  },
+  "openFindings": {"p0": 0, "p1": 0, "p2": 0},
+  "pr": 28,
+  "merged": false
+}
