@@ -86,7 +86,7 @@ class CompilationObserverTest {
         PipelineExecutionResult result = execute(observer);
 
         assertEquals(CompilationSessionState.PUBLISHED, result.state());
-        assertTrue(result.candidate().isPresent());
+        assertFalse(result.artifacts().isEmpty());
         assertTrue(result.diagnostics().stream().anyMatch(diagnostic ->
                 diagnostic.code() == DiagnosticCode.MIX_OBSERVER_FAILURE
                         && diagnostic.severity() == DiagnosticSeverity.WARNING
