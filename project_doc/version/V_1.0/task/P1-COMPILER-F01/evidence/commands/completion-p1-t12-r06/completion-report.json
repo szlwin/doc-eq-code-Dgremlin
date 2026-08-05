@@ -1,0 +1,59 @@
+{
+  "completion_id": "COMPLETION-P1-T12-R06@ce8c92523256",
+  "task": "TASK-P1-T12",
+  "iteration": "I006",
+  "status": "PASSED",
+  "dependency": "COMPLETION-P1-T11-R02@86b55b45d1cd",
+  "invalidated_history": [
+    "COMPLETION-P1-T12-R01@c6a515820972",
+    "COMPLETION-P1-T12-R02@5d5a7d72119b",
+    "COMPLETION-P1-T12-R03@4d4cd5c4c049",
+    "COMPLETION-P1-T12-R04@923129b1f20d",
+    "COMPLETION-P1-T12-R05@304a2156ff5e"
+  ],
+  "design": "DESIGN-R43@P1-T12-REWORK-I006",
+  "plan": "TP-P1-COMPILER-F01-R39@P1-T12-REWORK-I006",
+  "tdd": "TDD-P1-T12-R06@788f475d60e4",
+  "architecture": "DEVSKEL-P1-T12-R06@788f475d60e4",
+  "development": "DEV-P1-T12-R06@ce8c92523256",
+  "code_review": "CODEREVIEW-P1-T12-R11@ce8c92523256",
+  "testing": "TESTING-P1-T12-R06@ce8c92523256",
+  "findings": [
+    {"id": "FND-P1-T12-I006-001", "severity": "P1", "status": "CLOSED"},
+    {"id": "FND-P1-T12-I006-002", "severity": "P1", "status": "CLOSED"},
+    {"id": "FND-P1-T12-I006-003", "severity": "P1", "status": "CLOSED"},
+    {"id": "FND-P1-T12-I006-004", "severity": "P2", "status": "CLOSED"}
+  ],
+  "open_p0_p1_p2": [0, 0, 0],
+  "clean_code_head": "ce8c9252325642cf45e89f71aaa1f807d4916aca",
+  "validation": {
+    "run": 30992489987,
+    "artifact": 8924724966,
+    "sha256": "f0d5b9ce6c44a922b9bdd534c82f0e235912588f97ced16c117d9b57774a54a4",
+    "surefire_xml": 98,
+    "i006": "18/18",
+    "t12": "117/117",
+    "compiler": "436/436",
+    "normal": "556/556",
+    "all_records": 557,
+    "intentional_failure": "EXPECTED_AND_RECOGNIZED",
+    "errors": 0,
+    "skipped": 0,
+    "reactor_modules": 12,
+    "java_release": 8,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "contracts": {
+    "operation_level_pair_cache": true,
+    "iterator_driven_list_equality": true,
+    "incremental_external_canonicalization": true,
+    "budget_before_external_next": true,
+    "stable_comparison_limit_exception": true,
+    "public_api_unchanged": true,
+    "override_annotation_own_line": true,
+    "chinese_important_comments": true
+  },
+  "merge_performed": false,
+  "next_task": "TASK-P1-T13",
+  "next_task_state": "BLOCKED_UNTIL_PR_27_MERGE"
+}
