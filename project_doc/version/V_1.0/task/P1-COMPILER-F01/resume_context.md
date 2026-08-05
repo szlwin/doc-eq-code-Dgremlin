@@ -47,8 +47,13 @@
 - Clean P0：`31011874941` — SUCCESS
 - Clean Artifact：`8932801028`
 - Clean SHA-256：`679600735885f589a6370b0ad54845c909a24b2749b7b5edc4ac231822a8bf05`
-- T13：`34/34`；T12：`133/133`；Compiler：`486/486`；Normal：`606/606`
-- Surefire XML：`106`；Errors/Skipped：`0/0`
+- Clean T13/T12/Compiler/Normal：`34/34` / `133/133` / `486/486` / `606/606`
+- Final documented input Head：`00052a538e8b022d3f19529403dfabc907cd826e`
+- Final documented P0：`31012799485` — SUCCESS
+- Final documented Artifact：`8933193699`
+- Final documented SHA-256：`605a24fa8d81346089b1479a192aec063256ee17ded71045b05ef2554d796c9b`
+- Final Surefire XML：`106`；T13：`34/34`；T12：`133/133`；Compiler：`486/486`；Normal：`606/606`
+- Final all records：`607`；intentional failure：`1`；Errors/Skipped：`0/0`
 - 12 modules / Java release 8 / intentional failure gate：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
 
@@ -57,7 +62,8 @@
 - R46 first commit/blob：`126db598680958cd6f4c4c2bdc8745743402b4ca` / `20034ec2cdb4353dbca459df7cdb2335e25b182b`
 - R42 first commit/blob：`3fa56d310286b4f72d4843f2129b5d1906cc21a0` / `6a346fe9d15f9ffbca17b0edb6622e1d044b57a0`
 - R46/R42 均早于 RED，blob 未变化；
-- Code/Test Revision 后只允许 `project_doc` 更新。
+- Code/Test Revision 后只允许 `project_doc` 更新；
+- `7d39c3bc0ab4...` 到 `00052a538e8b...` 的 11 个提交全部仅修改 `project_doc`。
 
 ## Recovery
 
