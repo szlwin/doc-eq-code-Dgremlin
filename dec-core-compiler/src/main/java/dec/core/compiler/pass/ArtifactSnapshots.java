@@ -2,17 +2,24 @@ package dec.core.compiler.pass;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.AbstractList;
+import java.util.AbstractMap;
+import java.util.AbstractSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.RandomAccess;
 import java.util.Set;
 
 /**
@@ -115,6 +122,15 @@ final class ArtifactSnapshots {
         FROZEN
     }
 
+    /** canonical 结构节点类型，避免不同容器结构被错误合并。 */
+    private enum NodeType {
+        OPTIONAL_EMPTY,
+        OPTIONAL_PRESENT,
+        LIST,
+        SET,
+        MAP
+    }
+
     /** 将冻结结果写入根或父容器的目标。 */
     private interface Assignment {
         void assign(Object value);
@@ -125,13 +141,26 @@ final class ArtifactSnapshots {
         void execute(SnapshotSession session, Deque<Task> stack);
     }
 
-    /** 单次 freeze 的计数器、identity 状态和完成态快照。 */
+    /** 单次 freeze 的预算、identity 状态和 canonical 结构索引。 */
     private static final class SnapshotSession {
         private final Limits limits;
         private final IdentityHashMap<Object, VisitState> states =
                 new IdentityHashMap<Object, VisitState>();
         private final IdentityHashMap<Object, Object> frozenBySource =
                 new IdentityHashMap<Object, Object>();
+        private final IdentityHashMap<Object, Integer> structuralIdsByFrozen =
+                new IdentityHashMap<Object, Integer>();
+        private final IdentityHashMap<Object, Integer> structuralHashesByFrozen =
+                new IdentityHashMap<Object, Integer>();
+        private final IdentityHashMap<Object, Integer> scalarIdsByIdentity =
+                new IdentityHashMap<Object, Integer>();
+        private final IdentityHashMap<Object, Integer> scalarHashesByIdentity =
+                new IdentityHashMap<Object, Integer>();
+        private final Map<ScalarKey, Integer> scalarIds =
+                new HashMap<ScalarKey, Integer>();
+        private final Map<NodeKey, Integer> nodeIds =
+                new HashMap<NodeKey, Integer>();
+        private int nextStructuralId = 1;
         private int uniqueContainers;
         private int traversedEdges;
         private int mapEntries;
@@ -183,14 +212,76 @@ final class ArtifactSnapshots {
             mapEntries++;
         }
 
-        /** 保存完成态快照，并把同一对象写入父容器以支持 identity 复用。 */
+        /**
+         * 保存完成态快照、canonical ID 与缓存 hash，并写入父容器。
+         */
         private void complete(
                 Object source,
                 Object frozen,
+                int structuralId,
+                int structuralHash,
                 Assignment target) {
             states.put(source, VisitState.FROZEN);
             frozenBySource.put(source, frozen);
+            structuralIdsByFrozen.put(frozen, Integer.valueOf(structuralId));
+            structuralHashesByFrozen.put(frozen, Integer.valueOf(structuralHash));
             target.assign(frozen);
+        }
+
+        /** 返回冻结值的 canonical 结构 ID，标量按 equals 语义归一化。 */
+        private int structuralId(Object value) {
+            Integer containerId = structuralIdsByFrozen.get(value);
+            if (containerId != null) {
+                return containerId.intValue();
+            }
+            Integer identityId = scalarIdsByIdentity.get(value);
+            if (identityId != null) {
+                return identityId.intValue();
+            }
+            if (!isImmutableScalar(value)
+                    && !(value instanceof ImmutablePipelineArtifact)) {
+                throw new IllegalStateException(
+                        "frozen container has no structural id");
+            }
+            int hash = value.hashCode();
+            ScalarKey key = new ScalarKey(value, hash);
+            Integer existing = scalarIds.get(key);
+            int id;
+            if (existing == null) {
+                id = nextStructuralId++;
+                scalarIds.put(key, Integer.valueOf(id));
+            } else {
+                id = existing.intValue();
+            }
+            scalarIdsByIdentity.put(value, Integer.valueOf(id));
+            scalarHashesByIdentity.put(value, Integer.valueOf(hash));
+            return id;
+        }
+
+        /** 返回与 Java 容器合同一致、但不会递归展开共享 DAG 的缓存 hash。 */
+        private int structuralHash(Object value) {
+            Integer containerHash = structuralHashesByFrozen.get(value);
+            if (containerHash != null) {
+                return containerHash.intValue();
+            }
+            Integer scalarHash = scalarHashesByIdentity.get(value);
+            if (scalarHash != null) {
+                return scalarHash.intValue();
+            }
+            structuralId(value);
+            return scalarHashesByIdentity.get(value).intValue();
+        }
+
+        /** 对相同 immediate child ID 序列分配同一 canonical 节点 ID。 */
+        private int nodeId(NodeType type, int[] parts) {
+            NodeKey key = new NodeKey(type, parts);
+            Integer existing = nodeIds.get(key);
+            if (existing != null) {
+                return existing.intValue();
+            }
+            int id = nextStructuralId++;
+            nodeIds.put(key, Integer.valueOf(id));
+            return id;
         }
     }
 
@@ -217,6 +308,7 @@ final class ArtifactSnapshots {
             Object checked = Objects.requireNonNull(source, nullMessage);
             if (isImmutableScalar(checked)
                     || checked instanceof ImmutablePipelineArtifact) {
+                session.structuralId(checked);
                 target.assign(checked);
                 return;
             }
@@ -259,7 +351,8 @@ final class ArtifactSnapshots {
             Assignment target) {
         Optional<?> optional = (Optional<?>) source;
         if (!optional.isPresent()) {
-            session.complete(source, Optional.empty(), target);
+            int id = session.nodeId(NodeType.OPTIONAL_EMPTY, new int[0]);
+            session.complete(source, Optional.empty(), id, 0, target);
             return;
         }
         session.consumeEdge();
@@ -295,7 +388,7 @@ final class ArtifactSnapshots {
         }
     }
 
-    /** 展开 Set，并在子结果写入时继续检查冻结后 equality collision。 */
+    /** 展开 Set，collision 使用 canonical ID 判断，不调用递归 hashCode。 */
     private static void expandSet(
             SnapshotSession session,
             Deque<Task> stack,
@@ -307,13 +400,13 @@ final class ArtifactSnapshots {
             session.consumeEdge();
             items.add(Objects.requireNonNull(item, "artifact set item"));
         }
-        Set<Object> copy = new LinkedHashSet<Object>();
+        SetBuilder copy = new SetBuilder();
         stack.push(new FinishSetTask(source, copy, target));
         for (int index = items.size() - 1; index >= 0; index--) {
             stack.push(new FreezeTask(
                     items.get(index),
                     depth + 1,
-                    new SetAssignment(copy),
+                    new SetAssignment(session, copy),
                     "artifact set item"));
         }
     }
@@ -338,11 +431,11 @@ final class ArtifactSnapshots {
                     "artifact map value");
             entries.add(new SourceMapEntry(key, value));
         }
-        Map<Object, Object> copy = new LinkedHashMap<Object, Object>();
+        MapBuilder copy = new MapBuilder();
         stack.push(new FinishMapTask(source, copy, target));
         for (int index = entries.size() - 1; index >= 0; index--) {
             SourceMapEntry entry = entries.get(index);
-            PendingMapEntry pending = new PendingMapEntry(copy);
+            PendingMapEntry pending = new PendingMapEntry(session, copy);
             stack.push(new FreezeTask(
                     entry.value,
                     depth + 1,
@@ -408,20 +501,39 @@ final class ArtifactSnapshots {
         }
     }
 
-    /** 写入 Set，并拒绝冻结后 equality collision。 */
-    private static final class SetAssignment implements Assignment {
-        private final Set<Object> target;
+    /** Set 构建器同时保存值、canonical ID 和缓存 hash。 */
+    private static final class SetBuilder {
+        private final List<Object> values = new ArrayList<Object>();
+        private final List<Integer> ids = new ArrayList<Integer>();
+        private final Set<Integer> uniqueIds = new HashSet<Integer>();
+        private int hash;
 
-        private SetAssignment(Set<Object> target) {
+        /** 写入一个元素并拒绝冻结后 equality collision。 */
+        private void add(SnapshotSession session, Object value) {
+            int id = session.structuralId(value);
+            if (!uniqueIds.add(Integer.valueOf(id))) {
+                throw new IllegalArgumentException(
+                        "artifact set elements collide after freezing");
+            }
+            values.add(value);
+            ids.add(Integer.valueOf(id));
+            hash += session.structuralHash(value);
+        }
+    }
+
+    /** 将冻结 Set 元素写入无 hash 放大的构建器。 */
+    private static final class SetAssignment implements Assignment {
+        private final SnapshotSession session;
+        private final SetBuilder target;
+
+        private SetAssignment(SnapshotSession session, SetBuilder target) {
+            this.session = session;
             this.target = target;
         }
 
         @Override
         public void assign(Object value) {
-            if (!target.add(value)) {
-                throw new IllegalArgumentException(
-                        "artifact set elements collide after freezing");
-            }
+            target.add(session, value);
         }
     }
 
@@ -436,15 +548,48 @@ final class ArtifactSnapshots {
         }
     }
 
-    /** 等待 key/value 均冻结后再原子写入目标 Map。 */
+    /** Map 构建器以 canonical key ID 拒绝 collision，不调用 key.hashCode。 */
+    private static final class MapBuilder {
+        private final List<FrozenMapEntry> entries =
+                new ArrayList<FrozenMapEntry>();
+        private final Set<Integer> keyIds = new HashSet<Integer>();
+        private int hash;
+
+        /** 原子写入已冻结 key/value。 */
+        private void add(
+                SnapshotSession session,
+                Object key,
+                Object value) {
+            int keyId = session.structuralId(key);
+            if (!keyIds.add(Integer.valueOf(keyId))) {
+                throw new IllegalArgumentException(
+                        "artifact map keys collide after freezing");
+            }
+            int valueId = session.structuralId(value);
+            int keyHash = session.structuralHash(key);
+            int valueHash = session.structuralHash(value);
+            entries.add(new FrozenMapEntry(
+                    key,
+                    value,
+                    keyId,
+                    valueId));
+            hash += keyHash ^ valueHash;
+        }
+    }
+
+    /** 等待 key/value 均冻结后再原子写入 Map 构建器。 */
     private static final class PendingMapEntry {
-        private final Map<Object, Object> target;
+        private final SnapshotSession session;
+        private final MapBuilder target;
         private Object key;
         private Object value;
         private boolean keyAssigned;
         private boolean valueAssigned;
 
-        private PendingMapEntry(Map<Object, Object> target) {
+        private PendingMapEntry(
+                SnapshotSession session,
+                MapBuilder target) {
+            this.session = session;
             this.target = target;
         }
 
@@ -467,11 +612,7 @@ final class ArtifactSnapshots {
             if (!keyAssigned || !valueAssigned) {
                 return;
             }
-            if (target.containsKey(key)) {
-                throw new IllegalArgumentException(
-                        "artifact map keys collide after freezing");
-            }
-            target.put(key, value);
+            target.add(session, key, value);
         }
     }
 
@@ -523,11 +664,21 @@ final class ArtifactSnapshots {
             if (!holder.assigned) {
                 throw new IllegalStateException("optional child was not frozen");
             }
-            session.complete(source, Optional.of(holder.value), target);
+            int childId = session.structuralId(holder.value);
+            int childHash = session.structuralHash(holder.value);
+            int id = session.nodeId(
+                    NodeType.OPTIONAL_PRESENT,
+                    new int[]{childId});
+            session.complete(
+                    source,
+                    Optional.of(holder.value),
+                    id,
+                    childHash,
+                    target);
         }
     }
 
-    /** 完成 List 并登记 FROZEN identity。 */
+    /** 完成 List，缓存标准 List hash 并登记 FROZEN identity。 */
     private static final class FinishListTask implements Task {
         private final Object source;
         private final List<Object> copy;
@@ -544,22 +695,28 @@ final class ArtifactSnapshots {
 
         @Override
         public void execute(SnapshotSession session, Deque<Task> stack) {
-            session.complete(
-                    source,
-                    Collections.unmodifiableList(copy),
-                    target);
+            int[] ids = new int[copy.size()];
+            int hash = 1;
+            for (int index = 0; index < copy.size(); index++) {
+                Object value = copy.get(index);
+                ids[index] = session.structuralId(value);
+                hash = 31 * hash + session.structuralHash(value);
+            }
+            int id = session.nodeId(NodeType.LIST, ids);
+            FrozenList frozen = new FrozenList(copy, hash);
+            session.complete(source, frozen, id, hash, target);
         }
     }
 
-    /** 完成 Set 并登记 FROZEN identity。 */
+    /** 完成 Set，canonical ID 与 hash 均基于 immediate child metadata。 */
     private static final class FinishSetTask implements Task {
         private final Object source;
-        private final Set<Object> copy;
+        private final SetBuilder copy;
         private final Assignment target;
 
         private FinishSetTask(
                 Object source,
-                Set<Object> copy,
+                SetBuilder copy,
                 Assignment target) {
             this.source = source;
             this.copy = copy;
@@ -568,22 +725,26 @@ final class ArtifactSnapshots {
 
         @Override
         public void execute(SnapshotSession session, Deque<Task> stack) {
-            session.complete(
-                    source,
-                    Collections.unmodifiableSet(copy),
-                    target);
+            int[] ids = new int[copy.ids.size()];
+            for (int index = 0; index < ids.length; index++) {
+                ids[index] = copy.ids.get(index).intValue();
+            }
+            Arrays.sort(ids);
+            int id = session.nodeId(NodeType.SET, ids);
+            FrozenSet frozen = new FrozenSet(copy.values, copy.hash);
+            session.complete(source, frozen, id, copy.hash, target);
         }
     }
 
-    /** 完成 Map 并登记 FROZEN identity。 */
+    /** 完成 Map，entry canonical 顺序与原 Map 迭代顺序解耦。 */
     private static final class FinishMapTask implements Task {
         private final Object source;
-        private final Map<Object, Object> copy;
+        private final MapBuilder copy;
         private final Assignment target;
 
         private FinishMapTask(
                 Object source,
-                Map<Object, Object> copy,
+                MapBuilder copy,
                 Assignment target) {
             this.source = source;
             this.copy = copy;
@@ -592,10 +753,253 @@ final class ArtifactSnapshots {
 
         @Override
         public void execute(SnapshotSession session, Deque<Task> stack) {
-            session.complete(
-                    source,
-                    Collections.unmodifiableMap(copy),
-                    target);
+            List<int[]> pairs = new ArrayList<int[]>(copy.entries.size());
+            for (FrozenMapEntry entry : copy.entries) {
+                pairs.add(new int[]{entry.keyId, entry.valueId});
+            }
+            Collections.sort(pairs, new Comparator<int[]>() {
+                @Override
+                public int compare(int[] left, int[] right) {
+                    int keyComparison = Integer.compare(left[0], right[0]);
+                    return keyComparison != 0
+                            ? keyComparison
+                            : Integer.compare(left[1], right[1]);
+                }
+            });
+            int[] parts = new int[pairs.size() * 2];
+            for (int index = 0; index < pairs.size(); index++) {
+                parts[index * 2] = pairs.get(index)[0];
+                parts[index * 2 + 1] = pairs.get(index)[1];
+            }
+            int id = session.nodeId(NodeType.MAP, parts);
+            FrozenMap frozen = new FrozenMap(copy.entries, copy.hash);
+            session.complete(source, frozen, id, copy.hash, target);
+        }
+    }
+
+    /** 标量 equals/hash 的稳定 key；hash 只计算一次。 */
+    private static final class ScalarKey {
+        private final Object value;
+        private final int hash;
+
+        private ScalarKey(Object value, int hash) {
+            this.value = value;
+            this.hash = hash;
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof ScalarKey)) {
+                return false;
+            }
+            ScalarKey that = (ScalarKey) other;
+            return Objects.equals(value, that.value);
+        }
+    }
+
+    /** immediate child ID 组成的 canonical 容器结构 key。 */
+    private static final class NodeKey {
+        private final NodeType type;
+        private final int[] parts;
+        private final int hash;
+
+        private NodeKey(NodeType type, int[] parts) {
+            this.type = Objects.requireNonNull(type, "type");
+            this.parts = Arrays.copyOf(parts, parts.length);
+            this.hash = 31 * type.hashCode() + Arrays.hashCode(this.parts);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (!(other instanceof NodeKey)) {
+                return false;
+            }
+            NodeKey that = (NodeKey) other;
+            return type == that.type && Arrays.equals(parts, that.parts);
+        }
+    }
+
+    /** 缓存 hash 的不可变 List，避免共享 DAG hash 递归展开。 */
+    private static final class FrozenList extends AbstractList<Object>
+            implements RandomAccess {
+        private final List<Object> values;
+        private final int hash;
+
+        private FrozenList(List<Object> values, int hash) {
+            this.values = Collections.unmodifiableList(
+                    new ArrayList<Object>(values));
+            this.hash = hash;
+        }
+
+        @Override
+        public Object get(int index) {
+            return values.get(index);
+        }
+
+        @Override
+        public int size() {
+            return values.size();
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+    }
+
+    /** 缓存 hash、保持迭代顺序的不可变 Set。 */
+    private static final class FrozenSet extends AbstractSet<Object> {
+        private final List<Object> values;
+        private final int hash;
+
+        private FrozenSet(List<Object> values, int hash) {
+            this.values = Collections.unmodifiableList(
+                    new ArrayList<Object>(values));
+            this.hash = hash;
+        }
+
+        @Override
+        public Iterator<Object> iterator() {
+            return values.iterator();
+        }
+
+        @Override
+        public int size() {
+            return values.size();
+        }
+
+        @Override
+        public boolean contains(Object value) {
+            return values.contains(value);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+    }
+
+    /** 已冻结 Map entry 及其 canonical key/value ID。 */
+    private static final class FrozenMapEntry {
+        private final Object key;
+        private final Object value;
+        private final int keyId;
+        private final int valueId;
+
+        private FrozenMapEntry(
+                Object key,
+                Object value,
+                int keyId,
+                int valueId) {
+            this.key = key;
+            this.value = value;
+            this.keyId = keyId;
+            this.valueId = valueId;
+        }
+    }
+
+    /** 缓存 hash、保持 entry 顺序的不可变 Map。 */
+    private static final class FrozenMap extends AbstractMap<Object, Object> {
+        private final List<Map.Entry<Object, Object>> entries;
+        private final Set<Map.Entry<Object, Object>> entrySet;
+        private final int hash;
+
+        private FrozenMap(List<FrozenMapEntry> values, int hash) {
+            List<Map.Entry<Object, Object>> copy =
+                    new ArrayList<Map.Entry<Object, Object>>(values.size());
+            for (FrozenMapEntry value : values) {
+                copy.add(new SimpleImmutableEntry<Object, Object>(
+                        value.key,
+                        value.value));
+            }
+            this.entries = Collections.unmodifiableList(copy);
+            this.entrySet = new FrozenEntrySet(entries, hash);
+            this.hash = hash;
+        }
+
+        @Override
+        public Set<Map.Entry<Object, Object>> entrySet() {
+            return entrySet;
+        }
+
+        @Override
+        public Object get(Object key) {
+            for (Map.Entry<Object, Object> entry : entries) {
+                if (Objects.equals(entry.getKey(), key)) {
+                    return entry.getValue();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public boolean containsKey(Object key) {
+            for (Map.Entry<Object, Object> entry : entries) {
+                if (Objects.equals(entry.getKey(), key)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public int size() {
+            return entries.size();
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+    }
+
+    /** List-backed 不可变 entrySet，构造期间不触发 key.hashCode。 */
+    private static final class FrozenEntrySet
+            extends AbstractSet<Map.Entry<Object, Object>> {
+        private final List<Map.Entry<Object, Object>> entries;
+        private final int hash;
+
+        private FrozenEntrySet(
+                List<Map.Entry<Object, Object>> entries,
+                int hash) {
+            this.entries = entries;
+            this.hash = hash;
+        }
+
+        @Override
+        public Iterator<Map.Entry<Object, Object>> iterator() {
+            return entries.iterator();
+        }
+
+        @Override
+        public int size() {
+            return entries.size();
+        }
+
+        @Override
+        public boolean contains(Object value) {
+            return entries.contains(value);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
         }
     }
 }
