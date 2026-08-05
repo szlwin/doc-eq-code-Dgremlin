@@ -2,7 +2,6 @@ package dec.core.compiler.pass;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -109,11 +108,9 @@ class CandidateContextT14Test {
                 new DigestPair("source-t14", "semantic-t14"),
                 published.get().compiledModelSet().digestPair());
         assertFalse(result.artifacts().isEmpty());
-        assertSame(
-                result.artifacts().get(
-                        CandidateContextPublicationPass.INPUT_ARTIFACT),
-                result.artifacts().get(
-                        CandidateContextPublicationPass.INPUT_ARTIFACT));
+        assertTrue(result.artifacts().get(
+                CandidateContextPublicationPass.INPUT_ARTIFACT)
+                instanceof CompiledModelSetBuilder.FrozenInput);
     }
 
     /** 缺少冻结输入时必须 FAILED，且不能调用 Publisher。 */
