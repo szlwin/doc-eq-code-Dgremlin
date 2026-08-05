@@ -1,0 +1,67 @@
+{
+  "taskId": "TASK-P1-T12",
+  "iteration": "I007",
+  "completionId": "COMPLETION-P1-T12-R07@74f402287bc4",
+  "status": "PASSED",
+  "base": "dev_all@3f53ea4a31b0b1366aad383f665736b0487d4d00",
+  "branch": "feature/p1-t12-compiler-pipeline-20260804-2331",
+  "pullRequest": 27,
+  "design": {
+    "id": "DESIGN-R44@P1-T12-REWORK-I007",
+    "firstCommit": "f5adb11de55364150973fb048396841341fc29a9",
+    "blob": "e8417832ed971c230b9159f5bcec8d577d15a268"
+  },
+  "plan": {
+    "id": "TP-P1-COMPILER-F01-R40@P1-T12-REWORK-I007",
+    "firstCommit": "0f09627b1f6664a084c7f1a9ac18b68b7027bb9b",
+    "blob": "223ed0fc0ae8bdef22de1cca8f28916752d8d97b"
+  },
+  "tdd": {
+    "id": "TDD-P1-T12-R07@cb3f08f28807",
+    "head": "cb3f08f28807ad40e2a4b40519baf4a2fc83ba61",
+    "run": 31000174741,
+    "artifact": 8927903337,
+    "sha256": "7a828a1d8d73aaf502032470780ca4af5089beef860484a9a06852a33016d0b6"
+  },
+  "architecture": "DEVSKEL-P1-T12-R07@cb3f08f28807",
+  "development": {
+    "id": "DEV-P1-T12-R07@74f402287bc4",
+    "productionCommit": "5c765bfbb47d35d0bfe48debe68dffc1476bd096",
+    "cleanCodeHead": "74f402287bc4968dae3221848a91d968ecad0698"
+  },
+  "review": {
+    "id": "CODEREVIEW-P1-T12-R13@74f402287bc4",
+    "result": "PASSED",
+    "reviews": "REV-000634..REV-000652",
+    "openP0P1P2": "0/0/0"
+  },
+  "testing": {
+    "id": "TESTING-P1-T12-R07@74f402287bc4",
+    "firstGreenRun": 31000726214,
+    "cleanRun": 31000986498,
+    "cleanArtifact": 8928238806,
+    "cleanSha256": "7d0a8c38c9d93df547ced820b3bf5ebdc964307bfc1032aeb48cf10cc12f19b5",
+    "surefireXml": 100,
+    "i007": "16/16",
+    "t12": "133/133",
+    "compiler": "452/452",
+    "normal": "572/572",
+    "errors": 0,
+    "skipped": 0
+  },
+  "invalidatedHistory": [
+    "COMPLETION-P1-T12-R01@c6a515820972",
+    "COMPLETION-P1-T12-R02@5d5a7d72119b",
+    "COMPLETION-P1-T12-R03@4d4cd5c4c049",
+    "COMPLETION-P1-T12-R04@923129b1f20d",
+    "COMPLETION-P1-T12-R05@304a2156ff5e",
+    "COMPLETION-P1-T12-R06@ce8c92523256"
+  ],
+  "style": {
+    "overrideOnOwnLine": true,
+    "criticalCommentsChinese": true,
+    "javaRelease": 8
+  },
+  "mergeAuthorized": false,
+  "nextTask": "TASK-P1-T13:BLOCKED_UNTIL_PR_27_MERGE"
+}

@@ -1,0 +1,49 @@
+{
+  "task": "TASK-P1-T12",
+  "iteration": "I005",
+  "completion": "COMPLETION-P1-T12-R05@304a2156ff5e",
+  "base": "dev_all@3f53ea4a31b0b1366aad383f665736b0487d4d00",
+  "reviewed_head": "2e113984973232d2d9a1d35bb886f73488f539c8",
+  "valid_red": {
+    "head": "c3a78498e595d0006334c8ec382c72c830142d19",
+    "run": 30983520984,
+    "artifact": 8921103609,
+    "sha256": "9348d599ace1898147697646e544452eacfe815d1ef0a23d21c681a034de8189",
+    "failures": 6,
+    "errors": 0
+  },
+  "design": {
+    "revision": "DESIGN-R42@P1-T12-REWORK-I005",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R42_t12_artifact_query_resource_rework.md",
+    "first_commit": "6d109ab58793d080ba8f86d593040b3b5353b79d",
+    "first_blob": "ef4797a32aa30aac1cdd67e0d211705e1c6fb62e",
+    "final_blob": "ef4797a32aa30aac1cdd67e0d211705e1c6fb62e"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R38@P1-T12-REWORK-I005",
+    "path": "project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R38_t12_artifact_query_resource_rework.md",
+    "first_commit": "2063c164d06246fc9f03c010e6443b45f44f6480",
+    "first_blob": "370678742f0a6e6cd0228a0c08b1400a36528031",
+    "final_blob": "370678742f0a6e6cd0228a0c08b1400a36528031"
+  },
+  "clean_code": {
+    "head": "304a2156ff5e86c2a45213d4e917f17b9a172831",
+    "run": 30984394393,
+    "artifact": 8921466813,
+    "sha256": "3a2002648c03c082f649991317e5ef3abbb167df6d99327dfa23c9e787d2fe6d",
+    "surefire_xml": 96,
+    "normal_tests": 538,
+    "compiler_tests": 418,
+    "t12_tests": 99,
+    "i005_tests": 16
+  },
+  "history": [
+    "COMPLETION-P1-T12-R01@c6a515820972",
+    "COMPLETION-P1-T12-R02@5d5a7d72119b",
+    "COMPLETION-P1-T12-R03@4d4cd5c4c049",
+    "COMPLETION-P1-T12-R04@923129b1f20d"
+  ],
+  "open": {"p0": 0, "p1": 0, "p2": 0},
+  "merge_performed": false,
+  "next_task": "TASK-P1-T13: BLOCKED_UNTIL_PR_27_MERGE"
+}

@@ -1,0 +1,23 @@
+{
+  "task": "TASK-P1-T12",
+  "iteration": "I002",
+  "base": "49b9beee65dbc5e5db77302a7128a34a2ab77386",
+  "dependency": "COMPLETION-P1-T11-R02@86b55b45d1cd",
+  "invalidated_history": "COMPLETION-P1-T12-R01@c6a515820972",
+  "design": {
+    "revision": "DESIGN-R39@P1-T12-REWORK-I002",
+    "first_commit": "0188e48db57772dc346658d6cccb83ccd7419c60",
+    "blob": "c4b6207f5bb06342f60e996fec44db35750bb8d1"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R35@P1-T12-REWORK-I002",
+    "first_commit": "294c34234f7ec88d3fbffaeabe9734f94cd6be71",
+    "blob": "51c772a3998da950f75707d87ac5b4e7fb176a36"
+  },
+  "valid_red": "a958141d0465ef7b5b279551116d69fc463d230e",
+  "architecture": "a7f8d99b1afe90015023ec98823b86616d4369c2",
+  "first_green": "4499bd90849d93c9863ea3b63277994e8f15652e",
+  "independent_review_green": "6130712b246de2b54716dce78bd367144b7bc280",
+  "clean_code_head": "5d5a7d72119b5a36a38b19cda44186de70911912",
+  "revision_integrity": "PASSED"
+}

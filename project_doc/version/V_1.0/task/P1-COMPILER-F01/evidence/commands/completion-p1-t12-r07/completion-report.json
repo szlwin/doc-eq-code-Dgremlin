@@ -1,0 +1,83 @@
+{
+  "command": "$common-develop -ar -auto",
+  "taskId": "TASK-P1-T12",
+  "iteration": "I007",
+  "completionId": "COMPLETION-P1-T12-R07@74f402287bc4",
+  "status": "PASSED",
+  "reviewGate": "PASSED",
+  "openFindings": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0
+  },
+  "findingClosures": [
+    {
+      "id": "FND-P1-T12-I007-001",
+      "severity": "P2",
+      "status": "CLOSED",
+      "summary": "Map duplicate canonical key and Set duplicate canonical element are rejected before canonical node intern."
+    }
+  ],
+  "revisions": {
+    "design": "DESIGN-R44@P1-T12-REWORK-I007",
+    "plan": "TP-P1-COMPILER-F01-R40@P1-T12-REWORK-I007",
+    "tdd": "TDD-P1-T12-R07@cb3f08f28807",
+    "architecture": "DEVSKEL-P1-T12-R07@cb3f08f28807",
+    "development": "DEV-P1-T12-R07@74f402287bc4",
+    "codeReview": "CODEREVIEW-P1-T12-R13@74f402287bc4",
+    "testing": "TESTING-P1-T12-R07@74f402287bc4"
+  },
+  "validRed": {
+    "head": "cb3f08f28807ad40e2a4b40519baf4a2fc83ba61",
+    "run": 31000174741,
+    "artifact": 8927903337,
+    "sha256": "7a828a1d8d73aaf502032470780ca4af5089beef860484a9a06852a33016d0b6",
+    "tests": 6,
+    "expectedFailures": 4,
+    "passingControls": 2,
+    "errors": 0
+  },
+  "firstGreen": {
+    "head": "2da699060a4bb596c612a7b26fa022fcb6474a4d",
+    "run": 31000726214,
+    "artifact": 8928131274,
+    "sha256": "67856fa28719e6448bb583eeb3d0b2fba2818ee04862eff52f11dc7f622cf25b"
+  },
+  "cleanCode": {
+    "head": "74f402287bc4968dae3221848a91d968ecad0698",
+    "run": 31000986498,
+    "artifact": 8928238806,
+    "sha256": "7d0a8c38c9d93df547ced820b3bf5ebdc964307bfc1032aeb48cf10cc12f19b5",
+    "surefireXml": 100,
+    "i007": "16/16",
+    "t12": "133/133",
+    "compiler": "452/452",
+    "normalTests": "572/572",
+    "allRecords": 573,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "reactorModules": 12,
+    "javaRelease": 8,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "revisionIntegrity": {
+    "r44FirstCommit": "f5adb11de55364150973fb048396841341fc29a9",
+    "r44Blob": "e8417832ed971c230b9159f5bcec8d577d15a268",
+    "r40FirstCommit": "0f09627b1f6664a084c7f1a9ac18b68b7027bb9b",
+    "r40Blob": "223ed0fc0ae8bdef22de1cca8f28916752d8d97b",
+    "designPlanBeforeRed": true
+  },
+  "skillBaseline": {
+    "tag": "common-develop-v2.44-rc8",
+    "commit": "4787876e135d347e9f37580910e2d28b09ea2ba4",
+    "guard": "DIRTY_HEAD_MATCHES_BASELINE_CRITICAL_DRIFT_0",
+    "existingDriftPreserved": true
+  },
+  "pullRequest": {
+    "number": 27,
+    "merged": false,
+    "mergeAuthorized": false
+  },
+  "nextTask": "TASK-P1-T13:BLOCKED_UNTIL_PR_27_MERGE"
+}
