@@ -1,0 +1,48 @@
+{
+  "task": "TASK-P1-T12",
+  "iteration": "I004",
+  "design": {
+    "revision": "DESIGN-R41@P1-T12-REWORK-I004",
+    "first_commit": "37dc26b5297dc73d5ac8f167df04ef62c9d3d97e",
+    "first_blob": "058f60f38649f3d7557eaf821bff3df37a3ea37c",
+    "final_blob": "058f60f38649f3d7557eaf821bff3df37a3ea37c"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R37@P1-T12-REWORK-I004",
+    "first_commit": "c06f715d414af37474076efe5bce1cd933248177",
+    "first_blob": "3d1200fd5a4339c91577aaa78873ac05beb68914",
+    "final_blob": "3d1200fd5a4339c91577aaa78873ac05beb68914"
+  },
+  "valid_red": {
+    "head": "1270d6f2b829a568f7edda4a23e21ba2748d7a50",
+    "run": 30974123330,
+    "artifact": 8917617823,
+    "sha256": "3a9e7a4d87d97d4f7b667d32a85026f160c49be0d14152dc7c5ea03a025e9164",
+    "tests": 8,
+    "expected_failures": 6,
+    "errors": 0
+  },
+  "independent_review_red": {
+    "head": "cbeed46dbf053184f247184ad9976c706d42f500",
+    "run": 30974844132,
+    "artifact": 8917868255,
+    "sha256": "aa5d191c64ac4e49875cef0272a164e4d73afcd3e79039da56b3a54b403a53be",
+    "expected_failures": 1,
+    "errors": 0
+  },
+  "clean_code": {
+    "head": "923129b1f20d6bebe589231b770b5c7675b52737",
+    "run": 30975103715,
+    "artifact": 8917961744,
+    "sha256": "df328a44496836e018c4725714adece969f46e0f71a0228c337ff9cadb71a640"
+  },
+  "history": {
+    "invalidated_completions": [
+      "COMPLETION-P1-T12-R01@c6a515820972",
+      "COMPLETION-P1-T12-R02@5d5a7d72119b",
+      "COMPLETION-P1-T12-R03@4d4cd5c4c049"
+    ],
+    "preserved": true
+  },
+  "revision_integrity": "PASSED"
+}
