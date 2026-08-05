@@ -183,12 +183,20 @@ public final class CompilerPipeline {
         PublicationPassContext context = new PublicationPassContext(session);
         PassResult passResult = null;
         RuntimeException passFailure = null;
+        boolean candidatePrepared = false;
+        Optional<EngineContext> candidate = Optional.empty();
         try {
             passResult = pass.execute(context);
         } catch (RuntimeException failure) {
             passFailure = failure;
         } finally {
-            context.close();
+            try {
+                // 关闭前生成 Pipeline 局部快照，关闭后 Context 的全部读取都拒绝。
+                candidatePrepared = context.candidatePrepared();
+                candidate = context.preparedCandidate();
+            } finally {
+                context.close();
+            }
         }
 
         Long endedNanos = readClockOrFail(session, passName);
@@ -220,8 +228,7 @@ public final class CompilerPipeline {
             fail(session);
             return;
         }
-        Optional<EngineContext> candidate = context.preparedCandidate();
-        if (!context.candidatePrepared() || !candidate.isPresent()) {
+        if (!candidatePrepared || !candidate.isPresent()) {
             addFailureAndStop(session, PipelineDiagnostics.publicationBlocked());
             return;
         }
