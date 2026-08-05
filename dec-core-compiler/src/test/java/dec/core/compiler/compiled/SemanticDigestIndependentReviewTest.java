@@ -18,6 +18,7 @@ import dec.core.context.model.DigestPair;
 import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.Registry;
 import java.net.URI;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -33,7 +34,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
- * TASK-P1-T13 / I001 独立 Review：复核 canonical JSON 与摘要边界。
+ * TASK-P1-T13 独立 Review：复核 canonical JSON、摘要与严格 Source identity 边界。
  */
 class SemanticDigestIndependentReviewTest {
 
@@ -167,6 +168,69 @@ class SemanticDigestIndependentReviewTest {
                 semantic).sourceDigest();
 
         assertEquals(left, right);
+    }
+
+    /** 不同单独 high surrogate 必须在摘要前稳定拒绝，不能进入替代字节碰撞。 */
+    @Test
+    void malformedHighSurrogateSourceIdsFailClosed() {
+        assertInvalidSourceId(String.valueOf((char) 0xD800));
+        assertInvalidSourceId(String.valueOf((char) 0xD801));
+    }
+
+    /** 不同单独 low surrogate 必须在摘要前稳定拒绝，不能进入替代字节碰撞。 */
+    @Test
+    void malformedLowSurrogateSourceIdsFailClosed() {
+        assertInvalidSourceId(String.valueOf((char) 0xDC00));
+        assertInvalidSourceId(String.valueOf((char) 0xDC01));
+    }
+
+    /** malformed sourceId 必须返回稳定异常类型、消息和编码原因。 */
+    @Test
+    void malformedSourceIdUsesStableFailure() {
+        IllegalArgumentException failure = assertInvalidSourceId(
+                "prefix-" + String.valueOf((char) 0xD800) + "-suffix");
+
+        assertEquals("sourceId must contain valid Unicode", failure.getMessage());
+        assertTrue(failure.getCause() instanceof CharacterCodingException);
+    }
+
+    /** 合法 surrogate pair 必须继续以标准 UTF-8 进入 sourceDigest。 */
+    @Test
+    void legalSupplementarySourceIdRemainsSupported() {
+        String digest = sourceDigest("\uD800\uDC00", "supplementary");
+
+        assertEquals(
+                "5d3487a17ddf02979b10ba3a08dde03e6181de5edab776174c1f99e0d7e10288",
+                digest);
+    }
+
+    /** 严格编码不得改变 ASCII、BMP 和 supplementary 的既有摘要向量。 */
+    @Test
+    void validSourceDigestVectorsRemainStable() {
+        assertEquals(
+                "b1bc9c4009cd2228c1b40f484036b6488f07d0e043e5fa26cec9ea5dd531ae67",
+                sourceDigest("ascii", "content"));
+        assertEquals(
+                "de7683b7fd49f38c3236e89e6f5b5ce3ce171b725bc74d61b997bbef53573505",
+                sourceDigest("\uE000", "bmp"));
+        assertEquals(
+                "5d3487a17ddf02979b10ba3a08dde03e6181de5edab776174c1f99e0d7e10288",
+                sourceDigest("\uD800\uDC00", "supplementary"));
+    }
+
+    /** 断言单个 malformed Source identity 被严格编码边界拒绝。 */
+    private static IllegalArgumentException assertInvalidSourceId(String sourceId) {
+        return assertThrows(
+                IllegalArgumentException.class,
+                () -> sourceDigest(sourceId, "same-content"));
+    }
+
+    /** 计算单 Source 的 sourceDigest，隔离 semantic digest 版本域。 */
+    private static String sourceDigest(String sourceId, String content) {
+        return new CompilerDigestService().compute(
+                new SourceManifest(Collections.singletonList(source(sourceId, content))),
+                emptyInput("compiler-1", "schema-1", "options-1"))
+                .sourceDigest();
     }
 
     /** 构造空语义输入。 */
