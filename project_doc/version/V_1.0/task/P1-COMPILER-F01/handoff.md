@@ -1,55 +1,55 @@
 # P1-COMPILER-F01 阶段交接
 
-> T01～T12 已合并到 `dev_all@659fb74563bbe1fa1daaf4d3a0e868f702daaec6`。TASK-P1-T13 / I003 已完成，当前有效 Completion 为 `COMPLETION-P1-T13-R03@5075793d06cc`。PR #28 尚未合并，T14 保持阻断。
+> T01～T13 已合并到 `dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce`。TASK-P1-T14 / I001 已完成，当前有效 Completion 为 `COMPLETION-P1-T14-R01@252024603bfc`。PR #29 尚未合并，T15 保持阻断。
 
-## Completion history
+## Current T14
 
-- R01 / I001：`COMPLETION-P1-T13-R01@74672ee1367b` — `INVALIDATED / PRESERVED`；
-- R02 / I002：`COMPLETION-P1-T13-R02@7d39c3bc0ab4` — `INVALIDATED / PRESERVED`；
-- R03 / I003：`COMPLETION-P1-T13-R03@5075793d06cc` — `CURRENT / PASSED`。
-
-## Current T13
-
-- Branch：`feature/p1-t13-semantic-digest-20260805-2005`
-- PR：`#28 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
-- Design：`DESIGN-R47@P1-T13-REWORK-I003`
-- Plan：`TP-P1-COMPILER-F01-R43@P1-T13-REWORK-I003`
-- TDD：`TDD-P1-T13-R03@5075793d06cc / ORACLE_HARDENING`
-- Architecture：`DEVSKEL-P1-T13-R03@5075793d06cc`
-- Development：`DEV-P1-T13-R03@5075793d06cc`
-- Code Review：`CODEREVIEW-P1-T13-R05@5075793d06cc`
-- Testing：`TESTING-P1-T13-R03@5075793d06cc`
-- Completion：`COMPLETION-P1-T13-R03@5075793d06cc`
+- Base：`dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce`
+- Dependency：`COMPLETION-P1-T13-R03@5075793d06cc`
+- Branch：`feature/p1-t14-candidate-context-20260805-2324`
+- PR：`#29 / OPEN / FINAL_P0_PENDING / NOT_MERGED`
+- Design：`DESIGN-R48@P1-T14-I001`
+- Plan：`TP-P1-COMPILER-F01-R44@P1-T14-I001`
+- TDD：`TDD-P1-T14-R01@f0f76facdd76`
+- Architecture：`DEVSKEL-P1-T14-R01@94fcc64aa6da`
+- Development：`DEV-P1-T14-R01@1a930d775e3e`
+- Code Review：`CODEREVIEW-P1-T14-R01@252024603bfc`
+- Testing：`TESTING-P1-T14-R01@252024603bfc`
+- Completion：`COMPLETION-P1-T14-R01@252024603bfc`
+- Reviews：`REV-000706`～`REV-000724`
+- Evidence：`EVD-001046`～`EVD-001067`
 - Open P0/P1/P2：`0 / 0 / 0`
 
-## I003 delivered contract
+## Delivered contract
 
-- FAILED Observer Control/Observed 使用相同失败位置与确定性 Clock；
-- 原 ERROR 完整 identity 保持；
-- Warning 完整 identity 和 subject=`STRUCTURALLY_VALIDATED->FAILED`；
-- state、executedPasses、fixture executions、transitions、timings 不变；
-- publisher=0、artifacts empty；
-- Observed 唯一新增一个 Observer Warning；
-- Production files changed：0。
-
-Strict Unicode、canonical JSON、semantic digest、Timing、Deadline、Cancel 和 Publication 合同继续保持。未实现 T14/T15 或 P2～P7 runtime。
+- 固定四阶段一次性 Builder；
+- Definition/Deferred immediate snapshot；
+- size/key/copy/final-size 完整性门禁；
+- identity mismatch、duplicate、missing value fail-closed；
+- FrozenInput 实现 `ImmutablePipelineArtifact`；
+- candidate 包含完整模型、摘要、版本和 Diagnostic；
+- ERROR 拒绝，Warning 保留；
+- final Pass 只准备 candidate，不持有 Publisher/CAS；
+- missing input publisher=0；normal input publisher=1；
+- Deadline、Cancel、Observer、Digest 和 commit-wins 保持；
+- T15 与 P2～P7 runtime 未实现。
 
 ## Validation
 
-- Code/Test Revision：`5075793d06cc028038d9689f0ca733ecc446e7b0`；
-- P0 Run：`31016766448` — SUCCESS；
-- Artifact：`8934826368`；
-- SHA-256：`13ad7a816de48d7aca33a18996934d41d330e3f41df9742a4c33c9a167926ef6`；
-- Surefire XML：106；T13：34/34；T12：133/133；Compiler：486/486；
-- 正常测试：606/606；intentional failure：1；Errors/Skipped：0/0；
+- Valid RED：`f0f76facdd76...` / Run `31021944964` / Artifact `8936970743`；
+- Review RED：`a494fa37574f...` / Run `31023013154` / Artifact `8937412168`；
+- Code/Test Revision：`252024603bfcdcee4ac42310b54b2af143aca002`；
+- Clean P0：`31023363308` — SUCCESS；
+- Clean Artifact/SHA：`8937562356` / `a8027e3479e0800086e9d97ef640ef1189b6a7dfde2324d712c0647e305250a6`；
+- Surefire XML：108；T14：12/12；T13：34/34；T12：133/133；Compiler：498/498；
+- Normal：618/618；intentional failure：1；Errors/Skipped：0/0；
 - Java 8、12 modules：PASSED；MySQL：`SKIPPED_NOT_APPLICABLE`。
 
 ## Recovery
 
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t13-r03/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t13-r05.md`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t13-r03.json`
-- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t13_r03_completion.json`
-- I002 invalidation：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t13-r04-invalidation.md`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t14-r01/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r01.md`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t14-r01.json`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t14_r01_completion.json`
 
-未经用户明确授权不得合并 PR #28；PR 合并前 TASK-P1-T14 保持 `BLOCKED_UNTIL_PR_28_MERGE`。
+未经用户明确授权不得合并 PR #29；PR 合并前 `TASK-P1-T15` 保持 `BLOCKED_UNTIL_PR_29_MERGE`。
