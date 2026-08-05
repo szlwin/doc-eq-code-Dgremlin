@@ -176,6 +176,17 @@ final class ArtifactSnapshots {
         }
     }
 
+    /** comparison canonical key/element 冲突的稳定内部异常。 */
+    static final class CanonicalCollisionException
+            extends IllegalArgumentException {
+        private static final long serialVersionUID = 1L;
+
+        /** 记录冲突维度，供同包调用方稳定识别 fail-closed 原因。 */
+        CanonicalCollisionException(String dimension) {
+            super("artifact comparison canonical collision: " + dimension);
+        }
+    }
+
     /** source identity 当前遍历状态。 */
     private enum VisitState {
         VISITING,

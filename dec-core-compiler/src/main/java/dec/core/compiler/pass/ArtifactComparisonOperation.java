@@ -326,39 +326,6 @@ final class ArtifactComparisonOperation {
         }
     }
 
-    /** 只有父聚合器仍相等时才继续执行后续子比较。 */
-    private static final class ConditionalCompareTask
-            implements ComparisonTask {
-        private final PairAggregate aggregate;
-        private final Object left;
-        private final Object right;
-        private final int depth;
-
-        private ConditionalCompareTask(
-                PairAggregate aggregate,
-                Object left,
-                Object right,
-                int depth) {
-            this.aggregate = aggregate;
-            this.left = left;
-            this.right = right;
-            this.depth = depth;
-        }
-
-        @Override
-        public void execute(
-                ComparisonOperation operation,
-                Deque<ComparisonTask> stack) {
-            if (aggregate.equal) {
-                stack.push(new CompareTask(
-                        left,
-                        right,
-                        depth,
-                        new AggregateAssignment(aggregate)));
-            }
-        }
-    }
-
     /** 比较一个 identity pair，并按容器类型调度非递归子任务。 */
     private static final class CompareTask implements ComparisonTask {
         private final Object left;
@@ -1147,6 +1114,15 @@ final class ArtifactComparisonOperation {
             }
             if (unordered) {
                 Arrays.sort(parts);
+                if (type == CanonicalType.SET) {
+                    // 排序后相邻 ID 相同表示 identity-backed Set 含 equality 重复元素。
+                    for (int index = 1; index < parts.length; index++) {
+                        if (parts[index - 1] == parts[index]) {
+                            throw new ArtifactSnapshots.CanonicalCollisionException(
+                                    "set-element");
+                        }
+                    }
+                }
             }
             session.complete(
                     source,
@@ -1197,6 +1173,15 @@ final class ArtifactComparisonOperation {
                                 : Integer.compare(left.value, right.value);
                     }
                 });
+            }
+            if (unordered && type == CanonicalType.MAP) {
+                // 相邻 canonical key 相同表示 Map 含 equality 重复 key，禁止形成合法节点。
+                for (int index = 1; index < ordered.size(); index++) {
+                    if (ordered.get(index - 1).key == ordered.get(index).key) {
+                        throw new ArtifactSnapshots.CanonicalCollisionException(
+                                "map-key");
+                    }
+                }
             }
             int[] parts = new int[ordered.size() * 2];
             for (int index = 0; index < ordered.size(); index++) {
