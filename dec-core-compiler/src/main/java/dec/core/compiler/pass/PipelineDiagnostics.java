@@ -97,6 +97,22 @@ final class PipelineDiagnostics {
                 CompilerPipeline.PUBLICATION_PASS);
     }
 
+    /** 创建 Timing Observer 回调失败 Warning。 */
+    static Diagnostic observerTimingFailure(String subject) {
+        return warning(
+                DiagnosticCode.MIX_OBSERVER_FAILURE,
+                "pipeline.observer.timing.failure",
+                subject);
+    }
+
+    /** 创建状态 Observer 回调失败 Warning。 */
+    static Diagnostic observerTransitionFailure(String subject) {
+        return warning(
+                DiagnosticCode.MIX_OBSERVER_FAILURE,
+                "pipeline.observer.transition.failure",
+                subject);
+    }
+
     /** 构造统一 ERROR Diagnostic。 */
     private static Diagnostic error(
             DiagnosticCode code,
@@ -111,5 +127,21 @@ final class PipelineDiagnostics {
                 Collections.<SourceRef>emptyList(),
                 null,
                 pass);
+    }
+
+    /** 构造不阻断原状态和 Context 的统一 WARNING Diagnostic。 */
+    private static Diagnostic warning(
+            DiagnosticCode code,
+            String messageKey,
+            String subject) {
+        return new Diagnostic(
+                code,
+                DiagnosticSeverity.WARNING,
+                messageKey,
+                null,
+                SOURCE,
+                Collections.<SourceRef>emptyList(),
+                null,
+                subject);
     }
 }

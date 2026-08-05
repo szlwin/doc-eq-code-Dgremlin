@@ -62,7 +62,7 @@ public final class PipelineExecutionResult {
         return transitions;
     }
 
-    /** 返回每个已执行 Pass 的单调时钟计时快照。 */
+    /** 返回 PASS 与 T13 补充阶段的单调时钟计时快照。 */
     public List<CompilationTiming> timings() {
         return timings;
     }

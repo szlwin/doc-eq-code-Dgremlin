@@ -43,7 +43,7 @@ class CompilerPipelineOrderTest {
         assertEquals(CompilerPipeline.fixedPassOrder(), executions);
         assertEquals(CompilerPipeline.fixedPassOrder(), result.executedPasses());
         assertEquals(expectedTransitions(), result.transitions());
-        assertEquals(10, result.timings().size());
+        assertEquals(13, result.timings().size());
         assertEquals(result.timings(), observer.timings());
         assertEquals(result.transitions(), observer.transitions());
         assertTrue(result.diagnostics().isEmpty());

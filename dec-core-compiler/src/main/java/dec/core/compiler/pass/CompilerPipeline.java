@@ -441,7 +441,7 @@ public final class CompilerPipeline {
             CompilationSession session,
             CompilationSessionState next) {
         SessionStateTransition transition = session.transitionTo(next);
-        notifyTransition(session.request().observer(), transition);
+        notifyTransition(session, transition);
     }
 
     /** 在非终态添加 Diagnostic 并进入 FAILED。 */
@@ -462,7 +462,7 @@ public final class CompilerPipeline {
     }
 
     /**
-     * 溢出安全地记录 Pass timing；任一异常都转换为稳定 Clock failure。
+     * 溢出安全地记录 Pass timing，并复用同一 elapsed 记录 T13 补充阶段。
      */
     private static boolean recordTimingOrFail(
             CompilationSession session,
@@ -471,17 +471,49 @@ public final class CompilerPipeline {
             long endedNanos) {
         try {
             long elapsedNanos = elapsedNanos(startedNanos, endedNanos);
-            CompilationTiming timing = new CompilationTiming(
-                    TimingPhase.PASS,
-                    Optional.of(passName),
-                    elapsedNanos);
-            session.recordTiming(timing);
-            notifyTiming(session.request().observer(), timing);
+            recordTiming(
+                    session,
+                    new CompilationTiming(
+                            TimingPhase.PASS,
+                            Optional.of(passName),
+                            elapsedNanos));
+            Optional<TimingPhase> supplemental = supplementalPhase(passName);
+            if (supplemental.isPresent()) {
+                // 补充阶段复用 Pass elapsed，禁止为观察行为再次读取 Clock。
+                recordTiming(
+                        session,
+                        new CompilationTiming(
+                                supplemental.get(),
+                                Optional.<String>empty(),
+                                elapsedNanos));
+            }
             return true;
         } catch (RuntimeException failure) {
             addFailureAndStop(session, PipelineDiagnostics.clockFailure(passName));
             return false;
         }
+    }
+
+    /** 记录一个 Timing，并让 Observer 只读观察该不可变事实。 */
+    private static void recordTiming(
+            CompilationSession session,
+            CompilationTiming timing) {
+        session.recordTiming(timing);
+        notifyTiming(session, timing);
+    }
+
+    /** 将三个冻结 Pass 映射到 DISCOVERY/PARSE/DIGEST 补充阶段。 */
+    private static Optional<TimingPhase> supplementalPhase(String passName) {
+        if (SOURCE_GRAPH_VALIDATION_PASS.equals(passName)) {
+            return Optional.of(TimingPhase.DISCOVERY);
+        }
+        if (STRUCTURAL_VALIDATION_PASS.equals(passName)) {
+            return Optional.of(TimingPhase.PARSE);
+        }
+        if (DIGEST_PASS.equals(passName)) {
+            return Optional.of(TimingPhase.DIGEST);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -494,25 +526,50 @@ public final class CompilerPipeline {
         return Math.subtractExact(endedNanos, startedNanos);
     }
 
-    /** Observer timing 回调失败不得改变 Session 状态或结果。 */
+    /** Observer timing 回调失败只追加 Warning，不改变 Session 状态或结果。 */
     private static void notifyTiming(
-            CompilationObserver observer,
+            CompilationSession session,
             CompilationTiming timing) {
         try {
-            observer.onTiming(timing);
-        } catch (RuntimeException ignored) {
-            // T13 将补充 Observer Failure Diagnostic；T12 只保证不改变语义事实。
+            session.request().observer().onTiming(timing);
+        } catch (RuntimeException failure) {
+            String subject = timing.phase().name()
+                    + ":"
+                    + (timing.pass().isPresent()
+                    ? timing.pass().get()
+                    : "-");
+            addObserverWarningFailOpen(
+                    session,
+                    PipelineDiagnostics.observerTimingFailure(subject));
         }
     }
 
-    /** Observer 状态回调失败不得改变 Session 状态或结果。 */
+    /** Observer 状态回调失败只追加 Warning，终态也不得回滚。 */
     private static void notifyTransition(
-            CompilationObserver observer,
+            CompilationSession session,
             SessionStateTransition transition) {
         try {
-            observer.onStateTransition(transition);
+            session.request().observer().onStateTransition(transition);
+        } catch (RuntimeException failure) {
+            addObserverWarningFailOpen(
+                    session,
+                    PipelineDiagnostics.observerTransitionFailure(
+                            transition.from().name()
+                                    + "->"
+                                    + transition.to().name()));
+        }
+    }
+
+    /**
+     * 尽力登记 Observer Warning；诊断构造或封闭竞态不得改变原编译事实。
+     */
+    private static void addObserverWarningFailOpen(
+            CompilationSession session,
+            Diagnostic warning) {
+        try {
+            session.addObservationDiagnostic(warning);
         } catch (RuntimeException ignored) {
-            // Observer 只能旁观，不能回滚或推进状态。
+            // Observer 及其诊断路径均为旁路，失败不能推进或回滚 Session。
         }
     }
 }

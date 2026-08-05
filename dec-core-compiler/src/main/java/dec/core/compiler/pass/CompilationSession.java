@@ -5,6 +5,7 @@ import dec.core.compiler.api.CompilationSessionState;
 import dec.core.compiler.api.CompilationTiming;
 import dec.core.compiler.api.SessionStateTransition;
 import dec.core.context.model.Diagnostic;
+import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,7 +120,7 @@ public final class CompilationSession {
         timings.add(Objects.requireNonNull(timing, "timing"));
     }
 
-    /** 仅允许 ACTIVE Context 向非终态 Session 聚合 Diagnostic。 */
+    /** 仅允许 ACTIVE Context 向非终态 Session 聚合语义 Diagnostic。 */
     void addDiagnostics(List<Diagnostic> values) {
         requireSemanticMutationAllowed();
         List<Diagnostic> copy = new ArrayList<Diagnostic>(
@@ -128,6 +129,26 @@ public final class CompilationSession {
             throw new NullPointerException("diagnostics contains null");
         }
         diagnostics.addAll(copy);
+    }
+
+    /**
+     * 在 Result seal 前追加只读 Observer 的非阻断失败事实。
+     *
+     * <p>该入口刻意允许终态写入，但只接受 MIX_OBSERVER_FAILURE 的
+     * INFO/WARNING，不能修改状态、artifact 或任何语义结果。</p>
+     */
+    void addObservationDiagnostic(Diagnostic diagnostic) {
+        requireNotSealed();
+        Diagnostic checked = Objects.requireNonNull(diagnostic, "diagnostic");
+        if (checked.code() != DiagnosticCode.MIX_OBSERVER_FAILURE) {
+            throw new IllegalArgumentException(
+                    "observation diagnostic must use MIX_OBSERVER_FAILURE");
+        }
+        if (checked.severity() == DiagnosticSeverity.ERROR) {
+            throw new IllegalArgumentException(
+                    "observation diagnostic must not be ERROR");
+        }
+        diagnostics.add(checked);
     }
 
     /** 判断当前 Session 是否已经包含阻断 ERROR。 */
