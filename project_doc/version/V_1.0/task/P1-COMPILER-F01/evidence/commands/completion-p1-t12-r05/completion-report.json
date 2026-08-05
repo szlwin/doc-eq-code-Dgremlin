@@ -1,0 +1,72 @@
+{
+  "task": "TASK-P1-T12",
+  "iteration": "I005",
+  "status": "COMPLETED_PASSED",
+  "completion": "COMPLETION-P1-T12-R05@304a2156ff5e",
+  "dependency": "COMPLETION-P1-T11-R02@86b55b45d1cd",
+  "design": "DESIGN-R42@P1-T12-REWORK-I005",
+  "plan": "TP-P1-COMPILER-F01-R38@P1-T12-REWORK-I005",
+  "tdd": "TDD-P1-T12-R05@c3a78498e595",
+  "architecture": "DEVSKEL-P1-T12-R05@c3a78498e595",
+  "development": "DEV-P1-T12-R05@304a2156ff5e",
+  "code_review": "CODEREVIEW-P1-T12-R09@304a2156ff5e",
+  "testing": "TESTING-P1-T12-R05@304a2156ff5e",
+  "clean_code_head": "304a2156ff5e86c2a45213d4e917f17b9a172831",
+  "findings": [
+    {
+      "id": "FND-P1-T12-I005-001",
+      "severity": "P1",
+      "status": "CLOSED",
+      "summary": "Frozen List/Set/Map/Entry equality and query now use bounded non-recursive graph comparison"
+    },
+    {
+      "id": "FND-P1-T12-I005-002",
+      "severity": "P2",
+      "status": "CLOSED",
+      "summary": "Added equality/query complexity, budget, cross-session and Collection contract oracles"
+    }
+  ],
+  "valid_red": {
+    "head": "c3a78498e595d0006334c8ec382c72c830142d19",
+    "run": 30983520984,
+    "artifact": 8921103609,
+    "sha256": "9348d599ace1898147697646e544452eacfe815d1ef0a23d21c681a034de8189",
+    "tests": 8,
+    "failures": 6,
+    "errors": 0,
+    "passing_controls": 2
+  },
+  "validation": {
+    "run": 30984394393,
+    "artifact": 8921466813,
+    "sha256": "3a2002648c03c082f649991317e5ef3abbb167df6d99327dfa23c9e787d2fe6d",
+    "surefire_xml": 96,
+    "all_records": 539,
+    "normal_tests": 538,
+    "normal_passed": 538,
+    "intentional_failure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "compiler_tests": 418,
+    "t12_tests": 99,
+    "i005_tests": 16,
+    "mysql": "SKIPPED_NOT_APPLICABLE",
+    "java_release": 8,
+    "reactor_modules": 12
+  },
+  "revision_integrity": "PASSED",
+  "style": {
+    "override_annotation_own_line": true,
+    "important_logic_chinese_comments": true
+  },
+  "open": {"p0": 0, "p1": 0, "p2": 0},
+  "history_preserved": [
+    "COMPLETION-P1-T12-R01@c6a515820972",
+    "COMPLETION-P1-T12-R02@5d5a7d72119b",
+    "COMPLETION-P1-T12-R03@4d4cd5c4c049",
+    "COMPLETION-P1-T12-R04@923129b1f20d"
+  ],
+  "pr": 27,
+  "merge_performed": false,
+  "next_task": "TASK-P1-T13: BLOCKED_UNTIL_PR_27_MERGE"
+}
