@@ -37,10 +37,10 @@
 - First complete-oracle P0：`31016766448` — SUCCESS
 - First Artifact：`8934826368`
 - First SHA-256：`13ad7a816de48d7aca33a18996934d41d330e3f41df9742a4c33c9a167926ef6`
-- Final documented Head：`906e78c23d0c745eddf5dc19fdc491f6275a847a`
-- Final documented P0：`31017403491` — SUCCESS
-- Final Artifact：`8935096764`
-- Final SHA-256：`3d74cb3ece38b78fda142c12933bfeb8a81629eb9835bdba734b5fb04fd8339c`
+- Actual final Head：`bd0fdf839a2ec54040d2b1279424fb2e78ec694b`
+- Actual final P0：`31017617531` — SUCCESS
+- Actual final Artifact：`8935185880`
+- Actual final SHA-256：`5c9ebb3b0c0e1a075bd6f717250f47f680a0c210f92c77a90b3400695e7ca9b1`
 - Surefire XML：106；T13：34/34；T12：133/133；Compiler：486/486；Normal：606/606
 - All records：607；intentional failure：1；Errors/Skipped：0/0
 - 12 modules / Java release 8 / intentional failure gate：PASSED
@@ -48,7 +48,7 @@
 
 ## Revision Integrity
 
-- Code/Test Revision 后到 final documented Head 的 12 个提交全部只修改 `project_doc`；
+- Code/Test Revision 后到 actual final Head 的 13 个提交全部只修改 `project_doc`；
 - Production files changed：0；
 - Test code 在 `5075793d06cc...` 后无漂移。
 
