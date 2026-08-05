@@ -1,5 +1,6 @@
 package dec.core.compiler.pass;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -95,6 +97,28 @@ class CompilerPipelineReworkI004IndependentReviewTest {
                 () -> ArtifactSnapshots.freeze(
                         source,
                         new ArtifactSnapshots.Limits(3, 20, 20, 20)));
+    }
+
+    /**
+     * 共享 DAG 作为 Set 元素时，构建目标 Set 不得递归展开其 hashCode。
+     */
+    @Test
+    void sharedDagSetElementDoesNotAmplifyHashComputation() {
+        AtomicInteger hashCalls = new AtomicInteger();
+        CountingImmutableArtifact leaf = new CountingImmutableArtifact(
+                hashCalls,
+                64);
+        Object dag = sharedDag(20, leaf);
+        Set<Object> source = Collections.newSetFromMap(
+                new IdentityHashMap<Object, Boolean>());
+        source.add(dag);
+
+        Set<?> frozen = (Set<?>) assertDoesNotThrow(
+                () -> ArtifactSnapshots.freeze(source));
+
+        assertEquals(1, frozen.size());
+        assertTrue(hashCalls.get() <= 4,
+                "目标 Set 不应递归计算共享 DAG：" + hashCalls.get());
     }
 
     /** final Pass 内资源超限必须准确分类且完全不触达 publisher。 */
@@ -212,6 +236,15 @@ class CompilerPipelineReworkI004IndependentReviewTest {
         return value;
     }
 
+    /** 创建每层两次引用同一子节点的共享 DAG。 */
+    private static Object sharedDag(int depth, Object leaf) {
+        Object value = leaf;
+        for (int index = 0; index < depth; index++) {
+            value = Arrays.<Object>asList(value, value);
+        }
+        return value;
+    }
+
     /** 创建在首 Pass 写入指定 artifact 的固定十阶段 Pipeline。 */
     private static List<CompilerPass> passesWithArtifact(
             String key,
@@ -261,6 +294,34 @@ class CompilerPipelineReworkI004IndependentReviewTest {
         /** 返回真实调用次数。 */
         private int calls() {
             return calls;
+        }
+    }
+
+    /** 受信任的不可变叶子，用于统计目标容器 hash 放大。 */
+    private static final class CountingImmutableArtifact
+            implements ImmutablePipelineArtifact {
+        private final AtomicInteger hashCalls;
+        private final int limit;
+
+        private CountingImmutableArtifact(
+                AtomicInteger hashCalls,
+                int limit) {
+            this.hashCalls = hashCalls;
+            this.limit = limit;
+        }
+
+        @Override
+        public int hashCode() {
+            int current = hashCalls.incrementAndGet();
+            if (current > limit) {
+                throw new IllegalStateException("shared DAG hash expanded repeatedly");
+            }
+            return 31;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return this == other;
         }
     }
 
