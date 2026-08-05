@@ -1,6 +1,6 @@
 # TASK-P1-T12 / I004 — Artifact Snapshot 资源边界返工
 
-- Status：`IN_PROGRESS / DESIGN_PASSED`
+- Status：`COMPLETED / PASSED`
 - Base：`PR27@cf6e7dbe18d2f172dc4c68c793f45d9ecfbabe9d`
 - Dependency：`COMPLETION-P1-T11-R02@86b55b45d1cd`
 - Invalidated History：`COMPLETION-P1-T12-R01@c6a515820972`、`COMPLETION-P1-T12-R02@5d5a7d72119b`、`COMPLETION-P1-T12-R03@4d4cd5c4c049`
@@ -8,31 +8,41 @@
 - PR：`#27`
 - Design：`DESIGN-R41@P1-T12-REWORK-I004`
 - Plan：`TP-P1-COMPILER-F01-R37@P1-T12-REWORK-I004`
-- Review：`NEEDS_CHANGES / REWORK`
-- Open P0/P1/P2：`0 / 1 / 1`
+- TDD：`TDD-P1-T12-R04@1270d6f2b829`
+- Architecture：`DEVSKEL-P1-T12-R04@c82e0a3023da`
+- Development：`DEV-P1-T12-R04@923129b1f20d`
+- Code Review：`CODEREVIEW-P1-T12-R07@923129b1f20d`
+- Testing：`TESTING-P1-T12-R04@923129b1f20d`
+- Completion：`COMPLETION-P1-T12-R04@923129b1f20d`
+- Reviews：`REV-000570`～`REV-000590`
+- Evidence：`EVD-000885`～`EVD-000909`
+- Findings：`FND-P1-T12-I004-001`～`003` CLOSED
+- Open P0/P1/P2：`0 / 0 / 0`
 
-## Findings
+## Delivered contract
 
-- `FND-P1-T12-I004-001` `[P1][BLOCKER][RESOURCE]`：递归 snapshot 对深层无环图、共享 DAG 和宽容器没有资源边界，且已完成共享子图没有 identity memoization；
-- `FND-P1-T12-I004-002` `[P2]`：缺少深度、共享 DAG、唯一节点、边、Map entry、宽容器、操作次数和 publisher=0 Oracle。
+- artifact 图使用显式 traversal stack，不依赖 JVM 方法递归；
+- VISITING identity 判定循环，FROZEN identity 复用同一 immutable snapshot；
+- 默认 depth/unique-container/edge/map-entry 预算为 256/4096/65536/16384；
+- 资源超限稳定形成 FAILED、`pipeline.artifact.resource-exceeded`、publisher=0；
+- 24 层共享 DAG 按唯一图线性遍历，不产生指数复制；
+- Set/Map collision 通过 canonical structural ID 判断；
+- Frozen List/Set/Map 缓存结构 hash，目标 Set/Map 不递归展开共享 DAG；
+- 深路径不能借助 memoized FROZEN 节点绕过 depth；
+- 循环、null、未知可变对象、collision、prepare/commit、Diagnostic、Clock、Deadline、Context/Result 原合同保持；
+- 未实现 T13/T14/T15 或 P2～P7 runtime。
 
-## Goal
+## Validation
 
-交付非递归 artifact traversal、VISITING/FROZEN identity memoization、四类显式资源预算及稳定资源超限 Diagnostic；共享 DAG 必须线性遍历并复用冻结 identity，资源失败必须 `FAILED + publisher=0`。
+- Valid RED：`1270d6f2b829...` / Run `30974123330` / 6 expected failures / 0 errors；
+- Hash Review RED：`cbeed46dbf05...` / Run `30974844132` / 1 expected failure / 0 errors；
+- Clean-code Head：`923129b1f20d6bebe589231b770b5c7675b52737`；
+- P0 Run：`30975103715` — SUCCESS；
+- Artifact：`8917961744`；
+- SHA-256：`df328a44496836e018c4725714adece969f46e0f71a0228c337ff9cadb71a640`；
+- I004：17/17；T12：83/83；Compiler：402/402；正常测试：522/522；
+- Surefire XML：94；Errors/Skipped：0/0；
+- 12 模块 Reactor、Java release 8、故意失败门禁：PASSED；
+- MySQL：`SKIPPED_NOT_APPLICABLE`。
 
-## History preservation
-
-R38～R40、R34～R36、I001～I003 的 RED、Architecture、Development、Review、Testing、Completion、CI、Artifact 和 documented Head 均保持原文件及原 SHA，不回写为通过。I004 使用新的 Revision、Evidence、Review 和 Completion。
-
-## Stop conditions
-
-- R41/R37 未早于 I004 RED；
-- 仍使用 JVM 方法递归遍历容器；
-- 没有 FROZEN identity memoization；
-- 资源预算缺少 depth、unique containers、edges 或 map entries 任一项；
-- 24 层共享 DAG 仍指数复制；
-- 资源失败可越过 Pipeline 或 publisher 非 0；
-- 循环、collision、prepare/commit、Diagnostic、Clock、Deadline、Context/Result Oracle 回归；
-- Open P0/P1/P2 未清零；
-- 未完成最终 P0、Artifact、Revision Integrity 和独立 Review；
-- 用户未授权时合并 PR #27 或启动 T13。
+PR #27 未经用户明确授权不得合并；PR #27 合并前 `TASK-P1-T13` 保持 `BLOCKED_UNTIL_PR_27_MERGE`。
