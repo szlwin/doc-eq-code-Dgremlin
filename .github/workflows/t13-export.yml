@@ -1,0 +1,29 @@
+name: T13 Source Export
+
+on:
+  push:
+    branches:
+      - feature/p1-t13-semantic-digest-20260805-2005
+    paths:
+      - .github/workflows/t13-export.yml
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Package repository source
+        shell: bash
+        run: |
+          git archive --format=zip --output=t13-source.zip HEAD
+      - uses: actions/upload-artifact@v6
+        with:
+          name: t13-source
+          path: t13-source.zip
+          if-no-files-found: error
+          compression-level: 0
