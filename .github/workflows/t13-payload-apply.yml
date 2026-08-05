@@ -1,0 +1,40 @@
+name: T13 Payload Apply
+
+on:
+  push:
+    branches:
+      - feature/p1-t13-semantic-digest-20260805-2005
+    paths:
+      - .github/workflows/t13-payload-apply.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: feature/p1-t13-semantic-digest-20260805-2005
+          fetch-depth: 0
+      - name: Verify and apply production payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/t13-payload/part* | base64 -d > /tmp/t13-production.tar.gz
+          echo "0b14f12ba476842373efbe0409deeee79d63494a5840efe706d41d53b1e065f4  /tmp/t13-production.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/t13-production.tar.gz
+          git rm .github/workflows/t13-payload-apply.yml
+          git rm -r .github/t13-payload
+          git config user.name "szlwin"
+          git config user.email "szlwin@163.com"
+          git add dec-core-compiler/src/main/java/dec/core/compiler/compiled
+          git add dec-core-compiler/src/main/java/dec/core/compiler/pass/CompilationSession.java
+          git add dec-core-compiler/src/main/java/dec/core/compiler/pass/PipelineDiagnostics.java
+          git add dec-core-compiler/src/main/java/dec/core/compiler/pass/CompilerPipeline.java
+          git add dec-core-compiler/src/main/java/dec/core/compiler/pass/PipelineExecutionResult.java
+          git add dec-core-compiler/src/test/java/dec/core/compiler/pass/CompilerPipelineOrderTest.java
+          git add dec-core-compiler/src/test/java/dec/core/compiler/pass/CompilerPipelineIndependentReviewTest.java
+          git commit -m "feat(compiler): implement deterministic semantic digest"
+          git push origin HEAD:feature/p1-t13-semantic-digest-20260805-2005
