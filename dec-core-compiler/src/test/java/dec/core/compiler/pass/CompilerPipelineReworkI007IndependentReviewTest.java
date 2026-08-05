@@ -229,8 +229,9 @@ class CompilerPipelineReworkI007IndependentReviewTest {
         }
     }
 
-    /** hash 相同但 equals 按 value 区分的合法 key。 */
-    private static final class HashCollisionKey {
+    /** hash 相同但 equals 按 value 区分的合法不可变 key。 */
+    private static final class HashCollisionKey
+            implements ImmutablePipelineArtifact {
         private final String value;
 
         private HashCollisionKey(String value) {
