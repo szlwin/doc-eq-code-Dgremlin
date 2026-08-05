@@ -4,6 +4,10 @@ import dec.core.compiler.source.DocumentSource;
 import dec.core.compiler.source.SourceManifest;
 import dec.core.context.model.DigestPair;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -63,10 +67,33 @@ public final class CompilerDigestService {
             DocumentSource checked = Objects.requireNonNull(source, "source");
             updateBytes(
                     digest,
-                    checked.sourceId().getBytes(StandardCharsets.UTF_8));
+                    strictUtf8(checked.sourceId(), "sourceId"));
             updateBytes(digest, checked.content());
         }
         return toHex(digest.digest());
+    }
+
+    /**
+     * 使用严格 UTF-8 编码 Source 身份，拒绝未配对 surrogate 等 malformed UTF-16。
+     *
+     * <p>CharsetEncoder 是有状态对象，因此每次调用创建独立实例，避免无状态摘要服务
+     * 在并发使用时共享可变编码器。</p>
+     */
+    private static byte[] strictUtf8(String value, String name) {
+        String checked = Objects.requireNonNull(value, name);
+        CharsetEncoder encoder = StandardCharsets.UTF_8.newEncoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT);
+        try {
+            ByteBuffer encoded = encoder.encode(CharBuffer.wrap(checked));
+            byte[] result = new byte[encoded.remaining()];
+            encoded.get(result);
+            return result;
+        } catch (CharacterCodingException failure) {
+            throw new IllegalArgumentException(
+                    name + " must contain valid Unicode",
+                    failure);
+        }
     }
 
     /** 计算单个字节闭包的 SHA-256。 */
