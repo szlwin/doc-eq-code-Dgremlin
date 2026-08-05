@@ -1,11 +1,13 @@
 # TASK-P1-T13 / I001 — 确定性 Digest、Deadline 与 Observer
 
-- Status：`IN_PROGRESS / DESIGN_PASSED`
+- Status：`IN_PROGRESS / TDD_RED_PENDING`
 - Base：`dev_all@659fb74563bbe1fa1daaf4d3a0e868f702daaec6`
 - Dependency：`COMPLETION-P1-T12-R07@74f402287bc4`
 - Branch：`feature/p1-t13-semantic-digest-20260805-2005`
+- PR：`#28 / WORKING`
 - Design：`DESIGN-R45@P1-T13-I001`
 - Plan：`TP-P1-COMPILER-F01-R41@P1-T13-I001`
+- RED Test Revision：`307ffc222e9644a9640d4b9b97d6f8d37e51dbbc`
 - Open P0/P1/P2：`0 / 0 / 0`
 
 ## Goal
@@ -33,6 +35,14 @@
 - 完整成功 Pipeline Timing 为 DISCOVERY=1、PARSE=1、PASS=10、DIGEST=1，额外 phase 不额外读取 Clock。
 - Observer failure 产生非 ERROR `MIX-OBSERVER-FAILURE`，不静默吞掉。
 - 所有 `@Override` 独占一行；方法与重要逻辑使用中文注释。
+
+## TDD RED matrix
+
+- `SemanticDigestDeterminismTest`：6 项；
+- `CompilationObserverTest`：4 项；
+- `CompilationDeadlineTest`：3 项；
+- 首次 Actions 推送产生的 Run `31005605957` 为 `action_required / no jobs`，不计入 RED Evidence；
+- 由本用户提交触发的新 P0 才可作为有效 RED。
 
 ## Stop conditions
 
