@@ -47,10 +47,10 @@
 - Clean P0：`31011874941` — SUCCESS
 - Clean Artifact：`8932801028`
 - Clean SHA-256：`679600735885f589a6370b0ad54845c909a24b2749b7b5edc4ac231822a8bf05`
-- Frozen final Head：`7fe1f671f1d8f732dcab513db04a35a9cf642fa6`
-- Frozen final P0：`31013428053` — SUCCESS
-- Frozen final Artifact：`8933450877`
-- Frozen final SHA-256：`ebfe9651866c97f92497dc53009789c72192344e60f605ccb91fdd778db27995`
+- Final frozen Head：`ea0ca9c5f3d5d5fdf30f2ed938e70f84b27bfecb`
+- Final frozen P0：`31013595041` — SUCCESS
+- Final frozen Artifact：`8933522085`
+- Final frozen SHA-256：`62a49d186f83eed9b3c4121bad875aa9f9c34f4d8f9ad6c6578d6b6bd200f662`
 - Final Surefire XML：`106`；T13：`34/34`；T12：`133/133`；Compiler：`486/486`；Normal：`606/606`
 - Final all records：`607`；intentional failure：`1`；Errors/Skipped：`0/0`
 - 12 modules / Java release 8 / intentional failure gate：PASSED
@@ -62,7 +62,7 @@
 - R42 first commit/blob：`3fa56d310286b4f72d4843f2129b5d1906cc21a0` / `6a346fe9d15f9ffbca17b0edb6622e1d044b57a0`
 - R46/R42 均早于 RED，blob 未变化；
 - Code/Test Revision 后只允许 `project_doc` 更新；
-- `7d39c3bc0ab4...` 到 `7fe1f671f1d8...` 的 14 个提交全部仅修改 `project_doc`。
+- `7d39c3bc0ab4...` 到 `ea0ca9c5f3d5...` 的 15 个提交全部仅修改 `project_doc`。
 
 ## Recovery
 
