@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "taskId": "TASK-P1-T13",
+  "iteration": "I001",
+  "status": "PASSED",
+  "base": "659fb74563bbe1fa1daaf4d3a0e868f702daaec6",
+  "dependency": "COMPLETION-P1-T12-R07@74f402287bc4",
+  "design": {
+    "revision": "DESIGN-R45@P1-T13-I001",
+    "firstCommit": "ef33ccf6f8fb7c4b2c76a4b137344cd5cb479858",
+    "blob": "ef0afc35234292a9c8e21a862af62eb91a100056"
+  },
+  "plan": {
+    "revision": "TP-P1-COMPILER-F01-R41@P1-T13-I001",
+    "firstCommit": "392a8a40d3a390b6b8faae4e6e7d3af19df70091",
+    "blob": "6a5216718681d6f14ffe9ae9cfa56eb0a4d57cfa"
+  },
+  "tdd": {
+    "revision": "TDD-P1-T13-R01@4f3d444f779f",
+    "head": "4f3d444f779f5c1f69a5b61751cbd00b4a9a528b",
+    "run": 31005889102,
+    "artifact": 8930284340,
+    "sha256": "fe03a8fea61ff6ecbcd2a45f8ddba3f91ac37629cf8c9ff1a583777dc5fa5946"
+  },
+  "architecture": "DEVSKEL-P1-T13-R01@4f3d444f779f",
+  "productionCommit": "65f96c71ae0560f375d402b586125ad4879dde4b",
+  "codeTestCommit": "74672ee1367bab9de75b4028cd4578b6118f96f0",
+  "development": "DEV-P1-T13-R01@74672ee1367b",
+  "codeReview": "CODEREVIEW-P1-T13-R01@74672ee1367b",
+  "testing": "TESTING-P1-T13-R01@74672ee1367b",
+  "completion": "COMPLETION-P1-T13-R01@74672ee1367b",
+  "cleanCodeValidation": {
+    "head": "eadeeffba4a947b1f400890fffbeafc30803ef1a",
+    "run": 31008161016,
+    "artifact": 8931238649,
+    "sha256": "57c6b57716f52e0c86ace7daf221fb51b8c88a5c7af5e2396a8d690c9f4dfed4",
+    "surefireXml": 105,
+    "t13Tests": 25,
+    "compilerTests": 477,
+    "normalTests": 597,
+    "allRecords": 598,
+    "intentionalFailures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "reviews": ["REV-000653", "REV-000671"],
+  "evidence": ["EVD-001003", "EVD-001018"],
+  "openFindings": {"p0": 0, "p1": 0, "p2": 0},
+  "scopeExclusions": ["TASK-P1-T14", "TASK-P1-T15", "P2-P7-runtime"],
+  "mergeAuthorized": false
+}
