@@ -1,6 +1,6 @@
 # TASK-P1-T13 / I001 — 确定性 Digest、Deadline 与 Observer
 
-- Status：`IN_PROGRESS / DEVELOPMENT_IMPLEMENTED_PENDING_GREEN`
+- Status：`IN_PROGRESS / INDEPENDENT_REVIEW_PENDING`
 - Base：`dev_all@659fb74563bbe1fa1daaf4d3a0e868f702daaec6`
 - Dependency：`COMPLETION-P1-T12-R07@74f402287bc4`
 - Branch：`feature/p1-t13-semantic-digest-20260805-2005`
@@ -10,6 +10,7 @@
 - TDD：`TDD-P1-T13-R01@4f3d444f779f`
 - Architecture：`DEVSKEL-P1-T13-R01@4f3d444f779f`
 - Production Revision：`65f96c71ae0560f375d402b586125ad4879dde4b`
+- Independent Review Test Revision：`74672ee1367bab9de75b4028cd4578b6118f96f0`
 - Open P0/P1/P2：`0 / 0 / 0`
 
 ## Goal
@@ -46,6 +47,14 @@
 - SHA-256：`fe03a8fea61ff6ecbcd2a45f8ddba3f91ac37629cf8c9ff1a583777dc5fa5946`
 - Result：`13 tests / 11 expected failures / 2 passing controls / 0 errors`
 
+## First GREEN
+
+- Head：`44aaa97678407865a34d06a9d4e61c21538ba273`
+- Production：`65f96c71ae0560f375d402b586125ad4879dde4b`
+- P0 Run：`31007497348` — SUCCESS
+- Artifact：`8930962119`
+- SHA-256：`e42468dc2480a7e103aa511c41518fcb692b996f3547cc7374e143226f1c6e88`
+
 ## Production delivery
 
 - `CanonicalJsonWriter`：Unicode code point object-key 顺序、标准 escaping、canonical decimal、cycle/unknown/duplicate-key fail-closed；
@@ -54,7 +63,19 @@
 - Pipeline：复用原 Pass 时钟读数记录 DISCOVERY/PARSE/PASS/DIGEST；
 - Observer：RuntimeException 转换为 `MIX-OBSERVER-FAILURE / WARNING`，不能改变 Session 终态或发布结果；
 - T14/T15 范围未实现；
-- 传输辅助 payload 与 Workflow 已从 Production Revision 文件树删除。
+- 所有传输辅助 payload 与 Workflow 已从最终代码树删除。
+
+## Independent Review matrix
+
+- Unicode supplementary code point key 顺序；
+- quote/backslash/control escaping 与 canonical decimal；
+- NaN/Infinity/未知对象/循环/重复 object key fail-closed；
+- 空输入与版本域；
+- SemanticDigestInput 防御性快照；
+- Source length-prefix 与 Unicode sourceId 顺序；
+- 每次 Timing/Transition Observer 失败均形成 Warning；
+- supplemental timing elapsed 与 Clock 读取次数；
+- observation diagnostic code/severity/seal 边界。
 
 ## Stop conditions
 
