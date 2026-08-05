@@ -5,8 +5,11 @@ import dec.core.compiler.api.CompilationRequest;
 import dec.core.compiler.api.CompilationSessionState;
 import dec.core.compiler.api.CompilationTiming;
 import dec.core.compiler.api.PublicationRequest;
+import dec.core.compiler.api.PublicationResult;
+import dec.core.compiler.api.PublicationStatus;
 import dec.core.compiler.api.SessionStateTransition;
 import dec.core.compiler.api.TimingPhase;
+import dec.core.context.EngineContext;
 import dec.core.context.model.Diagnostic;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 按 DESIGN-R39 固定顺序协调九个普通 Pass 和最终 Publication Pass。
+ * 按 DESIGN-R40 固定顺序协调九个普通 Pass、最终准备阶段和唯一提交边界。
  */
 public final class CompilerPipeline {
     public static final String SOURCE_GRAPH_VALIDATION_PASS =
@@ -64,7 +67,7 @@ public final class CompilerPipeline {
         this.passes = Collections.unmodifiableList(copy);
     }
 
-    /** 返回 DESIGN-R39 冻结的 Pass 名称顺序。 */
+    /** 返回 DESIGN-R40 冻结的 Pass 名称顺序。 */
     public static List<String> fixedPassOrder() {
         return FIXED_PASS_ORDER;
     }
@@ -75,7 +78,7 @@ public final class CompilerPipeline {
     }
 
     /**
-     * 创建新 Session，并在 execute 栈上局部持有 PublicationRequest。
+     * 创建新 Session，并仅在 Pipeline 栈上持有 PublicationRequest。
      *
      * <p>该方法保持包内可见，避免形成绕过 {@code ModelCompiler.compileAndPublish}
      * 的公共 compile-only 成功入口。</p>
@@ -113,7 +116,11 @@ public final class CompilerPipeline {
             return false;
         }
         Long startedNanos = readClockOrFail(session, passName);
-        if (startedNanos == null) {
+        if (startedNanos == null
+                || !validateStartDeadline(
+                        session,
+                        passName,
+                        startedNanos.longValue())) {
             return false;
         }
 
@@ -132,10 +139,14 @@ public final class CompilerPipeline {
         }
 
         Long endedNanos = readClockOrFail(session, passName);
-        if (endedNanos == null) {
+        if (endedNanos == null
+                || !recordTimingOrFail(
+                        session,
+                        passName,
+                        startedNanos.longValue(),
+                        endedNanos.longValue())) {
             return false;
         }
-        recordTiming(session, passName, startedNanos.longValue(), endedNanos.longValue());
         session.addDiagnostics(passResult.diagnostics());
         if (session.hasErrors()) {
             fail(session);
@@ -149,7 +160,7 @@ public final class CompilerPipeline {
     }
 
     /**
-     * 执行最终 Publication Pass；提交成功后任何后置故障都不得降级状态。
+     * 执行最终候选准备阶段；完整 Diagnostic 和基础设施门禁通过后才提交。
      */
     private static void executePublicationPass(
             CompilationSession session,
@@ -160,14 +171,16 @@ public final class CompilerPipeline {
             return;
         }
         Long startedNanos = readClockOrFail(session, passName);
-        if (startedNanos == null) {
+        if (startedNanos == null
+                || !validateStartDeadline(
+                        session,
+                        passName,
+                        startedNanos.longValue())) {
             return;
         }
 
         session.recordPass(passName);
-        PublicationPassContext context = new PublicationPassContext(
-                session,
-                publicationRequest);
+        PublicationPassContext context = new PublicationPassContext(session);
         PassResult passResult = null;
         RuntimeException passFailure = null;
         try {
@@ -178,21 +191,15 @@ public final class CompilerPipeline {
             context.close();
         }
 
-        if (context.publicationSucceeded()
-                || session.state() == CompilationSessionState.PUBLISHED) {
-            // 外部提交已经成功：timing 只做尽力记录，任何后置故障均不改变语义终态。
-            recordCommittedTimingSafely(
-                    session,
-                    passName,
-                    startedNanos.longValue());
-            return;
-        }
-
         Long endedNanos = readClockOrFail(session, passName);
-        if (endedNanos == null) {
+        if (endedNanos == null
+                || !recordTimingOrFail(
+                        session,
+                        passName,
+                        startedNanos.longValue(),
+                        endedNanos.longValue())) {
             return;
         }
-        recordTiming(session, passName, startedNanos.longValue(), endedNanos.longValue());
 
         if (passFailure != null) {
             if (!session.hasErrors()) {
@@ -206,16 +213,69 @@ public final class CompilerPipeline {
             addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
             return;
         }
+
+        // 最终 Pass 的返回 Diagnostic 必须在任何外部提交前完整进入 Session。
         session.addDiagnostics(passResult.diagnostics());
         if (session.hasErrors()) {
             fail(session);
             return;
         }
-        if (!context.publishAttempted()) {
+        Optional<EngineContext> candidate = context.preparedCandidate();
+        if (!context.candidatePrepared() || !candidate.isPresent()) {
             addFailureAndStop(session, PipelineDiagnostics.publicationBlocked());
             return;
         }
-        addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+        if (!preflight(session, passName)) {
+            return;
+        }
+
+        commitPublication(session, publicationRequest, candidate.get());
+    }
+
+    /**
+     * Pipeline 唯一调用 publisher，并在返回 PUBLISHED 后立即锁定不可逆终态。
+     */
+    private static void commitPublication(
+            CompilationSession session,
+            PublicationRequest publicationRequest,
+            EngineContext candidate) {
+        PublicationResult result;
+        try {
+            result = publicationRequest.publisher().publish(
+                    publicationRequest.expectedCurrent(),
+                    candidate);
+        } catch (RuntimeException failure) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+            return;
+        }
+        if (result == null) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+            return;
+        }
+
+        PublicationStatus status;
+        try {
+            // PublicationStatus 只读取一次，避免不稳定实现产生分裂判断。
+            status = result.status();
+        } catch (RuntimeException failure) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+            return;
+        }
+        if (status == null) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+            return;
+        }
+        if (status == PublicationStatus.CONFLICT) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationConflict());
+            return;
+        }
+        if (status != PublicationStatus.PUBLISHED) {
+            addFailureAndStop(session, PipelineDiagnostics.publicationFailure());
+            return;
+        }
+
+        // publisher 已确认提交成功，后续 Observer 故障不能否定外部事实。
+        transition(session, CompilationSessionState.PUBLISHED);
     }
 
     /** 在执行任何 Pass 前验证完整固定顺序和 capability 类型。 */
@@ -279,6 +339,28 @@ public final class CompilerPipeline {
             }
         }
         return true;
+    }
+
+    /**
+     * 使用真实 start timestamp 再次复核 Deadline，防止陈旧 preflight 放行。
+     */
+    private static boolean validateStartDeadline(
+            CompilationSession session,
+            String passName,
+            long startedNanos) {
+        if (!session.request().deadline().isPresent()) {
+            return true;
+        }
+        try {
+            if (session.request().deadline().get().isExpired(startedNanos)) {
+                addFailureAndStop(session, PipelineDiagnostics.timedOut(passName));
+                return false;
+            }
+            return true;
+        } catch (RuntimeException failure) {
+            addFailureAndStop(session, PipelineDiagnostics.clockFailure(passName));
+            return false;
+        }
     }
 
     /** 读取 start/end clock；失败时形成独立 Diagnostic 并停止。 */
@@ -357,34 +439,37 @@ public final class CompilerPipeline {
         }
     }
 
-    /** 记录非负 Pass 耗时，并交给 Observer 只读观察。 */
-    private static void recordTiming(
+    /**
+     * 溢出安全地记录 Pass timing；任一异常都转换为稳定 Clock failure。
+     */
+    private static boolean recordTimingOrFail(
             CompilationSession session,
             String passName,
             long startedNanos,
             long endedNanos) {
-        long elapsedNanos = endedNanos >= startedNanos
-                ? endedNanos - startedNanos
-                : 0L;
-        CompilationTiming timing = new CompilationTiming(
-                TimingPhase.PASS,
-                Optional.of(passName),
-                elapsedNanos);
-        session.recordTiming(timing);
-        notifyTiming(session.request().observer(), timing);
+        try {
+            long elapsedNanos = elapsedNanos(startedNanos, endedNanos);
+            CompilationTiming timing = new CompilationTiming(
+                    TimingPhase.PASS,
+                    Optional.of(passName),
+                    elapsedNanos);
+            session.recordTiming(timing);
+            notifyTiming(session.request().observer(), timing);
+            return true;
+        } catch (RuntimeException failure) {
+            addFailureAndStop(session, PipelineDiagnostics.clockFailure(passName));
+            return false;
+        }
     }
 
-    /** 发布成功后尽力补充 timing，任何异常均不得否定提交。 */
-    private static void recordCommittedTimingSafely(
-            CompilationSession session,
-            String passName,
-            long startedNanos) {
-        try {
-            long endedNanos = session.request().clock().nanoTime();
-            recordTiming(session, passName, startedNanos, endedNanos);
-        } catch (RuntimeException ignored) {
-            // post-commit timing 是非语义观察事实；失败时允许缺失，不降级 PUBLISHED。
+    /**
+     * 计算非负 elapsed；递增 long 的差值溢出时使用异常触发 fail-closed。
+     */
+    private static long elapsedNanos(long startedNanos, long endedNanos) {
+        if (endedNanos < startedNanos) {
+            return 0L;
         }
+        return Math.subtractExact(endedNanos, startedNanos);
     }
 
     /** Observer timing 回调失败不得改变 Session 状态或结果。 */
