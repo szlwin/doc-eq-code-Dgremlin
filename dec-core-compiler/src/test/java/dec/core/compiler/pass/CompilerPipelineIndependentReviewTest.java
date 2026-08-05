@@ -73,7 +73,7 @@ class CompilerPipelineIndependentReviewTest {
 
         assertEquals(CompilationSessionState.FAILED, result.state());
         assertEquals(3, executions.size());
-        assertEquals(3, result.timings().size());
+        assertEquals(5, result.timings().size());
         assertFalse(executions.contains(CompilerPipeline.PUBLICATION_PASS));
         assertTrue(result.diagnostics().stream().anyMatch(diagnostic ->
                 diagnostic.code() == DiagnosticCode.MIX_COMPILATION_CANCELLED));

@@ -1,0 +1,52 @@
+{
+  "taskId": "TASK-P1-T13",
+  "iteration": "I003",
+  "status": "PASSED",
+  "reviewedBase": "f80656c19dd695c92e75a4d8eceb8b54d8e37940",
+  "design": "DESIGN-R47@P1-T13-REWORK-I003",
+  "plan": "TP-P1-COMPILER-F01-R43@P1-T13-REWORK-I003",
+  "tdd": {
+    "id": "TDD-P1-T13-R03@5075793d06cc",
+    "mode": "ORACLE_HARDENING",
+    "productionRed": "NOT_APPLICABLE"
+  },
+  "architecture": "DEVSKEL-P1-T13-R03@5075793d06cc",
+  "development": "DEV-P1-T13-R03@5075793d06cc",
+  "codeReview": "CODEREVIEW-P1-T13-R05@5075793d06cc",
+  "testing": "TESTING-P1-T13-R03@5075793d06cc",
+  "codeTestRevision": "5075793d06cc028038d9689f0ca733ecc446e7b0",
+  "productionFilesChanged": 0,
+  "testFilesChanged": [
+    "dec-core-compiler/src/test/java/dec/core/compiler/pass/CompilationObserverIndependentReviewTest.java"
+  ],
+  "validation": {
+    "run": 31016766448,
+    "artifact": 8934826368,
+    "sha256": "13ad7a816de48d7aca33a18996934d41d330e3f41df9742a4c33c9a167926ef6",
+    "surefireXml": 106,
+    "allRecords": 607,
+    "normalPassed": 606,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "t13": 34,
+    "t12": 133,
+    "compiler": 486
+  },
+  "previousReview": {
+    "id": "CODEREVIEW-P1-T13-R03@7d39c3bc0ab4",
+    "status": "INVALIDATED_PRESERVED"
+  },
+  "previousCompletion": {
+    "id": "COMPLETION-P1-T13-R02@7d39c3bc0ab4",
+    "status": "INVALIDATED_PRESERVED"
+  },
+  "openFindings": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "mergePerformed": false,
+  "nextTask": "TASK-P1-T14",
+  "nextTaskStatus": "BLOCKED_UNTIL_PR_28_MERGE"
+}

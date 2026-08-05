@@ -1,0 +1,58 @@
+{
+  "taskId": "TASK-P1-T13",
+  "iteration": "I002",
+  "status": "PASSED",
+  "base": "PR28@9d180f2d34728cd453c377a6310b01fe1a7659cf",
+  "design": {
+    "id": "DESIGN-R46@P1-T13-REWORK-I002",
+    "firstCommit": "126db598680958cd6f4c4c2bdc8745743402b4ca",
+    "blob": "20034ec2cdb4353dbca459df7cdb2335e25b182b"
+  },
+  "plan": {
+    "id": "TP-P1-COMPILER-F01-R42@P1-T13-REWORK-I002",
+    "firstCommit": "3fa56d310286b4f72d4843f2129b5d1906cc21a0",
+    "blob": "6a346fe9d15f9ffbca17b0edb6622e1d044b57a0"
+  },
+  "tdd": {
+    "id": "TDD-P1-T13-R02@83c66072849c",
+    "head": "83c66072849c8017beb74adbb539820a15bb515e",
+    "run": 31011478257,
+    "artifact": 8932629734,
+    "sha256": "dff13bcc110615bf1648e2df535b3cd1149045851f5c3f2cbcb0cfa5e4a9642c",
+    "expectedFailures": 3,
+    "errors": 0
+  },
+  "architecture": "DEVSKEL-P1-T13-R02@83c66072849c",
+  "productionRevision": "e2842eb888651858770202c560b1f4cd5932e7d7",
+  "codeTestRevision": "7d39c3bc0ab45b6cd3c8ab637c10ae40a15e07b8",
+  "development": "DEV-P1-T13-R02@7d39c3bc0ab4",
+  "codeReview": "CODEREVIEW-P1-T13-R03@7d39c3bc0ab4",
+  "testing": "TESTING-P1-T13-R02@7d39c3bc0ab4",
+  "cleanValidation": {
+    "run": 31011874941,
+    "artifact": 8932801028,
+    "sha256": "679600735885f589a6370b0ad54845c909a24b2749b7b5edc4ac231822a8bf05",
+    "surefireXml": 106,
+    "allRecords": 607,
+    "normalPassed": 606,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "t13": 34,
+    "t12": 133,
+    "compiler": 486
+  },
+  "previousCompletion": {
+    "id": "COMPLETION-P1-T13-R01@74672ee1367b",
+    "status": "INVALIDATED_PRESERVED"
+  },
+  "openFindings": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "postCodeTestPolicy": "PROJECT_DOC_ONLY",
+  "mergePerformed": false,
+  "nextTask": "TASK-P1-T14",
+  "nextTaskStatus": "BLOCKED_UNTIL_PR_28_MERGE"
+}
