@@ -33,8 +33,8 @@ class CandidateContextT14IndependentReviewTest {
     /** Registry 与 Deferred 必须只在各自阶段读取，freeze 后不得重新访问。 */
     @Test
     void mutableRegistriesAreReadOnlyDuringTheirSnapshotStage() {
-        CountingRegistry definitions = new CountingRegistry();
-        CountingDeferredRegistry deferred = new CountingDeferredRegistry();
+        CountingRegistry definitions = new CountingRegistry(0);
+        CountingDeferredRegistry deferred = new CountingDeferredRegistry(0);
 
         CompiledModelSetBuilder.FrozenInput input = builder()
                 .sourceManifest(PublishedSourceManifest.empty())
@@ -51,6 +51,24 @@ class CandidateContextT14IndependentReviewTest {
         assertEquals(1, deferred.keysReads.get());
         assertEquals(0, candidate.compiledModelSet().definitions().size());
         assertEquals(0, candidate.compiledModelSet().deferred().size());
+    }
+
+    /** keys 与 size 不一致时不得静默形成不完整发布快照。 */
+    @Test
+    void inconsistentRegistrySizesFailClosed() {
+        CompiledModelSetBuilder definitionBuilder = builder()
+                .sourceManifest(PublishedSourceManifest.empty());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> definitionBuilder.definitions(new CountingRegistry(1)));
+
+        CompiledModelSetBuilder deferredBuilder = builder()
+                .sourceManifest(PublishedSourceManifest.empty())
+                .definitions(new CountingRegistry(0));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> deferredBuilder.deferred(
+                        new CountingDeferredRegistry(1)));
     }
 
     /** ERROR Diagnostic 必须在 candidate 构造边界 fail-closed。 */
@@ -145,8 +163,8 @@ class CandidateContextT14IndependentReviewTest {
     private static CompiledModelSetBuilder.FrozenInput input() {
         return builder()
                 .sourceManifest(PublishedSourceManifest.empty())
-                .definitions(new CountingRegistry())
-                .deferred(new CountingDeferredRegistry())
+                .definitions(new CountingRegistry(0))
+                .deferred(new CountingDeferredRegistry(0))
                 .digestPair(new DigestPair("source-review", "semantic-review"))
                 .freeze();
     }
@@ -162,8 +180,14 @@ class CandidateContextT14IndependentReviewTest {
     /** 统计并可拒绝阶段结束后读取的空 Definition Registry。 */
     private static final class CountingRegistry
             implements Registry<DefinitionKey, CompiledDefinition> {
+        private final int reportedSize;
         private final AtomicInteger keysReads = new AtomicInteger();
         private boolean rejectFurtherReads;
+
+        /** 允许测试制造 keys 与 size 不一致的 Registry。 */
+        private CountingRegistry(int reportedSize) {
+            this.reportedSize = reportedSize;
+        }
 
         @Override
         public Optional<CompiledDefinition> find(DefinitionKey key) {
@@ -187,7 +211,7 @@ class CandidateContextT14IndependentReviewTest {
         @Override
         public int size() {
             rejectIfClosed();
-            return 0;
+            return reportedSize;
         }
 
         /** 模拟调用方在阶段完成后封闭原 Registry。 */
@@ -201,8 +225,14 @@ class CandidateContextT14IndependentReviewTest {
     /** 统计并可拒绝阶段结束后读取的空 Deferred Registry。 */
     private static final class CountingDeferredRegistry
             implements DeferredRegistry {
+        private final int reportedSize;
         private final AtomicInteger keysReads = new AtomicInteger();
         private boolean rejectFurtherReads;
+
+        /** 允许测试制造 keys 与 size 不一致的 Deferred Registry。 */
+        private CountingDeferredRegistry(int reportedSize) {
+            this.reportedSize = reportedSize;
+        }
 
         @Override
         public List<DeferredDefinition> requiredBy(RequiredStage stage) {
@@ -232,7 +262,7 @@ class CandidateContextT14IndependentReviewTest {
         @Override
         public int size() {
             rejectIfClosed();
-            return 0;
+            return reportedSize;
         }
 
         /** 模拟调用方在阶段完成后封闭原 Deferred Registry。 */
