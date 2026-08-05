@@ -13,6 +13,7 @@ import dec.core.compiler.api.PublicationResult;
 import dec.core.compiler.api.SessionStateTransition;
 import dec.core.compiler.api.TimingPhase;
 import dec.core.context.EngineContext;
+import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DiagnosticCode;
 import dec.core.context.model.DiagnosticSeverity;
 import java.util.ArrayList;
@@ -70,54 +71,67 @@ class CompilationObserverIndependentReviewTest {
         assertFalse(result.artifacts().isEmpty());
     }
 
-    /** FAILED 转换的 Observer 异常只能追加 Warning，不能覆盖原 ERROR 或触发发布。 */
+    /**
+     * FAILED 转换的 Observer 异常只能追加精确 Warning，不能改变原错误身份、
+     * Pass 执行、状态转换、Timing、Publisher 或 Artifact。
+     */
     @Test
     void failedTransitionObserverFailurePreservesOriginalFailure() {
-        AtomicInteger publisherCalls = new AtomicInteger();
-        CompilationObserver observer = new CompilationObserver() {
-            @Override
-            public void onTiming(CompilationTiming timing) {
-                // 本用例只让 FAILED 状态转换回调失败。
-            }
+        AtomicInteger controlPublisherCalls = new AtomicInteger();
+        AtomicInteger observedPublisherCalls = new AtomicInteger();
+        List<String> controlExecutions = new ArrayList<String>();
+        List<String> observedExecutions = new ArrayList<String>();
 
-            @Override
-            public void onStateTransition(SessionStateTransition transition) {
-                if (transition.to() == CompilationSessionState.FAILED) {
-                    throw new IllegalStateException("observer-failure");
-                }
-            }
-        };
-        ContextPublisher publisher = new ContextPublisher() {
-            @Override
-            public PublicationResult publish(
-                    Optional<EngineContext> expectedCurrent,
-                    EngineContext candidate) {
-                publisherCalls.incrementAndGet();
-                return PipelineTestSupport.publishedResult();
-            }
-        };
+        PipelineExecutionResult control = executeFailed(
+                new PipelineTestSupport.RecordingObserver(),
+                controlPublisherCalls,
+                controlExecutions);
+        PipelineExecutionResult observed = executeFailed(
+                failedTransitionThrowingObserver(),
+                observedPublisherCalls,
+                observedExecutions);
 
-        PipelineExecutionResult result = new CompilerPipeline(
-                PipelineTestSupport.failingPasses(
-                        new ArrayList<String>(),
-                        2)).execute(
-                PipelineTestSupport.request(
-                        new CountingClock(),
-                        () -> false,
-                        Optional.empty(),
-                        observer),
-                PipelineTestSupport.publicationRequest(publisher));
+        // Observer 失败不得改变 Pipeline 的任何执行事实或终态顺序。
+        assertEquals(control.state(), observed.state());
+        assertEquals(CompilationSessionState.FAILED, observed.state());
+        assertEquals(control.executedPasses(), observed.executedPasses());
+        assertEquals(controlExecutions, observedExecutions);
+        assertEquals(control.transitions(), observed.transitions());
+        assertEquals(control.timings(), observed.timings());
 
-        assertEquals(CompilationSessionState.FAILED, result.state());
-        assertEquals(1L, result.diagnostics().stream().filter(diagnostic ->
-                diagnostic.severity() == DiagnosticSeverity.ERROR
-                        && "test.pass.error".equals(diagnostic.messageKey()))
-                .count());
-        assertEquals(
-                1L,
-                warningCount(result, "pipeline.observer.transition.failure"));
-        assertEquals(0, publisherCalls.get());
-        assertTrue(result.artifacts().isEmpty());
+        // 原始 Pass ERROR 的完整身份必须在两组结果中保持一致。
+        Diagnostic controlOriginal = requireDiagnostic(
+                control,
+                DiagnosticCode.MIX_PUBLICATION_BLOCKED,
+                DiagnosticSeverity.ERROR,
+                "test.pass.error");
+        Diagnostic observedOriginal = requireDiagnostic(
+                observed,
+                DiagnosticCode.MIX_PUBLICATION_BLOCKED,
+                DiagnosticSeverity.ERROR,
+                "test.pass.error");
+        assertEquals("PipelineTestPass", controlOriginal.pass());
+        assertEquals(controlOriginal, observedOriginal);
+
+        // 观察组唯一允许新增一个与真实 FAILED 转换一致的 Warning。
+        Diagnostic warning = requireDiagnostic(
+                observed,
+                DiagnosticCode.MIX_OBSERVER_FAILURE,
+                DiagnosticSeverity.WARNING,
+                "pipeline.observer.transition.failure");
+        assertEquals("STRUCTURALLY_VALIDATED->FAILED", warning.pass());
+        assertEquals(control.diagnostics().size() + 1, observed.diagnostics().size());
+        assertEquals(0L, warningCount(
+                control,
+                "pipeline.observer.transition.failure"));
+        assertEquals(1L, warningCount(
+                observed,
+                "pipeline.observer.transition.failure"));
+
+        assertEquals(0, controlPublisherCalls.get());
+        assertEquals(0, observedPublisherCalls.get());
+        assertTrue(control.artifacts().isEmpty());
+        assertTrue(observed.artifacts().isEmpty());
     }
 
     /** supplemental timing 必须复用同一 elapsed，且总 Clock 读取保持 20。 */
@@ -169,6 +183,67 @@ class CompilationObserverIndependentReviewTest {
                 IllegalStateException.class,
                 () -> session.addObservationDiagnostic(
                         PipelineDiagnostics.observerTimingFailure("PASS:test")));
+    }
+
+    /** 构造只在真实 FAILED 状态转换时抛异常的 Observer。 */
+    private static CompilationObserver failedTransitionThrowingObserver() {
+        return new CompilationObserver() {
+            @Override
+            public void onTiming(CompilationTiming timing) {
+                // 本用例不干扰 Timing 回调。
+            }
+
+            @Override
+            public void onStateTransition(SessionStateTransition transition) {
+                if (transition.to() == CompilationSessionState.FAILED) {
+                    throw new IllegalStateException("observer-failure");
+                }
+            }
+        };
+    }
+
+    /**
+     * 使用固定失败位置执行 Pipeline，确保控制组和观察组只有 Observer 行为不同。
+     */
+    private static PipelineExecutionResult executeFailed(
+            CompilationObserver observer,
+            AtomicInteger publisherCalls,
+            List<String> executions) {
+        ContextPublisher publisher = new ContextPublisher() {
+            @Override
+            public PublicationResult publish(
+                    Optional<EngineContext> expectedCurrent,
+                    EngineContext candidate) {
+                publisherCalls.incrementAndGet();
+                return PipelineTestSupport.publishedResult();
+            }
+        };
+        return new CompilerPipeline(
+                PipelineTestSupport.failingPasses(executions, 2)).execute(
+                PipelineTestSupport.request(
+                        new CountingClock(),
+                        () -> false,
+                        Optional.empty(),
+                        observer),
+                PipelineTestSupport.publicationRequest(publisher));
+    }
+
+    /** 按完整身份查找唯一 Diagnostic，避免只按 severity 或 messageKey 误命中。 */
+    private static Diagnostic requireDiagnostic(
+            PipelineExecutionResult result,
+            DiagnosticCode code,
+            DiagnosticSeverity severity,
+            String messageKey) {
+        List<Diagnostic> matches = new ArrayList<Diagnostic>();
+        for (Diagnostic diagnostic : result.diagnostics()) {
+            if (diagnostic.code() == code
+                    && diagnostic.severity() == severity
+                    && messageKey.equals(diagnostic.messageKey())) {
+                matches.add(diagnostic);
+            }
+        }
+        assertEquals(1, matches.size());
+        return matches.get(0);
     }
 
     /** 运行完整成功 Pipeline。 */
