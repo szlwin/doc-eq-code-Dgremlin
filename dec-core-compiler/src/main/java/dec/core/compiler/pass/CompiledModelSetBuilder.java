@@ -13,6 +13,7 @@ import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.ImmutableRegistry;
 import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.Registry;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,15 +111,25 @@ public final class CompiledModelSetBuilder {
         }
     }
 
-    /** 对 Definition Registry 执行单次、确定性的防御性复制。 */
+    /** 对 Definition Registry 执行单次、确定性且完整的防御性复制。 */
     private static ImmutableRegistry<DefinitionKey, CompiledDefinition>
             snapshotDefinitions(
                     Registry<DefinitionKey, CompiledDefinition> source) {
         Registry<DefinitionKey, CompiledDefinition> checked =
                 Objects.requireNonNull(source, "definitions");
+        int declaredSize = requireNonNegativeSize(
+                checked.size(),
+                "definitions");
+        List<DefinitionKey> keys = new ArrayList<DefinitionKey>(
+                Objects.requireNonNull(checked.keys(), "definitions keys"));
+        requireCompleteKeyEnumeration(
+                "definitions",
+                declaredSize,
+                keys.size());
+
         Map<DefinitionKey, CompiledDefinition> copy =
                 new LinkedHashMap<DefinitionKey, CompiledDefinition>();
-        for (DefinitionKey key : checked.keys()) {
+        for (DefinitionKey key : keys) {
             DefinitionKey checkedKey = Objects.requireNonNull(
                     key,
                     "definitions contains null key");
@@ -137,16 +148,26 @@ public final class CompiledModelSetBuilder {
                         "definitions contains duplicate key: " + checkedKey);
             }
         }
+        requireStableSnapshot(
+                "definitions",
+                declaredSize,
+                copy.size(),
+                checked.size());
         return new ImmutableRegistry<DefinitionKey, CompiledDefinition>(copy);
     }
 
-    /** 对 Deferred Registry 执行单次、确定性的防御性复制。 */
+    /** 对 Deferred Registry 执行单次、确定性且完整的防御性复制。 */
     private static ImmutableDeferredRegistry snapshotDeferred(
             DeferredRegistry source) {
         DeferredRegistry checked = Objects.requireNonNull(source, "deferred");
+        int declaredSize = requireNonNegativeSize(checked.size(), "deferred");
+        List<DeferredKey> keys = new ArrayList<DeferredKey>(
+                Objects.requireNonNull(checked.keys(), "deferred keys"));
+        requireCompleteKeyEnumeration("deferred", declaredSize, keys.size());
+
         Map<DeferredKey, DeferredDefinition> copy =
                 new LinkedHashMap<DeferredKey, DeferredDefinition>();
-        for (DeferredKey key : checked.keys()) {
+        for (DeferredKey key : keys) {
             DeferredKey checkedKey = Objects.requireNonNull(
                     key,
                     "deferred contains null key");
@@ -166,7 +187,53 @@ public final class CompiledModelSetBuilder {
                         "deferred contains duplicate key: " + checkedKey);
             }
         }
+        requireStableSnapshot(
+                "deferred",
+                declaredSize,
+                copy.size(),
+                checked.size());
         return new ImmutableDeferredRegistry(copy);
+    }
+
+    /** Registry size 必须为非负稳定事实。 */
+    private static int requireNonNegativeSize(int value, String name) {
+        if (value < 0) {
+            throw new IllegalArgumentException(name + " size must be >= 0");
+        }
+        return value;
+    }
+
+    /** keys 枚举必须与阶段开始时声明的 size 完全一致。 */
+    private static void requireCompleteKeyEnumeration(
+            String name,
+            int declaredSize,
+            int keyCount) {
+        if (declaredSize != keyCount) {
+            throw new IllegalArgumentException(
+                    name
+                            + " keys/size mismatch: size="
+                            + declaredSize
+                            + ", keys="
+                            + keyCount);
+        }
+    }
+
+    /** 复制结果和阶段结束 size 必须与阶段开始事实一致。 */
+    private static void requireStableSnapshot(
+            String name,
+            int declaredSize,
+            int copiedSize,
+            int finalSize) {
+        if (declaredSize != copiedSize || declaredSize != finalSize) {
+            throw new IllegalArgumentException(
+                    name
+                            + " changed during snapshot: declared="
+                            + declaredSize
+                            + ", copied="
+                            + copiedSize
+                            + ", final="
+                            + finalSize);
+        }
     }
 
     /** 统一校验并裁剪发布版本文本。 */
