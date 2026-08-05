@@ -1,0 +1,65 @@
+{
+  "completionId": "COMPLETION-P1-T13-R03@5075793d06cc",
+  "taskId": "TASK-P1-T13",
+  "iteration": "I003",
+  "status": "PASSED",
+  "previousReview": "CODEREVIEW-P1-T13-R03@7d39c3bc0ab4 / INVALIDATED_PRESERVED",
+  "previousCompletion": "COMPLETION-P1-T13-R02@7d39c3bc0ab4 / INVALIDATED_PRESERVED",
+  "revisions": {
+    "design": "DESIGN-R47@P1-T13-REWORK-I003",
+    "plan": "TP-P1-COMPILER-F01-R43@P1-T13-REWORK-I003",
+    "tdd": "TDD-P1-T13-R03@5075793d06cc",
+    "architecture": "DEVSKEL-P1-T13-R03@5075793d06cc",
+    "development": "DEV-P1-T13-R03@5075793d06cc",
+    "codeReview": "CODEREVIEW-P1-T13-R05@5075793d06cc",
+    "testing": "TESTING-P1-T13-R03@5075793d06cc"
+  },
+  "finding": {
+    "id": "FND-P1-T13-I003-001",
+    "severity": "P2",
+    "status": "CLOSED",
+    "closure": "exact ERROR identity, Observer Warning subject and control/observed order invariants are frozen"
+  },
+  "scope": {
+    "productionFilesChanged": 0,
+    "testFilesChanged": 1,
+    "t14Implemented": false,
+    "t15Implemented": false,
+    "p2ToP7RuntimeImplemented": false
+  },
+  "validation": {
+    "run": 31016766448,
+    "artifact": 8934826368,
+    "sha256": "13ad7a816de48d7aca33a18996934d41d330e3f41df9742a4c33c9a167926ef6",
+    "surefireXml": 106,
+    "t13Passed": 34,
+    "t12Passed": 133,
+    "compilerPassed": 486,
+    "normalPassed": 606,
+    "allRecords": 607,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "reactorModules": 12,
+    "javaRelease": 8,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "style": {
+    "overrideOnOwnLine": true,
+    "importantLogicChineseComments": true
+  },
+  "openFindings": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "pullRequest": {
+    "number": 28,
+    "merged": false,
+    "mergeAuthorized": false
+  },
+  "nextTask": {
+    "id": "TASK-P1-T14",
+    "status": "BLOCKED_UNTIL_PR_28_MERGE"
+  }
+}
