@@ -1,0 +1,30 @@
+{
+  "task": "TASK-P1-T12",
+  "iteration": "I007",
+  "status": "COMPLETED_PASSED",
+  "completion": "COMPLETION-P1-T12-R07@74f402287bc4",
+  "design": "DESIGN-R44@P1-T12-REWORK-I007",
+  "plan": "TP-P1-COMPILER-F01-R40@P1-T12-REWORK-I007",
+  "tdd": "TDD-P1-T12-R07@cb3f08f28807",
+  "architecture": "DEVSKEL-P1-T12-R07@cb3f08f28807",
+  "development": "DEV-P1-T12-R07@74f402287bc4",
+  "codeReview": "CODEREVIEW-P1-T12-R13@74f402287bc4",
+  "testing": "TESTING-P1-T12-R07@74f402287bc4",
+  "cleanCodeHead": "74f402287bc4968dae3221848a91d968ecad0698",
+  "cleanP0Run": 31000986498,
+  "artifact": 8928238806,
+  "artifactSha256": "7d0a8c38c9d93df547ced820b3bf5ebdc964307bfc1032aeb48cf10cc12f19b5",
+  "tests": {
+    "i007": "16/16",
+    "t12": "133/133",
+    "compiler": "452/452",
+    "normal": "572/572",
+    "surefireXml": 100,
+    "errors": 0,
+    "skipped": 0
+  },
+  "openP0P1P2": "0/0/0",
+  "pullRequest": 27,
+  "merged": false,
+  "next": "BLOCKED_UNTIL_PR_27_MERGE"
+}
