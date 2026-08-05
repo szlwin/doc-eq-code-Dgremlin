@@ -31,6 +31,12 @@ final class ArtifactSnapshots {
             4096,
             65536,
             16384);
+    private static final ComparisonLimits DEFAULT_COMPARISON_LIMITS =
+            new ComparisonLimits(
+                    256,
+                    16384,
+                    131072,
+                    16384);
 
     /** 工具类不允许实例化。 */
     private ArtifactSnapshots() {
@@ -50,6 +56,19 @@ final class ArtifactSnapshots {
         return new SnapshotSession(
                 Objects.requireNonNull(limits, "limits"))
                 .freeze(Objects.requireNonNull(value, "value"));
+    }
+
+    /**
+     * 使用指定内部预算执行非递归精确比较；该入口仅供同包边界测试。
+     */
+    static boolean controlledEquals(
+            Object left,
+            Object right,
+            ComparisonLimits limits) {
+        return ArtifactComparisonSupport.equalsValues(
+                left,
+                right,
+                Objects.requireNonNull(limits, "limits"));
     }
 
     /** 判断值是否属于明确不可变的标量集合。 */
@@ -113,6 +132,47 @@ final class ArtifactSnapshots {
         /** 记录超限维度，供 Pipeline 映射为稳定 Diagnostic。 */
         private ResourceLimitException(String dimension) {
             super("artifact snapshot resource limit exceeded: " + dimension);
+        }
+    }
+
+    /** I005 内部 comparison 预算，不形成 Compiler 公共 API。 */
+    static final class ComparisonLimits {
+        final int maxDepth;
+        final int maxPairs;
+        final int maxEdges;
+        final int maxCanonicalNodes;
+
+        /** 创建严格为正的四类 comparison 预算。 */
+        ComparisonLimits(
+                int maxDepth,
+                int maxPairs,
+                int maxEdges,
+                int maxCanonicalNodes) {
+            this.maxDepth = positiveComparison(maxDepth, "maxDepth");
+            this.maxPairs = positiveComparison(maxPairs, "maxPairs");
+            this.maxEdges = positiveComparison(maxEdges, "maxEdges");
+            this.maxCanonicalNodes = positiveComparison(
+                    maxCanonicalNodes,
+                    "maxCanonicalNodes");
+        }
+
+        /** 拒绝 0 或负值，避免 comparison 边界含糊。 */
+        private static int positiveComparison(int value, String name) {
+            if (value <= 0) {
+                throw new IllegalArgumentException(name + " must be > 0");
+            }
+            return value;
+        }
+    }
+
+    /** equality/query 资源预算超限的稳定内部异常。 */
+    static final class ComparisonLimitException
+            extends IllegalArgumentException {
+        private static final long serialVersionUID = 1L;
+
+        /** 记录超限维度，供调用方稳定识别拒绝原因。 */
+        ComparisonLimitException(String dimension) {
+            super("artifact comparison resource limit exceeded: " + dimension);
         }
     }
 
@@ -835,9 +895,9 @@ final class ArtifactSnapshots {
         }
     }
 
-    /** 缓存 hash 的不可变 List，避免共享 DAG hash 递归展开。 */
+    /** 缓存 hash、使用受控 equality/query 的不可变 List。 */
     private static final class FrozenList extends AbstractList<Object>
-            implements RandomAccess {
+            implements RandomAccess, ArtifactComparisonSupport.CachedHash {
         private final List<Object> values;
         private final int hash;
 
@@ -857,14 +917,58 @@ final class ArtifactSnapshots {
             return values.size();
         }
 
+        /** 使用显式 pair traversal 比较普通或冻结 List。 */
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || other instanceof List<?>
+                    && ArtifactComparisonSupport.equalsValues(
+                            this,
+                            other,
+                            DEFAULT_COMPARISON_LIMITS);
+        }
+
+        /** 查询元素时不调用 query 对象的递归 equals。 */
+        @Override
+        public boolean contains(Object value) {
+            return indexOf(value) >= 0;
+        }
+
+        /** 从前向后使用共享总预算查找元素。 */
+        @Override
+        public int indexOf(Object value) {
+            return ArtifactComparisonSupport.indexOf(
+                    values,
+                    value,
+                    false,
+                    DEFAULT_COMPARISON_LIMITS);
+        }
+
+        /** 从后向前使用共享总预算查找元素。 */
+        @Override
+        public int lastIndexOf(Object value) {
+            return ArtifactComparisonSupport.indexOf(
+                    values,
+                    value,
+                    true,
+                    DEFAULT_COMPARISON_LIMITS);
+        }
+
         @Override
         public int hashCode() {
             return hash;
         }
+
+        /** 向比较器暴露已缓存的标准 List hash。 */
+        @Override
+        public int cachedHash() {
+            return hash;
+        }
     }
 
-    /** 缓存 hash、保持迭代顺序的不可变 Set。 */
-    private static final class FrozenSet extends AbstractSet<Object> {
+    /** 缓存 hash、保持迭代顺序并使用受控查询的不可变 Set。 */
+    private static final class FrozenSet extends AbstractSet<Object>
+            implements ArtifactComparisonSupport.CachedHash {
         private final List<Object> values;
         private final int hash;
 
@@ -884,13 +988,34 @@ final class ArtifactSnapshots {
             return values.size();
         }
 
+        /** Set element 查询使用非递归比较和共享操作预算。 */
         @Override
         public boolean contains(Object value) {
-            return values.contains(value);
+            return ArtifactComparisonSupport.containsElement(
+                    values,
+                    value,
+                    DEFAULT_COMPARISON_LIMITS);
+        }
+
+        /** Set equality 使用跨双根 canonical IDs 完成无序精确比较。 */
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || other instanceof Set<?>
+                    && ArtifactComparisonSupport.equalsValues(
+                            this,
+                            other,
+                            DEFAULT_COMPARISON_LIMITS);
         }
 
         @Override
         public int hashCode() {
+            return hash;
+        }
+
+        /** 向比较器暴露已缓存的标准 Set hash。 */
+        @Override
+        public int cachedHash() {
             return hash;
         }
     }
@@ -914,8 +1039,63 @@ final class ArtifactSnapshots {
         }
     }
 
-    /** 缓存 hash、保持 entry 顺序的不可变 Map。 */
-    private static final class FrozenMap extends AbstractMap<Object, Object> {
+    /** 使用受控 key/value equality 的不可变公开 Entry。 */
+    private static final class FrozenEntry
+            implements Map.Entry<Object, Object>,
+            ArtifactComparisonSupport.CachedHash {
+        private final Object key;
+        private final Object value;
+        private final int hash;
+
+        private FrozenEntry(Object key, Object value) {
+            this.key = key;
+            this.value = value;
+            this.hash = key.hashCode() ^ value.hashCode();
+        }
+
+        @Override
+        public Object getKey() {
+            return key;
+        }
+
+        @Override
+        public Object getValue() {
+            return value;
+        }
+
+        /** Entry 为不可变事实，不允许替换 value。 */
+        @Override
+        public Object setValue(Object newValue) {
+            throw new UnsupportedOperationException(
+                    "frozen map entry is immutable");
+        }
+
+        /** Entry equality 的 key/value 均进入显式 pair traversal。 */
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || other instanceof Map.Entry<?, ?>
+                    && ArtifactComparisonSupport.equalsValues(
+                            this,
+                            other,
+                            DEFAULT_COMPARISON_LIMITS);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        /** 向比较器暴露已缓存的标准 Entry hash。 */
+        @Override
+        public int cachedHash() {
+            return hash;
+        }
+    }
+
+    /** 缓存 hash、保持 entry 顺序并使用受控查询的不可变 Map。 */
+    private static final class FrozenMap extends AbstractMap<Object, Object>
+            implements ArtifactComparisonSupport.CachedHash {
         private final List<Map.Entry<Object, Object>> entries;
         private final Set<Map.Entry<Object, Object>> entrySet;
         private final int hash;
@@ -924,9 +1104,7 @@ final class ArtifactSnapshots {
             List<Map.Entry<Object, Object>> copy =
                     new ArrayList<Map.Entry<Object, Object>>(values.size());
             for (FrozenMapEntry value : values) {
-                copy.add(new SimpleImmutableEntry<Object, Object>(
-                        value.key,
-                        value.value));
+                copy.add(new FrozenEntry(value.key, value.value));
             }
             this.entries = Collections.unmodifiableList(copy);
             this.entrySet = new FrozenEntrySet(entries, hash);
@@ -938,24 +1116,32 @@ final class ArtifactSnapshots {
             return entrySet;
         }
 
+        /** Map key 查询不调用 query key 的递归 equals/hashCode。 */
         @Override
         public Object get(Object key) {
-            for (Map.Entry<Object, Object> entry : entries) {
-                if (Objects.equals(entry.getKey(), key)) {
-                    return entry.getValue();
-                }
-            }
-            return null;
+            int index = ArtifactComparisonSupport.findEntryByKey(
+                    entries,
+                    key,
+                    DEFAULT_COMPARISON_LIMITS);
+            return index < 0 ? null : entries.get(index).getValue();
         }
 
+        /** containsKey 与 get 使用完全相同的受控 key 匹配合同。 */
         @Override
         public boolean containsKey(Object key) {
-            for (Map.Entry<Object, Object> entry : entries) {
-                if (Objects.equals(entry.getKey(), key)) {
-                    return true;
-                }
-            }
-            return false;
+            return ArtifactComparisonSupport.findEntryByKey(
+                    entries,
+                    key,
+                    DEFAULT_COMPARISON_LIMITS) >= 0;
+        }
+
+        /** containsValue 使用非递归精确比较和共享总预算。 */
+        @Override
+        public boolean containsValue(Object value) {
+            return ArtifactComparisonSupport.containsValue(
+                    entries,
+                    value,
+                    DEFAULT_COMPARISON_LIMITS);
         }
 
         @Override
@@ -963,15 +1149,33 @@ final class ArtifactSnapshots {
             return entries.size();
         }
 
+        /** Map equality 使用 canonical key/value IDs 完成无序比较。 */
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || other instanceof Map<?, ?>
+                    && ArtifactComparisonSupport.equalsValues(
+                            this,
+                            other,
+                            DEFAULT_COMPARISON_LIMITS);
+        }
+
         @Override
         public int hashCode() {
             return hash;
         }
+
+        /** 向比较器暴露已缓存的标准 Map hash。 */
+        @Override
+        public int cachedHash() {
+            return hash;
+        }
     }
 
-    /** List-backed 不可变 entrySet，构造期间不触发 key.hashCode。 */
+    /** List-backed 不可变 entrySet，查询与 equality 均使用受控比较。 */
     private static final class FrozenEntrySet
-            extends AbstractSet<Map.Entry<Object, Object>> {
+            extends AbstractSet<Map.Entry<Object, Object>>
+            implements ArtifactComparisonSupport.CachedHash {
         private final List<Map.Entry<Object, Object>> entries;
         private final int hash;
 
@@ -992,14 +1196,36 @@ final class ArtifactSnapshots {
             return entries.size();
         }
 
+        /** 普通外部 Entry 的 key/value 也使用受控比较。 */
         @Override
         public boolean contains(Object value) {
-            return entries.contains(value);
+            return ArtifactComparisonSupport.containsEntry(
+                    entries,
+                    value,
+                    DEFAULT_COMPARISON_LIMITS);
+        }
+
+        /** entrySet equality 复用 Set canonical 比较合同。 */
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || other instanceof Set<?>
+                    && ArtifactComparisonSupport.equalsValues(
+                            this,
+                            other,
+                            DEFAULT_COMPARISON_LIMITS);
         }
 
         @Override
         public int hashCode() {
             return hash;
         }
+
+        /** 向比较器暴露已缓存的标准 entrySet hash。 */
+        @Override
+        public int cachedHash() {
+            return hash;
+        }
     }
+
 }
