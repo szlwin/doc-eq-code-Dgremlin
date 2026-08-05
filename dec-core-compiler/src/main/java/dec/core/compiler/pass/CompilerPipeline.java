@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 按 DESIGN-R40 固定顺序协调九个普通 Pass、最终准备阶段和唯一提交边界。
+ * 按 DESIGN-R41 固定顺序协调九个普通 Pass、最终准备阶段和唯一提交边界。
  */
 public final class CompilerPipeline {
     public static final String SOURCE_GRAPH_VALIDATION_PASS =
@@ -67,7 +67,7 @@ public final class CompilerPipeline {
         this.passes = Collections.unmodifiableList(copy);
     }
 
-    /** 返回 DESIGN-R40 冻结的 Pass 名称顺序。 */
+    /** 返回 DESIGN-R41 冻结的 Pass 名称顺序。 */
     public static List<String> fixedPassOrder() {
         return FIXED_PASS_ORDER;
     }
@@ -131,6 +131,12 @@ public final class CompilerPipeline {
             passResult = Objects.requireNonNull(
                     pass.execute(context),
                     "pass result");
+        } catch (ArtifactSnapshots.ResourceLimitException failure) {
+            // 资源预算超限使用独立 Diagnostic，避免与普通业务异常混淆。
+            addFailureAndStop(
+                    session,
+                    PipelineDiagnostics.artifactResourceExceeded(passName));
+            return false;
         } catch (RuntimeException failure) {
             addFailureAndStop(session, PipelineDiagnostics.passFailure(passName));
             return false;
@@ -182,11 +188,14 @@ public final class CompilerPipeline {
         session.recordPass(passName);
         PublicationPassContext context = new PublicationPassContext(session);
         PassResult passResult = null;
+        ArtifactSnapshots.ResourceLimitException resourceFailure = null;
         RuntimeException passFailure = null;
         boolean candidatePrepared = false;
         Optional<EngineContext> candidate = Optional.empty();
         try {
             passResult = pass.execute(context);
+        } catch (ArtifactSnapshots.ResourceLimitException failure) {
+            resourceFailure = failure;
         } catch (RuntimeException failure) {
             passFailure = failure;
         } finally {
@@ -209,6 +218,12 @@ public final class CompilerPipeline {
             return;
         }
 
+        if (resourceFailure != null) {
+            addFailureAndStop(
+                    session,
+                    PipelineDiagnostics.artifactResourceExceeded(passName));
+            return;
+        }
         if (passFailure != null) {
             if (!session.hasErrors()) {
                 session.addDiagnostics(Collections.singletonList(
