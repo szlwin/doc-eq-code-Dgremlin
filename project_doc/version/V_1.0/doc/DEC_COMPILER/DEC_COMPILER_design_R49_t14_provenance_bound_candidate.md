@@ -7,7 +7,7 @@
 
 ## Goal
 
-修复 T14 candidate 发布事实可被任意拆分组合的问题。Digest、Manifest、Definitions、Deferred 与版本域必须由同一次 T13 语义摘要计算原子绑定，最终 Publication Pass 必须再次绑定当前 `CompilationRequest`，任何 provenance 或版本不一致均 fail-closed。
+修复 T14 candidate 发布事实可被任意拆分组合的问题。Digest、Manifest、Definitions、Deferred 与版本域必须由同一次 T13 语义摘要计算原子绑定，最终 Publication Pass 必须再次绑定当前 `CompilationRequest` 中实际存在的 schema/options 事实，任何 provenance 或版本不一致均 fail-closed。
 
 ## Atomic provenance artifact
 
@@ -36,13 +36,12 @@ I001 的分阶段 Builder 历史保留，但不再作为当前生产入口。
 
 ## Publication request binding
 
-`CandidateContextPublicationPass` 在 `prepare()` 前必须验证 FrozenInput：
+`CompilationOptions` 当前只公开 schemaVersion/optionsDigest，不公开 compilerVersion。因此 Publication Pass 在 `prepare()` 前必须验证 FrozenInput：
 
-- `compilerVersion == request.options().compilerVersion()`；
 - `schemaVersion == request.options().schemaVersion()`；
 - `optionsDigest == request.options().optionsDigest()`。
 
-任一不一致返回稳定 `MIX_PUBLICATION_PROVENANCE_MISMATCH / ERROR`，Pipeline 进入 FAILED，publisher=0，artifacts empty。缺少输入继续返回 `MIX_PUBLICATION_BLOCKED / ERROR`。
+compilerVersion 由同一个 `SemanticDigestInput` 纳入 T13 canonical input 并封入 atomic provenance，不允许在 T14 再单独替换。任一 request mismatch 返回稳定 `MIX_PUBLICATION_PROVENANCE_MISMATCH / ERROR`，Pipeline 进入 FAILED，publisher=0，artifacts empty。缺少输入继续返回 `MIX_PUBLICATION_BLOCKED / ERROR`。
 
 ## Snapshot integrity
 
@@ -58,7 +57,8 @@ Definition 与 Deferred 快照必须分别验证：
 
 ## Required Oracle
 
-- request compiler/schema/options mismatch；
+- request schema/options mismatch；
+- compilerVersion 与其余语义事实由同一 atomic provenance 持有；
 - 任意 DigestPair 注入入口不存在；
 - 非法 Digest 格式拒绝；
 - Definition/Deferred 全部快照负向边界；
