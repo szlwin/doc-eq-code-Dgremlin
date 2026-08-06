@@ -33,8 +33,9 @@ jobs:
           while IFS= read -r path; do
             test -n "$path" && rm -f -- "$path"
           done < /tmp/stage-closure/delete.txt
+          rm -f /tmp/stage-closure/files/.github/workflows/p0-build.yml
           cp -a /tmp/stage-closure/files/. .
-          rm -rf .stage-closure-publish .github/workflows/stage-closure-publish.yml
+          rm -rf .stage-closure-publish
           git config user.name 'OpenAI Common Develop'
           git config user.email 'common-develop@openai.invalid'
           git add -A
