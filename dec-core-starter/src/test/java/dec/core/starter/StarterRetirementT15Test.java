@@ -10,6 +10,8 @@ import dec.core.compiler.api.ModelCompiler;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -29,12 +31,20 @@ class StarterRetirementT15Test {
         assertEquals(1, constructors[0].getParameterCount());
         assertEquals(ModelCompiler.class, constructors[0].getParameterTypes()[0]);
 
+        List<Field> contractFields = new ArrayList<Field>();
         for (Field field : starter.getDeclaredFields()) {
+            // JaCoCo 会注入 synthetic static 字段，该字段不属于 Starter 业务状态合同。
+            if (field.isSynthetic()) {
+                continue;
+            }
+            contractFields.add(field);
             assertFalse(
-                    Modifier.isStatic(field.getModifiers())
-                            && !Modifier.isFinal(field.getModifiers()),
-                    "Starter 不得保存 static mutable current 或全局状态");
+                    Modifier.isStatic(field.getModifiers()),
+                    "Starter 不得保存 static current 或全局状态");
         }
+        assertEquals(1, contractFields.size());
+        assertEquals(ModelCompiler.class, contractFields.get(0).getType());
+        assertTrue(Modifier.isFinal(contractFields.get(0).getModifiers()));
     }
 
     /** 旧 Starter 的全局 Config 写入口必须从发布 Artifact 中消失。 */
