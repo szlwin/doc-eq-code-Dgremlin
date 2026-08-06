@@ -19,6 +19,11 @@
       <groupId>doc.eq.code</groupId>
       <artifactId>dec-core-starter</artifactId>
     </dependency>
+    <!-- Demo 中仍保留独立的模型监听示例，因此显式声明模型依赖，禁止通过 Starter 传递引入。 -->
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-core-model</artifactId>
+    </dependency>
     <dependency>
       <groupId>doc.eq.code</groupId>
       <artifactId>dec-context-config-parse-yaml</artifactId>
