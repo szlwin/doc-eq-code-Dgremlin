@@ -1,65 +1,66 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T14 / I001` 已完成
-- 当前有效 Completion：`COMPLETION-P1-T14-R01@252024603bfc`
+- 当前逻辑任务：`TASK-P1-T14 / I002` 已完成
+- 当前有效 Completion：`COMPLETION-P1-T14-R02@668d865b0189`
+- 失效但保留：`COMPLETION-P1-T14-R01@252024603bfc`
 - Dependency：`COMPLETION-P1-T13-R03@5075793d06cc`
 - 状态：`COMPLETED / PASSED`
 - Base：`dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce`
 - Branch：`feature/p1-t14-candidate-context-20260805-2324`
-- PR：`#29 / OPEN / FINAL_P0_PENDING / NOT_MERGED`
-- Design：`DESIGN-R48@P1-T14-I001`
-- Plan：`TP-P1-COMPILER-F01-R44@P1-T14-I001`
-- TDD：`TDD-P1-T14-R01@f0f76facdd76`
-- Architecture：`DEVSKEL-P1-T14-R01@94fcc64aa6da`
-- Development：`DEV-P1-T14-R01@1a930d775e3e`
-- Code Review：`CODEREVIEW-P1-T14-R01@252024603bfc`
-- Testing：`TESTING-P1-T14-R01@252024603bfc`
-- Reviews：`REV-000706`～`REV-000724`
-- Evidence：`EVD-001046`～`EVD-001067`
+- PR：`#29 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
+- Design：`DESIGN-R49@P1-T14-REWORK-I002`
+- Plan：`TP-P1-COMPILER-F01-R45@P1-T14-REWORK-I002`
+- TDD：`TDD-P1-T14-R02@1df0a14f2a74`
+- Architecture：`DEVSKEL-P1-T14-R02@2c7ddd4f4f96`
+- Development：`DEV-P1-T14-R02@668d865b0189`
+- Code Review：`CODEREVIEW-P1-T14-R03@668d865b0189`
+- Testing：`TESTING-P1-T14-R02@668d865b0189`
+- Reviews：`REV-000725`～`REV-000746`
+- Evidence：`EVD-001068`～`EVD-001091`
 - Open P0/P1/P2：`0 / 0 / 0`
 
 ## Current contract
 
-- Builder 固定四阶段且只能使用一次；
-- Registry/Deferred 在阶段入口完成完整快照；
-- size、keys、copy 和 final size 必须一致；
-- key/value identity、duplicate 和 missing value fail-closed；
-- FrozenInput 为不可变 Pipeline artifact；
-- candidate 包含完整模型、摘要、版本和 Diagnostic；
-- ERROR 拒绝，Warning 保留；
-- final Pass 只准备 candidate，不持有 Publisher/CAS；
-- missing input publisher=0；normal input publisher=1；
+- atomic bind 同时冻结 raw/published Source、Definitions、Deferred 与版本域；
+- T13 Source/Semantic Digest 使用同一冻结闭包计算；
+- raw/published sourceId 集合必须完全一致；
+- Builder 不再公开分离式 source/registry/version/digest API；
+- 正式 Digest 必须为 64 位小写 SHA-256；
+- Publication Pass 绑定当前 request schema/options；
+- provenance mismatch 和 missing input 均产生精确 ERROR Diagnostic；
+- 失败路径 publisher=0、artifacts empty；
+- 正常路径完整 candidate 精确传给唯一 Publisher；
+- Definition/Deferred 全部快照完整性门禁均有直接负向 Oracle；
 - T12/T13 Deadline、Observer、Digest 和 commit-wins 保持；
 - T15 与 P2～P7 runtime 未实现。
 
 ## Validation
 
-- Valid RED：`f0f76facdd76d626cd82859ef8413964ae1b6fdf`
-- Valid RED Run/Artifact/SHA：`31021944964` / `8936970743` / `f9e5259bb29a11f7ebf23637f3541df0f82485af10a2dc6953b7e89c939ccc5e`
-- Review RED：`a494fa37574f7ae37362421d15e4f6a175ff6091`
-- Review RED Run/Artifact/SHA：`31023013154` / `8937412168` / `28448029b7f95dee776129bbf8c6fd521856d5dc489bd37f25d0a59c37c9ed99`
-- Production Revision：`1a930d775e3e226da55ec83697a2942d3dd1950d`
-- Code/Test Revision：`252024603bfcdcee4ac42310b54b2af143aca002`
-- Clean P0：`31023363308` — SUCCESS
-- Clean Artifact/SHA：`8937562356` / `a8027e3479e0800086e9d97ef640ef1189b6a7dfde2324d712c0647e305250a6`
-- Surefire XML：108；T14：12/12；T13：34/34；T12：133/133；Compiler：498/498；Normal：618/618
-- All records：619；intentional failure：1；Errors/Skipped：0/0
+- Valid RED：`1df0a14f2a746d6027485a99dcf9cbd3ceeb3899`
+- RED Run/Artifact/SHA：`31068551065` / `8954760225` / `7431ba21d9447de5cd60aa2db06cb849a3a045867553e276f7d22f61931d5d15`
+- Code/Test Revision：`668d865b0189e9107f25295a1726748968aa7462`
+- Clean P0：`31069685120` — SUCCESS
+- Artifact/SHA：`8955166219` / `5553810bfb87146c97835dd5d1c2de10b4c2b8405a9ef533e994f110c7b71c6c`
+- Surefire XML：109；T14：18/18；T13：34/34；T12：133/133；Compiler：504/504；Normal：624/624
+- All records：625；intentional failure：1；Errors/Skipped：0/0
 - Java 8、12 modules、intentional failure gate：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
 
 ## Revision Integrity
 
-- R48 first commit/blob：`ceb032670a96715a61ff3db6edd7032fc58b409f` / `6fdd71a8ddeae2afa2935233aee3a2d24441a98b`
-- R44 first commit/blob：`1581481e3c8acb46d6120aa28b63476aa2e9890c` / `006311b43f1304aaa439b19b5d9b4eea3d808af5`
-- R48/R44 均早于有效 RED，blob 未变化；
+- R49 first commit：`eda473f06ea8b0dcc1666c0e41c9a179aaf5ad0d`
+- R49 final pre-production commit/blob：`2c7ddd4f4f96d6a5c108d8aeca4534d62ace380c` / `023cc974ad5b29e74b13249003c597e341acf738`
+- R45 first commit/blob：`331b3f6dc36596051cf2657e81b3d5059724e4e7` / `c80f520b34a409e5f5fa8eaa7166e95087ec9373`
+- 行为合同在 RED 前冻结；具体 bind 签名在 RED 后、production 前受控修订；
 - Code/Test Revision 后只允许 `project_doc` 更新。
 
 ## Recovery
 
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t14-r01/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r01.md`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t14-r01.json`
-- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t14_r01_completion.json`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t14-r02/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r03.md`
+- Invalidation：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r02-invalidation.md`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t14-r02.json`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t14_r02_completion.json`
 - 所有 `@Override` 独占一行，方法和重要逻辑使用中文注释；
 - 仅在用户明确授权后合并 PR #29；
 - TASK-P1-T15：`BLOCKED_UNTIL_PR_29_MERGE`。
