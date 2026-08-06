@@ -10,9 +10,11 @@ import dec.core.context.model.DefinitionKey;
 import dec.core.context.model.DigestPair;
 import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.ImmutableRegistry;
+import dec.core.context.model.PublishedSourceDescriptor;
 import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.Registry;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,7 @@ public final class DigestBoundCompiledInput {
         PublishedSourceManifest checkedManifest = Objects.requireNonNull(
                 sourceManifest,
                 "sourceManifest");
+        requireSameSourceClosure(checkedSources, checkedManifest);
         ImmutableRegistry<DefinitionKey, CompiledDefinition> frozenDefinitions =
                 snapshotDefinitions(definitions);
         ImmutableDeferredRegistry frozenDeferred = snapshotDeferred(deferred);
@@ -137,6 +140,29 @@ public final class DigestBoundCompiledInput {
     /** 返回由同一冻结闭包计算出的真实摘要对。 */
     public DigestPair digestPair() {
         return digestPair;
+    }
+
+    /**
+     * 原始 Source 与发布 Source 必须拥有完全相同的身份集合，禁止跨编译清单拼接。
+     */
+    private static void requireSameSourceClosure(
+            SourceManifest sources,
+            PublishedSourceManifest published) {
+        List<String> rawSourceIds = new ArrayList<String>(sources.sourceIds());
+        List<String> publishedSourceIds = new ArrayList<String>();
+        for (PublishedSourceDescriptor descriptor : published.sources()) {
+            publishedSourceIds.add(Objects.requireNonNull(
+                    descriptor,
+                    "published source").sourceId());
+        }
+        Collections.sort(publishedSourceIds);
+        if (!rawSourceIds.equals(publishedSourceIds)) {
+            throw new IllegalArgumentException(
+                    "raw and published source closures must match: raw="
+                            + rawSourceIds
+                            + ", published="
+                            + publishedSourceIds);
+        }
     }
 
     /** 对 Definition Registry 执行单次、完整且确定性的防御性复制。 */
