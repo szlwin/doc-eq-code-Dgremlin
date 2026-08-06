@@ -81,6 +81,14 @@ final class PipelineDiagnostics {
                 CompilerPipeline.PUBLICATION_PASS);
     }
 
+    /** 创建 candidate provenance 与当前请求不一致 Diagnostic。 */
+    static Diagnostic publicationProvenanceMismatch() {
+        return error(
+                DiagnosticCode.MIX_PUBLICATION_PROVENANCE_MISMATCH,
+                "pipeline.publication.provenance-mismatch",
+                CompilerPipeline.PUBLICATION_PASS);
+    }
+
     /** 创建 compare-and-set 冲突 Diagnostic。 */
     static Diagnostic publicationConflict() {
         return error(
