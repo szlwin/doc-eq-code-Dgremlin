@@ -1,8 +1,14 @@
 package dec.core.compiler.compiled;
 
+import dec.core.compiler.api.CompilationOptions;
 import dec.core.compiler.source.DocumentSource;
 import dec.core.compiler.source.SourceManifest;
+import dec.core.context.model.CompiledDefinition;
+import dec.core.context.model.DeferredRegistry;
+import dec.core.context.model.DefinitionKey;
 import dec.core.context.model.DigestPair;
+import dec.core.context.model.PublishedSourceManifest;
+import dec.core.context.model.Registry;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -46,6 +52,26 @@ public final class CompilerDigestService {
                 sourceDigest(checkedSources),
                 sha256Hex(checkedSemantic.canonicalJson().getBytes(
                         StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * 原子冻结模型事实、版本域并立即计算摘要，返回不可拆分 provenance 输入。
+     */
+    public DigestBoundCompiledInput bind(
+            SourceManifest sources,
+            PublishedSourceManifest sourceManifest,
+            Registry<DefinitionKey, CompiledDefinition> definitions,
+            DeferredRegistry deferred,
+            String compilerVersion,
+            CompilationOptions options) {
+        return DigestBoundCompiledInput.bind(
+                this,
+                sources,
+                sourceManifest,
+                definitions,
+                deferred,
+                compilerVersion,
+                options);
     }
 
     /** 对 Source 身份和原始字节执行长度前缀增量摘要。 */

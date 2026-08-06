@@ -1,0 +1,70 @@
+{
+  "completionId": "COMPLETION-P1-T14-R03@37fb814b39c5",
+  "taskId": "TASK-P1-T14",
+  "iteration": "I003",
+  "status": "PASSED",
+  "mode": "TDD_REPAIR_ORACLE_HARDENING",
+  "base": "dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce",
+  "branch": "feature/p1-t14-candidate-context-20260805-2324",
+  "pullRequest": 29,
+  "revisions": {
+    "design": "DESIGN-R50@P1-T14-REWORK-I003",
+    "plan": "TP-P1-COMPILER-F01-R46@P1-T14-REWORK-I003",
+    "architecture": "DEVSKEL-P1-T14-R03@dc4f0f5cc566",
+    "tdd": "TDD-P1-T14-R03@37fb814b39c5",
+    "development": "DEV-P1-T14-R03@37fb814b39c5",
+    "codeReview": "CODEREVIEW-P1-T14-R05@37fb814b39c5",
+    "testing": "TESTING-P1-T14-R03@37fb814b39c5",
+    "codeTestRevision": "37fb814b39c54e6260fd65d13cb31e817bc0fe92"
+  },
+  "invalidatedPreserved": [
+    "TDD-P1-T14-R02@1df0a14f2a74",
+    "CODEREVIEW-P1-T14-R03@668d865b0189",
+    "COMPLETION-P1-T14-R02@668d865b0189"
+  ],
+  "delivered": [
+    "reproducible request-binding mutation proof",
+    "reproducible source-closure mutation proof",
+    "behavior assertion failure classification",
+    "production source restoration after mutation",
+    "targeted restored GREEN verification",
+    "full Surefire report preservation",
+    "mutation logs XML and JSON in CI artifact",
+    "PR metadata updated from I001 to I003"
+  ],
+  "validation": {
+    "run": 31073434459,
+    "artifact": 8956534261,
+    "sha256": "3266e2b475bbcdf0f6dc24b3de097c84efbc40853ae77bec8432e6feaa7207e5",
+    "surefireXml": 109,
+    "t14Passed": 18,
+    "t13Passed": 34,
+    "t12Passed": 133,
+    "compilerPassed": 504,
+    "normalPassed": 624,
+    "allRecords": 625,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "reactorModules": 12,
+    "javaRelease": 8,
+    "mutationProof": {
+      "requestBinding": "1_TEST_1_ASSERTION_FAILURE_0_ERROR",
+      "sourceClosure": "1_TEST_1_ASSERTION_FAILURE_0_ERROR",
+      "restoredGreen": true,
+      "fullSurefireReportsRestored": true
+    },
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "findings": {
+    "FND-P1-T14-I003-001": "CLOSED",
+    "FND-P1-T14-I003-002": "CLOSED",
+    "FND-P1-T14-I003-003": "CLOSED"
+  },
+  "openP0P1P2": "0/0/0",
+  "productionChangedInI003": false,
+  "junitSourceChangedInI003": false,
+  "prBodyUpdated": true,
+  "mergePerformed": false,
+  "nextGate": "TASK-P1-T15_BLOCKED_UNTIL_PR_29_MERGE"
+}

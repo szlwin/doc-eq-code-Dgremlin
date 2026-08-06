@@ -1,0 +1,48 @@
+{
+  "taskId": "TASK-P1-T14",
+  "iteration": "I003",
+  "completionId": "COMPLETION-P1-T14-R03@37fb814b39c5",
+  "status": "PASSED",
+  "mode": "TDD_REPAIR_ORACLE_HARDENING",
+  "codeTestRevision": "37fb814b39c54e6260fd65d13cb31e817bc0fe92",
+  "p0Run": 31073434459,
+  "artifact": 8956534261,
+  "sha256": "3266e2b475bbcdf0f6dc24b3de097c84efbc40853ae77bec8432e6feaa7207e5",
+  "normalTests": {
+    "surefireXml": 109,
+    "allRecords": 625,
+    "passed": 624,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "t14": 18,
+    "t13": 34,
+    "t12": 133,
+    "compiler": 504
+  },
+  "mutationProof": {
+    "requestBinding": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "classification": "BEHAVIOR_ASSERTION_FAILURE"
+    },
+    "sourceClosure": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "classification": "BEHAVIOR_ASSERTION_FAILURE"
+    },
+    "restoredGreen": true,
+    "fullSurefireReportsRestored": true
+  },
+  "invalidatedPreserved": [
+    "TDD-P1-T14-R02@1df0a14f2a74",
+    "CODEREVIEW-P1-T14-R03@668d865b0189",
+    "COMPLETION-P1-T14-R02@668d865b0189"
+  ],
+  "openP0P1P2": "0/0/0",
+  "pullRequest": 29,
+  "merged": false,
+  "next": "TASK-P1-T15_BLOCKED_UNTIL_PR_29_MERGE"
+}

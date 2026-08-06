@@ -1,0 +1,32 @@
+{
+  "task": "TASK-P1-T14",
+  "iteration": "I001",
+  "completion": "COMPLETION-P1-T14-R01@252024603bfc",
+  "status": "PASSED",
+  "design": "DESIGN-R48@P1-T14-I001",
+  "plan": "TP-P1-COMPILER-F01-R44@P1-T14-I001",
+  "tdd": "TDD-P1-T14-R01@f0f76facdd76",
+  "architecture": "DEVSKEL-P1-T14-R01@94fcc64aa6da",
+  "development": "DEV-P1-T14-R01@1a930d775e3e",
+  "review": "CODEREVIEW-P1-T14-R01@252024603bfc",
+  "testing": "TESTING-P1-T14-R01@252024603bfc",
+  "codeTestRevision": "252024603bfcdcee4ac42310b54b2af143aca002",
+  "cleanValidation": {
+    "run": 31023363308,
+    "artifact": 8937562356,
+    "sha256": "a8027e3479e0800086e9d97ef640ef1189b6a7dfde2324d712c0647e305250a6",
+    "surefireXml": 108,
+    "t14": 12,
+    "t13": 34,
+    "t12": 133,
+    "compiler": 498,
+    "normalPassed": 618,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "openP0P1P2": "0/0/0",
+  "pr": 29,
+  "merged": false,
+  "nextTask": "TASK-P1-T15 / BLOCKED_UNTIL_PR_29_MERGE"
+}

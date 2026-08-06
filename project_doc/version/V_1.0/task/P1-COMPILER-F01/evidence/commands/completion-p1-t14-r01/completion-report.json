@@ -1,0 +1,81 @@
+{
+  "completionId": "COMPLETION-P1-T14-R01@252024603bfc",
+  "taskId": "TASK-P1-T14",
+  "iteration": "I001",
+  "status": "PASSED",
+  "revisions": {
+    "design": "DESIGN-R48@P1-T14-I001",
+    "plan": "TP-P1-COMPILER-F01-R44@P1-T14-I001",
+    "tdd": "TDD-P1-T14-R01@f0f76facdd76",
+    "architecture": "DEVSKEL-P1-T14-R01@94fcc64aa6da",
+    "development": "DEV-P1-T14-R01@1a930d775e3e",
+    "codeReview": "CODEREVIEW-P1-T14-R01@252024603bfc",
+    "testing": "TESTING-P1-T14-R01@252024603bfc"
+  },
+  "heads": {
+    "base": "3e4da420d2ef5ada8398aefbbeabb37964e384ce",
+    "validRed": "f0f76facdd76d626cd82859ef8413964ae1b6fdf",
+    "reviewRed": "a494fa37574f7ae37362421d15e4f6a175ff6091",
+    "production": "1a930d775e3e226da55ec83697a2942d3dd1950d",
+    "codeTest": "252024603bfcdcee4ac42310b54b2af143aca002"
+  },
+  "findings": [
+    {
+      "id": "FND-P1-T14-I001-001",
+      "severity": "P2",
+      "status": "CLOSED",
+      "closure": "Registry and Deferred snapshots verify non-negative size, complete key enumeration, copied size and stable final size"
+    }
+  ],
+  "validation": {
+    "validRedRun": 31021944964,
+    "reviewRedRun": 31023013154,
+    "cleanRun": 31023363308,
+    "cleanArtifact": 8937562356,
+    "cleanArtifactSha256": "a8027e3479e0800086e9d97ef640ef1189b6a7dfde2324d712c0647e305250a6",
+    "surefireXml": 108,
+    "t14Passed": 12,
+    "t13Passed": 34,
+    "t12Passed": 133,
+    "compilerPassed": 498,
+    "normalPassed": 618,
+    "allRecords": 619,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "reactorModules": 12,
+    "javaRelease": 8,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "scope": {
+    "productionFiles": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java",
+      "dec-core-compiler/src/main/java/dec/core/compiler/pass/CandidateContextPublicationPass.java",
+      "dec-core-compiler/src/main/java/dec/core/compiler/pass/PublicationPassContext.java"
+    ],
+    "testFiles": [
+      "dec-core-compiler/src/test/java/dec/core/compiler/pass/CandidateContextT14Test.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/pass/CandidateContextT14IndependentReviewTest.java"
+    ],
+    "t15Implemented": false,
+    "p2ToP7RuntimeImplemented": false
+  },
+  "style": {
+    "overrideOnOwnLine": true,
+    "importantLogicChineseComments": true
+  },
+  "openFindings": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "pullRequest": {
+    "number": 29,
+    "merged": false,
+    "mergeAuthorized": false
+  },
+  "nextTask": {
+    "id": "TASK-P1-T15",
+    "status": "BLOCKED_UNTIL_PR_29_MERGE"
+  }
+}

@@ -1,64 +1,78 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T13 / I003` 已完成
-- 当前有效 Completion：`COMPLETION-P1-T13-R03@5075793d06cc`
-- 失效但保留：`COMPLETION-P1-T13-R02@7d39c3bc0ab4`、`COMPLETION-P1-T13-R01@74672ee1367b`
-- Dependency：`COMPLETION-P1-T12-R07@74f402287bc4`
+- 当前逻辑任务：`TASK-P1-T14 / I003` 已完成
+- 当前有效 Completion：`COMPLETION-P1-T14-R03@37fb814b39c5`
+- 失效但保留：`TDD-P1-T14-R02@1df0a14f2a74`、`CODEREVIEW-P1-T14-R03@668d865b0189`、`COMPLETION-P1-T14-R02@668d865b0189`
+- Dependency：`COMPLETION-P1-T13-R03@5075793d06cc`
 - 状态：`COMPLETED / PASSED`
-- Base：`dev_all@659fb74563bbe1fa1daaf4d3a0e868f702daaec6`
-- Branch：`feature/p1-t13-semantic-digest-20260805-2005`
-- PR：`#28 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
-- Design：`DESIGN-R47@P1-T13-REWORK-I003`
-- Plan：`TP-P1-COMPILER-F01-R43@P1-T13-REWORK-I003`
-- TDD：`TDD-P1-T13-R03@5075793d06cc / ORACLE_HARDENING / RED_NOT_APPLICABLE`
-- Architecture：`DEVSKEL-P1-T13-R03@5075793d06cc`
-- Development：`DEV-P1-T13-R03@5075793d06cc`
-- Code Review：`CODEREVIEW-P1-T13-R05@5075793d06cc`
-- Testing：`TESTING-P1-T13-R03@5075793d06cc`
-- Reviews：`REV-000693`～`REV-000705`
-- Evidence：`EVD-001034`～`EVD-001045`
+- Mode：`TDD_REPAIR / ORACLE_HARDENING`
+- Base：`dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce`
+- Branch：`feature/p1-t14-candidate-context-20260805-2324`
+- PR：`#29 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
+- Design：`DESIGN-R50@P1-T14-REWORK-I003`
+- Plan：`TP-P1-COMPILER-F01-R46@P1-T14-REWORK-I003`
+- TDD：`TDD-P1-T14-R03@37fb814b39c5`
+- Architecture：`DEVSKEL-P1-T14-R03@dc4f0f5cc566`
+- Development：`DEV-P1-T14-R03@37fb814b39c5`
+- Code Review：`CODEREVIEW-P1-T14-R05@37fb814b39c5`
+- Testing：`TESTING-P1-T14-R03@37fb814b39c5`
+- Reviews：`REV-000747`～`REV-000759`
+- Evidence：`EVD-001092`～`EVD-001101`
 - Open P0/P1/P2：`0 / 0 / 0`
 
-## Current contract
+## Current production contract
 
-- Strict Unicode Source identity 修复继续有效；
-- FAILED Observer 原 ERROR 完整 identity 保持；
-- Warning 完整 identity 与真实 subject 保持；
-- Control/Observed state、executedPasses、fixture executions、transitions、timings 一致；
-- publisher=0、artifacts empty；
-- Observer 异常不传播；
-- Production files changed：0；
-- T12 Deadline/Cancel/Clock/Publication 原子性保持；
-- 未实现 T14/T15 或 P2～P7 runtime。
+- atomic bind 同时冻结 raw/published Source、Definitions、Deferred 与版本域；
+- T13 Source/Semantic Digest 使用同一冻结闭包计算；
+- raw/published sourceId 集合必须完全一致；
+- Builder 不公开分离式 source/registry/version/digest API；
+- 正式 Digest 必须为 64 位小写 SHA-256；
+- Publication Pass 绑定当前 request schema/options；
+- provenance mismatch 和 missing input 产生精确 ERROR Diagnostic；
+- 失败路径 publisher=0、artifacts empty；
+- 正常路径完整 candidate 精确传给唯一 Publisher；
+- Definition/Deferred 快照完整性门禁均有直接负向 Oracle；
+- T15 与 P2～P7 runtime 未实现。
+
+## I003 evidence repair
+
+- I002 RED 因 `testCompile` 失败已失效保留；
+- mutation A 短路 request binding，目标测试产生 1 个 assertion failure、0 error；
+- mutation B 跳过 Source closure binding，目标测试产生 1 个 assertion failure、0 error；
+- 两个 mutation 均成功编译并实际执行；
+- 恢复正确源码后两个目标测试各 1/1 GREEN；
+- mutation 源码未进入 Git；
+- mutation XML、日志和 JSON 摘要独立归档；
+- 完整 5 项/11 项 Surefire XML 在上传前恢复；
+- PR #29 正文已更新至 I003。
 
 ## Validation
 
-- Code/Test Revision：`5075793d06cc028038d9689f0ca733ecc446e7b0`
-- First complete-oracle P0：`31016766448` — SUCCESS
-- First Artifact：`8934826368`
-- First SHA-256：`13ad7a816de48d7aca33a18996934d41d330e3f41df9742a4c33c9a167926ef6`
-- Actual final Head：`bd0fdf839a2ec54040d2b1279424fb2e78ec694b`
-- Actual final P0：`31017617531` — SUCCESS
-- Actual final Artifact：`8935185880`
-- Actual final SHA-256：`5c9ebb3b0c0e1a075bd6f717250f47f680a0c210f92c77a90b3400695e7ca9b1`
-- Surefire XML：106；T13：34/34；T12：133/133；Compiler：486/486；Normal：606/606
-- All records：607；intentional failure：1；Errors/Skipped：0/0
-- 12 modules / Java release 8 / intentional failure gate：PASSED
+- Code/Test Revision：`37fb814b39c54e6260fd65d13cb31e817bc0fe92`
+- P0 Run：`31073434459` — SUCCESS
+- Artifact/SHA：`8956534261` / `3266e2b475bbcdf0f6dc24b3de097c84efbc40853ae77bec8432e6feaa7207e5`
+- Surefire XML：109；T14：18/18；T13：34/34；T12：133/133；Compiler：504/504；Normal：624/624
+- All records：625；intentional failure：1；Errors/Skipped：0/0
+- Java 8、12 modules、mutation gate、intentional failure gate：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
 
-## Revision Integrity
+## Revision integrity
 
-- Code/Test Revision 后到 actual final Head 的 13 个提交全部只修改 `project_doc`；
-- Production files changed：0；
-- Test code 在 `5075793d06cc...` 后无漂移。
+- R50 first commit/blob：`b97bedbbadda21e9c7e0cfc68ae755d34019b724` / `050364ad99ae63067929f3b94473105579de484d`
+- R46 first commit/blob：`445dbb496638d66a39a20a2174b8f4507957d6a7` / `d6c21d456b467b5efd543eb289196663697a683d`
+- Code/Test Revision：`37fb814b39c54e6260fd65d13cb31e817bc0fe92`
+- Code/Test Revision 后只允许 `project_doc` 更新；
+- I003 生产和 JUnit 测试源码变更均为 0。
 
 ## Recovery
 
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t13-r03/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t13-r05.md`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t13-r03.json`
-- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t13_r03_completion.json`
-- I002 invalidation：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t13-r04-invalidation.md`
-- 所有 `@Override` 独占一行，方法和重要逻辑使用中文注释；
-- 仅在用户明确授权后合并 PR #28；
-- TASK-P1-T14：`BLOCKED_UNTIL_PR_28_MERGE`。
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t14-r03/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r05.md`
+- Invalidation：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r04-invalidation.md`
+- TDD：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/tdd-p1-t14-r03.md`
+- Testing：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/testing-p1-t14-r03.md`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t14-r03.json`
+- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t14_r03_completion.json`
+- 既有 `@Override` 独占一行；脚本方法和重要逻辑使用中文注释；
+- 仅在用户明确授权后合并 PR #29；
+- TASK-P1-T15：`BLOCKED_UNTIL_PR_29_MERGE`。

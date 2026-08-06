@@ -5,6 +5,7 @@ import dec.core.compiler.api.CompilationSessionState;
 import dec.core.context.EngineContext;
 import dec.core.context.model.Diagnostic;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -38,6 +39,17 @@ public final class PublicationPassContext {
     public <T> Optional<T> artifact(String key, Class<T> type) {
         requireActive();
         return session.artifact(key, type);
+    }
+
+    /**
+     * 返回 candidate 构造前已经登记的稳定排序 Diagnostic 快照。
+     *
+     * <p>返回值不具备写能力；最终 Pass 只能把现有事实带入模型，
+     * 不能绕过 Session 的 Diagnostic 门禁。</p>
+     */
+    public List<Diagnostic> diagnostics() {
+        requireActive();
+        return session.diagnostics();
     }
 
     /** 在最终提交门禁前登记 Diagnostic。 */

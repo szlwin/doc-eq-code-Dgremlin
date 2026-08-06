@@ -1,0 +1,52 @@
+{
+  "taskId": "TASK-P1-T14",
+  "iteration": "I002",
+  "status": "LOCKED",
+  "base": "3e4da420d2ef5ada8398aefbbeabb37964e384ce",
+  "design": {
+    "id": "DESIGN-R49@P1-T14-REWORK-I002",
+    "firstCommit": "eda473f06ea8b0dcc1666c0e41c9a179aaf5ad0d",
+    "requestBindingAmendment": "499030d21021ca28bc5539057438acd59baed482",
+    "finalPreProductionCommit": "2c7ddd4f4f96d6a5c108d8aeca4534d62ace380c",
+    "finalBlob": "023cc974ad5b29e74b13249003c597e341acf738",
+    "note": "Behavioral provenance contract was frozen before RED; concrete bind signature was finalized after RED and before the first production commit."
+  },
+  "plan": {
+    "id": "TP-P1-COMPILER-F01-R45@P1-T14-REWORK-I002",
+    "firstCommit": "331b3f6dc36596051cf2657e81b3d5059724e4e7",
+    "blob": "c80f520b34a409e5f5fa8eaa7166e95087ec9373"
+  },
+  "tdd": {
+    "id": "TDD-P1-T14-R02@1df0a14f2a74",
+    "redRevision": "1df0a14f2a746d6027485a99dcf9cbd3ceeb3899",
+    "redRun": 31068551065,
+    "redArtifact": 8954760225,
+    "redSha256": "7431ba21d9447de5cd60aa2db06cb849a3a045867553e276f7d22f61931d5d15"
+  },
+  "codeTestRevision": "668d865b0189e9107f25295a1726748968aa7462",
+  "cleanCodeValidation": {
+    "run": 31069685120,
+    "artifact": 8955166219,
+    "sha256": "5553810bfb87146c97835dd5d1c2de10b4c2b8405a9ef533e994f110c7b71c6c",
+    "surefireXml": 109,
+    "allRecords": 625,
+    "normalPassed": 624,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "t14": 18,
+    "t13": 34,
+    "t12": 133,
+    "compiler": 504
+  },
+  "findings": {
+    "FND-P1-T14-I002-001": "CLOSED",
+    "FND-P1-T14-I002-002": "CLOSED",
+    "FND-P1-T14-I002-003": "CLOSED"
+  },
+  "openSeverity": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  }
+}

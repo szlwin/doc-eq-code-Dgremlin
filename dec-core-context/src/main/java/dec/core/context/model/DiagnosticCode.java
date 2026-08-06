@@ -20,6 +20,7 @@ public enum DiagnosticCode {
     MIX_MODEL_ACCESS_NON_COMPOSITE("MIX-MODEL-ACCESS-NON-COMPOSITE"),
     MIX_DEFERRED_INCOMPLETE("MIX-DEFERRED-INCOMPLETE"),
     MIX_PUBLICATION_BLOCKED("MIX-PUBLICATION-BLOCKED"),
+    MIX_PUBLICATION_PROVENANCE_MISMATCH("MIX-PUBLICATION-PROVENANCE-MISMATCH"),
     MIX_DIGEST_NONDETERMINISTIC("MIX-DIGEST-NONDETERMINISTIC"),
     MIX_CONTEXT_MUTATION("MIX-CONTEXT-MUTATION"),
     MIX_PROJECTION_WRITE("MIX-PROJECTION-WRITE"),
@@ -34,9 +35,16 @@ public enum DiagnosticCode {
 
     private final String code;
 
-    DiagnosticCode(String code) { this.code = code; }
+    DiagnosticCode(String code) {
+        this.code = code;
+    }
 
-    public String code() { return code; }
+    public String code() {
+        return code;
+    }
 
-    @Override public String toString() { return code; }
+    @Override
+    public String toString() {
+        return code;
+    }
 }

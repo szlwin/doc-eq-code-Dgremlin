@@ -1,0 +1,60 @@
+{
+  "taskId": "TASK-P1-T14",
+  "iteration": "I001",
+  "status": "PASSED",
+  "base": "dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce",
+  "dependency": "COMPLETION-P1-T13-R03@5075793d06cc",
+  "design": {
+    "id": "DESIGN-R48@P1-T14-I001",
+    "firstCommit": "ceb032670a96715a61ff3db6edd7032fc58b409f",
+    "blob": "6fdd71a8ddeae2afa2935233aee3a2d24441a98b"
+  },
+  "plan": {
+    "id": "TP-P1-COMPILER-F01-R44@P1-T14-I001",
+    "firstCommit": "1581481e3c8acb46d6120aa28b63476aa2e9890c",
+    "blob": "006311b43f1304aaa439b19b5d9b4eea3d808af5"
+  },
+  "architecture": "DEVSKEL-P1-T14-R01@94fcc64aa6da",
+  "tdd": {
+    "id": "TDD-P1-T14-R01@f0f76facdd76",
+    "head": "f0f76facdd76d626cd82859ef8413964ae1b6fdf",
+    "run": 31021944964,
+    "artifact": 8936970743,
+    "sha256": "f9e5259bb29a11f7ebf23637f3541df0f82485af10a2dc6953b7e89c939ccc5e"
+  },
+  "reviewRed": {
+    "head": "a494fa37574f7ae37362421d15e4f6a175ff6091",
+    "run": 31023013154,
+    "artifact": 8937412168,
+    "sha256": "28448029b7f95dee776129bbf8c6fd521856d5dc489bd37f25d0a59c37c9ed99"
+  },
+  "productionRevision": "1a930d775e3e226da55ec83697a2942d3dd1950d",
+  "codeTestRevision": "252024603bfcdcee4ac42310b54b2af143aca002",
+  "development": "DEV-P1-T14-R01@1a930d775e3e",
+  "codeReview": "CODEREVIEW-P1-T14-R01@252024603bfc",
+  "testing": "TESTING-P1-T14-R01@252024603bfc",
+  "cleanValidation": {
+    "run": 31023363308,
+    "artifact": 8937562356,
+    "sha256": "a8027e3479e0800086e9d97ef640ef1189b6a7dfde2324d712c0647e305250a6",
+    "surefireXml": 108,
+    "allRecords": 619,
+    "normalPassed": 618,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "t14": 12,
+    "t13": 34,
+    "t12": 133,
+    "compiler": 498
+  },
+  "openFindings": {
+    "p0": 0,
+    "p1": 0,
+    "p2": 0
+  },
+  "postCodeTestPolicy": "PROJECT_DOC_ONLY",
+  "mergePerformed": false,
+  "nextTask": "TASK-P1-T15",
+  "nextTaskStatus": "BLOCKED_UNTIL_PR_29_MERGE"
+}
