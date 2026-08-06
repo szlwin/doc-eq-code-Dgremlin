@@ -1,5 +1,6 @@
 package dec.core.compiler.pass;
 
+import dec.core.compiler.api.CompilationOptions;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public final class CandidateContextPublicationPass
     }
 
     /**
-     * 从 Session 的不可变输入闭包构造 candidate，并只交给 Context 的 prepare 边界。
+     * 先绑定当前请求的 schema/options，再构造 candidate 并交给 prepare 边界。
      */
     @Override
     public PassResult execute(PublicationPassContext context) {
@@ -28,6 +29,14 @@ public final class CandidateContextPublicationPass
         if (!input.isPresent()) {
             return PassResult.of(Collections.singletonList(
                     PipelineDiagnostics.publicationBlocked()));
+        }
+
+        CompilationOptions options = context.request().options();
+        if (!input.get().matchesRequest(
+                options.schemaVersion(),
+                options.optionsDigest())) {
+            return PassResult.of(Collections.singletonList(
+                    PipelineDiagnostics.publicationProvenanceMismatch()));
         }
 
         // Diagnostic 快照在 candidate 构造前读取；任何 ERROR 都由模型边界拒绝。
