@@ -16,6 +16,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v6
+
+      - name: Export source snapshot for stage closure development
+        run: tar --exclude=.git --exclude='*/target' -czf /tmp/source-snapshot.tar.gz .
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -45,6 +49,7 @@ jobs:
             **/target/site/jacoco/**
             **/target/t14-mutation-proof/**
             target/p1-t15-retirement/**
+            /tmp/source-snapshot.tar.gz
           if-no-files-found: warn
 
   mysql-it:
