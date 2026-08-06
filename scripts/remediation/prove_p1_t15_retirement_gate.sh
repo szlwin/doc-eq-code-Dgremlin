@@ -7,19 +7,24 @@ REPORT_DIR="$ROOT/target/p1-t15-retirement"
 MUTATION_MODULE="$ROOT/dec-expand-declaration"
 MUTATION_SOURCE_DIR="$ROOT/dec-core-starter/src/test/java/dec/core/starter/t15mutation"
 MUTATION_SOURCE="$MUTATION_SOURCE_DIR/LegacyDeclarationAdapter.java"
+mutation_active=0
 
-# 无论验证成功或中断，都必须恢复工作树，避免 mutation 污染后续构建。
+# 只清理由本脚本成功注入的内容，绝不删除基线中真实存在的残留。
 cleanup_mutation() {
-  rm -rf "$MUTATION_MODULE"
-  rm -rf "$MUTATION_SOURCE_DIR"
+  if [ "$mutation_active" -eq 1 ]; then
+    rm -rf "$MUTATION_MODULE"
+    rm -rf "$MUTATION_SOURCE_DIR"
+    mutation_active=0
+  fi
 }
-trap cleanup_mutation EXIT HUP INT TERM
 
-# 先证明当前仓库基线本身满足退役合同。
+# 先证明当前仓库基线本身满足退役合同；失败时只报告，不修改工作树。
 sh "$VERIFY"
 cp "$REPORT_DIR/summary.json" "$REPORT_DIR/baseline-summary.json"
 
-# 同时注入模块目录和未跟踪源码回流，验证两个独立扫描面都会 fail-closed。
+# 基线通过后才允许注入 mutation，并从此刻开始安装异常清理门禁。
+mutation_active=1
+trap cleanup_mutation EXIT HUP INT TERM
 mkdir -p "$MUTATION_MODULE" "$MUTATION_SOURCE_DIR"
 printf '%s\n' '<project><!-- dec-expand-declaration mutation --></project>' \
   >"$MUTATION_MODULE/pom.xml"
@@ -31,6 +36,7 @@ final class LegacyDeclarationAdapter {
 }
 JAVA
 
+# 同时注入模块目录和未跟踪源码回流，验证两个独立扫描面都会 fail-closed。
 set +e
 sh "$VERIFY" >"$REPORT_DIR/mutation-run.log" 2>&1
 mutation_status=$?
@@ -69,6 +75,7 @@ with open(sys.argv[1], "w", encoding="utf-8") as output:
             "expectedBlocked": True,
             "detectedCategories": ["MODULE", "SOURCE"],
             "restoredBaselinePassed": True,
+            "baselineFailureIsReadOnly": True,
         },
         output,
         ensure_ascii=False,
