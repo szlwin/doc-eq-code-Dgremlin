@@ -1,54 +1,52 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T15 / I002` 已完成
-- 当前有效 Completion：`COMPLETION-P1-T15-R02@7c901332b8e5`
+- 当前逻辑任务：`TASK-P1-T15 / I003` 已完成
+- 当前有效 Completion：`COMPLETION-P1-T15-R03@66fa5db14f7b`
 - 状态：`COMPLETED / PASSED`
 - Base：`dev_all@665dd364975505bb01263885a25b3bb1be767d2b`
 - Dependency：`COMPLETION-P1-T14-R03@37fb814b39c5`
 - Branch：`feature/p1-t15-retire-declaration-20260806-1354`
 - PR：`#30 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
 - TDD：`TDD-P1-T15-R01@bff67b86fb55` — VALID
-- Development：`DEV-P1-T15-R02@7c901332b8e5`
-- Code Review：`CODEREVIEW-P1-T15-R02@7c901332b8e5`
-- Testing：`TESTING-P1-T15-R02@7c901332b8e5`
+- Development：`DEV-P1-T15-R03@66fa5db14f7b`
+- Code Review：`CODEREVIEW-P1-T15-R03@66fa5db14f7b`
+- Testing：`TESTING-P1-T15-R03@66fa5db14f7b`
 - Open P0/P1/P2：`0 / 0 / 0`
 
 ## Superseded but retained
 
-- `CODEREVIEW-P1-T15-R01@f36b03e6243`；
-- `TESTING-P1-T15-R01@f36b03e6243`；
-- `COMPLETION-P1-T15-R01@f36b03e6243`。
+- `CODEREVIEW-P1-T15-R02@7c901332b8e5`；
+- `TESTING-P1-T15-R02@7c901332b8e5`；
+- `COMPLETION-P1-T15-R02@7c901332b8e5`。
 
-失效原因：`FND-P1-T15-I001-002` 证明 I001 retirement gate 覆盖和证据不完整。生产 Starter、Projection 与 TDD 结论不失效。
+失效原因：`FND-P1-T15-I002-003` 证明 R02 的 MySQL 结论只覆盖环境/Schema，没有业务执行测试。R02 的生产退役实现、retirement gate、TDD 与架构结论不失效。
 
 ## Current contract
 
-- Starter 与 Projection 生产合同保持 I001 实现；
-- 全部 11 个项目 POM 被扫描；
-- 11 个 Reactor 目标各有独立 dependency-tree 文件、日志与状态；
-- class 常量池、编译资源、ServiceLoader、Artifact entry 和解压内容均被扫描；
-- Artifact 不可读时 fail-closed；
-- 七类 mutation 均可阻断，恢复后重新生成 11/11 依赖报告并通过。
+- Starter、Projection 和 Declaration Runtime 退役合同保持 I001/I002 实现；
+- `dec-demo` 增加测试专用 MySQL 装配，不修改生产源码；
+- 必需业务场景为 `RuleTests`、`DirectoryTest`、`OrderTest`；
+- 三个场景必须执行真实 `ModelContainer`/`DirectoryContainer` 和 JDBC 结果断言；
+- Surefire 必需 suite、测试计数和数据库执行标记全部 fail-closed；
+- `TestOrderBusiness` 不恢复，禁止 Declaration Runtime 回流。
 
 ## Validation
 
-- Code/Test Revision：`7c901332b8e5c559a73c127e1a1bd86411f8adc1`
-- Run / Artifact：`31092216605 / 8963981122`
-- SHA-256：`b012e85a83b93fba76341fdeee5c719d147e57673e97d036f44abde259f7a016`
-- Surefire XML：110；All：633；Normal：632；intentional failure：1；Errors/Skipped：0/0
-- POM / dependency modules：`11 / 11-of-11`
-- class / compiled resource：`947 / 205`
-- Artifact / entry / unreadable：`10 / 958 / 0`
-- mutation：12/12 modules，七类检测；restore：11/11 modules
-- MySQL：`SKIPPED_NOT_APPLICABLE`
+- Code/Test Revision：`66fa5db14f7b0ead00e5d706acd164e1a9f4ff62`
+- Run / Attempt：`31119253989 / 3` — SUCCESS
+- Core Artifact：`8974119611`；SHA-256：`929a748eea9b70e5b5e2ac15e5501b204f8149c5a62d099c67d85870d85d0bb7`
+- MySQL Artifact：`8974141953`；SHA-256：`6a79f5c2140225fcaa4ac7930cd305f959c96b756ec3565f39058a8ea511b7ce`
+- Core：112 XML；639 total；638 normal passed；1 intentional failure；0 errors/skipped
+- MySQL：3/3 passed；3/3 markers；0 failures/errors/skipped
+- Database：order/order-detail/pay/pay-detail/product/user=`1/1/1/1/1/3`
 
 ## Recovery files
 
 - Task：`project_doc/version/V_1.0/task/P1-COMPILER-F01/TASK-P1-T15.md`
-- Development：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/development-p1-t15-r02.md`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t15-r02.md`
-- Testing：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/testing-p1-t15-r02.md`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t15-r02/completion-report.json`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t15-r02.md`
+- Development：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/development-p1-t15-r03.md`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t15-r03.md`
+- Testing：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/testing-p1-t15-r03.md`
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t15-r03/completion-report.json`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t15-r03.md`
 
 仅在用户明确授权后合并 PR #30。

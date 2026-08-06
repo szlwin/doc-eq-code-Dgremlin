@@ -1,0 +1,62 @@
+{
+  "completionId": "COMPLETION-P1-T15-R03@66fa5db14f7b",
+  "taskId": "TASK-P1-T15",
+  "iteration": "I003",
+  "status": "PASSED",
+  "base": "dev_all@665dd364975505bb01263885a25b3bb1be767d2b",
+  "branch": "feature/p1-t15-retire-declaration-20260806-1354",
+  "pullRequest": 30,
+  "design": "DESIGN-R51@P1-T15-I001",
+  "plan": "TP-P1-COMPILER-F01-R47@P1-T15-I001",
+  "tdd": "TDD-P1-T15-R01@bff67b86fb55",
+  "architecture": "DEVSKEL-P1-T15-R01@bff67b86fb55",
+  "development": "DEV-P1-T15-R03@66fa5db14f7b",
+  "codeReview": "CODEREVIEW-P1-T15-R03@66fa5db14f7b",
+  "testing": "TESTING-P1-T15-R03@66fa5db14f7b",
+  "codeTestRevision": "66fa5db14f7b0ead00e5d706acd164e1a9f4ff62",
+  "superseded": [
+    "CODEREVIEW-P1-T15-R02@7c901332b8e5",
+    "TESTING-P1-T15-R02@7c901332b8e5",
+    "COMPLETION-P1-T15-R02@7c901332b8e5"
+  ],
+  "validation": {
+    "run": 31119253989,
+    "runAttempt": 3,
+    "coreArtifact": 8974119611,
+    "coreSha256": "929a748eea9b70e5b5e2ac15e5501b204f8149c5a62d099c67d85870d85d0bb7",
+    "mysqlArtifact": 8974141953,
+    "mysqlSha256": "6a79f5c2140225fcaa4ac7930cd305f959c96b756ec3565f39058a8ea511b7ce",
+    "coreSurefireXml": 112,
+    "coreAllRecords": 639,
+    "coreNormalPassed": 638,
+    "intentionalFailure": 1,
+    "coreErrors": 0,
+    "coreSkipped": 0,
+    "mysqlRequiredSuites": 3,
+    "mysqlDiscoveredSuites": 3,
+    "mysqlTests": 3,
+    "mysqlFailures": 0,
+    "mysqlErrors": 0,
+    "mysqlSkipped": 0,
+    "databaseExecutionMarkers": 3,
+    "databaseCounts": {
+      "order_info": 1,
+      "order_detail_info": 1,
+      "pay_info": 1,
+      "pay_detail_info": 1,
+      "product_info": 1,
+      "user_info": 3
+    },
+    "retirementGatePassed": true,
+    "javaRelease": 8,
+    "mysqlBusinessExecution": "PASSED"
+  },
+  "finding": {
+    "FND-P1-T15-I001-001": "CLOSED",
+    "FND-P1-T15-I001-002": "CLOSED",
+    "FND-P1-T15-I002-003": "CLOSED"
+  },
+  "openP0P1P2": "0/0/0",
+  "prReadyForReview": true,
+  "merged": false
+}
