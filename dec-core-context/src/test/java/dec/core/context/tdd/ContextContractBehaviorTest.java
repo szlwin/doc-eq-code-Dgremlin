@@ -109,7 +109,10 @@ class ContextContractBehaviorTest {
 
         assertSame(earlier, values.get(0));
         assertEquals("MIX-REF-UNKNOWN", DiagnosticCode.MIX_REF_UNKNOWN.code());
-        assertEquals(30, DiagnosticCode.values().length);
+        assertEquals(
+                "MIX-PUBLICATION-PROVENANCE-MISMATCH",
+                DiagnosticCode.MIX_PUBLICATION_PROVENANCE_MISMATCH.code());
+        assertEquals(31, DiagnosticCode.values().length);
     }
 
     @Test
