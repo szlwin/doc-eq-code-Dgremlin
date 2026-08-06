@@ -3,7 +3,7 @@
 - Design ID：`DESIGN-R49@P1-T14-REWORK-I002`
 - Base：`dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce`
 - Rework Input：独立 Review `FND-P1-T14-I002-001`、`FND-P1-T14-I002-002`
-- Status：`FROZEN`
+- Status：`FROZEN / PRE_PRODUCTION_AMENDMENT`
 
 ## Goal
 
@@ -11,7 +11,7 @@
 
 ## Atomic provenance artifact
 
-新增 `DigestBoundCompiledInput`，只能由 `CompilerDigestService.bind(SourceManifest, SemanticDigestInput)` 创建。该对象原子持有：
+新增 `DigestBoundCompiledInput`，只能由 `CompilerDigestService.bind(SourceManifest, PublishedSourceManifest, Registry, DeferredRegistry, compilerVersion, CompilationOptions)` 创建。该工厂在内部先完整快照模型事实，再用同一快照构造 `SemanticDigestInput` 并立即计算 `DigestPair`。该对象原子持有：
 
 - `PublishedSourceManifest`；
 - 不可变 Definition Registry；
@@ -19,9 +19,9 @@
 - compilerVersion；
 - schemaVersion；
 - optionsDigest；
-- 由同一个 `SemanticDigestInput` 和原始 `SourceManifest` 计算出的 `DigestPair`。
+- 由上述同一个冻结闭包和原始 `SourceManifest` 计算出的 `DigestPair`。
 
-构造路径不暴露分别注入模型事实、版本字符串或 `DigestPair` 的入口。`DigestPair` 在该正式边界必须满足固定 64 位小写十六进制 SHA-256 格式。
+构造路径不暴露分别注入版本字符串或 `DigestPair` 的入口；模型事实只能在 bind 内先冻结、后摘要。`DigestPair` 在正式边界必须满足固定 64 位小写十六进制 SHA-256 格式。
 
 ## Builder contract
 
@@ -41,7 +41,7 @@ I001 的分阶段 Builder 历史保留，但不再作为当前生产入口。
 - `schemaVersion == request.options().schemaVersion()`；
 - `optionsDigest == request.options().optionsDigest()`。
 
-compilerVersion 由同一个 `SemanticDigestInput` 纳入 T13 canonical input 并封入 atomic provenance，不允许在 T14 再单独替换。任一 request mismatch 返回稳定 `MIX_PUBLICATION_PROVENANCE_MISMATCH / ERROR`，Pipeline 进入 FAILED，publisher=0，artifacts empty。缺少输入继续返回 `MIX_PUBLICATION_BLOCKED / ERROR`。
+compilerVersion 已在 bind 内与其余模型事实一起进入 T13 canonical input，不允许在 T14 再单独替换。任一 request mismatch 返回稳定 `MIX_PUBLICATION_PROVENANCE_MISMATCH / ERROR`，Pipeline 进入 FAILED，publisher=0，artifacts empty。缺少输入继续返回 `MIX_PUBLICATION_BLOCKED / ERROR`。
 
 ## Snapshot integrity
 
