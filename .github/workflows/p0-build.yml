@@ -28,6 +28,9 @@ jobs:
       - name: Verify Maven Wrapper
         run: ./mvnw --version
 
+      - name: Export Maven cache for offline stage closure development
+        run: tar -C /home/runner -czf /tmp/maven-cache.tar.gz .m2/repository .m2/wrapper
+
       - name: Bootstrap repository-bundled legacy dependencies
         run: scripts/remediation/bootstrap_legacy_dependencies.sh
       - name: Core build and tests
@@ -50,6 +53,7 @@ jobs:
             **/target/t14-mutation-proof/**
             target/p1-t15-retirement/**
             /tmp/source-snapshot.tar.gz
+            /tmp/maven-cache.tar.gz
           if-no-files-found: warn
 
   mysql-it:
