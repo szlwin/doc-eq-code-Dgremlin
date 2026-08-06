@@ -1,0 +1,5 @@
+{
+  "task": "TASK-P1-STAGE-CLOSURE",
+  "iteration": "I001",
+  "action": "dispatch-p0-with-mysql"
+}
