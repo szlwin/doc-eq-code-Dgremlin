@@ -2,135 +2,73 @@
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+VERIFY="$ROOT/scripts/remediation/verify_p1_t15_retirement.sh"
 REPORT_DIR="$ROOT/target/p1-t15-retirement"
-DEPENDENCY_REPORT="$REPORT_DIR/dependency-tree.txt"
-VIOLATIONS="$REPORT_DIR/violations.txt"
-SUMMARY="$REPORT_DIR/summary.json"
+MUTATION_MODULE="$ROOT/dec-expand-declaration"
+MUTATION_SOURCE_DIR="$ROOT/dec-core-starter/src/test/java/dec/core/starter/t15mutation"
+MUTATION_SOURCE="$MUTATION_SOURCE_DIR/LegacyDeclarationAdapter.java"
 
-mkdir -p "$REPORT_DIR"
-: >"$VIOLATIONS"
-
-# 统一记录残留事实，避免扫描只输出不可机器解析的终端文本。
-record_violation() {
-  category=$1
-  detail=$2
-  printf '%s\t%s\n' "$category" "$detail" >>"$VIOLATIONS"
+# 无论验证成功或中断，都必须恢复工作树，避免 mutation 污染后续构建。
+cleanup_mutation() {
+  rm -rf "$MUTATION_MODULE"
+  rm -rf "$MUTATION_SOURCE_DIR"
 }
+trap cleanup_mutation EXIT HUP INT TERM
 
-# 临时模块目录和根 Reactor 声明必须整体消失。
-if [ -e "$ROOT/dec-expand-declaration" ]; then
-  record_violation "MODULE" "dec-expand-declaration directory exists"
-fi
+# 先证明当前仓库基线本身满足退役合同。
+sh "$VERIFY"
+cp "$REPORT_DIR/summary.json" "$REPORT_DIR/baseline-summary.json"
 
-if grep -n "dec-expand-declaration" "$ROOT/pom.xml" >/dev/null 2>&1; then
-  grep -n "dec-expand-declaration" "$ROOT/pom.xml" \
-    | while IFS= read -r line; do
-        record_violation "ROOT_POM" "$line"
-      done
-fi
+# 同时注入模块目录和未跟踪源码回流，验证两个独立扫描面都会 fail-closed。
+mkdir -p "$MUTATION_MODULE" "$MUTATION_SOURCE_DIR"
+printf '%s\n' '<project><!-- dec-expand-declaration mutation --></project>' \
+  >"$MUTATION_MODULE/pom.xml"
+cat >"$MUTATION_SOURCE" <<'JAVA'
+package dec.core.starter.t15mutation;
 
-# Starter 只能通过 Compiler 公共 API 工作，不得保留全局 Config 或旧 Parser 依赖。
-for legacy_file in \
-  "$ROOT/dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java" \
-  "$ROOT/dec-core-starter/src/main/java/dec/core/starter/common/DataSourceManager.java"
-do
-  if [ -e "$legacy_file" ]; then
-    record_violation "STARTER_GLOBAL" "${legacy_file#$ROOT/}"
-  fi
-done
+/** mutation only: dec.expand.declare / LegacyDeclarationAdapter */
+final class LegacyDeclarationAdapter {
+}
+JAVA
 
-for legacy_dependency in \
-  dec-context-config-parse-xml \
-  dec-context-config-parse-yaml
-do
-  if grep -n "$legacy_dependency" "$ROOT/dec-core-starter/pom.xml" >/dev/null 2>&1; then
-    grep -n "$legacy_dependency" "$ROOT/dec-core-starter/pom.xml" \
-      | while IFS= read -r line; do
-          record_violation "STARTER_DEPENDENCY" "$line"
-        done
-  fi
-done
-
-# 扫描生产、测试和服务发现入口；历史文档和本门禁脚本允许说明被退役名称。
 set +e
-git -C "$ROOT" grep -n -I -E \
-  'dec\.expand\.declare|LegacyDeclarationAdapter|doc\.eq\.code:dec-expand-declaration' \
-  -- \
-  ':(glob)**/src/main/**' \
-  ':(glob)**/src/test/**' \
-  ':(glob)**/META-INF/services/**' \
-  ':(exclude)dec-expand-declaration/**' \
-  >"$REPORT_DIR/source-scan.txt"
-source_status=$?
+sh "$VERIFY" >"$REPORT_DIR/mutation-run.log" 2>&1
+mutation_status=$?
 set -e
-if [ "$source_status" -eq 0 ]; then
-  while IFS= read -r line; do
-    record_violation "SOURCE" "$line"
-  done <"$REPORT_DIR/source-scan.txt"
-elif [ "$source_status" -ne 1 ]; then
-  echo "source residual scan failed unexpectedly" >&2
-  exit 2
+cp "$REPORT_DIR/summary.json" "$REPORT_DIR/mutation-summary.json"
+cp "$REPORT_DIR/violations.txt" "$REPORT_DIR/mutation-violations.txt"
+
+if [ "$mutation_status" -eq 0 ]; then
+  echo "T15 retirement mutation unexpectedly passed" >&2
+  exit 1
+fi
+if ! grep -q '^MODULE[[:space:]]' "$REPORT_DIR/mutation-violations.txt"; then
+  echo "T15 retirement mutation did not detect module residue" >&2
+  exit 1
+fi
+if ! grep -q '^SOURCE[[:space:]]' "$REPORT_DIR/mutation-violations.txt"; then
+  echo "T15 retirement mutation did not detect source residue" >&2
+  exit 1
 fi
 
-# Maven 依赖树必须证明没有任何模块继续解析旧 Artifact。
-"$ROOT/mvnw" --batch-mode --no-transfer-progress \
-  -DskipTests \
-  -DoutputType=text \
-  -DoutputFile="$DEPENDENCY_REPORT" \
-  dependency:tree >/dev/null
+# 删除注入内容后再次验证，证明门禁没有依赖脏工作树或一次性缓存。
+cleanup_mutation
+sh "$VERIFY"
+cp "$REPORT_DIR/summary.json" "$REPORT_DIR/restored-summary.json"
 
-if grep -n "dec-expand-declaration" "$DEPENDENCY_REPORT" >/dev/null 2>&1; then
-  grep -n "dec-expand-declaration" "$DEPENDENCY_REPORT" \
-    | while IFS= read -r line; do
-        record_violation "DEPENDENCY_TREE" "$line"
-      done
-fi
-
-# 发布 Artifact 中不得包含旧 package、旧 artifactId 或 Adapter 名称。
-: >"$REPORT_DIR/artifact-scan.txt"
-find "$ROOT" -type f \( -name '*.jar' -o -name '*.war' -o -name '*.zip' \) \
-  -path '*/target/*' -print \
-  | LC_ALL=C sort \
-  | while IFS= read -r artifact; do
-      if unzip -Z1 "$artifact" 2>/dev/null \
-          | grep -E '(^|/)dec/expand/declare/|LegacyDeclarationAdapter|dec-expand-declaration' \
-          >"$REPORT_DIR/current-artifact-match.txt"; then
-        while IFS= read -r entry; do
-          record_violation \
-            "ARTIFACT" \
-            "${artifact#$ROOT/}:$entry"
-        done <"$REPORT_DIR/current-artifact-match.txt"
-      fi
-    done
-
-violation_count=$(wc -l <"$VIOLATIONS" | tr -d ' ')
-result=PASSED
-if [ "$violation_count" -ne 0 ]; then
-  result=FAILED
-fi
-
-python3 - "$SUMMARY" "$result" "$violation_count" <<'PY'
+python3 - "$REPORT_DIR/mutation-proof-summary.json" <<'PY'
 import json
 import sys
 
-summary_path, result, count = sys.argv[1:]
-with open(summary_path, "w", encoding="utf-8") as output:
+with open(sys.argv[1], "w", encoding="utf-8") as output:
     json.dump(
         {
             "task": "TASK-P1-T15",
-            "gate": "DECLARATION_RUNTIME_RETIREMENT",
-            "result": result,
-            "violationCount": int(count),
-            "scopes": [
-                "REACTOR_MODULES",
-                "DEPENDENCY_MANAGEMENT",
-                "DEPENDENCY_TREE",
-                "SOURCE_REFERENCES",
-                "SERVICE_LOADER",
-                "REFLECTION_STRINGS",
-                "PUBLISHED_ARTIFACTS",
-                "STARTER_GLOBAL_CONFIG",
-            ],
+            "gate": "DECLARATION_RUNTIME_RETIREMENT_MUTATION_PROOF",
+            "result": "PASSED",
+            "expectedBlocked": True,
+            "detectedCategories": ["MODULE", "SOURCE"],
+            "restoredBaselinePassed": True,
         },
         output,
         ensure_ascii=False,
@@ -140,10 +78,4 @@ with open(summary_path, "w", encoding="utf-8") as output:
     output.write("\n")
 PY
 
-if [ "$result" != "PASSED" ]; then
-  echo "T15 retirement gate found $violation_count residual item(s)" >&2
-  cat "$VIOLATIONS" >&2
-  exit 1
-fi
-
-echo "T15 declaration runtime retirement gate passed"
+echo "T15 declaration retirement mutation proof passed"
