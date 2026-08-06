@@ -1,78 +1,63 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T14 / I003` 已完成
-- 当前有效 Completion：`COMPLETION-P1-T14-R03@37fb814b39c5`
-- 失效但保留：`TDD-P1-T14-R02@1df0a14f2a74`、`CODEREVIEW-P1-T14-R03@668d865b0189`、`COMPLETION-P1-T14-R02@668d865b0189`
-- Dependency：`COMPLETION-P1-T13-R03@5075793d06cc`
+- 当前逻辑任务：`TASK-P1-T15 / I001` 已完成
+- 当前有效 Completion：`COMPLETION-P1-T15-R01@f36b03e6243`
 - 状态：`COMPLETED / PASSED`
-- Mode：`TDD_REPAIR / ORACLE_HARDENING`
-- Base：`dev_all@3e4da420d2ef5ada8398aefbbeabb37964e384ce`
-- Branch：`feature/p1-t14-candidate-context-20260805-2324`
-- PR：`#29 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
-- Design：`DESIGN-R50@P1-T14-REWORK-I003`
-- Plan：`TP-P1-COMPILER-F01-R46@P1-T14-REWORK-I003`
-- TDD：`TDD-P1-T14-R03@37fb814b39c5`
-- Architecture：`DEVSKEL-P1-T14-R03@dc4f0f5cc566`
-- Development：`DEV-P1-T14-R03@37fb814b39c5`
-- Code Review：`CODEREVIEW-P1-T14-R05@37fb814b39c5`
-- Testing：`TESTING-P1-T14-R03@37fb814b39c5`
-- Reviews：`REV-000747`～`REV-000759`
-- Evidence：`EVD-001092`～`EVD-001101`
+- Base：`dev_all@665dd364975505bb01263885a25b3bb1be767d2b`
+- Dependency：`COMPLETION-P1-T14-R03@37fb814b39c5`
+- Branch：`feature/p1-t15-retire-declaration-20260806-1354`
+- PR：`#30 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
+- Design：`DESIGN-R51@P1-T15-I001`
+- Plan：`TP-P1-COMPILER-F01-R47@P1-T15-I001`
+- TDD：`TDD-P1-T15-R01@bff67b86fb55`
+- Architecture：`DEVSKEL-P1-T15-R01@bff67b86fb55`
+- Development：`DEV-P1-T15-R01@f36b03e6243`
+- Code Review：`CODEREVIEW-P1-T15-R01@f36b03e6243`
+- Testing：`TESTING-P1-T15-R01@f36b03e6243`
 - Open P0/P1/P2：`0 / 0 / 0`
 
-## Current production contract
+## Current contract
 
-- atomic bind 同时冻结 raw/published Source、Definitions、Deferred 与版本域；
-- T13 Source/Semantic Digest 使用同一冻结闭包计算；
-- raw/published sourceId 集合必须完全一致；
-- Builder 不公开分离式 source/registry/version/digest API；
-- 正式 Digest 必须为 64 位小写 SHA-256；
-- Publication Pass 绑定当前 request schema/options；
-- provenance mismatch 和 missing input 产生精确 ERROR Diagnostic；
-- 失败路径 publisher=0、artifacts empty；
-- 正常路径完整 candidate 精确传给唯一 Publisher；
-- Definition/Deferred 快照完整性门禁均有直接负向 Oracle；
-- T15 与 P2～P7 runtime 未实现。
+- `EngineContext → CoreConfigProjection` 是旧核心唯一只读事实源；
+- `CompilerStarter` 只持有实例级 `ModelCompiler`；
+- 编译发布精确委托一次，输入与结果不复制、不改写；
+- Projection 只从 `PublishedCompilationResult.engineContext()` 获取；
+- Starter 不保存全局 current Context，不拥有额外 Publisher/CAS；
+- `dec-expand-declaration` 已从 Git、POM、Reactor、依赖图、源码和 Artifact 整体退役；
+- Demo 不再包含旧 declaration/config 示例；
+- 无 Adapter、反射生产逻辑、ServiceLoader 回流或双轨 runtime。
 
-## I003 evidence repair
+## Review repair
 
-- I002 RED 因 `testCompile` 失败已失效保留；
-- mutation A 短路 request binding，目标测试产生 1 个 assertion failure、0 error；
-- mutation B 跳过 Source closure binding，目标测试产生 1 个 assertion failure、0 error；
-- 两个 mutation 均成功编译并实际执行；
-- 恢复正确源码后两个目标测试各 1/1 GREEN；
-- mutation 源码未进入 Git；
-- mutation XML、日志和 JSON 摘要独立归档；
-- 完整 5 项/11 项 Surefire XML 在上传前恢复；
-- PR #29 正文已更新至 I003。
+- Finding：`FND-P1-T15-I001-001 / P2 / SPEC-CORRECTNESS-ORACLE / CLOSED`；
+- 原 3 项测试只覆盖结构与类路径；
+- 新增 4 项独立行为测试，覆盖精确一次委托、参数/结果 identity、null 前置拒绝、Projection identity 和非发布拒绝；
+- 修复只修改测试，不修改生产实现。
 
 ## Validation
 
-- Code/Test Revision：`37fb814b39c54e6260fd65d13cb31e817bc0fe92`
-- P0 Run：`31073434459` — SUCCESS
-- Artifact/SHA：`8956534261` / `3266e2b475bbcdf0f6dc24b3de097c84efbc40853ae77bec8432e6feaa7207e5`
-- Surefire XML：109；T14：18/18；T13：34/34；T12：133/133；Compiler：504/504；Normal：624/624
-- All records：625；intentional failure：1；Errors/Skipped：0/0
-- Java 8、12 modules、mutation gate、intentional failure gate：PASSED
+- Code/Test Revision：`f36b03e6243f6e3c9d2f5b2ffce7cf4b1fd63eb3`
+- Run / Artifact：`31083267905 / 8960370768`
+- SHA-256：`ea2c919cbacfead831a5d137894991b09b7a2163f0616c9bc47f99505db517b3`
+- Surefire XML：110；All：633；Normal passed：632；intentional failure：1；Errors/Skipped：0/0
+- T15：10/10；Starter：10/10；Compiler：504/504；XML：30/30；YAML：59/59；Demo：3/3
+- retirement baseline / mutation blocked / restored baseline：`PASSED / YES / PASSED`
+- Java 8、T14 mutation、T15 retirement、intentional failure：PASSED
 - MySQL：`SKIPPED_NOT_APPLICABLE`
 
 ## Revision integrity
 
-- R50 first commit/blob：`b97bedbbadda21e9c7e0cfc68ae755d34019b724` / `050364ad99ae63067929f3b94473105579de484d`
-- R46 first commit/blob：`445dbb496638d66a39a20a2174b8f4507957d6a7` / `d6c21d456b467b5efd543eb289196663697a683d`
-- Code/Test Revision：`37fb814b39c54e6260fd65d13cb31e817bc0fe92`
-- Code/Test Revision 后只允许 `project_doc` 更新；
-- I003 生产和 JUnit 测试源码变更均为 0。
+- R51 first commit/blob：`4e47d3a4b57f40ee2da6c9fcd4ba30e572bbd9b2` / `3a11a6f8f8110ab0c187d07a3a88bf4c442c0516`
+- R47 first commit/blob：`c5d0537f95f0d0b7c95be2d6e9bbff0151a643b4` / `051e41e77d3f5c40a8248e3de1bb94c65e71ed8d`
+- Code/Test Revision 后只允许 `project_doc` 与 PR 元数据更新；
+- 新增 `@Override` 独占一行；方法与重要逻辑使用中文注释。
 
 ## Recovery
 
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t14-r03/completion-report.json`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r05.md`
-- Invalidation：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t14-r04-invalidation.md`
-- TDD：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/tdd-p1-t14-r03.md`
-- Testing：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/testing-p1-t14-r03.md`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t14-r03.json`
-- Machine checkpoint：`project_doc/version/V_1.0/tdd_p1_t14_r03_completion.json`
-- 既有 `@Override` 独占一行；脚本方法和重要逻辑使用中文注释；
-- 仅在用户明确授权后合并 PR #29；
-- TASK-P1-T15：`BLOCKED_UNTIL_PR_29_MERGE`。
+- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t15-r01/completion-report.json`
+- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t15-r01.md`
+- TDD：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/tdd-p1-t15-r01.md`
+- Testing：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/testing-p1-t15-r01.md`
+- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t15-r01.md`
+
+仅在用户明确授权后合并 PR #30。
