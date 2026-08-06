@@ -1,0 +1,25 @@
+{
+  "task": "TASK-P1-T14",
+  "iteration": "I002",
+  "completion": "COMPLETION-P1-T14-R02@668d865b0189",
+  "status": "PASSED",
+  "codeTestRevision": "668d865b0189e9107f25295a1726748968aa7462",
+  "red": {
+    "head": "1df0a14f2a746d6027485a99dcf9cbd3ceeb3899",
+    "run": 31068551065,
+    "artifact": 8954760225,
+    "sha256": "7431ba21d9447de5cd60aa2db06cb849a3a045867553e276f7d22f61931d5d15"
+  },
+  "green": {
+    "head": "668d865b0189e9107f25295a1726748968aa7462",
+    "run": 31069685120,
+    "artifact": 8955166219,
+    "sha256": "5553810bfb87146c97835dd5d1c2de10b4c2b8405a9ef533e994f110c7b71c6c",
+    "t14": "18/18",
+    "compiler": "504/504",
+    "normal": "624/624"
+  },
+  "openP0P1P2": "0/0/0",
+  "pr": 29,
+  "merged": false
+}
