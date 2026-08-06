@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    mix 目录用于讨论目标设计：
+
+    1. Business Model 可以跨越 user、order、payment 等多个 System；
+    2. System 负责 RuleView 归属、数据写入范围和执行能力；
+    3. Information Tree 负责稳定业务语义；
+    4. Directory 负责跨 System 编排。
+
+    当前解析器未必已经支持 system-file-info、business-file-info 等元素。
+-->
+<orm-config name="mix">
+
+    <orm-datasource-info default="data1">
+        <orm-datasource name="data1">
+            <name>MySQL</name>
+        </orm-datasource>
+    </orm-datasource-info>
+
+    <orm-data-file-info>
+        <orm-file path="classpath:stage-mix/data/"/>
+    </orm-data-file-info>
+
+    <orm-view-file-info>
+        <orm-file path="classpath:stage-mix/view/"/>
+    </orm-view-file-info>
+
+    <!-- RuleView 不再由全局目录统一加载，而是由所属 System 加载。 -->
+    <system-file-info>
+        <system-file path="classpath:stage-mix/system/systems.xml"/>
+    </system-file-info>
+
+    <business-file-info>
+        <business-file path="classpath:stage-mix/business/order-business.xml"/>
+    </business-file-info>
+
+    <orm-connection-info default="con1">
+        <orm-connection name="con1">
+            <data-source-info>
+                <data-source ref="data1"/>
+            </data-source-info>
+        </orm-connection>
+    </orm-connection-info>
+
+</orm-config>

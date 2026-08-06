@@ -26,6 +26,7 @@
     <modules>
         <module>dec-core-context</module>
         <module>dec-core-compiler</module>
+        <module>dec-core-frontends</module>
         <module>dec-core-datasource</module>
         <module>dec-context-config-parse-xml</module>
         <module>dec-context-config-parse-yaml</module>
@@ -40,6 +41,7 @@
         <dependencies>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-context</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-compiler</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-frontends</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-model</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-context-config-parse-xml</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-context-config-parse-yaml</artifactId><version>${framework.version}</version></dependency>

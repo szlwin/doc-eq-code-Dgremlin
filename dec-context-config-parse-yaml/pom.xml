@@ -21,6 +21,10 @@
             <artifactId>dec-core-compiler</artifactId>
         </dependency>
         <dependency>
+            <groupId>doc.eq.code</groupId>
+            <artifactId>dec-core-frontends</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>2.2</version>

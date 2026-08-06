@@ -13,6 +13,12 @@
 - Pipeline 继续独占最终 Publisher 调用；
 - 成功结果必须返回 Publisher 实际接收的同一个 `EngineContext` 实例。
 
+### dec-core-frontends
+
+- 从旧 XML/YAML 解析模块迁出已验证的安全 `DocumentFrontend`；
+- 只发布 Canonical Frontend 与资源预算实现，不携带旧 `ConfigFileParser` 或 `YamlConfigParser`；
+- 由旧解析模块和 Starter 共同依赖，避免复制实现及 FQCN 漂移。
+
 ### dec-core-starter
 
 - 组装 classpath Provider、安全 SourcePolicy、XML/YAML FrontendRegistry、标准 ModelCompiler、Clock、Observer 和 Publisher；

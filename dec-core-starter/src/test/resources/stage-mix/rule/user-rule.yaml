@@ -1,0 +1,20 @@
+orm-rule-mapping:
+  rule-view-info:
+    - "@attributes":
+        system: user
+        name: isActivated
+        view-ref: UserInfo
+      rule:
+        "@attributes":
+          name: checkActivated
+          type: checkPattern
+          pattern: "user.status = 1"
+    - "@attributes":
+        system: user
+        name: isCertified
+        view-ref: UserInfo
+      rule:
+        "@attributes":
+          name: checkCertified
+          type: checkPattern
+          pattern: "user.certified = 1"
