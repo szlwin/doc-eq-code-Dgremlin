@@ -16,10 +16,6 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v6
-
-      - name: Export source snapshot for stage closure development
-        run: tar --exclude=.git --exclude='*/target' -czf /tmp/source-snapshot.tar.gz .
-
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -27,9 +23,6 @@ jobs:
           cache: maven
       - name: Verify Maven Wrapper
         run: ./mvnw --version
-
-      - name: Export Maven cache for offline stage closure development
-        run: tar -C /home/runner -czf /tmp/maven-cache.tar.gz .m2/repository .m2/wrapper
 
       - name: Bootstrap repository-bundled legacy dependencies
         run: scripts/remediation/bootstrap_legacy_dependencies.sh
@@ -52,8 +45,6 @@ jobs:
             **/target/site/jacoco/**
             **/target/t14-mutation-proof/**
             target/p1-t15-retirement/**
-            /tmp/source-snapshot.tar.gz
-            /tmp/maven-cache.tar.gz
           if-no-files-found: warn
 
   mysql-it:
