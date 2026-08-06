@@ -6,11 +6,21 @@ PASS_FILE="$ROOT/dec-core-compiler/src/main/java/dec/core/compiler/pass/Candidat
 BOUND_FILE="$ROOT/dec-core-compiler/src/main/java/dec/core/compiler/compiled/DigestBoundCompiledInput.java"
 REPORT_DIR="$ROOT/dec-core-compiler/target/t14-mutation-proof"
 SUREFIRE_DIR="$ROOT/dec-core-compiler/target/surefire-reports"
+REQUEST_XML="$SUREFIRE_DIR/TEST-dec.core.compiler.pass.CandidateContextT14Test.xml"
+CLOSURE_XML="$SUREFIRE_DIR/TEST-dec.core.compiler.pass.CandidateContextT14IndependentReviewTest.xml"
 TMP_DIR=$(mktemp -d)
 
 cp "$PASS_FILE" "$TMP_DIR/CandidateContextPublicationPass.java"
 cp "$BOUND_FILE" "$TMP_DIR/DigestBoundCompiledInput.java"
 mkdir -p "$REPORT_DIR"
+
+# mutation 在完整 clean verify 后执行，因此必须先保存完整测试报告。
+if [ ! -f "$REQUEST_XML" ] || [ ! -f "$CLOSURE_XML" ]; then
+  echo "ERROR: full T14 Surefire reports are missing before mutation proof" >&2
+  exit 1
+fi
+cp "$REQUEST_XML" "$TMP_DIR/CandidateContextT14Test.full.xml"
+cp "$CLOSURE_XML" "$TMP_DIR/CandidateContextT14IndependentReviewTest.full.xml"
 
 # 无论 mutation 验证在哪一步退出，都必须恢复正确生产源码。
 restore_sources() {
@@ -18,8 +28,15 @@ restore_sources() {
   cp "$TMP_DIR/DigestBoundCompiledInput.java" "$BOUND_FILE"
 }
 
+# 定向 mutation 会覆盖 Surefire XML；归档前必须恢复完整 clean verify 报告。
+restore_full_reports() {
+  cp "$TMP_DIR/CandidateContextT14Test.full.xml" "$REQUEST_XML"
+  cp "$TMP_DIR/CandidateContextT14IndependentReviewTest.full.xml" "$CLOSURE_XML"
+}
+
 cleanup() {
   restore_sources 2>/dev/null || true
+  restore_full_reports 2>/dev/null || true
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT HUP INT TERM
@@ -120,14 +137,13 @@ set +e
   test >"$REPORT_DIR/request-binding.log" 2>&1
 request_status=$?
 set -e
-request_xml="$SUREFIRE_DIR/TEST-dec.core.compiler.pass.CandidateContextT14Test.xml"
 validate_behavior_failure \
   "$request_status" \
-  "$request_xml" \
+  "$REQUEST_XML" \
   "$REPORT_DIR/request-binding.log" \
   "$REPORT_DIR/request-binding.json" \
   "REQUEST_BINDING_BYPASS"
-cp "$request_xml" "$REPORT_DIR/request-binding.xml"
+cp "$REQUEST_XML" "$REPORT_DIR/request-binding.xml"
 restore_sources
 
 # Mutation B：临时跳过 raw/published Source identity 闭包门禁。
@@ -155,14 +171,13 @@ set +e
   test >"$REPORT_DIR/source-closure.log" 2>&1
 closure_status=$?
 set -e
-closure_xml="$SUREFIRE_DIR/TEST-dec.core.compiler.pass.CandidateContextT14IndependentReviewTest.xml"
 validate_behavior_failure \
   "$closure_status" \
-  "$closure_xml" \
+  "$CLOSURE_XML" \
   "$REPORT_DIR/source-closure.log" \
   "$REPORT_DIR/source-closure.json" \
   "SOURCE_CLOSURE_BYPASS"
-cp "$closure_xml" "$REPORT_DIR/source-closure.xml"
+cp "$CLOSURE_XML" "$REPORT_DIR/source-closure.xml"
 restore_sources
 
 # 恢复正确实现后重跑两个目标测试，确保 mutation 不污染最终 GREEN。
@@ -173,8 +188,8 @@ restore_sources
   test >"$REPORT_DIR/restored-green.log" 2>&1
 
 python3 - \
-  "$SUREFIRE_DIR/TEST-dec.core.compiler.pass.CandidateContextT14Test.xml" \
-  "$SUREFIRE_DIR/TEST-dec.core.compiler.pass.CandidateContextT14IndependentReviewTest.xml" \
+  "$REQUEST_XML" \
+  "$CLOSURE_XML" \
   "$REPORT_DIR/restored-green.json" <<'PY'
 import json
 import sys
@@ -208,6 +223,32 @@ with open(sys.argv[3], "w", encoding="utf-8") as output:
     )
     output.write("\n")
 PY
+cp "$REQUEST_XML" "$REPORT_DIR/restored-request-binding.xml"
+cp "$CLOSURE_XML" "$REPORT_DIR/restored-source-closure.xml"
+
+# 归档正常测试时恢复完整 clean verify XML，并验证原始 T14 统计未被覆盖。
+restore_full_reports
+python3 - "$REQUEST_XML" "$CLOSURE_XML" <<'PY'
+import sys
+import xml.etree.ElementTree as ET
+
+expected = {
+    "CandidateContextT14Test": 5,
+    "CandidateContextT14IndependentReviewTest": 11,
+}
+for xml_path in sys.argv[1:]:
+    root = ET.parse(xml_path).getroot()
+    name = root.attrib.get("name", "").split(".")[-1]
+    tests = int(root.attrib.get("tests", "0"))
+    failures = int(root.attrib.get("failures", "0"))
+    errors = int(root.attrib.get("errors", "0"))
+    skipped = int(root.attrib.get("skipped", "0"))
+    if tests != expected.get(name) or failures or errors or skipped:
+        raise SystemExit(
+            "full Surefire report was not restored: %s %s/%s/%s/%s"
+            % (name, tests, failures, errors, skipped)
+        )
+PY
 
 python3 - "$REPORT_DIR" <<'PY'
 import json
@@ -230,6 +271,7 @@ with (report_dir / "summary.json").open("w", encoding="utf-8") as output:
             "mode": "TDD_REPAIR_ORACLE_HARDENING",
             "mutations": [request, closure],
             "restored": restored,
+            "fullSurefireReportsRestored": True,
             "result": "PASSED",
         },
         output,
@@ -240,4 +282,4 @@ with (report_dir / "summary.json").open("w", encoding="utf-8") as output:
     output.write("\n")
 PY
 
-echo "T14 provenance mutation gate proved and restored to GREEN"
+echo "T14 provenance mutation gate proved, restored to GREEN, and preserved full reports"
