@@ -26,6 +26,7 @@ import dec.core.context.model.DigestPair;
 import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.ImmutableRegistry;
 import dec.core.context.model.NormalizedBody;
+import dec.core.context.model.PublishedSourceDescriptor;
 import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.Registry;
 import dec.core.context.model.RequiredStage;
@@ -149,6 +150,20 @@ class CandidateContextT14IndependentReviewTest {
                 () -> bind(emptyDefinitions(), deferred));
     }
 
+    /** raw 与 published Source 身份集合不一致时不得计算跨闭包摘要。 */
+    @Test
+    void sourceManifestClosureMismatchFailsClosed() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new CompilerDigestService().bind(
+                        sourceManifest(),
+                        PublishedSourceManifest.empty(),
+                        emptyDefinitions(),
+                        emptyDeferred(),
+                        "compiler-review",
+                        new CompilationOptions("schema-v1", "options-v1")));
+    }
+
     /** atomic bind 完成后 candidate 构造不得重新读取原 Registry。 */
     @Test
     void originalRegistriesAreNeverReadAfterBind() {
@@ -234,11 +249,22 @@ class CandidateContextT14IndependentReviewTest {
             DeferredRegistry deferred) {
         return new CompilerDigestService().bind(
                 sourceManifest(),
-                PublishedSourceManifest.empty(),
+                publishedManifest(),
                 definitions,
                 deferred,
                 "compiler-review",
                 new CompilationOptions("schema-v1", "options-v1"));
+    }
+
+    /** 创建 raw Source 与发布 Source 身份一致的发布清单。 */
+    private static PublishedSourceManifest publishedManifest() {
+        return new PublishedSourceManifest(
+                "source:root",
+                Collections.singletonList(new PublishedSourceDescriptor(
+                        "source:root",
+                        "XML",
+                        "content-review")),
+                Collections.emptyList());
     }
 
     /** 创建真实 T13 Source Digest 所需的最小 SourceManifest。 */
