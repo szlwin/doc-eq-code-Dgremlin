@@ -1,5 +1,12 @@
 CREATE DATABASE IF NOT EXISTS `demo-test2` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 use `demo-test2`;
+
+CREATE TABLE IF NOT EXISTS `dec_test_execution_audit` (
+  `test_case` varchar(200) NOT NULL,
+  `executed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`test_case`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+DELETE FROM `dec_test_execution_audit`;
 CREATE TABLE IF NOT EXISTS `order_detail_info` (
                                                    `o_d_id` int NOT NULL AUTO_INCREMENT,
                                                    `o_orderId` int DEFAULT NULL,

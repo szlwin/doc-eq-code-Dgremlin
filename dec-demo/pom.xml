@@ -28,6 +28,12 @@
       <groupId>doc.eq.code</groupId>
       <artifactId>dec-context-config-parse-yaml</artifactId>
     </dependency>
+    <!-- MySQL 业务测试直接加载 XML 运行时配置，不重新引入已退役的 Starter 全局工具。 -->
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-context-config-parse-xml</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -63,4 +69,23 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>mysql-it</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <!-- 只运行真实 MySQL 业务场景，并在场景被误删或过滤时失败。 -->
+              <groups>mysql-it</groups>
+              <failIfNoTests>true</failIfNoTests>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

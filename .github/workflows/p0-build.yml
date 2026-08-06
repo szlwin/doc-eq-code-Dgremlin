@@ -16,6 +16,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v6
+
+      - name: Export source snapshot for stage closure development
+        run: tar --exclude=.git --exclude='*/target' -czf /tmp/source-snapshot.tar.gz .
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -45,11 +49,13 @@ jobs:
             **/target/site/jacoco/**
             **/target/t14-mutation-proof/**
             target/p1-t15-retirement/**
+            /tmp/source-snapshot.tar.gz
           if-no-files-found: warn
 
   mysql-it:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     services:
       mysql:
@@ -124,9 +130,56 @@ jobs:
               SHOW TABLES LIKE 'order_info';
             "
 
-      - name: Run MySQL integration tests
+      - name: Run dec-demo MySQL business tests
         run: ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
         env:
-          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2
+          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
           DEC_MYSQL_USER: root
           DEC_MYSQL_PASSWORD: mysqldb
+
+      - name: Verify dec-demo MySQL test reports
+        run: python3 scripts/remediation/verify_dec_demo_mysql_it.py
+
+      - name: Verify business execution markers and database effects
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          marker_count="$(
+            docker exec \
+              -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+              "$MYSQL_CONTAINER_ID" \
+              mysql -N -uroot --database='demo-test2' \
+              -e "SELECT COUNT(*) FROM dec_test_execution_audit
+                  WHERE test_case IN (
+                    'RuleTests.orderRulesWriteExpectedRowsToBothDatabases',
+                    'DirectoryTest.directoryRangeReturnsOnlyRegisterAndAuthUsers',
+                    'OrderTest.saveOrderWritesCompleteAggregate'
+                  );"
+          )"
+          test "$marker_count" = "3"
+
+          docker exec \
+            -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" \
+            "$MYSQL_CONTAINER_ID" \
+            mysql -uroot --database='demo-test2' \
+            -e "
+              SELECT * FROM dec_test_execution_audit ORDER BY test_case;
+              SELECT COUNT(*) AS order_count FROM order_info;
+              SELECT COUNT(*) AS order_detail_count FROM order_detail_info;
+              SELECT COUNT(*) AS pay_count FROM pay_info;
+              SELECT COUNT(*) AS pay_detail_count FROM pay_detail_info;
+              SELECT COUNT(*) AS product_count FROM product_info;
+              SELECT COUNT(*) AS user_count FROM user_info;
+            " | tee target/dec-demo-mysql-it/database-evidence.txt
+
+      - name: Upload MySQL business test evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: dec-demo-mysql-business-reports
+          path: |
+            dec-demo/target/surefire-reports/**
+            target/dec-demo-mysql-it/**
+          if-no-files-found: error
