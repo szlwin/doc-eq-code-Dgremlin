@@ -5,132 +5,200 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dec.core.compiler.api.CompilationOptions;
 import dec.core.compiler.api.ContextPublisher;
 import dec.core.compiler.api.PublicationRequest;
+import dec.core.compiler.canonical.DocumentFormat;
+import dec.core.compiler.compiled.CompilerDigestService;
+import dec.core.compiler.compiled.DigestBoundCompiledInput;
+import dec.core.compiler.source.AllowedRoot;
+import dec.core.compiler.source.DocumentSource;
+import dec.core.compiler.source.SourceManifest;
 import dec.core.context.EngineContext;
 import dec.core.context.model.CompiledDefinition;
+import dec.core.context.model.DataKey;
 import dec.core.context.model.DeferredDefinition;
 import dec.core.context.model.DeferredKey;
+import dec.core.context.model.DeferredKind;
 import dec.core.context.model.DeferredRegistry;
 import dec.core.context.model.DefinitionKey;
-import dec.core.context.model.Diagnostic;
 import dec.core.context.model.DigestPair;
+import dec.core.context.model.ImmutableDeferredRegistry;
+import dec.core.context.model.ImmutableRegistry;
+import dec.core.context.model.NormalizedBody;
 import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.Registry;
 import dec.core.context.model.RequiredStage;
+import dec.core.context.model.SourceRef;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 /**
- * TASK-P1-T14 独立 Review：复核输入快照、Diagnostic 和发布能力边界。
+ * TASK-P1-T14 / I002 独立 Review：provenance、快照完整性和能力边界。
  */
 class CandidateContextT14IndependentReviewTest {
 
-    /** Registry 与 Deferred 必须只在各自阶段读取，freeze 后不得重新访问。 */
+    /** Definition 与 Deferred 的负 size 必须分别 fail-closed。 */
     @Test
-    void mutableRegistriesAreReadOnlyDuringTheirSnapshotStage() {
-        CountingRegistry definitions = new CountingRegistry(0);
-        CountingDeferredRegistry deferred = new CountingDeferredRegistry(0);
+    void negativeRegistrySizesFailClosed() {
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(new TestRegistry(-1, -1, Collections.emptyList()),
+                        emptyDeferred()));
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(emptyDefinitions(),
+                        new TestDeferredRegistry(-1, -1, Collections.emptyList())));
+    }
 
-        CompiledModelSetBuilder.FrozenInput input = builder()
-                .sourceManifest(PublishedSourceManifest.empty())
-                .definitions(definitions)
-                .deferred(deferred)
-                .digestPair(new DigestPair("source-review", "semantic-review"))
-                .freeze();
+    /** keys 数量与声明 size 不一致时必须分别拒绝。 */
+    @Test
+    void keyEnumerationMismatchFailsClosed() {
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(new TestRegistry(1, 1, Collections.emptyList()),
+                        emptyDeferred()));
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(emptyDefinitions(),
+                        new TestDeferredRegistry(1, 1, Collections.emptyList())));
+    }
 
+    /** Definition 与 Deferred 的重复 key 必须分别拒绝。 */
+    @Test
+    void duplicateKeysFailClosed() {
+        DefinitionKey key = key("alpha");
+        CompiledDefinition definition = definition(key);
+        TestRegistry definitions = new TestRegistry(
+                2, 2, Arrays.asList(key, key));
+        definitions.values.put(key, definition);
+
+        DeferredDefinition deferredDefinition = deferred(key, 0);
+        TestDeferredRegistry deferred = new TestDeferredRegistry(
+                2, 2, Arrays.asList(
+                        deferredDefinition.key(),
+                        deferredDefinition.key()));
+        deferred.values.put(deferredDefinition.key(), deferredDefinition);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(definitions, emptyDeferred()));
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(emptyDefinitions(), deferred));
+    }
+
+    /** keys 中存在但无对应 value 时必须分别拒绝。 */
+    @Test
+    void missingValuesFailClosed() {
+        DefinitionKey key = key("alpha");
+        TestRegistry definitions = new TestRegistry(
+                1, 1, Collections.singletonList(key));
+        DeferredKey deferredKey = new DeferredKey(
+                key, DeferredKind.INFORMATION, 0);
+        TestDeferredRegistry deferred = new TestDeferredRegistry(
+                1, 1, Collections.singletonList(deferredKey));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(definitions, emptyDeferred()));
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(emptyDefinitions(), deferred));
+    }
+
+    /** 外部 map key 与 Definition 内部 identity 不一致时必须分别拒绝。 */
+    @Test
+    void identityMismatchFailsClosed() {
+        DefinitionKey alpha = key("alpha");
+        DefinitionKey beta = key("beta");
+        TestRegistry definitions = new TestRegistry(
+                1, 1, Collections.singletonList(alpha));
+        definitions.values.put(alpha, definition(beta));
+
+        DeferredDefinition betaDeferred = deferred(beta, 0);
+        DeferredKey alphaDeferredKey = new DeferredKey(
+                alpha, DeferredKind.INFORMATION, 0);
+        TestDeferredRegistry deferred = new TestDeferredRegistry(
+                1, 1, Collections.singletonList(alphaDeferredKey));
+        deferred.values.put(alphaDeferredKey, betaDeferred);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(definitions, emptyDeferred()));
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(emptyDefinitions(), deferred));
+    }
+
+    /** 快照结束时 size 漂移必须分别拒绝。 */
+    @Test
+    void finalSizeDriftFailsClosed() {
+        DefinitionKey key = key("alpha");
+        TestRegistry definitions = new TestRegistry(
+                1, 2, Collections.singletonList(key));
+        definitions.values.put(key, definition(key));
+        DeferredDefinition deferredDefinition = deferred(key, 0);
+        TestDeferredRegistry deferred = new TestDeferredRegistry(
+                1, 2, Collections.singletonList(deferredDefinition.key()));
+        deferred.values.put(deferredDefinition.key(), deferredDefinition);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(definitions, emptyDeferred()));
+        assertThrows(IllegalArgumentException.class,
+                () -> bind(emptyDefinitions(), deferred));
+    }
+
+    /** atomic bind 完成后 candidate 构造不得重新读取原 Registry。 */
+    @Test
+    void originalRegistriesAreNeverReadAfterBind() {
+        DefinitionKey key = key("alpha");
+        TestRegistry definitions = new TestRegistry(
+                1, 1, Collections.singletonList(key));
+        definitions.values.put(key, definition(key));
+        DeferredDefinition deferredDefinition = deferred(key, 0);
+        TestDeferredRegistry deferred = new TestDeferredRegistry(
+                1, 1, Collections.singletonList(deferredDefinition.key()));
+        deferred.values.put(deferredDefinition.key(), deferredDefinition);
+
+        DigestBoundCompiledInput bound = bind(definitions, deferred);
         definitions.rejectFurtherReads = true;
         deferred.rejectFurtherReads = true;
-        EngineContext candidate = input.candidate(Collections.emptyList());
 
-        assertEquals(1, definitions.keysReads.get());
-        assertEquals(1, deferred.keysReads.get());
-        assertEquals(0, candidate.compiledModelSet().definitions().size());
-        assertEquals(0, candidate.compiledModelSet().deferred().size());
+        EngineContext candidate = new CompiledModelSetBuilder(bound)
+                .freeze()
+                .candidate(Collections.emptyList());
+
+        assertEquals(1, candidate.compiledModelSet().definitions().size());
+        assertEquals(1, candidate.compiledModelSet().deferred().size());
     }
 
-    /** keys 与 size 不一致时不得静默形成不完整发布快照。 */
+    /** 正式 provenance 构造边界必须拒绝非 64 位小写 SHA-256。 */
     @Test
-    void inconsistentRegistrySizesFailClosed() {
-        CompiledModelSetBuilder definitionBuilder = builder()
-                .sourceManifest(PublishedSourceManifest.empty());
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> definitionBuilder.definitions(new CountingRegistry(1)));
+    void invalidDigestFormatFailsClosed() throws Exception {
+        Constructor<DigestBoundCompiledInput> constructor =
+                DigestBoundCompiledInput.class.getDeclaredConstructor(
+                        PublishedSourceManifest.class,
+                        ImmutableRegistry.class,
+                        ImmutableDeferredRegistry.class,
+                        String.class,
+                        String.class,
+                        String.class,
+                        DigestPair.class);
+        constructor.setAccessible(true);
 
-        CompiledModelSetBuilder deferredBuilder = builder()
-                .sourceManifest(PublishedSourceManifest.empty())
-                .definitions(new CountingRegistry(0));
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> deferredBuilder.deferred(
-                        new CountingDeferredRegistry(1)));
-    }
+        InvocationTargetException failure = assertThrows(
+                InvocationTargetException.class,
+                () -> constructor.newInstance(
+                        PublishedSourceManifest.empty(),
+                        emptyDefinitions(),
+                        emptyDeferred(),
+                        "compiler",
+                        "schema-v1",
+                        "options-v1",
+                        new DigestPair("not-sha", "also-not-sha")));
 
-    /** ERROR Diagnostic 必须在 candidate 构造边界 fail-closed。 */
-    @Test
-    void errorDiagnosticRejectsCandidateBeforePublication() {
-        Diagnostic error = PipelineTestSupport.error("t14.error", 8);
-
-        IllegalArgumentException failure = assertThrows(
-                IllegalArgumentException.class,
-                () -> input().candidate(Collections.singletonList(error)));
-
-        assertTrue(failure.getMessage().contains("ERROR"));
-    }
-
-    /** 非阻断 Warning 必须完整进入 CompiledModelSet，不能被 Builder 丢弃。 */
-    @Test
-    void warningDiagnosticIsPreservedInCandidate() {
-        Diagnostic warning = PipelineDiagnostics.observerTransitionFailure(
-                "SEMANTICALLY_VALIDATED->PUBLISHED");
-
-        EngineContext candidate = input().candidate(
-                Collections.singletonList(warning));
-
-        assertEquals(
-                Collections.singletonList(warning),
-                candidate.compiledModelSet().diagnostics());
-    }
-
-    /** 版本域和四个阶段的 null/blank 输入必须稳定拒绝。 */
-    @Test
-    void invalidVersionsAndNullStagesFailClosed() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new CompiledModelSetBuilder(" ", "schema", "options"));
-        assertThrows(
-                NullPointerException.class,
-                () -> builder().sourceManifest(null));
-        assertThrows(
-                NullPointerException.class,
-                () -> builder()
-                        .sourceManifest(PublishedSourceManifest.empty())
-                        .definitions(null));
-    }
-
-    /** FrozenInput 可重复生成等价候选，但不能暴露或重新读取 Builder 状态。 */
-    @Test
-    void frozenInputProducesStableEquivalentCandidates() {
-        CompiledModelSetBuilder.FrozenInput input = input();
-
-        EngineContext first = input.candidate(Collections.emptyList());
-        EngineContext second = input.candidate(Collections.emptyList());
-
-        assertFalse(first == second);
-        assertEquals(
-                first.compiledModelSet().sourceManifest(),
-                second.compiledModelSet().sourceManifest());
-        assertEquals(
-                first.compiledModelSet().digestPair(),
-                second.compiledModelSet().digestPair());
-        assertEquals(
-                first.compiledModelSet().compilerVersion(),
-                second.compiledModelSet().compilerVersion());
+        assertTrue(failure.getCause() instanceof IllegalArgumentException);
     }
 
     /** 最终 Pass 自身不得持有 Publisher 或 PublicationRequest capability。 */
@@ -143,7 +211,7 @@ class CandidateContextT14IndependentReviewTest {
         }
     }
 
-    /** Publication Context 关闭后，Diagnostic 快照入口也必须拒绝访问。 */
+    /** Publication Context 关闭后所有只读入口继续拒绝访问。 */
     @Test
     void diagnosticSnapshotRejectsUseAfterContextClose() {
         CompilationSession session = new CompilationSession(
@@ -157,81 +225,146 @@ class CandidateContextT14IndependentReviewTest {
         context.close();
 
         assertThrows(IllegalStateException.class, context::diagnostics);
+        assertThrows(IllegalStateException.class, context::request);
     }
 
-    /** 创建完整、空 Registry 的冻结输入。 */
-    private static CompiledModelSetBuilder.FrozenInput input() {
-        return builder()
-                .sourceManifest(PublishedSourceManifest.empty())
-                .definitions(new CountingRegistry(0))
-                .deferred(new CountingDeferredRegistry(0))
-                .digestPair(new DigestPair("source-review", "semantic-review"))
-                .freeze();
-    }
-
-    /** 创建稳定版本域 Builder。 */
-    private static CompiledModelSetBuilder builder() {
-        return new CompiledModelSetBuilder(
+    /** 使用指定 Registry 创建真实摘要绑定输入。 */
+    private static DigestBoundCompiledInput bind(
+            Registry<DefinitionKey, CompiledDefinition> definitions,
+            DeferredRegistry deferred) {
+        return new CompilerDigestService().bind(
+                sourceManifest(),
+                PublishedSourceManifest.empty(),
+                definitions,
+                deferred,
                 "compiler-review",
-                "schema-review",
-                "options-review");
+                new CompilationOptions("schema-v1", "options-v1"));
     }
 
-    /** 统计并可拒绝阶段结束后读取的空 Definition Registry。 */
-    private static final class CountingRegistry
+    /** 创建真实 T13 Source Digest 所需的最小 SourceManifest。 */
+    private static SourceManifest sourceManifest() {
+        DocumentSource source = new DocumentSource(
+                "source:root",
+                URI.create("memory:/root"),
+                DocumentFormat.XML,
+                new AllowedRoot(URI.create("memory:/")),
+                "<root/>".getBytes(StandardCharsets.UTF_8),
+                "fixture-review");
+        return new SourceManifest(Collections.singletonList(source));
+    }
+
+    /** 创建稳定 DefinitionKey。 */
+    private static DefinitionKey key(String value) {
+        return new DataKey(value);
+    }
+
+    /** 创建内部 identity 与参数一致的 Definition。 */
+    private static CompiledDefinition definition(DefinitionKey key) {
+        return new CompiledDefinition(
+                key,
+                new SourceRef("source:root", 1, 1, "/data/" + key.canonical()),
+                new NormalizedBody("json", "{}"));
+    }
+
+    /** 创建完整 Deferred Definition。 */
+    private static DeferredDefinition deferred(
+            DefinitionKey owner,
+            int ordinal) {
+        return new DeferredDefinition(
+                new DeferredKey(owner, DeferredKind.INFORMATION, ordinal),
+                RequiredStage.P3,
+                "P3_INFORMATION",
+                new SourceRef("source:root", 2, 1, "/information/test"),
+                new NormalizedBody("expression", "test"),
+                Collections.singletonList(owner));
+    }
+
+    /** 创建空 Definition Registry。 */
+    private static ImmutableRegistry<DefinitionKey, CompiledDefinition>
+            emptyDefinitions() {
+        return new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
+                Collections.<DefinitionKey, CompiledDefinition>emptyMap());
+    }
+
+    /** 创建空 Deferred Registry。 */
+    private static ImmutableDeferredRegistry emptyDeferred() {
+        return new ImmutableDeferredRegistry(
+                Collections.<DeferredKey, DeferredDefinition>emptyMap());
+    }
+
+    /** 可制造 size、枚举、value、identity 和阶段漂移反例的 Registry。 */
+    private static final class TestRegistry
             implements Registry<DefinitionKey, CompiledDefinition> {
-        private final int reportedSize;
-        private final AtomicInteger keysReads = new AtomicInteger();
+        private final int initialSize;
+        private final int finalSize;
+        private final List<DefinitionKey> keys;
+        private final Map<DefinitionKey, CompiledDefinition> values =
+                new LinkedHashMap<DefinitionKey, CompiledDefinition>();
+        private int sizeReads;
         private boolean rejectFurtherReads;
 
-        /** 允许测试制造 keys 与 size 不一致的 Registry。 */
-        private CountingRegistry(int reportedSize) {
-            this.reportedSize = reportedSize;
+        private TestRegistry(
+                int initialSize,
+                int finalSize,
+                List<DefinitionKey> keys) {
+            this.initialSize = initialSize;
+            this.finalSize = finalSize;
+            this.keys = keys;
         }
 
         @Override
         public Optional<CompiledDefinition> find(DefinitionKey key) {
             rejectIfClosed();
-            return Optional.empty();
+            return Optional.ofNullable(values.get(key));
         }
 
         @Override
         public CompiledDefinition require(DefinitionKey key) {
             rejectIfClosed();
-            throw new IllegalArgumentException("missing definition");
+            CompiledDefinition value = values.get(key);
+            if (value == null) {
+                throw new IllegalArgumentException("missing definition");
+            }
+            return value;
         }
 
         @Override
         public List<DefinitionKey> keys() {
             rejectIfClosed();
-            keysReads.incrementAndGet();
-            return Collections.emptyList();
+            return keys;
         }
 
         @Override
         public int size() {
             rejectIfClosed();
-            return reportedSize;
+            return sizeReads++ == 0 ? initialSize : finalSize;
         }
 
-        /** 模拟调用方在阶段完成后封闭原 Registry。 */
         private void rejectIfClosed() {
             if (rejectFurtherReads) {
-                throw new AssertionError("definitions reread after snapshot");
+                throw new AssertionError("definitions reread after bind");
             }
         }
     }
 
-    /** 统计并可拒绝阶段结束后读取的空 Deferred Registry。 */
-    private static final class CountingDeferredRegistry
+    /** 可制造同类反例的 Deferred Registry。 */
+    private static final class TestDeferredRegistry
             implements DeferredRegistry {
-        private final int reportedSize;
-        private final AtomicInteger keysReads = new AtomicInteger();
+        private final int initialSize;
+        private final int finalSize;
+        private final List<DeferredKey> keys;
+        private final Map<DeferredKey, DeferredDefinition> values =
+                new LinkedHashMap<DeferredKey, DeferredDefinition>();
+        private int sizeReads;
         private boolean rejectFurtherReads;
 
-        /** 允许测试制造 keys 与 size 不一致的 Deferred Registry。 */
-        private CountingDeferredRegistry(int reportedSize) {
-            this.reportedSize = reportedSize;
+        private TestDeferredRegistry(
+                int initialSize,
+                int finalSize,
+                List<DeferredKey> keys) {
+            this.initialSize = initialSize;
+            this.finalSize = finalSize;
+            this.keys = keys;
         }
 
         @Override
@@ -249,26 +382,24 @@ class CandidateContextT14IndependentReviewTest {
         @Override
         public Optional<DeferredDefinition> find(DeferredKey key) {
             rejectIfClosed();
-            return Optional.empty();
+            return Optional.ofNullable(values.get(key));
         }
 
         @Override
         public List<DeferredKey> keys() {
             rejectIfClosed();
-            keysReads.incrementAndGet();
-            return Collections.emptyList();
+            return keys;
         }
 
         @Override
         public int size() {
             rejectIfClosed();
-            return reportedSize;
+            return sizeReads++ == 0 ? initialSize : finalSize;
         }
 
-        /** 模拟调用方在阶段完成后封闭原 Deferred Registry。 */
         private void rejectIfClosed() {
             if (rejectFurtherReads) {
-                throw new AssertionError("deferred reread after snapshot");
+                throw new AssertionError("deferred reread after bind");
             }
         }
     }
