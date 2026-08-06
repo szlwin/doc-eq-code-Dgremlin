@@ -33,7 +33,6 @@
         <module>dec-datasource-orm-mysql</module>
         <module>dec-core-model</module>
         <module>dec-core-starter</module>
-        <module>dec-expand-declaration</module>
         <module>dec-demo</module>
     </modules>
 
@@ -49,7 +48,6 @@
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-datasource-orm-mysql</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-starter</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-demo</artifactId><version>${framework.version}</version></dependency>
-            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-expand-declaration</artifactId><version>${framework.version}</version></dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId>
                 <version>${junit.jupiter.version}</version><scope>test</scope>
