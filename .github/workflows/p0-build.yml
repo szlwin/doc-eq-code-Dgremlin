@@ -32,6 +32,8 @@ jobs:
         run: sh scripts/remediation/prove_t14_provenance_mutation_gate.sh
       - name: Prove failing tests block the build
         run: scripts/remediation/prove_test_failure_gate.sh
+      - name: Prove T15 declaration runtime retirement
+        run: sh scripts/remediation/prove_p1_t15_retirement_gate.sh
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v6
@@ -42,6 +44,7 @@ jobs:
             **/target/failsafe-reports/**
             **/target/site/jacoco/**
             **/target/t14-mutation-proof/**
+            target/p1-t15-retirement/**
           if-no-files-found: warn
 
   mysql-it:
