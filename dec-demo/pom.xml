@@ -1,72 +1,61 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-	<groupId>doc.eq.code</groupId>
-	<artifactId>doc-eq-code-parent</artifactId>
-	<version>1.0</version>
-   </parent>
+    <groupId>doc.eq.code</groupId>
+    <artifactId>doc-eq-code-parent</artifactId>
+    <version>1.0</version>
+  </parent>
   <artifactId>dec-demo</artifactId>
   <packaging>jar</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-	</properties>
+  <dependencies>
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-datasource-orm-mysql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-core-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-context-config-parse-yaml</artifactId>
+    </dependency>
 
-	<dependencies>
-		<dependency>
-			<groupId>doc.eq.code</groupId>
-			<artifactId>dec-datasource-orm-mysql</artifactId>
-
-		</dependency>
-		<dependency>
-			<groupId>doc.eq.code</groupId>
-			<artifactId>dec-core-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>doc.eq.code</groupId>
-			<artifactId>dec-expand-declaration</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>doc.eq.code</groupId>
-			<artifactId>dec-context-config-parse-yaml</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.30</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.30</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.83</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.kahlkn</groupId>
-			<artifactId>artoria</artifactId>
-			<version>1.0.0.20210823.beta</version>
-		</dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
-            <scope>test</scope>
-        </dependency>
-
-	</dependencies>
-
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.30</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.30</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.83</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.kahlkn</groupId>
+      <artifactId>artoria</artifactId>
+      <version>1.0.0.20210823.beta</version>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.28</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>4.0.3</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
