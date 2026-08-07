@@ -30,10 +30,10 @@ public final class DemoMySqlTestSupport implements AutoCloseable {
     private static final String MYSQL_TYPE = "MySQL";
     private static final String PRIMARY_DEFAULT =
             "jdbc:mysql://127.0.0.1:3306/demo-test2"
-                    + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+                    + "?useSSL=false&allowPublicKeyRetrieval=true";
     private static final String SECONDARY_DEFAULT =
             "jdbc:mysql://127.0.0.1:3306/demo-test1"
-                    + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+                    + "?useSSL=false&allowPublicKeyRetrieval=true";
 
     private final HikariDataSource primaryDataSource;
     private final HikariDataSource secondaryDataSource;

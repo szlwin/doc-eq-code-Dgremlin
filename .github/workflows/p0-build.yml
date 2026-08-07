@@ -133,8 +133,8 @@ jobs:
       - name: Run dec-demo MySQL business tests
         run: ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
         env:
-          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-          DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
           DEC_MYSQL_USER: root
           DEC_MYSQL_PASSWORD: mysqldb
 
