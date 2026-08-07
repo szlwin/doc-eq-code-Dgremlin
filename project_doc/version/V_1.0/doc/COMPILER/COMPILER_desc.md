@@ -1,4 +1,4 @@
-<!-- managed-by: common-develop/wk-d -->
+<!-- template: common-develop/module-desc-v2 -->
 # COMPILER 模块说明
 
 > 本文件由版本级模块描述通过 `wk -d` 合并，是模块能力、功能、业务信息、规则、依赖和文档索引的当前事实源。
@@ -45,14 +45,13 @@
 
 | 流程编号 | 流程名称 | 模块角色 | 关联功能 | 流程层级 | 状态 | 流程文档 |
 | --- | --- | --- | --- | --- | --- | --- |
-| FLOW-CONFIG-COMPILE | 配置编译与上下文发布 | OWNER | P1-COMPILER-F01 | L0 | ACTIVE | [FLOW-CONFIG-COMPILE](../_flows/COMPILER_flow.md#flow-config-compile) |
 
 ## 文档引用
 
-- 需求列表：`../requirement_list.md`
+- 需求列表：`../../requirement_list.md`
 - 业务模型：`COMPILER_business_model.yaml`
 - API 契约：`COMPILER_api.yaml`
 - DB 契约：`COMPILER_db.yaml`
 - 模块设计：`COMPILER_design.md`
 - 依赖关系：`../_relations/dependency_impact.yaml`
-- 补充文档（V_1.0，自动）：[COMPILER_api_contract.md](../../version/V_1.0/doc/COMPILER/COMPILER_api_contract.md)
+- 补充文档（自动）：[COMPILER_api_contract.md](COMPILER_api_contract.md)

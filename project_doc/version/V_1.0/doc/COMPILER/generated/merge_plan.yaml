@@ -1,0 +1,192 @@
+schemaVersion: 1
+mergeMode: "CURRENT_FACT_MERGE"
+version: "V_1.0"
+module: "COMPILER"
+changeSetIds: []
+baseRevisions: {}
+resultRevisions: {}
+structuredArtifacts: []
+documentArtifacts:
+  - "requirement_list"
+documentMerges:
+  -
+    artifactType: "requirement_list"
+    sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/requirement_list.md"
+    targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/requirement_list.md"
+    mergeMode: "TABLE_UPSERT"
+    sourceRevision: "REQUIREMENT_LIST@f4ad00747729"
+    resultRevision: "REQUIREMENT_LIST@82f9cc0de066"
+    status: "READY"
+    sourceDigest: "f4ad00747729c7274a085eaaefdb9237e48df57add312477042a8a1e7524ccac"
+    targetDigest: "cb9ca6dff51dba93fdfa7534fd47e6a89c207e949f98d0563f862e7f263210cf"
+    resultDigest: "82f9cc0de0667f6759f6f53c30d6d80ade1576b07111f0ad1484400f139b7a8e"
+    reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+    evidenceRefs:
+      - "project_doc/version/V_1.0/doc/COMPILER/generated/requirement_list_preview.md"
+businessFlowMerges: []
+affectedTraceIds: []
+workMode:
+  modelCode: false
+  pageDesign: false
+  minimal: false
+  auto: true
+  architectureReview: true
+  gitCheckpoint: true
+  skippedPhases: []
+  workRef: "version/V_1.0/work.md"
+  workDigest: "f4c8c42059d03dafb0516e27fe92b6c46e10b2292d6d41bf9cabab68a63d2ace"
+resultDigest: "f39029e653975ccfeace49215410dfcce2e6a3a9cc670b2c5810c0413e4b38d5"
+archiveGate:
+  status: "READY"
+  gates:
+    requirementConfirmation:
+      status: "PASSED"
+      revision: "REQCONF-R04@c186ce681e1e"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I004"
+      evidenceIds:
+        - "EVD-000243"
+        - "EVD-000244"
+        - "EVD-000245"
+        - "EVD-000246"
+        - "EVD-000247"
+        - "EVD-000248"
+        - "EVD-000249"
+        - "EVD-000250"
+        - "EVD-000251"
+      reviewerAgents:
+        - "RequirementAnalysisAgent"
+        - "TestDesignAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    requirementAnalysis:
+      status: "PASSED"
+      revision: "REQAN-R05@7de35e8dc15b"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-REQUIREMENT_ANALYSIS-I005"
+      evidenceIds:
+        - "EVD-000280"
+        - "EVD-000279"
+      reviewerAgents:
+        - "BusinessModelAgent"
+        - "DesignAgent"
+        - "TestDesignAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    businessModel:
+      status: "NOT_APPLICABLE"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: "本次 merge plan 不包含 business_model 增量。"
+    design:
+      status: "PASSED"
+      revision: "DESIGN-R05@0b37a9b4dd48"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-DESIGN-I007"
+      evidenceIds:
+        - "EVD-000284"
+        - "EVD-000283"
+      reviewerAgents:
+        - "RequirementReviewAgent"
+        - "BusinessModelReviewAgent"
+        - "ArchitectureReviewAgent"
+        - "TestDesignAgent"
+        - "DevelopAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    testDesign:
+      status: "PASSED"
+      revision: "TESTDESIGN-R01@ba7779cf089b"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-TEST_DESIGN-I007"
+      evidenceIds:
+        - "EVD-000286"
+        - "EVD-000287"
+      reviewerAgents:
+        - "RequirementReviewAgent"
+        - "DesignReviewAgent"
+        - "TDDReviewAgent"
+        - "TestEvidenceReviewAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    implementationPlan:
+      status: "PASSED"
+      revision: "TP-P1-COMPILER-F01-R01@88b56e6caa64"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-IMPLEMENTATION_PLAN-I007"
+      evidenceIds:
+        - "EVD-000288"
+        - "EVD-000289"
+      reviewerAgents:
+        - "PlanReviewAgent"
+        - "ArchitectureReviewAgent"
+        - "TestDesignAgent"
+        - "DevelopAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    tdd:
+      status: "PASSED"
+      revision: "TDD-P1-T01-R01@4ebeed4dad6a"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-TDD-I007"
+      evidenceIds:
+        - "EVD-000290"
+        - "EVD-000291"
+      reviewerAgents:
+        - "TDDReviewAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    development:
+      status: "PASSED"
+      revision: "DEV-P1-T01-R01@de1adfd37c9b"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-DEVELOPMENT-I008"
+      evidenceIds:
+        - "EVD-000295"
+        - "EVD-000296"
+      reviewerAgents:
+        - "TDDReviewAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    codeReview:
+      status: "PASSED"
+      revision: "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-CODE_REVIEW-I008"
+      evidenceIds:
+        - "EVD-000363"
+        - "EVD-000364"
+        - "EVD-000366"
+        - "EVD-000367"
+        - "EVD-000368"
+      reviewerAgents:
+        - "SpecComplianceReviewAgent"
+        - "EngineeringStandardsReviewAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    testing:
+      status: "PASSED"
+      revision: "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-TESTING-I009"
+      evidenceIds:
+        - "EVD-000371"
+        - "EVD-000372"
+        - "EVD-000373"
+      reviewerAgents:
+        - "TestEvidenceReviewAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+    completionVerification:
+      status: "PASSED"
+      revision: "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+      stageOutcomeRefs:
+        - "SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009"
+      evidenceIds:
+        - "EVD-000374"
+        - "EVD-000375"
+        - "EVD-000376"
+        - "EVD-000377"
+      reviewerAgents:
+        - "CompletionVerificationAgent"
+      reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+  openIssueIds: []
+  authorizedBy: "ProjectManagerAgent"
+  authorizedAt: "2026-08-07T12:51:00+00:00"
+  decisionRef: "DEC-P1-COMPILER-ARCHIVE-001"
+  userConfirmed: true
+  notes: "P1 首轮结构化归档完成后，同步已合并/已归档状态到项目级 requirement_list。"
+generatedAt: "2026-08-07T12:50:59+00:00"

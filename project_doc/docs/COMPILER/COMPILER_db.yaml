@@ -1,0 +1,8 @@
+schemaVersion: 1
+artifact: "db"
+module:
+  code: "COMPILER"
+  name: "dec-core-compiler"
+revision: "DB-R00@init"
+baseRevision: ""
+tables: []

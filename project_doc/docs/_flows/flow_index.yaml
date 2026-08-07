@@ -1,0 +1,26 @@
+schemaVersion: 1
+artifact: "business_flow_index"
+groups:
+  -
+    code: "COMPILER"
+    name: "配置编译与上下文发布"
+    revision: "FLOW-R02@compiler-owned-discovery"
+    documentRef: "docs/_flows/COMPILER_flow.md"
+flows:
+  -
+    id: "FLOW-CONFIG-COMPILE"
+    name: "配置编译与上下文发布"
+    group: "COMPILER"
+    level: "L0"
+    ownerModule: "COMPILER"
+    participantModules:
+      - "CONTEXT"
+      - "COMPILER"
+      - "XML"
+      - "YAML"
+      - "STARTER"
+      - "DEMO"
+    featureRefs:
+      - "P1-COMPILER-F01"
+    status: "ACTIVE"
+    documentRef: "docs/_flows/COMPILER_flow.md#flow-config-compile"

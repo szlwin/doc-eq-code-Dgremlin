@@ -1,0 +1,540 @@
+schemaVersion: 1
+appliedChangeSets:
+  -
+    id: "CHG-V_1.0-COMPILER-P1-ARCHIVE-BM-R05"
+    version: "V_1.0"
+    module: "COMPILER"
+    featureCode: "P1-COMPILER-F01"
+    reason: "PR #31 已合并后，将 P1 已通过 BM-R05 当前业务模型归档到项目级 COMPILER 全量事实。"
+    artifacts:
+      - "business_model"
+    source: "project_doc/version/V_1.0/doc/COMPILER/changes/p1-archive-business-model.yaml"
+    baseRevisions:
+      business_model: "BM-R00@init"
+    resultRevisions:
+      business_model: "BM-R05@4ecb1f8c09f4"
+    affectedTraceIds:
+      - "TR-P1-COMPILER-001"
+      - "TR-P1-COMPILER-002"
+      - "TR-P1-COMPILER-003"
+      - "TR-P1-COMPILER-004"
+      - "TR-P1-COMPILER-005"
+      - "TR-P1-COMPILER-006"
+      - "TR-P1-COMPILER-007"
+      - "TR-P1-COMPILER-008"
+      - "TR-P1-COMPILER-009"
+    mergeDigest: "3e0858e944797dadffbd37ad637956ac37382320a51d4e7165bf398cfc020a60"
+    mergePlan:
+      file: "project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml"
+      gates:
+        requirementConfirmation:
+          status: "PASSED"
+          revision: "REQCONF-R04@c186ce681e1e"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I004"
+          evidenceIds:
+            - "EVD-000243"
+            - "EVD-000244"
+            - "EVD-000245"
+            - "EVD-000246"
+            - "EVD-000247"
+            - "EVD-000248"
+            - "EVD-000249"
+            - "EVD-000250"
+            - "EVD-000251"
+          reviewerAgents:
+            - "RequirementAnalysisAgent"
+            - "TestDesignAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        requirementAnalysis:
+          status: "PASSED"
+          revision: "REQAN-R05@7de35e8dc15b"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-REQUIREMENT_ANALYSIS-I005"
+          evidenceIds:
+            - "EVD-000280"
+            - "EVD-000279"
+          reviewerAgents:
+            - "BusinessModelAgent"
+            - "DesignAgent"
+            - "TestDesignAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        businessModel:
+          status: "PASSED"
+          revision: "BM-R05@4ecb1f8c09f4"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-BUSINESS_MODEL-I005"
+          evidenceIds:
+            - "EVD-000282"
+            - "EVD-000281"
+          reviewerAgents:
+            - "RequirementReviewAgent"
+            - "BusinessModelReviewAgent"
+            - "DesignReviewAgent"
+            - "TestDesignAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        design:
+          status: "PASSED"
+          revision: "DESIGN-R05@0b37a9b4dd48"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-DESIGN-I007"
+          evidenceIds:
+            - "EVD-000284"
+            - "EVD-000283"
+          reviewerAgents:
+            - "RequirementReviewAgent"
+            - "BusinessModelReviewAgent"
+            - "ArchitectureReviewAgent"
+            - "TestDesignAgent"
+            - "DevelopAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        testDesign:
+          status: "PASSED"
+          revision: "TESTDESIGN-R01@ba7779cf089b"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-TEST_DESIGN-I007"
+          evidenceIds:
+            - "EVD-000286"
+            - "EVD-000287"
+          reviewerAgents:
+            - "RequirementReviewAgent"
+            - "DesignReviewAgent"
+            - "TDDReviewAgent"
+            - "TestEvidenceReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        implementationPlan:
+          status: "PASSED"
+          revision: "TP-P1-COMPILER-F01-R01@88b56e6caa64"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-IMPLEMENTATION_PLAN-I007"
+          evidenceIds:
+            - "EVD-000288"
+            - "EVD-000289"
+          reviewerAgents:
+            - "PlanReviewAgent"
+            - "ArchitectureReviewAgent"
+            - "TestDesignAgent"
+            - "DevelopAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        tdd:
+          status: "PASSED"
+          revision: "TDD-P1-T01-R01@4ebeed4dad6a"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-TDD-I007"
+          evidenceIds:
+            - "EVD-000290"
+            - "EVD-000291"
+          reviewerAgents:
+            - "TDDReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        development:
+          status: "PASSED"
+          revision: "DEV-P1-T01-R01@de1adfd37c9b"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-DEVELOPMENT-I008"
+          evidenceIds:
+            - "EVD-000295"
+            - "EVD-000296"
+          reviewerAgents:
+            - "TDDReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        codeReview:
+          status: "PASSED"
+          revision: "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-CODE_REVIEW-I008"
+          evidenceIds:
+            - "EVD-000363"
+            - "EVD-000364"
+            - "EVD-000366"
+            - "EVD-000367"
+            - "EVD-000368"
+          reviewerAgents:
+            - "SpecComplianceReviewAgent"
+            - "EngineeringStandardsReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        testing:
+          status: "PASSED"
+          revision: "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-TESTING-I009"
+          evidenceIds:
+            - "EVD-000371"
+            - "EVD-000372"
+            - "EVD-000373"
+          reviewerAgents:
+            - "TestEvidenceReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        completionVerification:
+          status: "PASSED"
+          revision: "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009"
+          evidenceIds:
+            - "EVD-000374"
+            - "EVD-000375"
+            - "EVD-000376"
+            - "EVD-000377"
+          reviewerAgents:
+            - "CompletionVerificationAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+      authorizedBy: "ProjectManagerAgent"
+      authorizedAt: "2026-08-07T12:41:00+00:00"
+      decisionRef: "DEC-P1-COMPILER-ARCHIVE-001"
+      userConfirmed: true
+      baseRevisions:
+        business_model: "BM-R00@init"
+        business_flow__COMPILER: "FLOW-R00@init"
+      resultRevisions:
+        business_model: "BM-R05@4ecb1f8c09f4"
+        business_flow__COMPILER: "FLOW-R02@compiler-owned-discovery"
+      structuredArtifacts:
+        - "business_flow"
+        - "business_model"
+      documentMerges:
+        -
+          artifactType: "requirement_list"
+          sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/requirement_list.md"
+          targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/requirement_list.md"
+          mergeMode: "TABLE_UPSERT"
+          sourceRevision: "REQUIREMENT_LIST@dc0a9e4e438a"
+          resultRevision: "REQUIREMENT_LIST@cb9ca6dff51d"
+          status: "READY"
+          sourceDigest: "dc0a9e4e438adf15f9a3ee0e9dd9058a56d3f992e3fda1582b2e0c6944434dd9"
+          targetDigest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          resultDigest: "cb9ca6dff51dba93fdfa7534fd47e6a89c207e949f98d0563f862e7f263210cf"
+          reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+          evidenceRefs:
+            - "project_doc/version/V_1.0/doc/COMPILER/generated/requirement_list_preview.md"
+        -
+          artifactType: "module_desc"
+          sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/doc/COMPILER/COMPILER_desc.md"
+          targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/COMPILER/COMPILER_desc.md"
+          mergeMode: "MODULE_DESC_MERGE"
+          sourceRevision: "MODULE_DESC@469546e6369e"
+          resultRevision: "MODULE_DESC@59e3224e8bc4"
+          status: "READY"
+          sourceDigest: "469546e6369eb3759f6a7776f6198b40199559f8f187542fabcafe5b0d247394"
+          targetDigest: "5c1a5e6da7f55242cd06b8f0b4764159b1e3c3cca9bfb9bdee6ede26faed64cd"
+          resultDigest: "59e3224e8bc4cacbe6c80b21ceda1ae7545ec618a22832c59a4a8f7ab942de94"
+          reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+          evidenceRefs:
+            - "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_desc_preview.md"
+      affectedTraceIds:
+        - "TR-P1-COMPILER-001"
+        - "TR-P1-COMPILER-002"
+        - "TR-P1-COMPILER-003"
+        - "TR-P1-COMPILER-004"
+        - "TR-P1-COMPILER-005"
+        - "TR-P1-COMPILER-006"
+        - "TR-P1-COMPILER-007"
+        - "TR-P1-COMPILER-008"
+        - "TR-P1-COMPILER-009"
+      workMode:
+        modelCode: false
+        pageDesign: false
+        minimal: false
+        auto: true
+        architectureReview: true
+        gitCheckpoint: true
+        skippedPhases: []
+        workRef: "version/V_1.0/work.md"
+        workDigest: "30adcb1423395a1f249de914e90abf309ffe038bad66f1633b58e3b3ebe5d6a5"
+    appliedAt: "2026-08-07T12:49:00+00:00"
+    appliedByAgent: "IncrementalArchiveAgent"
+  -
+    id: "FLOW-CHG-V_1.0-COMPILER-LAYOUT-001"
+    kind: "BUSINESS_FLOW"
+    version: "V_1.0"
+    module: "COMPILER"
+    flowGroup: "COMPILER"
+    featureCode: "COMPILER"
+    reason: "迁移流程事实并明确 Compiler 在同一 Session 内负责源发现和原子发布协调。"
+    artifacts:
+      - "business_flow__COMPILER"
+    source: "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml"
+    baseRevisions:
+      business_flow__COMPILER: "FLOW-R00@init"
+    resultRevisions:
+      business_flow__COMPILER: "FLOW-R02@compiler-owned-discovery"
+    affectedTraceIds:
+      - "TR-P1-COMPILER-001"
+      - "TR-P1-COMPILER-002"
+      - "TR-P1-COMPILER-003"
+      - "TR-P1-COMPILER-004"
+    affectedFlowIds:
+      - "FLOW-CONFIG-COMPILE"
+    mergeDigest: "3e0858e944797dadffbd37ad637956ac37382320a51d4e7165bf398cfc020a60"
+    mergePlan:
+      file: "project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml"
+      gates:
+        requirementConfirmation:
+          status: "PASSED"
+          revision: "REQCONF-R04@c186ce681e1e"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I004"
+          evidenceIds:
+            - "EVD-000243"
+            - "EVD-000244"
+            - "EVD-000245"
+            - "EVD-000246"
+            - "EVD-000247"
+            - "EVD-000248"
+            - "EVD-000249"
+            - "EVD-000250"
+            - "EVD-000251"
+          reviewerAgents:
+            - "RequirementAnalysisAgent"
+            - "TestDesignAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        requirementAnalysis:
+          status: "PASSED"
+          revision: "REQAN-R05@7de35e8dc15b"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-REQUIREMENT_ANALYSIS-I005"
+          evidenceIds:
+            - "EVD-000280"
+            - "EVD-000279"
+          reviewerAgents:
+            - "BusinessModelAgent"
+            - "DesignAgent"
+            - "TestDesignAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        businessModel:
+          status: "PASSED"
+          revision: "BM-R05@4ecb1f8c09f4"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-BUSINESS_MODEL-I005"
+          evidenceIds:
+            - "EVD-000282"
+            - "EVD-000281"
+          reviewerAgents:
+            - "RequirementReviewAgent"
+            - "BusinessModelReviewAgent"
+            - "DesignReviewAgent"
+            - "TestDesignAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        design:
+          status: "PASSED"
+          revision: "DESIGN-R05@0b37a9b4dd48"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-DESIGN-I007"
+          evidenceIds:
+            - "EVD-000284"
+            - "EVD-000283"
+          reviewerAgents:
+            - "RequirementReviewAgent"
+            - "BusinessModelReviewAgent"
+            - "ArchitectureReviewAgent"
+            - "TestDesignAgent"
+            - "DevelopAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        testDesign:
+          status: "PASSED"
+          revision: "TESTDESIGN-R01@ba7779cf089b"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-TEST_DESIGN-I007"
+          evidenceIds:
+            - "EVD-000286"
+            - "EVD-000287"
+          reviewerAgents:
+            - "RequirementReviewAgent"
+            - "DesignReviewAgent"
+            - "TDDReviewAgent"
+            - "TestEvidenceReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        implementationPlan:
+          status: "PASSED"
+          revision: "TP-P1-COMPILER-F01-R01@88b56e6caa64"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-IMPLEMENTATION_PLAN-I007"
+          evidenceIds:
+            - "EVD-000288"
+            - "EVD-000289"
+          reviewerAgents:
+            - "PlanReviewAgent"
+            - "ArchitectureReviewAgent"
+            - "TestDesignAgent"
+            - "DevelopAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        tdd:
+          status: "PASSED"
+          revision: "TDD-P1-T01-R01@4ebeed4dad6a"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-TDD-I007"
+          evidenceIds:
+            - "EVD-000290"
+            - "EVD-000291"
+          reviewerAgents:
+            - "TDDReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        development:
+          status: "PASSED"
+          revision: "DEV-P1-T01-R01@de1adfd37c9b"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-DEVELOPMENT-I008"
+          evidenceIds:
+            - "EVD-000295"
+            - "EVD-000296"
+          reviewerAgents:
+            - "TDDReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        codeReview:
+          status: "PASSED"
+          revision: "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-CODE_REVIEW-I008"
+          evidenceIds:
+            - "EVD-000363"
+            - "EVD-000364"
+            - "EVD-000366"
+            - "EVD-000367"
+            - "EVD-000368"
+          reviewerAgents:
+            - "SpecComplianceReviewAgent"
+            - "EngineeringStandardsReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        testing:
+          status: "PASSED"
+          revision: "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-TESTING-I009"
+          evidenceIds:
+            - "EVD-000371"
+            - "EVD-000372"
+            - "EVD-000373"
+          reviewerAgents:
+            - "TestEvidenceReviewAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+        completionVerification:
+          status: "PASSED"
+          revision: "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+          stageOutcomeRefs:
+            - "SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009"
+          evidenceIds:
+            - "EVD-000374"
+            - "EVD-000375"
+            - "EVD-000376"
+            - "EVD-000377"
+          reviewerAgents:
+            - "CompletionVerificationAgent"
+          reason: "绑定当前 P1 已通过 StageOutcome、Evidence 与 reviewer 结论。"
+      authorizedBy: "ProjectManagerAgent"
+      authorizedAt: "2026-08-07T12:41:00+00:00"
+      decisionRef: "DEC-P1-COMPILER-ARCHIVE-001"
+      userConfirmed: true
+      baseRevisions:
+        business_model: "BM-R00@init"
+        business_flow__COMPILER: "FLOW-R00@init"
+      resultRevisions:
+        business_model: "BM-R05@4ecb1f8c09f4"
+        business_flow__COMPILER: "FLOW-R02@compiler-owned-discovery"
+      structuredArtifacts:
+        - "business_flow"
+        - "business_model"
+      documentMerges:
+        -
+          artifactType: "requirement_list"
+          sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/requirement_list.md"
+          targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/requirement_list.md"
+          mergeMode: "TABLE_UPSERT"
+          sourceRevision: "REQUIREMENT_LIST@dc0a9e4e438a"
+          resultRevision: "REQUIREMENT_LIST@cb9ca6dff51d"
+          status: "READY"
+          sourceDigest: "dc0a9e4e438adf15f9a3ee0e9dd9058a56d3f992e3fda1582b2e0c6944434dd9"
+          targetDigest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          resultDigest: "cb9ca6dff51dba93fdfa7534fd47e6a89c207e949f98d0563f862e7f263210cf"
+          reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+          evidenceRefs:
+            - "project_doc/version/V_1.0/doc/COMPILER/generated/requirement_list_preview.md"
+        -
+          artifactType: "module_desc"
+          sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/doc/COMPILER/COMPILER_desc.md"
+          targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/COMPILER/COMPILER_desc.md"
+          mergeMode: "MODULE_DESC_MERGE"
+          sourceRevision: "MODULE_DESC@469546e6369e"
+          resultRevision: "MODULE_DESC@59e3224e8bc4"
+          status: "READY"
+          sourceDigest: "469546e6369eb3759f6a7776f6198b40199559f8f187542fabcafe5b0d247394"
+          targetDigest: "5c1a5e6da7f55242cd06b8f0b4764159b1e3c3cca9bfb9bdee6ede26faed64cd"
+          resultDigest: "59e3224e8bc4cacbe6c80b21ceda1ae7545ec618a22832c59a4a8f7ab942de94"
+          reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+          evidenceRefs:
+            - "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_desc_preview.md"
+      affectedTraceIds:
+        - "TR-P1-COMPILER-001"
+        - "TR-P1-COMPILER-002"
+        - "TR-P1-COMPILER-003"
+        - "TR-P1-COMPILER-004"
+        - "TR-P1-COMPILER-005"
+        - "TR-P1-COMPILER-006"
+        - "TR-P1-COMPILER-007"
+        - "TR-P1-COMPILER-008"
+        - "TR-P1-COMPILER-009"
+      workMode:
+        modelCode: false
+        pageDesign: false
+        minimal: false
+        auto: true
+        architectureReview: true
+        gitCheckpoint: true
+        skippedPhases: []
+        workRef: "version/V_1.0/work.md"
+        workDigest: "30adcb1423395a1f249de914e90abf309ffe038bad66f1633b58e3b3ebe5d6a5"
+    appliedAt: "2026-08-07T12:49:00+00:00"
+    appliedByAgent: "IncrementalArchiveAgent"
+  -
+    id: "DOCMERGE-V_1.0-COMPILER-f8d463b66085"
+    kind: "DOCUMENT_MERGE"
+    version: "V_1.0"
+    module: "COMPILER"
+    documentMerges:
+      -
+        artifactType: "requirement_list"
+        sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/requirement_list.md"
+        targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/requirement_list.md"
+        mergeMode: "TABLE_UPSERT"
+        sourceRevision: "REQUIREMENT_LIST@dc0a9e4e438a"
+        resultRevision: "REQUIREMENT_LIST@cb9ca6dff51d"
+        status: "READY"
+        sourceDigest: "dc0a9e4e438adf15f9a3ee0e9dd9058a56d3f992e3fda1582b2e0c6944434dd9"
+        targetDigest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        resultDigest: "cb9ca6dff51dba93fdfa7534fd47e6a89c207e949f98d0563f862e7f263210cf"
+        reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+        evidenceRefs: []
+      -
+        artifactType: "module_desc"
+        sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/doc/COMPILER/COMPILER_desc.md"
+        targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/COMPILER/COMPILER_desc.md"
+        mergeMode: "MODULE_DESC_MERGE"
+        sourceRevision: "MODULE_DESC@469546e6369e"
+        resultRevision: "MODULE_DESC@59e3224e8bc4"
+        status: "READY"
+        sourceDigest: "469546e6369eb3759f6a7776f6198b40199559f8f187542fabcafe5b0d247394"
+        targetDigest: "5c1a5e6da7f55242cd06b8f0b4764159b1e3c3cca9bfb9bdee6ede26faed64cd"
+        resultDigest: "59e3224e8bc4cacbe6c80b21ceda1ae7545ec618a22832c59a4a8f7ab942de94"
+        reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+        evidenceRefs: []
+    appliedAt: "2026-08-07T12:49:00+00:00"
+    appliedByAgent: "IncrementalArchiveAgent"
+  -
+    id: "DOCMERGE-V_1.0-COMPILER-660a07b1337b"
+    kind: "DOCUMENT_MERGE"
+    version: "V_1.0"
+    module: "COMPILER"
+    documentMerges:
+      -
+        artifactType: "requirement_list"
+        sourceRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/version/V_1.0/requirement_list.md"
+        targetRef: "/mnt/data/doc-eq-code-Dgremlin-fact-sync-rc9/project_doc/docs/requirement_list.md"
+        mergeMode: "TABLE_UPSERT"
+        sourceRevision: "REQUIREMENT_LIST@f4ad00747729"
+        resultRevision: "REQUIREMENT_LIST@82f9cc0de066"
+        status: "READY"
+        sourceDigest: "f4ad00747729c7274a085eaaefdb9237e48df57add312477042a8a1e7524ccac"
+        targetDigest: "cb9ca6dff51dba93fdfa7534fd47e6a89c207e949f98d0563f862e7f263210cf"
+        resultDigest: "82f9cc0de0667f6759f6f53c30d6d80ade1576b07111f0ad1484400f139b7a8e"
+        reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+        evidenceRefs: []
+    appliedAt: "2026-08-07T12:51:34+00:00"
+    appliedByAgent: "IncrementalArchiveAgent"

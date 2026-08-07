@@ -1,0 +1,8 @@
+schemaVersion: 1
+artifact: "api"
+module:
+  code: "COMPILER"
+  name: "dec-core-compiler"
+revision: "API-R00@init"
+baseRevision: ""
+endpoints: []
