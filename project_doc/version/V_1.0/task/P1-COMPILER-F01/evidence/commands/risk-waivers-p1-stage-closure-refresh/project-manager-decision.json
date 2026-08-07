@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "input_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+  "risk_type": "architecture_change",
+  "detection_ids": [
+    "DET-E75DA6841B70"
+  ],
+  "decision": "WAIVE_LEXICAL_FALSE_POSITIVE",
+  "reason": "RISK-ARCH-001 在 DirectoryKey.java 中命中的 content:port 来自 Java 关键字 import 的子串 port。复核确认该文件未新增网络端口、六边形架构 Port、模块依赖或跨模块运行时路径；本次仅刷新既有 development revision 的风险输入摘要，不构成新的架构变更。",
+  "approved_by": "ProjectManagerAgent"
+}

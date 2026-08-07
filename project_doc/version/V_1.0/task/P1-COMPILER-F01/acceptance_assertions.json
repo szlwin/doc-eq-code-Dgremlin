@@ -868,223 +868,6 @@
       "reason": "DEV-P1-T01-R01 已完成可归因的 RED→GREEN；测试断言保持、语义回归补强、Java 8 与 context→compiler 零反向依赖均有可复现 Evidence。"
     },
     {
-      "assertion_id": "ASRT-P1-T01-CR-SPEC-001",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "DEV-P1-T01-R01 implements only the frozen TASK-P1-T01 context contract scope, preserves DESIGN-R05 and TDD-R01, and introduces no T02-T15 behavior.",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "SpecComplianceReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01#expected_results/0"
-      ],
-      "evidence_ids": [
-        "EVD-000321",
-        "EVD-000324"
-      ],
-      "verified_by_agent": "SpecComplianceReviewAgent",
-      "verified_at": "2026-08-01T08:29:12+00:00",
-      "reason": "DEV-P1-T01-R01 is consistent with TASK-P1-T01, DESIGN-R05 and TDD-R01, with no scope drift or unresolved finding."
-    },
-    {
-      "assertion_id": "ASRT-P1-T01-CR-ENG-001",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "Implementation is maintainable Java 8 code with immutable values, defensive copies, no public mutators, no placeholder markers, and reproducible checks.",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "EngineeringStandardsReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01#expected_results/1"
-      ],
-      "evidence_ids": [
-        "EVD-000321",
-        "EVD-000324",
-        "EVD-000323"
-      ],
-      "verified_by_agent": "EngineeringStandardsReviewAgent",
-      "verified_at": "2026-08-01T08:29:17+00:00",
-      "reason": "DEV-P1-T01-R01 uses small focused types, stable equality/string behavior, explicit validation, and no unresolved engineering-standard finding."
-    },
-    {
-      "assertion_id": "ASRT-P1-T01-CR-ARCH-001",
-      "acceptance_id": "AC-P1-COMPILER-005",
-      "statement": "The T01 implementation preserves the compiler-to-context dependency direction and the neutral immutable context boundary without introducing runtime behavior.",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "ArchitectureReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "DESIGN-R05@0b37a9b4dd48"
-      ],
-      "evidence_ids": [
-        "EVD-000321",
-        "EVD-000322",
-        "EVD-000324",
-        "EVD-000325"
-      ],
-      "verified_by_agent": "ArchitectureReviewAgent",
-      "verified_at": "2026-08-01T08:31:06+00:00",
-      "reason": "DEV-P1-T01-R01 preserves the frozen context/compiler boundary, contains failure semantics inside immutable constructors, and supplies stable test seams without premature runtime behavior."
-    },
-    {
-      "assertion_id": "ASRT-P1-T01-CR-XMOD-001",
-      "acceptance_id": "AC-P1-COMPILER-004",
-      "statement": "TASK-P1-T01 adds only additive context contracts and does not create an unresolved cross-module integration dependency.",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01#dependencies"
-      ],
-      "evidence_ids": [
-        "EVD-000322",
-        "EVD-000324",
-        "EVD-000325"
-      ],
-      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
-      "verified_at": "2026-08-01T08:32:28+00:00",
-      "reason": "The cross-module trigger is conservative: no cross-module runtime path is implemented by T01, the dependency boundary is proven, and all actual integration responsibilities remain explicitly assigned to later tasks."
-    },
-    {
-      "assertion_id": "ASRT-P1-T01-CR-IMPACT-001",
-      "acceptance_id": "AC-P1-COMPILER-005",
-      "statement": "The T01 change impact is contained to additive context contracts and tests, with existing BaseData behavior preserved and no destructive migration.",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "ImpactAnalysisReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01#allowed_files"
-      ],
-      "evidence_ids": [
-        "EVD-000322",
-        "EVD-000324"
-      ],
-      "verified_by_agent": "ImpactAnalysisReviewAgent",
-      "verified_at": "2026-08-01T08:34:08+00:00",
-      "reason": "Impact is contained and reversible through the task checkpoint; all affected code and tests are explicit, no destructive compatibility action exists, and later integration tasks remain independently gated."
-    },
-    {
-      "assertion_id": "ASRT-P1-T01-CR-PERF-001",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "The immutable defensive-copy implementation introduces no unbounded IO, background work, hot-path blocking, or unjustified performance risk.",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "PerformanceReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01#implementation"
-      ],
-      "evidence_ids": [
-        "EVD-000321",
-        "EVD-000322",
-        "EVD-000323",
-        "EVD-000325"
-      ],
-      "verified_by_agent": "PerformanceReviewAgent",
-      "verified_at": "2026-08-01T08:34:28+00:00",
-      "reason": "Performance risk is acceptable for T01: implementation is bounded linear defensive copying with no IO or asynchronous work, and current revision verification is green."
-    },
-    {
-      "assertion_id": "ASRT-P1-T01-CR-SEC-001",
-      "acceptance_id": "AC-P1-COMPILER-005",
-      "statement": "The T01 value-contract implementation introduces no credential, authorization, parser, filesystem, network, deserialization, or secret-handling surface.",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "SecurityReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01#stop_conditions"
-      ],
-      "evidence_ids": [
-        "EVD-000324",
-        "EVD-000321",
-        "EVD-000323"
-      ],
-      "verified_by_agent": "SecurityReviewAgent",
-      "verified_at": "2026-08-01T08:34:31+00:00",
-      "reason": "The security scan trigger is a lexical false positive. T01 adds immutable metadata contracts only and introduces no security-sensitive execution surface."
-    },
-    {
-      "assertion_id": "ASRT-P1-T01-TEST-EVID-001",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "TestEvidenceReviewAgent 确认 TESTING-P1-T01-R01 绑定真实 PR Head、P0/R02 Run 与不可变 Artifact 摘要；普通测试全绿、故意失败门禁有效、MySQL 不适用说明透明。",
-      "type": "MANUAL_REVIEW",
-      "phase": "testing",
-      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "TestEvidenceReviewAgent",
-        "review_phase": "testing",
-        "criteria_ids": [
-          "RC-EVID-001",
-          "RC-EVID-002",
-          "RC-EVID-003",
-          "RC-EVID-004",
-          "RC-EVID-005",
-          "RC-EVID-006",
-          "RC-EVID-007",
-          "RC-TEST-008",
-          "RC-BFLOW-005"
-        ]
-      },
-      "source_refs": [
-        "TASK-P1-T01-TESTING",
-        "CODEREVIEW-P1-T01-R01@488bc81150f7",
-        "DEV-P1-T01-R01@de1adfd37c9b",
-        "TR-P1-COMPILER-003",
-        "TR-P1-COMPILER-004",
-        "TR-P1-COMPILER-005",
-        "TR-P1-COMPILER-006"
-      ],
-      "evidence_ids": [
-        "EVD-000330",
-        "EVD-000331",
-        "EVD-000332"
-      ],
-      "verified_by_agent": "TestEvidenceReviewAgent",
-      "verified_at": "2026-08-01T09:06:20+00:00",
-      "reason": "Testing Evidence 可复现、完整、新鲜并与声明边界一致；无测试或基础设施 blocker。"
-    },
-    {
       "assertion_id": "ASRT-P1-CLOSURE-001",
       "acceptance_id": "AC-P1-COMPILER-005",
       "statement": "business_model StageOutcome 为 PASSED，无开放 P0/P1，并创建 Git checkpoint",
@@ -1729,218 +1512,6 @@
       "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01#expected_results/4."
     },
     {
-      "assertion_id": "ASRT-P1-CLOSURE-029",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "Spec Review confirms no missing requirement or scope drift",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "SpecComplianceReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01-CODE-REVIEW#expected_results/0"
-      ],
-      "evidence_ids": [
-        "EVD-000321"
-      ],
-      "verified_by_agent": "SpecComplianceReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED SpecComplianceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/0."
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-030",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "Engineering Review confirms immutable implementation and tests are maintainable",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "EngineeringStandardsReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01-CODE-REVIEW#expected_results/1"
-      ],
-      "evidence_ids": [
-        "EVD-000321"
-      ],
-      "verified_by_agent": "EngineeringStandardsReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED EngineeringStandardsReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/1."
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-031",
-      "acceptance_id": "AC-P1-COMPILER-005",
-      "statement": "Architecture Review confirms context remains compiler-neutral and failure-isolated",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "ArchitectureReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01-CODE-REVIEW#expected_results/2"
-      ],
-      "evidence_ids": [
-        "EVD-000322"
-      ],
-      "verified_by_agent": "ArchitectureReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED ArchitectureReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/2."
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-032",
-      "acceptance_id": "AC-P1-COMPILER-004",
-      "statement": "No open P0/P1 findings",
-      "type": "MANUAL_REVIEW",
-      "phase": "code_review",
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
-        "review_phase": "code_review"
-      },
-      "source_refs": [
-        "TASK-P1-T01-CODE-REVIEW#expected_results/3"
-      ],
-      "evidence_ids": [
-        "EVD-000322"
-      ],
-      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED CrossModuleIntegrationReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-CODE-REVIEW#expected_results/3."
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-033",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "所有阶段 Revision 与 Evidence ACTIVE 且可回查",
-      "type": "JSON_PATH",
-      "phase": "completion_verification",
-      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "path": "$.result",
-        "operator": "EQUALS",
-        "expected": "PASSED"
-      },
-      "source_refs": [
-        "TASK-P1-T01-COMPLETION#expected_results/0"
-      ],
-      "evidence_ids": [
-        "EVD-000333"
-      ],
-      "verified_by_agent": "CompletionVerificationAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": ""
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-034",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "无开放 P0/P1 finding",
-      "type": "JSON_PATH",
-      "phase": "completion_verification",
-      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "path": "$.open_p0_p1_findings",
-        "operator": "EQUALS",
-        "expected": []
-      },
-      "source_refs": [
-        "TASK-P1-T01-COMPLETION#expected_results/1"
-      ],
-      "evidence_ids": [
-        "EVD-000333"
-      ],
-      "verified_by_agent": "CompletionVerificationAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": ""
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-035",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "最终 PR 不包含临时 workflow/payload/chunk/trigger",
-      "type": "JSON_PATH",
-      "phase": "completion_verification",
-      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "path": "$.temporary_path_count",
-        "operator": "EQUALS",
-        "expected": 0
-      },
-      "source_refs": [
-        "TASK-P1-T01-COMPLETION#expected_results/2"
-      ],
-      "evidence_ids": [
-        "EVD-000335"
-      ],
-      "verified_by_agent": "CompletionVerificationAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": ""
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-036",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "最终干净 Head 标准 P0 全绿",
-      "type": "JSON_PATH",
-      "phase": "completion_verification",
-      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "path": "$.result",
-        "operator": "EQUALS",
-        "expected": "PASSED"
-      },
-      "source_refs": [
-        "TASK-P1-T01-COMPLETION#expected_results/3"
-      ],
-      "evidence_ids": [
-        "EVD-000334"
-      ],
-      "verified_by_agent": "CompletionVerificationAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": ""
-    },
-    {
-      "assertion_id": "ASRT-P1-CLOSURE-037",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "T01 状态 PASSED 并交接到 TASK-P1-T02 TDD",
-      "type": "JSON_PATH",
-      "phase": "completion_verification",
-      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "path": "$.next_task_started",
-        "operator": "EQUALS",
-        "expected": false
-      },
-      "source_refs": [
-        "TASK-P1-T01-COMPLETION#expected_results/4"
-      ],
-      "evidence_ids": [
-        "EVD-000333"
-      ],
-      "verified_by_agent": "CompletionVerificationAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": ""
-    },
-    {
       "assertion_id": "ASRT-P1-CLOSURE-038",
       "acceptance_id": "AC-P1-COMPILER-006",
       "statement": "三个冻结 TDD 合同测试全部 GREEN",
@@ -2079,119 +1650,186 @@
       "reason": "Existing PASSED TDDReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-DEV-SKELETON#expected_results/5."
     },
     {
-      "assertion_id": "ASRT-P1-CLOSURE-044",
+      "assertion_id": "ASRT-P1-STAGE-I008-SPEC-001",
       "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "R02 9 tests 全绿",
+      "statement": "Stage Closure 返修保持冻结的 P1 产品集成目标，P1-003/P1-004 的修复与测试没有引入范围漂移，且 FND-P1-STAGE-002 仅通过正式状态机收口。",
       "type": "MANUAL_REVIEW",
-      "phase": "testing",
-      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
-        "reviewer_agent": "TestEvidenceReviewAgent",
-        "review_phase": "testing"
+        "reviewer_agent": "SpecComplianceReviewAgent",
+        "review_phase": "code_review"
       },
       "source_refs": [
-        "TASK-P1-T01-TESTING#expected_results/0"
+        "TASK-P1-STAGE-CLOSURE#frozen-targets"
       ],
       "evidence_ids": [
-        "EVD-000330"
+        "EVD-000369",
+        "EVD-000370",
+        "EVD-000363",
+        "EVD-000366",
+        "EVD-000364"
       ],
-      "verified_by_agent": "TestEvidenceReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/0."
+      "verified_by_agent": "SpecComplianceReviewAgent",
+      "verified_at": "2026-08-07T07:38:47+00:00",
+      "reason": "Spec Compliance Review PASS：Stage Closure 返修与冻结目标、TDD RED→GREEN 和当前 Findings 一致。"
     },
     {
-      "assertion_id": "ASRT-P1-CLOSURE-045",
+      "assertion_id": "ASRT-P1-STAGE-I008-ENG-001",
       "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "标准 P0 normal suites 全绿",
+      "statement": "Stage Closure 返修实现与测试保持可维护工程标准；本轮 machine-state 迁移不修改生产 Java，@Override 独占一行且关键逻辑中文注释要求保持满足。",
       "type": "MANUAL_REVIEW",
-      "phase": "testing",
-      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
-        "reviewer_agent": "TestEvidenceReviewAgent",
-        "review_phase": "testing"
+        "reviewer_agent": "EngineeringStandardsReviewAgent",
+        "review_phase": "code_review"
       },
       "source_refs": [
-        "TASK-P1-T01-TESTING#expected_results/1"
+        "TASK-P1-STAGE-CLOSURE#rework-boundary"
       ],
       "evidence_ids": [
-        "EVD-000330"
+        "EVD-000369",
+        "EVD-000370",
+        "EVD-000363",
+        "EVD-000366",
+        "EVD-000368"
       ],
-      "verified_by_agent": "TestEvidenceReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/1."
+      "verified_by_agent": "EngineeringStandardsReviewAgent",
+      "verified_at": "2026-08-07T07:38:51+00:00",
+      "reason": "Engineering Standards Review PASS：实现、测试与代码风格满足工程标准，未发现新的 P0/P1。"
     },
     {
-      "assertion_id": "ASRT-P1-CLOSURE-046",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "故意失败测试被构建门禁正确阻断",
+      "assertion_id": "ASRT-P1-STAGE-I008-ARCH-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "Stage Closure 返修保持 classpath/source policy/starter 的既有架构边界，symlink 与 byte-budget 修复在正确 Provider/Bootstrap 层 fail-closed，未改变冻结主架构。",
       "type": "MANUAL_REVIEW",
-      "phase": "testing",
-      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
-        "reviewer_agent": "TestEvidenceReviewAgent",
-        "review_phase": "testing"
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "code_review"
       },
       "source_refs": [
-        "TASK-P1-T01-TESTING#expected_results/2"
+        "TASK-P1-STAGE-CLOSURE#frozen-targets"
       ],
       "evidence_ids": [
-        "EVD-000330"
+        "EVD-000369",
+        "EVD-000370",
+        "EVD-000366",
+        "EVD-000367"
       ],
-      "verified_by_agent": "TestEvidenceReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/2."
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-07T07:37:20+00:00",
+      "reason": "Architecture Review PASS：Stage Closure 返修保持既有分层与依赖边界，P1-003/P1-004 修复位置与 fail-closed 语义合理。"
     },
     {
-      "assertion_id": "ASRT-P1-CLOSURE-047",
+      "assertion_id": "ASRT-P1-STAGE-I008-XMOD-001",
       "acceptance_id": "AC-P1-COMPILER-004",
-      "statement": "dec-core-context 不依赖 dec-core-compiler",
+      "statement": "Stage Closure 返修未引入新的跨模块运行时耦合；CompilerBootstrap 与 Provider 的预算绑定和 source 边界在现有模块职责内闭合。",
       "type": "MANUAL_REVIEW",
-      "phase": "testing",
-      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
-        "reviewer_agent": "TestEvidenceReviewAgent",
-        "review_phase": "testing"
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "code_review"
       },
       "source_refs": [
-        "TASK-P1-T01-TESTING#expected_results/3"
+        "TASK-P1-STAGE-CLOSURE#rework-boundary"
       ],
       "evidence_ids": [
-        "EVD-000330"
+        "EVD-000364",
+        "EVD-000366",
+        "EVD-000367"
       ],
-      "verified_by_agent": "TestEvidenceReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/3."
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-07T07:38:55+00:00",
+      "reason": "Cross-Module Integration Review PASS：跨模块边界保持稳定，现有集成路径与验证均为绿色。"
     },
     {
-      "assertion_id": "ASRT-P1-CLOSURE-048",
-      "acceptance_id": "AC-P1-COMPILER-006",
-      "statement": "MySQL 对 T01 明确为不适用而非伪造通过",
+      "assertion_id": "ASRT-P1-STAGE-I008-IMPACT-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "Stage Closure 返修影响被限制在已审查的 Provider/Bootstrap/测试与机器状态文档；未恢复 Declaration Runtime，也未扩大 T15 已完成边界。",
       "type": "MANUAL_REVIEW",
-      "phase": "testing",
-      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
-        "reviewer_agent": "TestEvidenceReviewAgent",
-        "review_phase": "testing"
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "code_review"
       },
       "source_refs": [
-        "TASK-P1-T01-TESTING#expected_results/4"
+        "TASK-P1-STAGE-CLOSURE#rework-boundary"
       ],
       "evidence_ids": [
-        "EVD-000330"
+        "EVD-000364",
+        "EVD-000366"
       ],
-      "verified_by_agent": "TestEvidenceReviewAgent",
-      "verified_at": "2026-08-01T12:13:37+00:00",
-      "reason": "Existing PASSED TestEvidenceReviewAgent conclusion and ACTIVE evidence verify TASK-P1-T01-TESTING#expected_results/4."
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-07T07:38:59+00:00",
+      "reason": "Impact Analysis Review PASS：影响可控、可追溯，未发现未登记的高风险扩散。"
+    },
+    {
+      "assertion_id": "ASRT-P1-STAGE-I008-PERF-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "Source byte budget 已在流式读取写入增长缓冲区前执行，并对 fileset 采用累计剩余预算；不存在此前的单次无界读取 P1 风险。",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PerformanceReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "FND-P1-STAGE-004"
+      ],
+      "evidence_ids": [
+        "EVD-000369",
+        "EVD-000370",
+        "EVD-000364",
+        "EVD-000368",
+        "EVD-000367"
+      ],
+      "verified_by_agent": "PerformanceReviewAgent",
+      "verified_at": "2026-08-07T07:39:03+00:00",
+      "reason": "Performance Review PASS：P1-004 已关闭，单次 Provider 读取不再存在预算 Gate 前无界分配问题。"
+    },
+    {
+      "assertion_id": "ASRT-P1-STAGE-I008-SEC-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "Classpath file 资源的 physical/real path 与逐段 symlink 校验 fail-closed，directory fileset 不跟随 symlink；此前 symlink escape/cycle P1 风险已关闭。",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "SecurityReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "FND-P1-STAGE-003"
+      ],
+      "evidence_ids": [
+        "EVD-000369",
+        "EVD-000366",
+        "EVD-000370",
+        "EVD-000368"
+      ],
+      "verified_by_agent": "SecurityReviewAgent",
+      "verified_at": "2026-08-07T07:39:08+00:00",
+      "reason": "Security Review PASS：P1-003 已关闭，未发现新的路径逃逸、循环或其它安全敏感执行面。"
     }
   ]
 }

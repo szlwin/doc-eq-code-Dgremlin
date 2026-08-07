@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "status": "PASSED",
+  "github_actions_run_id": 31148550742,
+  "head_sha": "75559ecc2e4791eddee166cf3010128130e27078",
+  "merge_ref_sha": "d3319c5b9224b57fa4b174fc6741fa30d6c7d427",
+  "artifact": {
+    "name": "surefire-and-jacoco-reports",
+    "id": 8982454725,
+    "size_bytes": 36873736,
+    "sha256": "a1d04b81b259bd83a42a75ee180556748d135de82ae984dd8dd6c4db6a4431ac"
+  },
+  "suites": [
+    {
+      "name": "ClasspathDocumentSourceProviderTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "dec-core-compiler",
+      "tests": 511,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "dec-core-starter",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "CompilerBootstrapStageClosureTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "gates": [
+    {
+      "name": "P0 Build Gate",
+      "result": "SUCCESS"
+    },
+    {
+      "name": "T14 provenance mutation gate",
+      "result": "PASSED"
+    },
+    {
+      "name": "intentional failing-test gate",
+      "result": "PASSED",
+      "detail": "预期 Maven failure 被 Gate 正确识别"
+    },
+    {
+      "name": "T15 declaration runtime retirement",
+      "result": "PASSED"
+    }
+  ]
+}

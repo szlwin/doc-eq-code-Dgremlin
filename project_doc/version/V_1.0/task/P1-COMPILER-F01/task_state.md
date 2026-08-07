@@ -8,9 +8,9 @@
   "schema_version": 2,
   "target_id": "P1-COMPILER-F01",
   "version": "V_1.0",
-  "task_status": "COMPLETED",
-  "current_phase": "completion_verification",
-  "current_round": "COMPLETION_VERIFICATION-I007",
+  "task_status": "PARTIAL",
+  "current_phase": "testing",
+  "current_round": "TESTING-I008",
   "current_agent": "ProjectManagerAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
@@ -77,22 +77,22 @@
       "iteration_no": 8
     },
     "code_review": {
-      "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "status": "PASSED",
-      "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
-      "iteration_no": 7
+      "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-008",
+      "iteration_no": 8
     },
     "testing": {
-      "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
-      "status": "PASSED",
-      "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
-      "iteration_no": 7
+      "revision": "",
+      "status": "STALE",
+      "iteration_id": "ITER-P1-COMPILER-F01-TESTING-008",
+      "iteration_no": 8
     },
     "completion_verification": {
-      "revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
-      "status": "PASSED",
-      "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
-      "iteration_no": 7
+      "revision": "",
+      "status": "STALE",
+      "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-008",
+      "iteration_no": 8
     }
   },
   "collaboration_reviews": {
@@ -639,7 +639,7 @@
       "review_history": []
     },
     "code_review": {
-      "artifact_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+      "artifact_revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "required_reviewers": [
         "ArchitectureReviewAgent",
         "EngineeringStandardsReviewAgent",
@@ -680,86 +680,159 @@
         }
       },
       "independent_conclusions": {
+        "ArchitectureReviewAgent": {
+          "profile_id": "code_review:ArchitectureReviewAgent",
+          "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000077",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-07T07:37:19+00:00"
+        },
         "SpecComplianceReviewAgent": {
           "profile_id": "code_review:SpecComplianceReviewAgent",
-          "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+          "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
           "conclusion": "PASSED",
-          "review_result_ref": "REV-000069",
+          "review_result_ref": "REV-000078",
           "finding_ids": [],
-          "reviewed_at": "2026-08-01T08:29:12+00:00"
+          "reviewed_at": "2026-08-07T07:38:47+00:00"
         },
         "EngineeringStandardsReviewAgent": {
           "profile_id": "code_review:EngineeringStandardsReviewAgent",
-          "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+          "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
           "conclusion": "PASSED",
-          "review_result_ref": "REV-000070",
+          "review_result_ref": "REV-000079",
           "finding_ids": [],
-          "reviewed_at": "2026-08-01T08:29:16+00:00"
-        },
-        "ArchitectureReviewAgent": {
-          "profile_id": "code_review:ArchitectureReviewAgent",
-          "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000071",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-01T08:31:06+00:00"
+          "reviewed_at": "2026-08-07T07:38:50+00:00"
         },
         "CrossModuleIntegrationReviewAgent": {
           "profile_id": "code_review:CrossModuleIntegrationReviewAgent",
-          "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+          "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
           "conclusion": "PASSED",
-          "review_result_ref": "REV-000072",
+          "review_result_ref": "REV-000080",
           "finding_ids": [],
-          "reviewed_at": "2026-08-01T08:32:28+00:00"
+          "reviewed_at": "2026-08-07T07:38:55+00:00"
         },
         "ImpactAnalysisReviewAgent": {
           "profile_id": "code_review:ImpactAnalysisReviewAgent",
-          "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+          "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
           "conclusion": "PASSED",
-          "review_result_ref": "REV-000073",
+          "review_result_ref": "REV-000081",
           "finding_ids": [],
-          "reviewed_at": "2026-08-01T08:34:08+00:00"
+          "reviewed_at": "2026-08-07T07:38:59+00:00"
         },
         "PerformanceReviewAgent": {
           "profile_id": "code_review:PerformanceReviewAgent",
-          "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+          "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
           "conclusion": "PASSED",
-          "review_result_ref": "REV-000074",
+          "review_result_ref": "REV-000082",
           "finding_ids": [],
-          "reviewed_at": "2026-08-01T08:34:28+00:00"
+          "reviewed_at": "2026-08-07T07:39:03+00:00"
         },
         "SecurityReviewAgent": {
           "profile_id": "code_review:SecurityReviewAgent",
-          "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+          "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
           "conclusion": "PASSED",
-          "review_result_ref": "REV-000075",
+          "review_result_ref": "REV-000083",
           "finding_ids": [],
-          "reviewed_at": "2026-08-01T08:34:31+00:00"
+          "reviewed_at": "2026-08-07T07:39:07+00:00"
         }
       },
       "status": "PASSED",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
-      "review_history": []
+      "current_iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-008",
+      "review_history": [
+        {
+          "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
+          "artifact_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+          "status": "PASSED",
+          "independent_conclusions": {
+            "SpecComplianceReviewAgent": {
+              "profile_id": "code_review:SpecComplianceReviewAgent",
+              "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000069",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T08:29:12+00:00"
+            },
+            "EngineeringStandardsReviewAgent": {
+              "profile_id": "code_review:EngineeringStandardsReviewAgent",
+              "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000070",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T08:29:16+00:00"
+            },
+            "ArchitectureReviewAgent": {
+              "profile_id": "code_review:ArchitectureReviewAgent",
+              "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000071",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T08:31:06+00:00"
+            },
+            "CrossModuleIntegrationReviewAgent": {
+              "profile_id": "code_review:CrossModuleIntegrationReviewAgent",
+              "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000072",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T08:32:28+00:00"
+            },
+            "ImpactAnalysisReviewAgent": {
+              "profile_id": "code_review:ImpactAnalysisReviewAgent",
+              "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000073",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T08:34:08+00:00"
+            },
+            "PerformanceReviewAgent": {
+              "profile_id": "code_review:PerformanceReviewAgent",
+              "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000074",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T08:34:28+00:00"
+            },
+            "SecurityReviewAgent": {
+              "profile_id": "code_review:SecurityReviewAgent",
+              "revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000075",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T08:34:31+00:00"
+            }
+          },
+          "archived_at": "2026-08-07T07:29:28+00:00"
+        }
+      ]
     },
     "testing": {
-      "artifact_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+      "artifact_revision": "",
       "required_reviewers": [
         "TestEvidenceReviewAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {
-        "TestEvidenceReviewAgent": {
-          "profile_id": "testing:TestEvidenceReviewAgent",
-          "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000076",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-01T09:06:20+00:00"
+      "independent_conclusions": {},
+      "status": "PENDING",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-TESTING-008",
+      "review_history": [
+        {
+          "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
+          "artifact_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+          "status": "PASSED",
+          "independent_conclusions": {
+            "TestEvidenceReviewAgent": {
+              "profile_id": "testing:TestEvidenceReviewAgent",
+              "revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000076",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-01T09:06:20+00:00"
+            }
+          },
+          "archived_at": "2026-08-07T07:29:28+00:00"
         }
-      },
-      "status": "PASSED",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
-      "review_history": []
+      ]
     },
     "development": {
       "artifact_revision": "DEV-P1-T01-R01@de1adfd37c9b",
@@ -809,12 +882,12 @@
   },
   "review_rounds": {},
   "open_issue_ids": [],
-  "last_gate": "testing",
+  "last_gate": "code_review",
   "failed_attempts": {
     "TASK-P1-DESIGN-001": 1
   },
-  "next_action": "",
-  "next_agent": "ProjectManagerAgent",
+  "next_action": "开始 testing 阶段",
+  "next_agent": "TestAgent",
   "resume_from": "tdd",
   "max_auto_review_rounds": 3,
   "stale_events": [
@@ -923,9 +996,21 @@
       "reason": "wk -ar skeleton Review passed; begin concrete implementation",
       "created_at": "2026-08-01T08:05:26+00:00",
       "executed_by_agent": "ProjectManagerAgent"
+    },
+    {
+      "from_phase": "code_review",
+      "source_revision": "75559ecc2e4791eddee166cf3010128130e27078",
+      "invalidated_phases": [
+        "code_review",
+        "testing",
+        "completion_verification"
+      ],
+      "reason": "Stage Closure 独立返修复核已确认 FND-P1-STAGE-003 与 FND-P1-STAGE-004 在 75559ecc2e4791eddee166cf3010128130e27078 上关闭，且代码级 P0/P1 为 0；但 canonical code_review/testing/completion 仍绑定旧 T01 revision（FND-P1-STAGE-002），因此从 code_review 合法重开并重新绑定本次 Stage Closure Review。",
+      "created_at": "2026-08-07T07:29:28+00:00",
+      "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-01T12:14:03+00:00",
+  "checkpoint_at": "2026-08-07T07:40:16+00:00",
   "request_intake": {
     "ref": "",
     "digest": "",
@@ -946,13 +1031,13 @@
     ],
     "implementation_iteration_id": "ITER-P1-COMPILER-F01-DEVELOPMENT-008",
     "implementation_revision": "DEV-P1-T01-R01@de1adfd37c9b",
-    "final_review_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "final_review_revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
     "final_review_result_refs": [
-      "REV-000069",
-      "REV-000070",
-      "REV-000071"
+      "REV-000078",
+      "REV-000079",
+      "REV-000077"
     ],
-    "updated_at": "2026-08-01T08:38:48+00:00"
+    "updated_at": "2026-08-07T07:39:37+00:00"
   }
 }
 ```

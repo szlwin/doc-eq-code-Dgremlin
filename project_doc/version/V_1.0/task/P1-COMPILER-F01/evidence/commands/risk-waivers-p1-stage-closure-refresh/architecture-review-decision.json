@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "input_revision": "DEV-P1-T01-R01@de1adfd37c9b",
+  "risk_type": "architecture_change",
+  "detection_ids": [
+    "DET-E75DA6841B70"
+  ],
+  "decision": "WAIVE_LEXICAL_FALSE_POSITIVE",
+  "reason": "ArchitectureReviewAgent 复核 DirectoryKey.java 后确认，content:port 仅由 Java 关键字 import 的词法子串触发；没有引入网络端口、架构 Port、模块边界变化或新的跨模块依赖，因此该检测属于词法误报。",
+  "approved_by": "ArchitectureReviewAgent"
+}

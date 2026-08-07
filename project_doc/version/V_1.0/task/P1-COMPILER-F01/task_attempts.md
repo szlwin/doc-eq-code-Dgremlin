@@ -913,6 +913,35 @@
     ],
     "summary": "TASK-P1-T01 全阶段 Revision/Evidence 可回查，最终干净代码 Head 的标准 P0 通过，无开放 P0/P1，临时文件为零。",
     "next_action": "发布 Completion Revision，完成阶段验收并将 TASK-P1-T02 保持为待执行未启动。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P1-T01-CODE-REVIEW-I008-A001",
+    "task_id": "TASK-P1-T01-CODE-REVIEW",
+    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-008",
+    "iteration_no": 8,
+    "attempt_no": 1,
+    "agent": "ProjectManagerAgent",
+    "phase": "code_review",
+    "status": "PASSED",
+    "input_revision": "9d9dbf8991355aa4d1ac1a44635e17b4540249791bf43a322a2e2dcea677a142",
+    "output_revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+    "started_at": "2026-08-07T07:34:14+00:00",
+    "completed_at": "2026-08-07T07:34:18+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [],
+    "command_evidence_ids": [
+      "EVD-000368"
+    ],
+    "evidence_ids": [
+      "EVD-000363",
+      "EVD-000364",
+      "EVD-000366",
+      "EVD-000367",
+      "EVD-000368"
+    ],
+    "summary": "Implementation Rework Review PASS：FND-P1-STAGE-003/004 保持 CLOSED，代码级 P0/P1=0；reviewed Head 75559ecc 的 P0 CI 与 surefire artifact 已核验。",
+    "next_action": "发布 Code Review I008 artifact，并由 Spec/Engineering/Architecture 及四个风险 Reviewer 独立确认。"
   }
 ]
 ```

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "status": "GREEN",
+  "reviewed_head_sha": "75559ecc2e4791eddee166cf3010128130e27078",
+  "ci_run_id": 31148550742,
+  "interpretation": "最终 reviewed code tree 已在 dev_all merge candidate 上通过 P0 Build Gate；本轮仅修改 project_doc machine state，不改变已验证生产代码。"
+}
