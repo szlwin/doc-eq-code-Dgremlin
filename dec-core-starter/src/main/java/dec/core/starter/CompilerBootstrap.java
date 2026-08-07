@@ -56,7 +56,8 @@ public final class CompilerBootstrap {
                 builder.maxTotalBytes);
         this.sourceProvider = new ClasspathDocumentSourceProvider(
                 builder.classLoader,
-                allowedRoot);
+                allowedRoot,
+                builder.maxTotalBytes);
         this.frontends = standardFrontends();
         this.publisher = builder.publisher;
         this.clock = builder.clock;
