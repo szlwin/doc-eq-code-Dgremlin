@@ -1,7 +1,431 @@
 # FEATURE-DESC-3361AD2E54FC 需求—模型—设计—计划—实现—测试追踪矩阵
 
 ```json traceability
-[]
+[
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-001",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-001, BR-P2-SYSTEM-RULEVIEW-002, BR-P2-SYSTEM-RULEVIEW-016, CR-P2-SYSTEM-RULEVIEW-001 -> AC-P2-SYSTEM-RULEVIEW-001",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-001",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-002",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-016",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-001",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-001",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-COMPILER"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-016",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-SYSTEM-COMPILATION"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-002",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-003, BR-P2-SYSTEM-RULEVIEW-004, BR-P2-SYSTEM-RULEVIEW-017, CR-P2-SYSTEM-RULEVIEW-002 -> AC-P2-SYSTEM-RULEVIEW-002",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-002"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-003",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-004",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-017",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-002",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-002",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-002"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-CONTEXT"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-RULEVIEW-KEY",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-017",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-RULEVIEW-COMPOSITE-IDENTITY"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-003",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-005, BR-P2-SYSTEM-RULEVIEW-006, CR-P2-SYSTEM-RULEVIEW-002 -> AC-P2-SYSTEM-RULEVIEW-003",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-003"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-005",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-006",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-002",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-003",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-003"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-CONTEXT",
+      "REL-P2-SYSTEM-RULEVIEW-STARTER"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-RULEVIEW-KEY",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-RULEVIEW-RESOLUTION",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-017"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-004",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-007, BR-P2-SYSTEM-RULEVIEW-008, BR-P2-SYSTEM-RULEVIEW-009, CR-P2-SYSTEM-RULEVIEW-003 -> AC-P2-SYSTEM-RULEVIEW-004",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-004"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-007",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-008",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-009",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-003",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-004",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-004"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-COMPILER",
+      "REL-P2-SYSTEM-RULEVIEW-CONTEXT",
+      "IMP-P2-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-MODEL-ACCESS-RULE",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-018",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-005",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-010, BR-P2-SYSTEM-RULEVIEW-011 -> AC-P2-SYSTEM-RULEVIEW-005",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-005"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-010",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-011",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-005",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-005"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-COMPILER",
+      "IMP-P2-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-MODEL-PATH",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-021",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-MODEL-PATH-COMPILATION"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-006",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-012, BR-P2-SYSTEM-RULEVIEW-014, CR-P2-SYSTEM-RULEVIEW-003 -> AC-P2-SYSTEM-RULEVIEW-006",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-006"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-012",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-014",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-003",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-006",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-006"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-CONTEXT",
+      "REL-P2-SYSTEM-RULEVIEW-STARTER",
+      "IMP-P2-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-MODEL-ACCESS-RULE",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-019",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-007",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-013, BR-P2-SYSTEM-RULEVIEW-014, CR-P2-SYSTEM-RULEVIEW-003 -> AC-P2-SYSTEM-RULEVIEW-007",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-007"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-013",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-014",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-003",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-007",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-007"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-STARTER",
+      "IMP-P2-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-020",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-MODEL-ACCESS-AUTHORIZATION",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-008",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-015, BR-P2-SYSTEM-RULEVIEW-016, BR-P2-SYSTEM-RULEVIEW-017, CR-P2-SYSTEM-RULEVIEW-001 -> AC-P2-SYSTEM-RULEVIEW-008",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-008"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-015",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-016",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-017",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-001",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-008",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-008"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-COMPILER",
+      "REL-P2-SYSTEM-RULEVIEW-CONTEXT",
+      "IMP-P2-MODEL-ACCESS-AUTHORIZATION"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-SYSTEM-COMPILED-CONFIG",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-COMPILATION-SESSION",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-019"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-009",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-006, BR-P2-SYSTEM-RULEVIEW-018, CR-P2-SYSTEM-RULEVIEW-002 -> AC-P2-SYSTEM-RULEVIEW-009",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-009"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-006",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-018",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-002",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-009",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-009"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-COMPILER"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-016",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-DIAGNOSTIC"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  },
+  {
+    "id": "TR-P2-SYSTEM-RULEVIEW-010",
+    "description": "System、RuleView 归属与模型访问边界: BR-P2-SYSTEM-RULEVIEW-019, BR-P2-SYSTEM-RULEVIEW-020, CR-P2-SYSTEM-RULEVIEW-004 -> AC-P2-SYSTEM-RULEVIEW-010",
+    "status": "COVERED",
+    "acceptance_criteria": [
+      "AC-P2-SYSTEM-RULEVIEW-010"
+    ],
+    "requirement_refs": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-019",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#BR-P2-SYSTEM-RULEVIEW-020",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#CR-P2-SYSTEM-RULEVIEW-004",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-010",
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#TR-P2-SYSTEM-RULEVIEW-010"
+    ],
+    "impact_required": true,
+    "dependency_impact_refs": [
+      "REL-P2-SYSTEM-RULEVIEW-DECLARATION",
+      "IMP-P2-DECLARATION-BOUNDARY"
+    ],
+    "business_flow_required": true,
+    "business_flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "cross_module_implementation_required": true,
+    "cross_module_implementation_refs": [
+      "CMI-P2-SYSTEM-RULEVIEW-001"
+    ],
+    "business_model_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-DEFERRED-BOUNDARY",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-DEFERRED-DEFINITION"
+    ],
+    "design_refs": [],
+    "test_case_ids": [],
+    "plan_task_ids": [],
+    "contract_refs": [],
+    "implementation_refs": [],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
+    "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py P2 extends the existing COMPILER dependency/CMI baseline; BusinessModel/Design must publish P2-specific downstream mappings before implementation."
+  }
+]
 ```
 
 ## 使用说明

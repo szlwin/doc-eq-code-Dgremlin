@@ -2,5 +2,369 @@
   "schema_version": 1,
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
-  "assertions": []
+  "assertions": [
+    {
+      "assertion_id": "ASRT-P2-REQCONF-R02-RA-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "RequirementAnalysisAgent 独立确认 R02 保持 P2 固定目标语义且目标、范围、失败恢复和关键决策足以进入结构化需求分析",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-P2-R02@ef30059b327d",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P2-REQCONF-001#expected_results/0",
+        "TASK-P2-REQCONF-001#expected_results/1",
+        "TASK-P2-REQCONF-001#expected_results/2",
+        "TASK-P2-REQCONF-001#expected_results/3",
+        "TASK-P2-REQCONF-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000013",
+        "EVD-000009",
+        "EVD-000014",
+        "EVD-000012"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-07T16:13:19+00:00",
+      "reason": "RequirementAnalysisAgent 独立复核 R02：格式规范化未改变 P2 固定语义；目标、范围、失败恢复与关键决策继续满足需求分析入口门禁。"
+    },
+    {
+      "assertion_id": "ASRT-P2-REQCONF-R02-TD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "TestDesignAgent 独立确认 R02 的 systems.xml、同名 RuleView、权限允许/拒绝、静态/动态失败和无副作用标准仍可测试，并完成同 Revision 独立 Review",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-P2-R02@ef30059b327d",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "TASK-P2-REQCONF-001#expected_results/4",
+        "TASK-P2-REQCONF-001#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000014",
+        "EVD-000009"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-07T16:13:20+00:00",
+      "reason": "TestDesignAgent 独立复核 R02：格式规范化未改变完成标准；正常、边界、失败与无副作用场景继续可测试、可观察。"
+    },
+    {
+      "assertion_id": "ASRT-P2-REQAN-BM-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "BusinessModelAgent 独立确认 P2 规则、状态、失败与发布不变量足以进入业务模型阶段",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P2-REQAN-001#expected_results/0",
+        "TASK-P2-REQAN-001#expected_results/1",
+        "TASK-P2-REQAN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000024",
+        "EVD-000026",
+        "EVD-000015",
+        "EVD-000016"
+      ],
+      "verified_by_agent": "BusinessModelAgent",
+      "verified_at": "2026-08-07T16:32:41+00:00",
+      "reason": "P2 需求分析已给出可建模的 System、RuleView、ModelAccess 语义与一致性边界，未提前锁定实现。"
+    },
+    {
+      "assertion_id": "ASRT-P2-REQAN-DES-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-005",
+      "statement": "DesignAgent 独立确认 P2 身份、路径、静态/动态权限和原子发布边界可设计且未提前锁定实现方案",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P2-REQAN-001#expected_results/0",
+        "TASK-P2-REQAN-001#expected_results/1",
+        "TASK-P2-REQAN-001#expected_results/2",
+        "TASK-P2-REQAN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000015",
+        "EVD-000016",
+        "EVD-000026",
+        "EVD-000025"
+      ],
+      "verified_by_agent": "DesignAgent",
+      "verified_at": "2026-08-07T16:32:42+00:00",
+      "reason": "P2 分析达到设计输入标准：边界明确、失败可观察、现有编译骨架具备承载点且未在需求层锁死实现。"
+    },
+    {
+      "assertion_id": "ASRT-P2-REQAN-TD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-004",
+      "statement": "TestDesignAgent 独立确认 10 条 AC 覆盖正常、边界、失败、同名隔离、权限矩阵和禁止副作用且可形成稳定 Case",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P2-REQAN-001#expected_results/0",
+        "TASK-P2-REQAN-001#expected_results/2",
+        "TASK-P2-REQAN-001#expected_results/3",
+        "TASK-P2-REQAN-001#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000015",
+        "EVD-000027",
+        "EVD-000016",
+        "EVD-000026"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-07T16:32:44+00:00",
+      "reason": "P2 AC 已具备完整测试维度和可观察结果，可进入正式 Test Design。"
+    },
+    {
+      "assertion_id": "ASRT-P2-REQAN-IMP-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "ImpactAnalysisReviewAgent 独立确认 P2 对既有 Compiler/Context/Starter/Frontend/declaration 关系与迁移边界已识别且没有遗漏阻塞影响",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P2-REQAN-001#expected_results/3",
+        "TASK-P2-REQAN-001#expected_results/5",
+        "TASK-P2-REQAN-001#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000016",
+        "EVD-000024",
+        "EVD-000015",
+        "EVD-000026",
+        "EVD-000027"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-07T16:32:45+00:00",
+      "reason": "P2 对现有编译链、Context、Starter 与 declaration 的影响边界已识别，无需求分析阶段未处置的阻塞影响。"
+    },
+    {
+      "assertion_id": "ASRT-P2-REQAN-XMOD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-003",
+      "statement": "CrossModuleIntegrationReviewAgent 独立确认 P2 复用 FLOW-CONFIG-COMPILE 且跨模块责任、失败和恢复边界可追踪",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "TASK-P2-REQAN-001#expected_results/4",
+        "TASK-P2-REQAN-001#expected_results/5",
+        "TASK-P2-REQAN-001#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000026",
+        "EVD-000016",
+        "EVD-000015",
+        "EVD-000025",
+        "EVD-000027"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-07T16:32:46+00:00",
+      "reason": "P2 跨模块职责、顺序、失败传播、恢复与测试映射可追踪；未引入循环依赖或隐藏回退。"
+    },
+    {
+      "assertion_id": "ASRT-P2-BM-R06-REQ-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "RequirementReviewAgent 独立确认 BM-R06 完整承接冻结 P2 需求、范围、失败与禁止副作用且没有引入需求漂移",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R06@6a0bce4fa0ae",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P2-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000030",
+        "EVD-000032",
+        "EVD-000035"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-07T16:50:19+00:00",
+      "reason": "BM-R06 与冻结 P2 需求一致，无范围漂移或未闭合冲突。"
+    },
+    {
+      "assertion_id": "ASRT-P2-BM-R06-BM-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-004",
+      "statement": "BusinessModelReviewAgent 独立确认 BM-R06 的统一语言、对象/聚合、不变量、错误与跨文档追踪完整且不泄漏实现",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R06@6a0bce4fa0ae",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P2-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000028",
+        "EVD-000029",
+        "EVD-000033",
+        "EVD-000030",
+        "EVD-000031",
+        "EVD-000034",
+        "EVD-000032"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-08-07T16:49:54+00:00",
+      "reason": "BM-R06 业务模型对象、不变量、失败恢复、追踪与设计映射完整，未泄漏具体存储或 Java 实现。"
+    },
+    {
+      "assertion_id": "ASRT-P2-BM-R06-DES-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "DesignReviewAgent 独立确认 BM-R06 的模块、原子发布、权限失败恢复与测试接缝可设计且可实现",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R06@6a0bce4fa0ae",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P2-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000034",
+        "EVD-000028",
+        "EVD-000029",
+        "EVD-000031",
+        "EVD-000033",
+        "EVD-000030",
+        "EVD-000035"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-08-07T16:50:21+00:00",
+      "reason": "BM-R06 可由下一 Design 阶段细化，模块边界、一致性、恢复和测试接缝明确。"
+    },
+    {
+      "assertion_id": "ASRT-P2-BM-R06-TD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "TestDesignAgent 独立确认 BM-R06 正常、边界、失败、权限、一致性和跨模块行为均可测试",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R06@6a0bce4fa0ae",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P2-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000035",
+        "EVD-000030",
+        "EVD-000033"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-07T16:50:22+00:00",
+      "reason": "BM-R06 的正常、边界、失败、权限、一致性和跨模块行为均有可观察测试结果。"
+    },
+    {
+      "assertion_id": "ASRT-P2-BM-R06-IMP-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "ImpactAnalysisReviewAgent 独立确认 P2 dependency impact 的节点、关系、处置、传播、历史边界与测试映射完整",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R06@6a0bce4fa0ae",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P2-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000028",
+        "EVD-000029",
+        "EVD-000030",
+        "EVD-000033",
+        "EVD-000034",
+        "EVD-000035"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-07T16:50:24+00:00",
+      "reason": "P2 影响节点、传播、处置、历史/在途边界与验证映射完整，无遗漏阻塞影响。"
+    },
+    {
+      "assertion_id": "ASRT-P2-BM-R06-XMOD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-003",
+      "statement": "CrossModuleIntegrationReviewAgent 独立确认 P2 CMI 的参与者、顺序、一致性、失败恢复与实现映射闭环完整",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R06@6a0bce4fa0ae",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P2-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000034",
+        "EVD-000033",
+        "EVD-000031",
+        "EVD-000028",
+        "EVD-000029",
+        "EVD-000035"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-07T16:50:27+00:00",
+      "reason": "P2 跨模块顺序、契约、一致性、失败恢复和后续实现映射形成闭环。"
+    }
+  ]
 }

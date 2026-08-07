@@ -6,8 +6,9 @@ scope:
   module: COMPILER
   targetIds:
     - P1-COMPILER-F01
-revision: REQAN-R05@7de35e8dc15b
-baseRevision: ''
+    - FEATURE-DESC-3361AD2E54FC
+revision: BM-R06@6a0bce4fa0ae
+baseRevision: 'REQAN-R05@7de35e8dc15b'
 nodes:
   - id: P1-COMPILER-F01
     type: FEATURE
@@ -85,6 +86,24 @@ nodes:
       - version/V_1.0/doc/P1-COMPILER-F01/requirement.md#AC-P1-COMPILER-007
     traceIds:
       - TR-P1-COMPILER-007
+  - id: FEATURE-DESC-3361AD2E54FC
+    type: FEATURE
+    name: P2 System and RuleView ownership
+    module: COMPILER
+    status: ACTIVE
+    refs:
+      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+      - TR-P2-SYSTEM-RULEVIEW-008
+      - TR-P2-SYSTEM-RULEVIEW-009
+      - TR-P2-SYSTEM-RULEVIEW-010
 relationships:
   - id: REL-P1-COMPILER-IMPLEMENTS
     from: P1-COMPILER-F01
@@ -162,6 +181,62 @@ relationships:
       - TR-P1-COMPILER-007
     evidenceRefs:
       - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#design-declaration-retirement
+  - id: REL-P2-SYSTEM-RULEVIEW-COMPILER
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-CORE-COMPILER
+    type: IMPLEMENTED_BY
+    direction: DIRECTED
+    rationale: Compiler owns System registration, RuleView composite resolution, ModelPath compilation, static access validation and atomic publication.
+    conditions: []
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-008
+      - TR-P2-SYSTEM-RULEVIEW-009
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-SYSTEM-COMPILED-CONFIG
+  - id: REL-P2-SYSTEM-RULEVIEW-CONTEXT
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-CORE-CONTEXT
+    type: AFFECTS
+    direction: DIRECTED
+    rationale: Published Context exposes immutable System- and RuleView-qualified compiled facts and access rules without global mutable lookup.
+    conditions:
+      - candidate compilation has no ERROR
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-008
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM
+  - id: REL-P2-SYSTEM-RULEVIEW-STARTER
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-CORE-STARTER
+    type: AFFECTS
+    direction: DIRECTED
+    rationale: Runtime assembly/callers resolve RuleView using system-ref + rule-ref and honor compiled/runtime access decisions without bare-name fallback.
+    conditions: []
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+    evidenceRefs:
+      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-003
+  - id: REL-P2-SYSTEM-RULEVIEW-DECLARATION
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-EXPAND-DECLARATION
+    type: AFFECTS
+    direction: DIRECTED
+    rationale: P2 preserves the declaration compatibility boundary and must not create a second runtime authority; final convergence remains P7.
+    conditions: []
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-010
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
 impactPolicies:
   - id: IMP-P1-COMPILER-PUBLICATION
     sourceRef: P1-COMPILER-F01
@@ -207,6 +282,55 @@ impactPolicies:
       - CASE-P1-RETIREMENT-001
     evidenceRefs:
       - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#design-declaration-retirement
+  - id: IMP-P2-MODEL-ACCESS-AUTHORIZATION
+    sourceRef: FEATURE-DESC-3361AD2E54FC
+    sourceAction: compileAndAuthorizeModelAccess
+    targetRefs:
+      - DEC-CORE-COMPILER
+      - DEC-CORE-CONTEXT
+      - DEC-CORE-STARTER
+    policy: REJECT_OPERATION
+    conditions:
+      - static access is undeclared or invalid
+      - runtime guard denies a genuinely dynamic access
+    consistency: ATOMIC
+    transactionBoundary: Static denial blocks complete candidate publication; runtime denial occurs before mutation or external side effect.
+    idempotency: The same System/target/path/operation and authority facts yield the same decision; denial has no state mutation to replay.
+    failureHandling: Emit stable source-aware denial and preserve the old EngineContext or current business state.
+    compensation: No compensation is required for denied access because no mutation is allowed before authorization.
+    historyHandling: Previous compiled Context and Evidence remain immutable.
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+      - TR-P2-SYSTEM-RULEVIEW-008
+    testCaseIds:
+      - CASE-P2-ACCESS-STATIC-001
+      - CASE-P2-ACCESS-RUNTIME-001
+      - CASE-P2-ACCESS-NO-BYPASS-001
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION
+  - id: IMP-P2-DECLARATION-BOUNDARY
+    sourceRef: FEATURE-DESC-3361AD2E54FC
+    sourceAction: preserveDeclarationCompatibilityBoundary
+    targetRefs:
+      - DEC-EXPAND-DECLARATION
+    policy: RETAIN_UNCHANGED
+    conditions:
+      - current phase is P2
+    consistency: ATOMIC
+    transactionBoundary: P2 changes do not delete or re-author declaration runtime ownership; P7 remains the convergence gate.
+    idempotency: Repeated P2 compilation keeps the same declaration migration boundary.
+    failureHandling: Any attempt to delete the boundary or create a second runtime authority blocks P2 completion.
+    compensation: Revert the P2 change that crosses the declared phase boundary.
+    historyHandling: Historical declaration facts remain available through Git/Evidence until P7 convergence.
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-010
+    testCaseIds:
+      - CASE-P2-DECLARATION-BOUNDARY-001
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
 crossModuleImplementations:
   - id: CMI-P1-COMPILER-001
     businessFlowRef: FLOW-CONFIG-COMPILE
@@ -411,3 +535,155 @@ crossModuleImplementations:
       - CASE-P1-SYSTEM-INFORMATION-001
       - CASE-P1-MODEL-ACCESS-TARGET-MAIN-001
     diagramRef: docs/_relations/dependency_graph.md#CMI-P1-COMPILER-001
+  - id: CMI-P2-SYSTEM-RULEVIEW-001
+    businessFlowRef: FLOW-CONFIG-COMPILE
+    businessStepRefs:
+      - STEP-CONFIG-COMPILE-01
+      - STEP-CONFIG-COMPILE-03
+      - STEP-CONFIG-COMPILE-04
+      - STEP-CONFIG-COMPILE-05
+      - STEP-CONFIG-COMPILE-06
+      - STEP-CONFIG-COMPILE-07
+    name: System-scoped RuleView and fail-closed model access compilation/runtime handoff
+    trigger: A caller compiles configuration containing System, RuleView and model-access facts, then resolves or executes a System-owned RuleView.
+    participants:
+      - id: CMPART-P2-FRONTEND
+        module: FRONTEND
+        responsibility: Preserve explicit System ownership, RuleView system/name and model-access SourceRef facts without global mutation.
+        contractRefs:
+          - FLOW-CONFIG-COMPILE
+      - id: CMPART-P2-COMPILER
+        module: COMPILER
+        responsibility: Register System identities, resolve RuleView composite keys, compile ModelPath, make static access decisions and build a complete immutable candidate.
+        contractRefs:
+          - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-SYSTEM-COMPILED-CONFIG
+      - id: CMPART-P2-CONTEXT
+        module: CONTEXT
+        responsibility: Hold immutable owner-qualified System/RuleView/access facts and keep Context instances isolated.
+        contractRefs:
+          - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM
+      - id: CMPART-P2-STARTER
+        module: STARTER
+        responsibility: Use system-ref + rule-ref for runtime lookup and route genuinely dynamic access through the common Guard before mutation.
+        contractRefs:
+          - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-003
+    steps:
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-01
+        order: 1
+        from: CMPART-P2-FRONTEND
+        to: CMPART-P2-COMPILER
+        interactionType: COMMAND
+        action: Submit explicit System/RuleView/model-access canonical facts
+        preconditions:
+          - sources passed structural parsing
+        postconditions:
+          - owner/source facts remain explicit
+        idempotency: Equivalent source ordering produces equivalent canonical facts.
+        failureHandling: Malformed or unknown facts become Diagnostic; no runtime state is changed.
+        compensation: No compensation; fix source and recompile.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-001
+          - TR-P2-SYSTEM-RULEVIEW-009
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-02
+        order: 2
+        from: CMPART-P2-COMPILER
+        to: CMPART-P2-CONTEXT
+        interactionType: DATA_WRITE
+        action: Publish complete owner-qualified System, RuleView and access candidate
+        preconditions:
+          - all duplicate/reference/path/static-access checks passed
+        postconditions:
+          - one immutable Context becomes visible atomically
+        idempotency: Same semantic input produces equivalent semanticDigest.
+        failureHandling: Any ERROR leaves the old Context unchanged.
+        compensation: Discard unpublished candidate.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-002
+          - TR-P2-SYSTEM-RULEVIEW-004
+          - TR-P2-SYSTEM-RULEVIEW-005
+          - TR-P2-SYSTEM-RULEVIEW-008
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-03
+        order: 3
+        from: CMPART-P2-STARTER
+        to: CMPART-P2-CONTEXT
+        interactionType: QUERY
+        action: Resolve RuleView by system-ref + rule-ref
+        preconditions:
+          - SystemKey and RuleView name are explicit
+        postconditions:
+          - exact RuleViewKey is returned or lookup fails explicitly
+        idempotency: Repeated lookup in the same immutable Context returns the same result.
+        failureHandling: Unknown composite key or bare-name request fails; no fallback lookup.
+        compensation: None.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-002
+          - TR-P2-SYSTEM-RULEVIEW-003
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-04
+        order: 4
+        from: CMPART-P2-STARTER
+        to: CMPART-P2-CONTEXT
+        interactionType: COMMAND
+        action: Request dynamic model access authorization before mutation when compilation marked RuntimeGuardRequired
+        preconditions:
+          - static compilation already accepted the rule boundary
+        postconditions:
+          - ALLOW permits mutation; DENY returns before state change/external side effect
+        idempotency: Repeated decision over unchanged authority/resource facts is stable.
+        failureHandling: DENY is fail-closed and preserves current state.
+        compensation: No compensation because mutation has not started.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-006
+          - TR-P2-SYSTEM-RULEVIEW-007
+    successCriteria:
+      - System and RuleView identities are deterministic and owner-qualified
+      - static illegal access blocks publication
+      - dynamic denial occurs before mutation
+      - declaration compatibility remains a P7 boundary
+    failurePaths:
+      - id: CMFAIL-P2-SYSTEM-RULEVIEW-01
+        atStep: CMSTEP-P2-SYSTEM-RULEVIEW-02
+        condition: duplicate/unknown/path/static permission error
+        result: candidate is not published and old Context remains active
+        compensationSteps: []
+        manualRecovery: Correct configuration and recompile.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-001
+          - TR-P2-SYSTEM-RULEVIEW-004
+          - TR-P2-SYSTEM-RULEVIEW-005
+          - TR-P2-SYSTEM-RULEVIEW-008
+      - id: CMFAIL-P2-SYSTEM-RULEVIEW-02
+        atStep: CMSTEP-P2-SYSTEM-RULEVIEW-03
+        condition: bare RuleView name or unknown composite key
+        result: lookup fails explicitly without cross-System fallback
+        compensationSteps: []
+        manualRecovery: Supply explicit valid system-ref + rule-ref.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-003
+      - id: CMFAIL-P2-SYSTEM-RULEVIEW-03
+        atStep: CMSTEP-P2-SYSTEM-RULEVIEW-04
+        condition: runtime Guard denies access
+        result: operation fails before mutation or external side effect
+        compensationSteps: []
+        manualRecovery: Correct authority/resource state before retry.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-006
+          - TR-P2-SYSTEM-RULEVIEW-007
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+      - TR-P2-SYSTEM-RULEVIEW-008
+      - TR-P2-SYSTEM-RULEVIEW-009
+      - TR-P2-SYSTEM-RULEVIEW-010
+    testCaseIds:
+      - CASE-P2-SYSTEM-001
+      - CASE-P2-RULEVIEW-ISOLATION-001
+      - CASE-P2-ACCESS-STATIC-001
+      - CASE-P2-ACCESS-RUNTIME-001
+      - CASE-P2-CONTEXT-ATOMIC-001
+      - CASE-P2-DECLARATION-BOUNDARY-001
+    diagramRef: project_doc/docs/_relations/dependency_graph.md#CMI-P2-SYSTEM-RULEVIEW-001

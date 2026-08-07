@@ -1,0 +1,976 @@
+schemaVersion: 1
+changeSet:
+  id: CHG-V_1.0-COMPILER-P2-BM-R06
+  version: V_1.0
+  module: COMPILER
+  featureCode: P2-SYSTEM-RULEVIEW
+  reason: P2 makes System first-class, RuleView system-scoped, and model-access fail-closed across static/runtime
+    boundaries.
+  baseRevisions:
+    business_model: BM-R05@4ecb1f8c09f4
+  resultRevisions:
+    business_model: BM-R06@6a0bce4fa0ae
+  affectedTraceIds:
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-005
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
+  - TR-P2-SYSTEM-RULEVIEW-008
+  - TR-P2-SYSTEM-RULEVIEW-009
+  - TR-P2-SYSTEM-RULEVIEW-010
+operations:
+- artifact: business_model
+  collection: terms
+  operation: update
+  targetId: TERM-DEFERRED-DEFINITION
+  beforeRef: COMPILER_business_model.yaml#TERM-DEFERRED-DEFINITION
+  after:
+    id: TERM-DEFERRED-DEFINITION
+    name: DeferredDefinition
+    definition: 当前阶段尚未拥有的后续语义登记。P2 已消费 System、RuleView 与 model-access 所有权/授权语义；P3～P8 仍必须以 requiredStage、reason、SourceRef
+      与已解析 Key 显式 Deferred。
+    forbiddenSynonyms:
+    - ignored definition
+    - partially compiled runtime
+    sourceRefs:
+    - BR-P1-007
+    - BR-P1-008
+    - BR-P2-SYSTEM-RULEVIEW-020
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: terms
+  operation: add
+  targetId: TERM-SYSTEM-COMPILED-IDENTITY
+  after:
+    id: TERM-SYSTEM-COMPILED-IDENTITY
+    name: System compiled identity
+    definition: System 以显式 SystemKey 作为一等编译身份；身份不得由文件名、路径、RuleView 名称或加载顺序推断。
+    forbiddenSynonyms:
+    - implicit system
+    - file-derived system
+    sourceRefs:
+    - BR-P2-SYSTEM-RULEVIEW-001
+    - BR-P2-SYSTEM-RULEVIEW-002
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: terms
+  operation: add
+  targetId: TERM-RULEVIEW-COMPOSITE-IDENTITY
+  after:
+    id: TERM-RULEVIEW-COMPOSITE-IDENTITY
+    name: RuleView composite identity
+    definition: RuleView 的唯一身份是 (SystemKey,name)；跨 System 同名合法，同一 System 重复定义非法，调用不得回退为裸 name。
+    forbiddenSynonyms:
+    - global RuleView name
+    - bare RuleView lookup
+    sourceRefs:
+    - BR-P2-SYSTEM-RULEVIEW-003
+    - BR-P2-SYSTEM-RULEVIEW-004
+    - BR-P2-SYSTEM-RULEVIEW-005
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: terms
+  operation: add
+  targetId: TERM-MODEL-ACCESS-RULE
+  after:
+    id: TERM-MODEL-ACCESS-RULE
+    name: ModelAccessRule
+    definition: 由 System、目标模型或 View、规范化 ModelPath、READ/WRITE/EXECUTE 操作与 SourceRef 共同限定的访问授权事实；未声明权限不产生隐式允许。
+    forbiddenSynonyms:
+    - default allow
+    - shared write by default
+    sourceRefs:
+    - BR-P2-SYSTEM-RULEVIEW-007
+    - BR-P2-SYSTEM-RULEVIEW-008
+    - BR-P2-SYSTEM-RULEVIEW-009
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: terms
+  operation: add
+  targetId: TERM-MODEL-PATH
+  after:
+    id: TERM-MODEL-PATH
+    name: ModelPath
+    definition: 对模型属性路径做精确、确定性、可复用编译后的路径身份；expression、change、query 与权限校验共享同一语义，不允许模糊或跨模型猜测。
+    forbiddenSynonyms:
+    - fuzzy model path
+    - root-property fallback
+    sourceRefs:
+    - BR-P2-SYSTEM-RULEVIEW-010
+    - BR-P2-SYSTEM-RULEVIEW-011
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: scenarios
+  operation: add
+  targetId: SCN-P2-SYSTEM-MULTISOURCE
+  after:
+    id: SCN-P2-SYSTEM-MULTISOURCE
+    given:
+    - 多个 system-file-info 来源声明不同 System
+    - 加载顺序可能变化
+    when: 编译器注册 System 定义
+    then:
+    - 相同语义输入得到相同 SystemKey 集合与 semanticDigest
+    - 同一 SystemKey 重复定义产生稳定 ERROR 且不发布候选 Context
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-008
+    - TR-P2-SYSTEM-RULEVIEW-009
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: scenarios
+  operation: add
+  targetId: SCN-P2-RULEVIEW-ISOLATION
+  after:
+    id: SCN-P2-RULEVIEW-ISOLATION
+    given:
+    - 两个不同 System 均声明同名 RuleView
+    when: 调用方以 system-ref + rule-ref 解析 RuleView
+    then:
+    - 分别命中各自 (SystemKey,name) 定义
+    - 裸 name 查找与同 System 重复定义被拒绝
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: scenarios
+  operation: add
+  targetId: SCN-P2-MODEL-ACCESS-STATIC
+  after:
+    id: SCN-P2-MODEL-ACCESS-STATIC
+    given:
+    - ModelAccessRule 的 System、目标、ModelPath 与 operation 在编译期可确定
+    when: 编译器执行访问规则验证
+    then:
+    - 明确声明的合法操作编译为 Allow 事实
+    - 未声明共享 WRITE、非法路径或越界引用产生 ERROR 并阻断发布
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+    - TR-P2-SYSTEM-RULEVIEW-008
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: scenarios
+  operation: add
+  targetId: SCN-P2-MODEL-ACCESS-RUNTIME
+  after:
+    id: SCN-P2-MODEL-ACCESS-RUNTIME
+    given:
+    - 访问在编译期合法但最终资源/路径取值只能在运行时确定
+    when: Rule、change 或 custom action 尝试 mutation
+    then:
+    - 统一 Guard 在 mutation 与外部副作用之前判定
+    - DENY 时不改变业务状态且无旁路入口
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: entities
+  operation: add
+  targetId: ENT-COMPILED-SYSTEM
+  after:
+    id: ENT-COMPILED-SYSTEM
+    name: CompiledSystem
+    identity: systemKey
+    attributes:
+    - name: systemKey
+      type: SystemKey
+      required: true
+    - name: sourceRefs
+      type: List<SourceRef>
+      required: true
+    - name: dataRefs
+      type: Set<DataKey>
+      required: true
+    - name: viewRefs
+      type: Set<ViewKey>
+      required: true
+    - name: ruleViewKeys
+      type: Set<RuleViewKey>
+      required: true
+    - name: modelAccessRules
+      type: Set<ModelAccessRule>
+      required: true
+    behaviors:
+    - publishImmutable
+    - rejectDuplicateSystemKey
+    - exposeOwnerQualifiedMembers
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-008
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: valueObjects
+  operation: update
+  targetId: VO-MODEL-ACCESS-BINDING
+  beforeRef: COMPILER_business_model.yaml#VO-MODEL-ACCESS-BINDING
+  after:
+    id: VO-MODEL-ACCESS-BINDING
+    name: ModelAccessBinding
+    identity: systemKey+sourcePath+operation+targetView+selector
+    attributes:
+    - name: systemKey
+      type: SystemKey
+      required: true
+    - name: operation
+      type: READ|WRITE|EXECUTE
+      required: true
+    - name: sourcePath
+      type: SharedModelPath
+      required: true
+    - name: targetView
+      type: ViewKey
+      required: true
+    - name: selector
+      type: TargetSelector
+      required: true
+    - name: resolvedTarget
+      type: ViewRoot|PropertyPath
+      required: true
+    behaviors:
+    - resolveTargetMainFirst
+    - resolveExactPropertyPathFallback
+    - rejectDuplicateOrAmbiguous
+    traceIds:
+    - TR-P1-COMPILER-008
+    - TR-P1-COMPILER-009
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: valueObjects
+  operation: update
+  targetId: VO-DEFERRED-DEFINITION
+  beforeRef: COMPILER_business_model.yaml#VO-DEFERRED-DEFINITION
+  after:
+    id: VO-DEFERRED-DEFINITION
+    name: DeferredDefinition
+    identity: definitionKey+requiredStage+reason
+    attributes:
+    - name: definitionKey
+      type: TypedKey
+      required: true
+    - name: requiredStage
+      type: P3|P4|P5|P6|P7|P8
+      required: true
+    - name: reason
+      type: String
+      required: true
+    - name: sourceRef
+      type: SourceRef
+      required: true
+    - name: resolvedKeys
+      type: Set<TypedKey>
+      required: true
+    behaviors:
+    - validateCompleteness
+    traceIds:
+    - TR-P1-COMPILER-004
+    - TR-P1-COMPILER-008
+    - TR-P1-COMPILER-009
+    - TR-P2-SYSTEM-RULEVIEW-010
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: valueObjects
+  operation: add
+  targetId: VO-RULEVIEW-KEY
+  after:
+    id: VO-RULEVIEW-KEY
+    name: RuleViewKey
+    identity: systemKey+name
+    attributes:
+    - name: systemKey
+      type: SystemKey
+      required: true
+    - name: name
+      type: String
+      required: true
+    behaviors:
+    - canonical
+    - rejectBareNameFallback
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: valueObjects
+  operation: add
+  targetId: VO-MODEL-PATH
+  after:
+    id: VO-MODEL-PATH
+    name: ModelPath
+    identity: modelKey+segments
+    attributes:
+    - name: modelKey
+      type: TypedKey
+      required: true
+    - name: segments
+      type: List<String>
+      required: true
+    behaviors:
+    - compileExact
+    - rejectUnknownSegment
+    - rejectNonCompositeIntermediate
+    - canonical
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: valueObjects
+  operation: add
+  targetId: VO-MODEL-ACCESS-RULE
+  after:
+    id: VO-MODEL-ACCESS-RULE
+    name: ModelAccessRule
+    identity: systemKey+targetKey+modelPath+operation
+    attributes:
+    - name: systemKey
+      type: SystemKey
+      required: true
+    - name: targetKey
+      type: DataKey|ViewKey|RuleViewKey
+      required: true
+    - name: modelPath
+      type: ModelPath
+      required: true
+    - name: operation
+      type: READ|WRITE|EXECUTE
+      required: true
+    - name: sourceRef
+      type: SourceRef
+      required: true
+    behaviors:
+    - compileStaticDecision
+    - requireRuntimeGuardWhenDeferred
+    - denyWhenUndeclared
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: aggregates
+  operation: update
+  targetId: AGG-COMPILATION-SESSION
+  beforeRef: COMPILER_business_model.yaml#AGG-COMPILATION-SESSION
+  after:
+    id: AGG-COMPILATION-SESSION
+    name: Compilation Session Aggregate
+    root: ENT-COMPILATION-SESSION
+    members:
+    - ENT-MIX-SOURCE-GRAPH
+    - ENT-RAW-DEFINITION-SET
+    - ENT-SYMBOL-TABLE
+    - ENT-DEFERRED-REGISTRY
+    - VO-DOCUMENT-SOURCE
+    - VO-CANONICAL-DOCUMENT-NODE
+    - VO-SOURCE-REF
+    - VO-TYPED-KEY
+    - VO-INFORMATION-KEY
+    - VO-MODEL-ACCESS-BINDING
+    - VO-DEFERRED-DEFINITION
+    - VO-DIAGNOSTIC
+    - VO-DIGEST-PAIR
+    - VO-COMPILATION-RESULT
+    - ENT-COMPILED-SYSTEM
+    - VO-RULEVIEW-KEY
+    - VO-MODEL-PATH
+    - VO-MODEL-ACCESS-RULE
+    invariantIds:
+    - INV-COMPILER-001
+    - INV-COMPILER-002
+    - INV-COMPILER-003
+    - INV-COMPILER-004
+    - INV-COMPILER-005
+    - INV-COMPILER-006
+    - INV-COMPILER-007
+    - INV-COMPILER-008
+    - INV-COMPILER-009
+    - INV-COMPILER-010
+    - INV-COMPILER-011
+    - INV-COMPILER-012
+    - INV-COMPILER-013
+    - INV-COMPILER-016
+    - INV-COMPILER-017
+    - INV-COMPILER-018
+    - INV-COMPILER-019
+    - INV-COMPILER-020
+    - INV-COMPILER-021
+    - INV-COMPILER-022
+    transactionBoundary: 一次 compile 调用；构建期变化只存在于该 Session，成功时由 compiler 调用注入的 ContextPublisher 条件发布后才进入 PUBLISHED
+    consistency: 强一致、全有或全无；不同 Session 不共享可变对象
+    traceIds:
+    - TR-P1-COMPILER-001
+    - TR-P1-COMPILER-002
+    - TR-P1-COMPILER-003
+    - TR-P1-COMPILER-004
+    - TR-P1-COMPILER-005
+    - TR-P1-COMPILER-007
+    - TR-P1-COMPILER-008
+    - TR-P1-COMPILER-009
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+    - TR-P2-SYSTEM-RULEVIEW-009
+    - TR-P2-SYSTEM-RULEVIEW-010
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: aggregates
+  operation: add
+  targetId: AGG-SYSTEM-COMPILED-CONFIG
+  after:
+    id: AGG-SYSTEM-COMPILED-CONFIG
+    name: System Compiled Configuration Aggregate
+    root: ENT-COMPILED-SYSTEM
+    members:
+    - VO-RULEVIEW-KEY
+    - VO-MODEL-PATH
+    - VO-MODEL-ACCESS-RULE
+    - VO-MODEL-ACCESS-BINDING
+    invariantIds:
+    - INV-COMPILER-016
+    - INV-COMPILER-017
+    - INV-COMPILER-018
+    - INV-COMPILER-019
+    - INV-COMPILER-020
+    - INV-COMPILER-021
+    - INV-COMPILER-022
+    transactionBoundary: 单个 CompilationSession 内完成 System 成员注册、引用解析、路径与访问规则校验；只有整个编译候选无 ERROR 时才随完整 Context 原子发布。
+    consistency: 强一致；同一 System 内身份和权限不变量不得以部分成功形式暴露。
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+    - TR-P2-SYSTEM-RULEVIEW-009
+    - TR-P2-SYSTEM-RULEVIEW-010
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: invariants
+  operation: update
+  targetId: INV-COMPILER-008
+  beforeRef: COMPILER_business_model.yaml#INV-COMPILER-008
+  after:
+    id: INV-COMPILER-008
+    statement: P2 已消费 System、RuleView 与 model-access 所有权/授权语义；其余 P3～P8 语义仍必须登记包含 requiredStage、reason、SourceRef 和已解析
+      TypedKey 的 DeferredDefinition，P2 不提前执行后续运行语义。
+    trigger: Deferred 分类
+    failure: ERR-MIX-DEFERRED-INCOMPLETE
+    traceIds:
+    - TR-P1-COMPILER-004
+    - TR-P1-COMPILER-008
+    - TR-P1-COMPILER-009
+    - TR-P2-SYSTEM-RULEVIEW-010
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: invariants
+  operation: add
+  targetId: INV-COMPILER-016
+  after:
+    id: INV-COMPILER-016
+    statement: SystemKey 必须来自显式 System 声明且与来源顺序无关；同一 SystemKey 的重复定义必须产生 ERROR，禁止路径或文件名推断身份。
+    trigger: 注册 System
+    failure: ERR-MIX-SYSTEM-DUPLICATE
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-009
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: invariants
+  operation: add
+  targetId: INV-COMPILER-017
+  after:
+    id: INV-COMPILER-017
+    statement: RuleView 的身份和所有查找必须使用 (SystemKey,name)；跨 System 同名合法，同 System 重复定义与裸 name 回退均非法。
+    trigger: 注册或解析 RuleView
+    failure: ERR-MIX-RULEVIEW-DUPLICATE 或 ERR-MIX-RULEVIEW-UNKNOWN
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: invariants
+  operation: add
+  targetId: INV-COMPILER-018
+  after:
+    id: INV-COMPILER-018
+    statement: READ、WRITE、EXECUTE 三种权限独立判定；未声明权限不产生允许，尤其共享模型 WRITE 默认拒绝。
+    trigger: 编译 ModelAccessRule
+    failure: ERR-MIX-MODEL-ACCESS-DENIED
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: invariants
+  operation: add
+  targetId: INV-COMPILER-019
+  after:
+    id: INV-COMPILER-019
+    statement: 能由 System、目标、ModelPath 和 operation 在编译期确定的非法访问必须阻断发布；只有静态合法但资源事实真正依赖运行时的访问才可登记 RuntimeGuardRequired。
+    trigger: 访问规则编译
+    failure: ERR-MIX-MODEL-ACCESS-DENIED
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-008
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: invariants
+  operation: add
+  targetId: INV-COMPILER-020
+  after:
+    id: INV-COMPILER-020
+    statement: 所有 Rule、change 与 custom action 的 mutation 路径在需要动态判定时必须先经过同一访问 Guard；DENY 必须发生在状态变更或外部副作用之前。
+    trigger: 运行时 mutation 授权
+    failure: ERR-MIX-MODEL-ACCESS-RUNTIME-DENIED
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: invariants
+  operation: add
+  targetId: INV-COMPILER-021
+  after:
+    id: INV-COMPILER-021
+    statement: ModelPath 使用同一精确编译语义供 expression、change、query 和 access 校验复用；未知段、非复合中间段、模糊匹配或跨目标搜索均非法。
+    trigger: 编译模型路径
+    failure: ERR-MIX-MODEL-PATH-INVALID
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: invariants
+  operation: add
+  targetId: INV-COMPILER-022
+  after:
+    id: INV-COMPILER-022
+    statement: P2 只收敛 System、RuleView 与 model-access 所有权/授权语义；declaration 兼容事实在 P2 保留且不得形成第二运行时权威，最终退役边界仍属于 P7。
+    trigger: 处理 declaration 兼容边界
+    failure: ERR-MIX-P2-DECLARATION-BOUNDARY
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-010
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: services
+  operation: update
+  targetId: SVC-REFERENCE-RESOLUTION
+  beforeRef: COMPILER_business_model.yaml#SVC-REFERENCE-RESOLUTION
+  after:
+    id: SVC-REFERENCE-RESOLUTION
+    name: ReferenceResolutionService
+    reason: Information 所有权、RuleView 归属、ModelAccess selector 和跨文件引用需要统一确定性策略。
+    inputs:
+    - RawDefinitionSet
+    - SymbolTable
+    - InformationOwnershipPolicy
+    - ModelAccessSelectorPolicy
+    outputs:
+    - ResolvedDefinitions
+    - ModelAccessBinding
+    - Diagnostic
+    traceIds:
+    - TR-P1-COMPILER-003
+    - TR-P1-COMPILER-008
+    - TR-P1-COMPILER-009
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: services
+  operation: add
+  targetId: SVC-SYSTEM-COMPILATION
+  after:
+    id: SVC-SYSTEM-COMPILATION
+    name: SystemCompilationService
+    reason: System 多源加载、显式身份和成员所有权需要确定性编译边界。
+    inputs:
+    - RawSystemDefinition
+    - SystemKey
+    - SymbolTable
+    outputs:
+    - CompiledSystem
+    - Diagnostic
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-008
+    - TR-P2-SYSTEM-RULEVIEW-009
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: services
+  operation: add
+  targetId: SVC-RULEVIEW-RESOLUTION
+  after:
+    id: SVC-RULEVIEW-RESOLUTION
+    name: RuleViewResolutionService
+    reason: RuleView 必须以 owner-qualified composite identity 注册与解析，禁止裸名称回退。
+    inputs:
+    - SystemKey
+    - RuleViewName
+    - SymbolTable
+    outputs:
+    - RuleViewKey
+    - ResolvedRuleView
+    - Diagnostic
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: services
+  operation: add
+  targetId: SVC-MODEL-PATH-COMPILATION
+  after:
+    id: SVC-MODEL-PATH-COMPILATION
+    name: ModelPathCompilationService
+    reason: expression、change、query 与访问控制必须共享同一精确路径语义。
+    inputs:
+    - TypedKey
+    - RawPath
+    - CompiledModelShape
+    outputs:
+    - ModelPath
+    - Diagnostic
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: services
+  operation: add
+  targetId: SVC-MODEL-ACCESS-AUTHORIZATION
+  after:
+    id: SVC-MODEL-ACCESS-AUTHORIZATION
+    name: ModelAccessAuthorizationService
+    reason: 静态可判定权限必须在发布前 fail-closed，真正动态的合法访问必须统一运行时 Guard。
+    inputs:
+    - CompiledSystem
+    - ModelAccessRule
+    - ModelPath
+    - AccessOperation
+    outputs:
+    - StaticAllow|RuntimeGuardRequired|Diagnostic
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: policies
+  operation: update
+  targetId: POL-MODEL-ACCESS-SELECTOR
+  beforeRef: COMPILER_business_model.yaml#POL-MODEL-ACCESS-SELECTOR
+  after:
+    id: POL-MODEL-ACCESS-SELECTOR
+    name: ModelAccessSelectorPolicy
+    reason: target-main 优先和 property path 回退是可变但必须确定性的业务规则。
+    inputs:
+    - SharedModelPath
+    - ViewKey
+    - TargetSelector
+    - CompiledViewStructure
+    outputs:
+    - ModelAccessBinding
+    - Diagnostic
+    traceIds:
+    - TR-P1-COMPILER-008
+    - TR-P1-COMPILER-009
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: policies
+  operation: update
+  targetId: POL-DEFERRED-BOUNDARY
+  beforeRef: COMPILER_business_model.yaml#POL-DEFERRED-BOUNDARY
+  after:
+    id: POL-DEFERRED-BOUNDARY
+    name: DeferredBoundaryPolicy
+    reason: 防止 P2 在收敛 System、RuleView、model-access 后继续提前执行 P3～P8 语义或静默忽略未完成定义。
+    inputs:
+    - ResolvedDefinition
+    - StageOwnershipMatrix
+    outputs:
+    - DeferredDefinition
+    traceIds:
+    - TR-P1-COMPILER-004
+    - TR-P2-SYSTEM-RULEVIEW-010
+  reason: Align the P1 baseline/deferred model with P2-owned System, RuleView and model-access semantics.
+- artifact: business_model
+  collection: policies
+  operation: add
+  targetId: POL-RULEVIEW-COMPOSITE-IDENTITY
+  after:
+    id: POL-RULEVIEW-COMPOSITE-IDENTITY
+    name: RuleViewCompositeIdentityPolicy
+    reason: 跨 System 同名隔离和无歧义调用要求 identity 始终绑定 SystemKey。
+    inputs:
+    - SystemKey
+    - RuleViewName
+    outputs:
+    - RuleViewKey
+    - Diagnostic
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: policies
+  operation: add
+  targetId: POL-MODEL-PATH
+  after:
+    id: POL-MODEL-PATH
+    name: ModelPathPolicy
+    reason: 所有模型路径消费者必须共享精确、确定性的路径编译规则。
+    inputs:
+    - TypedKey
+    - RawPath
+    - CompiledModelShape
+    outputs:
+    - ModelPath
+    - Diagnostic
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: policies
+  operation: add
+  targetId: POL-MODEL-ACCESS-AUTHORIZATION
+  after:
+    id: POL-MODEL-ACCESS-AUTHORIZATION
+    name: ModelAccessAuthorizationPolicy
+    reason: 访问控制采用最小权限和 fail-closed；READ/WRITE/EXECUTE 独立，未声明共享 WRITE 默认拒绝。
+    inputs:
+    - SystemKey
+    - TargetKey
+    - ModelPath
+    - AccessOperation
+    - DeclaredModelAccess
+    outputs:
+    - StaticAllow|RuntimeGuardRequired|Diagnostic
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: businessErrors
+  operation: add
+  targetId: ERR-MIX-SYSTEM-DUPLICATE
+  after:
+    id: ERR-MIX-SYSTEM-DUPLICATE
+    condition: 同一显式 SystemKey 被多个来源重复声明
+    meaning: System 身份冲突；编译失败且不发布
+    retryable: false
+    stateChanged: false
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-009
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: businessErrors
+  operation: add
+  targetId: ERR-MIX-RULEVIEW-DUPLICATE
+  after:
+    id: ERR-MIX-RULEVIEW-DUPLICATE
+    condition: 同一 System 内重复声明相同 RuleView name
+    meaning: RuleView 复合身份冲突；编译失败且不发布
+    retryable: false
+    stateChanged: false
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-002
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: businessErrors
+  operation: add
+  targetId: ERR-MIX-RULEVIEW-UNKNOWN
+  after:
+    id: ERR-MIX-RULEVIEW-UNKNOWN
+    condition: 使用裸 RuleView 名称、未知 System 或未知 (system,name) 调用目标
+    meaning: RuleView 必须通过完整 composite identity 解析
+    retryable: false
+    stateChanged: false
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-003
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: businessErrors
+  operation: add
+  targetId: ERR-MIX-MODEL-PATH-INVALID
+  after:
+    id: ERR-MIX-MODEL-PATH-INVALID
+    condition: ModelPath 包含未知段、非复合中间段、模糊/跨目标搜索或其他非精确语义
+    meaning: 模型路径非法；静态阶段阻断
+    retryable: false
+    stateChanged: false
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-005
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: businessErrors
+  operation: add
+  targetId: ERR-MIX-MODEL-ACCESS-DENIED
+  after:
+    id: ERR-MIX-MODEL-ACCESS-DENIED
+    condition: 静态可判定的 READ/WRITE/EXECUTE 未被显式授权或越过 System/目标/path 边界
+    meaning: 访问被拒绝；编译失败且候选 Context 不发布
+    retryable: false
+    stateChanged: false
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-008
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: businessErrors
+  operation: add
+  targetId: ERR-MIX-MODEL-ACCESS-RUNTIME-DENIED
+  after:
+    id: ERR-MIX-MODEL-ACCESS-RUNTIME-DENIED
+    condition: 编译期合法但运行时 Guard 判定当前资源访问无权
+    meaning: 访问在 mutation/副作用之前失败，状态保持不变
+    retryable: true
+    stateChanged: false
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: businessErrors
+  operation: add
+  targetId: ERR-MIX-P2-DECLARATION-BOUNDARY
+  after:
+    id: ERR-MIX-P2-DECLARATION-BOUNDARY
+    condition: P2 尝试删除 declaration 兼容边界或建立与统一 compiler/context 并行的第二运行时权威
+    meaning: 阶段越界；必须保留到 P7 收敛
+    retryable: false
+    stateChanged: false
+    traceIds:
+    - TR-P2-SYSTEM-RULEVIEW-010
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-001
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-001
+    modelRefs:
+    - ENT-COMPILED-SYSTEM
+    - INV-COMPILER-016
+    - SVC-SYSTEM-COMPILATION
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-002
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-002
+    modelRefs:
+    - VO-RULEVIEW-KEY
+    - INV-COMPILER-017
+    - POL-RULEVIEW-COMPOSITE-IDENTITY
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-003
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-003
+    modelRefs:
+    - VO-RULEVIEW-KEY
+    - SVC-RULEVIEW-RESOLUTION
+    - INV-COMPILER-017
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-004
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-004
+    modelRefs:
+    - VO-MODEL-ACCESS-RULE
+    - INV-COMPILER-018
+    - POL-MODEL-ACCESS-AUTHORIZATION
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-005
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-005
+    modelRefs:
+    - VO-MODEL-PATH
+    - INV-COMPILER-021
+    - SVC-MODEL-PATH-COMPILATION
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-006
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-006
+    modelRefs:
+    - VO-MODEL-ACCESS-RULE
+    - INV-COMPILER-019
+    - SVC-MODEL-ACCESS-AUTHORIZATION
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-007
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-007
+    modelRefs:
+    - INV-COMPILER-020
+    - SVC-MODEL-ACCESS-AUTHORIZATION
+    - POL-MODEL-ACCESS-AUTHORIZATION
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-008
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-008
+    modelRefs:
+    - AGG-SYSTEM-COMPILED-CONFIG
+    - AGG-COMPILATION-SESSION
+    - INV-COMPILER-019
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-009
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-009
+    modelRefs:
+    - INV-COMPILER-016
+    - ENT-COMPILED-SYSTEM
+    - VO-DIAGNOSTIC
+  reason: P2 System/RuleView/model-access business model increment.
+- artifact: business_model
+  collection: traceability
+  operation: add
+  targetId: TR-P2-SYSTEM-RULEVIEW-010
+  after:
+    traceId: TR-P2-SYSTEM-RULEVIEW-010
+    modelRefs:
+    - INV-COMPILER-022
+    - POL-DEFERRED-BOUNDARY
+    - VO-DEFERRED-DEFINITION
+  reason: P2 System/RuleView/model-access business model increment.
