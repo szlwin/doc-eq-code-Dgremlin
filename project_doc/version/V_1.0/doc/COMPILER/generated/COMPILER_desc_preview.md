@@ -45,7 +45,6 @@
 
 | 流程编号 | 流程名称 | 模块角色 | 关联功能 | 流程层级 | 状态 | 流程文档 |
 | --- | --- | --- | --- | --- | --- | --- |
-| FLOW-CONFIG-COMPILE | 配置编译与上下文发布 | OWNER | P1-COMPILER-F01 | L0 | ACTIVE | [FLOW-CONFIG-COMPILE](../_flows/COMPILER_flow.md#flow-config-compile) |
 
 ## 文档引用
 

@@ -156,6 +156,24 @@
       "completion_verification"
     ],
     "supersedes": ""
+  },
+  {
+    "id": "DEC-P1-COMPILER-ARCHIVE-001",
+    "status": "ACTIVE",
+    "category": "ARCHIVE_AUTHORIZATION",
+    "question": "PR #31 合并到 dev_all 后是否执行 P1 增量归档？",
+    "options_considered": [
+      "保持版本事实不归档",
+      "按 common-develop -d 将已通过 P1 当前事实增量归档到项目级事实"
+    ],
+    "decision": "执行 common-develop -d P1 增量归档；仅归档已验证当前事实，不启动 P2。",
+    "rationale": "用户已明确要求对 P1 归档并在归档完成后提交 PR；PR #31 已验证 merged=true，dev_all merge commit 为 7f001bb0d7e529f49344a8b38224bde8e3b9d28e。",
+    "decided_by": "ProjectManagerAgent",
+    "decided_at": "2026-08-07T12:41:00+00:00",
+    "affects": [
+      "completion_verification"
+    ],
+    "supersedes": ""
   }
 ]
 ```

@@ -2242,6 +2242,114 @@
 | 测试与验证 | long_task=OK; work_record=PASSED; risk=PASSED; evidence=PASSED(238); acceptance=PASSED(76); git diff --check=PASSED |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"IncrementalArchiveAgent","event_id":"WR-P1-ARCHIVE-001","event_type":"ARCHIVE_COMPLETED","execution_mode":"SEQUENTIAL","modified_files_summary":["project-level COMPILER business model/module/requirements/flow facts and archive manifest."],"next_action":"Submit archive changes to a new PR targeting dev_all.","next_agent":"ProjectManagerAgent","output_revision":"BM-R05@4ecb1f8c09f4","record_id":"WR-20260807-125045-P1-COMPILER-F01-PASSED","render_digest":"0947dfca645ac0448a75bdb13e220e91022e76a673999a0b60bc9a4c04593df4","schema_version":4,"scope":"P1","source":"common-develop-wk-d","state_change":"PASSED/MERGED -> PASSED/MERGED/ARCHIVED","status":"PASSED","summary":"P1 post-merge incremental archive completed.","target_id":"P1-COMPILER-F01","task_type":"incremental_archive","timestamp":"2026-08-07T12:50:45+00:00","validation_summary":"merge_docs archive applied; immediate validate returned zero pending increments.","version":"V_1.0"} -->
+## WR-20260807-125045-P1-COMPILER-F01-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T12:50:45+00:00 |
+| 执行 Agent | IncrementalArchiveAgent |
+| 命令或来源 | common-develop-wk-d |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | P1 |
+| 阶段 | 无 / 未登记 |
+| 任务类型 | incremental_archive |
+| 事件类型 | ARCHIVE_COMPLETED |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P1 post-merge incremental archive completed. |
+| 状态 | PASSED |
+| 状态变更 | PASSED/MERGED -> PASSED/MERGED/ARCHIVED |
+| Task | 无 / 未登记 |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | 无 / 未登记 |
+| 输出 Revision | BM-R05@4ecb1f8c09f4 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Submit archive changes to a new PR targeting dev_all. |
+
+### 变更摘要
+
+- P1 post-merge incremental archive completed.
+
+### 文件变更摘要
+
+- `project-level COMPILER business model/module/requirements/flow facts and archive manifest.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | merge_docs archive applied; immediate validate returned zero pending increments. |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"WR-P1-ARCHIVE-VALIDATED-001","event_type":"ARCHIVE_VALIDATED","execution_mode":"SEQUENTIAL","modified_files_summary":["P1 archive artifacts and post-merge status projections."],"next_action":"Publish one archive commit and open a PR targeting dev_all.","next_agent":"ProjectManagerAgent","output_revision":"BM-R05@4ecb1f8c09f4","record_id":"WR-20260807-125254-P1-COMPILER-F01-PASSED","render_digest":"ffa04719ddcec885a7238ef004896014a985097c2f2247e31c3b81dc17944c30","schema_version":4,"scope":"P1","source":"common-develop-wk-d","status":"PASSED","summary":"P1 archive and post-archive fact projection validation passed.","target_id":"P1-COMPILER-F01","task_type":"incremental_archive","timestamp":"2026-08-07T12:52:54+00:00","validation_summary":"long-task PASSED; work-record PASSED; merge_docs zero pending; diff scope project_doc only; BM-R05 and module refs validated.","version":"V_1.0"} -->
+## WR-20260807-125254-P1-COMPILER-F01-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T12:52:54+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | common-develop-wk-d |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | P1 |
+| 阶段 | 无 / 未登记 |
+| 任务类型 | incremental_archive |
+| 事件类型 | ARCHIVE_VALIDATED |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P1 archive and post-archive fact projection validation passed. |
+| 状态 | PASSED |
+| 状态变更 | 未登记 |
+| Task | 无 / 未登记 |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | 无 / 未登记 |
+| 输出 Revision | BM-R05@4ecb1f8c09f4 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish one archive commit and open a PR targeting dev_all. |
+
+### 变更摘要
+
+- P1 archive and post-archive fact projection validation passed.
+
+### 文件变更摘要
+
+- `P1 archive artifacts and post-merge status projections.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | long-task PASSED; work-record PASSED; merge_docs zero pending; diff scope project_doc only; BM-R05 and module refs validated. |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

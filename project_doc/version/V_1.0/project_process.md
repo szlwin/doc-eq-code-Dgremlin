@@ -3,9 +3,9 @@
 | 顺序 | 目标 | 名称 | 当前范围 | 状态 |
 |---:|---|---|---|---|
 | 1 | P1-GOVERNANCE-REPAIR | 项目治理修复 | 环境绑定、计划事实源、全串行策略与 common-develop 状态完整性修复 | PASSED |
-| 2 | P1-COMPILER-F01 | 统一 AST、Registry 与 Compiler 骨架 | Stage Closure 已完成 canonical Code Review I008、Testing I009、Completion I009；PR #31 Ready for Review | PASSED |
+| 2 | P1-COMPILER-F01 | 统一 AST、Registry 与 Compiler 骨架 | Stage Closure 已完成 canonical Code Review I008、Testing I009、Completion I009；PR #31 已合并；P1 已完成 wk -d 增量归档 | PASSED |
 
-> 全流程按 common-develop SEQUENTIAL 策略执行。当前 P1 Stage Completion 已通过；PR #31 尚未合并，且本状态不自动授权 P2/catalog 开发。
+> 全流程按 common-develop SEQUENTIAL 策略执行。P1 已完成 PASSED → MERGED → ARCHIVED 闭环；P2 尚未启动，下一业务生命周期只能从 requirement_confirmation 开始。
 
 ## 当前生命周期位置
 
@@ -24,4 +24,4 @@ P1-COMPILER-F01
   completion_verification   COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47    PASSED
 ```
 
-Stage Closure 发布 Head / Fact Sync 输入 Head：`06e70cbb9fd81f9e7e96c840f29ffc7e67ce53b6`；P0 Build Gate `31161560840` SUCCESS；PR 已为 Ready for Review、Open、Not merged。下一动作仅为人工 Review / Merge 决策；未经用户明确授权不得 merge，也不得直接进入 P2/catalog 开发。
+PR #31 merge commit：`7f001bb0d7e529f49344a8b38224bde8e3b9d28e`；合并后 dev_all P0 Build Gate `31177897571` SUCCESS；P1 `wk -d` 归档已写入 `project_doc/archive_manifest.yaml`。P1 当前状态为 `PASSED / MERGED / ARCHIVED`；P2 尚未启动。

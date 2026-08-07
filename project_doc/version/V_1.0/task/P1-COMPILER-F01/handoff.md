@@ -4,13 +4,13 @@
 
 ## Current Stage Closure
 
-- Status：`STAGE_COMPLETED / MACHINE_SYNCED`
+- Status：`STAGE_COMPLETED / MACHINE_SYNCED / MERGED / ARCHIVED`
 - Base：`dev_all@81aa3b40129d10a08b3f1a20ba6312b4015b9079`
 - Branch：`rework/p1-stage-closure-20260807`
-- PR：`#31 / READY_FOR_REVIEW / OPEN / NOT_MERGED`
+- PR：`#31 / MERGED / 7f001bb0d7e529f49344a8b38224bde8e3b9d28e`
 - Reviewed Code Head：`75559ecc2e4791eddee166cf3010128130e27078`
 - Stage Closure Published Head / Fact Sync Source Head：`06e70cbb9fd81f9e7e96c840f29ffc7e67ce53b6`
-- Final P0 Run：`31161560840` — SUCCESS
+- Final P0 Run：`31177897571` — SUCCESS（dev_all merge commit）
 - Reviewed P0 Run：`31148550742` — SUCCESS
 - Canonical Code Review：`CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47` — PASSED
 - Canonical Testing：`TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47` — PASSED
@@ -37,12 +37,11 @@
 
 ## Post-publication handling
 
-1. machine-state/恢复文档已提交到现有 PR #31；
-2. 最终 PR Head P0 Build Gate `31161560840` 已 GREEN；
-3. PR #31 已标记 Ready for Review；
-4. 当前下一动作仅为人工 Review / Merge 决策；
-5. 未经用户明确授权不得合并 PR #31；
-6. 本次 Stage Completion 不自动授权后续 P2/catalog 开发。
+1. PR #31 已合并到 `dev_all@7f001bb0d7e529f49344a8b38224bde8e3b9d28e`；
+2. 合并后 P0 Build Gate `31177897571` 已 GREEN；
+3. P1 `wk -d` 增量归档已完成并写入 `project_doc/archive_manifest.yaml`；
+4. P1 当前闭环为 `PASSED / MERGED / ARCHIVED`；
+5. P2 尚未初始化，后续必须从 requirement_confirmation 开始。
 
 ## Recovery
 
