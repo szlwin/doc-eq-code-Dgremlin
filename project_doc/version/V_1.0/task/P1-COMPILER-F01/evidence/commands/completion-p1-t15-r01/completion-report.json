@@ -1,0 +1,42 @@
+{
+  "completionId": "COMPLETION-P1-T15-R01@f36b03e6243",
+  "taskId": "TASK-P1-T15",
+  "iteration": "I001",
+  "status": "PASSED",
+  "base": "dev_all@665dd364975505bb01263885a25b3bb1be767d2b",
+  "branch": "feature/p1-t15-retire-declaration-20260806-1354",
+  "pullRequest": 30,
+  "design": "DESIGN-R51@P1-T15-I001",
+  "plan": "TP-P1-COMPILER-F01-R47@P1-T15-I001",
+  "tdd": "TDD-P1-T15-R01@bff67b86fb55",
+  "architecture": "DEVSKEL-P1-T15-R01@bff67b86fb55",
+  "development": "DEV-P1-T15-R01@f36b03e6243",
+  "codeReview": "CODEREVIEW-P1-T15-R01@f36b03e6243",
+  "testing": "TESTING-P1-T15-R01@f36b03e6243",
+  "codeTestRevision": "f36b03e6243f6e3c9d2f5b2ffce7cf4b1fd63eb3",
+  "validation": {
+    "run": 31083267905,
+    "artifact": 8960370768,
+    "sha256": "ea2c919cbacfead831a5d137894991b09b7a2163f0616c9bc47f99505db517b3",
+    "surefireXml": 110,
+    "allRecords": 633,
+    "normalPassed": 632,
+    "intentionalFailure": 1,
+    "errors": 0,
+    "skipped": 0,
+    "t15Passed": 10,
+    "starterPassed": 10,
+    "compilerPassed": 504,
+    "retirementBaselinePassed": true,
+    "retirementMutationBlocked": true,
+    "retirementRestoredPassed": true,
+    "javaRelease": 8,
+    "mysql": "SKIPPED_NOT_APPLICABLE"
+  },
+  "finding": {
+    "FND-P1-T15-I001-001": "CLOSED"
+  },
+  "openP0P1P2": "0/0/0",
+  "prReadyForReview": true,
+  "merged": false
+}

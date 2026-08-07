@@ -26,6 +26,7 @@
     <modules>
         <module>dec-core-context</module>
         <module>dec-core-compiler</module>
+        <module>dec-core-frontends</module>
         <module>dec-core-datasource</module>
         <module>dec-context-config-parse-xml</module>
         <module>dec-context-config-parse-yaml</module>
@@ -33,7 +34,6 @@
         <module>dec-datasource-orm-mysql</module>
         <module>dec-core-model</module>
         <module>dec-core-starter</module>
-        <module>dec-expand-declaration</module>
         <module>dec-demo</module>
     </modules>
 
@@ -41,6 +41,7 @@
         <dependencies>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-context</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-compiler</artifactId><version>${framework.version}</version></dependency>
+            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-frontends</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-model</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-context-config-parse-xml</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-context-config-parse-yaml</artifactId><version>${framework.version}</version></dependency>
@@ -49,7 +50,6 @@
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-datasource-orm-mysql</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-core-starter</artifactId><version>${framework.version}</version></dependency>
             <dependency><groupId>doc.eq.code</groupId><artifactId>dec-demo</artifactId><version>${framework.version}</version></dependency>
-            <dependency><groupId>doc.eq.code</groupId><artifactId>dec-expand-declaration</artifactId><version>${framework.version}</version></dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId>
                 <version>${junit.jupiter.version}</version><scope>test</scope>

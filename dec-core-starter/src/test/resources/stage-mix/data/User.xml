@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<orm-data-mapping>
+
+    <data name="user">
+
+        <property-info>
+            <property name="id" type="int" desc="用户主键"/>
+            <property name="name" type="string" desc="用户名称"/>
+            <property name="activeTime" type="date" desc="激活时间"/>
+            <property name="status" type="int" desc="用户状态"/>
+            <property name="certified" type="int" desc="是否已认证"/>
+        </property-info>
+
+        <table-info>
+            <table
+                    name="user_info"
+                    data-source="data1"
+                    key="u_id"
+                    key-type="increment">
+
+                <column name="u_id" ref-property="id"/>
+                <column name="u_name" ref-property="name"/>
+                <column name="u_status" ref-property="status"/>
+                <column name="u_certified" ref-property="certified"/>
+                <column name="u_activeTime" ref-property="activeTime" type="timestamp"/>
+
+            </table>
+        </table-info>
+
+    </data>
+
+</orm-data-mapping>

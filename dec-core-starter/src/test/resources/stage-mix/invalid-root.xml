@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orm-config name="invalid">
+    <orm-data-file-info>
+        <orm-file path="classpath:outside-root/data/"/>
+    </orm-data-file-info>
+</orm-config>
