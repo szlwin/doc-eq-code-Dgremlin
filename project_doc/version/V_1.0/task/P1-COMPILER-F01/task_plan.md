@@ -909,7 +909,7 @@
     "title": "验证 TASK-P1-T01 全流程完成与可合并性",
     "objective": "确认 TDD、架构骨架、具体实现、Code Review、Testing、Evidence、Git checkpoint 与最终干净 PR 全部闭环。",
     "phase": "completion_verification",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P1-T01-TESTING"
     ],
@@ -965,10 +965,15 @@
       "存在开放 P0/P1"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+    "validation_evidence_ids": [
+      "EVD-000374",
+      "EVD-000375",
+      "EVD-000376",
+      "EVD-000377"
+    ]
   }
 ]
 ```

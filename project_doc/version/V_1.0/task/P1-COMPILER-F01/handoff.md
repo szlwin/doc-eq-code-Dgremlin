@@ -1,47 +1,45 @@
 # P1-COMPILER-F01 阶段交接
 
-> PR #30 已由外部操作合并到 `dev_all@81aa3b40129d10a08b3f1a20ba6312b4015b9079`。当前工作切换为 `TASK-P1-STAGE-CLOSURE / I001` 的独立返修分支与 PR #31；T01～T15 的历史 Completion 保留，不被本轮覆盖。
+> PR #30 的历史结果继续保留。本轮 `TASK-P1-STAGE-CLOSURE` 已在 PR #31 上完成独立返修复核、canonical machine-state 迁移、Testing 与 Completion；不得将旧 Completion 或本轮新 Completion 互相覆盖。
 
 ## Current Stage Closure
 
-- Status：`REWORK_VALIDATED / CI_GREEN / FINAL_REVIEW_PENDING`
+- Status：`STAGE_COMPLETED / MACHINE_SYNCED`
 - Base：`dev_all@81aa3b40129d10a08b3f1a20ba6312b4015b9079`
 - Branch：`rework/p1-stage-closure-20260807`
-- PR：`#31 / DRAFT / OPEN / NOT_MERGED`
-- Test-only RED Revision：`e565163c746e5b7e1fb09a7fa47912065d6ea627`
-- Code/Test GREEN Revision：`b603579d75770ca07760522e2df218047f6708ac`
-- GREEN Run：`31147778389`
-- Candidate Open P0/P1/P2：`0 / 0 / 1`（P2 为 machine state migration）
-- Final independent Review：`PENDING`
+- PR：`#31 / OPEN / NOT_MERGED`
+- Reviewed Code Head：`75559ecc2e4791eddee166cf3010128130e27078`
+- Reviewed P0 Run：`31148550742` — SUCCESS
+- Canonical Code Review：`CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47` — PASSED
+- Canonical Testing：`TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47` — PASSED
+- Canonical Completion：`COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47` — PASSED
+- Open P0/P1/P2：`0 / 0 / 0`
 
-## Rework delivered
+## Findings
 
-- `FND-P1-STAGE-001`：Stage Starter 真实 XML+YAML、十阶段、Digest、CAS 与失败不污染回归已形成 3/3 自动化证据；
-- `FND-P1-STAGE-003`：Classpath Provider 对 exploded-directory symlink escape/cycle fail-closed，并对单文件 `file:` 资源执行真实物理边界校验；
-- `FND-P1-STAGE-004`：Provider 在流式读取时执行硬字节预算，文件集执行累计预算，且 `CompilerBootstrap` 与 `SourcePolicy` 使用同一个 `maxTotalBytes`；
-- `FND-P1-STAGE-002`：task/handoff/resume 与显式 state/outcome overlay 已同步；正式 `task_state.md` / `stage_outcomes.md` machine record 因 common-develop baseline guard 无效而不得手工伪造，仍是 Completion blocker；
+- `FND-P1-STAGE-001`：CLOSED；
+- `FND-P1-STAGE-002`：CLOSED — 正式 `task_state.md` / `stage_outcomes.md` 已通过状态机迁移，不再依赖 overlay；
+- `FND-P1-STAGE-003`：CLOSED — Provider symlink escape/cycle fail-closed；
+- `FND-P1-STAGE-004`：CLOSED — streaming + fileset aggregate byte budget；
 - 未恢复 Declaration Runtime，T15 retirement gate 保持通过。
 
-## Validation
+## Review / Testing / Completion evidence
 
-- RED Run：`31147472707` — expected compile-time RED on test-only revision；
-- GREEN Run：`31147778389` — SUCCESS；
-- Core Job：`92770789003` — SUCCESS；
-- MySQL Job：`92770789019` — SUCCESS；
-- Core Artifact / SHA-256：`8982191285 / 2c7103f36ed4aa12e891408a50a855a003b3dee45f87e808754cea9a2078d328`；
-- MySQL Artifact / SHA-256：`8982163220 / 5af08b353a68af719700ec14c940a14aebccc5f0534c6d7b64db6978374c17b9`；
-- Provider tests：7/7；Compiler：511/511；Starter：13/13；Stage Closure e2e：3/3；
-- MySQL：3/3 passed；3/3 markers；数据库计数 `1/1/1/1/1/3`；
-- T14 provenance / T15 retirement：PASSED。
+- Code Review：`REV-000077` Architecture、`REV-000078` Spec、`REV-000079` Engineering、`REV-000080` CrossModule、`REV-000081` Impact、`REV-000082` Performance、`REV-000083` Security，全部 PASSED；
+- Testing Evidence Review：`REV-000084` — PASSED；
+- P0 Run `31148550742`：`core-verify` / `mysql-it` 均 SUCCESS；
+- Artifact `8982454725`：SHA-256 `a1d04b81b259bd83a42a75ee180556748d135de82ae984dd8dd6c4db6a4431ac`，下载后复算一致；
+- Provider：7/7；Compiler：511/511；Starter：13/13；Stage Closure：3/3；
+- T14 provenance mutation、intentional failure blocking、T15 retirement：PASSED；
+- `long_task` / `risk` / `evidence` / `acceptance` final validation：PASSED。
 
-## Next gate
+## Post-publication handling
 
-1. 等本次 traceability 文档提交在精确 PR Head 上完成 CI；
-2. 对该最终 Head 执行独立 Code Review；
-3. Review 为 PASS 且 Head 未变化时，将同一 Head 的成功 CI 收录为正式 Testing；
-4. 恢复有效 common-develop baseline 后，将 overlay 迁移为正式 machine record 并清零 `FND-P1-STAGE-002`；
-5. 只有 Review、Testing 与 machine state migration 全部完成后才执行 Completion 并将 PR #31 标记 Ready for Review；
-6. 未经用户明确授权不得合并 PR #31；不得先行开展被 Stage Completion 阻断的后续 P2/catalog 工作。
+1. 将本轮 machine-state/恢复文档提交到现有 PR #31；
+2. 核验新的 PR Head P0；该运行用于确认 machine/document-only 提交未破坏构建，不重新打开已完成的 Stage Closure machine revision；
+3. CI GREEN 后可将 PR #31 标记 Ready for Review；
+4. 未经用户明确授权不得合并 PR #31；
+5. 本次 Stage Completion 不自动授权后续 P2/catalog 开发。
 
 ## Recovery
 

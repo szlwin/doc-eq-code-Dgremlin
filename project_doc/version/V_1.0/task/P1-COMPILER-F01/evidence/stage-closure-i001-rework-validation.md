@@ -6,7 +6,7 @@
 - PR：`#31`
 - Test-only RED Revision：`e565163c746e5b7e1fb09a7fa47912065d6ea627`
 - Code/Test GREEN Revision：`b603579d75770ca07760522e2df218047f6708ac`
-- Status：`CI_GREEN / FINAL_REVIEW_PENDING`
+- 本次返修验证采集时状态（历史快照，已由本文末尾 Completion 收口结论取代）：`CI_GREEN / FINAL_REVIEW_PENDING`
 
 ## RED evidence
 
@@ -53,6 +53,26 @@ P0 Run `31147778389` 在 Code/Test Revision `b603579d75770ca07760522e2df218047f6
 - `FND-P1-STAGE-001`：CLOSED by Stage Closure e2e regression；
 - `FND-P1-STAGE-003`：CLOSED by physical path/symlink fail-closed + two negative tests；
 - `FND-P1-STAGE-004`：CLOSED by streaming/aggregate byte budget + two negative tests；
-- `FND-P1-STAGE-002`：human-readable repository traceability 已同步；正式 machine record 迁移因 common-develop baseline guard 无效而仍 OPEN/P2，禁止手工伪造。
+- 历史采集点的 `FND-P1-STAGE-002`：当时 human-readable repository traceability 已同步，但正式 machine record 尚未迁移，因此仍为 OPEN/P2；该状态已在后续 canonical machine-state 迁移中关闭，详见本文末尾 Completion 收口记录。
 
 本 Evidence 不替代独立 Code Review，也不自行创建新的 common-develop Attempt/Revision ID。
+
+## Independent Review and canonical machine closure — 2026-08-07
+
+后续独立复核在精确 reviewed Head `75559ecc2e4791eddee166cf3010128130e27078` 上确认：
+
+- `FND-P1-STAGE-003` / `FND-P1-STAGE-004` 保持 CLOSED；没有新的代码级 P0/P1；
+- P0 Run `31148550742`：`core-verify` 与 `mysql-it` 均 SUCCESS；
+- Artifact `8982454725` 的 SHA-256 为 `a1d04b81b259bd83a42a75ee180556748d135de82ae984dd8dd6c4db6a4431ac`，下载后复算一致；
+- Provider 7/7、Compiler 511/511、Starter 13/13、Stage Closure 3/3；T14、intentional failing-test gate、T15 均 PASSED。
+
+正式 common-develop machine-state 已完成迁移：
+
+- Code Review I008：`CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47`，`REV-000077`～`REV-000083` 全部 PASSED；
+- Testing I009：`TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47`，`REV-000084` PASSED；
+- Completion I009：`COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47` PASSED；
+- Current StageOutcome：`SO-P1-COMPILER-F01-CODE_REVIEW-I008`、`SO-P1-COMPILER-F01-TESTING-I009`、`SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009`；
+- `long_task validate`、`risk_detect validate`、`evidence validate`、`acceptance validate` 均 PASSED；
+- Open P0/P1/P2=`0/0/0`；临时 export workflow 已删除；reviewed Head 之后未引入 project_doc 之外的新差异。
+
+因此 `FND-P1-STAGE-002 / P2` 已由 canonical 状态机迁移正式关闭。本文件继续作为外部/历史证据，不替代 machine state。

@@ -604,6 +604,30 @@
     "open_risks": [],
     "started_at": "2026-08-07T07:47:56+00:00",
     "completed_at": "2026-08-07T07:49:22+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009",
+    "phase": "completion_verification",
+    "round": "COMPLETION_VERIFICATION-I009",
+    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009",
+    "iteration_no": 9,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "CompletionVerificationAgent",
+    "input_revisions": {
+      "testing": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+    },
+    "output_revision": "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+    "evidence_ids": [
+      "EVD-000374",
+      "EVD-000375",
+      "EVD-000376",
+      "EVD-000377"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T07:52:13+00:00",
+    "completed_at": "2026-08-07T07:56:10+00:00"
   }
 ]
 ```

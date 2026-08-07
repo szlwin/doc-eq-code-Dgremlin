@@ -1854,6 +1854,110 @@
       "verified_by_agent": "TestEvidenceReviewAgent",
       "verified_at": "2026-08-07T07:49:00+00:00",
       "reason": "Testing I009 Evidence 与当前 Stage Closure revision、真实 GitHub CI 和 artifact 完整绑定，可支持 PASSED 结论。"
+    },
+    {
+      "assertion_id": "ASRT-P1-STAGE-CLOSE-TDD-EXPECTED-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "TDD 当前 revision 的可执行 RED 验证同时证明测试源码可编译、既有 BaseDataContractTest 保持 GREEN 且 context 依赖方向不反向指向 compiler。",
+      "type": "COMMAND_EXIT",
+      "phase": "tdd",
+      "revision": "TDD-P1-T01-R01@4ebeed4dad6a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "expected": 0,
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P1-T01#expected_results/0",
+        "TASK-P1-T01#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000291"
+      ],
+      "verified_by_agent": "ProjectManagerAgent",
+      "verified_at": "2026-08-07T07:55:53+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-STAGE-CLOSE-CODE-REVIEW-EXPECTED-001",
+      "acceptance_id": "AC-P1-COMPILER-005",
+      "statement": "Code Review I008 的正式验证命令与七个独立 Reviewer 结论共同证明 Spec、Engineering、Architecture 要求通过且无开放 P0/P1。",
+      "type": "COMMAND_EXIT",
+      "phase": "code_review",
+      "revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "expected": 0,
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P1-T01-CODE-REVIEW#expected_results/0",
+        "TASK-P1-T01-CODE-REVIEW#expected_results/1",
+        "TASK-P1-T01-CODE-REVIEW#expected_results/2",
+        "TASK-P1-T01-CODE-REVIEW#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000368"
+      ],
+      "verified_by_agent": "ProjectManagerAgent",
+      "verified_at": "2026-08-07T07:55:54+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-STAGE-CLOSE-TESTING-EXPECTED-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "Testing I009 验证命令覆盖 T01 R02 GREEN、依赖方向、标准 P0、故意失败阻断，并明确区分 T01 无数据库变更与整体 mysql-it 成功。",
+      "type": "COMMAND_EXIT",
+      "phase": "testing",
+      "revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "expected": 0,
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING#expected_results/0",
+        "TASK-P1-T01-TESTING#expected_results/1",
+        "TASK-P1-T01-TESTING#expected_results/2",
+        "TASK-P1-T01-TESTING#expected_results/3",
+        "TASK-P1-T01-TESTING#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000373"
+      ],
+      "verified_by_agent": "ProjectManagerAgent",
+      "verified_at": "2026-08-07T07:55:56+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P1-STAGE-CLOSE-COMPLETION-EXPECTED-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "Completion I009 终态命令验证所有阶段/Evidence 可回查、开放 P0/P1 为零、临时 workflow 已清理、reviewed Head P0 全绿，并完成 T01 canonical 状态收口。",
+      "type": "COMMAND_EXIT",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "expected": 0,
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P1-T01-COMPLETION#expected_results/0",
+        "TASK-P1-T01-COMPLETION#expected_results/1",
+        "TASK-P1-T01-COMPLETION#expected_results/2",
+        "TASK-P1-T01-COMPLETION#expected_results/3",
+        "TASK-P1-T01-COMPLETION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000377"
+      ],
+      "verified_by_agent": "ProjectManagerAgent",
+      "verified_at": "2026-08-07T07:55:58+00:00",
+      "reason": ""
     }
   ]
 }
