@@ -13,6 +13,8 @@ import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -31,8 +33,11 @@ import java.util.jar.JarFile;
 public final class ClasspathDocumentSourceProvider
         implements DocumentSourceProvider {
     private static final String CLASSPATH_SCHEME = "classpath";
+    private static final long DEFAULT_MAX_RESOLUTION_BYTES =
+            64L * 1024L * 1024L;
     private final ClassLoader classLoader;
     private final AllowedRoot allowedRoot;
+    private final long maxResolutionBytes;
 
     /**
      * 绑定显式 ClassLoader 和安全根；Provider 不读取全局可变配置。
@@ -40,8 +45,23 @@ public final class ClasspathDocumentSourceProvider
     public ClasspathDocumentSourceProvider(
             ClassLoader classLoader,
             AllowedRoot allowedRoot) {
+        this(classLoader, allowedRoot, DEFAULT_MAX_RESOLUTION_BYTES);
+    }
+
+    /**
+     * 绑定显式读取预算；Provider 必须在构造完整字节数组前执行该门禁。
+     */
+    public ClasspathDocumentSourceProvider(
+            ClassLoader classLoader,
+            AllowedRoot allowedRoot,
+            long maxResolutionBytes) {
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
         this.allowedRoot = Objects.requireNonNull(allowedRoot, "allowedRoot");
+        if (maxResolutionBytes <= 0L) {
+            throw new IllegalArgumentException(
+                    "maxResolutionBytes must be > 0");
+        }
+        this.maxResolutionBytes = maxResolutionBytes;
     }
 
     /** 精确解析一个 classpath 文档。 */
@@ -67,10 +87,15 @@ public final class ClasspathDocumentSourceProvider
                     document(
                             reference.value(),
                             matches.values().iterator().next(),
-                            path),
+                            path,
+                            maxResolutionBytes),
                     Collections.<Diagnostic>emptyList());
         } catch (DuplicateSourceException failure) {
             return failed(reference, "source.classpath.duplicate");
+        } catch (PathEscapeException failure) {
+            return failed(reference, "source.classpath.path-escape");
+        } catch (SourceBudgetExceededException failure) {
+            return failed(reference, "source.classpath.byte-budget");
         } catch (RuntimeException failure) {
             return failed(reference, "source.classpath.invalid");
         } catch (IOException failure) {
@@ -98,17 +123,25 @@ public final class ClasspathDocumentSourceProvider
             List<String> paths = new ArrayList<String>(resources.keySet());
             Collections.sort(paths);
             List<DocumentSource> documents = new ArrayList<DocumentSource>();
+            long remainingBytes = maxResolutionBytes;
             for (String path : paths) {
-                documents.add(document(
+                DocumentSource source = document(
                         CLASSPATH_SCHEME + ":" + path,
                         resources.get(path),
-                        path));
+                        path,
+                        remainingBytes);
+                documents.add(source);
+                remainingBytes -= source.content().length;
             }
             return SourceResolutionResults.resolvedFileSet(
                     documents,
                     Collections.<Diagnostic>emptyList());
         } catch (DuplicateSourceException failure) {
             return failed(reference, "source.classpath.fileset-duplicate");
+        } catch (PathEscapeException failure) {
+            return failed(reference, "source.classpath.fileset-path-escape");
+        } catch (SourceBudgetExceededException failure) {
+            return failed(reference, "source.classpath.fileset-byte-budget");
         } catch (RuntimeException failure) {
             return failed(reference, "source.classpath.fileset-invalid");
         } catch (IOException failure) {
@@ -183,6 +216,10 @@ public final class ClasspathDocumentSourceProvider
             String prefix,
             File directory,
             Map<String, URL> output) throws IOException {
+        Path directoryPath = directory.toPath();
+        if (Files.isSymbolicLink(directoryPath)) {
+            throw new PathEscapeException(directory.toString());
+        }
         if (!directory.isDirectory()) {
             return;
         }
@@ -205,6 +242,9 @@ public final class ClasspathDocumentSourceProvider
             return;
         }
         for (File child : children) {
+            if (Files.isSymbolicLink(child.toPath())) {
+                throw new PathEscapeException(child.toString());
+            }
             if (child.isDirectory()) {
                 walk(child, output);
             } else if (child.isFile()) {
@@ -258,12 +298,16 @@ public final class ClasspathDocumentSourceProvider
         }
     }
 
-    /** 构造不可变 DocumentSource，并以原始字节计算真实 SHA-256。 */
+    /**
+     * 构造不可变 DocumentSource；文件资源先执行真实路径边界，再按预算读取。
+     */
     private DocumentSource document(
             String sourceId,
             URL resource,
-            String path) throws IOException {
-        byte[] bytes = readAll(resource.openStream());
+            String path,
+            long maxBytes) throws IOException {
+        validatePhysicalResource(resource, path);
+        byte[] bytes = readAll(resource.openStream(), maxBytes);
         URI uri = URI.create(sourceId);
         return new DocumentSource(
                 sourceId,
@@ -272,6 +316,88 @@ public final class ClasspathDocumentSourceProvider
                 allowedRoot,
                 bytes,
                 sha256(bytes));
+    }
+
+    /**
+     * file: 资源必须解析到当前 ClasspathRoot 对应 AllowedRoot 的真实后代。
+     *
+     * <p>逻辑 URI 门禁无法识别符号链接，因此这里同时拒绝路径中的任何
+     * symlink，并用 real path 再做一次边界比较；jar entry 不存在此类文件系统
+     * 跳转，继续使用既有逻辑边界。</p>
+     */
+    private void validatePhysicalResource(URL resource, String path)
+            throws IOException {
+        if (!"file".equalsIgnoreCase(resource.getProtocol())) {
+            return;
+        }
+        Path candidate = new File(URI.create(resource.toExternalForm()))
+                .toPath().toAbsolutePath().normalize();
+        Path classpathRoot = classpathRoot(candidate, path);
+        Path physicalAllowedRoot = classpathRoot
+                .resolve(classpathLocation(allowedRoot.uri()))
+                .normalize();
+        if (!physicalAllowedRoot.startsWith(classpathRoot)) {
+            throw new PathEscapeException(candidate.toString());
+        }
+
+        rejectSymbolicLinks(classpathRoot, physicalAllowedRoot);
+        rejectSymbolicLinks(classpathRoot, candidate);
+
+        Path rootReal = classpathRoot.toRealPath();
+        Path allowedReal = physicalAllowedRoot.toRealPath();
+        Path candidateReal = candidate.toRealPath();
+        if (!allowedReal.startsWith(rootReal)
+                || !candidateReal.startsWith(allowedReal)) {
+            throw new PathEscapeException(candidate.toString());
+        }
+    }
+
+    /** 根据逻辑 classpath 路径从物理候选反推 ClasspathRoot。 */
+    private static Path classpathRoot(Path candidate, String path) {
+        Path root = candidate;
+        String normalized = path.replace('\\', '/');
+        String[] segments = normalized.split("/");
+        for (String segment : segments) {
+            if (segment.isEmpty()) {
+                continue;
+            }
+            root = root.getParent();
+            if (root == null) {
+                throw new PathEscapeException(candidate.toString());
+            }
+        }
+        return root.toAbsolutePath().normalize();
+    }
+
+    /** 返回 AllowedRoot 的相对 classpath 位置。 */
+    private static String classpathLocation(URI uri) {
+        String value = uri.isOpaque()
+                ? uri.getSchemeSpecificPart()
+                : uri.getPath();
+        String normalized = value == null ? "" : value.replace('\\', '/');
+        while (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+        return normalized;
+    }
+
+    /**
+     * 从 ClasspathRoot 的第一个后代开始逐段拒绝符号链接，避免逃逸与循环。
+     */
+    private static void rejectSymbolicLinks(Path classpathRoot, Path candidate) {
+        Path normalizedRoot = classpathRoot.toAbsolutePath().normalize();
+        Path normalizedCandidate = candidate.toAbsolutePath().normalize();
+        if (!normalizedCandidate.startsWith(normalizedRoot)) {
+            throw new PathEscapeException(candidate.toString());
+        }
+        Path relative = normalizedRoot.relativize(normalizedCandidate);
+        Path current = normalizedRoot;
+        for (Path segment : relative) {
+            current = current.resolve(segment);
+            if (Files.isSymbolicLink(current)) {
+                throw new PathEscapeException(current.toString());
+            }
+        }
     }
 
     /** 校验 classpath scheme、安全根和规范路径。 */
@@ -320,20 +446,45 @@ public final class ClasspathDocumentSourceProvider
         return left + "/" + relative.replace('\\', '/');
     }
 
-    /** 关闭输入流并读取完整字节。 */
-    private static byte[] readAll(InputStream input) throws IOException {
+    /**
+     * 在流式读取期间执行硬字节上限；超过上限的字节永不写入增长缓冲区。
+     */
+    private static byte[] readAll(InputStream input, long maxBytes)
+            throws IOException {
         try {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             byte[] buffer = new byte[8192];
+            long total = 0L;
             int count;
             while ((count = input.read(buffer)) != -1) {
-                if (count > 0) {
-                    output.write(buffer, 0, count);
+                if (count <= 0) {
+                    continue;
                 }
+                if (total > maxBytes - count) {
+                    throw new SourceBudgetExceededException(maxBytes);
+                }
+                output.write(buffer, 0, count);
+                total += count;
             }
             return output.toByteArray();
         } finally {
             input.close();
+        }
+    }
+
+    /** 文件系统真实路径越界或 symlink 出现时的 fail-closed 标记。 */
+    private static final class PathEscapeException
+            extends IllegalArgumentException {
+        private PathEscapeException(String path) {
+            super("classpath physical path escapes allowed root: " + path);
+        }
+    }
+
+    /** Provider 在完整分配 Source 内容前触发的流式字节预算失败。 */
+    private static final class SourceBudgetExceededException
+            extends IOException {
+        private SourceBudgetExceededException(long maxBytes) {
+            super("classpath source byte budget exceeded: " + maxBytes);
         }
     }
 
