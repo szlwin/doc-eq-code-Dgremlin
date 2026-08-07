@@ -581,6 +581,29 @@
     "open_risks": [],
     "started_at": "2026-08-07T07:34:22+00:00",
     "completed_at": "2026-08-07T07:39:37+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-TESTING-I009",
+    "phase": "testing",
+    "round": "TESTING-I009",
+    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-009",
+    "iteration_no": 9,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TestAgent",
+    "input_revisions": {
+      "code_review": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+    },
+    "output_revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+    "evidence_ids": [
+      "EVD-000371",
+      "EVD-000372",
+      "EVD-000373"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T07:47:56+00:00",
+    "completed_at": "2026-08-07T07:49:22+00:00"
   }
 ]
 ```

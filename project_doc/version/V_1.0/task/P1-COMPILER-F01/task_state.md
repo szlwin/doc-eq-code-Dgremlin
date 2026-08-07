@@ -9,8 +9,8 @@
   "target_id": "P1-COMPILER-F01",
   "version": "V_1.0",
   "task_status": "PARTIAL",
-  "current_phase": "testing",
-  "current_round": "TESTING-I008",
+  "current_phase": "completion_verification",
+  "current_round": "COMPLETION_VERIFICATION-I009",
   "current_agent": "ProjectManagerAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
@@ -83,16 +83,16 @@
       "iteration_no": 8
     },
     "testing": {
-      "revision": "",
-      "status": "STALE",
-      "iteration_id": "ITER-P1-COMPILER-F01-TESTING-008",
-      "iteration_no": 8
+      "revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "status": "PASSED",
+      "iteration_id": "ITER-P1-COMPILER-F01-TESTING-009",
+      "iteration_no": 9
     },
     "completion_verification": {
       "revision": "",
       "status": "STALE",
-      "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-008",
-      "iteration_no": 8
+      "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009",
+      "iteration_no": 9
     }
   },
   "collaboration_reviews": {
@@ -807,14 +807,23 @@
       ]
     },
     "testing": {
-      "artifact_revision": "",
+      "artifact_revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
       "required_reviewers": [
         "TestEvidenceReviewAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {},
-      "status": "PENDING",
-      "current_iteration_id": "ITER-P1-COMPILER-F01-TESTING-008",
+      "independent_conclusions": {
+        "TestEvidenceReviewAgent": {
+          "profile_id": "testing:TestEvidenceReviewAgent",
+          "revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000084",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-07T07:48:59+00:00"
+        }
+      },
+      "status": "PASSED",
+      "current_iteration_id": "ITER-P1-COMPILER-F01-TESTING-009",
       "review_history": [
         {
           "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
@@ -882,12 +891,12 @@
   },
   "review_rounds": {},
   "open_issue_ids": [],
-  "last_gate": "code_review",
+  "last_gate": "testing",
   "failed_attempts": {
     "TASK-P1-DESIGN-001": 1
   },
-  "next_action": "开始 testing 阶段",
-  "next_agent": "TestAgent",
+  "next_action": "开始 completion_verification 阶段",
+  "next_agent": "CompletionVerificationAgent",
   "resume_from": "tdd",
   "max_auto_review_rounds": 3,
   "stale_events": [
@@ -1008,9 +1017,20 @@
       "reason": "Stage Closure 独立返修复核已确认 FND-P1-STAGE-003 与 FND-P1-STAGE-004 在 75559ecc2e4791eddee166cf3010128130e27078 上关闭，且代码级 P0/P1 为 0；但 canonical code_review/testing/completion 仍绑定旧 T01 revision（FND-P1-STAGE-002），因此从 code_review 合法重开并重新绑定本次 Stage Closure Review。",
       "created_at": "2026-08-07T07:29:28+00:00",
       "executed_by_agent": "ProjectManagerAgent"
+    },
+    {
+      "from_phase": "testing",
+      "source_revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "invalidated_phases": [
+        "testing",
+        "completion_verification"
+      ],
+      "reason": "Code Review I008 已完成并绑定 Stage Closure revision；Testing I008 仍携带返修前 Code Review 输入 revision。按状态机重新打开 Testing，使当前测试任务绑定最新 code_review revision，并让 Completion 在后续推进时再绑定新 testing revision。",
+      "created_at": "2026-08-07T07:45:24+00:00",
+      "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-07T07:40:16+00:00",
+  "checkpoint_at": "2026-08-07T07:49:33+00:00",
   "request_intake": {
     "ref": "",
     "digest": "",

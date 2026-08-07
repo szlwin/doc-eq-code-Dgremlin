@@ -2034,6 +2034,56 @@
 | 测试与验证 | 登记 Evidence 5 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"TestAgent","attempt_id":"ATTEMPT-TASK-P1-T01-TESTING-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-TESTING-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000371","EVD-000372","EVD-000373"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"3fd41a940683544bb04fe36c6aa80af70b12247df18fe46b9061359e33f07c32","iteration_id":"ITER-P1-COMPILER-F01-TESTING-009","iteration_no":9,"next_action":"发布 Testing I009 revision，并由 TestEvidenceReviewAgent 独立复核真实 run/head/artifact 绑定。","next_agent":"TestEvidenceReviewAgent","output_revision":"TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47","phase":"testing","record_id":"WR-20260807-074752-TASK-P1-T01-TESTING-PASSED","render_digest":"b442e23ad8fc0f6a5c062f6c361bc8b8665115fd3aae18930a92182eab16ecf6","schema_version":4,"scope":"验证 T01 Context 不可变契约与主干回归","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-TESTING: RUNNING → PASSED","status":"PASSED","summary":"Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-TESTING","task_type":"testing","timestamp":"2026-08-07T07:47:52+00:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260807-074752-TASK-P1-T01-TESTING-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T07:47:52+00:00 |
+| 执行 Agent | TestAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 验证 T01 Context 不可变契约与主干回归 |
+| 阶段 | testing |
+| 任务类型 | testing |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-T01-TESTING: RUNNING → PASSED |
+| Task | TASK-P1-T01-TESTING |
+| Attempt | ATTEMPT-TASK-P1-T01-TESTING-I009-A001 |
+| Iteration | ITER-P1-COMPILER-F01-TESTING-009 / 9 |
+| 输入 Revision | 3fd41a940683544bb04fe36c6aa80af70b12247df18fe46b9061359e33f07c32 |
+| 输出 Revision | TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
+| StageOutcome | 无 |
+| Evidence | EVD-000371、EVD-000372、EVD-000373 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | TestEvidenceReviewAgent |
+| 后续事项 | 发布 Testing I009 revision，并由 TestEvidenceReviewAgent 独立复核真实 run/head/artifact 绑定。 |
+
+### 变更摘要
+
+- Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

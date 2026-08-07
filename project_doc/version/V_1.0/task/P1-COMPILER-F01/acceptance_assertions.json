@@ -1830,6 +1830,30 @@
       "verified_by_agent": "SecurityReviewAgent",
       "verified_at": "2026-08-07T07:39:08+00:00",
       "reason": "Security Review PASS：P1-003 已关闭，未发现新的路径逃逸、循环或其它安全敏感执行面。"
+    },
+    {
+      "assertion_id": "ASRT-P1-STAGE-I009-TEST-EVID-001",
+      "acceptance_id": "AC-P1-COMPILER-006",
+      "statement": "Testing I009 的最终测试证据必须绑定当前 Stage Closure code_review revision、真实 GitHub run/head/artifact，并覆盖成功路径、关键边界、MySQL 集成以及故意失败阻断门禁。",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent"
+      },
+      "source_refs": [
+        "TASK-P1-T01-TESTING#expected_results"
+      ],
+      "evidence_ids": [
+        "EVD-000371",
+        "EVD-000372",
+        "EVD-000373"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-07T07:49:00+00:00",
+      "reason": "Testing I009 Evidence 与当前 Stage Closure revision、真实 GitHub CI 和 artifact 完整绑定，可支持 PASSED 结论。"
     }
   ]
 }
