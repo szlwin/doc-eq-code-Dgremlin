@@ -38,6 +38,7 @@ P0 -> P1 -> P2 -> P3 -> P4 -> P5 -> P6 -> P7 -> P8
 ## 当前状态
 
 - P0：`PASSED`。本地核心验证、MySQL 集成验证、故意失败门禁和静态校验均已有正式 Evidence。
-- P1：`PASSED / MERGED / ARCHIVED`。PR #31 已合并至 `dev_all@7f001bb0d7e529f49344a8b38224bde8e3b9d28e`；合并后 P0 Build Gate `31177897571` SUCCESS；项目级 BM-R05、模块说明、需求列表与业务流程已通过 `wk -d` 归档。
-- P2—P8：`TODO`。
-- 当前默认 Agent：`ProjectManagerAgent`；P2 尚未启动，下一正式动作是 P2 `requirement_confirmation` 初始化/确认，而不是直接开发。
+- P1：`PASSED / MERGED / ARCHIVED`。PR #31 已完成 Stage Closure；P1 `wk -d` 归档 PR #32 已合并至 `dev_all@0403cd43325a6290eebfbbdf48604f252707c147`，合并后 P0 Build Gate `31190480938` SUCCESS。
+- P2：`READY / REQUEST_INTAKE_REGISTERED`。Target `FEATURE-DESC-3361AD2E54FC` 已按 `NEW_REQUIREMENT / STANDARD_FEATURE_FLOW` 初始化；当前停在 `requirement_confirmation` I001，尚未开始阶段 attempt。
+- P3—P8：`TODO`。
+- 当前默认 Agent：`ProjectManagerAgent`；下一执行 Agent：`RequirementConfirmationAgent`。下一正式动作是获取 P2 `requirement_confirmation` task context 并启动该阶段，不得直接进入分析、设计或开发。

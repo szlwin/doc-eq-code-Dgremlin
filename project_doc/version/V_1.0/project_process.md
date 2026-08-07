@@ -4,8 +4,9 @@
 |---:|---|---|---|---|
 | 1 | P1-GOVERNANCE-REPAIR | 项目治理修复 | 环境绑定、计划事实源、全串行策略与 common-develop 状态完整性修复 | PASSED |
 | 2 | P1-COMPILER-F01 | 统一 AST、Registry 与 Compiler 骨架 | Stage Closure 已完成 canonical Code Review I008、Testing I009、Completion I009；PR #31 已合并；P1 已完成 wk -d 增量归档 | PASSED |
+| 3 | FEATURE-DESC-3361AD2E54FC | P2：System 与 RuleView 归属 | Request Intake 已登记并初始化 Target；`requirement_confirmation` I001 已建立但尚未启动 attempt | READY |
 
-> 全流程按 common-develop SEQUENTIAL 策略执行。P1 已完成 PASSED → MERGED → ARCHIVED 闭环；P2 尚未启动，下一业务生命周期只能从 requirement_confirmation 开始。
+> 全流程按 common-develop SEQUENTIAL 策略执行。P1 已完成 PASSED → MERGED → ARCHIVED 闭环；P2 Request Intake / Target 初始化已完成，下一业务生命周期动作只能从 `requirement_confirmation` 开始。
 
 ## 当前生命周期位置
 
@@ -24,4 +25,11 @@ P1-COMPILER-F01
   completion_verification   COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47    PASSED
 ```
 
-PR #31 merge commit：`7f001bb0d7e529f49344a8b38224bde8e3b9d28e`；合并后 dev_all P0 Build Gate `31177897571` SUCCESS；P1 `wk -d` 归档已写入 `project_doc/archive_manifest.yaml`。P1 当前状态为 `PASSED / MERGED / ARCHIVED`；P2 尚未启动。
+```text
+FEATURE-DESC-3361AD2E54FC
+  request_intake            NEW_REQUIREMENT / STANDARD_FEATURE_FLOW          REGISTERED
+  requirement_confirmation REQUIREMENT_CONFIRMATION-I001                     PENDING
+  next_agent                RequirementConfirmationAgent                      READY
+```
+
+PR #31 merge commit：`7f001bb0d7e529f49344a8b38224bde8e3b9d28e`；P1 `wk -d` 归档 PR #32 merge commit：`0403cd43325a6290eebfbbdf48604f252707c147`；归档合并后 dev_all P0 Build Gate `31190480938` SUCCESS。P1 当前状态为 `PASSED / MERGED / ARCHIVED`。P2 Target `FEATURE-DESC-3361AD2E54FC` 已完成 Request Intake / 初始化，task_status=`READY`、current_phase=`requirement_confirmation`、next_agent=`RequirementConfirmationAgent`；尚未启动 requirement_confirmation attempt。
