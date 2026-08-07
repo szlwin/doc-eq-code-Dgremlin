@@ -5,8 +5,10 @@
 - 状态：`STAGE_COMPLETED / MACHINE_SYNCED`
 - Base：`dev_all@81aa3b40129d10a08b3f1a20ba6312b4015b9079`
 - Branch：`rework/p1-stage-closure-20260807`
-- PR：`#31 / OPEN / NOT_MERGED`
+- PR：`#31 / READY_FOR_REVIEW / OPEN / NOT_MERGED`
 - Reviewed Head：`75559ecc2e4791eddee166cf3010128130e27078`
+- Stage Closure Published Head / Fact Sync Source Head：`06e70cbb9fd81f9e7e96c840f29ffc7e67ce53b6`
+- Final P0 Run：`31161560840` — SUCCESS
 - Reviewed P0 Run：`31148550742` — SUCCESS
 - Code Review：`I008 / CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47 / PASSED`
 - Testing：`I009 / TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47 / PASSED`
@@ -42,7 +44,7 @@
 
 ## Resume order
 
-Stage Closure 本身无需继续返修。若恢复本工作，仅执行 PR #31 的发布后 CI/Review 元数据核对；CI GREEN 后可保持/设置 Ready for Review。未经用户明确授权不得 merge，也不得直接进入被本任务之外另行规划的 P2/catalog 开发。
+Stage Closure 与发布后 Fact Sync 均已完成。若恢复本工作，仅确认 PR #31 的人工 Review / Merge 决策；最终 P0 已 GREEN，PR 已 Ready for Review。未经用户明确授权不得 merge，也不得直接进入被本任务之外另行规划的 P2/catalog 开发。
 
 ## Recovery files
 

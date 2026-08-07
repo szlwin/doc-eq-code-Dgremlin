@@ -102,3 +102,13 @@ PR #31: OPEN / NOT_MERGED
 ```
 
 本记录已完成 Stage Completion。最终 machine-state 提交到 PR #31 后，GitHub P0 仅作为发布后确认；若该 CI 仍为 GREEN，可将 PR 从 Draft 标记为 Ready for Review。未经用户明确授权不得合并 PR #31，也不得把本次收口自动解释为后续 P2/catalog 开发授权。
+
+
+## 8. 发布后确认
+
+- Stage Closure Published Head：`06e70cbb9fd81f9e7e96c840f29ffc7e67ce53b6`；
+- Final P0 Build Gate：`31161560840` — SUCCESS；
+- `core-verify` / `mysql-it`：SUCCESS / SUCCESS；
+- PR #31：Ready for Review / Open / Not merged；
+- 发布后 Fact Sync 只同步版本级/人工投影视图，不重开已 PASSED 的 Code Review I008、Testing I009、Completion I009；
+- 下一动作仅为人工 Review / Merge 决策；未经用户明确授权不得 merge，也不得进入 P2/catalog 开发。
