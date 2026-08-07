@@ -1,6 +1,9 @@
 name: Temporary P1 Stage Machine Export
 
 on:
+  push:
+    branches:
+      - rework/p1-stage-closure-20260807
   pull_request:
     branches:
       - dev_all
