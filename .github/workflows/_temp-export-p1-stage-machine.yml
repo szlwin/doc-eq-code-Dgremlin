@@ -21,10 +21,13 @@ jobs:
     steps:
       - name: Checkout PR source
         uses: actions/checkout@v4
-      - name: Upload project_doc snapshot
+      - name: Upload repository snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: p1-stage-machine-source
-          path: project_doc
+          name: p1-stage-repository-source
+          path: |
+            .
+            !.git/**
+            !**/target/**
           if-no-files-found: error
           retention-days: 1
