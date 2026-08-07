@@ -79,12 +79,116 @@ class ClasspathDocumentSourceProviderTest {
         }
     }
 
+    /**
+     * AllowedRoot 内的符号链接不得把单文件解析带到 classpath 根之外。
+     */
+    @Test
+    void rejectsSymlinkEscapeFromAllowedRoot(
+            @TempDir Path directory) throws Exception {
+        Path root = Files.createDirectory(directory.resolve("root"));
+        Path outside = Files.createDirectory(directory.resolve("outside"));
+        write(outside, "secret.xml", "<data name=\"secret\"/>");
+        Files.createDirectories(root.resolve("stage"));
+        Files.createSymbolicLink(
+                root.resolve("stage/escape.xml"),
+                outside.resolve("secret.xml"));
+        URLClassLoader loader = loader(root);
+        try {
+            SourceResolutionResult result = provider(loader).resolve(
+                    new SourceReference("classpath:stage/escape.xml"),
+                    context());
+
+            assertEquals(SourceResolutionStatus.FAILED, result.status());
+            assertTrue(result.diagnostics().get(0).messageKey()
+                    .contains("path-escape"));
+        } finally {
+            loader.close();
+        }
+    }
+
+    /**
+     * 文件集扫描遇到目录符号链接环时必须 fail-closed，且不得递归跟随。
+     */
+    @Test
+    void rejectsSymlinkCycleInFileSet(
+            @TempDir Path directory) throws Exception {
+        Path root = Files.createDirectory(directory.resolve("root"));
+        write(root, "stage/item.xml", "<data name=\"item\"/>");
+        Files.createSymbolicLink(
+                root.resolve("stage/loop"),
+                root.resolve("stage"));
+        URLClassLoader loader = loader(root);
+        try {
+            SourceResolutionResult result = provider(loader).resolveFileSet(
+                    new SourceReference("classpath:stage/"),
+                    context());
+
+            assertEquals(SourceResolutionStatus.FAILED, result.status());
+            assertTrue(result.diagnostics().get(0).messageKey()
+                    .contains("path-escape"));
+        } finally {
+            loader.close();
+        }
+    }
+
+    /**
+     * 单个 Source 超过读取上限时必须由 Provider 在构造字节数组前拒绝。
+     */
+    @Test
+    void rejectsOversizedSingleSourceBeforeFullRead(
+            @TempDir Path directory) throws Exception {
+        write(directory, "stage/item.xml",
+                "<data name=\"this-source-is-too-large\"/>");
+        URLClassLoader loader = loader(directory);
+        try {
+            SourceResolutionResult result = provider(loader, 8L).resolve(
+                    new SourceReference("classpath:stage/item.xml"),
+                    context());
+
+            assertEquals(SourceResolutionStatus.FAILED, result.status());
+            assertTrue(result.diagnostics().get(0).messageKey()
+                    .contains("byte-budget"));
+        } finally {
+            loader.close();
+        }
+    }
+
+    /**
+     * 同一次文件集解析的累计字节不得超过 SourcePolicy 对应读取上限。
+     */
+    @Test
+    void rejectsFileSetAggregateByteBudget(
+            @TempDir Path directory) throws Exception {
+        write(directory, "stage/a.xml", "<a/>");
+        write(directory, "stage/b.xml", "<bbbb/>");
+        URLClassLoader loader = loader(directory);
+        try {
+            SourceResolutionResult result = provider(loader, 8L).resolveFileSet(
+                    new SourceReference("classpath:stage/"),
+                    context());
+
+            assertEquals(SourceResolutionStatus.FAILED, result.status());
+            assertTrue(result.diagnostics().get(0).messageKey()
+                    .contains("byte-budget"));
+        } finally {
+            loader.close();
+        }
+    }
+
     /** 创建只允许 stage 根的生产 Provider。 */
     private static ClasspathDocumentSourceProvider provider(
             ClassLoader loader) {
+        return provider(loader, 64L * 1024L * 1024L);
+    }
+
+    /** 创建带显式读取预算的生产 Provider。 */
+    private static ClasspathDocumentSourceProvider provider(
+            ClassLoader loader,
+            long maxResolutionBytes) {
         return new ClasspathDocumentSourceProvider(
                 loader,
-                new AllowedRoot(URI.create("classpath:stage/")));
+                new AllowedRoot(URI.create("classpath:stage/")),
+                maxResolutionBytes);
     }
 
     /** 创建不继承应用资源的隔离 URLClassLoader。 */
