@@ -1,52 +1,55 @@
 # P1-COMPILER-F01 恢复上下文
 
-- 当前逻辑任务：`TASK-P1-T15 / I003` 已完成
-- 当前有效 Completion：`COMPLETION-P1-T15-R03@66fa5db14f7b`
-- 状态：`COMPLETED / PASSED`
-- Base：`dev_all@665dd364975505bb01263885a25b3bb1be767d2b`
-- Dependency：`COMPLETION-P1-T14-R03@37fb814b39c5`
-- Branch：`feature/p1-t15-retire-declaration-20260806-1354`
-- PR：`#30 / OPEN / READY_FOR_REVIEW / NOT_MERGED`
-- TDD：`TDD-P1-T15-R01@bff67b86fb55` — VALID
-- Development：`DEV-P1-T15-R03@66fa5db14f7b`
-- Code Review：`CODEREVIEW-P1-T15-R03@66fa5db14f7b`
-- Testing：`TESTING-P1-T15-R03@66fa5db14f7b`
+- 当前逻辑任务：`TASK-P1-STAGE-CLOSURE / I001`（外部恢复记录）
+- Canonical Target：`P1-COMPILER-F01`
+- 状态：`STAGE_COMPLETED / MACHINE_SYNCED`
+- Base：`dev_all@81aa3b40129d10a08b3f1a20ba6312b4015b9079`
+- Branch：`rework/p1-stage-closure-20260807`
+- PR：`#31 / READY_FOR_REVIEW / OPEN / NOT_MERGED`
+- Reviewed Head：`75559ecc2e4791eddee166cf3010128130e27078`
+- Stage Closure Published Head / Fact Sync Source Head：`06e70cbb9fd81f9e7e96c840f29ffc7e67ce53b6`
+- Final P0 Run：`31161560840` — SUCCESS
+- Reviewed P0 Run：`31148550742` — SUCCESS
+- Code Review：`I008 / CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47 / PASSED`
+- Testing：`I009 / TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47 / PASSED`
+- Completion：`I009 / COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47 / PASSED`
 - Open P0/P1/P2：`0 / 0 / 0`
 
-## Superseded but retained
+## Retained history
 
-- `CODEREVIEW-P1-T15-R02@7c901332b8e5`；
-- `TESTING-P1-T15-R02@7c901332b8e5`；
-- `COMPLETION-P1-T15-R02@7c901332b8e5`。
-
-失效原因：`FND-P1-T15-I002-003` 证明 R02 的 MySQL 结论只覆盖环境/Schema，没有业务执行测试。R02 的生产退役实现、retirement gate、TDD 与架构结论不失效。
+- PR #30 / T15 I003 的 Development、Review、Testing、Completion 历史全部保留；
+- 旧 T01 Completion `COMPLETION-P1-T01-R01@7be02cd9af4c` 保留在历史中，不再作为 Stage Closure 当前 Completion；
+- Stage Closure 的外部 overlay I001 保留用于说明 baseline 不可用时期的恢复边界，但已经被 canonical I008/I009 machine history supersede；
+- `reopen-phase` stale/reopen 历史与旧 Review/Outcome 均保留，没有手工覆盖 machine JSON。
 
 ## Current contract
 
-- Starter、Projection 和 Declaration Runtime 退役合同保持 I001/I002 实现；
-- `dec-demo` 增加测试专用 MySQL 装配，不修改生产源码；
-- 必需业务场景为 `RuleTests`、`DirectoryTest`、`OrderTest`；
-- 三个场景必须执行真实 `ModelContainer`/`DirectoryContainer` 和 JDBC 结果断言；
-- Surefire 必需 suite、测试计数和数据库执行标记全部 fail-closed；
-- `TestOrderBusiness` 不恢复，禁止 Declaration Runtime 回流。
+- Stage Starter 继续通过生产 `DocumentSourceProvider`、XML/YAML Frontend、固定十阶段 Pipeline 与显式 CAS Publisher 完成 compile-and-publish；
+- 第二次失败编译不得发布、不得污染此前成功 Context；
+- exploded-directory classpath 资源不得通过 symlink 逃逸 AllowedRoot 或构造目录循环；
+- Provider 必须在完整读取前执行硬字节预算，文件集必须执行累计预算；
+- `CompilerBootstrap.sourceBudgets(... maxTotalBytes)` 同时约束 Provider 与 `SourcePolicy`；
+- T15 Declaration Runtime retirement 合同继续有效；
+- `FND-P1-STAGE-001/002/003/004` 均 CLOSED。
 
-## Validation
+## Final evidence
 
-- Code/Test Revision：`66fa5db14f7b0ead00e5d706acd164e1a9f4ff62`
-- Run / Attempt：`31119253989 / 3` — SUCCESS
-- Core Artifact：`8974119611`；SHA-256：`929a748eea9b70e5b5e2ac15e5501b204f8149c5a62d099c67d85870d85d0bb7`
-- MySQL Artifact：`8974141953`；SHA-256：`6a79f5c2140225fcaa4ac7930cd305f959c96b756ec3565f39058a8ea511b7ce`
-- Core：112 XML；639 total；638 normal passed；1 intentional failure；0 errors/skipped
-- MySQL：3/3 passed；3/3 markers；0 failures/errors/skipped
-- Database：order/order-detail/pay/pay-detail/product/user=`1/1/1/1/1/3`
+- Code Review：`REV-000077`～`REV-000083` 全部 PASSED；
+- Testing Evidence Review：`REV-000084` PASSED；
+- P0 Run：`31148550742`，`core-verify` / `mysql-it` SUCCESS；
+- Artifact：`8982454725`，SHA-256 `a1d04b81b259bd83a42a75ee180556748d135de82ae984dd8dd6c4db6a4431ac`；
+- Provider 7/7、Compiler 511/511、Starter 13/13、Stage Closure 3/3；
+- `long_task` / `risk` / `evidence` / `acceptance` 均 PASSED；
+- 临时 export workflow 已删除，reviewed Head 之后没有新增生产 Java 变化。
+
+## Resume order
+
+Stage Closure 与发布后 Fact Sync 均已完成。若恢复本工作，仅确认 PR #31 的人工 Review / Merge 决策；最终 P0 已 GREEN，PR 已 Ready for Review。未经用户明确授权不得 merge，也不得直接进入被本任务之外另行规划的 P2/catalog 开发。
 
 ## Recovery files
 
-- Task：`project_doc/version/V_1.0/task/P1-COMPILER-F01/TASK-P1-T15.md`
-- Development：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/development-p1-t15-r03.md`
-- Review：`project_doc/version/V_1.0/task/P1-COMPILER-F01/review/review-p1-t15-r03.md`
-- Testing：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/testing-p1-t15-r03.md`
-- Completion：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t15-r03/completion-report.json`
-- Revision Lock：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/revision-lock-p1-t15-r03.md`
-
-仅在用户明确授权后合并 PR #30。
+- Task：`project_doc/version/V_1.0/task/P1-COMPILER-F01/TASK-P1-STAGE-CLOSURE.md`
+- Validation：`project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/stage-closure-i001-rework-validation.md`
+- State：`project_doc/version/V_1.0/task/P1-COMPILER-F01/task_state.md`
+- Outcomes：`project_doc/version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.md`
+- Handoff：`project_doc/version/V_1.0/task/P1-COMPILER-F01/handoff.md`

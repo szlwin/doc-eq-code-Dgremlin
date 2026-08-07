@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "test_report_manifest",
+  "task_id": "TASK-P1-T01-TESTING",
+  "revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+  "captured_at": "2026-08-07T07:46:50+00:00",
+  "workflow": {
+    "run_id": 31148550742,
+    "head_sha": "75559ecc2e4791eddee166cf3010128130e27078",
+    "merge_sha": "d3319c5b9224b57fa4b174fc6741fa30d6c7d427",
+    "core_verify": "PASSED",
+    "mysql_it": "PASSED",
+    "artifact_id": 8982454725,
+    "artifact_digest": "sha256:a1d04b81b259bd83a42a75ee180556748d135de82ae984dd8dd6c4db6a4431ac"
+  },
+  "suites": [
+    {
+      "suite": "dec.core.compiler.source.ClasspathDocumentSourceProviderTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "dec-core-compiler aggregate",
+      "tests": 511,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "dec-core-starter aggregate",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "dec.core.starter.CompilerBootstrapStageClosureTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "gates": {
+    "t14_provenance_mutation_gate": "PASSED",
+    "intentional_failing_test_gate": "PASSED",
+    "t15_declaration_runtime_retirement": "PASSED"
+  },
+  "artifact_local_verification": {
+    "path": "/mnt/data/surefire-and-jacoco-reports.zip",
+    "size_bytes": 36873736,
+    "sha256": "a1d04b81b259bd83a42a75ee180556748d135de82ae984dd8dd6c4db6a4431ac",
+    "digest_matches_github": true
+  },
+  "input_code_review_revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+  "claim_boundary": "Testing I009 re-validates the Stage Closure reviewed candidate at 75559ecc; later commits in this turn are machine-state/export-only and do not alter reviewed production Java."
+}

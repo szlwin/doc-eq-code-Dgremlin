@@ -735,10 +735,10 @@
   {
     "id": "TASK-P1-T01-CODE-REVIEW",
     "logical_task_id": "LOGICAL-TASK-P1-T01-CODE-REVIEW",
-    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
-    "iteration_no": 7,
-    "supersedes_iteration_id": "",
-    "revision_reason": "DEV-P1-T01-R01 已通过 Development/TDD Review，进入三项独立最终代码 Review。",
+    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-008",
+    "iteration_no": 8,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
+    "revision_reason": "Stage Closure 独立返修复核已确认 FND-P1-STAGE-003 与 FND-P1-STAGE-004 在 75559ecc2e4791eddee166cf3010128130e27078 上关闭，且代码级 P0/P1 为 0；但 canonical code_review/testing/completion 仍绑定旧 T01 revision（FND-P1-STAGE-002），因此从 code_review 合法重开并重新绑定本次 Stage Closure Review。",
     "title": "审查 T01 Context 中立不可变公共契约",
     "objective": "独立验证 DEV-P1-T01-R01 对 DESIGN-R05/TDD-R01 的符合性、工程质量、架构边界和测试可靠性。",
     "phase": "code_review",
@@ -812,12 +812,13 @@
     ],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "CODEREVIEW-P1-T01-R01@488bc81150f7",
+    "output_revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
     "validation_evidence_ids": [
-      "EVD-000321",
-      "EVD-000322",
-      "EVD-000323",
-      "EVD-000324"
+      "EVD-000363",
+      "EVD-000364",
+      "EVD-000366",
+      "EVD-000367",
+      "EVD-000368"
     ],
     "feature_id": "P1-COMPILER-F01"
   },
@@ -825,10 +826,10 @@
     "id": "TASK-P1-T01-TESTING",
     "logical_task_id": "LOGICAL-TASK-P1-T01-TESTING",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
-    "iteration_no": 7,
-    "supersedes_iteration_id": "",
-    "revision_reason": "CODEREVIEW-P1-T01-R01 已由七项独立 Review 通过，进入真实源码树的标准 P0 与专项 GREEN 验证。",
+    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-TESTING-008",
+    "revision_reason": "Code Review I008 已完成并绑定 Stage Closure revision；Testing I008 仍携带返修前 Code Review 输入 revision。按状态机重新打开 Testing，使当前测试任务绑定最新 code_review revision，并让 Completion 在后续推进时再绑定新 testing revision。",
     "title": "验证 T01 Context 不可变契约与主干回归",
     "objective": "在真实 PR 源码树上验证 T01 合同、行为、模块回归、依赖方向、标准 P0 和故意失败阻断门禁。",
     "phase": "testing",
@@ -841,8 +842,7 @@
       "TestEvidenceReviewAgent"
     ],
     "input_revisions": {
-      "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "development": "DEV-P1-T01-R01@de1adfd37c9b"
+      "code_review": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47"
     },
     "allowed_files": [
       "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
@@ -891,21 +891,21 @@
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "TESTING-P1-T01-R01@2c618f7c32a6",
+    "output_revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
     "validation_evidence_ids": [
-      "EVD-000330",
-      "EVD-000331",
-      "EVD-000332"
+      "EVD-000371",
+      "EVD-000372",
+      "EVD-000373"
     ]
   },
   {
     "id": "TASK-P1-T01-COMPLETION",
     "logical_task_id": "LOGICAL-TASK-P1-T01-COMPLETION",
     "feature_id": "P1-COMPILER-F01",
-    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
-    "iteration_no": 7,
-    "supersedes_iteration_id": "",
-    "revision_reason": "TESTING-P1-T01-R01 已通过 TestEvidenceReviewAgent，进入 T01 全流程完成验证和 PR 清理。",
+    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-008",
+    "revision_reason": "Code Review I008 已完成并绑定 Stage Closure revision；Testing I008 仍携带返修前 Code Review 输入 revision。按状态机重新打开 Testing，使当前测试任务绑定最新 code_review revision，并让 Completion 在后续推进时再绑定新 testing revision。",
     "title": "验证 TASK-P1-T01 全流程完成与可合并性",
     "objective": "确认 TDD、架构骨架、具体实现、Code Review、Testing、Evidence、Git checkpoint 与最终干净 PR 全部闭环。",
     "phase": "completion_verification",
@@ -916,10 +916,7 @@
     "owner_agent": "CompletionVerificationAgent",
     "reviewer_agents": [],
     "input_revisions": {
-      "tdd": "TDD-P1-T01-R01@4ebeed4dad6a",
-      "development": "DEV-P1-T01-R01@de1adfd37c9b",
-      "code_review": "CODEREVIEW-P1-T01-R01@488bc81150f7",
-      "testing": "TESTING-P1-T01-R01@2c618f7c32a6"
+      "testing": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47"
     },
     "allowed_files": [
       "version/V_1.0/task/P1-COMPILER-F01/task_plan.md",
@@ -970,12 +967,12 @@
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "COMPLETION-P1-T01-R01@7be02cd9af4c",
+    "output_revision": "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47",
     "validation_evidence_ids": [
-      "EVD-000333",
-      "EVD-000334",
-      "EVD-000335",
-      "EVD-000336"
+      "EVD-000374",
+      "EVD-000375",
+      "EVD-000376",
+      "EVD-000377"
     ]
   }
 ]

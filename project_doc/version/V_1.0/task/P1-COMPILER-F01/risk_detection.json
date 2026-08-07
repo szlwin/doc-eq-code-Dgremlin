@@ -37,10 +37,10 @@
     "dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java",
     "dec-core-context/src/test/java/dec/core/context/tdd/ContextContractBehaviorTest.java"
   ],
-  "input_digest": "18f6d134543f795c02dcf8e0cedde8bee376886281e39308cb48156979a2e49f",
+  "input_digest": "c2bb601da519243c1c59608b0ae83fe3460e42cb28dd76eb5e04c7f2609bf2dd",
   "status": "SCANNED",
   "scanned_by_agent": "ProjectManagerAgent",
-  "scanned_at": "2026-08-01T08:23:28+00:00",
+  "scanned_at": "2026-08-07T07:22:02+00:00",
   "detections": [
     {
       "detection_id": "DET-20E381C430AF",
@@ -49,7 +49,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000305"
+        "EVD-000344"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -62,7 +62,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000309"
+        "EVD-000349"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -75,7 +75,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000312"
+        "EVD-000352"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -88,7 +88,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000303"
+        "EVD-000342"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -101,7 +101,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000318"
+        "EVD-000358"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -114,7 +114,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000310"
+        "EVD-000350"
       ],
       "status": "DETECTED",
       "reason": "content:for (",
@@ -127,7 +127,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000318"
+        "EVD-000358"
       ],
       "status": "DETECTED",
       "reason": "content:for (",
@@ -140,7 +140,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000317"
+        "EVD-000357"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -153,7 +153,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000300"
+        "EVD-000339"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -166,7 +166,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000301"
+        "EVD-000340"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -179,10 +179,23 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000315"
+        "EVD-000355"
       ],
       "status": "WAIVED",
       "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-521DD49002FF",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000341"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
       "source": "DETECTOR"
     },
     {
@@ -192,7 +205,7 @@
       "confidence": 8,
       "required_reviewer": "ImpactAnalysisReviewAgent",
       "evidence_ids": [
-        "EVD-000307"
+        "EVD-000346"
       ],
       "status": "DETECTED",
       "reason": "content:cancel",
@@ -205,7 +218,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000302"
+        "EVD-000341"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -218,7 +231,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000304"
+        "EVD-000343"
       ],
       "status": "DETECTED",
       "reason": "content:permission",
@@ -231,7 +244,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000299"
+        "EVD-000338"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -244,7 +257,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000310"
+        "EVD-000350"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -257,7 +270,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000309"
+        "EVD-000349"
       ],
       "status": "DETECTED",
       "reason": "content:for (",
@@ -270,7 +283,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000316"
+        "EVD-000356"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -283,7 +296,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000308"
+        "EVD-000347"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -296,7 +309,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000319"
+        "EVD-000359"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -309,7 +322,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000298"
+        "EVD-000337"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -322,7 +335,20 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000314"
+        "EVD-000354"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-E75DA6841B70",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000348"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -335,7 +361,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000313"
+        "EVD-000353"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -348,7 +374,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000311"
+        "EVD-000351"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -361,7 +387,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000306"
+        "EVD-000345"
       ],
       "status": "WAIVED",
       "reason": "content:port",
@@ -374,7 +400,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000301"
+        "EVD-000340"
       ],
       "status": "DETECTED",
       "reason": "content:for (",
@@ -387,7 +413,7 @@
       "confidence": 9,
       "required_reviewer": "ImpactAnalysisReviewAgent",
       "evidence_ids": [
-        "EVD-000320"
+        "EVD-000360"
       ],
       "status": "DETECTED",
       "reason": "traceability impact_required=true: TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P1-COMPILER-005, TR-P1-COMPILER-006, TR-P1-COMPILER-007, TR-P1-COMPILER-008, TR-P1-COMPILER-009",
@@ -400,7 +426,7 @@
       "confidence": 9,
       "required_reviewer": "CrossModuleIntegrationReviewAgent",
       "evidence_ids": [
-        "EVD-000320"
+        "EVD-000360"
       ],
       "status": "DETECTED",
       "reason": "traceability cross_module_implementation_required=true: TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P1-COMPILER-005, TR-P1-COMPILER-006, TR-P1-COMPILER-007, TR-P1-COMPILER-008, TR-P1-COMPILER-009",
@@ -667,6 +693,19 @@
         "EVD-000329"
       ],
       "approved_at": "2026-08-01T08:38:41+00:00"
+    },
+    {
+      "detection_id": "DET-E75DA6841B70",
+      "reason": "RISK-ARCH-001 的 content:port 命中来自 Java 关键字 import 的词法子串；经 ProjectManagerAgent 与 ArchitectureReviewAgent 双重复核，不存在网络端口、架构 Port、模块边界变化或新的跨模块运行时依赖。此次扫描仅用于刷新既有 development revision 的风险输入摘要。",
+      "approved_by": [
+        "ProjectManagerAgent",
+        "ArchitectureReviewAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000361",
+        "EVD-000362"
+      ],
+      "approved_at": "2026-08-07T07:26:41+00:00"
     }
   ]
 }

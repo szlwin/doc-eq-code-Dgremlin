@@ -492,8 +492,8 @@
     "round": "CODE_REVIEW-I007",
     "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-007",
     "iteration_no": 7,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-CODE-REVIEW-008",
     "status": "PASSED",
     "produced_by_agent": "ProjectManagerAgent",
     "input_revisions": {
@@ -516,8 +516,8 @@
     "round": "TESTING-I007",
     "iteration_id": "ITER-P1-COMPILER-F01-TESTING-007",
     "iteration_no": 7,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-TESTING-008",
     "status": "PASSED",
     "produced_by_agent": "TestAgent",
     "input_revisions": {
@@ -539,8 +539,8 @@
     "round": "COMPLETION_VERIFICATION-I007",
     "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007",
     "iteration_no": 7,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-008",
     "status": "PASSED",
     "produced_by_agent": "CompletionVerificationAgent",
     "input_revisions": {
@@ -556,6 +556,78 @@
     "open_risks": [],
     "started_at": "2026-08-01T12:07:31+00:00",
     "completed_at": "2026-08-01T12:14:03+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-CODE_REVIEW-I008",
+    "phase": "code_review",
+    "round": "CODE_REVIEW-I008",
+    "iteration_id": "ITER-P1-COMPILER-F01-CODE-REVIEW-008",
+    "iteration_no": 8,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "ProjectManagerAgent",
+    "input_revisions": {
+      "development": "DEV-P1-T01-R01@de1adfd37c9b"
+    },
+    "output_revision": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+    "evidence_ids": [
+      "EVD-000363",
+      "EVD-000364",
+      "EVD-000366",
+      "EVD-000367",
+      "EVD-000368"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T07:34:22+00:00",
+    "completed_at": "2026-08-07T07:39:37+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-TESTING-I009",
+    "phase": "testing",
+    "round": "TESTING-I009",
+    "iteration_id": "ITER-P1-COMPILER-F01-TESTING-009",
+    "iteration_no": 9,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TestAgent",
+    "input_revisions": {
+      "code_review": "CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+    },
+    "output_revision": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+    "evidence_ids": [
+      "EVD-000371",
+      "EVD-000372",
+      "EVD-000373"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T07:47:56+00:00",
+    "completed_at": "2026-08-07T07:49:22+00:00"
+  },
+  {
+    "id": "SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009",
+    "phase": "completion_verification",
+    "round": "COMPLETION_VERIFICATION-I009",
+    "iteration_id": "ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009",
+    "iteration_no": 9,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "CompletionVerificationAgent",
+    "input_revisions": {
+      "testing": "TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47"
+    },
+    "output_revision": "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+    "evidence_ids": [
+      "EVD-000374",
+      "EVD-000375",
+      "EVD-000376",
+      "EVD-000377"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T07:52:13+00:00",
+    "completed_at": "2026-08-07T07:56:10+00:00"
   }
 ]
 ```

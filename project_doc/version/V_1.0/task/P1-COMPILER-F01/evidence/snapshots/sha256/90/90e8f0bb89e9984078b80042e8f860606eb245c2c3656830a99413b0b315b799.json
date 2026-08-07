@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "PASSED",
+  "reviewed_head_sha": "75559ecc2e4791eddee166cf3010128130e27078",
+  "checks": [
+    {
+      "name": "git-reviewed-head-present",
+      "result": "PASSED",
+      "detail": "75559ecc2e4791eddee166cf3010128130e27078"
+    },
+    {
+      "name": "reviewed-head-ancestor-of-current-workspace",
+      "result": "PASSED",
+      "detail": "75559ecc is ancestor of local reconstructed branch head"
+    },
+    {
+      "name": "source-provider-override-format",
+      "result": "PASSED",
+      "detail": "@Override annotations are on separate lines"
+    },
+    {
+      "name": "machine-state-pre-reopen-validation",
+      "result": "PASSED",
+      "detail": "common-develop long_task validate OK after risk digest refresh and lexical false-positive waiver"
+    }
+  ],
+  "notes": [
+    "本轮未修改生产 Java；仅生成机器状态与审计 Evidence。"
+  ]
+}

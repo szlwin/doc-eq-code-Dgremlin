@@ -1984,6 +1984,264 @@
 | 测试与验证 | 登记 Evidence 4 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P1-T01-CODE-REVIEW-I008-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-CODE-REVIEW-I008-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000363","EVD-000364","EVD-000366","EVD-000367","EVD-000368"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"9d9dbf8991355aa4d1ac1a44635e17b4540249791bf43a322a2e2dcea677a142","iteration_id":"ITER-P1-COMPILER-F01-CODE-REVIEW-008","iteration_no":8,"next_action":"发布 Code Review I008 artifact，并由 Spec/Engineering/Architecture 及四个风险 Reviewer 独立确认。","next_agent":"ProjectManagerAgent","output_revision":"CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47","phase":"code_review","record_id":"WR-20260807-073418-TASK-P1-T01-CODE-REVIEW-PASSED","render_digest":"d38767c6b347c0b1773202e6150d099da6a55e05ee641623745debde14874205","schema_version":4,"scope":"审查 T01 Context 中立不可变公共契约","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-CODE-REVIEW: RUNNING → PASSED","status":"PASSED","summary":"Implementation Rework Review PASS：FND-P1-STAGE-003/004 保持 CLOSED，代码级 P0/P1=0；reviewed Head 75559ecc 的 P0 CI 与 surefire artifact 已核验。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-CODE-REVIEW","task_type":"code_review","timestamp":"2026-08-07T07:34:18+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260807-073418-TASK-P1-T01-CODE-REVIEW-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T07:34:18+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 审查 T01 Context 中立不可变公共契约 |
+| 阶段 | code_review |
+| 任务类型 | code_review |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Implementation Rework Review PASS：FND-P1-STAGE-003/004 保持 CLOSED，代码级 P0/P1=0；reviewed Head 75559ecc 的 P0 CI 与 surefire artifact 已核验。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-T01-CODE-REVIEW: RUNNING → PASSED |
+| Task | TASK-P1-T01-CODE-REVIEW |
+| Attempt | ATTEMPT-TASK-P1-T01-CODE-REVIEW-I008-A001 |
+| Iteration | ITER-P1-COMPILER-F01-CODE-REVIEW-008 / 8 |
+| 输入 Revision | 9d9dbf8991355aa4d1ac1a44635e17b4540249791bf43a322a2e2dcea677a142 |
+| 输出 Revision | CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
+| StageOutcome | 无 |
+| Evidence | EVD-000363、EVD-000364、EVD-000366、EVD-000367、EVD-000368 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 发布 Code Review I008 artifact，并由 Spec/Engineering/Architecture 及四个风险 Reviewer 独立确认。 |
+
+### 变更摘要
+
+- Implementation Rework Review PASS：FND-P1-STAGE-003/004 保持 CLOSED，代码级 P0/P1=0；reviewed Head 75559ecc 的 P0 CI 与 surefire artifact 已核验。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"TestAgent","attempt_id":"ATTEMPT-TASK-P1-T01-TESTING-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-TESTING-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000371","EVD-000372","EVD-000373"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"3fd41a940683544bb04fe36c6aa80af70b12247df18fe46b9061359e33f07c32","iteration_id":"ITER-P1-COMPILER-F01-TESTING-009","iteration_no":9,"next_action":"发布 Testing I009 revision，并由 TestEvidenceReviewAgent 独立复核真实 run/head/artifact 绑定。","next_agent":"TestEvidenceReviewAgent","output_revision":"TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47","phase":"testing","record_id":"WR-20260807-074752-TASK-P1-T01-TESTING-PASSED","render_digest":"b442e23ad8fc0f6a5c062f6c361bc8b8665115fd3aae18930a92182eab16ecf6","schema_version":4,"scope":"验证 T01 Context 不可变契约与主干回归","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-TESTING: RUNNING → PASSED","status":"PASSED","summary":"Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-TESTING","task_type":"testing","timestamp":"2026-08-07T07:47:52+00:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260807-074752-TASK-P1-T01-TESTING-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T07:47:52+00:00 |
+| 执行 Agent | TestAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 验证 T01 Context 不可变契约与主干回归 |
+| 阶段 | testing |
+| 任务类型 | testing |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-T01-TESTING: RUNNING → PASSED |
+| Task | TASK-P1-T01-TESTING |
+| Attempt | ATTEMPT-TASK-P1-T01-TESTING-I009-A001 |
+| Iteration | ITER-P1-COMPILER-F01-TESTING-009 / 9 |
+| 输入 Revision | 3fd41a940683544bb04fe36c6aa80af70b12247df18fe46b9061359e33f07c32 |
+| 输出 Revision | TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
+| StageOutcome | 无 |
+| Evidence | EVD-000371、EVD-000372、EVD-000373 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | TestEvidenceReviewAgent |
+| 后续事项 | 发布 Testing I009 revision，并由 TestEvidenceReviewAgent 独立复核真实 run/head/artifact 绑定。 |
+
+### 变更摘要
+
+- Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"CompletionVerificationAgent","attempt_id":"ATTEMPT-TASK-P1-T01-COMPLETION-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-COMPLETION-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000374","EVD-000375","EVD-000376","EVD-000377"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"1468c51497e4e57e488dd59112f96246d8a75611910d2bf1481152aaa26c320e","iteration_id":"ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009","iteration_no":9,"next_action":"发布并 finalize Completion I009，随后同步人工 Stage Closure 视图并提交 PR #31 最终 machine-state 变更。","next_agent":"ProjectManagerAgent","output_revision":"COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47","phase":"completion_verification","record_id":"WR-20260807-075208-TASK-P1-T01-COMPLETION-PASSED","render_digest":"6ddd88186f47a2b89ff11dc9d61ba3d2bf32c25ad3b00fc0e5257d90bb7da8c3","schema_version":4,"scope":"验证 TASK-P1-T01 全流程完成与可合并性","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-COMPLETION: RUNNING → PASSED","status":"PASSED","summary":"Canonical Code Review I008 与 Testing I009 均已通过；long_task/risk/evidence/acceptance 四层校验 PASSED；开放 P0/P1=0；临时导出 workflow 已删除；相对 reviewed head 75559ecc 无 project_doc 之外的差异、无生产 Java 新变化，reviewed P0 run 31148550742 的 core-verify/mysql-it 均成功。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-COMPLETION","task_type":"completion_verification","timestamp":"2026-08-07T07:52:08+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260807-075208-TASK-P1-T01-COMPLETION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T07:52:08+00:00 |
+| 执行 Agent | CompletionVerificationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | 验证 TASK-P1-T01 全流程完成与可合并性 |
+| 阶段 | completion_verification |
+| 任务类型 | completion_verification |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Canonical Code Review I008 与 Testing I009 均已通过；long_task/risk/evidence/acceptance 四层校验 PASSED；开放 P0/P1=0；临时导出 workflow 已删除；相对 reviewed head 75559ecc 无 project_doc 之外的差异、无生产 Java 新变化，reviewed P0 run 31148550742 的 core-verify/mysql-it 均成功。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P1-T01-COMPLETION: RUNNING → PASSED |
+| Task | TASK-P1-T01-COMPLETION |
+| Attempt | ATTEMPT-TASK-P1-T01-COMPLETION-I009-A001 |
+| Iteration | ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009 / 9 |
+| 输入 Revision | 1468c51497e4e57e488dd59112f96246d8a75611910d2bf1481152aaa26c320e |
+| 输出 Revision | COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
+| StageOutcome | 无 |
+| Evidence | EVD-000374、EVD-000375、EVD-000376、EVD-000377 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 发布并 finalize Completion I009，随后同步人工 Stage Closure 视图并提交 PR #31 最终 machine-state 变更。 |
+
+### 变更摘要
+
+- Canonical Code Review I008 与 Testing I009 均已通过；long_task/risk/evidence/acceptance 四层校验 PASSED；开放 P0/P1=0；临时导出 workflow 已删除；相对 reviewed head 75559ecc 无 project_doc 之外的差异、无生产 Java 新变化，reviewed P0 run 31148550742 的 core-verify/mysql-it 均成功。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 4 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-POST-CLOSURE-FACT-SYNC-20260807","event_type":"FACT_SYNC_COMPLETED","execution_mode":"standard / sequential","input_revision":"COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47","modified_files_summary":["project_process.md, work.md, requirement_list.md, handoff.md, resume_context.md, TASK-P1-STAGE-CLOSURE.md, TASK-P1-POST-CLOSURE-FACT-SYNC.md"],"next_action":"PR #31 final P0 validation, then human Review / Merge decision","next_agent":"ProjectManagerAgent","output_revision":"FACTSYNC-P1-R01@06e70cbb9fd8","phase":"completion_verification","record_id":"WR-20260807-120600-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED","render_digest":"60ebf335e5c5c35191d15692342bf1ab052fde18a551a6b0aa563f4eae11cff3","schema_version":4,"scope":"P1 post-closure projection synchronization","source":"$common-develop post-closure fact sync","stage_outcome_refs":["SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009"],"state_change":"projection facts stale -> synced to completed P1 Stage Closure","status":"PASSED","summary":"同步 project_process/work/requirement_list/handoff/resume/Stage Closure 发布后事实，不重开 canonical lifecycle revision","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-POST-CLOSURE-FACT-SYNC","task_type":"post_closure_fact_sync","timestamp":"2026-08-07T12:06:00+00:00","validation_summary":"pending final common-develop validation and post-sync P0","version":"V_1.0"} -->
+## WR-20260807-120600-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T12:06:00+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | $common-develop post-closure fact sync |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | P1 post-closure projection synchronization |
+| 阶段 | completion_verification |
+| 任务类型 | post_closure_fact_sync |
+| 事件类型 | FACT_SYNC_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 同步 project_process/work/requirement_list/handoff/resume/Stage Closure 发布后事实，不重开 canonical lifecycle revision |
+| 状态 | PASSED |
+| 状态变更 | projection facts stale -> synced to completed P1 Stage Closure |
+| Task | TASK-P1-POST-CLOSURE-FACT-SYNC |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
+| 输出 Revision | FACTSYNC-P1-R01@06e70cbb9fd8 |
+| StageOutcome | SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | PR #31 final P0 validation, then human Review / Merge decision |
+
+### 变更摘要
+
+- 同步 project_process/work/requirement_list/handoff/resume/Stage Closure 发布后事实，不重开 canonical lifecycle revision
+
+### 文件变更摘要
+
+- `project_process.md, work.md, requirement_list.md, handoff.md, resume_context.md, TASK-P1-STAGE-CLOSURE.md, TASK-P1-POST-CLOSURE-FACT-SYNC.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | pending final common-develop validation and post-sync P0 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-POST-CLOSURE-FACT-SYNC-VALIDATED-20260807","event_type":"FACT_SYNC_VALIDATED","execution_mode":"standard / sequential","input_revision":"FACTSYNC-P1-R01@06e70cbb9fd8","modified_files_summary":["projection facts and task_state work-mode digest only; no production code"],"next_action":"publish to existing PR #31, run new Head P0, then human Review / Merge decision","next_agent":"ProjectManagerAgent","output_revision":"FACTSYNC-P1-R01@06e70cbb9fd8","phase":"completion_verification","record_id":"WR-20260807-120701-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED","render_digest":"d9a5e2b514f53de45edb619ae026223bf92faba3a50c82010eae71293cafd9fe","schema_version":4,"scope":"P1 post-closure projection synchronization","source":"$common-develop post-closure fact sync validation","stage_outcome_refs":["SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009"],"status":"PASSED","summary":"Post-closure Fact Sync 本地 common-develop 校验全部通过","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-POST-CLOSURE-FACT-SYNC","task_type":"post_closure_fact_sync","timestamp":"2026-08-07T12:07:01+00:00","validation_summary":"long_task=OK; work_record=PASSED; risk=PASSED; evidence=PASSED(238); acceptance=PASSED(76); git diff --check=PASSED","version":"V_1.0"} -->
+## WR-20260807-120701-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T12:07:01+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | $common-develop post-closure fact sync validation |
+| 版本 | V_1.0 |
+| 目标 | P1-COMPILER-F01 |
+| 范围 | P1 post-closure projection synchronization |
+| 阶段 | completion_verification |
+| 任务类型 | post_closure_fact_sync |
+| 事件类型 | FACT_SYNC_VALIDATED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Post-closure Fact Sync 本地 common-develop 校验全部通过 |
+| 状态 | PASSED |
+| 状态变更 | 未登记 |
+| Task | TASK-P1-POST-CLOSURE-FACT-SYNC |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | FACTSYNC-P1-R01@06e70cbb9fd8 |
+| 输出 Revision | FACTSYNC-P1-R01@06e70cbb9fd8 |
+| StageOutcome | SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | publish to existing PR #31, run new Head P0, then human Review / Merge decision |
+
+### 变更摘要
+
+- Post-closure Fact Sync 本地 common-develop 校验全部通过
+
+### 文件变更摘要
+
+- `projection facts and task_state work-mode digest only; no production code`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | long_task=OK; work_record=PASSED; risk=PASSED; evidence=PASSED(238); acceptance=PASSED(76); git diff --check=PASSED |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

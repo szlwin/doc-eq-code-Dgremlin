@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "review_type": "IMPLEMENTATION_REWORK_REVIEW",
+  "result": "PASSED",
+  "pr_number": 31,
+  "base_sha": "81aa3b40129d10a08b3f1a20ba6312b4015b9079",
+  "reviewed_head_sha": "75559ecc2e4791eddee166cf3010128130e27078",
+  "findings": [
+    {
+      "id": "FND-P1-STAGE-001",
+      "severity": "P1",
+      "status": "CLOSED",
+      "conclusion": "Starter Stage Closure 真实 XML+YAML、十阶段、发布及失败不污染验证保持通过。"
+    },
+    {
+      "id": "FND-P1-STAGE-003",
+      "severity": "P1",
+      "status": "CLOSED",
+      "conclusion": "Classpath Provider 对 symlink 越界/循环 fail-closed，真实临时文件系统负向测试覆盖。"
+    },
+    {
+      "id": "FND-P1-STAGE-004",
+      "severity": "P1",
+      "status": "CLOSED",
+      "conclusion": "Source 读取预算在流式读取写入前执行，并对 fileset 采用累计剩余预算。"
+    },
+    {
+      "id": "FND-P1-STAGE-002",
+      "severity": "P2",
+      "status": "MACHINE_SYNC_IN_PROGRESS",
+      "conclusion": "代码返修已通过；当前 I008 用 canonical 状态机重新绑定 Code Review/Testing/Completion。"
+    }
+  ],
+  "open_code_blockers": {
+    "P0": 0,
+    "P1": 0
+  },
+  "decision": "不继续修改 P1-003/P1-004 生产实现；仅完成 FND-P1-STAGE-002 canonical machine-state 迁移并重跑下游 Gate。"
+}

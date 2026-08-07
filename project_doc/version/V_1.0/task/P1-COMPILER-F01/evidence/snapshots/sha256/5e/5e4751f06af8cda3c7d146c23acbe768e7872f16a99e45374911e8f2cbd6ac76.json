@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "base_sha": "81aa3b40129d10a08b3f1a20ba6312b4015b9079",
+  "reviewed_head_sha": "75559ecc2e4791eddee166cf3010128130e27078",
+  "changed_files": [
+    {
+      "status": "M",
+      "path": "dec-core-compiler/src/main/java/dec/core/compiler/source/ClasspathDocumentSourceProvider.java"
+    },
+    {
+      "status": "M",
+      "path": "dec-core-compiler/src/test/java/dec/core/compiler/source/ClasspathDocumentSourceProviderTest.java"
+    },
+    {
+      "status": "M",
+      "path": "dec-core-starter/src/main/java/dec/core/starter/CompilerBootstrap.java"
+    },
+    {
+      "status": "M",
+      "path": "project_doc/version/V_1.0/task/P1-COMPILER-F01/TASK-P1-STAGE-CLOSURE.md"
+    },
+    {
+      "status": "A",
+      "path": "project_doc/version/V_1.0/task/P1-COMPILER-F01/evidence/stage-closure-i001-rework-validation.md"
+    },
+    {
+      "status": "M",
+      "path": "project_doc/version/V_1.0/task/P1-COMPILER-F01/handoff.md"
+    },
+    {
+      "status": "M",
+      "path": "project_doc/version/V_1.0/task/P1-COMPILER-F01/resume_context.md"
+    },
+    {
+      "status": "A",
+      "path": "project_doc/version/V_1.0/task/P1-COMPILER-F01/stage_outcomes.stage-closure-overlay.md"
+    },
+    {
+      "status": "A",
+      "path": "project_doc/version/V_1.0/task/P1-COMPILER-F01/task_state.stage-closure-overlay.md"
+    }
+  ],
+  "production_files": [
+    "dec-core-compiler/src/main/java/dec/core/compiler/source/ClasspathDocumentSourceProvider.java",
+    "dec-core-starter/src/main/java/dec/core/starter/CompilerBootstrap.java"
+  ],
+  "scope_note": "Stage Closure 独立复核仅重新验证当前 PR 差异；本轮 FND-P1-STAGE-002 收口不修改生产 Java。"
+}

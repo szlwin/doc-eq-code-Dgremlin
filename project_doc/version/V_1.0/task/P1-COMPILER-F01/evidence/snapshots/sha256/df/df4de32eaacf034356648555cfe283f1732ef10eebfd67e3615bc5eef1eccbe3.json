@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "kind": "runtime_result",
+  "task_id": "TASK-P1-T01-COMPLETION",
+  "revision": "COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47",
+  "run_id": 31148550742,
+  "head_sha": "75559ecc2e4791eddee166cf3010128130e27078",
+  "merge_sha": "d3319c5b9224b57fa4b174fc6741fa30d6c7d427",
+  "jobs": {
+    "core-verify": "PASSED",
+    "mysql-it": "PASSED"
+  },
+  "artifact_id": 8982454725,
+  "artifact_digest": "sha256:a1d04b81b259bd83a42a75ee180556748d135de82ae984dd8dd6c4db6a4431ac",
+  "code_equivalence": {
+    "non_project_doc_diff_since_reviewed_head": [],
+    "production_java_diff_since_reviewed_head": [],
+    "equivalent": true
+  }
+}
