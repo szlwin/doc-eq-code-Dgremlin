@@ -6,9 +6,9 @@ import hashlib
 import json
 import subprocess
 from pathlib import Path
+import sys
 
 TASK = Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC')
-INDEX = TASK / 'evidence/evidence_index.json'
 LEDGER = TASK / 'evidence/migrations/20260808-pr34-flattened-checkpoint-gitref-repair.json'
 EXPECTED_HEAD = 'f0beab1f4230adaa4800ff6a49a060bbedce32ae'
 BROKEN_COMMIT = 'dfb2d6b9707ed6127a0434bd5fb5578c2160b5cf'
@@ -19,6 +19,9 @@ FREEZE_PATHS = {
     'EVD-000033': 'project_doc/docs/_relations/dependency_graph.md',
 }
 ALL_IDS = REBIND_IDS | set(FREEZE_PATHS)
+
+sys.path.insert(0, '/home/oai/skills/common-develop/scripts')
+import evidence as ev  # type: ignore
 
 
 def git(*args: str):
@@ -44,11 +47,15 @@ def main():
     head = git('rev-parse','HEAD').strip()
     if head != EXPECTED_HEAD:
         raise RuntimeError(f'expected {EXPECTED_HEAD}, got {head}')
-    doc = json.loads(INDEX.read_text(encoding='utf-8'))
+
+    doc = ev.load_index(TASK)
     found = []
 
     for entry in doc.get('evidences', []):
+        if not isinstance(entry, dict):
+            continue
         eid = str(entry.get('evidence_id') or '')
+
         if eid in REBIND_IDS:
             if entry.get('capture_mode') != 'GIT_REF':
                 raise RuntimeError(f'{eid}: expected GIT_REF')
@@ -80,7 +87,7 @@ def main():
             metadata['git_ref'] = {**gr, 'repository': '.', 'commit': head, 'members': [repaired_member]}
             metadata['governance_repair'] = {
                 'kind': 'FLATTENED_CHECKPOINT_GIT_REF_REBIND_AND_COMPACT_MEMBER_RESTORE',
-                'reason': 'PR #34 flattened local common-develop checkpoint commits into one remote commit and retained compact GIT_REF member metadata without member-level digest/type. The exact recorded blob is unchanged at the merged dev_all commit.',
+                'reason': 'PR #34 flattened local common-develop checkpoint commits into one remote commit. The exact recorded blob is unchanged at the merged dev_all commit.',
                 'source_commit': BROKEN_COMMIT,
                 'replacement_commit': head,
                 'original_ref': f'git:{BROKEN_COMMIT}',
@@ -98,7 +105,7 @@ def main():
 
         elif eid in FREEZE_PATHS:
             if entry.get('status') != 'ACTIVE':
-                raise RuntimeError(f'{eid}: expected ACTIVE evidence')
+                raise RuntimeError(f'{eid}: expected ACTIVE evidence after RC9 expansion, got {entry.get("status")}')
             if entry.get('capture_mode') != 'DIRECT':
                 raise RuntimeError(f'{eid}: expected DIRECT before freeze, got {entry.get("capture_mode")}')
             path = FREEZE_PATHS[eid]
@@ -107,6 +114,7 @@ def main():
             oid, actual_digest, size = blob_fact(head, path)
             if actual_digest != expected_digest:
                 raise RuntimeError(f'{eid}: current blob digest does not match historical Evidence digest: {actual_digest} != {expected_digest}')
+
             old_ref = str(entry.get('ref') or '')
             old_source_ref = str(entry.get('source_ref') or '')
             old_metadata = json.loads(json.dumps(entry.get('metadata') if isinstance(entry.get('metadata'), dict) else {}))
@@ -149,7 +157,9 @@ def main():
         'entries': found,
         'created_at': dt.datetime.now(dt.timezone.utc).isoformat(),
     }
-    INDEX.write_text(json.dumps(doc, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+
+    # Use RC9 official schema4 expansion/compaction instead of hand-editing stored defaults.
+    ev.save_index(TASK, doc)
     LEDGER.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
     subprocess.run(['python3','/home/oai/skills/common-develop/scripts/evidence.py','validate','-g','ProjectManagerAgent','--task-dir',str(TASK)],check=True)
@@ -158,7 +168,7 @@ def main():
 
     subprocess.run(['git','config','user.name','Common Develop ProjectManagerAgent'],check=True)
     subprocess.run(['git','config','user.email','common-develop@local.invalid'],check=True)
-    subprocess.run(['git','add',str(INDEX),str(LEDGER)],check=True)
+    subprocess.run(['git','add',str(TASK/'evidence/evidence_index.json'),str(LEDGER)],check=True)
     subprocess.run(['git','diff','--cached','--check'],check=True)
     subprocess.run(['git','commit','-m','chore(p2): repair and freeze prior business model evidence'],check=True)
     print(json.dumps({'status':'PASSED','repair_id':ledger['repair_id'],'commit':git('rev-parse','HEAD').strip(),'entries':found},ensure_ascii=False,indent=2))
