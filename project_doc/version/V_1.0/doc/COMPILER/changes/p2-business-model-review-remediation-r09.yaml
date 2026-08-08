@@ -1,0 +1,224 @@
+schemaVersion: 1
+changeSet:
+  id: CHG-V_1.0-COMPILER-P2-BM-R09
+  version: V_1.0
+  module: COMPILER
+  featureCode: P2-SYSTEM-RULEVIEW
+  reason: >-
+    Materialize the independent Review corrections for Guard coverage and RuleView ownership,
+    and align the Business Model with AC-006 by making RuntimeGuardRequired a compiler-derived
+    runtime binding requirement rather than a new source-authored predicate language.
+  baseRevisions:
+    business_model: BM-R07@7d7bf504ca9d
+  resultRevisions:
+    business_model: BM-R09
+  affectedTraceIds:
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+operations:
+  - artifact: business_model
+    collection: scenarios
+    operation: update
+    targetId: SCN-P2-MODEL-ACCESS-RUNTIME
+    beforeRef: COMPILER_business_model.yaml#SCN-P2-MODEL-ACCESS-RUNTIME
+    after:
+      given:
+        - 访问的 System、授权目标、operation 与允许的模型结构在编译期合法且可确定
+        - 最终对象实例或容器内元素选择依赖运行时值，无法在编译期绑定到具体对象实例
+      when: 编译器形成访问授权事实并由 Rule、change、custom action 或 protected read 在运行时访问实际对象
+      then:
+        - 编译器从已解析的 target/path 与动态对象绑定语义确定性派生 RuntimeAccessRequirement，并登记 RuntimeGuardRequired
+        - RuntimeAccessRequirement 只约束运行时解析结果必须仍属于同一 Context、target 与已授权 exact ModelPath，不引入新的权限 Predicate DSL
+        - 发布后的统一 Guard 使用当前实际绑定事实判定 ALLOW 或 DENY
+        - DENY 在任何 read/write/execute、状态推进或外部副作用之前发生
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+    reason: AC-006 requires a legal dynamic access to reach RuntimeGuardRequired and then ALLOW/DENY at runtime.
+
+  - artifact: business_model
+    collection: valueObjects
+    operation: update
+    targetId: VO-MODEL-ACCESS-RULE
+    beforeRef: COMPILER_business_model.yaml#VO-MODEL-ACCESS-RULE
+    after:
+      attributes:
+        - name: decisionRequirement
+          type: STATIC_ALLOW|RUNTIME_GUARD_REQUIRED
+          required: true
+          constraints:
+            - STATIC_ALLOW 表示权限与实际访问绑定均可在编译期证明
+            - RUNTIME_GUARD_REQUIRED 仅表示最终对象绑定依赖运行时值，不扩大静态授权范围
+        - name: runtimeRequirement
+          type: RuntimeAccessRequirement
+          required: false
+          constraints:
+            - 仅当 decisionRequirement=RUNTIME_GUARD_REQUIRED 时存在
+            - 必须由 compiler 从已解析的静态授权与动态对象绑定语义确定性派生
+      behaviors:
+        - compileStaticDecision
+        - deriveRuntimeBindingRequirementWhenDeferred
+        - requireRuntimeGuardWhenDeferred
+        - denyWhenUndeclared
+    reason: Freeze the business fact that dynamic authorization owns a compiler-derived runtime binding requirement.
+
+  - artifact: business_model
+    collection: valueObjects
+    operation: add
+    targetId: VO-RUNTIME-ACCESS-REQUIREMENT
+    after:
+      id: VO-RUNTIME-ACCESS-REQUIREMENT
+      name: RuntimeAccessRequirement
+      identity: authorizedRuleKey+bindingKind
+      attributes:
+        - name: authorizedRuleKey
+          type: ModelAccessRuleKey
+          required: true
+        - name: bindingKind
+          type: EXACT_RUNTIME_BINDING
+          required: true
+        - name: sourceRef
+          type: SourceRef
+          required: true
+      behaviors:
+        - deriveFromCompiledAccessSemantics
+        - verifyRuntimeBindingWithinAuthorizedRule
+        - canonical
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+    reason: Model the AC-006 runtime-check-required fact without adding a new source predicate language.
+
+  - artifact: business_model
+    collection: aggregates
+    operation: update
+    targetId: AGG-SYSTEM-COMPILED-CONFIG
+    beforeRef: COMPILER_business_model.yaml#AGG-SYSTEM-COMPILED-CONFIG
+    after:
+      members:
+        - VO-RUNTIME-ACCESS-REQUIREMENT
+      invariantIds:
+        - INV-COMPILER-023
+    reason: Runtime access requirement is part of the same immutable compiled configuration aggregate.
+
+  - artifact: business_model
+    collection: invariants
+    operation: update
+    targetId: INV-COMPILER-019
+    beforeRef: COMPILER_business_model.yaml#INV-COMPILER-019
+    after:
+      statement: >-
+        能由 System、目标、ModelPath 和 operation 在编译期确定的非法访问必须阻断发布；静态结构与权限合法但最终对象实例或容器元素选择确实依赖运行时值时，compiler 必须从现有访问/路径语义确定性派生 RuntimeAccessRequirement 并登记 RuntimeGuardRequired，使该合法动态访问能够发布后由 Guard 判定，而不是把静态不可完全判定当作默认允许或编译错误。
+      trigger: 访问规则编译与动态对象绑定分类
+      failure: ERR-MIX-MODEL-ACCESS-DENIED
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-008
+    reason: Restore the Requirement/Business Model AC-006 reachable dynamic-access semantics.
+
+  - artifact: business_model
+    collection: invariants
+    operation: update
+    targetId: INV-COMPILER-020
+    beforeRef: COMPILER_business_model.yaml#INV-COMPILER-020
+    after:
+      statement: >-
+        所有受保护的运行时模型 READ、WRITE、EXECUTE 入口都必须先进入同一个 ModelAccessGuard，包括 Rule、change、custom action、query/read；STATIC_ALLOW 只能是 Guard 内部快速路径，不能由 caller 绕过 Guard。Guard 不可用、Context/owner/path/operation 不匹配、动态绑定无法证明属于已授权 rule 或任何授权异常时必须 fail-closed；DENY 必须发生在 read/write/execute、状态推进或外部副作用之前。
+      trigger: 任何受保护 READ/WRITE/EXECUTE
+      failure: ERR-MIX-MODEL-ACCESS-RUNTIME-DENIED
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+    reason: Materialize the no-bypass Guard semantics from the R08 review correction.
+
+  - artifact: business_model
+    collection: invariants
+    operation: add
+    targetId: INV-COMPILER-023
+    after:
+      id: INV-COMPILER-023
+      statement: >-
+        RuntimeAccessRequirement 必须由 compiler 基于已解析的授权 rule、exact ModelPath 与“最终对象绑定依赖运行时”的既有语义确定性派生；P2 不要求、也不得偷偷引入新的 source-authored 权限 Predicate DSL。该 requirement 只能收窄/验证已静态授权边界，不能扩大 System、target、path 或 operation 权限。
+      trigger: 生成 RuntimeGuardRequired 编译事实
+      failure: ERR-MIX-MODEL-ACCESS-DENIED
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+    reason: Prevent Development from inventing a predicate DSL while keeping AC-006 reachable.
+
+  - artifact: business_model
+    collection: services
+    operation: update
+    targetId: SVC-MODEL-ACCESS-AUTHORIZATION
+    beforeRef: COMPILER_business_model.yaml#SVC-MODEL-ACCESS-AUTHORIZATION
+    after:
+      inputs:
+        - CompiledSystem
+        - ModelAccessRule
+        - ModelPath
+        - AccessOperation
+        - DynamicBindingClassification
+      outputs:
+        - StaticAllow|RuntimeGuardRequired(RuntimeAccessRequirement)|Diagnostic
+    reason: Make compiler-derived RuntimeAccessRequirement an explicit service output for legal dynamic access.
+
+  - artifact: business_model
+    collection: policies
+    operation: update
+    targetId: POL-MODEL-ACCESS-AUTHORIZATION
+    beforeRef: COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION
+    after:
+      inputs:
+        - SystemKey
+        - TargetKey
+        - ModelPath
+        - AccessOperation
+        - DeclaredModelAccess
+        - DynamicBindingClassification
+      outputs:
+        - StaticAllow|RuntimeGuardRequired(RuntimeAccessRequirement)|Diagnostic
+    reason: Align authorization policy with AC-006 and least-privilege runtime binding checks.
+
+  - artifact: business_model
+    collection: businessErrors
+    operation: add
+    targetId: ERR-MIX-RULEVIEW-SYSTEM-REQUIRED
+    after:
+      id: ERR-MIX-RULEVIEW-SYSTEM-REQUIRED
+      condition: 新 RuleView 缺少显式 owner System
+      meaning: RuleView System 归属为必填，编译失败且禁止裸名称 fallback
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-002
+        - TR-P2-SYSTEM-RULEVIEW-003
+      diagnosticCode: MIX-RULEVIEW-SYSTEM-REQUIRED
+    reason: Materialize the missing business error corrected by BM-R08.
+
+  - artifact: business_model
+    collection: traceability
+    operation: update
+    targetId: TR-P2-SYSTEM-RULEVIEW-006
+    beforeRef: COMPILER_business_model.yaml#TR-P2-SYSTEM-RULEVIEW-006
+    after:
+      modelRefs:
+        - VO-RUNTIME-ACCESS-REQUIREMENT
+        - INV-COMPILER-023
+    reason: Trace AC-006 runtime requirement facts into the canonical Business Model.
+
+  - artifact: business_model
+    collection: traceability
+    operation: update
+    targetId: TR-P2-SYSTEM-RULEVIEW-007
+    beforeRef: COMPILER_business_model.yaml#TR-P2-SYSTEM-RULEVIEW-007
+    after:
+      modelRefs:
+        - VO-RUNTIME-ACCESS-REQUIREMENT
+        - INV-COMPILER-023
+    reason: Trace no-bypass runtime authorization to the compiler-derived runtime requirement.
