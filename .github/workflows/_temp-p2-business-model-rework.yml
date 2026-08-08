@@ -20,11 +20,12 @@ jobs:
           ref: tmp/p2-business-model-rework-run-20260808
           fetch-depth: 1
 
-      - name: Preserve rework runner and verified RC9 delta
+      - name: Preserve runners and verified RC9 delta
         shell: bash
         run: |
           set -euo pipefail
           cp tools/_temp_p2_bm_rework.py /tmp/p2_bm_rework.py
+          cp tools/_temp_p2_evidence_gitref_repair.py /tmp/p2_evidence_gitref_repair.py
           cp .common-develop-rc9/rc8-to-rc9.patch.xz.b64 /tmp/rc8-to-rc9.patch.xz.b64
 
       - name: Checkout formal rework branch
@@ -89,7 +90,12 @@ jobs:
           sudo ln -sfn /tmp/common-develop /home/oai/.codex/skills/common-develop
           python3 /home/oai/skills/common-develop/scripts/baseline_guard.py -g ProjectManagerAgent status --require-clean --json
 
+      - name: Repair PR34 flattened checkpoint GIT_REF evidence
+        run: python3 /tmp/p2_evidence_gitref_repair.py
+
       - name: Execute controlled BM rework
-        env:
-          EXPECTED_BASE: f0beab1f4230adaa4800ff6a49a060bbedce32ae
-        run: python3 /tmp/p2_bm_rework.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          export EXPECTED_BASE="$(git rev-parse HEAD)"
+          python3 /tmp/p2_bm_rework.py
