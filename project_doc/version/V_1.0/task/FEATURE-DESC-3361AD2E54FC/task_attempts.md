@@ -131,6 +131,52 @@
     ],
     "summary": "BM-R06 候选完成：System 一等实体、RuleView composite identity、ModelPath 与静态/动态 model-access fail-closed 语义；P2 dependency impact/CMI/trace 同步。",
     "next_action": "冻结 BM-R06 并执行同 Revision 六项独立 Review。"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-BMODEL-001-I003-A001",
+    "task_id": "TASK-P2-BMODEL-001",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003",
+    "iteration_no": 3,
+    "attempt_no": 1,
+    "agent": "BusinessModelAgent",
+    "phase": "business_model",
+    "status": "PASSED",
+    "input_revision": "REQAN-P2-R01@d08612768131",
+    "output_revision": "BM-R07@7d7bf504ca9d",
+    "started_at": "2026-08-08T04:06:50+00:00",
+    "completed_at": "2026-08-08T04:12:44+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.md",
+      "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml",
+      "version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml",
+      "docs/_relations/dependency_impact.yaml",
+      "docs/_relations/dependency_graph.md",
+      "version/V_1.0/requirement_list.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000043",
+      "EVD-000044",
+      "EVD-000045",
+      "EVD-000046",
+      "EVD-000047",
+      "EVD-000048"
+    ],
+    "evidence_ids": [
+      "EVD-000049",
+      "EVD-000050",
+      "EVD-000051",
+      "EVD-000052",
+      "EVD-000053",
+      "EVD-000054",
+      "EVD-000055",
+      "EVD-000056",
+      "EVD-000057",
+      "EVD-000058"
+    ],
+    "summary": "BM-R07 candidate 完成：BM-R05 stable ID 全量继承、DEC_COMPILER→COMPILER lineage 显式化、完整 17 节 Markdown 恢复，并保持 BM-R06 P2 核心语义。",
+    "next_action": "冻结 BM-R07 并执行六项独立 Review"
   }
 ]
 ```

@@ -77,8 +77,8 @@
     "round": "BUSINESS_MODEL-I002",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002",
     "iteration_no": 2,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003",
     "status": "PASSED",
     "produced_by_agent": "BusinessModelAgent",
     "input_revisions": {
@@ -101,6 +101,42 @@
     "open_risks": [],
     "started_at": "2026-08-07T16:48:19+00:00",
     "completed_at": "2026-08-07T16:51:08+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-BUSINESS_MODEL-I003",
+    "phase": "business_model",
+    "round": "BUSINESS_MODEL-I003",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003",
+    "iteration_no": 3,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "BusinessModelAgent",
+    "input_revisions": {
+      "requirement_analysis": "REQAN-P2-R01@d08612768131"
+    },
+    "output_revision": "BM-R07@7d7bf504ca9d",
+    "evidence_ids": [
+      "EVD-000049",
+      "EVD-000050",
+      "EVD-000051",
+      "EVD-000052",
+      "EVD-000053",
+      "EVD-000054",
+      "EVD-000055",
+      "EVD-000056",
+      "EVD-000057",
+      "EVD-000058",
+      "EVD-000043",
+      "EVD-000044",
+      "EVD-000045",
+      "EVD-000046",
+      "EVD-000047",
+      "EVD-000048"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-08T04:12:48+00:00",
+    "completed_at": "2026-08-08T04:18:20+00:00"
   }
 ]
 ```

@@ -3,7 +3,7 @@
 
 - Project：`doc-eq-code`
 - Version：`V_1.0`
-- Revision：`BM-R06@6a0bce4fa0ae`
+- Revision：`BM-R07@7d7bf504ca9d`
 
 ## 需求—需求关系图
 
@@ -17,6 +17,7 @@
 
 ```mermaid
 flowchart LR
+  N_5a128a068e["DEC-COMPILER-DOC-LEGACY<br/>Legacy compiler document identity DEC_COMPILER<br/>MODULE"]
   N_e8a76389cb["DEC-CORE-COMPILER<br/>Compiler core<br/>MODULE"]
   N_b036b6fcc7["DEC-CORE-CONTEXT<br/>Immutable context model<br/>MODULE"]
   N_f83b77a954["DEC-CORE-STARTER<br/>Compiler assembly<br/>MODULE"]
@@ -35,6 +36,7 @@ flowchart LR
   N_4bb6608ca0 -->|"AFFECTS"| N_b036b6fcc7
   N_4bb6608ca0 -->|"AFFECTS"| N_f83b77a954
   N_4bb6608ca0 -->|"AFFECTS"| N_db4539e543
+  N_e8a76389cb -->|"SUPERSEDES"| N_5a128a068e
 ```
 
 ## 关系明细
@@ -51,6 +53,7 @@ flowchart LR
 | REL-P2-SYSTEM-RULEVIEW-CONTEXT | FEATURE-DESC-3361AD2E54FC | AFFECTS | DEC-CORE-CONTEXT | candidate compilation has no ERROR | Published Context exposes immutable System- and RuleView-qualified compiled facts and access rules without global mutable lookup. | TR-P2-SYSTEM-RULEVIEW-002<br>TR-P2-SYSTEM-RULEVIEW-003<br>TR-P2-SYSTEM-RULEVIEW-004<br>TR-P2-SYSTEM-RULEVIEW-008 |
 | REL-P2-SYSTEM-RULEVIEW-STARTER | FEATURE-DESC-3361AD2E54FC | AFFECTS | DEC-CORE-STARTER |  | Runtime assembly/callers resolve RuleView using system-ref + rule-ref and honor compiled/runtime access decisions without bare-name fallback. | TR-P2-SYSTEM-RULEVIEW-003<br>TR-P2-SYSTEM-RULEVIEW-006<br>TR-P2-SYSTEM-RULEVIEW-007 |
 | REL-P2-SYSTEM-RULEVIEW-DECLARATION | FEATURE-DESC-3361AD2E54FC | AFFECTS | DEC-EXPAND-DECLARATION |  | P2 preserves the declaration compatibility boundary and must not create a second runtime authority; final convergence remains P7. | TR-P2-SYSTEM-RULEVIEW-010 |
+| REL-COMPILER-DOC-LINEAGE | DEC-CORE-COMPILER | SUPERSEDES | DEC-COMPILER-DOC-LEGACY |  | COMPILER is the canonical current documentation identity for the same logical compiler modeled historically under DEC_COMPILER; this is a documentation/module-code normalization only and must not create a second compiler, registry, context, or runtime authority. | TR-P1-COMPILER-001<br>TR-P2-SYSTEM-RULEVIEW-001<br>TR-P2-SYSTEM-RULEVIEW-010 |
 
 ## 关联对象处置策略
 

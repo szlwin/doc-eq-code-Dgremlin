@@ -161,12 +161,12 @@
     "id": "TASK-P2-BMODEL-001",
     "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-BUSINESS-MODEL",
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
-    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002",
-    "iteration_no": 2,
-    "supersedes_iteration_id": "",
-    "revision_reason": "REQAN-P2-R01 已通过；在当前 downstream I002 首次建立 P2 System/RuleView/model-access 业务模型增量。",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003",
+    "iteration_no": 3,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002",
+    "revision_reason": "用户确认 BM-R06 核心语义基本正确，但要求按 BM-R05 完整可读结构重建 Markdown、显式建立 DEC_COMPILER→COMPILER 同一逻辑模块 lineage、验证 stable ID 全量继承，并形成新 Business Model Revision 后重新执行六项独立 Review。",
     "title": "建立 P2 System、RuleView 与 model-access 业务模型",
-    "objective": "在 COMPILER BM-R05 基线上形成 P2 BM-R06，显式建模 System 身份、RuleView 复合身份、ModelPath 与 ModelAccess 权限/Guard 不变量，并补齐 P2 影响与跨模块映射。",
+    "objective": "在已通过的 COMPILER BM-R06 基线上形成 BM-R07，保持 P2 System/RuleView/model-access 核心语义不变，显式建立 DEC_COMPILER→COMPILER 同一逻辑模块 lineage，恢复完整 17 节人类可读业务模型，并证明 BM-R05 stable IDs 全量继承。",
     "phase": "business_model",
     "status": "PASSED",
     "depends_on": [
@@ -174,8 +174,8 @@
     ],
     "owner_agent": "BusinessModelAgent",
     "reviewer_agents": [
-      "RequirementReviewAgent",
       "BusinessModelReviewAgent",
+      "RequirementReviewAgent",
       "DesignReviewAgent",
       "TestDesignAgent",
       "ImpactAnalysisReviewAgent",
@@ -198,7 +198,10 @@
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md",
       "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md",
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
-      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+      "version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml",
+      "version/V_1.0/requirement_list.md",
+      "project_doc/version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml"
     ],
     "acceptance_trace_ids": [
       "TR-P2-SYSTEM-RULEVIEW-001",
@@ -224,37 +227,40 @@
       "STEP-CONFIG-COMPILE-07"
     ],
     "validation_commands": [
-      "validate COMPILER_business_model.yaml against business-model.schema.json",
-      "python3 /mnt/data/common-develop/scripts/render_relationships.py -g BusinessModelAgent --input project_doc/docs/_relations/dependency_impact.yaml --check",
-      "python3 /mnt/data/common-develop/scripts/long_task.py validate -g BusinessModelAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC"
+      "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g BusinessModelAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+      "python3 -c \"import json,yaml,jsonschema; jsonschema.validate(yaml.safe_load(open('project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml',encoding='utf-8')),json.load(open('/home/oai/skills/common-develop/assets/structured-docs/business-model.schema.json',encoding='utf-8')))\"",
+      "python3 -c \"import json,yaml,jsonschema; jsonschema.validate(yaml.safe_load(open('project_doc/version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml',encoding='utf-8')),json.load(open('/home/oai/skills/common-develop/assets/structured-docs/changeset.schema.json',encoding='utf-8')))\"",
+      "python3 -c \"import json,yaml,jsonschema; jsonschema.validate(yaml.safe_load(open('project_doc/docs/_relations/dependency_impact.yaml',encoding='utf-8')),json.load(open('/home/oai/skills/common-develop/assets/structured-docs/dependency-impact.schema.json',encoding='utf-8')))\"",
+      "python3 /home/oai/skills/common-develop/scripts/render_relationships.py -g BusinessModelAgent --input project_doc/docs/_relations/dependency_impact.yaml --check",
+      "git diff --check"
     ],
     "expected_results": [
-      "BM-R06 在 BM-R05 基线上把 System 编译身份、RuleView (system,name) 与 ModelAccessRule/ModelPath 作为稳定业务模型对象和术语",
-      "READ/WRITE/EXECUTE 独立授权、未声明共享 WRITE 默认拒绝、静态拒绝阻断发布和动态 Guard 先于任何 mutation 形成可判定不变量",
-      "P2 消费 System/RuleView/model-access 的 Deferred 边界，同时继续保留 P3～P8 未实现语义为显式 DeferredDefinition",
-      "dependency_impact 增加 P2 节点、影响策略与 CMI 映射，复用 FLOW-CONFIG-COMPILE 且明确原子发布、fail-closed、恢复与 declaration P7 边界",
-      "10 条 P2 trace 均引用 BM-R06 稳定模型 ID，并保持 requirement/business flow/impact/cross-module 追踪闭环",
-      "RequirementReviewAgent、BusinessModelReviewAgent、DesignReviewAgent、TestDesignAgent、ImpactAnalysisReviewAgent、CrossModuleIntegrationReviewAgent 对同一 Revision 独立 PASSED"
+      "BM-R05 stable IDs 全量继承，R07 不删除任何既有 stable ID",
+      "DEC_COMPILER→COMPILER lineage 有结构化 relationship 和完整人类可读说明",
+      "COMPILER_business_model.md 恢复为可独立阅读的完整 17 节视图且与 YAML 当前事实等价",
+      "BM-R07 六项独立 Review 全部 PASSED，无开放 P0/P1"
     ],
     "stop_conditions": [
-      "不得引入裸 RuleView 名称回退或隐式 System 推断",
-      "不得把未声明共享 WRITE 解释为允许",
-      "不得在 P2 删除 declaration runtime 或实现 P3～P8 完整运行语义",
-      "不得把业务模型直接锁定为具体 Java 类/API 实现"
+      "BM-R05 stable IDs 不得丢失、重命名或静默覆盖",
+      "DEC_COMPILER 与 COMPILER 必须明确为同一逻辑模块文档谱系，不得形成第二 runtime authority",
+      "BM-R06 已确认的 P2 System/RuleView/model-access 语义不得在可读性修订中发生未声明变化",
+      "六项独立 Review 任一不是 PASSED 时停止，不得进入 Design"
     ],
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "BM-R06@6a0bce4fa0ae",
+    "output_revision": "BM-R07@7d7bf504ca9d",
     "validation_evidence_ids": [
-      "EVD-000028",
-      "EVD-000029",
-      "EVD-000030",
-      "EVD-000031",
-      "EVD-000032",
-      "EVD-000033",
-      "EVD-000034",
-      "EVD-000035"
+      "EVD-000049",
+      "EVD-000050",
+      "EVD-000051",
+      "EVD-000052",
+      "EVD-000053",
+      "EVD-000054",
+      "EVD-000055",
+      "EVD-000056",
+      "EVD-000057",
+      "EVD-000058"
     ]
   }
 ]

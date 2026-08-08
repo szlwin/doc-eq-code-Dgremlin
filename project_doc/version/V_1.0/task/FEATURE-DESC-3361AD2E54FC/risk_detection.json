@@ -2,12 +2,266 @@
   "schema_version": 1,
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
-  "input_revision": "",
-  "input_files": [],
-  "input_digest": "",
-  "status": "NOT_SCANNED",
-  "scanned_by_agent": "",
-  "scanned_at": "",
-  "detections": [],
+  "input_revision": "BM-R07@7d7bf504ca9d",
+  "input_files": [
+    "project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml",
+    "project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.md",
+    "project_doc/version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml",
+    "project_doc/docs/_relations/dependency_impact.yaml",
+    "project_doc/docs/_relations/dependency_graph.md"
+  ],
+  "input_digest": "29a2b2f8507b3c2dcf2c489b3f349526f50d88e1825cbb07f8430df30578492e",
+  "status": "SCANNED",
+  "scanned_by_agent": "ProjectManagerAgent",
+  "scanned_at": "2026-08-08T04:19:38+00:00",
+  "detections": [
+    {
+      "detection_id": "DET-0091F020FC86",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000060"
+      ],
+      "status": "DETECTED",
+      "reason": "content:module, content:dependency, content:adapter",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-15F6A50B0E2E",
+      "rule_id": "RISK-MNT-001",
+      "risk_type": "maintainability",
+      "confidence": 7,
+      "required_reviewer": "MaintainabilityReviewAgent",
+      "evidence_ids": [
+        "EVD-000062"
+      ],
+      "status": "DETECTED",
+      "reason": "content:temporary",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-18B83C1BF8A6",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000062"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-18BEAE564C54",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000062"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize, content:permission",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-41125EC481A5",
+      "rule_id": "RISK-IMP-001",
+      "risk_type": "impact_analysis",
+      "confidence": 8,
+      "required_reviewer": "ImpactAnalysisReviewAgent",
+      "evidence_ids": [
+        "EVD-000063"
+      ],
+      "status": "DETECTED",
+      "reason": "content:delete, content:cancel, content:cascade, content:supersede",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-425E96B2573F",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000063"
+      ],
+      "status": "DETECTED",
+      "reason": "file:**/*dependency*, content:module, content:dependency, content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-4B24E97C4D91",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000059"
+      ],
+      "status": "DETECTED",
+      "reason": "content:module, content:dependency, content:adapter",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-505B1A29B909",
+      "rule_id": "RISK-DATA-001",
+      "risk_type": "data_migration",
+      "confidence": 9,
+      "required_reviewer": "DataMigrationReviewAgent",
+      "evidence_ids": [
+        "EVD-000062"
+      ],
+      "status": "DETECTED",
+      "reason": "content:migration",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-55EBEC123531",
+      "rule_id": "RISK-MNT-001",
+      "risk_type": "maintainability",
+      "confidence": 7,
+      "required_reviewer": "MaintainabilityReviewAgent",
+      "evidence_ids": [
+        "EVD-000063"
+      ],
+      "status": "DETECTED",
+      "reason": "content:temporary",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-7404B9966CF8",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000060"
+      ],
+      "status": "DETECTED",
+      "reason": "content:permission",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-7B8B2B11D396",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000062"
+      ],
+      "status": "DETECTED",
+      "reason": "file:**/*dependency*, content:module, content:dependency, content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-81BD79D48BFC",
+      "rule_id": "RISK-IMP-001",
+      "risk_type": "impact_analysis",
+      "confidence": 8,
+      "required_reviewer": "ImpactAnalysisReviewAgent",
+      "evidence_ids": [
+        "EVD-000062"
+      ],
+      "status": "DETECTED",
+      "reason": "content:delete, content:cancel, content:cascade, content:supersede",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-AA174F62C221",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000059"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-BFA9AC2374B2",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000061"
+      ],
+      "status": "DETECTED",
+      "reason": "content:module",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-CEECE5367C64",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000063"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize, content:permission",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-D56CC34E70DC",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000063"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-ED36E632BDB3",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000060"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F038F2449065",
+      "rule_id": "RISK-IMP-TRACE-001",
+      "risk_type": "impact_analysis",
+      "confidence": 9,
+      "required_reviewer": "ImpactAnalysisReviewAgent",
+      "evidence_ids": [
+        "EVD-000064"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability impact_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-FE4B1454B988",
+      "rule_id": "RISK-XMOD-TRACE-001",
+      "risk_type": "cross_module_integration",
+      "confidence": 9,
+      "required_reviewer": "CrossModuleIntegrationReviewAgent",
+      "evidence_ids": [
+        "EVD-000064"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability cross_module_implementation_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
+      "source": "DETECTOR"
+    }
+  ],
   "waivers": []
 }
