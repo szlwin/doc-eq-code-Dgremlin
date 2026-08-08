@@ -1,451 +1,283 @@
-# P2-SYSTEM-RULEVIEW 可执行测试设计
-
-> Revision：`TESTDESIGN-P2-R02@d0514b9ac591`。Iteration：`TEST_DESIGN-I004`。输入固定为 `DESIGN-P2-R01@8875f042898c`；Requirement/BM 仅作为该 Design 的可追溯上游事实。
->
-> 本阶段只冻结 Case、fixture、稳定接缝、oracle、禁止副作用、未来 TDD 有效 RED 与证据采集方式；不编写生产实现、不新增测试代码、不执行未来 TDD 命令，也不把类/模块不存在、依赖失败、编译错误当作有效 RED。
-
-## 1. 阶段目标与退出门禁
-
-- P2 的 10 条 TR 与 10 项 AC 均至少映射一个正式 Case；P2-T01～T12 均有测试责任；
-- 正常、边界、异常、权限、失败、并发/隔离、原子发布、兼容迁移边界全部覆盖；
-- READ/WRITE/EXECUTE 独立权限矩阵、静态拒绝、动态 Guard ALLOW/DENY/THROW/UNKNOWN、Rule/change/custom action 无旁路均有独立 oracle；
-- 每个 Case 的 oracle 来自 Requirement/BM/Design，不从未来实现输出反推；
-- TDD RED 只有在测试骨架可以正常构建执行后、业务断言因 P2 尚未实现而失败才有效；模块不存在、类不存在、依赖下载失败、语法错误、fixture 缺失都不是有效 RED；
-- `RequirementReviewAgent`、`DesignReviewAgent`、`TDDReviewAgent`、`TestEvidenceReviewAgent` 必须对同一 Test Design Revision 独立通过。
-
-## 2. 测试层级与环境
-
-| 层级 | 目的 | 主要实现位置 | 外部边界 | 证据 |
-|---|---|---|---|---|
-| unit | ModelPath、权限 operation、复合 Key、静态授权与 Guard 决策 | `dec-core-compiler` / `dec-core-context` | 只用 deterministic stub/spy | Surefire XML + command-result |
-| contract | System 多源编译、RuleView 复合 Registry、CompiledModelSet/EngineContext | compiler/context/frontend fixture | 真实 classpath fixture 或内存 SourceProvider | 快照 + key/digest/Diagnostic 断言 |
-| negative | duplicate/missing/unknown/path/permission deny | compiler + runtime guard | 禁止真实外部副作用 | Diagnostic + MutationProbe |
-| concurrency | Context/Registry/policy 隔离与确定性 | compiler/context | deterministic executor，不使用 sleep | 重复快照 |
-| architecture | bare-name fallback、Guard bypass、declaration/P7 边界 | repository/module/dependency scan | 不访问业务数据库/网络 | scan result + command-result |
-
-P2 Test Design 不需要真实数据库；若后续实现引入持久化测试，必须使用显式测试连接配置，缺失时仅跳过该子范围，不能回退 dev/生产。
-
-## 3. 固定 Fixture 与稳定接缝
-
-### 3.1 SystemDefinitionFixture
-
-- 当前真实 `mix/system/systems.xml` 作为主契约 fixture；
-- 构造语义等价多文件、不同枚举顺序、合法前向引用、重复 System 两来源四类变体；
-- 不固定生产逻辑中的 System 数量或 demo 路径。
-
-### 3.2 RuleViewCompositeFixture
-
-- `SystemKey(A)` 与 `SystemKey(B)` 各声明 `RuleViewKey(system, "main")`；
-- 同 System 重名、缺 System、未知复合引用、仅裸 `rule-ref` 各为独立负向 fixture；
-- bare-name probe 只能用于证明新路径没有调用 fallback，不作为允许的解析 seam。
-
-### 3.3 ModelShapeFixture / ModelAccessPolicyFixture
-
-- 合法精确路径、unknown segment、non-composite intermediate、target mismatch；
-- 对同一 target/path 冻结 READ/WRITE/EXECUTE declared/undeclared 组合；
-- 未声明共享 WRITE 必须 DENY；operation 之间不得互相蕴含。
-
-### 3.4 Runtime seam
-
-- `RuntimeFactEvaluatorStub(ALLOW|DENY|THROW|UNKNOWN)`；
-- `ModelAccessGuardSpy` 记录 authorize 次数、顺序与完整 request；
-- `MutationProbe` 记录 `stateVersion`、`writeCount`、`externalEffectCount`；
-- `CompositeRuleViewResolverSpy` 记录实际 `RuleViewKey`；
-- `ContextPairFixture` 同名 RuleView/不同权限事实，用于实例隔离。
-
-## 4. Case 总览
-
-| Case | 分组 | 层级 | TR | AC | Diagnostic |
-|---|---|---|---|---|---|
-| `CASE-P2-TD-SYSTEM-DETERMINISM-001` | system | contract | TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009 | AC-P2-SYSTEM-RULEVIEW-001, AC-P2-SYSTEM-RULEVIEW-008, AC-P2-SYSTEM-RULEVIEW-009 | — |
-| `CASE-P2-TD-SYSTEM-DUPLICATE-001` | system | negative | TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-009 | AC-P2-SYSTEM-RULEVIEW-001, AC-P2-SYSTEM-RULEVIEW-009 | MIX-SYSTEM-DUPLICATE |
-| `CASE-P2-TD-SYSTEM-FORWARD-REF-001` | system | contract | TR-P2-SYSTEM-RULEVIEW-001 | AC-P2-SYSTEM-RULEVIEW-001 | — |
-| `CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001` | ruleview | negative | TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-009 | AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-009 | MIX-RULEVIEW-SYSTEM-REQUIRED |
-| `CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001` | ruleview | negative | TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-009 | AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-009 | MIX-RULEVIEW-DUPLICATE |
-| `CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001` | ruleview | contract | TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-008 | AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-008 | — |
-| `CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001` | ruleview | contract | TR-P2-SYSTEM-RULEVIEW-003 | AC-P2-SYSTEM-RULEVIEW-003 | MIX-RULEVIEW-UNKNOWN |
-| `CASE-P2-TD-RULEVIEW-BARE-NAME-REJECT-001` | ruleview | negative | TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-010 | AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-010 | MIX-RULEVIEW-UNKNOWN |
-| `CASE-P2-TD-MODEL-PATH-EXACT-001` | model_path | contract | TR-P2-SYSTEM-RULEVIEW-005 | AC-P2-SYSTEM-RULEVIEW-005 | — |
-| `CASE-P2-TD-MODEL-PATH-UNKNOWN-001` | model_path | negative | TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-009 | AC-P2-SYSTEM-RULEVIEW-005, AC-P2-SYSTEM-RULEVIEW-009 | MIX-MODEL-PATH-INVALID |
-| `CASE-P2-TD-MODEL-PATH-NON-COMPOSITE-001` | model_path | negative | TR-P2-SYSTEM-RULEVIEW-005 | AC-P2-SYSTEM-RULEVIEW-005 | MIX-MODEL-PATH-INVALID |
-| `CASE-P2-TD-ACCESS-READ-MATRIX-001` | model_access | contract | TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-006 | AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-006 | MIX-MODEL-ACCESS-DENIED |
-| `CASE-P2-TD-ACCESS-WRITE-MATRIX-001` | model_access | negative | TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-007 | AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-007 | MIX-MODEL-ACCESS-DENIED |
-| `CASE-P2-TD-ACCESS-EXECUTE-MATRIX-001` | model_access | contract | TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-007 | AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-007 | MIX-MODEL-ACCESS-DENIED |
-| `CASE-P2-TD-STATIC-DENY-001` | model_access | negative | TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-008 | AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-005, AC-P2-SYSTEM-RULEVIEW-008 | MIX-MODEL-ACCESS-DENIED |
-| `CASE-P2-TD-RUNTIME-GUARD-ALLOW-001` | runtime_guard | contract | TR-P2-SYSTEM-RULEVIEW-006 | AC-P2-SYSTEM-RULEVIEW-006 | — |
-| `CASE-P2-TD-RUNTIME-GUARD-DENY-001` | runtime_guard | negative | TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007 | AC-P2-SYSTEM-RULEVIEW-006, AC-P2-SYSTEM-RULEVIEW-007 | MIX-MODEL-ACCESS-RUNTIME-DENIED |
-| `CASE-P2-TD-RUNTIME-GUARD-FAIL-CLOSED-001` | runtime_guard | negative | TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-009 | AC-P2-SYSTEM-RULEVIEW-006, AC-P2-SYSTEM-RULEVIEW-009 | MIX-MODEL-ACCESS-RUNTIME-DENIED |
-| `CASE-P2-TD-GUARD-NO-BYPASS-001` | runtime_guard | architecture | TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-010 | AC-P2-SYSTEM-RULEVIEW-007, AC-P2-SYSTEM-RULEVIEW-010 | — |
-| `CASE-P2-TD-ATOMIC-PUBLICATION-001` | publication | contract | TR-P2-SYSTEM-RULEVIEW-008 | AC-P2-SYSTEM-RULEVIEW-008 | — |
-| `CASE-P2-TD-CONTEXT-ISOLATION-001` | publication | concurrency | TR-P2-SYSTEM-RULEVIEW-008 | AC-P2-SYSTEM-RULEVIEW-008 | — |
-| `CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001` | diagnostic | contract | TR-P2-SYSTEM-RULEVIEW-009 | AC-P2-SYSTEM-RULEVIEW-009 | — |
-| `CASE-P2-TD-LEGACY-NO-NEW-BARE-FALLBACK-001` | compatibility | architecture | TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-010 | AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-010 | — |
-| `CASE-P2-TD-DECLARATION-BOUNDARY-001` | compatibility | architecture | TR-P2-SYSTEM-RULEVIEW-010 | AC-P2-SYSTEM-RULEVIEW-010 | MIX-P2-DECLARATION-BOUNDARY |
-
-## 5. Case 合同
-
-### 5.1 `CASE-P2-TD-SYSTEM-DETERMINISM-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009 / AC-P2-SYSTEM-RULEVIEW-001, AC-P2-SYSTEM-RULEVIEW-008, AC-P2-SYSTEM-RULEVIEW-009
-- **层级 / 分组**：contract / system
-- **Fixture**：SystemDefinitionFixture：真实 systems.xml + 语义等价的多文件/重排 source 集合
-- **稳定 seam**：deterministic SourceProvider + SystemCompilationPass + CompiledModelSet digest
-- **未来测试类**：`P2SystemCompilationContractTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2SystemCompilationContractTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：SystemKey 集合、RuleViewKey 集合、Diagnostic 顺序和 semanticDigest 在重排后完全相同；成功只发布一个完整 Context
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得依赖文件系统枚举顺序、不得形成第二 Registry
-- **有效 RED 合同**：测试骨架可编译后，若顺序变化导致 key/digest/diagnostic 差异或结果不一致，才是有效 RED。
-
-### 5.2 `CASE-P2-TD-SYSTEM-DUPLICATE-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-009 / AC-P2-SYSTEM-RULEVIEW-001, AC-P2-SYSTEM-RULEVIEW-009
-- **层级 / 分组**：negative / system
-- **Fixture**：SystemDefinitionFixture：同一 SystemKey 来自两个 SourceRef
-- **稳定 seam**：SystemCompilationPass duplicate detection + ContextPublisher probe
-- **未来测试类**：`P2SystemCompilationContractTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2SystemCompilationContractTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：产生 MIX-SYSTEM-DUPLICATE，包含双方来源；candidate FAILED；publisher publishCount=0；旧 Context identity 不变
-- **预期 Diagnostic**：MIX-SYSTEM-DUPLICATE
-- **禁止副作用**：不得覆盖首项、不得发布其余部分 System
-- **有效 RED 合同**：测试骨架可编译后，若重复 System 被接受、错误码/来源不符或发生发布，才是有效 RED。
-
-### 5.3 `CASE-P2-TD-SYSTEM-FORWARD-REF-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-001 / AC-P2-SYSTEM-RULEVIEW-001
-- **层级 / 分组**：contract / system
-- **Fixture**：两个 System source：引用先出现、定义后出现；再交换顺序
-- **稳定 seam**：two-phase register/link seam
-- **未来测试类**：`P2SystemCompilationContractTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2SystemCompilationContractTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：两种顺序均先全量注册再链接，最终引用解析一致且无 ERROR
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得靠单遍顺序碰巧解析，不得猜测 System
-- **有效 RED 合同**：测试骨架可编译后，若合法前向引用因顺序失败或结果不同，才是有效 RED。
-
-### 5.4 `CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-009 / AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-009
-- **层级 / 分组**：negative / ruleview
-- **Fixture**：RuleViewCompositeFixture：新 RuleView 无 system
-- **稳定 seam**：RuleViewOwnershipPass + Diagnostic collector
-- **未来测试类**：`P2RuleViewCompositeIdentityTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2RuleViewCompositeIdentityTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：产生 MIX-RULEVIEW-SYSTEM-REQUIRED，候选不发布；bare-name probe 调用次数=0
-- **预期 Diagnostic**：MIX-RULEVIEW-SYSTEM-REQUIRED
-- **禁止副作用**：不得推断 System，不得 fallback 裸名称 Registry
-- **有效 RED 合同**：测试骨架可编译后，缺 system 被接受或触发 bare-name lookup 才是有效 RED。
-
-### 5.5 `CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-009 / AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-009
-- **层级 / 分组**：negative / ruleview
-- **Fixture**：同一 SystemKey 下两个相同 localName，不同 SourceRef
-- **稳定 seam**：RuleViewKey(SystemKey,name) registration
-- **未来测试类**：`P2RuleViewCompositeIdentityTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2RuleViewCompositeIdentityTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：产生 MIX-RULEVIEW-DUPLICATE，双方 SourceRef 可定位；不覆盖、不发布
-- **预期 Diagnostic**：MIX-RULEVIEW-DUPLICATE
-- **禁止副作用**：不得 last-write-wins
-- **有效 RED 合同**：测试骨架可编译后，同 System 重名未失败或覆盖才是有效 RED。
-
-### 5.6 `CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-008 / AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-008
-- **层级 / 分组**：contract / ruleview
-- **Fixture**：System A/B 各声明 localName=main
-- **稳定 seam**：TypedDefinitionRegistries.ruleViews + CompositeRuleViewResolverSpy
-- **未来测试类**：`P2RuleViewCompositeIdentityTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2RuleViewCompositeIdentityTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：同时存在 RuleViewKey(A,main) 与 RuleViewKey(B,main)，分别解析各自定义；两个 Context 间也不污染
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得以 name 作为全局唯一键
-- **有效 RED 合同**：测试骨架可编译后，跨 System 同名冲突、串用或污染才是有效 RED。
-
-### 5.7 `CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-003 / AC-P2-SYSTEM-RULEVIEW-003
-- **层级 / 分组**：contract / ruleview
-- **Fixture**：已发布 A/main、B/main；请求 A/main、B/main、C/main、A/unknown
-- **稳定 seam**：CompositeRuleViewResolver
-- **未来测试类**：`P2RuleViewCompositeIdentityTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2RuleViewCompositeIdentityTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：仅两个完整存在的复合 Key 成功；未知 System/RuleView 返回稳定 MIX-RULEVIEW-UNKNOWN
-- **预期 Diagnostic**：MIX-RULEVIEW-UNKNOWN
-- **禁止副作用**：不得跨 System 搜索同名项
-- **有效 RED 合同**：测试骨架可编译后，错误复合身份解析成功或失败事实不稳定才是有效 RED。
-
-### 5.8 `CASE-P2-TD-RULEVIEW-BARE-NAME-REJECT-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-010 / AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-010
-- **层级 / 分组**：negative / ruleview
-- **Fixture**：已存在多个 main；新调用仅传 rule-ref=main
-- **稳定 seam**：CompositeRuleViewResolverSpy + legacy adapter probe
-- **未来测试类**：`P2RuleViewCompositeIdentityTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2RuleViewCompositeIdentityTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：新路径拒绝裸名称；legacy 只读 Adapter 若被显式调用也不得向新 Registry 写入
-- **预期 Diagnostic**：MIX-RULEVIEW-UNKNOWN
-- **禁止副作用**：不得新增或调用裸名称 fallback 作为新路径
-- **有效 RED 合同**：测试骨架可编译后，新路径能通过裸名成功解析或写新 Registry 才是有效 RED。
-
-### 5.9 `CASE-P2-TD-MODEL-PATH-EXACT-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-005 / AC-P2-SYSTEM-RULEVIEW-005
-- **层级 / 分组**：contract / model_path
-- **Fixture**：ModelShapeFixture：同一合法结构由 rule/change/query 三类消费者引用
-- **稳定 seam**：ModelPathCompiler
-- **未来测试类**：`P2ModelPathCompilerTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelPathCompilerTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：三类消费者得到相同规范化 ModelPath identity；大小写/segment 规则一致
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得各自实现路径解释器，不得模糊匹配
-- **有效 RED 合同**：测试骨架可编译后，同一输入产生不同规范路径才是有效 RED。
-
-### 5.10 `CASE-P2-TD-MODEL-PATH-UNKNOWN-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-009 / AC-P2-SYSTEM-RULEVIEW-005, AC-P2-SYSTEM-RULEVIEW-009
-- **层级 / 分组**：negative / model_path
-- **Fixture**：ModelShapeFixture：未知 segment / 目标不匹配
-- **稳定 seam**：ModelPathCompiler + StaticAccessValidationPass
-- **未来测试类**：`P2ModelPathCompilerTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelPathCompilerTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：编译期 MIX-MODEL-PATH-INVALID；source-aware；候选不发布
-- **预期 Diagnostic**：MIX-MODEL-PATH-INVALID
-- **禁止副作用**：不得推迟到 runtime 再试，不得跨 View 搜索
-- **有效 RED 合同**：测试骨架可编译后，未知路径通过静态阶段或发生发布才是有效 RED。
-
-### 5.11 `CASE-P2-TD-MODEL-PATH-NON-COMPOSITE-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-005 / AC-P2-SYSTEM-RULEVIEW-005
-- **层级 / 分组**：negative / model_path
-- **Fixture**：ModelShapeFixture：中间 segment 为 scalar 仍继续下钻
-- **稳定 seam**：ModelPathCompiler
-- **未来测试类**：`P2ModelPathCompilerTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelPathCompilerTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：精确拒绝为 MIX-MODEL-PATH-INVALID，定位失败 segment/SourceRef
-- **预期 Diagnostic**：MIX-MODEL-PATH-INVALID
-- **禁止副作用**：不得静默截断或自动转换
-- **有效 RED 合同**：测试骨架可编译后，non-composite path 被接受才是有效 RED。
-
-### 5.12 `CASE-P2-TD-ACCESS-READ-MATRIX-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-006 / AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-006
-- **层级 / 分组**：contract / model_access
-- **Fixture**：ModelAccessPolicyFixture：READ 显式 allow/undeclared，WRITE/EXECUTE 独立组合
-- **稳定 seam**：StaticAccessValidationPass + ModelAccessGuard
-- **未来测试类**：`P2ModelAccessStaticAuthorizationTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessStaticAuthorizationTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：READ 只由 READ rule 决定；WRITE/EXECUTE grant 不隐含 READ；undeclared DENY
-- **预期 Diagnostic**：MIX-MODEL-ACCESS-DENIED
-- **禁止副作用**：不得权限类型互相继承
-- **有效 RED 合同**：测试骨架可编译后，READ 被其它 operation grant 或 undeclared 放行才是有效 RED。
-
-### 5.13 `CASE-P2-TD-ACCESS-WRITE-MATRIX-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-007 / AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-007
-- **层级 / 分组**：negative / model_access
-- **Fixture**：共享模型 WRITE 显式 allow/undeclared + 只有 READ grant
-- **稳定 seam**：StaticAccessValidationPass + MutationProbe
-- **未来测试类**：`P2ModelAccessStaticAuthorizationTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessStaticAuthorizationTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：只有显式 WRITE allow 可继续；undeclared 或仅 READ 均 DENY；拒绝时 stateVersion/writeCount/externalEffectCount 不变
-- **预期 Diagnostic**：MIX-MODEL-ACCESS-DENIED
-- **禁止副作用**：不得因历史可写/READ grant 默认 WRITE
-- **有效 RED 合同**：测试骨架可编译后，未显式 WRITE 被允许或有副作用才是有效 RED。
-
-### 5.14 `CASE-P2-TD-ACCESS-EXECUTE-MATRIX-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-007 / AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-007
-- **层级 / 分组**：contract / model_access
-- **Fixture**：EXECUTE allow/undeclared + 仅 READ/WRITE grant
-- **稳定 seam**：StaticAccessValidationPass/Guard
-- **未来测试类**：`P2ModelAccessStaticAuthorizationTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessStaticAuthorizationTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：EXECUTE 独立判定；未声明 DENY；其它 operation 不隐含 EXECUTE
-- **预期 Diagnostic**：MIX-MODEL-ACCESS-DENIED
-- **禁止副作用**：不得 operation 升权
-- **有效 RED 合同**：测试骨架可编译后，非 EXECUTE grant 使执行成功才是有效 RED。
-
-### 5.15 `CASE-P2-TD-STATIC-DENY-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-008 / AC-P2-SYSTEM-RULEVIEW-004, AC-P2-SYSTEM-RULEVIEW-005, AC-P2-SYSTEM-RULEVIEW-008
-- **层级 / 分组**：negative / model_access
-- **Fixture**：可静态判定的目标存在但访问规则不授权
-- **稳定 seam**：StaticAccessValidationPass + ContextPublisher probe
-- **未来测试类**：`P2ModelAccessStaticAuthorizationTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessStaticAuthorizationTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：编译期 MIX-MODEL-ACCESS-DENIED，candidate FAILED，publishCount=0，旧 Context 不变
-- **预期 Diagnostic**：MIX-MODEL-ACCESS-DENIED
-- **禁止副作用**：不得把静态 deny 标成 runtime-check-required
-- **有效 RED 合同**：测试骨架可编译后，静态 deny 被发布或推迟 runtime 才是有效 RED。
-
-### 5.16 `CASE-P2-TD-RUNTIME-GUARD-ALLOW-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-006 / AC-P2-SYSTEM-RULEVIEW-006
-- **层级 / 分组**：contract / runtime_guard
-- **Fixture**：动态合法路径，RuntimeFactEvaluatorStub=ALLOW
-- **稳定 seam**：ModelAccessGuardSpy + MutationProbe
-- **未来测试类**：`P2ModelAccessGuardTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessGuardTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：编译事实标记 RUNTIME_GUARD_REQUIRED；Guard 恰调用一次且 request 含 System/target/path/op；ALLOW 后才执行操作
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得先副作用后授权
-- **有效 RED 合同**：测试骨架可编译后，Guard 未调用、请求字段错或操作先于 Guard 才是有效 RED。
-
-### 5.17 `CASE-P2-TD-RUNTIME-GUARD-DENY-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007 / AC-P2-SYSTEM-RULEVIEW-006, AC-P2-SYSTEM-RULEVIEW-007
-- **层级 / 分组**：negative / runtime_guard
-- **Fixture**：同一动态访问，RuntimeFactEvaluatorStub=DENY
-- **稳定 seam**：ModelAccessGuardSpy + MutationProbe
-- **未来测试类**：`P2ModelAccessGuardTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessGuardTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：MIX-MODEL-ACCESS-RUNTIME-DENIED；stateVersion/writeCount/externalEffectCount 全部不变
-- **预期 Diagnostic**：MIX-MODEL-ACCESS-RUNTIME-DENIED
-- **禁止副作用**：不得 retry 到另一入口，不得写后回滚冒充无副作用
-- **有效 RED 合同**：测试骨架可编译后，DENY 后任一受保护副作用发生才是有效 RED。
-
-### 5.18 `CASE-P2-TD-RUNTIME-GUARD-FAIL-CLOSED-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-009 / AC-P2-SYSTEM-RULEVIEW-006, AC-P2-SYSTEM-RULEVIEW-009
-- **层级 / 分组**：negative / runtime_guard
-- **Fixture**：RuntimeFactEvaluatorStub=THROW 与 UNKNOWN 两组
-- **稳定 seam**：ModelAccessGuard + MutationProbe
-- **未来测试类**：`P2ModelAccessGuardTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessGuardTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：两组均确定性 DENY/fail-closed，Diagnostic 可定位；所有副作用计数为 0
-- **预期 Diagnostic**：MIX-MODEL-ACCESS-RUNTIME-DENIED
-- **禁止副作用**：不得 exception/unknown 时 fail-open
-- **有效 RED 合同**：测试骨架可编译后，THROW/UNKNOWN 被放行、吞异常或有副作用才是有效 RED。
-
-### 5.19 `CASE-P2-TD-GUARD-NO-BYPASS-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-010 / AC-P2-SYSTEM-RULEVIEW-007, AC-P2-SYSTEM-RULEVIEW-010
-- **层级 / 分组**：architecture / runtime_guard
-- **Fixture**：Rule/change/custom action 三类 caller 对同一受保护 path，ALLOW/DENY 各一组
-- **稳定 seam**：统一 ModelAccessGuardSpy + architecture dependency scan
-- **未来测试类**：`P2ModelAccessGuardTest + P2LegacyBoundaryArchitectureTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2ModelAccessGuardTest + P2LegacyBoundaryArchitectureTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：三入口均调用同一 Guard 语义；DENY 全部 0 副作用；静态扫描无绕过写入口
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得调用私有/legacy 通道绕开 Guard
-- **有效 RED 合同**：测试骨架可编译后，任一入口未经过 Guard 或 DENY 仍能修改才是有效 RED。
-
-### 5.20 `CASE-P2-TD-ATOMIC-PUBLICATION-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-008 / AC-P2-SYSTEM-RULEVIEW-008
-- **层级 / 分组**：contract / publication
-- **Fixture**：旧 Context + 成功 candidate + 分别含 System/RuleView/access ERROR candidate
-- **稳定 seam**：ContextPublisher probe + CompiledModelSet snapshot
-- **未来测试类**：`P2PublicationIsolationTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2PublicationIsolationTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：成功 candidate 全量一次发布；任一错误 candidate 0 次发布且旧 Context identity/内容不变
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得部分 Registry 暴露
-- **有效 RED 合同**：测试骨架可编译后，失败 candidate 替换/污染旧 Context 才是有效 RED。
-
-### 5.21 `CASE-P2-TD-CONTEXT-ISOLATION-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-008 / AC-P2-SYSTEM-RULEVIEW-008
-- **层级 / 分组**：concurrency / publication
-- **Fixture**：Context A/B 含同名 RuleView但不同 System/policy
-- **稳定 seam**：两个独立 EngineContext + deterministic executor
-- **未来测试类**：`P2PublicationIsolationTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2PublicationIsolationTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：并行/交错读取始终命中各自 registries/policies；无 global current；重复运行快照一致
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得共享可变 Registry，不使用 sleep 作为并发 oracle
-- **有效 RED 合同**：测试骨架可编译后，任一 Context 读到另一 Context 事实或顺序影响结果才是有效 RED。
-
-### 5.22 `CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-009 / AC-P2-SYSTEM-RULEVIEW-009
-- **层级 / 分组**：contract / diagnostic
-- **Fixture**：重复 System、缺 system、unknown composite、invalid path、static deny、runtime deny
-- **稳定 seam**：Diagnostic collector + fixed SourceRef fixture
-- **未来测试类**：`P2DiagnosticContractTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2DiagnosticContractTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：重复执行 code/order/applicable fields 完全稳定；包含适用 System/RuleView/op/path/SourceRef；无敏感配置泄露
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得 null-success、仅日志、随机排序
-- **有效 RED 合同**：测试骨架可编译后，Diagnostic 缺关键定位、排序漂移或泄露敏感值才是有效 RED。
-
-### 5.23 `CASE-P2-TD-LEGACY-NO-NEW-BARE-FALLBACK-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-010 / AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-010
-- **层级 / 分组**：architecture / compatibility
-- **Fixture**：扫描 P2 新生产调用链 + legacy ConfigInfo/RuleParser 边界
-- **稳定 seam**：repository dependency/static scan + legacy adapter probe
-- **未来测试类**：`P2LegacyBoundaryArchitectureTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2LegacyBoundaryArchitectureTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：P2 新路径不调用 ConfigInfo/DataUtil 裸名 RuleView lookup；兼容入口只读且不写 typed registry
-- **预期 Diagnostic**：—
-- **禁止副作用**：不得删除旧入口，也不得让新代码依赖旧裸名 fallback
-- **有效 RED 合同**：测试骨架可编译后，发现新生产代码依赖裸名 lookup/写入新 Registry 才是有效 RED。
-
-### 5.24 `CASE-P2-TD-DECLARATION-BOUNDARY-001`
-
-- **TR / AC**：TR-P2-SYSTEM-RULEVIEW-010 / AC-P2-SYSTEM-RULEVIEW-010
-- **层级 / 分组**：architecture / compatibility
-- **Fixture**：现有 declaration System 入口与 P2 新 System 模型并存
-- **稳定 seam**：repository/module/dependency scan + migration mapping evidence
-- **未来测试类**：`P2LegacyBoundaryArchitectureTest`
-- **未来执行命令**：`mvn -pl dec-core-compiler,dec-core-context,dec-context-config-parse-xml -am -Dtest=P2LegacyBoundaryArchitectureTest test`（若 Case 为 architecture scan，则由同名测试/脚本在后续 TDD 阶段提供可执行入口；本阶段不执行）
-- **Oracle**：旧入口仍在；P2 不复制旧 runtime；映射/差异/P7 删除条件可追踪；不实现 P3～P7 完整运行语义
-- **预期 Diagnostic**：MIX-P2-DECLARATION-BOUNDARY
-- **禁止副作用**：不得 P2 提前删除或复制 declaration runtime
-- **有效 RED 合同**：测试骨架可编译后，旧入口被提前删除、复制出第二 runtime 或新路径依赖第二 authority 才是有效 RED。
-
-## 6. P2-T01～T12 覆盖矩阵
-
-| Task | 正式 Case |
+# FEATURE-DESC-3361AD2E54FC Test Design
+
+> Revision：`TESTDESIGN-P2-R07`。
+> Base：`TESTDESIGN-P2-R06`。
+> Inputs：Requirement `REQAN-P2-R01`、Business Model candidate `BM-R09`、Design candidate `DESIGN-P2-R06`。
+> Status：`NEEDS_CHANGES_CANDIDATE_FIXED / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`，即本文件是返修后的 canonical Test Design candidate，但在 Design exact-revision Review、RC9 reopen/publish 与 machine-valid Evidence 完成前不得 PASSED。
+
+## 1. Test Design principles
+
+1. Acceptance must be tested from public/source-observable behavior, not only internal helper behavior.
+2. Every protected READ/WRITE/EXECUTE must prove Guard entry; STATIC_ALLOW is Guard-internal only.
+3. Runtime wildcard lookup is forbidden; real source `read path="*"` is compile-time expansion only.
+4. AC-006 must prove **Source -> Compiler -> published Context -> Runtime Guard -> ALLOW/DENY**, not just direct construction of an internal compiled rule.
+5. A valid TDD RED must compile the target test, start the intended test and fail the intended behavioral/contract assertion.
+6. Missing module/test/production symbol, testCompile error, dependency/plugin/setup failure or upstream reactor failure is `INVALID_RED`.
+7. No production code, API skeleton or implementation is created in Test Design.
+
+## 2. Formal Maven / valid-RED contract
+
+Dependency/bootstrap preparation, when required:
+
+```bash
+./mvnw -pl <target-module> -am -Dmaven.test.skip=true install
+```
+
+Formal target test:
+
+```bash
+./mvnw -pl <target-module> -Dtest=<TestClass> -Dsurefire.failIfNoSpecifiedTests=true test
+```
+
+The target-test step MUST NOT use `-am`.
+
+Before a new API symbol exists, the initial API-shape RED uses reflection/string/source/bytecode contract inspection that itself compiles. Direct typed tests become eligible only after the legal TDD lifecycle has produced the minimal frozen API skeleton.
+
+## 3. Requirement acceptance matrix
+
+### AC-001 — deterministic System compilation
+
+**CASE-P2-SYSTEM-DETERMINISM-001-R07**
+
+- compile the real `systems.xml` and semantically identical reordered/multi-source forms;
+- assert identical SystemKey set, canonical ordering and semantic digest;
+- duplicate/conflicting System emits stable ERROR;
+- failed candidate does not publish partial Context.
+
+### AC-002 — RuleView composite identity
+
+**CASE-P2-RULEVIEW-COMPOSITE-001-R07**
+
+- same RuleView name in two Systems publishes as two `(SystemKey,name)` keys;
+- duplicate within one System fails;
+- missing System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`;
+- no bare-name registration fallback.
+
+### AC-003 — RuleView composite call
+
+**CASE-P2-RULEVIEW-CALL-001-R07**
+
+- correct System+name resolves exact RuleView;
+- wrong System/name and bare-name attempts fail deterministically;
+- no cross-System search/fallback.
+
+### AC-004 — model-access permission matrix
+
+**CASE-P2-ACCESS-MATRIX-001-R07**
+
+For READ/WRITE/EXECUTE independently:
+
+- declared operation -> authorized according to compiled rule;
+- undeclared operation -> fail closed;
+- shared WRITE is denied unless explicitly declared;
+- denial executes zero protected operation and zero external side effects.
+
+### AC-005 — unified ModelPath / static blocking
+
+**CASE-P2-MODEL-PATH-001-R07**
+
+- same logical path used by rule/change/query/access yields same canonical identity;
+- unknown segment/non-composite intermediate/target mismatch fails at compile time;
+- no fuzzy/prefix/suffix/cross-target lookup.
+
+### AC-006 — dynamic access from Source to runtime Guard
+
+**CASE-P2-DYNAMIC-SOURCE-TO-GUARD-001-R07** — **blocking**
+
+Purpose: prove the production Compiler can actually generate a legal `RUNTIME_GUARD_REQUIRED` fact from current source semantics.
+
+Fixture contract:
+
+- use existing source grammar only; do not invent a runtime-predicate XML/YAML DSL;
+- declare an exact legal model-access surface;
+- use a rule/change/custom-action/read fixture whose **final object instance or collection element is chosen at runtime** under that exact authorized target/path. A representative fixture may use an authorized container path such as `orderDetailList` with runtime element traversal; the exact fixture chosen by TDD must already be expressible by existing source syntax and remain within P2 scope.
+
+Required chain/oracles:
+
+1. source parses and compiles successfully;
+2. static System/target/path/operation authorization is valid;
+3. `DynamicBindingClassification = RUNTIME_OBJECT_BOUND` (or exact frozen equivalent);
+4. compiler emits one exact `CompiledModelAccessRule` with `status=RUNTIME_GUARD_REQUIRED`;
+5. that rule owns a deterministic compiler-derived `RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)` traceable to the rule/SourceRef;
+6. semantic digest includes the derived requirement identity;
+7. candidate publishes into an immutable EngineContext;
+8. runtime binding A resolves to the same Context/target/exact authorized path/operation -> Guard ALLOW -> protected operation exactly once;
+9. runtime binding B mismatches Context/target/path/operation or escapes the authorized binding -> Guard DENY;
+10. DENY path executes protected operation zero times, state version unchanged and external-effect count zero;
+11. Guard unavailable also DENY/fail-closed;
+12. compiler must not require or invent `FACT_EQUALS/ALL_OF/ANY_OF/NOT` source predicates for this case.
+
+A unit test that manually creates `CompiledModelAccessRule`/`RuntimeAccessRequirement` does **not** satisfy this case.
+
+### AC-007 — no bypass from all protected entry types
+
+**CASE-P2-GUARD-NO-BYPASS-001-R07**
+
+- Rule, change, custom action and protected query/read all call Guard;
+- STATIC_ALLOW still records one Guard entry and zero evaluator submissions;
+- DENY blocks before read/write/execute and side effects.
+
+### AC-008 — atomic publication / Context isolation
+
+**CASE-P2-CONTEXT-ATOMICITY-001-R07**
+
+- valid new compilation publishes whole closure;
+- failed P2 candidate leaves old Context unchanged;
+- two contexts have independent registries/policies/guards and no mutable global current.
+
+### AC-009 — stable diagnostic/denial
+
+**CASE-P2-DIAGNOSTIC-001-R07**
+
+Repeated runs produce stable codes/order/source location for duplicate System, missing RuleView owner, unknown composite key, invalid path and access denial. Runtime reasons distinguish policy/context/binding/Guard/evaluator failures and do not leak complete runtime data.
+
+### AC-010 — declaration compatibility boundary
+
+**CASE-P2-DECLARATION-BOUNDARY-001-R07**
+
+- retired `DEC-EXPAND-DECLARATION` is not restored to repository/reactor/dependencies;
+- surviving legacy RuleView/Config read surface is read-only;
+- new P2 compiler/runtime does not write legacy registry or create second authority;
+- final removal remains P7.
+
+## 4. Selected-rule delivery / FND-009 regression
+
+**CASE-P2-SELECTED-RULE-001-R07**
+
+- exact PolicyIndex lookup count = 1;
+- Guard passes the exact selected `CompiledModelAccessRule` to any evaluator/validator seam;
+- no evaluator PolicyIndex re-selection;
+- request cannot supply a replacement rule/requirement;
+- selected rule/request key mismatch -> DENY before protected operation.
+
+For current P2 `EXACT_RUNTIME_BINDING`, authorization is decided from selected rule + runtime binding facts. Future business predicates require a future Requirement revision.
+
+## 5. Real source wildcard / FND-010 regression
+
+**CASE-P2-SYSTEMS-WILDCARD-READ-001-R07**
+
+Fixture: `dec-demo/src/main/resources/mix/system/systems.xml`.
+
+Required assertions:
+
+- `order/OrderInfo` and `payment/OrderInfo` source READ `path="*"` are accepted;
+- each expands only against its exact target `CompiledTargetPathCatalog`;
+- result is finite, canonical-sorted and deduplicated exact READ rules;
+- explicit exact overlap preserves provenance without duplicate rule key;
+- runtime policy index contains zero wildcard keys;
+- wildcard WRITE/EXECUTE rejected;
+- empty expansion rejected;
+- target model-shape change changes digest/forces recompile; old Context does not silently expand permission.
+
+## 6. Closed RuntimeFactValue / FND-011 regression
+
+**CASE-P2-RUNTIME-FACT-VALUE-001-R07**
+
+- class modifier is public+final;
+- constructor is not externally accessible;
+- only frozen typed factories are public construction seams;
+- LIST/OBJECT deep-copy recursively and expose unmodifiable values;
+- external subclassing impossible;
+- visitor exhaustively handles six kinds;
+- no generic mutable payload getter;
+- canonical form deterministic.
+
+## 7. Cross-module construction / FND-015 regression
+
+**CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R07**
+
+- `RuntimeAccessRequirement` lives in `dec-core-context` neutral fact package;
+- production `dec-core-compiler` can construct it through the frozen public validated factory without split package or reflection;
+- context has no dependency on compiler;
+- public factory does not grant authorization: a caller-created requirement not present in current selected rule/CompiledModelSet cannot affect Guard decision;
+- `RuntimeRequirementKey` cannot be caller-chosen/overridden.
+
+This case includes a Java 8 compile/API architecture check, not merely documentation inspection.
+
+## 8. Guard unavailable / timeout / cancellation / fail-closed matrix
+
+Carry forward R04/R05/R06 coverage:
+
+| Condition | Expected |
 |---|---|
-| P2-T01 System Raw/Compiled | CASE-P2-TD-SYSTEM-DETERMINISM-001, CASE-P2-TD-ATOMIC-PUBLICATION-001 |
-| P2-T02 System loader | CASE-P2-TD-SYSTEM-DETERMINISM-001, CASE-P2-TD-SYSTEM-DUPLICATE-001, CASE-P2-TD-SYSTEM-FORWARD-REF-001 |
-| P2-T03 ModelAccessRule | CASE-P2-TD-ACCESS-READ-MATRIX-001, CASE-P2-TD-ACCESS-WRITE-MATRIX-001, CASE-P2-TD-ACCESS-EXECUTE-MATRIX-001 |
-| P2-T04 ModelPath | CASE-P2-TD-MODEL-PATH-EXACT-001, CASE-P2-TD-MODEL-PATH-UNKNOWN-001, CASE-P2-TD-MODEL-PATH-NON-COMPOSITE-001 |
-| P2-T05 RuleView ownership/key | CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001, CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001, CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001 |
-| P2-T06 Parser/Registry/Diagnostic | CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001, CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001 |
-| P2-T07 static permission | CASE-P2-TD-STATIC-DENY-001 |
-| P2-T08 runtime Guard | CASE-P2-TD-RUNTIME-GUARD-ALLOW-001, CASE-P2-TD-RUNTIME-GUARD-DENY-001, CASE-P2-TD-RUNTIME-GUARD-FAIL-CLOSED-001 |
-| P2-T09 composite call | CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001, CASE-P2-TD-RULEVIEW-BARE-NAME-REJECT-001 |
-| P2-T10 same-name isolation | CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001, CASE-P2-TD-CONTEXT-ISOLATION-001 |
-| P2-T11 unauthorized matrix | CASE-P2-TD-ACCESS-READ-MATRIX-001, CASE-P2-TD-ACCESS-WRITE-MATRIX-001, CASE-P2-TD-ACCESS-EXECUTE-MATRIX-001, CASE-P2-TD-GUARD-NO-BYPASS-001 |
-| P2-T12 declaration boundary | CASE-P2-TD-LEGACY-NO-NEW-BARE-FALLBACK-001, CASE-P2-TD-DECLARATION-BOUNDARY-001 |
+| policy missing | DENY / POLICY_NOT_FOUND |
+| Context mismatch | DENY / CONTEXT_IDENTITY_MISMATCH |
+| RUNTIME_GUARD_REQUIRED but runtime binding missing | DENY / RUNTIME_BINDING_REQUIRED |
+| binding target/path/operation mismatch | DENY / RUNTIME_BINDING_MISMATCH |
+| Guard unavailable sentinel | DENY / GUARD_UNAVAILABLE |
+| evaluator required but unavailable | DENY / RUNTIME_EVALUATOR_UNAVAILABLE |
+| evaluator exception | DENY / RUNTIME_EVALUATOR_EXCEPTION |
+| evaluator null | DENY / RUNTIME_EVALUATOR_NULL |
+| evaluator timeout/non-return | DENY / RUNTIME_EVALUATOR_TIMEOUT + cancellation |
+| evaluator unknown | DENY / RUNTIME_EVALUATOR_UNKNOWN |
+| STATIC_ALLOW | Guard entry 1, evaluator submit 0, ALLOW |
+| runtime binding matches | ALLOW only after exact selected-rule validation |
 
-## 7. AC 完整性矩阵
+Every DENY asserts protected read/write/execute count = 0 and external-effect count = 0.
 
-| AC | 核心 Case |
+Timeout tests use injected fake monotonic time / controlled Future; `Thread.sleep` is not the oracle.
+
+## 9. Java 8 / EngineContext compatibility
+
+**CASE-P2-JAVA8-ENGINE-CONTEXT-001-R07**
+
+- production P2 API compiles with Java release 8;
+- no record / Java 9 collection factory/copy API in production source;
+- `EngineContext` remains `public final class`;
+- existing single-arg constructor and `compiledModelSet()/modelSet()/projection()` remain callable;
+- P2 APIs are additive;
+- no new `findRuleView(String)` bare-name API;
+- existing equals/hashCode/toString behavior is not silently changed by P2 metadata.
+
+## 10. Runtime requirement API security
+
+**CASE-P2-RUNTIME-REQUIREMENT-AUTHORITY-001-R07**
+
+- public validated factory accepts only a complete authorized rule key, frozen kind and SourceRef;
+- deterministic key derived inside factory;
+- caller cannot inject the constructed value into `ModelAccessRequest` as authority;
+- Guard uses only requirement embedded in current selected rule from current Context;
+- requirement can only validate/narrow runtime binding against the statically authorized surface.
+
+## 11. Formal TDD RED examples
+
+Initial API shape, before symbols exist:
+
+- reflection/string lookup for class/modifier/method signature;
+- source/bytecode contract scan that compiles against existing code.
+
+After legal minimal API skeleton exists:
+
+- direct typed behavior tests;
+- expected RED is failed assertion/behavior, not compilation failure.
+
+Evidence for each RED must record command, target test, intended failing oracle and actual failure category.
+
+## 12. Traceability
+
+| Acceptance / Finding | Blocking case |
 |---|---|
-| AC-P2-SYSTEM-RULEVIEW-001 | SYSTEM-DETERMINISM / SYSTEM-DUPLICATE / SYSTEM-FORWARD-REF |
-| AC-P2-SYSTEM-RULEVIEW-002 | RULEVIEW-SYSTEM-REQUIRED / SAME-SYSTEM-DUPLICATE / CROSS-SYSTEM-ISOLATION |
-| AC-P2-SYSTEM-RULEVIEW-003 | RULEVIEW-COMPOSITE-LOOKUP / BARE-NAME-REJECT |
-| AC-P2-SYSTEM-RULEVIEW-004 | ACCESS-READ/WRITE/EXECUTE-MATRIX / STATIC-DENY |
-| AC-P2-SYSTEM-RULEVIEW-005 | MODEL-PATH-EXACT / UNKNOWN / NON-COMPOSITE |
-| AC-P2-SYSTEM-RULEVIEW-006 | RUNTIME-GUARD-ALLOW / DENY / FAIL-CLOSED |
-| AC-P2-SYSTEM-RULEVIEW-007 | ACCESS-WRITE/EXECUTE-MATRIX / RUNTIME-GUARD-DENY / GUARD-NO-BYPASS |
-| AC-P2-SYSTEM-RULEVIEW-008 | SYSTEM-DETERMINISM / ATOMIC-PUBLICATION / CONTEXT-ISOLATION |
-| AC-P2-SYSTEM-RULEVIEW-009 | SYSTEM-DUPLICATE / RULEVIEW failures / MODEL-PATH-UNKNOWN / GUARD-FAIL-CLOSED / DIAGNOSTIC-DETERMINISM |
-| AC-P2-SYSTEM-RULEVIEW-010 | RULEVIEW-BARE-NAME-REJECT / GUARD-NO-BYPASS / LEGACY-NO-NEW-BARE-FALLBACK / DECLARATION-BOUNDARY |
+| AC-001 | CASE-P2-SYSTEM-DETERMINISM-001-R07 |
+| AC-002 | CASE-P2-RULEVIEW-COMPOSITE-001-R07 |
+| AC-003 | CASE-P2-RULEVIEW-CALL-001-R07 |
+| AC-004 | CASE-P2-ACCESS-MATRIX-001-R07 |
+| AC-005 | CASE-P2-MODEL-PATH-001-R07 |
+| AC-006 / FND-014 / FND-016 | CASE-P2-DYNAMIC-SOURCE-TO-GUARD-001-R07 |
+| AC-007 / FND-001 | CASE-P2-GUARD-NO-BYPASS-001-R07 |
+| AC-008 | CASE-P2-CONTEXT-ATOMICITY-001-R07 |
+| AC-009 | CASE-P2-DIAGNOSTIC-001-R07 |
+| AC-010 / FND-003 | CASE-P2-DECLARATION-BOUNDARY-001-R07 |
+| FND-009 | CASE-P2-SELECTED-RULE-001-R07 |
+| FND-010 | CASE-P2-SYSTEMS-WILDCARD-READ-001-R07 |
+| FND-011 | CASE-P2-RUNTIME-FACT-VALUE-001-R07 |
+| FND-012 | §2 valid-RED command/oracle contract |
+| FND-015 | CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R07 |
+| FND-008 | CASE-P2-JAVA8-ENGINE-CONTEXT-001-R07 |
 
-## 8. TDD 进入条件与 RED 真实性
+## 13. Review and phase gate
 
-- 本 Test Design PASSED 后仍不得直接开发；必须先完成 Implementation Plan，再进入 TDD。
-- 后续 TDD 先创建测试骨架和可运行 seam；只有命令真正进入测试并因业务断言不满足而失败，才能登记 RED Evidence。
-- 以下均是无效 RED：`ClassNotFound`、生产/测试类不存在、Maven 模块选择错误、依赖下载失败、Java 编译错误、fixture 文件不存在、测试被 skip/disabled。
-- 每个 Case 的 GREEN 必须执行同一语义 oracle；不得用 mock 自证生产路径，除非 Case 本身就是明确的 seam/unit boundary。
+`TESTDESIGN-P2-R07` cannot pass before exact `DESIGN-P2-R06` passes and RC9 machine lifecycle binds the current revisions.
 
-## 9. 未来证据采集
+After Design closure, exact R07 requires independent Test Design reviewers including RequirementReviewAgent, DesignReviewAgent, TDDReviewAgent and TestEvidenceReviewAgent under the current RC9 contract.
 
-- TDD：保存每个 Case family 的 RED command-result、失败断言摘要、随后 GREEN command-result；
-- Testing：保存 Surefire XML/汇总、Diagnostic snapshot、architecture scan、必要的并发重复结果；
-- 对 runtime DENY family，必须保存 `MutationProbe` 的前后快照，证明 `stateVersion/writeCount/externalEffectCount` 未变化；
-- 对 publication family，保存旧 Context identity 与 publishCount/registry snapshot，证明失败候选未泄漏；
-- 对 bare-name/declaration 边界，保存 repository/module scan 结果，禁止仅以人工说明替代。
-
-## 10. 停止条件
-
-- Design Revision 不再是 `DESIGN-P2-R01@8875f042898c` 或其核心语义被重开；
-- 需要把裸 RuleView fallback、默认 WRITE allow、Guard fail-open 或 P2 删除 declaration runtime 视为合法行为；
-- Case 无法给出独立于实现的 observable oracle；
-- 任一 required Reviewer 对当前 Test Design Revision 给出 BLOCKED/FAILED 或形成开放 P0/P1。
+Implementation Plan / TDD / Development remain BLOCKED while any effective P0/P1 is open.
