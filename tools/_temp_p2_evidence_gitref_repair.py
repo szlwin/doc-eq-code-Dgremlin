@@ -7,7 +7,6 @@ import json
 import subprocess
 from pathlib import Path
 
-ROOT = Path.cwd()
 TASK = Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC')
 INDEX = TASK / 'evidence/evidence_index.json'
 LEDGER = TASK / 'evidence/migrations/20260808-pr34-flattened-checkpoint-gitref-repair.json'
@@ -16,15 +15,15 @@ BROKEN_COMMIT = 'dfb2d6b9707ed6127a0434bd5fb5578c2160b5cf'
 IDS = {'EVD-000030','EVD-000031','EVD-000034'}
 
 
-def git(*args: str, binary: bool=False):
-    p = subprocess.run(['git', *args], capture_output=True, text=not binary)
+def git(*args: str):
+    p = subprocess.run(['git', *args], capture_output=True, text=True)
     if p.returncode:
-        raise RuntimeError(f"git {' '.join(args)} failed: {p.stderr if not binary else p.stderr.decode(errors='replace')}")
+        raise RuntimeError(f"git {' '.join(args)} failed: {p.stderr}")
     return p.stdout
 
 
 def main():
-    head = str(git('rev-parse','HEAD')).strip()
+    head = git('rev-parse','HEAD').strip()
     if head != EXPECTED_HEAD:
         raise RuntimeError(f'expected {EXPECTED_HEAD}, got {head}')
     doc = json.loads(INDEX.read_text(encoding='utf-8'))
@@ -47,14 +46,15 @@ def main():
         expected_oid = str(member.get('blob_oid') or '')
         expected_digest = str(member.get('digest') or '')
         expected_size = int(member.get('size') or 0)
-        tree_line = str(git('ls-tree', HEAD, '--', path)).strip()
+
+        tree_line = git('ls-tree', head, '--', path).strip()
         if not tree_line:
             raise RuntimeError(f'{eid}: path missing at current merge commit: {path}')
         header = tree_line.split('\t',1)[0].split()
         actual_oid = header[2] if len(header) == 3 else ''
         if actual_oid != expected_oid:
             raise RuntimeError(f'{eid}: blob OID changed: expected {expected_oid}, actual {actual_oid}')
-        blob = subprocess.run(['git','cat-file','blob',actual_oid],capture_output=True).stdout
+        blob = subprocess.run(['git','cat-file','blob',actual_oid],capture_output=True,check=True).stdout
         actual_digest = hashlib.sha256(blob).hexdigest()
         if actual_digest != expected_digest or len(blob) != expected_size:
             raise RuntimeError(f'{eid}: blob content mismatch')
@@ -62,13 +62,12 @@ def main():
             raise RuntimeError(f'{eid}: aggregate digest changed')
 
         old_git_ref = json.loads(json.dumps(gr))
-        metadata.pop('git_ref', None)
-        metadata['git_ref'] = {**gr, 'commit': HEAD}
+        metadata['git_ref'] = {**gr, 'commit': head}
         metadata['governance_repair'] = {
             'kind': 'FLATTENED_CHECKPOINT_GIT_REF_REBIND',
             'reason': 'PR #34 flattened local common-develop checkpoint commits into one remote commit; the original checkpoint commit is unreachable on GitHub, while the exact recorded blob OID/digest/size is present unchanged at the merged dev_all commit.',
             'source_commit': BROKEN_COMMIT,
-            'replacement_commit': HEAD,
+            'replacement_commit': head,
             'original_ref': f'git:{BROKEN_COMMIT}',
             'original_git_ref': old_git_ref,
             'byte_identity_verified': True,
@@ -77,7 +76,7 @@ def main():
             'size_verified': expected_size,
             'repaired_at': dt.datetime.now(dt.timezone.utc).isoformat(),
         }
-        entry['ref'] = f'git:{HEAD}'
+        entry['ref'] = f'git:{head}'
         entry['metadata'] = metadata
         found.append({
             'evidence_id': eid,
@@ -86,10 +85,12 @@ def main():
             'digest': expected_digest,
             'size': expected_size,
             'old_commit': BROKEN_COMMIT,
-            'new_commit': HEAD,
+            'new_commit': head,
         })
-    if {x['evidence_id'] for x in found} != IDS:
-        raise RuntimeError(f'missing expected evidence IDs: {sorted(IDS - {x["evidence_id"] for x in found})}')
+
+    seen = {x['evidence_id'] for x in found}
+    if seen != IDS:
+        raise RuntimeError(f'missing expected evidence IDs: {sorted(IDS - seen)}')
 
     LEDGER.parent.mkdir(parents=True, exist_ok=True)
     ledger = {
@@ -99,7 +100,7 @@ def main():
         'reason': 'Restore RC9 Evidence resolvability after PR #34 flattened local task checkpoint history.',
         'invariant': 'Evidence ID, type, phase, revision, source path, blob OID, SHA-256 digest, size and bytes are unchanged; only the unreachable commit pointer is rebound to the merged remote commit containing the exact same blob.',
         'old_commit': BROKEN_COMMIT,
-        'new_commit': HEAD,
+        'new_commit': head,
         'entries': found,
         'created_at': dt.datetime.now(dt.timezone.utc).isoformat(),
     }
@@ -115,7 +116,7 @@ def main():
     subprocess.run(['git','add',str(INDEX),str(LEDGER)],check=True)
     subprocess.run(['git','diff','--cached','--check'],check=True)
     subprocess.run(['git','commit','-m','chore(p2): repair flattened checkpoint evidence refs'],check=True)
-    print(json.dumps({'status':'PASSED','repair_id':ledger['repair_id'],'commit':str(git('rev-parse','HEAD')).strip(),'entries':found},ensure_ascii=False,indent=2))
+    print(json.dumps({'status':'PASSED','repair_id':ledger['repair_id'],'commit':git('rev-parse','HEAD').strip(),'entries':found},ensure_ascii=False,indent=2))
 
 if __name__ == '__main__':
     main()
