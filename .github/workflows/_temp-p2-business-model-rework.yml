@@ -51,7 +51,9 @@ jobs:
           RC9_TREE=d001cd84a86c28f027eaed4e3b328a98b2688aef
           PATCH_SHA=ba5c20ffbc759373b0cf6a7c5621f71748c420c8fabf90e9c0c04289865c7891
 
-          git clone --depth 1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          git clone https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          git -C /tmp/common-develop cat-file -e "$RC8^{commit}"
+          git -C /tmp/common-develop checkout --detach "$RC8"
           test "$(git -C /tmp/common-develop rev-parse HEAD)" = "$RC8"
 
           base64 -d /tmp/rc8-to-rc9.patch.xz.b64 > /tmp/rc8-to-rc9.patch.xz
@@ -70,7 +72,7 @@ jobs:
           COMMIT=$(printf '%s\n' 'fix(long-task): close reopen lifecycle gaps' | git -C /tmp/common-develop commit-tree "$RC9_TREE" -p "$RC8")
           test "$COMMIT" = "$RC9"
           git -C /tmp/common-develop reset --hard "$RC9"
-          git -C /tmp/common-develop tag common-develop-v2.44-rc9 "$RC9"
+          git -C /tmp/common-develop tag -f common-develop-v2.44-rc9 "$RC9"
 
           python3 - <<'PY'
           import json
