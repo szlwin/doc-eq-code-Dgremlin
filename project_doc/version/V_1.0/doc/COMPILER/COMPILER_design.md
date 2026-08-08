@@ -1,20 +1,21 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R08`。Base：`DESIGN-P2-R07`，并继承 P1 已通过的 Compiler Pipeline/Context 基线。
-> 输入 Business Model 候选：`BM-R11`（标准 changeset `CHG-V_1.0-COMPILER-P2-BM-R11`；在 RC9 正式 reopen/publish 前仍为 MACHINE_BLOCKED）。
+> Revision：`DESIGN-P2-R09`。Base：`DESIGN-P2-R08`，继承 P1 已通过的 Compiler Pipeline/Context 基线。
+> 输入 Business Model 候选：`BM-R12`（标准 changeset `CHG-V_1.0-COMPILER-P2-BM-R12`；在正式 RC9 reopen/publish 前仍为 MACHINE_BLOCKED）。
 > 状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
-> 本文件是 P2 当前 canonical Design source；历史 R01～R07 保留为 Git/changes 历史，与本文件冲突时以 R08 为当前候选语义。
+> 本文件是 P2 当前 canonical Design source；历史 R01～R08 保留在 Git/changes 历史中，与本文件冲突时以 R09 为当前候选语义。
 
 ## 1. 设计目标与不可绕过约束
 
 1. System 是显式一等身份；RuleView 唯一身份为 `(SystemKey,name)`。
 2. READ/WRITE/EXECUTE 独立授权，未声明即拒绝；共享 WRITE 默认拒绝。
-3. 所有 protected READ/WRITE/EXECUTE 都进入同一 Guard；`STATIC_ALLOW` 仅为 Guard 内 fast path。
-4. runtime exact lookup 禁止 wildcard、prefix/suffix、parent/child、bare-name 和跨 target/System fallback。
-5. Java 生产 API 以 release 8 为约束；EngineContext 现有 final/additive compatibility 保持。
+3. **所有 protected READ/WRITE/EXECUTE 都必须通过同一个 `ProtectedAccessGateway -> ModelAccessGuard` 执行路径。** `STATIC_ALLOW` 只能是 Guard 在 exact rule lookup 之后的内部 fast path，caller 不得存在静态直通入口。
+4. runtime exact lookup 禁止 wildcard、prefix/suffix、parent/child、bare-name 与跨 target/System fallback。
+5. Java 生产 API 以 release 8 为约束；现有 `public final class EngineContext` 与 P1 API 保持 additive compatibility。
 6. P2 不新增 source-authored 权限 Predicate DSL；AC-006 只处理已静态授权 surface 下的 runtime object binding。
-7. **Guard 验证的实际 runtime object 与最终 protected operation 的实际 target 必须是同一个不可替换 framework binding。** Detached ALLOW、proof A + target B、authorize 后重新选择 target 均禁止。
+7. 被 Guard 验证的实际 target 与最终 protected operation target 必须是同一个不可替换 framework binding；proof/capability A 不得授权 B。
 8. DENY 必须发生在 read/write/execute、状态推进和外部副作用之前。
+9. `RuntimeBindingPlan` **只属于 `RUNTIME_GUARD_REQUIRED`**；`STATIC_ALLOW` 不得伪造、借用或要求 RuntimeBindingPlan。
 
 ## 2. 模块与 ownership
 
@@ -23,8 +24,7 @@ dec-core-context
   dec.core.context.model.*
   dec.core.context.model.access.*
       neutral immutable rule / plan / requirement contracts
-      Guard decision contracts
-      opaque capability contracts
+      ResolvedProtectedAccess / Guard / decision contracts
 
         ^ depends-on
         |
@@ -32,20 +32,21 @@ dec-core-compiler
   dec.core.compiler.*
       resolved access-consumer IR
       production DynamicBindingClassifier
-      RuntimeBindingPlan publication
+      exact rule / RuntimeBindingPlan publication
 
         ^
         |
-framework execution consumers
-      RuntimeResolutionContext creation
-      actual object resolution
-      ResolvedProtectedAccess issuance
-      ProtectedAccessGateway verify+execute
+framework execution runtime
+      ProtectedAccessResolutionContext ownership
+      actual target resolution
+      one-shot ResolvedProtectedAccess issuance
+      ProtectedAccessGateway -> Guard -> same-target execution
+      runtime membership verifier only when selected rule requires it
 ```
 
-禁止 context -> compiler、split package、compiler -> concrete parser、global mutable current，以及 business caller 构造 replacement rule/plan/requirement/capability。
+禁止 context -> compiler、split package、compiler -> concrete parser、global mutable current，以及 business caller 构造 replacement rule/plan/requirement/capability 或 protected-target bypass。
 
-## 3. Production classifier（FND-018 保持冻结）
+## 3. Production classifier
 
 ```java
 public enum AccessCompilationStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
@@ -60,37 +61,40 @@ public enum DynamicBindingClassification { STATIC_BOUND, RUNTIME_OBJECT_BOUND }
 
 Classifier stub 仅用于下游 unit isolation，不能证明 classifier correctness/AC-006。
 
-## 4. RuntimeBindingPlan / RuntimeAccessRequirement
-
-`RUNTIME_OBJECT_BOUND` 产生 compiler-published immutable：
+## 4. Compiled rule / RuntimeBindingPlan
 
 ```java
-public final class RuntimeBindingPlan {
-    public enum Kind { COLLECTION_ELEMENT_MEMBERSHIP }
-    public RuntimeBindingPlanKey key();
-    public ModelAccessRuleKey authorizedRuleKey();
-    public CanonicalModelPath collectionPath();
-    public CanonicalModelPath elementRelativePath();
+public final class CompiledModelAccessRule {
+    public ModelAccessRuleKey key();
+    public AccessCompilationStatus status();
+    public Optional<RuntimeAccessRequirement> runtimeRequirement();
+    public Optional<RuntimeBindingPlan> runtimeBindingPlan();
     public SourceRef sourceRef();
-}
-
-public final class RuntimeAccessRequirement {
-    public enum Kind { EXACT_RUNTIME_BINDING }
-    public RuntimeRequirementKey key();
-    public ModelAccessRuleKey authorizedRuleKey();
-    public RuntimeBindingPlanKey planKey();
-    public Kind kind();
 }
 ```
 
-Rule/plan/requirement 同属一个 immutable `CompiledModelSet` closure；plan key/model-shape digest/requirement identity 进入 semantic digest。Authority 只来自 current Context exact PolicyIndex 选中的 rule。
+规范状态：
 
-## 5. RuntimeResolutionContext 完整契约（FND-004 收敛）
+```text
+STATIC_BOUND
+ -> STATIC_ALLOW
+ -> runtimeRequirement = empty
+ -> runtimeBindingPlan = empty
 
-`RuntimeResolutionContext` 不是 caller 任意 DTO，而是 framework-owned、短生命周期 execution frame：
+RUNTIME_OBJECT_BOUND
+ -> RUNTIME_GUARD_REQUIRED
+ -> runtimeRequirement = EXACT_RUNTIME_BINDING
+ -> runtimeBindingPlan = exactly one compiler-published plan
+```
+
+`RuntimeBindingPlan(COLLECTION_ELEMENT_MEMBERSHIP)`、requirement key、model-shape digest 与 exact rule 同属 immutable `CompiledModelSet` closure。只有 runtime-required rule 可以引用 plan；STATIC_ALLOW rule 携带 plan 属非法 compiled state。
+
+## 5. ProtectedAccessResolutionContext：所有 protected access 的 framework execution frame
+
+R08 的 `RuntimeResolutionContext` 名称和职责过窄，只能解释 runtime-plan path。R09 将当前候选 contract 统一为 framework-owned `ProtectedAccessResolutionContext`：
 
 ```java
-public interface RuntimeResolutionContext {
+public interface ProtectedAccessResolutionContext {
     String engineContextId();
     AccessConsumerIrKey accessConsumerIrKey();
     RuntimeExecutionFrameId frameId();
@@ -101,155 +105,180 @@ public interface RuntimeResolutionContext {
 
 Normative：
 
-- 只能由当前 framework execution pipeline 创建；business code 无 public constructor/factory。
-- 绑定 current EngineContext、当前 resolved access-consumer IR、当前 root/owner resolution 和（若为 every）当前 collection cursor/element selection frame。
-- 生命周期只覆盖当前 protected access evaluation；不得跨 Context、rule evaluation、collection cursor 或 request 缓存复用。
-- 不暴露 raw domain object getter；实际对象 identity/provenance 仅由 resolver/gateway 内部 registry 持有。
-- execution frame 失效、owner/cursor 改变或 Context replacement 会使后续 capability fail closed。
+- 只能由 framework execution pipeline 创建；business code 无 public constructor/factory。
+- 绑定 current EngineContext、当前 resolved access-consumer IR、execution frame/root owner；`every(...)` 等 runtime element 场景额外绑定 collection cursor。
+- 生命周期只覆盖当前 protected access evaluation；不得跨 Context、rule evaluation、frame/cursor 缓存复用。
+- 不暴露 raw domain object getter；actual target identity/provenance 只在 framework context-local registry/执行帧内部存在。
+- DIRECT_EXACT 与 EVERY_COLLECTION_ELEMENT 都通过该 execution context 解析实际 target；区别在于 Guard 是否需要额外 runtime membership verification，而不是 capability 是否存在。
 
-## 6. R08：proof 与 actual operation 原子绑定
+## 6. 通用 one-shot `ResolvedProtectedAccess`
 
-R07 的 `RuntimeBindingHandle` 可以证明 element A 的 membership，但 detached handle + `Guard.authorize(...)` 后仍可能由 caller 改为操作 B。R08 因此把 handle 降为 resolver 内部 proof material；**caller-facing execution authority 是 one-shot `ResolvedProtectedAccess` capability**。
+`ResolvedProtectedAccess` 是**所有 protected access** 的 execution capability，不等价于 runtime-binding capability，也不要求 RuntimeBindingPlan：
 
 ```java
 public final class ResolvedProtectedAccess {
     // no public/protected constructor; no public mint/factory
     public String capabilityId();
     public String engineContextId();
-    public ModelAccessRuleKey selectedRuleKey();
-    public RuntimeBindingPlanKey planKey();
+    public ModelAccessRuleKey requestedRuleKey();
     public AccessOperation operation();
+    public RuntimeExecutionFrameId executionFrameId();
 }
 ```
 
-Capability 内部（不通过 public API 暴露）必须同时绑定：
+Capability 的 hidden framework binding 同时包含：
 
-- exact actual object identity；
-- collection owner/membership provenance；
-- current resolution/frame/cursor identity；
-- exact selected rule + plan + Context；
-- exact protected operation intent；
+- exact actual target identity；
+- operation payload/action identity；
+- resolution owner identity；
+- optional collection cursor identity；
+- optional runtime membership/provenance；
 - one-shot lifecycle state。
 
-### 6.1 Resolver
+`requestedRuleKey` 由已解析 access-consumer IR 的 exact System/target/ModelPath/operation 确定性形成，不是 caller 自报 selected policy。Capability 创建阶段**不需要 PolicyIndex lookup，也不需要 RuntimeBindingPlan**。
+
+## 7. `ProtectedAccessResolver`：先绑定 target，不预判 policy status
 
 ```java
-public interface RuntimeBindingResolver {
+public interface ProtectedAccessResolver {
     ResolvedProtectedAccess resolve(
-        RuntimeBindingPlan plan,
-        RuntimeResolutionContext executionContext,
+        ProtectedAccessResolutionContext executionContext,
         ProtectedOperationIntent operationIntent);
 }
 ```
 
-`ProtectedOperationIntent` 也是 framework-owned immutable intent：它描述当前 access-consumer IR 已确定的 READ/WRITE/EXECUTE intent 和必要 payload/action identity，**不含一个可由 caller 替换的 target object 参数**。当前 AC-006 真实 fixture 使用 READ；未来 WRITE/EXECUTE 若为 runtime-bound，必须复用同一 capability invariant。
+`ProtectedOperationIntent` 是 framework-owned immutable intent，包含当前 access-consumer IR 已确定的 exact `ModelAccessRuleKey`、READ/WRITE/EXECUTE intent 与必要 payload/action identity，但没有 caller 可替换的 raw target 参数。
 
-Resolver 在解析实际 object A 的同一 framework step 中创建 capability A，并将 hidden target identity + proof + operation intent 原子登记；不返回 `handle A` 让业务代码自行重新组合 target。
+Resolver 负责：
 
-### 6.2 ProtectedAccessGateway
+1. 在当前 execution frame 中解析实际 target A；
+2. 将 A + exact operation intent + frame/owner/cursor 原子登记为 one-shot capability；
+3. 不查询/选择 policy status；
+4. 不要求 runtime plan；
+5. 不返回 detached runtime handle 供业务 caller 重组。
+
+因此同一个 resolver 能合法创建 STATIC_ALLOW 与 RUNTIME_GUARD_REQUIRED 两类访问所需 capability。
+
+## 8. `ProtectedAccessGateway` + `ModelAccessGuard`：统一执行路径
 
 ```java
 public interface ProtectedAccessGateway {
     ProtectedAccessResult execute(ResolvedProtectedAccess access);
 }
+
+public interface ModelAccessGuard {
+    ModelAccessDecision authorize(ResolvedProtectedAccess access);
+}
 ```
 
-Gateway 是 runtime-bound protected operation 的唯一支持执行入口：
+Gateway 是所有 protected READ/WRITE/EXECUTE 的唯一支持执行入口。固定顺序：
 
-1. 读取 capability 当前 Context/rule/plan/operation；
-2. exact PolicyIndex lookup **一次**获得 selected rule；
-3. 调用 `ModelAccessGuard` 验证 capability 内部 proof/membership/provenance；
-4. 在同一次 gateway execution 中再次确认 capability 未 consumed、frame/cursor/membership 未失效；
-5. 由 framework executor 对 **capability 内部登记的 actual target** 执行 **capability 内部登记的 operation**；
-6. API 不接受第二个 object/target 参数，不接受 caller callback/closure 选择另一个 protected object；
-7. ALLOW 成功执行或 terminal DENY 后 capability 均 consumed；replay fail closed。
+1. 原子 reserve one-shot capability；若已 consumed -> DENY。
+2. 调用 Guard **恰好一次**；Gateway 自身不得额外 PolicyIndex lookup。
+3. Guard 使用 `requestedRuleKey` 对 current Context PolicyIndex 做 **恰好一次 exact lookup** 得到 selected rule。
+4. Guard 验证 Context/key/operation/capability frame 基本一致性。
+5. 根据 selected rule status 进入唯一分支：
+   - `STATIC_ALLOW`：确认 selected rule 的 plan/requirement 都为空；runtime verifier/evaluator 调用数 = 0；返回内部 fast-path ALLOW。
+   - `RUNTIME_GUARD_REQUIRED`：require exact plan + requirement，并调用 RuntimeBindingVerifier 校验 capability hidden membership/provenance 对 current plan/rule/Context/frame/cursor 仍有效；通过才 ALLOW。
+6. ALLOW 后 Gateway 在同一个 framework execution boundary 内对 capability hidden-bound **同一个 actual target + 同一个 operation** 执行。
+7. 成功或 terminal DENY 都 consume capability；caller 不获得可复用 detached ALLOW token。
 
-因此正常 API 上不存在：
+### 8.1 STATIC_ALLOW 的完整可达路径（FND-001）
 
 ```text
-valid proof/capability A + arbitrary protected object B
+DIRECT_EXACT source/IR
+ -> STATIC_BOUND
+ -> compiled rule STATIC_ALLOW, no RuntimeBindingPlan
+ -> framework resolves actual target A
+ -> generic ResolvedProtectedAccess A
+ -> ProtectedAccessGateway.execute(A)
+ -> ModelAccessGuard.authorize(A)
+      -> exact PolicyIndex lookup = 1
+      -> selected STATIC_ALLOW
+      -> runtime verifier = 0
+      -> evaluator = 0
+      -> ALLOW fast path inside Guard
+ -> gateway executes same hidden A target once
 ```
 
-若底层 invariant-test seam 人为注入 capability target identity 与 executor actual target identity 不一致，必须 `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`，B operation count = 0。
-
-### 6.3 TOCTOU / membership change
-
-若从 resolve 到 gateway execute 之间 owner collection membership、frame/cursor、Context 或 plan/rule identity 发生变化，capability 失效并在操作前 DENY。实现可以使用 context-local resolution registry/version/critical section，但 Development 不得放宽成“验证旧 proof 后照常执行当前任意 object”。
-
-## 7. Guard contract
-
-`ModelAccessGuard` 仍是 authorization decision authority，但 **detached `ALLOW` 不是 runtime-bound object execution authority**。
+任何 caller-side：
 
 ```text
-ResolvedProtectedAccess
- -> ProtectedAccessGateway
- -> exact selected rule lookup ONCE
- -> Guard verifies same capability proof
+if (rule.status == STATIC_ALLOW) directReadOrWrite(target)
+```
+
+都属于 `MODEL_ACCESS_GUARD_BYPASS`，不属于支持架构。
+
+### 8.2 RUNTIME_GUARD_REQUIRED 路径
+
+```text
+EVERY_COLLECTION_ELEMENT source/IR
+ -> RUNTIME_OBJECT_BOUND
+ -> runtime rule + RuntimeBindingPlan + EXACT_RUNTIME_BINDING
+ -> framework resolves current actual element A into generic capability A
+ -> Gateway -> Guard exact lookup once
+ -> selected runtime rule
+ -> RuntimeBindingVerifier verifies A membership/provenance against exact plan
  -> ALLOW
- -> gateway executes same internally-bound target+operation
+ -> Gateway executes same hidden A target once
 ```
 
-Request/capability 不携带 replacement rule/requirement/plan/target。Verifier 不重新选 policy。Business caller 不能在 Guard ALLOW 后调用一个接受 arbitrary target 的 protected accessor。
+STATIC 与 runtime path 共享 capability/gateway/Guard；差异仅发生在 Guard 选中 rule 后是否需要 runtime proof。
 
-`STATIC_ALLOW` 仍走 Guard；FND-019 的 capability/gateway强约束特别适用于 `RUNTIME_GUARD_REQUIRED`。
+## 9. Proof-to-operation binding / FND-019
 
-## 8. RuntimeBindingHandle / proof material
+支持 API 不存在：
 
-`RuntimeBindingHandle` 可作为 resolver 内部 registry/proof value 保留，用于 current Context + rule + plan + membership/provenance 验证，但不得作为“授权后可搭配任意 object”的 caller execution token。Business caller 无 mint API，也无受支持的 `execute(handle, object)` API。
+- `execute(capability, target)`；
+- `execute(handle, rawObject)`；
+- caller callback/closure 在 ALLOW 后选择第二 protected target；
+- caller-side direct static executor。
 
-Stable runtime reasons 至少包括：
+若低层 invariant seam 人为制造 `executorActualTarget != capabilityHiddenTarget`，必须在 protected operation 前 DENY `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`，A/B protected operation count 均为 0。
 
-- `RUNTIME_BINDING_REQUIRED`
-- `RUNTIME_BINDING_PROOF_INVALID`
-- `RUNTIME_BINDING_STALE`
-- `RUNTIME_BINDING_PLAN_MISMATCH`
-- `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`
-- `RUNTIME_BINDING_CAPABILITY_CONSUMED`
-- `CONTEXT_IDENTITY_MISMATCH`
-- `POLICY_NOT_FOUND`
-- `GUARD_UNAVAILABLE`
+## 10. TOCTOU / concurrency
 
-所有 DENY 均在 protected operation 前完成。
+Gateway 在 one-shot reserve 与 operation 之间维持 context-local execution invariant。对 runtime-required capability，Guard 在实际 operation 前重新确认 Context、frame/cursor、selected rule/plan 与 membership/provenance；对 static capability，至少重新确认 Context/frame/capability target binding 未失效。Capability consumption 状态转换必须原子化；并发 `execute(A)` 最多一个 terminal successful consumer。
 
-## 9. Wildcard / RuntimeFactValue / timeout / EngineContext
+## 11. ModelPath / wildcard
 
-继续继承已冻结契约：
+Runtime `ModelPath` 永远 exact。真实 `systems.xml` 中 READ `path="*"` 只允许 compile-time 对 exact target path catalog 做 finite canonical expansion；runtime PolicyIndex 不含 wildcard。wildcard WRITE/EXECUTE、empty expansion、parent/fuzzy fallback 均禁止。
 
-- real source READ `path="*"` 仅 compile-time finite exact expansion；runtime PolicyIndex zero wildcard。
-- `RuntimeFactValue` public final/private constructor/six typed factory/deep immutable/canonical/typed visitor。
-- R04 bounded evaluator timeout/cancel/rejection/exception/null/unknown fail-closed 仅供未来 Requirement-authorized predicate extension；当前 AC-006 不依赖 predicate evaluator。
-- EngineContext 保持 existing final class + current constructors/core accessors；P2 只 additive owner-qualified policy/Guard/runtime gateway read surfaces。
+## 12. RuntimeFactValue / evaluator / timeout
 
-## 10. Source -> Compiler -> operation-bound AC-006 chain
+继续保持 closed Java-8 `RuntimeFactValue`：public final、private constructor、六种 typed factory、LIST/OBJECT deep immutable、typed visitor、deterministic canonical form。
+
+当前 AC-006 不使用 business predicate evaluator。R04 bounded evaluator executor/fake monotonic time/timed Future/cancel/fail-closed 仅保留给未来 Requirement-authorized predicate extension；STATIC_ALLOW 和当前 EXACT_RUNTIME_BINDING 均不得无条件触发 evaluator。
+
+## 13. EngineContext compatibility
+
+保留 final class、现有单参 constructor、`compiledModelSet()/modelSet()/projection()`；P2 只增加 owner-qualified lookup、contextId、fail-closed Guard、`ProtectedAccessResolver` 与 `ProtectedAccessGateway` 等 additive read surfaces。禁止新增 bare-name `findRuleView(String)`。
+
+## 14. Stable reasons
+
+Compile 至少：`MIX-SYSTEM-DUPLICATE`、`MIX-RULEVIEW-SYSTEM-REQUIRED`、`MIX-MODEL-PATH-INVALID`、wildcard unsupported/empty、`MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`、`MIX-MODEL-ACCESS-DENIED`。
+
+Runtime 至少：`POLICY_NOT_FOUND`、`CONTEXT_IDENTITY_MISMATCH`、`MODEL_ACCESS_GUARD_BYPASS`、`RUNTIME_BINDING_REQUIRED`、`RUNTIME_BINDING_PROOF_INVALID`、`RUNTIME_BINDING_STALE`、`RUNTIME_BINDING_PLAN_MISMATCH`、`RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`、`RUNTIME_BINDING_CAPABILITY_CONSUMED`、`GUARD_UNAVAILABLE`、`STATIC_ALLOW`、`RUNTIME_ALLOW`、`RUNTIME_DENY`。
+
+## 15. Full source -> protected operation chain
 
 ```text
-real systems.xml + order.ordered rule-data
- -> exact static read authorization
- -> production classifier
-      direct status -> STATIC_BOUND -> STATIC_ALLOW
-      every(orderDetailList,status) -> RUNTIME_OBJECT_BOUND
- -> RuntimeBindingPlan + EXACT_RUNTIME_BINDING
- -> exact RUNTIME_GUARD_REQUIRED rule
- -> immutable Context publication
- -> framework RuntimeResolutionContext for current every element
- -> resolver resolves actual element A + operation intent
- -> one-shot ResolvedProtectedAccess A
+real source
+ -> resolved access-consumer IR
+ -> exact static authorization
+ -> production DynamicBindingClassifier
+      DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW(no plan)
+      EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> runtime rule + plan
+ -> immutable CompiledModelSet publication
+ -> framework resolves actual target into generic ResolvedProtectedAccess
  -> ProtectedAccessGateway
-      exact rule lookup + Guard verify A
-      execute the same internally-bound A target
- -> ALLOW: A operation exactly once
- -> substitution attempt proof/capability A + target B: impossible by supported API or invariant-test DENY
- -> stale/replayed/changed-membership capability: DENY before operation/effects
+ -> ModelAccessGuard exact lookup once
+      STATIC_ALLOW -> fast path, runtime verifier/evaluator 0
+      RUNTIME_GUARD_REQUIRED -> exact runtime plan/proof verification
+ -> Gateway executes same internally-bound target+operation once
+ -> no caller-side static or runtime bypass
 ```
 
-## 11. Concurrency / immutability
+## 16. Review / lifecycle gate
 
-Compiled facts immutable；PolicyIndex/resolution registry context-local；capability one-shot state transition 必须原子；concurrent replay 只能一个 terminal consumer；membership/frame invalidation 在 gateway execute 前 revalidate；无 global mutable current/cache。
-
-## 12. Declaration compatibility boundary
-
-`DEC-EXPAND-DECLARATION` 仅历史 retired fact；P2 只保留 read-only legacy compatibility 到 P7，不恢复 retired module、不 dual-write、不创建第二 runtime authority。
-
-## 13. Review / lifecycle gate
-
-`DESIGN-P2-R08` **not PASSED**。正式 RC9 lifecycle 仍需从 business_model reopen，materialize/publish BM-R11，再绑定 exact Design revision、生成 current-revision risk Evidence，并完成 ApiContract/Concurrency/Architecture/BusinessModel/Develop/Requirement/TestDesign/Impact/CrossModule 等触发 Review 与 DataMigration review/valid waiver。当前 Implementation Plan / TDD / Development 继续 BLOCKED。
+`DESIGN-P2-R09` **not PASSED**。FND-001、FND-004、FND-019 仍保持 OPEN，候选内容必须由正式 RC9 lifecycle 绑定 exact revision 后再完成 ApiContract/Architecture/BusinessModel/Requirement/TestDesign/Develop/Impact/CrossModule/Concurrency 等独立 Review 与 current-risk Evidence。当前不制造 repository Evidence，不推进 Implementation Plan/TDD/Development。
