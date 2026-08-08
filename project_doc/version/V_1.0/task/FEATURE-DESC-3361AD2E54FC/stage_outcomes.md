@@ -1,7 +1,108 @@
 # FEATURE-DESC-3361AD2E54FC 阶段结果
 
 ```json stage-outcomes
-[]
+[
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-REQUIREMENT_CONFIRMATION-I001",
+    "phase": "requirement_confirmation",
+    "round": "REQUIREMENT_CONFIRMATION-I001",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-001",
+    "iteration_no": 1,
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-002",
+    "status": "PASSED",
+    "produced_by_agent": "RequirementConfirmationAgent",
+    "input_revisions": {},
+    "output_revision": "REQCONF-P2-R01@001604ced8af",
+    "evidence_ids": [
+      "EVD-000001",
+      "EVD-000002",
+      "EVD-000003",
+      "EVD-000004"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T16:05:39+00:00",
+    "completed_at": "2026-08-07T16:08:56+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-REQUIREMENT_CONFIRMATION-I002",
+    "phase": "requirement_confirmation",
+    "round": "REQUIREMENT_CONFIRMATION-I002",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-002",
+    "iteration_no": 2,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "RequirementConfirmationAgent",
+    "input_revisions": {},
+    "output_revision": "REQCONF-P2-R02@ef30059b327d",
+    "evidence_ids": [
+      "EVD-000009",
+      "EVD-000010",
+      "EVD-000011",
+      "EVD-000012"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T16:12:37+00:00",
+    "completed_at": "2026-08-07T16:13:22+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-REQUIREMENT_ANALYSIS-I002",
+    "phase": "requirement_analysis",
+    "round": "REQUIREMENT_ANALYSIS-I002",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-ANALYSIS-002",
+    "iteration_no": 2,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "RequirementAnalysisAgent",
+    "input_revisions": {
+      "requirement_confirmation": "REQCONF-P2-R02@ef30059b327d"
+    },
+    "output_revision": "REQAN-P2-R01@d08612768131",
+    "evidence_ids": [
+      "EVD-000015",
+      "EVD-000016",
+      "EVD-000021",
+      "EVD-000022",
+      "EVD-000023"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T16:26:34+00:00",
+    "completed_at": "2026-08-07T16:33:21+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-BUSINESS_MODEL-I002",
+    "phase": "business_model",
+    "round": "BUSINESS_MODEL-I002",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002",
+    "iteration_no": 2,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "BusinessModelAgent",
+    "input_revisions": {
+      "requirement_analysis": "REQAN-P2-R01@d08612768131"
+    },
+    "output_revision": "BM-R06@6a0bce4fa0ae",
+    "evidence_ids": [
+      "EVD-000028",
+      "EVD-000029",
+      "EVD-000030",
+      "EVD-000031",
+      "EVD-000032",
+      "EVD-000033",
+      "EVD-000034",
+      "EVD-000035",
+      "EVD-000041",
+      "EVD-000038",
+      "EVD-000042"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-07T16:48:19+00:00",
+    "completed_at": "2026-08-07T16:51:08+00:00"
+  }
+]
 ```
 
 ## 使用说明

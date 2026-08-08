@@ -3,8 +3,8 @@ artifact: business_model
 module:
   code: COMPILER
   name: dec-core-compiler
-revision: BM-R05@4ecb1f8c09f4
-baseRevision: BM-R04@1b19a0ba26b6
+revision: BM-R06@6a0bce4fa0ae
+baseRevision: BM-R05@4ecb1f8c09f4
 terms:
 - id: TERM-COMPILATION-SESSION
   name: CompilationSession
@@ -43,8 +43,7 @@ terms:
   - BR-P1-016
 - id: TERM-COMMON-SYSTEM
   name: common System
-  definition: 只拥有跨 System expression Information 的特殊 System；不拥有 Data、View、RuleView、ModelAccess
-    或运行时编排。
+  definition: 只拥有跨 System expression Information 的特殊 System；不拥有 Data、View、RuleView、ModelAccess 或运行时编排。
   forbiddenSynonyms:
   - global system
   - shared runtime
@@ -70,13 +69,15 @@ terms:
   - BR-P1-020
 - id: TERM-DEFERRED-DEFINITION
   name: DeferredDefinition
-  definition: P1 已完成结构和 Key 解析、但明确交由 P2～P8 执行的语义登记。
+  definition: 当前阶段尚未拥有的后续语义登记。P2 已消费 System、RuleView 与 model-access 所有权/授权语义；P3～P8 仍必须以 requiredStage、reason、SourceRef
+    与已解析 Key 显式 Deferred。
   forbiddenSynonyms:
   - ignored definition
   - partially compiled runtime
   sourceRefs:
   - BR-P1-007
   - BR-P1-008
+  - BR-P2-SYSTEM-RULEVIEW-020
 - id: TERM-COMPILED-MODEL-SET
   name: CompiledModelSet
   definition: 无 ERROR 后一次性构造并冻结的全部编译事实集合。
@@ -95,8 +96,7 @@ terms:
   - BR-P1-011
 - id: TERM-DIAGNOSTIC
   name: Diagnostic
-  definition: 包含稳定 code、severity、SourceRef、definitionKey、relatedRefs、pass 与 recoveryHint
-    的可排序失败事实。
+  definition: 包含稳定 code、severity、SourceRef、definitionKey、relatedRefs、pass 与 recoveryHint 的可排序失败事实。
   forbiddenSynonyms:
   - generic exception
   - operation failed
@@ -125,14 +125,51 @@ terms:
   - compatibility runtime
   sourceRefs:
   - BR-P1-012
+- id: TERM-SYSTEM-COMPILED-IDENTITY
+  name: System compiled identity
+  definition: System 以显式 SystemKey 作为一等编译身份；身份不得由文件名、路径、RuleView 名称或加载顺序推断。
+  forbiddenSynonyms:
+  - implicit system
+  - file-derived system
+  sourceRefs:
+  - BR-P2-SYSTEM-RULEVIEW-001
+  - BR-P2-SYSTEM-RULEVIEW-002
+- id: TERM-RULEVIEW-COMPOSITE-IDENTITY
+  name: RuleView composite identity
+  definition: RuleView 的唯一身份是 (SystemKey,name)；跨 System 同名合法，同一 System 重复定义非法，调用不得回退为裸 name。
+  forbiddenSynonyms:
+  - global RuleView name
+  - bare RuleView lookup
+  sourceRefs:
+  - BR-P2-SYSTEM-RULEVIEW-003
+  - BR-P2-SYSTEM-RULEVIEW-004
+  - BR-P2-SYSTEM-RULEVIEW-005
+- id: TERM-MODEL-ACCESS-RULE
+  name: ModelAccessRule
+  definition: 由 System、目标模型或 View、规范化 ModelPath、READ/WRITE/EXECUTE 操作与 SourceRef 共同限定的访问授权事实；未声明权限不产生隐式允许。
+  forbiddenSynonyms:
+  - default allow
+  - shared write by default
+  sourceRefs:
+  - BR-P2-SYSTEM-RULEVIEW-007
+  - BR-P2-SYSTEM-RULEVIEW-008
+  - BR-P2-SYSTEM-RULEVIEW-009
+- id: TERM-MODEL-PATH
+  name: ModelPath
+  definition: 对模型属性路径做精确、确定性、可复用编译后的路径身份；expression、change、query 与权限校验共享同一语义，不允许模糊或跨模型猜测。
+  forbiddenSynonyms:
+  - fuzzy model path
+  - root-property fallback
+  sourceRefs:
+  - BR-P2-SYSTEM-RULEVIEW-010
+  - BR-P2-SYSTEM-RULEVIEW-011
 scenarios:
 - id: SCN-COMPILER-SUCCESS
   given:
   - 根 DocumentSource 位于允许根路径
   - XML/YAML frontend 与 ContextPublisher 已注入
   - 所有引用最终可解析
-  when: CompilationSession 执行发现、解析、Raw 构建、符号注册、引用解析、Deferred 分类，并以 expectedCurrent
-    条件发布
+  when: CompilationSession 执行发现、解析、Raw 构建、符号注册、引用解析、Deferred 分类，并以 expectedCurrent 条件发布
   then:
   - 产生不可变 CompiledModelSet 与 EngineContext
   - ContextPublisher 在同一次 compile 调用内原子替换 expectedCurrent
@@ -225,6 +262,49 @@ scenarios:
   traceIds:
   - TR-P1-COMPILER-001
   - TR-P1-COMPILER-002
+- id: SCN-P2-SYSTEM-MULTISOURCE
+  given:
+  - 多个 system-file-info 来源声明不同 System
+  - 加载顺序可能变化
+  when: 编译器注册 System 定义
+  then:
+  - 相同语义输入得到相同 SystemKey 集合与 semanticDigest
+  - 同一 SystemKey 重复定义产生稳定 ERROR 且不发布候选 Context
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-008
+  - TR-P2-SYSTEM-RULEVIEW-009
+- id: SCN-P2-RULEVIEW-ISOLATION
+  given:
+  - 两个不同 System 均声明同名 RuleView
+  when: 调用方以 system-ref + rule-ref 解析 RuleView
+  then:
+  - 分别命中各自 (SystemKey,name) 定义
+  - 裸 name 查找与同 System 重复定义被拒绝
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+- id: SCN-P2-MODEL-ACCESS-STATIC
+  given:
+  - ModelAccessRule 的 System、目标、ModelPath 与 operation 在编译期可确定
+  when: 编译器执行访问规则验证
+  then:
+  - 明确声明的合法操作编译为 Allow 事实
+  - 未声明共享 WRITE、非法路径或越界引用产生 ERROR 并阻断发布
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-005
+  - TR-P2-SYSTEM-RULEVIEW-008
+- id: SCN-P2-MODEL-ACCESS-RUNTIME
+  given:
+  - 访问在编译期合法但最终资源/路径取值只能在运行时确定
+  when: Rule、change 或 custom action 尝试 mutation
+  then:
+  - 统一 Guard 在 mutation 与外部副作用之前判定
+  - DENY 时不改变业务状态且无旁路入口
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
 entities:
 - id: ENT-COMPILATION-SESSION
   name: CompilationSession
@@ -423,6 +503,37 @@ entities:
   traceIds:
   - TR-P1-COMPILER-006
   lifecycle: 与来源 EngineContext 同生命周期，不单独注册事实
+- id: ENT-COMPILED-SYSTEM
+  name: CompiledSystem
+  identity: systemKey
+  attributes:
+  - name: systemKey
+    type: SystemKey
+    required: true
+  - name: sourceRefs
+    type: List<SourceRef>
+    required: true
+  - name: dataRefs
+    type: Set<DataKey>
+    required: true
+  - name: viewRefs
+    type: Set<ViewKey>
+    required: true
+  - name: ruleViewKeys
+    type: Set<RuleViewKey>
+    required: true
+  - name: modelAccessRules
+    type: Set<ModelAccessRule>
+    required: true
+  behaviors:
+  - publishImmutable
+  - rejectDuplicateSystemKey
+  - exposeOwnerQualifiedMembers
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-008
 valueObjects:
 - id: VO-DOCUMENT-SOURCE
   name: DocumentSource
@@ -533,7 +644,7 @@ valueObjects:
     type: SystemKey
     required: true
   - name: operation
-    type: READ|WRITE
+    type: READ|WRITE|EXECUTE
     required: true
   - name: sourcePath
     type: SharedModelPath
@@ -554,6 +665,8 @@ valueObjects:
   traceIds:
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-005
 - id: VO-DEFERRED-DEFINITION
   name: DeferredDefinition
   identity: definitionKey+requiredStage+reason
@@ -562,7 +675,7 @@ valueObjects:
     type: TypedKey
     required: true
   - name: requiredStage
-    type: P2|P3|P4|P5|P6|P7|P8
+    type: P3|P4|P5|P6|P7|P8
     required: true
   - name: reason
     type: String
@@ -579,6 +692,7 @@ valueObjects:
   - TR-P1-COMPILER-004
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
+  - TR-P2-SYSTEM-RULEVIEW-010
 - id: VO-DIAGNOSTIC
   name: Diagnostic
   identity: sourceRef+code+definitionKey+pass
@@ -650,6 +764,67 @@ valueObjects:
   - requireNoPartialPublication
   traceIds:
   - TR-P1-COMPILER-005
+- id: VO-RULEVIEW-KEY
+  name: RuleViewKey
+  identity: systemKey+name
+  attributes:
+  - name: systemKey
+    type: SystemKey
+    required: true
+  - name: name
+    type: String
+    required: true
+  behaviors:
+  - canonical
+  - rejectBareNameFallback
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+- id: VO-MODEL-PATH
+  name: ModelPath
+  identity: modelKey+segments
+  attributes:
+  - name: modelKey
+    type: TypedKey
+    required: true
+  - name: segments
+    type: List<String>
+    required: true
+  behaviors:
+  - compileExact
+  - rejectUnknownSegment
+  - rejectNonCompositeIntermediate
+  - canonical
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-005
+- id: VO-MODEL-ACCESS-RULE
+  name: ModelAccessRule
+  identity: systemKey+targetKey+modelPath+operation
+  attributes:
+  - name: systemKey
+    type: SystemKey
+    required: true
+  - name: targetKey
+    type: DataKey|ViewKey|RuleViewKey
+    required: true
+  - name: modelPath
+    type: ModelPath
+    required: true
+  - name: operation
+    type: READ|WRITE|EXECUTE
+    required: true
+  - name: sourceRef
+    type: SourceRef
+    required: true
+  behaviors:
+  - compileStaticDecision
+  - requireRuntimeGuardWhenDeferred
+  - denyWhenUndeclared
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-005
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
 aggregates:
 - id: AGG-COMPILATION-SESSION
   name: Compilation Session Aggregate
@@ -669,6 +844,10 @@ aggregates:
   - VO-DIAGNOSTIC
   - VO-DIGEST-PAIR
   - VO-COMPILATION-RESULT
+  - ENT-COMPILED-SYSTEM
+  - VO-RULEVIEW-KEY
+  - VO-MODEL-PATH
+  - VO-MODEL-ACCESS-RULE
   invariantIds:
   - INV-COMPILER-001
   - INV-COMPILER-002
@@ -683,8 +862,14 @@ aggregates:
   - INV-COMPILER-011
   - INV-COMPILER-012
   - INV-COMPILER-013
-  transactionBoundary: 一次 compile 调用；构建期变化只存在于该 Session，成功时由 compiler 调用注入的 ContextPublisher
-    条件发布后才进入 PUBLISHED
+  - INV-COMPILER-016
+  - INV-COMPILER-017
+  - INV-COMPILER-018
+  - INV-COMPILER-019
+  - INV-COMPILER-020
+  - INV-COMPILER-021
+  - INV-COMPILER-022
+  transactionBoundary: 一次 compile 调用；构建期变化只存在于该 Session，成功时由 compiler 调用注入的 ContextPublisher 条件发布后才进入 PUBLISHED
   consistency: 强一致、全有或全无；不同 Session 不共享可变对象
   traceIds:
   - TR-P1-COMPILER-001
@@ -695,6 +880,16 @@ aggregates:
   - TR-P1-COMPILER-007
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-005
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
+  - TR-P2-SYSTEM-RULEVIEW-008
+  - TR-P2-SYSTEM-RULEVIEW-009
+  - TR-P2-SYSTEM-RULEVIEW-010
 - id: AGG-PUBLISHED-CONTEXT
   name: Published Context Aggregate
   root: ENT-ENGINE-CONTEXT
@@ -712,6 +907,35 @@ aggregates:
   traceIds:
   - TR-P1-COMPILER-005
   - TR-P1-COMPILER-006
+- id: AGG-SYSTEM-COMPILED-CONFIG
+  name: System Compiled Configuration Aggregate
+  root: ENT-COMPILED-SYSTEM
+  members:
+  - VO-RULEVIEW-KEY
+  - VO-MODEL-PATH
+  - VO-MODEL-ACCESS-RULE
+  - VO-MODEL-ACCESS-BINDING
+  invariantIds:
+  - INV-COMPILER-016
+  - INV-COMPILER-017
+  - INV-COMPILER-018
+  - INV-COMPILER-019
+  - INV-COMPILER-020
+  - INV-COMPILER-021
+  - INV-COMPILER-022
+  transactionBoundary: 单个 CompilationSession 内完成 System 成员注册、引用解析、路径与访问规则校验；只有整个编译候选无 ERROR 时才随完整 Context 原子发布。
+  consistency: 强一致；同一 System 内身份和权限不变量不得以部分成功形式暴露。
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-005
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
+  - TR-P2-SYSTEM-RULEVIEW-008
+  - TR-P2-SYSTEM-RULEVIEW-009
+  - TR-P2-SYSTEM-RULEVIEW-010
 invariants:
 - id: INV-COMPILER-001
   statement: 编译器不得硬编码 dec-demo 或 mix fixture 路径；根 SourceProvider 必须由调用方注入。
@@ -740,42 +964,41 @@ invariants:
   - TR-P1-COMPILER-003
   - TR-P1-COMPILER-008
 - id: INV-COMPILER-005
-  statement: 普通 System expression 只能引用本 System InformationKey；跨 System expression
-    只能由 common 拥有，且 common 只能声明 expression Information。
+  statement: 普通 System expression 只能引用本 System InformationKey；跨 System expression 只能由 common 拥有，且 common 只能声明 expression
+    Information。
   trigger: 解析 Information expression
   failure: ERR-MIX-INFORMATION-CROSS-SYSTEM 或 ERR-MIX-COMMON-MEMBER
   traceIds:
   - TR-P1-COMPILER-004
   - TR-P1-COMPILER-008
 - id: INV-COMPILER-006
-  statement: Information view-ref、rule-ref 与 ModelAccess ref@view 只能指向当前 System 已声明的
-    View 或 RuleView。
+  statement: Information view-ref、rule-ref 与 ModelAccess ref@view 只能指向当前 System 已声明的 View 或 RuleView。
   trigger: 解析 System 内引用
   failure: ERR-MIX-REF-VIEW-NOT-DECLARED 或 ERR-MIX-REF-RULE-SYSTEM-MISMATCH
   traceIds:
   - TR-P1-COMPILER-003
   - TR-P1-COMPILER-008
 - id: INV-COMPILER-007
-  statement: ModelAccess sourcePath 与 target selector 是不同字段；selector 先精确匹配 target-main，未匹配才逐段精确解析同一
-    View property path；禁止模糊、跨 View 或静默降级。
+  statement: ModelAccess sourcePath 与 target selector 是不同字段；selector 先精确匹配 target-main，未匹配才逐段精确解析同一 View property
+    path；禁止模糊、跨 View 或静默降级。
   trigger: 解析 ModelAccessBinding
   failure: ERR-MIX-MODEL-ACCESS-NOT-FOUND、AMBIGUOUS 或 NON-COMPOSITE
   traceIds:
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
 - id: INV-COMPILER-008
-  statement: 每个后续语义必须登记包含 requiredStage、reason、SourceRef 和已解析 TypedKey 的 DeferredDefinition；P1
-    不执行 P2～P8 运行语义。
+  statement: P2 已消费 System、RuleView 与 model-access 所有权/授权语义；其余 P3～P8 语义仍必须登记包含 requiredStage、reason、SourceRef 和已解析
+    TypedKey 的 DeferredDefinition，P2 不提前执行后续运行语义。
   trigger: Deferred 分类
   failure: ERR-MIX-DEFERRED-INCOMPLETE
   traceIds:
   - TR-P1-COMPILER-004
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
+  - TR-P2-SYSTEM-RULEVIEW-010
 - id: INV-COMPILER-009
-  statement: 任一 ERROR、ContextPublisher 拒绝 expectedCurrent 条件或发布异常都使 CompilationSession
-    进入 FAILED；compiler 不得返回未发布的成功结果，CompiledModelSet 与 EngineContext 不得部分暴露，调用方旧 Context
-    不变。
+  statement: 任一 ERROR、ContextPublisher 拒绝 expectedCurrent 条件或发布异常都使 CompilationSession 进入 FAILED；compiler
+    不得返回未发布的成功结果，CompiledModelSet 与 EngineContext 不得部分暴露，调用方旧 Context 不变。
   trigger: 任一 Compiler Pass 结束或 compiler 原子发布时
   failure: ERR-MIX-PUBLICATION-BLOCKED
   traceIds:
@@ -790,8 +1013,7 @@ invariants:
   traceIds:
   - TR-P1-COMPILER-005
 - id: INV-COMPILER-011
-  statement: 已发布 Registry、CompiledModelSet 与 EngineContext 永久不可变，不存在全局 current Context，不同
-    Context 不共享可变状态。
+  statement: 已发布 Registry、CompiledModelSet 与 EngineContext 永久不可变，不存在全局 current Context，不同 Context 不共享可变状态。
   trigger: 发布和读取
   failure: ERR-MIX-CONTEXT-MUTATION
   traceIds:
@@ -805,27 +1027,71 @@ invariants:
   - TR-P1-COMPILER-001
   - TR-P1-COMPILER-002
 - id: INV-COMPILER-013
-  statement: dec-expand-declaration、LegacyDeclarationAdapter、复制实现或第二运行时不得存在于仓库、Reactor、依赖、服务、反射字符串或发布
-    artifact。
+  statement: dec-expand-declaration、LegacyDeclarationAdapter、复制实现或第二运行时不得存在于仓库、Reactor、依赖、服务、反射字符串或发布 artifact。
   trigger: 退役扫描和构建
   failure: ERR-MIX-RETIREMENT-RESIDUE
   traceIds:
   - TR-P1-COMPILER-007
 - id: INV-COMPILER-014
-  statement: CoreConfigProjection 只能从当前 CompiledModelSet 派生 Data/View/Rule 只读视图，写入必须拒绝，不能拥有第二
-    Registry。
+  statement: CoreConfigProjection 只能从当前 CompiledModelSet 派生 Data/View/Rule 只读视图，写入必须拒绝，不能拥有第二 Registry。
   trigger: 旧核心读取或写入尝试
   failure: ERR-MIX-PROJECTION-WRITE
   traceIds:
   - TR-P1-COMPILER-006
 - id: INV-COMPILER-015
-  statement: RuleViewKey 预留 SystemKey 命名空间，RuleView.system、来源 System 与 view-ref 所属
-    System 必须一致。
+  statement: RuleViewKey 预留 SystemKey 命名空间，RuleView.system、来源 System 与 view-ref 所属 System 必须一致。
   trigger: 注册和解析 RuleView
   failure: ERR-MIX-REF-RULE-SYSTEM-MISMATCH
   traceIds:
   - TR-P1-COMPILER-003
   - TR-P1-COMPILER-008
+- id: INV-COMPILER-016
+  statement: SystemKey 必须来自显式 System 声明且与来源顺序无关；同一 SystemKey 的重复定义必须产生 ERROR，禁止路径或文件名推断身份。
+  trigger: 注册 System
+  failure: ERR-MIX-SYSTEM-DUPLICATE
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-009
+- id: INV-COMPILER-017
+  statement: RuleView 的身份和所有查找必须使用 (SystemKey,name)；跨 System 同名合法，同 System 重复定义与裸 name 回退均非法。
+  trigger: 注册或解析 RuleView
+  failure: ERR-MIX-RULEVIEW-DUPLICATE 或 ERR-MIX-RULEVIEW-UNKNOWN
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+- id: INV-COMPILER-018
+  statement: READ、WRITE、EXECUTE 三种权限独立判定；未声明权限不产生允许，尤其共享模型 WRITE 默认拒绝。
+  trigger: 编译 ModelAccessRule
+  failure: ERR-MIX-MODEL-ACCESS-DENIED
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-004
+- id: INV-COMPILER-019
+  statement: 能由 System、目标、ModelPath 和 operation 在编译期确定的非法访问必须阻断发布；只有静态合法但资源事实真正依赖运行时的访问才可登记 RuntimeGuardRequired。
+  trigger: 访问规则编译
+  failure: ERR-MIX-MODEL-ACCESS-DENIED
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-008
+- id: INV-COMPILER-020
+  statement: 所有 Rule、change 与 custom action 的 mutation 路径在需要动态判定时必须先经过同一访问 Guard；DENY 必须发生在状态变更或外部副作用之前。
+  trigger: 运行时 mutation 授权
+  failure: ERR-MIX-MODEL-ACCESS-RUNTIME-DENIED
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
+- id: INV-COMPILER-021
+  statement: ModelPath 使用同一精确编译语义供 expression、change、query 和 access 校验复用；未知段、非复合中间段、模糊匹配或跨目标搜索均非法。
+  trigger: 编译模型路径
+  failure: ERR-MIX-MODEL-PATH-INVALID
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-005
+- id: INV-COMPILER-022
+  statement: P2 只收敛 System、RuleView 与 model-access 所有权/授权语义；declaration 兼容事实在 P2 保留且不得形成第二运行时权威，最终退役边界仍属于 P7。
+  trigger: 处理 declaration 兼容边界
+  failure: ERR-MIX-P2-DECLARATION-BOUNDARY
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-010
 stateMachines:
 - id: SM-COMPILATION-SESSION
   name: CompilationSession 生命周期
@@ -928,8 +1194,7 @@ stateMachines:
     - 所有 Registry 可防御性冻结
     - ContextPublisher 与 expectedCurrent 已注入
     sideEffects:
-    - compiler 一次性创建 CompiledModelSet 和 EngineContext，并在本次 compile 调用内按 expectedCurrent
-      条件原子发布
+    - compiler 一次性创建 CompiledModelSet 和 EngineContext，并在本次 compile 调用内按 expectedCurrent 条件原子发布
     failure: 条件冲突、空返回或异常均转 FAILED且不替换旧 Context
   traceIds:
   - TR-P1-COMPILER-001
@@ -1000,6 +1265,9 @@ services:
   - TR-P1-COMPILER-003
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+  - TR-P2-SYSTEM-RULEVIEW-005
 - id: SVC-DEFERRED-CLASSIFICATION
   name: DeferredClassificationService
   reason: P1 必须显式区分已解析结构与后续阶段运行语义。
@@ -1025,11 +1293,65 @@ services:
   traceIds:
   - TR-P1-COMPILER-005
   - TR-P1-COMPILER-006
+- id: SVC-SYSTEM-COMPILATION
+  name: SystemCompilationService
+  reason: System 多源加载、显式身份和成员所有权需要确定性编译边界。
+  inputs:
+  - RawSystemDefinition
+  - SystemKey
+  - SymbolTable
+  outputs:
+  - CompiledSystem
+  - Diagnostic
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-008
+  - TR-P2-SYSTEM-RULEVIEW-009
+- id: SVC-RULEVIEW-RESOLUTION
+  name: RuleViewResolutionService
+  reason: RuleView 必须以 owner-qualified composite identity 注册与解析，禁止裸名称回退。
+  inputs:
+  - SystemKey
+  - RuleViewName
+  - SymbolTable
+  outputs:
+  - RuleViewKey
+  - ResolvedRuleView
+  - Diagnostic
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+- id: SVC-MODEL-PATH-COMPILATION
+  name: ModelPathCompilationService
+  reason: expression、change、query 与访问控制必须共享同一精确路径语义。
+  inputs:
+  - TypedKey
+  - RawPath
+  - CompiledModelShape
+  outputs:
+  - ModelPath
+  - Diagnostic
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-005
+- id: SVC-MODEL-ACCESS-AUTHORIZATION
+  name: ModelAccessAuthorizationService
+  reason: 静态可判定权限必须在发布前 fail-closed，真正动态的合法访问必须统一运行时 Guard。
+  inputs:
+  - CompiledSystem
+  - ModelAccessRule
+  - ModelPath
+  - AccessOperation
+  outputs:
+  - StaticAllow|RuntimeGuardRequired|Diagnostic
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
+  - TR-P2-SYSTEM-RULEVIEW-008
 policies:
 - id: POL-INFORMATION-OWNERSHIP
   name: InformationOwnershipPolicy
-  reason: Information owner 和 common 跨 System 规则横跨 System、Information 与 BusinessScope
-    定义。
+  reason: Information owner 和 common 跨 System 规则横跨 System、Information 与 BusinessScope 定义。
   inputs:
   - RawSystemDefinition
   - RawInformationDefinition
@@ -1056,9 +1378,10 @@ policies:
   traceIds:
   - TR-P1-COMPILER-008
   - TR-P1-COMPILER-009
+  - TR-P2-SYSTEM-RULEVIEW-005
 - id: POL-DEFERRED-BOUNDARY
   name: DeferredBoundaryPolicy
-  reason: 防止 P1 提前执行 P2～P8 语义或静默忽略未完成定义。
+  reason: 防止 P2 在收敛 System、RuleView、model-access 后继续提前执行 P3～P8 语义或静默忽略未完成定义。
   inputs:
   - ResolvedDefinition
   - StageOwnershipMatrix
@@ -1066,6 +1389,7 @@ policies:
   - DeferredDefinition
   traceIds:
   - TR-P1-COMPILER-004
+  - TR-P2-SYSTEM-RULEVIEW-010
 - id: POL-PUBLICATION
   name: AtomicPublicationPolicy
   reason: 保护无 ERROR、全量冻结、expectedCurrent 条件发布和旧 Context 保留的一致性边界。
@@ -1101,6 +1425,45 @@ policies:
   - RetirementGateResult
   traceIds:
   - TR-P1-COMPILER-007
+- id: POL-RULEVIEW-COMPOSITE-IDENTITY
+  name: RuleViewCompositeIdentityPolicy
+  reason: 跨 System 同名隔离和无歧义调用要求 identity 始终绑定 SystemKey。
+  inputs:
+  - SystemKey
+  - RuleViewName
+  outputs:
+  - RuleViewKey
+  - Diagnostic
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-002
+  - TR-P2-SYSTEM-RULEVIEW-003
+- id: POL-MODEL-PATH
+  name: ModelPathPolicy
+  reason: 所有模型路径消费者必须共享精确、确定性的路径编译规则。
+  inputs:
+  - TypedKey
+  - RawPath
+  - CompiledModelShape
+  outputs:
+  - ModelPath
+  - Diagnostic
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-005
+- id: POL-MODEL-ACCESS-AUTHORIZATION
+  name: ModelAccessAuthorizationPolicy
+  reason: 访问控制采用最小权限和 fail-closed；READ/WRITE/EXECUTE 独立，未声明共享 WRITE 默认拒绝。
+  inputs:
+  - SystemKey
+  - TargetKey
+  - ModelPath
+  - AccessOperation
+  - DeclaredModelAccess
+  outputs:
+  - StaticAllow|RuntimeGuardRequired|Diagnostic
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
 events:
 - id: EVT-SOURCES-DISCOVERED
   name: SourcesDiscovered
@@ -1326,6 +1689,58 @@ businessErrors:
   traceIds:
   - TR-P1-COMPILER-007
   diagnosticCode: MIX-RETIREMENT-RESIDUE
+- id: ERR-MIX-SYSTEM-DUPLICATE
+  condition: 同一显式 SystemKey 被多个来源重复声明
+  meaning: System 身份冲突；编译失败且不发布
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-001
+  - TR-P2-SYSTEM-RULEVIEW-009
+- id: ERR-MIX-RULEVIEW-DUPLICATE
+  condition: 同一 System 内重复声明相同 RuleView name
+  meaning: RuleView 复合身份冲突；编译失败且不发布
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-002
+- id: ERR-MIX-RULEVIEW-UNKNOWN
+  condition: 使用裸 RuleView 名称、未知 System 或未知 (system,name) 调用目标
+  meaning: RuleView 必须通过完整 composite identity 解析
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-003
+- id: ERR-MIX-MODEL-PATH-INVALID
+  condition: ModelPath 包含未知段、非复合中间段、模糊/跨目标搜索或其他非精确语义
+  meaning: 模型路径非法；静态阶段阻断
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-005
+- id: ERR-MIX-MODEL-ACCESS-DENIED
+  condition: 静态可判定的 READ/WRITE/EXECUTE 未被显式授权或越过 System/目标/path 边界
+  meaning: 访问被拒绝；编译失败且候选 Context 不发布
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-004
+  - TR-P2-SYSTEM-RULEVIEW-008
+- id: ERR-MIX-MODEL-ACCESS-RUNTIME-DENIED
+  condition: 编译期合法但运行时 Guard 判定当前资源访问无权
+  meaning: 访问在 mutation/副作用之前失败，状态保持不变
+  retryable: true
+  stateChanged: false
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-006
+  - TR-P2-SYSTEM-RULEVIEW-007
+- id: ERR-MIX-P2-DECLARATION-BOUNDARY
+  condition: P2 尝试删除 declaration 兼容边界或建立与统一 compiler/context 并行的第二运行时权威
+  meaning: 阶段越界；必须保留到 P7 收敛
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-SYSTEM-RULEVIEW-010
 traceability:
 - traceId: TR-P1-COMPILER-001
   modelRefs:
@@ -1413,3 +1828,53 @@ traceability:
   - ERR-MIX-MODEL-ACCESS-NOT-FOUND
   - ERR-MIX-MODEL-ACCESS-AMBIGUOUS
   - ERR-MIX-MODEL-ACCESS-NON-COMPOSITE
+- traceId: TR-P2-SYSTEM-RULEVIEW-001
+  modelRefs:
+  - ENT-COMPILED-SYSTEM
+  - INV-COMPILER-016
+  - SVC-SYSTEM-COMPILATION
+- traceId: TR-P2-SYSTEM-RULEVIEW-002
+  modelRefs:
+  - VO-RULEVIEW-KEY
+  - INV-COMPILER-017
+  - POL-RULEVIEW-COMPOSITE-IDENTITY
+- traceId: TR-P2-SYSTEM-RULEVIEW-003
+  modelRefs:
+  - VO-RULEVIEW-KEY
+  - SVC-RULEVIEW-RESOLUTION
+  - INV-COMPILER-017
+- traceId: TR-P2-SYSTEM-RULEVIEW-004
+  modelRefs:
+  - VO-MODEL-ACCESS-RULE
+  - INV-COMPILER-018
+  - POL-MODEL-ACCESS-AUTHORIZATION
+- traceId: TR-P2-SYSTEM-RULEVIEW-005
+  modelRefs:
+  - VO-MODEL-PATH
+  - INV-COMPILER-021
+  - SVC-MODEL-PATH-COMPILATION
+- traceId: TR-P2-SYSTEM-RULEVIEW-006
+  modelRefs:
+  - VO-MODEL-ACCESS-RULE
+  - INV-COMPILER-019
+  - SVC-MODEL-ACCESS-AUTHORIZATION
+- traceId: TR-P2-SYSTEM-RULEVIEW-007
+  modelRefs:
+  - INV-COMPILER-020
+  - SVC-MODEL-ACCESS-AUTHORIZATION
+  - POL-MODEL-ACCESS-AUTHORIZATION
+- traceId: TR-P2-SYSTEM-RULEVIEW-008
+  modelRefs:
+  - AGG-SYSTEM-COMPILED-CONFIG
+  - AGG-COMPILATION-SESSION
+  - INV-COMPILER-019
+- traceId: TR-P2-SYSTEM-RULEVIEW-009
+  modelRefs:
+  - INV-COMPILER-016
+  - ENT-COMPILED-SYSTEM
+  - VO-DIAGNOSTIC
+- traceId: TR-P2-SYSTEM-RULEVIEW-010
+  modelRefs:
+  - INV-COMPILER-022
+  - POL-DEFERRED-BOUNDARY
+  - VO-DEFERRED-DEFINITION

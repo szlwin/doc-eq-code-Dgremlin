@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/render_relationships.py -g BusinessModelAgent --input project_doc/docs/_relations/dependency_impact.yaml --check",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:47:17+00:00",
+  "revision": "BM-R06@6a0bce4fa0ae",
+  "output_ref": "evidence/commands/bm-p2-r06/dependency-impact-check.out",
+  "output_digest": "be931ee0ab3712b4c1c2097bac0aade18f42674a51a375c1b8f3908782767774"
+}

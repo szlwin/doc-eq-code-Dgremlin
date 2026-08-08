@@ -1,0 +1,289 @@
+schemaVersion: 1
+artifact: "business_flow_changeset"
+changeSet:
+  id: "FLOW-CHG-V_1.0-COMPILER-P2-001"
+  version: "V_1.0"
+  module: "COMPILER"
+  flowGroup: "COMPILER"
+  flowGroupName: "配置编译与上下文发布"
+  reason: "P2 复用既有配置编译流程并补充 System 一等身份、RuleView 复合归属与 model-access 静态权限边界；不创建第二条编译流程。"
+  baseRevision: "FLOW-R02@compiler-owned-discovery"
+  resultRevision: "FLOW-R03@p2-system-ruleview-access"
+  affectedTraceIds:
+    - "TR-P2-SYSTEM-RULEVIEW-001"
+    - "TR-P2-SYSTEM-RULEVIEW-002"
+    - "TR-P2-SYSTEM-RULEVIEW-003"
+    - "TR-P2-SYSTEM-RULEVIEW-004"
+    - "TR-P2-SYSTEM-RULEVIEW-005"
+    - "TR-P2-SYSTEM-RULEVIEW-006"
+    - "TR-P2-SYSTEM-RULEVIEW-007"
+    - "TR-P2-SYSTEM-RULEVIEW-008"
+    - "TR-P2-SYSTEM-RULEVIEW-009"
+    - "TR-P2-SYSTEM-RULEVIEW-010"
+operations:
+  -
+    operation: "update"
+    targetId: "FLOW-CONFIG-COMPILE"
+    reason: "在 P1 稳定编译/发布流程中收敛 P2 System、RuleView 与权限语义。"
+    after:
+      id: "FLOW-CONFIG-COMPILE"
+      name: "配置编译与上下文发布"
+      level: "L0"
+      type: "MAIN"
+      ownerModule: "COMPILER"
+      participantModules:
+        - "CONTEXT"
+        - "COMPILER"
+        - "XML"
+        - "YAML"
+        - "STARTER"
+        - "DEMO"
+      goal: "把 XML/YAML 文档集合确定性编译为可发布的不可变 EngineContext，并在同一流程中闭合 System 显式身份、RuleView (system,name) 归属与 model-access 静态权限；失败时保持既有 Context 不变。"
+      trigger: "starter 或测试调用者提交根 SourceReference、编译请求和显式发布请求。"
+      requirementRefs:
+        -
+          id: "P1-COMPILER"
+          documentRef: "version/V_1.0/doc/P1-COMPILER-F01/requirement.md"
+        -
+          id: "P2-SYSTEM-RULEVIEW"
+          documentRef: "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md"
+      featureRefs:
+        -
+          id: "P1-COMPILER-F01"
+          module: "COMPILER"
+        -
+          id: "P2-SYSTEM-RULEVIEW-F01"
+          module: "COMPILER"
+      ruleRefs:
+        - "BR-P1-004"
+        - "BR-P1-006"
+        - "BR-P1-011"
+        - "BR-P2-SYSTEM-RULEVIEW-001"
+        - "BR-P2-SYSTEM-RULEVIEW-002"
+        - "BR-P2-SYSTEM-RULEVIEW-003"
+        - "BR-P2-SYSTEM-RULEVIEW-004"
+        - "BR-P2-SYSTEM-RULEVIEW-005"
+        - "BR-P2-SYSTEM-RULEVIEW-006"
+        - "BR-P2-SYSTEM-RULEVIEW-007"
+        - "BR-P2-SYSTEM-RULEVIEW-008"
+        - "BR-P2-SYSTEM-RULEVIEW-009"
+        - "BR-P2-SYSTEM-RULEVIEW-010"
+        - "BR-P2-SYSTEM-RULEVIEW-011"
+        - "BR-P2-SYSTEM-RULEVIEW-012"
+        - "BR-P2-SYSTEM-RULEVIEW-013"
+        - "BR-P2-SYSTEM-RULEVIEW-014"
+        - "BR-P2-SYSTEM-RULEVIEW-015"
+        - "BR-P2-SYSTEM-RULEVIEW-016"
+        - "BR-P2-SYSTEM-RULEVIEW-017"
+        - "BR-P2-SYSTEM-RULEVIEW-018"
+        - "BR-P2-SYSTEM-RULEVIEW-019"
+        - "BR-P2-SYSTEM-RULEVIEW-020"
+        - "CR-P2-SYSTEM-RULEVIEW-001"
+        - "CR-P2-SYSTEM-RULEVIEW-002"
+        - "CR-P2-SYSTEM-RULEVIEW-003"
+        - "CR-P2-SYSTEM-RULEVIEW-004"
+      acceptanceRefs:
+        - "AC-P1-COMPILER-001"
+        - "AC-P1-COMPILER-002"
+        - "AC-P1-COMPILER-003"
+        - "AC-P1-COMPILER-004"
+        - "AC-P2-SYSTEM-RULEVIEW-001"
+        - "AC-P2-SYSTEM-RULEVIEW-002"
+        - "AC-P2-SYSTEM-RULEVIEW-003"
+        - "AC-P2-SYSTEM-RULEVIEW-004"
+        - "AC-P2-SYSTEM-RULEVIEW-005"
+        - "AC-P2-SYSTEM-RULEVIEW-006"
+        - "AC-P2-SYSTEM-RULEVIEW-007"
+        - "AC-P2-SYSTEM-RULEVIEW-008"
+        - "AC-P2-SYSTEM-RULEVIEW-009"
+        - "AC-P2-SYSTEM-RULEVIEW-010"
+      traceIds:
+        - "TR-P1-COMPILER-001"
+        - "TR-P1-COMPILER-002"
+        - "TR-P1-COMPILER-003"
+        - "TR-P1-COMPILER-004"
+        - "TR-P2-SYSTEM-RULEVIEW-001"
+        - "TR-P2-SYSTEM-RULEVIEW-002"
+        - "TR-P2-SYSTEM-RULEVIEW-003"
+        - "TR-P2-SYSTEM-RULEVIEW-004"
+        - "TR-P2-SYSTEM-RULEVIEW-005"
+        - "TR-P2-SYSTEM-RULEVIEW-006"
+        - "TR-P2-SYSTEM-RULEVIEW-007"
+        - "TR-P2-SYSTEM-RULEVIEW-008"
+        - "TR-P2-SYSTEM-RULEVIEW-009"
+        - "TR-P2-SYSTEM-RULEVIEW-010"
+      preconditions:
+        - "DocumentFrontend 与编译选项已装配；输入源具有稳定 sourceId。"
+      steps:
+        -
+          id: "STEP-CONFIG-COMPILE-01"
+          order: 1
+          name: "发现并排序文档源"
+          ownerModule: "COMPILER"
+          featureRef: "P1-COMPILER-F01"
+          preconditions:
+            - "调用方提供显式根路径或资源集合。"
+          postconditions:
+            - "得到按 sourceId 稳定排序的 DocumentSource 集合，包含由 system-file-info 发现的 System 定义源。"
+          notes: "由 COMPILER 的 MixSourceResolver 执行发现；STARTER 只注入 SourceProvider 与根引用。"
+        -
+          id: "STEP-CONFIG-COMPILE-02"
+          order: 2
+          name: "前端解析为 Canonical 节点"
+          ownerModule: "COMPILER"
+          featureRef: "P1-COMPILER-F01"
+          preconditions:
+            - "每个源的格式可识别。"
+          postconditions:
+            - "得到有序 CanonicalDocumentNode 或格式 Diagnostic。"
+          notes: "由 XML/YAML 前端实现，详细技术 owner 见 CMI-P1-COMPILER-001。"
+        -
+          id: "STEP-CONFIG-COMPILE-03"
+          order: 3
+          name: "构建 Raw AST 并结构校验"
+          ownerModule: "COMPILER"
+          featureRef: "P1-COMPILER-F01"
+          preconditions:
+            - "Canonical 节点可用。"
+          postconditions:
+            - "Raw 声明保留来源、顺序和未解析引用，并显式保留 System、RuleView System 归属与 model-access。"
+        -
+          id: "STEP-CONFIG-COMPILE-04"
+          order: 4
+          name: "注册强类型符号"
+          ownerModule: "COMPILER"
+          featureRef: "P1-COMPILER-F01"
+          preconditions:
+            - "结构满足最小声明约束。"
+          postconditions:
+            - "重复定义被诊断；System 与 RuleView 以强类型复合身份进入构建期 SymbolTable，跨 System 同名 RuleView 可共存。"
+        -
+          id: "STEP-CONFIG-COMPILE-05"
+          order: 5
+          name: "解析引用并准备图"
+          ownerModule: "COMPILER"
+          featureRef: "P1-COMPILER-F01"
+          preconditions:
+            - "全部符号完成注册。"
+          postconditions:
+            - "合法引用解析为强类型对象；RuleView 使用 (system,name)，模型访问路径进入统一规范化语义，未知/类型错形成 Diagnostic。"
+        -
+          id: "STEP-CONFIG-COMPILE-06"
+          order: 6
+          name: "执行语义校验并生成摘要"
+          ownerModule: "COMPILER"
+          featureRef: "P1-COMPILER-F01"
+          preconditions:
+            - "可解析引用已完成。"
+          postconditions:
+            - "执行 System/RuleView/model-access 静态语义与权限校验，Diagnostics 稳定排序并计算 source/semantic digest。"
+        -
+          id: "STEP-CONFIG-COMPILE-07"
+          order: 7
+          name: "发布或拒绝 EngineContext"
+          ownerModule: "COMPILER"
+          featureRef: "P1-COMPILER-F01"
+          preconditions:
+            - "编译结果已形成。"
+          postconditions:
+            - "无 ERROR 且 caller-injected CAS 成功时发布包含 System/RuleView/访问约束事实的不可变 Context；其它路径 FAILED 并保持现有 Context 不变。"
+          notes: "COMPILER 在 compileAndPublish 内调用 Publisher 一次；STARTER 只返回结果，不二次发布。"
+      variants:
+        -
+          id: "FVAR-CONFIG-FORMAT-XML"
+          name: "XML 前端"
+          condition: "DocumentFormat=XML"
+          differences:
+            - "使用安全 XML 解析并捕获行列位置。"
+          ruleRefs:
+            - "BR-P1-001"
+        -
+          id: "FVAR-CONFIG-FORMAT-YAML"
+          name: "YAML 前端"
+          condition: "DocumentFormat=YAML"
+          differences:
+            - "使用受控 YAML Node 并捕获 Mark；P1 仅最小等价路径。"
+          ruleRefs:
+            - "BR-P1-001"
+      failurePaths:
+        -
+          id: "FAIL-CONFIG-COMPILE-001"
+          atStep: "STEP-CONFIG-COMPILE-02"
+          condition: "文档格式错误、XXE 或不受控 YAML 类型"
+          result: "生成 ERROR 并拒绝发布。"
+          compensation: "无数据补偿；调用方继续使用原 Context。"
+          blocking: true
+          acceptanceRefs:
+            - "AC-P1-COMPILER-001"
+            - "AC-P1-COMPILER-002"
+        -
+          id: "FAIL-CONFIG-COMPILE-002"
+          atStep: "STEP-CONFIG-COMPILE-04"
+          condition: "重复强类型 Key"
+          result: "记录首次和重复位置，拒绝 Registry 发布。"
+          compensation: "丢弃本次 Session 的 Builder。"
+          blocking: true
+          acceptanceRefs:
+            - "AC-P1-COMPILER-002"
+            - "AC-P1-COMPILER-003"
+        -
+          id: "FAIL-CONFIG-COMPILE-003"
+          atStep: "STEP-CONFIG-COMPILE-05"
+          condition: "未知引用或引用类型错误"
+          result: "聚合 Diagnostic，拒绝 Context 发布。"
+          compensation: "不修改旧 Context。"
+          blocking: true
+          acceptanceRefs:
+            - "AC-P1-COMPILER-002"
+        -
+          id: "FAIL-CONFIG-COMPILE-P2-001"
+          atStep: "STEP-CONFIG-COMPILE-04"
+          condition: "重复 System、RuleView 缺少 System 或同一 System 内 RuleView 复合 Key 冲突"
+          result: "生成 source-aware ERROR 并拒绝候选 Registry/Context 发布。"
+          compensation: "丢弃本次候选；调用方继续使用原 Context。"
+          blocking: true
+          acceptanceRefs:
+            - "AC-P2-SYSTEM-RULEVIEW-001"
+            - "AC-P2-SYSTEM-RULEVIEW-002"
+        -
+          id: "FAIL-CONFIG-COMPILE-P2-002"
+          atStep: "STEP-CONFIG-COMPILE-05"
+          condition: "未知 System/RuleView、非法模型目标或静态非法路径"
+          result: "生成稳定 ERROR，不进入发布。"
+          compensation: "无部分发布；旧 Context 保持不变。"
+          blocking: true
+          acceptanceRefs:
+            - "AC-P2-SYSTEM-RULEVIEW-003"
+            - "AC-P2-SYSTEM-RULEVIEW-005"
+        -
+          id: "FAIL-CONFIG-COMPILE-P2-003"
+          atStep: "STEP-CONFIG-COMPILE-06"
+          condition: "静态 model-access 越权或未声明共享 WRITE"
+          result: "权限校验 ERROR 并拒绝候选 Context。"
+          compensation: "不产生模型或外部副作用；运行时动态访问仍须独立 Guard。"
+          blocking: true
+          acceptanceRefs:
+            - "AC-P2-SYSTEM-RULEVIEW-004"
+            - "AC-P2-SYSTEM-RULEVIEW-006"
+            - "AC-P2-SYSTEM-RULEVIEW-007"
+      successCriteria:
+        - "Data/View/Rule 进入不可变 Registry。"
+        - "两个 Context 可同时存在且无污染。"
+        - "语义 digest 与诊断顺序可重复。"
+        - "System、RuleView (system,name) 与 model-access 静态约束进入不可变发布结果。"
+        - "不同 System 下同名 RuleView 可共存，未授权共享 WRITE 默认拒绝。"
+        - "动态合法访问携带 runtime-check-required 约束，任何权限失败均在副作用前阻断。"
+      businessModelRefs:
+        - "AGG-COMPILATION-SESSION"
+      dependencyImpactRefs:
+        - "docs/_relations/dependency_impact.yaml#CMI-P1-COMPILER-001"
+      designRefs: []
+      testCaseIds:
+        - "CASE-P1-CANONICAL-001"
+        - "CASE-P1-DIAGNOSTIC-001"
+        - "CASE-P1-SYMBOL-001"
+        - "CASE-P1-CONTEXT-001"
+      status: "ACTIVE"
+      createdVersion: "V_1.0"
+      lastChangedVersion: "V_1.0"
+      supersedes: []

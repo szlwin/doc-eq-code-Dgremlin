@@ -1,0 +1,16 @@
+{
+  "valid": true,
+  "stage": "confirmation",
+  "path": "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md",
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "features": 1,
+    "businessRules": 2,
+    "crossFeatureRules": 1,
+    "acceptanceCriteria": 1,
+    "traceItems": 1,
+    "exceptionScenarios": 1,
+    "unresolvedPlaceholders": 34
+  }
+}

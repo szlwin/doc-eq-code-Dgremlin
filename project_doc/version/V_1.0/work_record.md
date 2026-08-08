@@ -2350,6 +2350,230 @@
 | 测试与验证 | long-task PASSED; work-record PASSED; merge_docs zero pending; diff scope project_doc only; BM-R05 and module refs validated. |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P2-REQCONF-001-I001-A001","event_id":"EVENT-ATTEMPT-TASK-P2-REQCONF-001-I001-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000001"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-001","iteration_no":1,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md"],"next_action":"发布 REQCONF-P2-R01 并由 RequirementAnalysisAgent、TestDesignAgent 独立 Review","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-P2-R01@001604ced8af","phase":"requirement_confirmation","record_id":"WR-20260807-160538-TASK-P2-REQCONF-001-PASSED","render_digest":"3961f0762d0cb2b3685ee871ef88c54a9abd0598538261e88b41467b694949ce","schema_version":4,"scope":"确认 P2 System 与 RuleView 归属需求边界","source":"long_task.py finish-attempt","state_change":"TASK-P2-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"P2 requirement_confirmation 候选 Revision 已冻结：System 一等实体、RuleView (system,name)、model-access 最小权限/WRITE 默认拒绝、失败恢复语义和 P2/P3-P8 边界均已明确，confirmation validator 通过。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-08-07T16:05:38+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260807-160538-TASK-P2-REQCONF-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T16:05:38+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 确认 P2 System 与 RuleView 归属需求边界 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P2 requirement_confirmation 候选 Revision 已冻结：System 一等实体、RuleView (system,name)、model-access 最小权限/WRITE 默认拒绝、失败恢复语义和 P2/P3-P8 边界均已明确，confirmation validator 通过。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-REQCONF-001: RUNNING → PASSED |
+| Task | TASK-P2-REQCONF-001 |
+| Attempt | ATTEMPT-TASK-P2-REQCONF-001-I001-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-001 / 1 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-P2-R01@001604ced8af |
+| StageOutcome | 无 |
+| Evidence | EVD-000001 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementAnalysisAgent |
+| 后续事项 | 发布 REQCONF-P2-R01 并由 RequirementAnalysisAgent、TestDesignAgent 独立 Review |
+
+### 变更摘要
+
+- P2 requirement_confirmation 候选 Revision 已冻结：System 一等实体、RuleView (system,name)、model-access 最小权限/WRITE 默认拒绝、失败恢复语义和 P2/P3-P8 边界均已明确，confirmation validator 通过。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P2-REQCONF-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P2-REQCONF-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000009"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md"],"next_action":"发布 R02 并对同一 Revision 重新执行 RequirementAnalysisAgent / TestDesignAgent 独立 Review","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-P2-R02@ef30059b327d","phase":"requirement_confirmation","record_id":"WR-20260807-161236-TASK-P2-REQCONF-001-PASSED","render_digest":"11300bb395b97813087efea78c501a0a03491b97ba8cb1634b744034a183ba9b","schema_version":4,"scope":"确认 P2 System 与 RuleView 归属需求边界","source":"long_task.py finish-attempt","state_change":"TASK-P2-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"REQCONF-P2-R02 仅规范化模板 Markdown 行尾；P2 固定目标与 R01 完全一致，confirmation validator 与 long-task validator 通过。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-08-07T16:12:36+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260807-161236-TASK-P2-REQCONF-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T16:12:36+00:00 |
+| 执行 Agent | RequirementConfirmationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 确认 P2 System 与 RuleView 归属需求边界 |
+| 阶段 | requirement_confirmation |
+| 任务类型 | requirement_confirmation |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | REQCONF-P2-R02 仅规范化模板 Markdown 行尾；P2 固定目标与 R01 完全一致，confirmation validator 与 long-task validator 通过。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-REQCONF-001: RUNNING → PASSED |
+| Task | TASK-P2-REQCONF-001 |
+| Attempt | ATTEMPT-TASK-P2-REQCONF-001-I002-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-002 / 2 |
+| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
+| 输出 Revision | REQCONF-P2-R02@ef30059b327d |
+| StageOutcome | 无 |
+| Evidence | EVD-000009 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementAnalysisAgent |
+| 后续事项 | 发布 R02 并对同一 Revision 重新执行 RequirementAnalysisAgent / TestDesignAgent 独立 Review |
+
+### 变更摘要
+
+- REQCONF-P2-R02 仅规范化模板 Markdown 行尾；P2 固定目标与 R01 完全一致，confirmation validator 与 long-task validator 通过。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P2-REQAN-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P2-REQAN-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000015","EVD-000016"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"REQCONF-P2-R02@ef30059b327d","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-ANALYSIS-002","iteration_no":2,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md","version/V_1.0/doc/_flows/COMPILER/changes/002-p2-system-ruleview-access.yaml","version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md","version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"],"next_action":"发布 REQAN-P2-R01 候选并进行五项独立 Review","next_agent":"ProjectManagerAgent","output_revision":"REQAN-P2-R01@d08612768131","phase":"requirement_analysis","record_id":"WR-20260807-162632-TASK-P2-REQAN-001-PASSED","render_digest":"65c8b21ecc2b5e8a3aa00c9e1e0999b872dd0d453f54e9b0f81d94f2c67c9565","schema_version":4,"scope":"分析 P2 System、RuleView 与 model-access 业务语义","source":"long_task.py finish-attempt","state_change":"TASK-P2-REQAN-001: RUNNING → PASSED","status":"PASSED","summary":"P2 需求分析 R01 已完成：20 BR、4 CR、10 AC、10 trace；复用 FLOW-CONFIG-COMPILE 并声明 impact/cross-module 条件 Review。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-REQAN-001","task_type":"requirement_analysis","timestamp":"2026-08-07T16:26:32+00:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260807-162632-TASK-P2-REQAN-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T16:26:32+00:00 |
+| 执行 Agent | RequirementAnalysisAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 分析 P2 System、RuleView 与 model-access 业务语义 |
+| 阶段 | requirement_analysis |
+| 任务类型 | requirement_analysis |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P2 需求分析 R01 已完成：20 BR、4 CR、10 AC、10 trace；复用 FLOW-CONFIG-COMPILE 并声明 impact/cross-module 条件 Review。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-REQAN-001: RUNNING → PASSED |
+| Task | TASK-P2-REQAN-001 |
+| Attempt | ATTEMPT-TASK-P2-REQAN-001-I002-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-ANALYSIS-002 / 2 |
+| 输入 Revision | REQCONF-P2-R02@ef30059b327d |
+| 输出 Revision | REQAN-P2-R01@d08612768131 |
+| StageOutcome | 无 |
+| Evidence | EVD-000015、EVD-000016 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 发布 REQAN-P2-R01 候选并进行五项独立 Review |
+
+### 变更摘要
+
+- P2 需求分析 R01 已完成：20 BR、4 CR、10 AC、10 trace；复用 FLOW-CONFIG-COMPILE 并声明 impact/cross-module 条件 Review。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md`
+- `version/V_1.0/doc/_flows/COMPILER/changes/002-p2-system-ruleview-access.yaml`
+- `version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md`
+- `version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 3 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P2-BMODEL-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P2-BMODEL-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000028","EVD-000029","EVD-000030","EVD-000031","EVD-000032","EVD-000033","EVD-000034","EVD-000035"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"REQAN-P2-R01@d08612768131","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002","iteration_no":2,"modified_files_summary":["project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml","project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.md","project_doc/version/V_1.0/doc/COMPILER/changes/p2-system-ruleview-business-model.yaml","project_doc/docs/_relations/dependency_impact.yaml","project_doc/docs/_relations/dependency_graph.md","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"],"next_action":"冻结 BM-R06 并执行同 Revision 六项独立 Review。","next_agent":"RequirementReviewAgent","output_revision":"BM-R06@6a0bce4fa0ae","phase":"business_model","record_id":"WR-20260807-164817-TASK-P2-BMODEL-001-PASSED","render_digest":"8a66df4712f604df4ff46412577e26115d71f5b60735845ddf5f23468642f61b","schema_version":4,"scope":"建立 P2 System、RuleView 与 model-access 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P2-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"BM-R06 候选完成：System 一等实体、RuleView composite identity、ModelPath 与静态/动态 model-access fail-closed 语义；P2 dependency impact/CMI/trace 同步。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-BMODEL-001","task_type":"business_model","timestamp":"2026-08-07T16:48:17+00:00","validation_summary":"登记 Evidence 8 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260807-164817-TASK-P2-BMODEL-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-07T16:48:17+00:00 |
+| 执行 Agent | BusinessModelAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 建立 P2 System、RuleView 与 model-access 业务模型 |
+| 阶段 | business_model |
+| 任务类型 | business_model |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | BM-R06 候选完成：System 一等实体、RuleView composite identity、ModelPath 与静态/动态 model-access fail-closed 语义；P2 dependency impact/CMI/trace 同步。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-BMODEL-001: RUNNING → PASSED |
+| Task | TASK-P2-BMODEL-001 |
+| Attempt | ATTEMPT-TASK-P2-BMODEL-001-I002-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002 / 2 |
+| 输入 Revision | REQAN-P2-R01@d08612768131 |
+| 输出 Revision | BM-R06@6a0bce4fa0ae |
+| StageOutcome | 无 |
+| Evidence | EVD-000028、EVD-000029、EVD-000030、EVD-000031、EVD-000032、EVD-000033、EVD-000034、EVD-000035 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementReviewAgent |
+| 后续事项 | 冻结 BM-R06 并执行同 Revision 六项独立 Review。 |
+
+### 变更摘要
+
+- BM-R06 候选完成：System 一等实体、RuleView composite identity、ModelPath 与静态/动态 model-access fail-closed 语义；P2 dependency impact/CMI/trace 同步。
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml`
+- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.md`
+- `project_doc/version/V_1.0/doc/COMPILER/changes/p2-system-ruleview-business-model.yaml`
+- `project_doc/docs/_relations/dependency_impact.yaml`
+- `project_doc/docs/_relations/dependency_graph.md`
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 8 项；命令 Evidence 3 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
