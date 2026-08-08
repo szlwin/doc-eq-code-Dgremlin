@@ -1,24 +1,48 @@
 # COMPILER P2 设计测试接缝
 
-> Revision：`DESIGN-P2-R01@8875f042898c`。该文件属于 Design Revision 的可测试性说明；正式 Test Design 另见本需求的 `test_case.md`。
+> Revision：`DESIGN-P2-R06`。正式 Test Design：`TESTDESIGN-P2-R07`。
 
-## 1. 编译 seam
-- deterministic System source provider：同语义多文件不同顺序；
-- System duplicate fixture：同 key 两个 SourceRef；
-- composite RuleView fixture：跨 System 同名、同 System 重名、缺 system；
-- model shape fixture：合法、unknown、non-composite path；
-- access matrix fixture：READ/WRITE/EXECUTE 各自 declared/undeclared。
+## 1. Compile seams
 
-## 2. Runtime seam
+- deterministic System source provider；
+- duplicate System and composite RuleView fixtures；
+- exact model-shape/path catalog；
+- real `systems.xml` READ `path="*"` expansion fixture；
+- declared/undeclared READ/WRITE/EXECUTE matrix；
+- `DynamicBindingClassifierStub(STATIC_BOUND|RUNTIME_OBJECT_BOUND)`，用于证明 production compiler 能产生 `RUNTIME_GUARD_REQUIRED`；
+- source fixture for dynamic container-element/object selection under an exact authorized path。
+
+## 2. Runtime seams
+
 - immutable Context A/B；
-- `RuntimeFactEvaluatorStub(ALLOW|DENY|THROW|UNKNOWN)`；
-- `ModelAccessGuardSpy` 记录 authorize 次数与 request；
-- `MutationProbe` 记录 state version、write count、external effect count；
-- `CompositeRuleViewResolverSpy` 记录 RuleViewKey，禁止 bare-name probe 被调用。
+- exact PolicyIndex spy (lookup count must be one)；
+- `RuntimeAccessBinding` allow/mismatch fixtures；
+- Guard spy + unavailable sentinel；
+- optional evaluator ALLOW/DENY/THROW/NULL/UNKNOWN/non-returning stubs；
+- bounded executor/fake monotonic time source；
+- Mutation/Read/Execute probes recording protected operation count, state version and external-effect count。
 
-## 3. Oracle 原则
-- expected identity/path/operation 由 requirement/BM/Design 固定，不从 implementation output 反推；
-- static invalid 必须在 compile 阶段失败；
-- dynamic DENY 的核心 oracle 是 protected state 与 external effect 均未变化；
-- 同语义顺序变化必须得到同 key set、Diagnostic order 和 semantic digest；
-- 不以 module-not-found、compile error、dependency download failure 作为未来有效 TDD RED。
+## 3. AC-006 end-to-end seam
+
+Required oracle：
+
+```text
+source with legal dynamic object binding
+ -> compiler succeeds
+ -> selected rule = RUNTIME_GUARD_REQUIRED
+ -> compiler-derived RuntimeAccessRequirement is traceable
+ -> Context publishes
+ -> runtime binding A matches -> ALLOW -> protected operation once
+ -> runtime binding B escapes/mismatches -> DENY -> protected operation zero, side effects zero
+```
+
+A test starting by directly constructing a `CompiledModelAccessRule` is useful unit coverage but cannot satisfy this end-to-end acceptance by itself。
+
+## 4. Oracle rules
+
+- expected identity/path/operation comes from Requirement/BM/Design, never implementation output；
+- compile/setup/missing-symbol failure is not a valid TDD RED；
+- initial API-shape RED uses reflection/source/bytecode contract checks that compile before new symbols exist；
+- runtime DENY asserts zero protected operation and zero external side effects；
+- no `Thread.sleep` timeout oracle；
+- wildcard never appears in runtime key lookup。
