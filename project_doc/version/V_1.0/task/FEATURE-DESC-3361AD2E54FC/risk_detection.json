@@ -2,266 +2,119 @@
   "schema_version": 1,
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
-  "input_revision": "BM-R07@7d7bf504ca9d",
+  "input_revision": "DESIGN-P2-R04",
+  "business_model_revision": "BM-R08",
   "input_files": [
-    "project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml",
-    "project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.md",
-    "project_doc/version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml",
+    "project_doc/version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml",
     "project_doc/docs/_relations/dependency_impact.yaml",
-    "project_doc/docs/_relations/dependency_graph.md"
+    "project_doc/docs/_relations/dependency_graph.md",
+    "project_doc/version/V_1.0/doc/COMPILER/changes/p2-design-runtimefacts-timeout-remediation-r04.md"
   ],
-  "input_digest": "29a2b2f8507b3c2dcf2c489b3f349526f50d88e1825cbb07f8430df30578492e",
+  "input_manifest": [
+    "project_doc/version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml=56fb06a86212243cdcac34e342a1def1da826015",
+    "project_doc/docs/_relations/dependency_impact.yaml=0b4585059c7adb8b4cd5e417ce0242d720e344e2",
+    "project_doc/docs/_relations/dependency_graph.md=400eae8093bf65f3dbb098a835512126fb9ed135",
+    "project_doc/version/V_1.0/doc/COMPILER/changes/p2-design-runtimefacts-timeout-remediation-r04.md=1bb78d4169723847aa301b6cae66d8cee0e10205"
+  ],
+  "input_digest": "56fcb9f073c2f30a658e6025736ffd6632a53799a83eccf67ea8b8907138099a",
   "status": "SCANNED",
+  "scan_mode": "INDEPENDENT_CONNECTOR_RESCAN",
   "scanned_by_agent": "ProjectManagerAgent",
-  "scanned_at": "2026-08-08T04:19:38+00:00",
+  "scanned_at": "2026-08-08T09:30:00Z",
+  "scan_note": "Current container could not execute the restored local common-develop binary, so this is an explicit exact-revision content rescan rather than a fabricated RC9 detector-script run. Required reviewers/waivers remain open.",
   "detections": [
     {
-      "detection_id": "DET-0091F020FC86",
+      "detection_id": "DET-P2R04-ARCH-001",
       "rule_id": "RISK-ARCH-001",
       "risk_type": "architecture_change",
-      "confidence": 8,
+      "confidence": 9,
       "required_reviewer": "ArchitectureReviewAgent",
-      "evidence_ids": [
-        "EVD-000060"
-      ],
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "content:module, content:dependency, content:adapter",
-      "source": "DETECTOR"
+      "reason": "DESIGN-P2-R04 adds Guard-owned evaluation executor/cancellation/degraded-state composition and BM-R08 changes the canonical dependency/compatibility boundary.",
+      "source": "INDEPENDENT_REVIEW"
     },
     {
-      "detection_id": "DET-15F6A50B0E2E",
-      "rule_id": "RISK-MNT-001",
-      "risk_type": "maintainability",
-      "confidence": 7,
-      "required_reviewer": "MaintainabilityReviewAgent",
-      "evidence_ids": [
-        "EVD-000062"
-      ],
+      "detection_id": "DET-P2R04-API-001",
+      "rule_id": "RISK-API-001",
+      "risk_type": "api_contract",
+      "confidence": 10,
+      "required_reviewer": "ApiContractReviewAgent",
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "content:temporary",
-      "source": "DETECTOR"
+      "reason": "DESIGN-P2-R04 freezes public RuntimeFactValue visitor/lookup and Guard evaluation contracts across context/compiler/starter modules.",
+      "source": "INDEPENDENT_REVIEW"
     },
     {
-      "detection_id": "DET-18B83C1BF8A6",
+      "detection_id": "DET-P2R04-CON-001",
       "rule_id": "RISK-CON-001",
       "risk_type": "concurrency",
-      "confidence": 8,
+      "confidence": 10,
       "required_reviewer": "ConcurrencyReviewAgent",
-      "evidence_ids": [
-        "EVD-000062"
-      ],
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "content:atomic",
-      "source": "DETECTOR"
+      "reason": "Runtime authorization now depends on bounded executor submission, Future timeout/cancel/interruption, rejection behavior, task isolation and degraded-state replacement.",
+      "source": "INDEPENDENT_REVIEW"
     },
     {
-      "detection_id": "DET-18BEAE564C54",
+      "detection_id": "DET-P2R04-SEC-001",
       "rule_id": "RISK-SEC-001",
       "risk_type": "security",
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
-      "evidence_ids": [
-        "EVD-000062"
-      ],
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "content:authorize, content:permission",
-      "source": "DETECTOR"
+      "reason": "All protected READ/WRITE/EXECUTE depend on fail-closed Guard semantics including timeout, unavailable, context mismatch and policy-missing branches.",
+      "source": "INDEPENDENT_REVIEW"
     },
     {
-      "detection_id": "DET-41125EC481A5",
+      "detection_id": "DET-P2R04-IMP-001",
       "rule_id": "RISK-IMP-001",
       "risk_type": "impact_analysis",
-      "confidence": 8,
+      "confidence": 10,
       "required_reviewer": "ImpactAnalysisReviewAgent",
-      "evidence_ids": [
-        "EVD-000063"
-      ],
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "content:delete, content:cancel, content:cascade, content:supersede",
-      "source": "DETECTOR"
+      "reason": "Canonical dependency_impact BM-R08 redirects P2 from retired DEC-EXPAND-DECLARATION to LEGACY-DECLARATION-SYSTEM-COMPAT and changes Guard CMI semantics.",
+      "source": "INDEPENDENT_REVIEW"
     },
     {
-      "detection_id": "DET-425E96B2573F",
-      "rule_id": "RISK-ARCH-001",
-      "risk_type": "architecture_change",
-      "confidence": 8,
-      "required_reviewer": "ArchitectureReviewAgent",
-      "evidence_ids": [
-        "EVD-000063"
-      ],
+      "detection_id": "DET-P2R04-XMOD-001",
+      "rule_id": "RISK-XMOD-001",
+      "risk_type": "cross_module_integration",
+      "confidence": 9,
+      "required_reviewer": "CrossModuleIntegrationReviewAgent",
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "file:**/*dependency*, content:module, content:dependency, content:adapter, content:port",
-      "source": "DETECTOR"
+      "reason": "P2 authorization contracts span CONTEXT, COMPILER and STARTER while retaining a read-only legacy compatibility surface.",
+      "source": "INDEPENDENT_REVIEW"
     },
     {
-      "detection_id": "DET-4B24E97C4D91",
-      "rule_id": "RISK-ARCH-001",
-      "risk_type": "architecture_change",
-      "confidence": 8,
-      "required_reviewer": "ArchitectureReviewAgent",
-      "evidence_ids": [
-        "EVD-000059"
-      ],
-      "status": "DETECTED",
-      "reason": "content:module, content:dependency, content:adapter",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-505B1A29B909",
+      "detection_id": "DET-P2R04-DATA-001",
       "rule_id": "RISK-DATA-001",
       "risk_type": "data_migration",
       "confidence": 9,
       "required_reviewer": "DataMigrationReviewAgent",
-      "evidence_ids": [
-        "EVD-000062"
-      ],
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "content:migration",
-      "source": "DETECTOR"
+      "reason": "P7 retirement/migration wording and the surviving legacy compatibility boundary still require an exact-revision DataMigration review or a contract-valid waiver proving P2 performs no data migration.",
+      "source": "INDEPENDENT_REVIEW"
     },
     {
-      "detection_id": "DET-55EBEC123531",
+      "detection_id": "DET-P2R04-MNT-001",
       "rule_id": "RISK-MNT-001",
       "risk_type": "maintainability",
       "confidence": 7,
       "required_reviewer": "MaintainabilityReviewAgent",
-      "evidence_ids": [
-        "EVD-000063"
-      ],
+      "evidence_ids": [],
       "status": "DETECTED",
-      "reason": "content:temporary",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-7404B9966CF8",
-      "rule_id": "RISK-SEC-001",
-      "risk_type": "security",
-      "confidence": 9,
-      "required_reviewer": "SecurityReviewAgent",
-      "evidence_ids": [
-        "EVD-000060"
-      ],
-      "status": "DETECTED",
-      "reason": "content:permission",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-7B8B2B11D396",
-      "rule_id": "RISK-ARCH-001",
-      "risk_type": "architecture_change",
-      "confidence": 8,
-      "required_reviewer": "ArchitectureReviewAgent",
-      "evidence_ids": [
-        "EVD-000062"
-      ],
-      "status": "DETECTED",
-      "reason": "file:**/*dependency*, content:module, content:dependency, content:adapter, content:port",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-81BD79D48BFC",
-      "rule_id": "RISK-IMP-001",
-      "risk_type": "impact_analysis",
-      "confidence": 8,
-      "required_reviewer": "ImpactAnalysisReviewAgent",
-      "evidence_ids": [
-        "EVD-000062"
-      ],
-      "status": "DETECTED",
-      "reason": "content:delete, content:cancel, content:cascade, content:supersede",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-AA174F62C221",
-      "rule_id": "RISK-CON-001",
-      "risk_type": "concurrency",
-      "confidence": 8,
-      "required_reviewer": "ConcurrencyReviewAgent",
-      "evidence_ids": [
-        "EVD-000059"
-      ],
-      "status": "DETECTED",
-      "reason": "content:atomic",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-BFA9AC2374B2",
-      "rule_id": "RISK-ARCH-001",
-      "risk_type": "architecture_change",
-      "confidence": 8,
-      "required_reviewer": "ArchitectureReviewAgent",
-      "evidence_ids": [
-        "EVD-000061"
-      ],
-      "status": "DETECTED",
-      "reason": "content:module",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-CEECE5367C64",
-      "rule_id": "RISK-SEC-001",
-      "risk_type": "security",
-      "confidence": 9,
-      "required_reviewer": "SecurityReviewAgent",
-      "evidence_ids": [
-        "EVD-000063"
-      ],
-      "status": "DETECTED",
-      "reason": "content:authorize, content:permission",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-D56CC34E70DC",
-      "rule_id": "RISK-CON-001",
-      "risk_type": "concurrency",
-      "confidence": 8,
-      "required_reviewer": "ConcurrencyReviewAgent",
-      "evidence_ids": [
-        "EVD-000063"
-      ],
-      "status": "DETECTED",
-      "reason": "content:atomic",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-ED36E632BDB3",
-      "rule_id": "RISK-CON-001",
-      "risk_type": "concurrency",
-      "confidence": 8,
-      "required_reviewer": "ConcurrencyReviewAgent",
-      "evidence_ids": [
-        "EVD-000060"
-      ],
-      "status": "DETECTED",
-      "reason": "content:atomic",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-F038F2449065",
-      "rule_id": "RISK-IMP-TRACE-001",
-      "risk_type": "impact_analysis",
-      "confidence": 9,
-      "required_reviewer": "ImpactAnalysisReviewAgent",
-      "evidence_ids": [
-        "EVD-000064"
-      ],
-      "status": "DETECTED",
-      "reason": "traceability impact_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
-      "source": "DETECTOR"
-    },
-    {
-      "detection_id": "DET-FE4B1454B988",
-      "rule_id": "RISK-XMOD-TRACE-001",
-      "risk_type": "cross_module_integration",
-      "confidence": 9,
-      "required_reviewer": "CrossModuleIntegrationReviewAgent",
-      "evidence_ids": [
-        "EVD-000064"
-      ],
-      "status": "DETECTED",
-      "reason": "traceability cross_module_implementation_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
-      "source": "DETECTOR"
+      "reason": "P2 adds lifecycle-sensitive Guard executor composition plus a temporary read-only compatibility boundary that must remain isolated until P7.",
+      "source": "INDEPENDENT_REVIEW"
     }
   ],
-  "waivers": []
+  "waivers": [],
+  "review_closure": {
+    "status": "OPEN",
+    "reason": "This rescan only binds risks to BM-R08/DESIGN-P2-R04. It does not fabricate exact-revision specialist Review or a DataMigration waiver."
+  }
 }
