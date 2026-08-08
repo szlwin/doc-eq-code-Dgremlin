@@ -1,31 +1,41 @@
 # COMPILER P2 架构增量
 
-> Revision：`DESIGN-P2-R01@8875f042898c`。基于 P1 `DEC_COMPILER` 已通过架构与 `BM-R07@7d7bf504ca9d`，仅描述 P2 增量。
+> Revision：`DESIGN-P2-R06`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
-## 1. 依赖方向
+## 1. Dependency direction
 
 ```text
-dec-core-context        <- neutral immutable P2 facts + guard contracts
+dec-core-context        <- neutral immutable P2 facts + Guard/API contracts
        ^
        |
-dec-core-compiler       <- System/RuleView/ModelPath/static authorization
+dec-core-compiler       <- builders/passes, dynamic-binding classification, publication
        ^
        |
-frontends / starter     <- explicit input + assembly only
+frontends / starter / execution consumers
 
-legacy XML Config path  -- compatibility read boundary only; no write into P2 registry
+legacy Config path      <- read-only compatibility boundary only
 ```
 
-禁止 context -> compiler 反向依赖；禁止 compiler -> concrete XML parser；禁止 starter 持有全局 current Context。
+禁止 context -> compiler 反向依赖；禁止 compiler class 通过 split package 放入 `dec.core.context.*`；禁止 compiler -> concrete parser；禁止 global current Context。
 
-## 2. 发布闭包
+## 2. Cross-module fact construction
 
-一个 `CompiledModelSet` 同时冻结 System、RuleView、ModelPath/access rules、remaining Deferred、Diagnostic 和 digest。P2 不引入单独的 AccessRegistry 生命周期；policy index 是同一发布闭包的只读派生/成员。
+Immutable compiled facts live in context。Compiler may call **public validated context-owned factories** to create them。Factory visibility is not an authorization boundary: only facts inside the compiler-published immutable `CompiledModelSet`/PolicyIndex are authoritative。Runtime requests cannot inject a replacement `RuntimeAccessRequirement`。
 
-## 3. 动态权限边界
+## 3. AC-006 dynamic binding
 
-Guard contract 位于中立层，具体 runtime fact evaluator 由执行环境注入。执行模块必须先取得明确 Context，再提交 owner-qualified request。Guard DENY/故障不触发模型 mutation、事务推进或外部 IO。
+`RUNTIME_GUARD_REQUIRED` means the static authorization is valid but final object binding depends on runtime。Compiler derives `RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)` from existing access/path IR；no new XML/YAML predicate DSL is introduced。
 
-## 4. 迁移架构
+Runtime execution resolves an immutable `RuntimeAccessBinding`；Guard compares it with the exact selected rule and requirement before protected access。This makes Source -> Compiler -> published Context -> Guard behavior reachable。
 
-旧 bare-name RuleView/Config 读取与新 composite registry 并存仅是迁移读取边界，不是双写；新事实只写新不可变 Context。P7 才允许在完成调用迁移后移除旧入口。
+## 4. Publication closure
+
+System、RuleView、exact ModelPath rules、RuntimeAccessRequirement、remaining Deferred、Diagnostic、digest and policy index are one immutable `CompiledModelSet` closure。No second AccessRegistry lifecycle。
+
+## 5. Timeout and concurrency
+
+R04 bounded executor remains for any evaluator extension。Exact runtime-binding validation is synchronous/pure。Timeout/cancellation tasks never obtain authority to execute protected business operation。
+
+## 6. Compatibility
+
+Existing final EngineContext and P1 APIs remain compatible。Legacy bare-name Config/RuleView reads survive only as read-only migration boundary until P7 and never write P2 registries。
