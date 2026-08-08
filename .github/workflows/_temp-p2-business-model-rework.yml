@@ -97,6 +97,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sed -i 's/Y.width = 120/Y.width = 1000000/' /tmp/p2_bm_rework.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('/tmp/p2_bm_rework.py')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('Y.width = 120', 'Y.width = 1000000')
+          replacements = {
+              "f'python3 -m jsonschema -i {BM.as_posix()} /home/oai/skills/common-develop/assets/structured-docs/business-model.schema.json'": "f'''python3 -c \"import json,pathlib,yaml,jsonschema; data=yaml.safe_load(pathlib.Path('{BM.as_posix()}').read_text(encoding='utf-8')); schema=json.loads(pathlib.Path('/home/oai/skills/common-develop/assets/structured-docs/business-model.schema.json').read_text(encoding='utf-8')); jsonschema.validate(data,schema)\"'''",
+              "f'python3 -m jsonschema -i {R07_CHANGE.as_posix()} /home/oai/skills/common-develop/assets/structured-docs/changeset.schema.json'": "f'''python3 -c \"import json,pathlib,yaml,jsonschema; data=yaml.safe_load(pathlib.Path('{R07_CHANGE.as_posix()}').read_text(encoding='utf-8')); schema=json.loads(pathlib.Path('/home/oai/skills/common-develop/assets/structured-docs/changeset.schema.json').read_text(encoding='utf-8')); jsonschema.validate(data,schema)\"'''",
+              "f'python3 -m jsonschema -i {IMPACT.as_posix()} /home/oai/skills/common-develop/assets/structured-docs/dependency-impact.schema.json'": "f'''python3 -c \"import json,pathlib,yaml,jsonschema; data=yaml.safe_load(pathlib.Path('{IMPACT.as_posix()}').read_text(encoding='utf-8')); schema=json.loads(pathlib.Path('/home/oai/skills/common-develop/assets/structured-docs/dependency-impact.schema.json').read_text(encoding='utf-8')); jsonschema.validate(data,schema)\"'''",
+          }
+          for old, new in replacements.items():
+              if old not in s:
+                  raise SystemExit(f'missing validation command to patch: {old}')
+              s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+          PY
           export EXPECTED_BASE="$(git rev-parse HEAD)"
           python3 /tmp/p2_bm_rework.py
