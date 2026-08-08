@@ -1,74 +1,110 @@
 # COMPILER P2 API 契约
 
-> Revision：`DESIGN-P2-R06`。输入：`BM-R09` candidate。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> Revision：`DESIGN-P2-R07`。输入：`BM-R10` candidate。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 > 本文件是当前 canonical P2 API source；Java 示例是 signature contract，生产实现必须兼容 Java 8。
 
-## 1. Compatibility first
+## 1. Compatibility
 
-- root compiler target: Java 8；禁止 record / `Map.of` / `Map.copyOf` 等 Java 9+ API。
-- `EngineContext` 保持 `public final class`；保留现有单参构造器及 `compiledModelSet()/modelSet()/projection()`。
-- P2 新 API 只能 additive/compatible；禁止新增 bare-name RuleView lookup。
+- Java release 8；禁止 record / `Map.of` / `Map.copyOf` 等 Java 9+ API。
+- `EngineContext` 保持 `public final class`，现有单参构造器和 `compiledModelSet()/modelSet()/projection()` 保持兼容。
+- P2 API additive only；禁止新增 bare-name RuleView lookup。
 
-## 2. Access keys and compiled rule
+## 2. Exact access rule
 
-`ModelAccessRuleKey = SystemKey + DefinitionKey target + CanonicalModelPath + AccessOperation`，四元组 exact identity。
+`ModelAccessRuleKey = SystemKey + DefinitionKey target + CanonicalModelPath + AccessOperation`。PolicyIndex 只允许一次 exact lookup，无 wildcard/fallback。
 
 ```java
 public enum AccessCompilationStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
+public enum DynamicBindingClassification { STATIC_BOUND, RUNTIME_OBJECT_BOUND }
 
 public final class CompiledModelAccessRule {
     public ModelAccessRuleKey key();
     public AccessCompilationStatus status();
     public Optional<RuntimeAccessRequirement> runtimeRequirement();
+    public Optional<RuntimeBindingPlan> runtimeBindingPlan();
     public SourceRef sourceRef();
 }
 ```
 
-PolicyIndex performs one exact lookup only; no wildcard/fallback。
-
-## 3. RuntimeAccessRequirement: compiler-derived binding constraint
-
-P2 does **not** define a source-authored permission predicate DSL。
+## 3. Production DynamicBindingClassifier
 
 ```java
-public final class RuntimeAccessRequirement {
-    public enum Kind { EXACT_RUNTIME_BINDING }
+public interface DynamicBindingClassifier {
+    DynamicBindingResult classify(ResolvedAccessConsumerIr accessIr);
+}
+```
 
-    public static RuntimeAccessRequirement derived(
+Frozen R07 rules：
+
+- `DIRECT_EXACT` IR -> `STATIC_BOUND`；真实 fixture：`order.ordered` rule-data 的直接 `status = 1` access。
+- `EVERY_COLLECTION_ELEMENT` IR (`every(collectionPath, elementExpression)`) -> `RUNTIME_OBJECT_BOUND`；真实 fixture：`every(orderDetailList, status = 1)` 中 element `status` READ。
+- 其它 runtime index/key/filter/find/selector 或无法解析 element type 的动态 IR -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。
+
+Test stub 不得作为 classifier correctness 或 AC-006 Evidence。
+
+## 4. RuntimeBindingPlan + RuntimeAccessRequirement
+
+```java
+public final class RuntimeBindingPlan {
+    public enum Kind { COLLECTION_ELEMENT_MEMBERSHIP }
+    public static RuntimeBindingPlan collectionElementMembership(
         ModelAccessRuleKey authorizedRuleKey,
-        Kind kind,
-        SourceRef sourceRef);
-
-    public RuntimeRequirementKey key();
+        CanonicalModelPath collectionPath,
+        CanonicalModelPath elementRelativePath,
+        SourceRef sourceRef,
+        Digest modelShapeDigest);
+    public RuntimeBindingPlanKey key();
     public ModelAccessRuleKey authorizedRuleKey();
     public Kind kind();
-    public SourceRef sourceRef();
-    public String canonicalForm();
+    public CanonicalModelPath collectionPath();
+    public CanonicalModelPath elementRelativePath();
+}
+
+public final class RuntimeAccessRequirement {
+    public enum Kind { EXACT_RUNTIME_BINDING }
+    public static RuntimeAccessRequirement derived(
+        ModelAccessRuleKey authorizedRuleKey,
+        RuntimeBindingPlanKey planKey,
+        Kind kind,
+        SourceRef sourceRef);
+    public RuntimeRequirementKey key();
+    public ModelAccessRuleKey authorizedRuleKey();
+    public RuntimeBindingPlanKey planKey();
+    public Kind kind();
 }
 ```
 
-The factory is public because `dec-core-compiler` depends on `dec-core-context` across package/module boundaries。It performs strict validation and deterministic key generation。A caller-created value has no authority unless embedded by compiler publication in the selected rule of the current `CompiledModelSet`。
+Factories are public validated context-owned factories because compiler is a different module. Authority comes only from compiler publication in the exact selected rule.
 
-## 4. RuntimeAccessBinding
+## 5. Opaque runtime-object binding proof
+
+R06 `RuntimeAccessBinding(engineContextId,targetKey,path,operation)` is removed. It cannot distinguish two elements under the same static tuple.
 
 ```java
-public final class RuntimeAccessBinding {
-    public static RuntimeAccessBinding resolved(
-        String engineContextId,
-        DefinitionKey targetKey,
-        CanonicalModelPath resolvedPath,
-        AccessOperation operation);
-
+public final class RuntimeBindingHandle {
+    // no public/protected constructor and no public mint/factory
     public String engineContextId();
-    public DefinitionKey targetKey();
-    public CanonicalModelPath resolvedPath();
-    public AccessOperation operation();
+    public RuntimeBindingPlanKey planKey();
+    public ModelAccessRuleKey selectedRuleKey();
+    public String resolutionId();
+}
+
+public interface RuntimeBindingResolver {
+    RuntimeBindingHandle resolve(
+        RuntimeBindingPlan plan,
+        RuntimeResolutionContext executionContext);
+
+    RuntimeBindingVerification verify(
+        RuntimeBindingHandle handle,
+        RuntimeBindingPlan plan,
+        ModelAccessRuleKey selectedRuleKey,
+        String engineContextId);
 }
 ```
 
-No raw model object/POJO is exposed。Guard validates the binding against the exact selected rule。
+Framework resolver issues the handle while resolving the actual collection element. Business callers cannot mint a handle. Internal object/collection identity may be retained by resolver/verifier but is never exposed as a raw POJO through Guard API. A foreign/stale/replayed/unknown handle fails closed even when System/target/path/operation are otherwise identical.
 
-## 5. ModelAccessRequest / Guard
+## 6. ModelAccessRequest / Guard
 
 ```java
 public final class ModelAccessRequest {
@@ -77,7 +113,7 @@ public final class ModelAccessRequest {
     public DefinitionKey targetKey();
     public CanonicalModelPath modelPath();
     public AccessOperation operation();
-    public Optional<RuntimeAccessBinding> runtimeBinding();
+    public Optional<RuntimeBindingHandle> runtimeBindingHandle();
     public RuntimeFacts runtimeFacts();
     public Duration timeoutBudget();
 }
@@ -87,42 +123,16 @@ public interface ModelAccessGuard {
 }
 ```
 
-Every protected READ/WRITE/EXECUTE calls Guard。`STATIC_ALLOW` is internal fast path only。
+All protected READ/WRITE/EXECUTE call Guard. `STATIC_ALLOW` is internal fast path. For `RUNTIME_GUARD_REQUIRED`, Guard validates the handle against exact selected rule/plan/current Context. Request cannot submit replacement rule/requirement/plan.
 
-## 6. Optional evaluator seam
+## 7. RuntimeFactValue / optional evaluator
 
-If a later Requirement revision introduces an accepted runtime predicate, the evaluator must receive the exact selected rule：
+`RuntimeFactValue` remains one public final tagged-value class with private constructor and six typed immutable factories. Current AC-006 does not use a business predicate evaluator. A future accepted Requirement may add predicate semantics only in a new revision; any evaluator must receive exact selected rule and may not re-query PolicyIndex.
 
-```java
-public interface RuntimeFactEvaluator {
-    ModelAccessDecision evaluate(
-        CompiledSystem system,
-        CompiledModelAccessRule selectedRule,
-        ModelAccessRequest request);
-}
-```
+## 8. EngineContext additive surfaces
 
-Current P2 AC-006 does not depend on such a predicate。The evaluator may not re-query PolicyIndex or infer hidden policy。
+May include `contextId()`, owner-qualified System/RuleView lookup, policy status, non-null fail-closed Guard, and framework runtime binding resolver access. No `findRuleView(String bareName)`.
 
-## 7. RuntimeFactValue
+## 9. Stable reasons
 
-`RuntimeFactValue` is one `public final` tagged-value class with private constructor and typed factories for STRING/BOOLEAN/DECIMAL/INSTANT/LIST/OBJECT。Collections are recursively immutable；there is no generic `Object` getter and no external subclassing。
-
-## 8. EngineContext P2 additions
-
-Additive compatible surfaces may include：
-
-- `contextId()`
-- `findSystem(SystemKey)`
-- `findRuleView(RuleViewKey)`
-- `findRuleView(SystemKey,String)`
-- `policyCompilationStatus(ModelAccessRuleKey)`
-- `modelAccessGuard()` (non-null；unavailable sentinel fail-closes)
-
-`findRuleView(String bareName)` is forbidden for P2 consumers。
-
-## 9. Decisions/reasons
-
-Decision code: ALLOW/DENY。Stable reasons include `STATIC_ALLOW`, `RUNTIME_ALLOW`, `RUNTIME_DENY`, `POLICY_NOT_FOUND`, `CONTEXT_IDENTITY_MISMATCH`, `RUNTIME_BINDING_REQUIRED`, `RUNTIME_BINDING_MISMATCH`, `GUARD_UNAVAILABLE`, evaluator unavailable/exception/null/timeout/unknown。
-
-No API in this contract permits a runtime caller to submit a replacement rule or requirement。
+Compile: `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` plus existing P2 diagnostics. Runtime: `RUNTIME_BINDING_REQUIRED`, `RUNTIME_BINDING_PROOF_INVALID`, `RUNTIME_BINDING_STALE`, `RUNTIME_BINDING_PLAN_MISMATCH`, `CONTEXT_IDENTITY_MISMATCH`, `POLICY_NOT_FOUND`, `GUARD_UNAVAILABLE`, `STATIC_ALLOW`, `RUNTIME_ALLOW`, `RUNTIME_DENY`.
