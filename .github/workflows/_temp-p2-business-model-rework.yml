@@ -1,0 +1,55 @@
+name: Temporary P2 Business Model Rework
+
+on:
+  push:
+    branches:
+      - tmp/p2-business-model-rework-run-20260808
+    paths:
+      - .github/workflows/_temp-p2-business-model-rework.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rework:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout helper branch
+        uses: actions/checkout@v6
+        with:
+          ref: tmp/p2-business-model-rework-run-20260808
+          fetch-depth: 1
+
+      - name: Preserve rework runner
+        run: cp tools/_temp_p2_bm_rework.py /tmp/p2_bm_rework.py
+
+      - name: Checkout formal rework branch
+        uses: actions/checkout@v6
+        with:
+          ref: rework/p2-business-model-readability-20260808
+          fetch-depth: 0
+          clean: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install validation dependencies
+        run: python3 -m pip install --disable-pip-version-check jsonschema PyYAML ruamel.yaml
+
+      - name: Install common-develop 2.44 RC9
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch common-develop-v2.44-rc9 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          test "$(git -C /tmp/common-develop rev-parse HEAD)" = "48d7804b394ca2fb4a533af4b842889419b14c38"
+          sudo mkdir -p /home/oai/skills /home/oai/.codex/skills
+          sudo ln -sfn /tmp/common-develop /home/oai/skills/common-develop
+          sudo ln -sfn /tmp/common-develop /home/oai/.codex/skills/common-develop
+          python3 /home/oai/skills/common-develop/scripts/baseline_guard.py -g ProjectManagerAgent status --json
+
+      - name: Execute controlled BM rework
+        env:
+          EXPECTED_BASE: f0beab1f4230adaa4800ff6a49a060bbedce32ae
+        run: python3 /tmp/p2_bm_rework.py
