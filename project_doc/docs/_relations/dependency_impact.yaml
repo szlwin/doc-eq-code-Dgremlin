@@ -7,8 +7,8 @@ scope:
   targetIds:
     - P1-COMPILER-F01
     - FEATURE-DESC-3361AD2E54FC
-revision: BM-R07@7d7bf504ca9d
-baseRevision: 'BM-R06@6a0bce4fa0ae'
+revision: BM-R08
+baseRevision: 'BM-R07@7d7bf504ca9d'
 nodes:
   - id: P1-COMPILER-F01
     type: FEATURE
@@ -81,11 +81,22 @@ nodes:
     type: MODULE
     name: Retired declaration expansion
     module: DECLARATION
-    status: DEPRECATED
+    status: SUPERSEDED
     refs:
       - version/V_1.0/doc/P1-COMPILER-F01/requirement.md#AC-P1-COMPILER-007
+      - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
     traceIds:
       - TR-P1-COMPILER-007
+  - id: LEGACY-DECLARATION-SYSTEM-COMPAT
+    type: MODULE
+    name: Surviving read-only declaration/System compatibility boundary
+    module: DECLARATION
+    status: ACTIVE
+    refs:
+      - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
+      - version/V_1.0/doc/COMPILER/changes/p2-design-runtimefacts-timeout-remediation-r04.md
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-010
   - id: FEATURE-DESC-3361AD2E54FC
     type: FEATURE
     name: P2 System and RuleView ownership
@@ -187,12 +198,13 @@ relationships:
     to: DEC-EXPAND-DECLARATION
     type: SUPERSEDES
     direction: DIRECTED
-    rationale: The unified compiler removes the temporary declaration module without an adapter or dual runtime.
+    rationale: The unified compiler removes the temporary declaration module without an adapter or dual runtime. The node remains only as a historical retired fact.
     conditions: []
     traceIds:
       - TR-P1-COMPILER-007
     evidenceRefs:
       - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#design-declaration-retirement
+      - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
   - id: REL-P2-SYSTEM-RULEVIEW-COMPILER
     from: FEATURE-DESC-3361AD2E54FC
     to: DEC-CORE-COMPILER
@@ -230,7 +242,7 @@ relationships:
     to: DEC-CORE-STARTER
     type: AFFECTS
     direction: DIRECTED
-    rationale: Runtime assembly/callers resolve RuleView using system-ref + rule-ref and honor compiled/runtime access decisions without bare-name fallback.
+    rationale: Runtime assembly/callers resolve RuleView using system-ref + rule-ref and route every protected READ/WRITE/EXECUTE through the common Guard without bare-name fallback.
     conditions: []
     traceIds:
       - TR-P2-SYSTEM-RULEVIEW-003
@@ -238,17 +250,21 @@ relationships:
       - TR-P2-SYSTEM-RULEVIEW-007
     evidenceRefs:
       - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-003
+      - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
   - id: REL-P2-SYSTEM-RULEVIEW-DECLARATION
     from: FEATURE-DESC-3361AD2E54FC
-    to: DEC-EXPAND-DECLARATION
+    to: LEGACY-DECLARATION-SYSTEM-COMPAT
     type: AFFECTS
     direction: DIRECTED
-    rationale: P2 preserves the declaration compatibility boundary and must not create a second runtime authority; final convergence remains P7.
-    conditions: []
+    rationale: P2 preserves only the surviving read-only declaration/System compatibility boundary until P7; the retired DEC-EXPAND-DECLARATION module is not restored or retained as a live dependency.
+    conditions:
+      - current phase is P2
+      - compatibility access is read-only
     traceIds:
       - TR-P2-SYSTEM-RULEVIEW-010
     evidenceRefs:
       - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
+      - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
   - id: REL-COMPILER-DOC-LINEAGE
     from: DEC-CORE-COMPILER
     to: DEC-COMPILER-DOC-LEGACY
@@ -319,12 +335,12 @@ impactPolicies:
     policy: REJECT_OPERATION
     conditions:
       - static access is undeclared or invalid
-      - runtime guard denies a genuinely dynamic access
+      - Guard denies any protected READ/WRITE/EXECUTE request
     consistency: ATOMIC
-    transactionBoundary: Static denial blocks complete candidate publication; runtime denial occurs before mutation or external side effect.
+    transactionBoundary: Static denial blocks complete candidate publication; runtime Guard denial occurs before protected read, mutation, execute or external side effect.
     idempotency: The same System/target/path/operation and authority facts yield the same decision; denial has no state mutation to replay.
     failureHandling: Emit stable source-aware denial and preserve the old EngineContext or current business state.
-    compensation: No compensation is required for denied access because no mutation is allowed before authorization.
+    compensation: No compensation is required for denied access because no protected operation is allowed before authorization.
     historyHandling: Previous compiled Context and Evidence remain immutable.
     traceIds:
       - TR-P2-SYSTEM-RULEVIEW-004
@@ -338,26 +354,29 @@ impactPolicies:
       - CASE-P2-ACCESS-NO-BYPASS-001
     evidenceRefs:
       - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION
+      - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
   - id: IMP-P2-DECLARATION-BOUNDARY
     sourceRef: FEATURE-DESC-3361AD2E54FC
-    sourceAction: preserveDeclarationCompatibilityBoundary
+    sourceAction: preserveReadOnlyDeclarationCompatibilityBoundary
     targetRefs:
-      - DEC-EXPAND-DECLARATION
+      - LEGACY-DECLARATION-SYSTEM-COMPAT
     policy: RETAIN_UNCHANGED
     conditions:
       - current phase is P2
+      - only ConfigInfo.getRuleViewInfo(String) / DataUtil.getRuleViewInfo(String) compatible read surface is retained
     consistency: ATOMIC
-    transactionBoundary: P2 changes do not delete or re-author declaration runtime ownership; P7 remains the convergence gate.
-    idempotency: Repeated P2 compilation keeps the same declaration migration boundary.
-    failureHandling: Any attempt to delete the boundary or create a second runtime authority blocks P2 completion.
+    transactionBoundary: P2 may retain the surviving read-only compatibility surface but must not restore DEC-EXPAND-DECLARATION, register new runtime authority through it, or create a second Registry/EngineContext.
+    idempotency: Repeated P2 compilation keeps the same read-only compatibility boundary and never recreates the retired module.
+    failureHandling: Any attempt to restore DEC-EXPAND-DECLARATION, write through the compatibility boundary, or create a second runtime authority blocks P2 completion.
     compensation: Revert the P2 change that crosses the declared phase boundary.
-    historyHandling: Historical declaration facts remain available through Git/Evidence until P7 convergence.
+    historyHandling: The retired module remains historical Git/Evidence only; the surviving read adapter remains until the P7 retirement gate.
     traceIds:
       - TR-P2-SYSTEM-RULEVIEW-010
     testCaseIds:
       - CASE-P2-DECLARATION-BOUNDARY-001
     evidenceRefs:
       - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
+      - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
 crossModuleImplementations:
   - id: CMI-P1-COMPILER-001
     businessFlowRef: FLOW-CONFIG-COMPILE
@@ -591,9 +610,10 @@ crossModuleImplementations:
           - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM
       - id: CMPART-P2-STARTER
         module: STARTER
-        responsibility: Use system-ref + rule-ref for runtime lookup and route genuinely dynamic access through the common Guard before mutation.
+        responsibility: Use system-ref + rule-ref for runtime lookup and route every protected READ/WRITE/EXECUTE through the common Guard before the target operation.
         contractRefs:
           - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-003
+          - version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml
     steps:
       - id: CMSTEP-P2-SYSTEM-RULEVIEW-01
         order: 1
@@ -650,22 +670,24 @@ crossModuleImplementations:
         from: CMPART-P2-STARTER
         to: CMPART-P2-CONTEXT
         interactionType: COMMAND
-        action: Request dynamic model access authorization before mutation when compilation marked RuntimeGuardRequired
+        action: Request ModelAccessGuard authorization for every protected READ/WRITE/EXECUTE before the target operation; STATIC_ALLOW is resolved only inside Guard and RUNTIME_GUARD_REQUIRED alone submits RuntimeFactEvaluator work.
         preconditions:
-          - static compilation already accepted the rule boundary
+          - static compilation accepted the structural rule boundary or produced a publish-blocking ERROR
         postconditions:
-          - ALLOW permits mutation; DENY returns before state change/external side effect
-        idempotency: Repeated decision over unchanged authority/resource facts is stable.
-        failureHandling: DENY is fail-closed and preserves current state.
-        compensation: No compensation because mutation has not started.
+          - only Guard ALLOW permits the protected operation; every DENY returns before target read/mutation/execute or external side effect
+        idempotency: Repeated decision over unchanged authority/resource facts is stable; no implicit retry follows timeout/rejection/exception.
+        failureHandling: Guard unavailable, policy missing, Context mismatch, evaluator failure/timeout/unavailable or other undecidable authorization fails closed and preserves current state.
+        compensation: No compensation because the protected operation has not started.
         traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-004
           - TR-P2-SYSTEM-RULEVIEW-006
           - TR-P2-SYSTEM-RULEVIEW-007
     successCriteria:
       - System and RuleView identities are deterministic and owner-qualified
       - static illegal access blocks publication
-      - dynamic denial occurs before mutation
-      - declaration compatibility remains a P7 boundary
+      - every protected runtime access reaches Guard; STATIC_ALLOW cannot bypass it
+      - Guard denial occurs before protected target operation or external side effect
+      - declaration compatibility points only to the surviving read-only boundary while DEC-EXPAND-DECLARATION stays retired
     failurePaths:
       - id: CMFAIL-P2-SYSTEM-RULEVIEW-01
         atStep: CMSTEP-P2-SYSTEM-RULEVIEW-02
@@ -688,11 +710,12 @@ crossModuleImplementations:
           - TR-P2-SYSTEM-RULEVIEW-003
       - id: CMFAIL-P2-SYSTEM-RULEVIEW-03
         atStep: CMSTEP-P2-SYSTEM-RULEVIEW-04
-        condition: runtime Guard denies access
-        result: operation fails before mutation or external side effect
+        condition: ModelAccessGuard denies any protected READ/WRITE/EXECUTE
+        result: operation fails before protected target operation or external side effect
         compensationSteps: []
-        manualRecovery: Correct authority/resource state before retry.
+        manualRecovery: Correct authority/resource/composition state before retry.
         traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-004
           - TR-P2-SYSTEM-RULEVIEW-006
           - TR-P2-SYSTEM-RULEVIEW-007
     traceIds:
