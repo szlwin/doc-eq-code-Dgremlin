@@ -7,8 +7,8 @@
   "candidate_ref": "project_doc/version/V_1.0/doc/COMPILER/changes/p2-design-runtime-requirement-wildcard-closed-facts-remediation-r05.md",
   "local_scan": {
     "validator_status": "PASSED",
-    "input_digest": "d568fd8e4bd7747b10c42af1493868e11d7f7924035ddadd06c4c7a523f1fbd5",
-    "scanned_at": "2026-08-08T10:34:22+00:00",
+    "input_digest": "274b9faeef2e8e27630b04ad847967a8098a4236aad8e56c1a4bbd3e1f613351",
+    "scanned_at": "2026-08-08T10:36:28+00:00",
     "scanned_by_agent": "ProjectManagerAgent",
     "active_risk_types": [
       "api_contract",
@@ -35,7 +35,7 @@
   "local_evidence": {
     "evidence_id": "EVD-000001",
     "type": "code_ref",
-    "digest": "abd674f59649f5be2a819a5540865114b28d1308265eb93c2fb4e8fdb48abd32",
+    "digest": "988883881684a4ab007cf697ea1e7e5dc897b895c97b4665db7f4ce6fd8575fc",
     "revision": "DESIGN-P2-R05",
     "phase": "development",
     "generated_by_agent": "ProjectManagerAgent"
@@ -44,6 +44,6 @@
   "repository_risk_detection_status": "NOT_SCANNED",
   "closure_eligible": false,
   "fnd_p2_rev_005_status": "OPEN",
-  "reason": "The RC9 scan was executed against an isolated local mirror of the candidate Design bytes. Its EVD-000001 belongs only to that temporary evidence registry and conflicts with the repository's historical evidence namespace. The connector-only runtime cannot safely transactionally append the generated evidence to the existing compact evidence/evidence_index.json, so the local ID MUST NOT be treated as repository Evidence. The repository risk_detection.json is intentionally NOT_SCANNED until the scan is rerun in a safely mounted repository working tree.",
+  "reason": "The RC9 scan was executed against an isolated local mirror of the exact candidate Design bytes. Its EVD-000001 belongs only to that temporary evidence registry and conflicts with the repository's historical evidence namespace. The connector-only runtime cannot safely transactionally append the generated evidence to the existing compact evidence/evidence_index.json, so the local ID MUST NOT be treated as repository Evidence. The repository risk_detection.json is intentionally NOT_SCANNED until the scan is rerun in a safely mounted repository working tree.",
   "required_next_action": "After formal reopen/publish in a real repository working tree, run RC9 risk_detect scan/add/validate against exact DESIGN-P2-R05 so new repository Evidence IDs are registered, then execute all triggered exact-revision reviewers or valid waivers."
 }
