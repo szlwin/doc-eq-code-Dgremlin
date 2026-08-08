@@ -111,6 +111,15 @@ jobs:
               if old not in s:
                   raise SystemExit(f'missing validation command to patch: {old}')
               s = s.replace(old, new)
+
+          # RC9 reopen does not synthesize new MANUAL_REVIEW assertions. Clone the six
+          # already-approved BM-R06 review obligations as fresh PENDING BM-R07 assertions.
+          needle = "    write_yaml(BM, current)\n"
+          if needle not in s:
+              raise SystemExit('missing BM write point for assertion clone')
+          inject = '''    write_yaml(BM, current)\n\n    sys.path.insert(0, str(COMMON/'scripts'))\n    import acceptance\n    assertion_doc = acceptance.load_document(TASK)\n    prior_bm_assertions = [\n        a for a in assertion_doc.get('assertions', [])\n        if isinstance(a, dict)\n        and a.get('type') == 'MANUAL_REVIEW'\n        and a.get('phase') == 'business_model'\n        and a.get('revision') == BASE_REV\n    ]\n    expected_reviewers = {\n        'BusinessModelReviewAgent','RequirementReviewAgent','DesignReviewAgent',\n        'TestDesignAgent','ImpactAnalysisReviewAgent','CrossModuleIntegrationReviewAgent'\n    }\n    prior_reviewers = {str((a.get('parameters') or {}).get('reviewer_agent') or '') for a in prior_bm_assertions}\n    if len(prior_bm_assertions) != 6 or prior_reviewers != expected_reviewers:\n        raise RuntimeError(f'BM-R06 review assertion baseline mismatch: count={len(prior_bm_assertions)} reviewers={sorted(prior_reviewers)}')\n    current_source_refs = [f'TASK-P2-BMODEL-001#expected_results/{i}' for i in range(4)]\n    for source_assertion in prior_bm_assertions:\n        old_id = str(source_assertion['assertion_id'])\n        if 'BM-R06' not in old_id:\n            raise RuntimeError(f'unexpected BM-R06 assertion id: {old_id}')\n        acceptance.add_assertion(\n            TASK,\n            assertion_id=old_id.replace('BM-R06','BM-R07'),\n            acceptance_id=str(source_assertion['acceptance_id']),\n            statement=str(source_assertion['statement']).replace('BM-R06','BM-R07'),\n            assertion_type='MANUAL_REVIEW',\n            phase='business_model',\n            revision=new_rev,\n            blocking=True,\n            parameters=dict(source_assertion.get('parameters') or {}),\n            source_refs=current_source_refs,\n        )\n'''
+          s = s.replace(needle, inject, 1)
+          s = s.replace("a.get('verification_mode') == 'MANUAL_REVIEW'", "a.get('type') == 'MANUAL_REVIEW'")
           p.write_text(s, encoding='utf-8')
           PY
           export EXPECTED_BASE="$(git rev-parse HEAD)"
