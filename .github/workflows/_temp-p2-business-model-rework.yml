@@ -20,8 +20,12 @@ jobs:
           ref: tmp/p2-business-model-rework-run-20260808
           fetch-depth: 1
 
-      - name: Preserve rework runner
-        run: cp tools/_temp_p2_bm_rework.py /tmp/p2_bm_rework.py
+      - name: Preserve rework runner and verified RC9 delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp tools/_temp_p2_bm_rework.py /tmp/p2_bm_rework.py
+          cp .common-develop-rc9/rc8-to-rc9.patch.xz.b64 /tmp/rc8-to-rc9.patch.xz.b64
 
       - name: Checkout formal rework branch
         uses: actions/checkout@v6
@@ -38,16 +42,50 @@ jobs:
       - name: Install validation dependencies
         run: python3 -m pip install --disable-pip-version-check jsonschema PyYAML ruamel.yaml
 
-      - name: Install common-develop 2.44 RC9
+      - name: Install common-develop 2.44 RC9 from verified RC8 delta
         shell: bash
         run: |
           set -euo pipefail
-          git clone --depth 1 --branch common-develop-v2.44-rc9 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
-          test "$(git -C /tmp/common-develop rev-parse HEAD)" = "48d7804b394ca2fb4a533af4b842889419b14c38"
+          RC8=4787876e135d347e9f37580910e2d28b09ea2ba4
+          RC9=48d7804b394ca2fb4a533af4b842889419b14c38
+          RC9_TREE=d001cd84a86c28f027eaed4e3b328a98b2688aef
+          PATCH_SHA=ba5c20ffbc759373b0cf6a7c5621f71748c420c8fabf90e9c0c04289865c7891
+
+          git clone --depth 1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          test "$(git -C /tmp/common-develop rev-parse HEAD)" = "$RC8"
+
+          base64 -d /tmp/rc8-to-rc9.patch.xz.b64 > /tmp/rc8-to-rc9.patch.xz
+          echo "$PATCH_SHA  /tmp/rc8-to-rc9.patch.xz" | sha256sum -c -
+          xz -dc /tmp/rc8-to-rc9.patch.xz > /tmp/rc8-to-rc9.patch
+          git -C /tmp/common-develop apply --binary /tmp/rc8-to-rc9.patch
+          git -C /tmp/common-develop add -A
+          test "$(git -C /tmp/common-develop write-tree)" = "$RC9_TREE"
+
+          export GIT_AUTHOR_NAME='Common Develop Maintainer'
+          export GIT_AUTHOR_EMAIL='common-develop@local.invalid'
+          export GIT_AUTHOR_DATE='2026-08-07T08:48:48Z'
+          export GIT_COMMITTER_NAME='Common Develop Maintainer'
+          export GIT_COMMITTER_EMAIL='common-develop@local.invalid'
+          export GIT_COMMITTER_DATE='2026-08-07T08:48:48Z'
+          COMMIT=$(printf '%s\n' 'fix(long-task): close reopen lifecycle gaps' | git -C /tmp/common-develop commit-tree "$RC9_TREE" -p "$RC8")
+          test "$COMMIT" = "$RC9"
+          git -C /tmp/common-develop reset --hard "$RC9"
+          git -C /tmp/common-develop tag common-develop-v2.44-rc9 "$RC9"
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/common-develop/assets/release-contract.json')
+          d=json.loads(p.read_text())
+          assert d['packageVersion']=='2.44'
+          assert d['releaseStage']=='RC9'
+          assert d['baselineTag']=='common-develop-v2.44-rc9'
+          PY
+
           sudo mkdir -p /home/oai/skills /home/oai/.codex/skills
           sudo ln -sfn /tmp/common-develop /home/oai/skills/common-develop
           sudo ln -sfn /tmp/common-develop /home/oai/.codex/skills/common-develop
-          python3 /home/oai/skills/common-develop/scripts/baseline_guard.py -g ProjectManagerAgent status --json
+          python3 /home/oai/skills/common-develop/scripts/baseline_guard.py -g ProjectManagerAgent status --require-clean --json
 
       - name: Execute controlled BM rework
         env:
