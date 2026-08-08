@@ -1,0 +1,27 @@
+name: Temporary Helper Export
+
+on:
+  push:
+    branches:
+      - tmp/p2-business-model-rework-run-20260808
+    paths:
+      - .helper-export/EXPORT
+
+permissions:
+  contents: read
+
+jobs:
+  export-helpers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout helper branch
+        uses: actions/checkout@v6
+      - name: Upload helper scripts only
+        uses: actions/upload-artifact@v4
+        with:
+          name: p2-bm-local-helpers
+          path: |
+            tools/_temp_p2_bm_rework.py
+            tools/_temp_p2_evidence_gitref_repair.py
+          if-no-files-found: error
+          retention-days: 1
