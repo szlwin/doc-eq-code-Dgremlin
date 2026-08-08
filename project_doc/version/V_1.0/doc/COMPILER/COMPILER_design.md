@@ -1,9 +1,9 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R06`。Base：`DESIGN-P2-R05`，并继承 P1 已通过的 Compiler Pipeline/Context 基线。
-> 输入 Business Model 候选：`BM-R09`（标准 changeset `CHG-V_1.0-COMPILER-P2-BM-R09`；在 RC9 正式 reopen/publish 前仍为 MACHINE_BLOCKED）。
+> Revision：`DESIGN-P2-R07`。Base：`DESIGN-P2-R06`，并继承 P1 已通过的 Compiler Pipeline/Context 基线。
+> 输入 Business Model 候选：`BM-R10`（标准 changeset `CHG-V_1.0-COMPILER-P2-BM-R10`；在 RC9 正式 reopen/publish 前仍为 MACHINE_BLOCKED）。
 > 状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
-> 本文件是 P2 当前 canonical Design source；历史 R01～R05 继续保留在 Git/changes 历史中，但与本文件冲突时以 R06 为当前候选语义。
+> 本文件是 P2 当前 canonical Design source；历史 R01～R06 继续保留在 Git/changes 历史中，但与本文件冲突时以 R07 为当前候选语义。
 
 ## 1. 设计目标与不可绕过约束
 
@@ -13,7 +13,7 @@
 4. runtime exact lookup 永不支持 wildcard、prefix/suffix、parent/child、bare-name 或跨 target/System fallback。
 5. Java 生产 API 以根 `pom.xml` 的 `maven.compiler.release=8` 为约束；不得使用 record、`Map.of/copyOf` 等 Java 9+ API。
 6. 现有 `public final class EngineContext`、单参构造器、`compiledModelSet()`、`modelSet()`、`projection()` 保持兼容；P2 只增加兼容能力。
-7. P2 不新增 source-authored 权限 Predicate DSL。AC-006 的 runtime-check-required 来源于**最终对象绑定依赖运行时值**，不是新增业务权限表达式。
+7. P2 不新增 source-authored 权限 Predicate DSL。AC-006 的 runtime-check-required 来源于最终对象绑定依赖运行时值，不是新增业务权限表达式。
 8. Guard DENY 必须在实际 read/write/execute、状态推进或外部副作用前完成。
 
 ## 2. 模块和 package 边界
@@ -42,17 +42,11 @@ dec-core-compiler
 frontends / starter / execution consumers
 ```
 
-禁止：
-
-- context -> compiler 反向依赖；
-- 把 compiler builder 塞进 `dec.core.context.*` split package；
-- compiler -> concrete XML parser；
-- starter/global singleton 持有全局 current Context；
-- runtime caller 构造/提交一个 requirement 来替换已发布 rule 自带 requirement。
+禁止 context -> compiler 反向依赖、split package、compiler -> concrete parser、global current Context，以及 runtime caller 构造/提交 replacement requirement/rule/plan。
 
 ### 2.1 跨模块构造边界
 
-`RuntimeAccessRequirement` 属于 `dec-core-context` 的 immutable fact，但由 `dec-core-compiler` 产生。构造 seam 必须可被 compiler 合法调用，因此使用 **context-owned public validated factory**，而不是 package-private factory：
+`RuntimeAccessRequirement` 属于 `dec-core-context` immutable fact，由 `dec-core-compiler` 产生，使用 context-owned public validated factory：
 
 ```java
 public final class RuntimeAccessRequirement {
@@ -62,252 +56,197 @@ public final class RuntimeAccessRequirement {
 
     public static RuntimeAccessRequirement derived(
         ModelAccessRuleKey authorizedRuleKey,
+        RuntimeBindingPlanKey planKey,
         Kind kind,
         SourceRef sourceRef);
 
     public RuntimeRequirementKey key();
     public ModelAccessRuleKey authorizedRuleKey();
+    public RuntimeBindingPlanKey planKey();
     public Kind kind();
     public SourceRef sourceRef();
     public String canonicalForm();
 }
 ```
 
-安全边界不是“谁能 new 一个值对象”，而是**只有同一 `CompiledModelSet` 中由 compiler 发布并由 exact PolicyIndex 选中的 `CompiledModelAccessRule` 才具有授权权威**。runtime request 中不接受 caller-supplied requirement，因此外部代码即使能调用 validated factory 也不能扩大权限。
-
-`RuntimeRequirementKey` 由 `RuntimeAccessRequirement.derived(...)` 内部确定性生成；不提供 caller-chosen public key factory。
+授权权威来自 current `CompiledModelSet` 中 exact PolicyIndex 选中的 rule，不来自 factory visibility。`RuntimeRequirementKey` 由 authorized rule + plan + kind + canonical Source identity 确定性生成；caller 不可指定 key。
 
 ## 3. System / RuleView / ModelPath
 
-### 3.1 System
+### 3.1 System / RuleView
 
-- 显式 `SystemKey` 注册；多 source 输入按 canonical source order 处理；重复 key -> `MIX-SYSTEM-DUPLICATE`。
-- `CompiledSystem` 与 registry、RuleView、access rules 同属于一个 `CompiledModelSet` 发布闭包。
+- 显式 `SystemKey`；重复 -> `MIX-SYSTEM-DUPLICATE`。
+- RuleView 新定义缺 owner System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；同 System 同名 -> duplicate；跨 System 同名合法。
+- runtime 只允许 owner-qualified exact lookup，禁止 bare-name fallback。
 
-### 3.2 RuleView
+### 3.2 ModelPath 与真实 `read path="*"`
 
-- 新 RuleView 缺 owner System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；
-- 同 System 同名 -> `MIX-RULEVIEW-DUPLICATE`；
-- 跨 System 同名合法；
-- runtime 只允许 `RuleViewKey` 或 `(SystemKey,name)` 精确 lookup；禁止新 bare-name API。
+Runtime `ModelPath` 始终 exact。真实 `systems.xml` 的 READ `*` 只在 compile-time：唯一 target -> immutable target path catalog -> finite canonical sort/dedup -> exact READ rule。wildcard 永不进入 runtime PolicyIndex；wildcard WRITE/EXECUTE 和 empty expansion compile ERROR；expanded exact key set + model-shape digest 进入 semantic digest。
 
-### 3.3 ModelPath 与真实 `read path="*"`
-
-运行时 `ModelPath` 始终 exact。真实 `systems.xml` 中 `order`、`payment` 的 `<read path="*"/>` 只是一种 **source/compile-time selector**：
-
-1. 先解析唯一 target；
-2. 从该 target 的 immutable `CompiledTargetPathCatalog` 枚举有限 canonical readable paths；
-3. canonical sort + deduplicate；
-4. 每个 path 形成普通 exact READ `ModelAccessRuleKey`；
-5. wildcard 永不进入 runtime PolicyIndex；
-6. wildcard WRITE/EXECUTE -> compile ERROR；
-7. empty expansion -> compile ERROR；
-8. expanded exact key set + target model-shape digest 进入 semantic digest；model shape 改变必须重新 compile。
-
-## 4. ModelAccessRule 与 AC-006 runtime-check-required
-
-### 4.1 编译结果
+## 4. Production classifier 与 AC-006 runtime-check-required
 
 ```java
-public enum AccessCompilationStatus {
-    STATIC_ALLOW,
-    RUNTIME_GUARD_REQUIRED
-}
+public enum AccessCompilationStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
+public enum DynamicBindingClassification { STATIC_BOUND, RUNTIME_OBJECT_BOUND }
+```
 
-public final class CompiledModelAccessRule {
-    private final ModelAccessRuleKey key;
-    private final AccessCompilationStatus status;
-    private final RuntimeAccessRequirement runtimeRequirement;
-    private final SourceRef sourceRef;
+`DynamicBindingClassification` 是 production compiler fact，不是 Test stub 输入。分类发生在 exact target/path/operation 静态授权完成之后，只消费 resolved access-consumer IR。
 
-    public ModelAccessRuleKey key();
-    public AccessCompilationStatus status();
-    public Optional<RuntimeAccessRequirement> runtimeRequirement();
+### 4.1 R07 确定性分类规则
+
+当前 P2 只冻结两类：
+
+1. `DIRECT_EXACT -> STATIC_BOUND`
+   - access IR 直接引用 canonical exact path；
+   - 不含 collection iteration、runtime index/key、filter/find/selector 或其它 element-selection operator；
+   - 真实 fixture：`systems.xml` 中 `order.ordered` 的 `rule-data` 子表达式 `status = 1`，其 `status` READ 必须 `STATIC_BOUND`。
+2. `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND`
+   - IR 为当前语法已有 `every(<collectionPath>, <elementExpression>)`；
+   - collectionPath 必须 exact resolve 为 collection；element protected member 必须 exact resolve 到 element type 的 relative path；
+   - 真实 fixture：`every(orderDetailList, status = 1)` 中 element `status` READ 必须 `RUNTIME_OBJECT_BOUND`；
+   - source READ `*` 必须先展开出该 element member 的 exact READ rule；不存在时 compile ERROR，禁止 parent-path fallback。
+3. 其它 dynamic IR -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。
+
+Classifier 输入至少含 `consumerKind + exactTargetKey + canonicalBasePath + canonicalRelativeElementPath(if any) + resolvedModelShape + SourceRef`；输出含 classification、稳定 reason 和（仅 runtime 时）deterministic `RuntimeBindingPlan`。同义 IR 必须得到相同 classification/plan key/digest。
+
+### 4.2 Compiler-derived RuntimeBindingPlan
+
+```java
+public final class RuntimeBindingPlan {
+    public enum Kind { COLLECTION_ELEMENT_MEMBERSHIP }
+
+    public static RuntimeBindingPlan collectionElementMembership(
+        ModelAccessRuleKey authorizedRuleKey,
+        CanonicalModelPath collectionPath,
+        CanonicalModelPath elementRelativePath,
+        SourceRef sourceRef,
+        Digest modelShapeDigest);
+
+    public RuntimeBindingPlanKey key();
+    public ModelAccessRuleKey authorizedRuleKey();
+    public Kind kind();
+    public CanonicalModelPath collectionPath();
+    public CanonicalModelPath elementRelativePath();
     public SourceRef sourceRef();
 }
 ```
 
-规则：
+`RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)` 必须引用该 plan key。Plan 是 compiler-published immutable fact，描述“实际 element 必须由当前 Context 下该 exact collection path 的 framework resolver 解析”，不是 caller predicate。
 
-- 静态 System/target/path/operation 不合法或未授权 -> compile ERROR，不发布 rule。
-- 权限和实际对象绑定都能静态证明 -> `STATIC_ALLOW`。
-- **静态授权结构合法，但最终对象实例/容器元素的绑定依赖运行时值** -> compiler 确定性生成 `RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)` 并发布 `RUNTIME_GUARD_REQUIRED`。
-- `RUNTIME_GUARD_REQUIRED` 不需要新的 XML/YAML predicate declaration；它从现有 access/path IR 的动态绑定分类派生。
-- requirement 只能验证实际 runtime binding 没有逃出已授权 System/target/exact path/operation，不能增加额外权限。
+### 4.3 Opaque runtime-object binding proof
 
-这使 Requirement AC-006 可达：合法动态访问可以编译成功并发布，而不是因为没有新 predicate grammar 被误判为 compile ERROR。
-
-### 4.2 Runtime binding facts
-
-execution consumer 在真正访问对象前构造只读 binding proof：
+R06 四字段 `RuntimeAccessBinding(context,target,path,operation)` 废止，因为无法区分同一 static tuple 下 element A/B。R07 使用 framework-owned opaque handle：
 
 ```java
-public final class RuntimeAccessBinding {
-    private final String engineContextId;
-    private final DefinitionKey targetKey;
-    private final CanonicalModelPath resolvedPath;
-    private final AccessOperation operation;
-
-    public static RuntimeAccessBinding resolved(
-        String engineContextId,
-        DefinitionKey targetKey,
-        CanonicalModelPath resolvedPath,
-        AccessOperation operation);
-
+public final class RuntimeBindingHandle {
+    // no public/protected constructor; no public mint/factory API
     public String engineContextId();
-    public DefinitionKey targetKey();
-    public CanonicalModelPath resolvedPath();
-    public AccessOperation operation();
+    public RuntimeBindingPlanKey planKey();
+    public ModelAccessRuleKey selectedRuleKey();
+    public String resolutionId();
+}
+
+public interface RuntimeBindingResolver {
+    RuntimeBindingHandle resolve(
+        RuntimeBindingPlan plan,
+        RuntimeResolutionContext executionContext);
+
+    RuntimeBindingVerification verify(
+        RuntimeBindingHandle handle,
+        RuntimeBindingPlan plan,
+        ModelAccessRuleKey selectedRuleKey,
+        String engineContextId);
 }
 ```
 
-该对象不携带业务模型实例、不暴露任意 POJO，也不拥有 policy identity。Guard 只把它与已选中的 rule 做约束验证。
+Contract：
 
-## 5. Guard 流程：selected rule 唯一权威
+- handle 只能由 framework resolver 在实际模型解析发生时签发；业务 caller/Rule/change/custom action 无 mint API；
+- resolver/verifier 内部可持有实际 object identity、collection-owner identity、provenance，但不向 Guard/业务代码暴露 raw POJO；
+- verify 必须证明 handle 绑定 current EngineContext + exact selected rule + exact plan，且实际对象是 plan 指定 collection 的真实成员；
+- handle A 来自当前 `OrderInfo.orderDetailList` member -> 可匹配；handle B 来自另一 OrderInfo/collection/context/plan/rule，即使 System/target/path/operation 相同也必须失败；
+- stale、replay、unknown/forged resolution id 全部 fail closed；Guard 不接受 caller 自报 boolean 或 raw object。
 
-所有 protected request：
+因此 AC-006 ALLOW/DENY 来自真实 runtime membership/provenance，而不是重复比较静态四元组，也不是新增 per-element business ACL。若未来需要按 element 业务属性授权，必须先新 Requirement。
 
-```text
-build ModelAccessRequest
-  -> validate Context identity / owner-qualified key / operation
-  -> exact PolicyIndex lookup ONCE
-  -> selected CompiledModelAccessRule
-  -> STATIC_ALLOW: Guard 内直接 ALLOW
-  -> RUNTIME_GUARD_REQUIRED:
-       validate selectedRule.runtimeRequirement
-       validate RuntimeAccessBinding against selected rule
-       optional bounded evaluator seam only for future requirement-authorized extensions
-  -> ALLOW ? execute : execute nothing
+### 4.4 Compiled rule
+
+```java
+public final class CompiledModelAccessRule {
+    public ModelAccessRuleKey key();
+    public AccessCompilationStatus status();
+    public Optional<RuntimeAccessRequirement> runtimeRequirement();
+    public Optional<RuntimeBindingPlan> runtimeBindingPlan();
+    public SourceRef sourceRef();
+}
 ```
 
-强约束：
+静态非法/未授权 -> compile ERROR；`STATIC_BOUND -> STATIC_ALLOW`；`RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + RuntimeBindingPlan`。Runtime rule 缺 plan/requirement 是非法 compiled state。
 
-- evaluator/validator 接收 exact `selectedRule`，不得再次 PolicyIndex lookup；
-- request 不携带可替换 policy/requirement；
-- key mismatch、Context mismatch、missing binding、binding target/path/operation mismatch、Guard unavailable、timeout、exception、null/unknown 都 fail closed；
-- `STATIC_ALLOW` 仍经过 Guard，evaluator 调用 0 次；
-- Guard 从不执行业务 mutation/read side effect，只返回 decision。
+## 5. Guard：selected rule + plan + opaque handle
 
-当前 P2 没有 source-authored predicate DSL，因此 AC-006 的动态分支由 Guard 自身的 `EXACT_RUNTIME_BINDING` validator 完成。若未来 Requirement 正式引入业务 predicate，再以新 Requirement/Design revision 扩展 evaluator，不得在 Development 偷加。
+```text
+ModelAccessRequest
+ -> validate Context/key/operation
+ -> exact PolicyIndex lookup ONCE
+ -> selected CompiledModelAccessRule
+ -> STATIC_ALLOW: Guard internal ALLOW
+ -> RUNTIME_GUARD_REQUIRED:
+      require requirement + plan + RuntimeBindingHandle
+      RuntimeBindingResolver.verify(handle, exact plan, exact rule, current Context)
+ -> MATCH ? ALLOW : DENY
+ -> only ALLOW may execute protected operation
+```
+
+Request 不携带 replacement rule/requirement/plan；verifier 不重新选 policy；proof mismatch/unknown/stale/context mismatch 均在 protected operation 前 DENY。当前 AC-006 不依赖 optional RuntimeFactEvaluator。
 
 ## 6. RuntimeFactValue
 
-R05 的 closed Java-8 value 方案继续有效：
-
-- `public final class RuntimeFactValue`；
-- private constructor；
-- STRING/BOOLEAN/DECIMAL/INSTANT/LIST/OBJECT 六个 typed factories；
-- LIST/OBJECT 递归防御性复制并不可变；
-- 无 `Object value()` generic payload getter；
-- typed visitor；
-- deterministic canonical form；
-- 外部无法 subclass。
-
-RuntimeFacts 可用于未来经过 Requirement 授权的 evaluator 扩展，但不是当前 AC-006 reachability 的前置条件。
+继续 R05 closed Java-8 value：public final、private constructor、六种 typed factory、LIST/OBJECT deep immutable、无 generic Object getter、typed visitor、deterministic canonical form、不可 subclass。
 
 ## 7. Timeout / cancellation / unavailable
 
-继承 R04：
-
-- Guard owns bounded evaluation executor and timeout budget；
-- Java 8 `Duration timeoutBudget` + injected monotonic `GuardTimeSource.nanoTime()`；
-- timed Future/get、timeout cancel(true)、interrupt restore、rejection/exception/null/unknown fail closed；
-- no `Thread.sleep` oracle；
-- unavailable Guard 使用非 null fail-closed sentinel，返回 `GUARD_UNAVAILABLE`；
-- evaluator unavailable 与 Guard unavailable reason 分离。
-
-`EXACT_RUNTIME_BINDING` 本身为同步、纯验证，不需要异步 evaluator；bounded executor 不得被无条件触发。
+继承 R04 bounded evaluator executor/fake monotonic time/timed Future/cancel(true)/interrupt restore/rejection/exception/null/unknown fail-closed。`EXACT_RUNTIME_BINDING` 为同步纯验证，不应无条件触发 evaluator executor。
 
 ## 8. EngineContext 兼容
 
-保留现有：
-
-```java
-public final class EngineContext {
-    public EngineContext(CompiledModelSet compiledModelSet);
-    public CompiledModelSet compiledModelSet();
-    public ModelSet modelSet();
-    public CoreConfigProjection projection();
-}
-```
-
-P2 只增加兼容 overload/read surfaces，包括 contextId、owner-qualified System/RuleView lookup、policy status 和 non-null Guard。现有 equals/hashCode/toString 语义不得因新增字段被静默改变；禁止 `findRuleView(String bareName)` 新入口。
+保留现有 final class、单参 constructor、`compiledModelSet()/modelSet()/projection()`。P2 仅 additive owner-qualified lookup、contextId、policy status、non-null Guard/runtime binding resolver read surface；禁止新的 `findRuleView(String bareName)`。
 
 ## 9. Diagnostic / denial reasons
 
-Compile 至少稳定区分：
+Compile 至少：`MIX-SYSTEM-DUPLICATE`、`MIX-RULEVIEW-SYSTEM-REQUIRED`、`MIX-MODEL-PATH-INVALID`、wildcard unsupported/empty、`MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`、`MIX-MODEL-ACCESS-DENIED`。
 
-- `MIX-SYSTEM-DUPLICATE`
-- `MIX-RULEVIEW-SYSTEM-REQUIRED`
-- `MIX-RULEVIEW-DUPLICATE`
-- `MIX-RULEVIEW-UNKNOWN`
-- `MIX-MODEL-PATH-INVALID`
-- wildcard unsupported/empty expansion
-- `MIX-MODEL-ACCESS-DENIED`
-
-Runtime 至少稳定区分：
-
-- `POLICY_NOT_FOUND`
-- `CONTEXT_IDENTITY_MISMATCH`
-- `RUNTIME_BINDING_REQUIRED`
-- `RUNTIME_BINDING_MISMATCH`
-- `GUARD_UNAVAILABLE`
-- `RUNTIME_EVALUATOR_UNAVAILABLE`
-- `RUNTIME_EVALUATOR_EXCEPTION`
-- `RUNTIME_EVALUATOR_NULL`
-- `RUNTIME_EVALUATOR_TIMEOUT`
-- `RUNTIME_EVALUATOR_UNKNOWN`
-- `STATIC_ALLOW`
-- `RUNTIME_ALLOW`
-- `RUNTIME_DENY`
+Runtime 至少：`POLICY_NOT_FOUND`、`CONTEXT_IDENTITY_MISMATCH`、`RUNTIME_BINDING_REQUIRED`、`RUNTIME_BINDING_PROOF_INVALID`、`RUNTIME_BINDING_STALE`、`RUNTIME_BINDING_PLAN_MISMATCH`、`GUARD_UNAVAILABLE`、future evaluator reasons、`STATIC_ALLOW`、`RUNTIME_ALLOW`、`RUNTIME_DENY`。
 
 ## 10. Source -> Compiler -> Runtime AC-006 chain
 
-Canonical required flow：
-
 ```text
-existing source syntax + declared model-access
-  -> Canonical/Raw access IR
-  -> exact static authorization
-  -> DynamicBindingClassification
-       STATIC_BOUND              -> STATIC_ALLOW
-       RUNTIME_OBJECT_BOUND      -> derived RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)
-                                    + RUNTIME_GUARD_REQUIRED
-  -> immutable CompiledModelSet publication
-  -> runtime resolves actual object/path
-  -> RuntimeAccessBinding
-  -> Guard exact selected rule + requirement validation
-  -> ALLOW or DENY before side effects
+real existing source + declared model-access
+ -> resolved access-consumer IR
+ -> exact static authorization
+ -> production DynamicBindingClassifier
+      DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW
+      EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND
+                                -> RuntimeBindingPlan(COLLECTION_ELEMENT_MEMBERSHIP)
+                                -> RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)
+                                -> RUNTIME_GUARD_REQUIRED
+      unsupported dynamic IR -> compile ERROR
+ -> immutable CompiledModelSet publication
+ -> framework resolver resolves actual collection element and issues opaque handle
+ -> Guard verifies exact selected rule + plan + current Context + actual membership
+ -> matching member handle ALLOW; foreign/stale/forged/replayed handle DENY before side effects
 ```
 
-Production compiler must have at least one test fixture that reaches `RUNTIME_OBJECT_BOUND`; a design where no production source can ever emit `RUNTIME_GUARD_REQUIRED` is non-conforming even if Guard unit tests pass。
+Production compiler 必须由真实 fixture 达到 `RUNTIME_OBJECT_BOUND`；仅 Guard unit test 或 classifier stub 不能满足 AC-006。
 
 ## 11. Concurrency / immutability
 
-- CompiledModelSet/Rule/Requirement/RuntimeFactValue/Binding are immutable；
-- PolicyIndex immutable and context-local；
-- no global mutable cache/current context；
-- concurrent authorization cannot mutate shared policy；
-- bounded executor queue/thread ownership and replacement/degraded behavior remain R04 contracts；
-- timed-out evaluator has no authority to execute protected operation or mutate protected state。
+CompiledModelSet/Rule/Requirement/RuntimeBindingPlan/RuntimeFactValue/RuntimeBindingHandle immutable；PolicyIndex context-local；无 global mutable current/cache；concurrent authorization 不修改 policy；future evaluator timeout task 无 protected operation authority。
 
 ## 12. Declaration compatibility boundary
 
-`DEC-EXPAND-DECLARATION` remains retired historical fact。P2 surviving boundary is read-only legacy compatibility (`ConfigInfo.getRuleViewInfo(String)` / `DataUtil.getRuleViewInfo(String)` or equivalent existing surface) until P7。P2 must not restore retired module, dual-write registries, or create a second runtime authority。
+`DEC-EXPAND-DECLARATION` 仅历史 retired fact；P2 只保留 read-only legacy compatibility 到 P7，不恢复 retired module、不 dual-write、不创建第二 runtime authority。
 
 ## 13. Review / lifecycle gate
 
-`DESIGN-P2-R06` is **not PASSED**。Before Design can pass it requires the current RC9 lifecycle to bind the exact revision and independent reviews appropriate to current detected risks, including at least：
-
-- ApiContractReviewAgent
-- ConcurrencyReviewAgent
-- ArchitectureReviewAgent
-- BusinessModelReviewAgent
-- DevelopAgent
-- RequirementReviewAgent
-- TestDesignAgent
-- ImpactAnalysisReviewAgent
-- CrossModuleIntegrationReviewAgent
-- DataMigrationReviewAgent or a contract-valid waiver
-
-The installed common-develop baseline currently reports `INVALID_BASELINE` because `common-develop-v2.44-rc9` is missing。This document does not repair that Skill baseline, fabricate repository Evidence, or claim machine closure。
+`DESIGN-P2-R07` **not PASSED**。必须由正式 RC9 lifecycle 绑定 exact revision，再完成 current-risk 对应的 ApiContract/Concurrency/Architecture/BusinessModel/Develop/Requirement/TestDesign/Impact/CrossModule 等独立 Review 与 DataMigration review/valid waiver。当前不制造 repository Evidence，不推进 Implementation Plan/TDD/Development。
