@@ -44,8 +44,11 @@ def main():
         member = members[0]
         path = str(member.get('path') or '')
         expected_oid = str(member.get('blob_oid') or '')
-        expected_digest = str(member.get('digest') or '')
+        expected_digest = str(member.get('digest') or entry.get('digest') or '')
         expected_size = int(member.get('size') or 0)
+        expected_type = str(member.get('type') or entry.get('type') or '')
+        if not expected_digest or not expected_type:
+            raise RuntimeError(f'{eid}: cannot recover compact member digest/type from Evidence record')
 
         tree_line = git('ls-tree', head, '--', path).strip()
         if not tree_line:
@@ -56,16 +59,19 @@ def main():
             raise RuntimeError(f'{eid}: blob OID changed: expected {expected_oid}, actual {actual_oid}')
         blob = subprocess.run(['git','cat-file','blob',actual_oid],capture_output=True,check=True).stdout
         actual_digest = hashlib.sha256(blob).hexdigest()
-        if actual_digest != expected_digest or len(blob) != expected_size:
-            raise RuntimeError(f'{eid}: blob content mismatch')
+        if actual_digest != expected_digest:
+            raise RuntimeError(f'{eid}: SHA256 mismatch: expected {expected_digest}, actual {actual_digest}')
+        if len(blob) != expected_size:
+            raise RuntimeError(f'{eid}: size mismatch: expected {expected_size}, actual {len(blob)}')
         if str(entry.get('digest') or '') != expected_digest:
-            raise RuntimeError(f'{eid}: aggregate digest changed')
+            raise RuntimeError(f'{eid}: top-level Evidence digest changed')
 
         old_git_ref = json.loads(json.dumps(gr))
-        metadata['git_ref'] = {**gr, 'commit': head}
+        repaired_member = {**member, 'digest': expected_digest, 'type': expected_type}
+        metadata['git_ref'] = {**gr, 'commit': head, 'members': [repaired_member]}
         metadata['governance_repair'] = {
-            'kind': 'FLATTENED_CHECKPOINT_GIT_REF_REBIND',
-            'reason': 'PR #34 flattened local common-develop checkpoint commits into one remote commit; the original checkpoint commit is unreachable on GitHub, while the exact recorded blob OID/digest/size is present unchanged at the merged dev_all commit.',
+            'kind': 'FLATTENED_CHECKPOINT_GIT_REF_REBIND_AND_COMPACT_MEMBER_RESTORE',
+            'reason': 'PR #34 flattened local common-develop checkpoint commits into one remote commit and retained compact GIT_REF member metadata without member-level digest/type. The original checkpoint commit is unreachable on GitHub, while the exact recorded blob OID, top-level SHA256 digest and size are present unchanged at the merged dev_all commit.',
             'source_commit': BROKEN_COMMIT,
             'replacement_commit': head,
             'original_ref': f'git:{BROKEN_COMMIT}',
@@ -74,6 +80,7 @@ def main():
             'blob_oid_verified': expected_oid,
             'digest_verified': expected_digest,
             'size_verified': expected_size,
+            'member_type_restored': expected_type,
             'repaired_at': dt.datetime.now(dt.timezone.utc).isoformat(),
         }
         entry['ref'] = f'git:{head}'
@@ -84,6 +91,7 @@ def main():
             'blob_oid': expected_oid,
             'digest': expected_digest,
             'size': expected_size,
+            'type': expected_type,
             'old_commit': BROKEN_COMMIT,
             'new_commit': head,
         })
@@ -97,8 +105,8 @@ def main():
         'schema_version': 1,
         'repair_id': 'GOV-REPAIR-P2-PR34-FLATTENED-GITREF-20260808',
         'target_id': 'FEATURE-DESC-3361AD2E54FC',
-        'reason': 'Restore RC9 Evidence resolvability after PR #34 flattened local task checkpoint history.',
-        'invariant': 'Evidence ID, type, phase, revision, source path, blob OID, SHA-256 digest, size and bytes are unchanged; only the unreachable commit pointer is rebound to the merged remote commit containing the exact same blob.',
+        'reason': 'Restore RC9 Evidence resolvability after PR #34 flattened local task checkpoint history and compacted GIT_REF member metadata.',
+        'invariant': 'Evidence ID, type, phase, revision, source path, blob OID, top-level SHA-256 digest, size and bytes are unchanged; only the unreachable commit pointer is rebound and missing member digest/type are restored from the same Evidence record.',
         'old_commit': BROKEN_COMMIT,
         'new_commit': head,
         'entries': found,
