@@ -1,0 +1,200 @@
+schemaVersion: 1
+changeSet:
+  id: CHG-V_1.0-COMPILER-P2-BM-R11
+  version: V_1.0
+  module: COMPILER
+  featureCode: P2-SYSTEM-RULEVIEW
+  reason: >-
+    Close independent Review finding FND-P2-REV-019 by atomically binding the runtime
+    membership proof to the exact protected operation target. A valid proof for element A
+    must never authorize an operation against element B under the same static access tuple.
+  baseRevisions:
+    business_model: BM-R10
+  resultRevisions:
+    business_model: BM-R11
+  affectedTraceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+operations:
+  - artifact: business_model
+    collection: terms
+    operation: add
+    targetId: TERM-RESOLVED-PROTECTED-ACCESS
+    after:
+      id: TERM-RESOLVED-PROTECTED-ACCESS
+      name: ResolvedProtectedAccess
+      definition: >-
+        Framework-owned one-shot execution capability produced while the actual protected
+        runtime object is resolved. It binds one current EngineContext, one exact selected
+        ModelAccessRule, one RuntimeBindingPlan, one actual runtime target identity and one
+        AccessOperation into a non-recomposable capability. The caller cannot replace the
+        target after authorization and cannot combine proof from A with operation on B.
+      forbiddenSynonyms:
+        - detached authorization token
+        - reusable handle plus arbitrary target
+        - caller supplied target proof
+      sourceRefs:
+        - REQAN-P2-R01
+        - FND-P2-REV-019
+
+  - artifact: business_model
+    collection: valueObjects
+    operation: add
+    targetId: VO-RESOLVED-PROTECTED-ACCESS
+    after:
+      id: VO-RESOLVED-PROTECTED-ACCESS
+      name: ResolvedProtectedAccess
+      identity: opaqueCapabilityId
+      attributes:
+        - name: opaqueCapabilityId
+          type: OpaqueCapabilityId
+          required: true
+        - name: engineContextId
+          type: EngineContextId
+          required: true
+        - name: selectedRuleKey
+          type: ModelAccessRuleKey
+          required: true
+        - name: planKey
+          type: RuntimeBindingPlanKey
+          required: true
+        - name: operation
+          type: AccessOperation
+          required: true
+        - name: resolutionId
+          type: OpaqueResolutionId
+          required: true
+      behaviors:
+        - issuedOnlyByFrameworkResolver
+        - bindActualTargetInternally
+        - bindProtectedOperationInternally
+        - consumeOnce
+        - rejectTargetSubstitution
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: services
+    operation: update
+    targetId: SVC-RUNTIME-BINDING-RESOLUTION
+    beforeRef: changes/p2-business-model-runtime-binding-proof-remediation-r10.yaml#SVC-RUNTIME-BINDING-RESOLUTION
+    after:
+      id: SVC-RUNTIME-BINDING-RESOLUTION
+      name: RuntimeBindingResolutionService
+      reason: >-
+        Runtime resolution must not emit a detached proof that can later be paired with an
+        arbitrary object. It resolves the actual object and creates a one-shot capability
+        whose hidden target identity and operation descriptor are registered atomically.
+      inputs:
+        - CurrentEngineContext
+        - RuntimeBindingPlan
+        - FrameworkOwnedRuntimeResolutionContext
+        - FrameworkOwnedProtectedOperationIntent
+      outputs:
+        - ResolvedProtectedAccess
+        - DiagnosticOrRuntimeDenial
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: services
+    operation: add
+    targetId: SVC-PROTECTED-ACCESS-GATEWAY
+    after:
+      id: SVC-PROTECTED-ACCESS-GATEWAY
+      name: ProtectedAccessGateway
+      reason: >-
+        Guard verification and actual protected operation must share the same capability and
+        framework-owned target binding. Returning ALLOW to a caller and then accepting a
+        second target parameter would reopen a substitution/TOCTOU bypass.
+      inputs:
+        - ResolvedProtectedAccess
+        - CurrentEngineContext
+      outputs:
+        - ProtectedAccessResult
+        - ModelAccessDecision
+      constraints:
+        - derive request tuple from the capability and current selected rule; do not accept replacement target/rule/plan
+        - invoke ModelAccessGuard before the protected operation
+        - execute only the target and operation already bound inside the capability
+        - expose no API shaped as proof-or-handle plus arbitrary object/target
+        - consume the capability after ALLOW execution or terminal DENY
+        - if membership/provenance changed between resolution and execution, DENY before side effects
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: scenarios
+    operation: update
+    targetId: SCN-P2-MODEL-ACCESS-RUNTIME
+    beforeRef: changes/p2-business-model-runtime-binding-proof-remediation-r10.yaml#SCN-P2-MODEL-ACCESS-RUNTIME
+    after:
+      id: SCN-P2-MODEL-ACCESS-RUNTIME
+      given:
+        - static System/target/exact path/operation authorization is valid
+        - production classifier emitted RUNTIME_GUARD_REQUIRED with RuntimeBindingPlan
+        - runtime resolver selects actual collection element A
+      when: framework performs the protected operation
+      then:
+        - resolver produces one ResolvedProtectedAccess bound internally to actual element A and the exact operation
+        - ProtectedAccessGateway derives the Guard request from that same capability
+        - Guard verification and final operation use the same selected rule, plan, resolution and hidden target identity
+        - capability A may execute only its bound operation against A
+        - attempting proof/capability A with actual element B is impossible through the supported API or deterministically DENY on a lower-level invariant test seam
+        - changed membership, stale Context, wrong plan/rule, replay or consumed capability DENY before protected operation
+        - caller cannot submit an arbitrary raw object, second target parameter or callback that substitutes the protected target
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: invariants
+    operation: add
+    targetId: INV-COMPILER-025
+    after:
+      id: INV-COMPILER-025
+      statement: >-
+        For every RUNTIME_GUARD_REQUIRED access, the runtime object identity verified by Guard
+        and the object identity actually read/written/executed must be the same framework-bound
+        identity inside one ResolvedProtectedAccess capability. A detached ALLOW decision,
+        RuntimeBindingHandle A plus arbitrary object B, or any API accepting a replacement
+        protected target after verification is forbidden. The capability is one-shot and a
+        membership/provenance change before execution invalidates it fail-closed.
+      trigger: runtime protected access after object resolution and before any protected operation
+      failure: RUNTIME_BINDING_OPERATION_TARGET_MISMATCH
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: businessErrors
+    operation: add
+    targetId: ERR-MIX-MODEL-ACCESS-RUNTIME-OPERATION-SUBSTITUTION
+    after:
+      id: ERR-MIX-MODEL-ACCESS-RUNTIME-OPERATION-SUBSTITUTION
+      condition: >-
+        a runtime capability/proof is replayed, consumed, no longer matches current membership,
+        or a lower-level execution seam observes an actual operation target different from the
+        target identity bound when the capability was issued
+      meaning: runtime authorization proof is not bound to the actual protected operation target
+      retryable: false
+      stateChanged: false
+      diagnosticCode: RUNTIME_BINDING_OPERATION_TARGET_MISMATCH
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+acceptance:
+  - A valid capability for actual element A can execute only the protected operation bound to A.
+  - `capability/proof A + actual protected target B` is unrepresentable through supported APIs; lower-level invariant injection must DENY with zero protected operation and zero external side effects.
+  - Guard verification and protected execution occur through the same framework gateway/capability, not as a detached authorize-then-arbitrary-operate sequence.
+  - Capability is one-shot; replay or membership/provenance change before execution fails closed.
+  - RuntimeResolutionContext ownership/lifecycle and operation-binding ownership are frozen by the corresponding Design revision.
+  - No finding is CLOSED until BM-R11 is materialized through formal RC9 lifecycle and exact-revision Review.
