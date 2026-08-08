@@ -1,6 +1,6 @@
 # COMPILER P2 API 契约
 
-> Revision：`DESIGN-P2-R08`。输入：`BM-R11` candidate。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> Revision：`DESIGN-P2-R09`。输入：`BM-R12` candidate。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 > 本文件是当前 canonical P2 API source；Java 示例是 signature contract，生产实现必须兼容 Java 8。
 
 ## 1. Compatibility
@@ -11,7 +11,7 @@
 
 ## 2. Exact access rule / classifier
 
-`ModelAccessRuleKey = SystemKey + DefinitionKey target + CanonicalModelPath + AccessOperation`。PolicyIndex 只允许一次 exact lookup，无 wildcard/fallback。
+`ModelAccessRuleKey = SystemKey + DefinitionKey target + CanonicalModelPath + AccessOperation`。PolicyIndex runtime lookup exact-only。
 
 ```java
 public enum AccessCompilationStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
@@ -22,9 +22,15 @@ public interface DynamicBindingClassifier {
 }
 ```
 
-Frozen rules：`DIRECT_EXACT -> STATIC_BOUND`；current grammar `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND`；其它动态形式 -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。Classifier stub 不得作为 production correctness/AC-006 Evidence。
+Frozen rules：
 
-## 3. RuntimeBindingPlan / requirement
+- `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`；
+- `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`；
+- 其它未冻结 dynamic form -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。
+
+Classifier stub 不得作为 production correctness/AC-006 Evidence。
+
+## 3. Compiled rule / runtime plan invariant
 
 ```java
 public final class CompiledModelAccessRule {
@@ -34,30 +40,28 @@ public final class CompiledModelAccessRule {
     public Optional<RuntimeBindingPlan> runtimeBindingPlan();
     public SourceRef sourceRef();
 }
-
-public final class RuntimeBindingPlan {
-    public enum Kind { COLLECTION_ELEMENT_MEMBERSHIP }
-    public RuntimeBindingPlanKey key();
-    public ModelAccessRuleKey authorizedRuleKey();
-    public CanonicalModelPath collectionPath();
-    public CanonicalModelPath elementRelativePath();
-}
-
-public final class RuntimeAccessRequirement {
-    public enum Kind { EXACT_RUNTIME_BINDING }
-    public RuntimeRequirementKey key();
-    public ModelAccessRuleKey authorizedRuleKey();
-    public RuntimeBindingPlanKey planKey();
-    public Kind kind();
-}
 ```
 
-Factories remain context-owned public validated factories callable by compiler。Runtime authority comes only from current compiler-published selected rule。
+Invariant：
 
-## 4. RuntimeResolutionContext ownership
+```text
+STATIC_ALLOW
+ -> runtimeRequirement.empty
+ -> runtimeBindingPlan.empty
+
+RUNTIME_GUARD_REQUIRED
+ -> runtimeRequirement.present(EXACT_RUNTIME_BINDING)
+ -> runtimeBindingPlan.present(exact compiler-published plan)
+```
+
+STATIC_ALLOW 不得为了进入 Guard 伪造 RuntimeBindingPlan。
+
+## 4. Framework-owned `ProtectedAccessResolutionContext`
+
+R09 supersedes the narrower R08 `RuntimeResolutionContext` candidate name with a generic framework execution context used by both static and runtime-bound protected access：
 
 ```java
-public interface RuntimeResolutionContext {
+public interface ProtectedAccessResolutionContext {
     String engineContextId();
     AccessConsumerIrKey accessConsumerIrKey();
     RuntimeExecutionFrameId frameId();
@@ -68,31 +72,64 @@ public interface RuntimeResolutionContext {
 
 Contract：
 
-- framework execution pipeline creates it; no business caller public constructor/factory；
-- bound to one current Context + one access-consumer IR + one execution frame/root owner + optional collection cursor；
+- framework execution pipeline creates it; no business caller production constructor/factory；
+- scoped to one current Context + one resolved access-consumer IR + one execution frame/root owner + optional collection cursor；
 - not reusable across Context/frame/rule evaluation/cursor；
 - exposes no raw domain object getter；
-- frame/cursor/owner invalidation makes derived runtime capability stale。
+- cursor is absent for DIRECT_EXACT and present when a runtime collection-element frame requires it。
 
-## 5. R08 operation-bound capability
+## 5. Generic one-shot `ResolvedProtectedAccess`
 
-R07 detached handle verification is insufficient as final execution authority because proof A could otherwise be followed by operation on B。The supported runtime-bound API now uses a one-shot framework capability：
+`ResolvedProtectedAccess` is the execution capability for **every** protected READ/WRITE/EXECUTE. It is not a runtime-plan-only token：
 
 ```java
 public final class ResolvedProtectedAccess {
     // no public/protected constructor; no public mint/factory
     public String capabilityId();
     public String engineContextId();
-    public ModelAccessRuleKey selectedRuleKey();
-    public RuntimeBindingPlanKey planKey();
+    public ModelAccessRuleKey requestedRuleKey();
     public AccessOperation operation();
+    public RuntimeExecutionFrameId executionFrameId();
 }
+```
 
-public interface RuntimeBindingResolver {
+Hidden framework state binds actual target identity, owner/cursor/provenance, operation payload/action identity and one-shot lifecycle state。There is deliberately **no mandatory `RuntimeBindingPlanKey planKey()`** in the generic capability contract。
+
+`requestedRuleKey` is derived from resolved access-consumer IR, not caller-selected policy status。Capability creation does not perform PolicyIndex lookup and does not require a runtime plan。
+
+## 6. Generic resolver
+
+```java
+public interface ProtectedAccessResolver {
     ResolvedProtectedAccess resolve(
-        RuntimeBindingPlan plan,
-        RuntimeResolutionContext executionContext,
+        ProtectedAccessResolutionContext executionContext,
         ProtectedOperationIntent operationIntent);
+}
+```
+
+`ProtectedOperationIntent` is framework-owned immutable intent containing the exact requested rule key, operation and required payload/action identity. It exposes no caller-replaceable target object。
+
+Resolver resolves and internally binds the actual target in the current execution frame. It does not decide STATIC_ALLOW vs RUNTIME_GUARD_REQUIRED and does not accept RuntimeBindingPlan as a universal input。
+
+## 7. Runtime-only verification seam
+
+```java
+public interface RuntimeBindingVerifier {
+    RuntimeBindingVerification verify(
+        ResolvedProtectedAccess access,
+        CompiledModelAccessRule selectedRule,
+        RuntimeBindingPlan plan,
+        String engineContextId);
+}
+```
+
+This seam is invoked **only** after Guard exact lookup selects `RUNTIME_GUARD_REQUIRED`。It verifies hidden framework membership/provenance against the selected rule's exact plan/current Context/frame/cursor。STATIC_ALLOW invocation count = 0。
+
+## 8. Guard / Gateway
+
+```java
+public interface ModelAccessGuard {
+    ModelAccessDecision authorize(ResolvedProtectedAccess access);
 }
 
 public interface ProtectedAccessGateway {
@@ -100,69 +137,83 @@ public interface ProtectedAccessGateway {
 }
 ```
 
-`ProtectedOperationIntent` is framework-owned immutable intent derived from the current resolved access-consumer IR。It contains the already-determined operation/payload/action identity required by the framework, **not an arbitrary replacement target object**。
+Normative ownership：
 
-`ResolvedProtectedAccess` internally binds actual object identity, collection owner/membership provenance, current frame/cursor, exact selected rule, exact plan, operation intent and one-shot lifecycle state。Those hidden identities are not exposed as raw POJO accessors。
+- Gateway is the only supported protected execution boundary for both static and runtime paths；
+- Gateway calls Guard exactly once and performs **zero** separate PolicyIndex lookup；
+- Guard performs exactly one exact PolicyIndex lookup using `access.requestedRuleKey()`；
+- Guard-selected `STATIC_ALLOW` -> validates base capability/context/key/op, requires selected rule plan/requirement empty, calls RuntimeBindingVerifier 0 and evaluator 0, then returns internal fast-path ALLOW；
+- Guard-selected `RUNTIME_GUARD_REQUIRED` -> requires exact plan/requirement and calls RuntimeBindingVerifier before ALLOW；
+- Gateway executes only the actual target+operation already hidden-bound inside the same capability；
+- no detached ALLOW is exposed as reusable execution authority；
+- capability is consumed after successful execution or terminal DENY。
 
-## 6. ModelAccessGuard integration
-
-```java
-public interface ModelAccessGuard {
-    ModelAccessDecision authorize(ResolvedProtectedAccess access);
-}
-```
-
-For `RUNTIME_GUARD_REQUIRED` the normal supported execution path is：
+### 8.1 STATIC_ALLOW supported path
 
 ```text
-ResolvedProtectedAccess
+DIRECT_EXACT
+ -> STATIC_BOUND
+ -> STATIC_ALLOW rule (no plan)
+ -> ProtectedAccessResolver -> generic capability
  -> ProtectedAccessGateway.execute
- -> exact PolicyIndex lookup once
- -> ModelAccessGuard.authorize(the same capability)
- -> ALLOW only if current proof/membership/frame/plan/rule all match
- -> framework executes the actual target+operation already bound inside that same capability
+ -> ModelAccessGuard.authorize
+      -> exact PolicyIndex lookup = 1
+      -> STATIC_ALLOW
+      -> RuntimeBindingVerifier = 0
+      -> evaluator = 0
+ -> same capability-bound target executes once
 ```
 
-A detached `ALLOW` result is **not** a reusable execution authority。There is no supported API shaped as：
+No supported API may directly execute a STATIC_ALLOW protected operation outside Gateway/Guard。
+
+### 8.2 Runtime-required supported path
 
 ```text
-authorize(handle/proof A) -> then execute(object B)
+EVERY_COLLECTION_ELEMENT
+ -> runtime rule + plan
+ -> ProtectedAccessResolver -> generic capability for current actual element
+ -> Gateway -> Guard exact lookup = 1
+ -> RuntimeBindingVerifier(selected rule exact plan)
+ -> ALLOW
+ -> same capability-bound element executes once
 ```
 
-and no `execute(capability, target)` / `execute(handle, rawObject)` / caller callback that can select a second protected target。
+## 9. Substitution / TOCTOU API shape
 
-Capability is consumed after successful execution or terminal DENY。Replay -> `RUNTIME_BINDING_CAPABILITY_CONSUMED`。If actual executor target identity differs from the capability-bound identity on an invariant-test seam -> `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH` before operation。
+Forbidden supported APIs include：
 
-## 7. Membership change / TOCTOU
+- `execute(capability, target)`；
+- `execute(handle, rawObject)`；
+- `authorize(A) -> caller callback chooses B`；
+- public capability mint/factory；
+- public raw target getter；
+- caller-side static fast-path executor。
 
-Immediately before operation, gateway revalidates current Context + frame/cursor + selected rule/plan + membership/provenance。If collection ownership/membership changed since resolve, capability is stale and DENY before protected operation。Implementation may use a context-local resolution registry/version/critical section, but may not authorize an old proof and then operate on a newly selected arbitrary object。
+If a low-level invariant seam observes executor target identity != capability-bound target identity, DENY `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH` before operation。Replay -> `RUNTIME_BINDING_CAPABILITY_CONSUMED`。
 
-## 8. Static access
+## 10. RuntimeFactValue / evaluator
 
-`STATIC_ALLOW` still enters Guard and remains Guard-internal fast path。FND-019 operation-bound capability is mandatory for `RUNTIME_GUARD_REQUIRED`; it does not permit caller-side Guard bypass for static access。
+`RuntimeFactValue` remains public final, private constructor, six typed immutable factories, deep immutable LIST/OBJECT, typed visitor and deterministic canonical form。Current AC-006 uses runtime binding verification only; future business predicate semantics require a new Requirement revision。
 
-## 9. RuntimeFactValue / evaluator
+## 11. EngineContext additive surfaces
 
-`RuntimeFactValue` remains public final, private constructor, six typed immutable factories, deep immutable collection/object values, typed visitor, deterministic canonical form。Current AC-006 uses binding proof/capability, not business predicate evaluator。Future predicate semantics require a new Requirement revision。
+May expose `contextId()`, owner-qualified lookup, policy status, fail-closed Guard, `ProtectedAccessResolver` and `ProtectedAccessGateway` read surfaces。No new bare-name RuleView API。
 
-## 10. EngineContext additive surfaces
-
-May expose `contextId()`, owner-qualified lookup, policy status, fail-closed Guard, runtime resolver and `ProtectedAccessGateway` read surfaces。No new bare-name RuleView API。
-
-## 11. Stable reasons
+## 12. Stable reasons
 
 Compile：`MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` plus existing P2 diagnostics。
 
 Runtime at least：
 
+- `POLICY_NOT_FOUND`
+- `CONTEXT_IDENTITY_MISMATCH`
+- `MODEL_ACCESS_GUARD_BYPASS`
 - `RUNTIME_BINDING_REQUIRED`
 - `RUNTIME_BINDING_PROOF_INVALID`
 - `RUNTIME_BINDING_STALE`
 - `RUNTIME_BINDING_PLAN_MISMATCH`
 - `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`
 - `RUNTIME_BINDING_CAPABILITY_CONSUMED`
-- `CONTEXT_IDENTITY_MISMATCH`
-- `POLICY_NOT_FOUND`
 - `GUARD_UNAVAILABLE`
 - `STATIC_ALLOW`
 - `RUNTIME_ALLOW`
