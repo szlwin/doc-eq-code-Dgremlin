@@ -1,296 +1,313 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R01@8875f042898c`。Base Design：`DESIGN-R05@0b37a9b4dd48`。输入：`REQAN-P2-R01@d08612768131`、`BM-R07@7d7bf504ca9d`。
-> 本 Revision 是同一 COMPILER 设计谱系上的 P2 增量：P1 的 Source/Canonical/Raw/Symbol/Deferred/Diagnostic/digest/原子发布保持有效；P2 只消费 System、RuleView 与 model-access 的 Deferred 所有权/授权边界，不建立第二 Compiler、Registry、Context 或 runtime authority。
+> Revision：`DESIGN-P2-R06`。Base：`DESIGN-P2-R05`，并继承 P1 已通过的 Compiler Pipeline/Context 基线。
+> 输入 Business Model 候选：`BM-R09`（标准 changeset `CHG-V_1.0-COMPILER-P2-BM-R09`；在 RC9 正式 reopen/publish 前仍为 MACHINE_BLOCKED）。
+> 状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> 本文件是 P2 当前 canonical Design source；历史 R01～R05 继续保留在 Git/changes 历史中，但与本文件冲突时以 R06 为当前候选语义。
 
-## 1. 设计目标与冻结决策 {#p2-design-goals}
+## 1. 设计目标与不可绕过约束
 
-P2 把已经存在于 P1 类型系统中的 `SystemKey`、`RuleViewKey(SystemKey,name)` 从“可表达”推进为端到端强制语义，并补齐 `CompiledSystem`、统一 `ModelPath`、`ModelAccessRule` 与 fail-closed Guard。冻结决策如下：
+1. System 是显式的一等编译身份；RuleView 唯一身份为 `(SystemKey,name)`。
+2. READ/WRITE/EXECUTE 独立授权，未声明即拒绝；共享 WRITE 默认拒绝。
+3. 所有 protected READ/WRITE/EXECUTE 都进入同一 `ModelAccessGuard`。`STATIC_ALLOW` 只是 Guard 内 fast path，caller 不得绕过 Guard。
+4. runtime exact lookup 永不支持 wildcard、prefix/suffix、parent/child、bare-name 或跨 target/System fallback。
+5. Java 生产 API 以根 `pom.xml` 的 `maven.compiler.release=8` 为约束；不得使用 record、`Map.of/copyOf` 等 Java 9+ API。
+6. 现有 `public final class EngineContext`、单参构造器、`compiledModelSet()`、`modelSet()`、`projection()` 保持兼容；P2 只增加兼容能力。
+7. P2 不新增 source-authored 权限 Predicate DSL。AC-006 的 runtime-check-required 来源于**最终对象绑定依赖运行时值**，不是新增业务权限表达式。
+8. Guard DENY 必须在实际 read/write/execute、状态推进或外部副作用前完成。
 
-1. System 身份只来自显式 System 定义；路径、文件名、包名和调用上下文都不是身份来源。
-2. RuleView 唯一身份始终是 `(SystemKey,name)`；新编译/发布/调用不提供裸名称 fallback。
-3. P1 `SharedModelPath + selector` 继续承担配置 selector 解析；P2 新增的 `ModelPath` 是面向运行语义消费者的已编译、强类型路径身份，两者职责不合并。
-4. `READ/WRITE/EXECUTE` 独立授权；未声明即 DENY，尤其共享模型 WRITE 默认拒绝。
-5. 静态可判定的非法访问在候选发布前失败；只有结构合法但资源事实确实依赖运行时的访问可形成 `RuntimeGuardRequired`。
-6. Guard 必须位于任何受保护模型读取/写入/执行的共同前置边界；DENY 发生在 mutation、状态推进或外部副作用之前。
-7. 旧 `ConfigInfo/RuleViewInfo` 裸名称能力仅作为 P7 前的兼容读取边界；P2 不允许其向新 Registry 注册事实，也不复制 declaration runtime。
+## 2. 模块和 package 边界
 
-## 2. P1 基线复用与 P2 增量 {#p2-baseline-delta}
+```text
+dec-core-context
+  dec.core.context.model.*
+  dec.core.context.model.access.*
+      neutral immutable P2 facts
+      Guard/request/decision contracts
+      validated public construction factories for immutable compiled facts
 
-| P1 已有事实 | P2 处理 | 禁止 |
-|---|---|---|
-| `SystemKey` | 直接复用并强制来源于显式 System | 新建第二 SystemId 或按路径推断 |
-| `RuleViewKey(SystemKey,name)` | 直接作为注册、发布、lookup 唯一 Key | `Map<String,RuleView>` 新注册、跨 System 搜索 |
-| `TypedDefinitionRegistries.systems()/ruleViews()` | 继续作为低层 typed registry；增加领域化只读查询 facade | 第二份可变 Registry |
-| `ModelAccessBinding` / `SharedModelPath` | 继续完成 P1 selector 精确绑定 | 把 selector 当成 P2 运行路径重新解释 |
-| `CompiledModelSet` / `EngineContext` | 扩展不可变发布事实闭包 | 全局 current Context |
-| P1 Deferred | P2 消费 System/RuleView/model-access 权限语义；P3～P8 仍 Deferred | 提前实现 P3～P7 |
+        ^ depends-on
+        |
+dec-core-compiler
+  dec.core.compiler.system.*
+  dec.core.compiler.ruleview.*
+  dec.core.compiler.modelpath.*
+  dec.core.compiler.access.*
+      compiler passes/builders
+      runtime-binding classification
+      canonical fact assembly
 
-## 3. 模块与包边界 {#p2-modules}
+        ^
+        |
+frontends / starter / execution consumers
+```
 
-### 3.1 `dec-core-context`
+禁止：
 
-新增/收敛中立不可变类型：
+- context -> compiler 反向依赖；
+- 把 compiler builder 塞进 `dec.core.context.*` split package；
+- compiler -> concrete XML parser；
+- starter/global singleton 持有全局 current Context；
+- runtime caller 构造/提交一个 requirement 来替换已发布 rule 自带 requirement。
 
-- `CompiledSystem`：SystemKey、SourceRef、成员 Key 集合、RuleViewKey 集合、access rule key 集合；
-- `ModelPath`：`targetKey + immutable segments`；
-- `AccessOperation`：闭集 `READ|WRITE|EXECUTE`；
-- `ModelAccessRule`：`systemKey + targetKey + modelPath + operation + sourceRef + decisionRequirement`；
-- `AccessDecisionRequirement`：`STATIC_ALLOW|RUNTIME_GUARD_REQUIRED`，不存在 STATIC_DENY 发布值；静态 DENY 必须转 Diagnostic 并阻断发布；
-- `ModelAccessDecision`：运行时 `ALLOW|DENY`；
-- `ModelAccessRequest`：调用方明确提供 Context、System、Target、ModelPath、Operation 和必要 runtime facts；
-- `ModelAccessGuard`：只读判定接口，不执行 mutation。
+### 2.1 跨模块构造边界
 
-Context 不依赖 compiler、parser 或执行模块；所有集合防御性复制并不可变。
+`RuntimeAccessRequirement` 属于 `dec-core-context` 的 immutable fact，但由 `dec-core-compiler` 产生。构造 seam 必须可被 compiler 合法调用，因此使用 **context-owned public validated factory**，而不是 package-private factory：
 
-### 3.2 `dec-core-compiler`
+```java
+public final class RuntimeAccessRequirement {
+    public enum Kind { EXACT_RUNTIME_BINDING }
 
-在现有 Pipeline 中增加 P2 owner-qualified pass/service：
+    private RuntimeAccessRequirement(...);
 
-- `SystemCompilationService` / `SystemCompilationPass`；
-- `RuleViewResolutionService` / `RuleViewOwnershipPass`；
-- `ModelPathCompiler` / `ModelPathCompilationPass`；
-- `ModelAccessAuthorizationService` / `StaticAccessValidationPass`；
-- `P2CompiledFactsAssembler`，把 System、RuleView、ModelPath 与 access rules 放入候选 `CompiledModelSet`。
+    public static RuntimeAccessRequirement derived(
+        ModelAccessRuleKey authorizedRuleKey,
+        Kind kind,
+        SourceRef sourceRef);
 
-Compiler 仍是唯一候选构建与原子发布协调者，不依赖具体 XML parser 实现。
+    public RuntimeRequirementKey key();
+    public ModelAccessRuleKey authorizedRuleKey();
+    public Kind kind();
+    public SourceRef sourceRef();
+    public String canonicalForm();
+}
+```
 
-### 3.3 frontend / legacy XML parser
+安全边界不是“谁能 new 一个值对象”，而是**只有同一 `CompiledModelSet` 中由 compiler 发布并由 exact PolicyIndex 选中的 `CompiledModelAccessRule` 才具有授权权威**。runtime request 中不接受 caller-supplied requirement，因此外部代码即使能调用 validated factory 也不能扩大权限。
 
-安全 Canonical frontend 继续只提供节点、属性与 SourceRef。`dec-context-config-parse-xml` 中旧 `RuleParser -> ConfigContextUtil -> ConfigInfo` 属于兼容历史路径：P2 设计要求显式标记为 legacy read boundary；它不得成为新 `RuleViewKey` Registry 的来源、不得通过裸 name 为新调用提供 fallback。新 `mix` 的 RuleView `system` 属性必须在 Canonical/Raw 输入中保留并进入 Compiler。
+`RuntimeRequirementKey` 由 `RuntimeAccessRequirement.derived(...)` 内部确定性生成；不提供 caller-chosen public key factory。
 
-### 3.4 `dec-core-starter` 与后续执行入口
+## 3. System / RuleView / ModelPath
 
-Starter 只组装 Compiler/Context 与统一 Guard；不得保存全局权限表。后续 Rule/change/custom action/query 消费者只接收已发布 Context 中的 owner-qualified facts，并通过共同 Guard seam 请求动态授权。
+### 3.1 System
 
-## 4. System 编译设计（P2-T01/T02） {#p2-system}
+- 显式 `SystemKey` 注册；多 source 输入按 canonical source order 处理；重复 key -> `MIX-SYSTEM-DUPLICATE`。
+- `CompiledSystem` 与 registry、RuleView、access rules 同属于一个 `CompiledModelSet` 发布闭包。
 
-### 4.1 输入
+### 3.2 RuleView
 
-`RawSystemDefinition` 必须携带：显式 name、SourceRef、稳定 source ordinal，以及其声明的 Data/View/rule-file/Information/model-access 引用。`system-file-info` 可以产生多个 System source；Source discovery 的输入顺序只影响读取过程，不影响最终 identity 集合。
-
-### 4.2 两阶段算法
-
-1. **Register phase**：按 `(SystemKey.canonical, SourceRef stable order)` 排序，先注册全部显式 SystemKey；重复 Key 收集双方/多方 SourceRef 并产生 `MIX-SYSTEM-DUPLICATE`。
-2. **Link phase**：在完整 System symbol set 上解析成员与前向引用，构造 `CompiledSystem`。任何 unknown/mismatch 只产生 Diagnostic，不创建“半 System”。
-
-### 4.3 发布不变量
-
-`CompiledSystem` 只出现在无 ERROR 候选；`TypedDefinitionRegistries.systems()` 与 `CompiledSystemRegistry` 必须由同一 `CompiledModelSet` 派生并保持 Key 集合一致。语义摘要纳入排序后的 System identity、成员 identity 与 access rule canonical form。
-
-## 5. RuleView 复合身份与解析（P2-T05/T06/T09/T10） {#p2-ruleview}
-
-### 5.1 注册
-
-- Raw RuleView 必须包含 owner System；缺失 owner -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；
-- Key 固定使用现有 `RuleViewKey(SystemKey owner,String name)`；
+- 新 RuleView 缺 owner System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；
 - 同 System 同名 -> `MIX-RULEVIEW-DUPLICATE`；
-- 跨 System 同名合法，Registry 中形成两个不同 Key；
-- RuleView 引用的 View/Rule 必须在同 owner System 允许范围内，否则使用 source-aware mismatch Diagnostic。
+- 跨 System 同名合法；
+- runtime 只允许 `RuleViewKey` 或 `(SystemKey,name)` 精确 lookup；禁止新 bare-name API。
 
-### 5.2 Runtime lookup
+### 3.3 ModelPath 与真实 `read path="*"`
 
-Context 暴露 `RuleViewResolver.resolve(SystemKey,String)` 或等价 facade，内部只构造 `RuleViewKey` 做精确查找。新 API 不提供 `resolve(String bareName)`。兼容读取若仍存在，必须在命名上明确 `LegacyRuleViewReadAdapter`，只读旧 `ConfigInfo`，不得写新 Registry，且不得被新业务调用链依赖。
+运行时 `ModelPath` 始终 exact。真实 `systems.xml` 中 `order`、`payment` 的 `<read path="*"/>` 只是一种 **source/compile-time selector**：
 
-## 6. 统一 ModelPath（P2-T04） {#p2-model-path}
+1. 先解析唯一 target；
+2. 从该 target 的 immutable `CompiledTargetPathCatalog` 枚举有限 canonical readable paths；
+3. canonical sort + deduplicate；
+4. 每个 path 形成普通 exact READ `ModelAccessRuleKey`；
+5. wildcard 永不进入 runtime PolicyIndex；
+6. wildcard WRITE/EXECUTE -> compile ERROR；
+7. empty expansion -> compile ERROR；
+8. expanded exact key set + target model-shape digest 进入 semantic digest；model shape 改变必须重新 compile。
 
-`ModelPath` 与 P1 selector 分层：
+## 4. ModelAccessRule 与 AC-006 runtime-check-required
 
-```text
-配置 selector: SharedModelPath + SystemViewSelector -> ModelAccessBinding
-运行语义路径: target DefinitionKey + exact segments -> ModelPath
+### 4.1 编译结果
+
+```java
+public enum AccessCompilationStatus {
+    STATIC_ALLOW,
+    RUNTIME_GUARD_REQUIRED
+}
+
+public final class CompiledModelAccessRule {
+    private final ModelAccessRuleKey key;
+    private final AccessCompilationStatus status;
+    private final RuntimeAccessRequirement runtimeRequirement;
+    private final SourceRef sourceRef;
+
+    public ModelAccessRuleKey key();
+    public AccessCompilationStatus status();
+    public Optional<RuntimeAccessRequirement> runtimeRequirement();
+    public SourceRef sourceRef();
+}
 ```
 
-`ModelPathCompiler` 只接受明确 target shape；逐段大小写敏感精确解析：
+规则：
 
-- unknown segment -> `MIX-MODEL-PATH-INVALID`；
-- non-composite intermediate -> 同 code + 精确 failing segment；
-- 禁止 wildcard、前/后缀、跨 target 搜索、root-property fallback；
-- canonical form 为 `targetKey.canonical + '/' + escapedSegments`，供 rule/change/query/access 共用；
-- 编译结果不可保存 parser-specific DOM/YAML node。
+- 静态 System/target/path/operation 不合法或未授权 -> compile ERROR，不发布 rule。
+- 权限和实际对象绑定都能静态证明 -> `STATIC_ALLOW`。
+- **静态授权结构合法，但最终对象实例/容器元素的绑定依赖运行时值** -> compiler 确定性生成 `RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)` 并发布 `RUNTIME_GUARD_REQUIRED`。
+- `RUNTIME_GUARD_REQUIRED` 不需要新的 XML/YAML predicate declaration；它从现有 access/path IR 的动态绑定分类派生。
+- requirement 只能验证实际 runtime binding 没有逃出已授权 System/target/exact path/operation，不能增加额外权限。
 
-## 7. ModelAccessRule 与静态授权（P2-T03/T07/T11） {#p2-model-access}
+这使 Requirement AC-006 可达：合法动态访问可以编译成功并发布，而不是因为没有新 predicate grammar 被误判为 compile ERROR。
 
-### 7.1 规则结构
+### 4.2 Runtime binding facts
 
-每条规则必须完整绑定：`SystemKey`、`targetKey`、`ModelPath`、`AccessOperation`、`SourceRef`。READ/WRITE/EXECUTE 作为闭集独立值，不做层级继承。
+execution consumer 在真正访问对象前构造只读 binding proof：
 
-### 7.2 静态判定
+```java
+public final class RuntimeAccessBinding {
+    private final String engineContextId;
+    private final DefinitionKey targetKey;
+    private final CanonicalModelPath resolvedPath;
+    private final AccessOperation operation;
 
-`ModelAccessAuthorizationService.compile(...)` 的候选结果只有：
+    public static RuntimeAccessBinding resolved(
+        String engineContextId,
+        DefinitionKey targetKey,
+        CanonicalModelPath resolvedPath,
+        AccessOperation operation);
 
-- `STATIC_ALLOW`：System、target、path、operation 均可静态确定且显式授权；
-- `RUNTIME_GUARD_REQUIRED`：身份/结构/声明均合法，但资源实例或动态边界确实只能运行时确定；
-- `Diagnostic ERROR`：未声明、错误 System/target/path、operation 不匹配、共享 WRITE 未授权等。
-
-没有 `UNKNOWN_ALLOW`。未声明权限、Guard 不可用、Context 不匹配均 fail-closed。
-
-### 7.3 权限索引
-
-发布时派生不可变 `ModelAccessPolicyIndex`：主键 `(SystemKey,targetKey,ModelPath,AccessOperation)`；只由 `ModelAccessRule` 构造。运行时不得重新解析 XML/YAML，也不得遍历全局名称空间。
-
-## 8. Runtime Guard（P2-T08/T11） {#p2-runtime-guard}
-
-`ModelAccessGuard.authorize(request)` 是唯一动态授权 seam：
-
-1. 验证 request 的 Context identity 与 policy index 同源；
-2. 使用精确四元组定位 rule；缺失即 DENY；
-3. `STATIC_ALLOW` 可直接 ALLOW；
-4. `RUNTIME_GUARD_REQUIRED` 调用注入的 runtime fact evaluator，只允许产生 ALLOW/DENY；异常、null、超时或无法确定均 DENY；
-5. 返回决定与稳定 reason code，不执行模型写入或外部操作。
-
-调用顺序必须是：`build request -> authorize -> if ALLOW then execute mutation/read/execute`。Guard 不能被 Rule/change/custom action 自己替换；测试 seam 必须能断言 DENY 后 mutation counter、state version、external-effect spy 均未变化。
-
-## 9. Pipeline 与状态转换 {#p2-pipeline}
-
-在 P1 `REFERENCES_RESOLVED -> GRAPH_PREPARED -> SEMANTICALLY_VALIDATED -> PUBLISHED` 语义内插入 P2 pass，不增加第二生命周期：
-
-| 顺序 | Pass | 输出 | ERROR |
-|---:|---|---|---|
-| 1 | existing Source/Structural/Symbol passes | Raw + symbols | P1 codes |
-| 2 | `SystemCompilationPass` | `CompiledSystem` candidates | duplicate/unknown System |
-| 3 | `RuleViewOwnershipPass` | owner-qualified RuleView facts | missing owner/duplicate/mismatch |
-| 4 | `ModelPathCompilationPass` | canonical ModelPath set | invalid/non-composite path |
-| 5 | `StaticAccessValidationPass` | access rules + decision requirement | denied/undeclared operation |
-| 6 | existing Deferred classification | only P3～P8 remaining Deferred | incomplete boundary |
-| 7 | digest/candidate/publication | immutable Context | P1 publication codes |
-
-任何 P2 ERROR 沿用 P1 原子发布规则：本轮 FAILED，Publisher 不接收候选，旧 Context 不变。
-
-## 10. CompiledModelSet / EngineContext 扩展 {#p2-context}
-
-`CompiledModelSet` 增加不可变 P2 视图，不复制 `definitions`：
-
-- `systems(): Registry<SystemKey,CompiledSystem>`；
-- `ruleViews(): Registry<RuleViewKey,CompiledDefinition|CompiledRuleView>`；
-- `modelAccessRules(): ModelAccessPolicyIndex`；
-- `resolveRuleView(SystemKey,String)` facade 可位于 EngineContext/专用 resolver，但底层只查同一 model set。
-
-构造时验证：所有 P2 map key 与内部 key 一致；RuleView owner 必须存在；rule target/path 必须属于同一发布闭包；不能包含静态 DENY；Diagnostics 不能含 ERROR。Context 间不共享可变 cache。
-
-## 11. Diagnostic 与拒绝契约 {#p2-diagnostics}
-
-设计冻结以下 P2 稳定 code（与 BM-R07 error IDs 一一对应）：
-
-| code | 触发 | 阶段 |
-|---|---|---|
-| `MIX-SYSTEM-DUPLICATE` | SystemKey 重复/冲突 | compile |
-| `MIX-RULEVIEW-SYSTEM-REQUIRED` | 新 RuleView 缺显式 System | compile |
-| `MIX-RULEVIEW-DUPLICATE` | 同 System 同名 | compile |
-| `MIX-RULEVIEW-UNKNOWN` | 复合 Key 不存在/错误 owner | compile/runtime lookup |
-| `MIX-MODEL-PATH-INVALID` | 路径未知、非复合、越目标 | compile |
-| `MIX-MODEL-ACCESS-DENIED` | 静态未授权/operation 不匹配 | compile |
-| `MIX-MODEL-ACCESS-RUNTIME-DENIED` | Guard 拒绝/不可判定 | runtime |
-| `MIX-P2-DECLARATION-BOUNDARY` | P2 删除/复制旧 runtime 或形成第二 authority | verification |
-
-所有 Diagnostic/denial 只携带定位所需的 SystemKey、RuleViewKey（适用时）、operation、canonical path、SourceRef/reason code；不回显凭据或完整 runtime value。
-
-## 12. 并发、幂等与原子性 {#p2-concurrency}
-
-- System/RuleView/access 编译器均无静态可变状态；状态只在当前 CompilationSession；
-- 所有 registry/index 在发布前冻结；同 Context 多线程只读；
-- 相同语义输入的 SystemKey/RuleViewKey/ModelPath/rule 排序与 digest 稳定；
-- Guard 不写 policy index；runtime evaluator 若需要业务状态，由调用方通过 request snapshot 显式提供；
-- 并行 Context A/B 使用各自 model set，禁止按“最新全局 Context”判定；
-- 编译错误和 runtime DENY 均无需补偿，因为副作用边界之前即失败。
-
-## 13. 安全设计 {#p2-security}
-
-- 权限默认 DENY；WRITE 无显式声明必须失败；
-- Operation 不提升：READ 不蕴含 WRITE/EXECUTE；
-- Guard evaluator 异常/null/timeout/unknown -> DENY；
-- 路径 canonicalization 在授权前完成，防止不同字符串指向同一资源却绕过 policy key；
-- Diagnostic 对 runtime value 做最小披露；
-- legacy adapter 不得写新 registry 或获得 wildcard 权限。
-
-## 14. 兼容与 P7 declaration 边界 {#p2-compatibility}
-
-P2 不删除旧 `ConfigInfo/RuleConfig/RuleViewInfo`、不恢复已退役 `dec-expand-declaration`，也不复制它们形成新 runtime。兼容边界只有：
-
-1. 允许旧调用在明确 legacy adapter 内读取旧裸名称事实；
-2. 新 Compiler/Context facts 不反向写旧 Config；
-3. 新调用链不得依赖裸名称 adapter；
-4. 无法无损映射的 declaration 差异记录为 P7 migration fact；
-5. P7 删除条件至少包括：所有新调用完成 composite lookup、所有动态 mutation 接入 Guard、无新注册流入 legacy registry、回归 fixture 全绿。
-
-## 15. 跨模块时序 {#p2-cross-module}
-
-```text
-Frontend/Source
-  -> Compiler: explicit System + RuleView owner + model-access + SourceRef
-Compiler
-  -> Context candidate: CompiledSystem + RuleViewKey + ModelPath + policy index
-Compiler
-  -> ContextPublisher: one atomic publish (only no ERROR)
-Caller/Starter
-  -> EngineContext: resolve RuleView(SystemKey,name)
-Caller/Executor
-  -> ModelAccessGuard: authorize(Context,System,target,path,operation,runtimeFacts)
-ModelAccessGuard
-  -> Caller: ALLOW | DENY
-Caller
-  -> protected operation: only after ALLOW
+    public String engineContextId();
+    public DefinitionKey targetKey();
+    public CanonicalModelPath resolvedPath();
+    public AccessOperation operation();
+}
 ```
 
-该时序落实 `CMI-P2-SYSTEM-RULEVIEW-001` 四个 CMSTEP；任何 compile ERROR 停在发布前，runtime DENY 停在 protected operation 前。
+该对象不携带业务模型实例、不暴露任意 POJO，也不拥有 policy identity。Guard 只把它与已选中的 rule 做约束验证。
 
-## 16. API/实现契约边界 {#p2-api-contract}
+## 5. Guard 流程：selected rule 唯一权威
 
-完整签名见 `COMPILER_api_contract.md`。设计要求：
+所有 protected request：
 
-- 复用现有 `SystemKey` / `RuleViewKey`，不改 canonical equality；
-- 新值对象均 Java 8 immutable；
-- 所有 public collection 返回 immutable snapshot/view；
-- lookup 返回 `Optional` 或显式 typed result，不以 null-success 表达 unknown；
-- Guard 只判定，不执行业务副作用；
-- 新 API 不提供 bare-name RuleView lookup；
-- API contract 的 runtime-denial 与 compile Diagnostic 区分，但共享 canonical System/path/operation identity。
+```text
+build ModelAccessRequest
+  -> validate Context identity / owner-qualified key / operation
+  -> exact PolicyIndex lookup ONCE
+  -> selected CompiledModelAccessRule
+  -> STATIC_ALLOW: Guard 内直接 ALLOW
+  -> RUNTIME_GUARD_REQUIRED:
+       validate selectedRule.runtimeRequirement
+       validate RuntimeAccessBinding against selected rule
+       optional bounded evaluator seam only for future requirement-authorized extensions
+  -> ALLOW ? execute : execute nothing
+```
 
-## 17. 测试接缝 {#p2-test-seams}
+强约束：
 
-Design 必须为 Test Design 提供以下稳定 seam：
+- evaluator/validator 接收 exact `selectedRule`，不得再次 PolicyIndex lookup；
+- request 不携带可替换 policy/requirement；
+- key mismatch、Context mismatch、missing binding、binding target/path/operation mismatch、Guard unavailable、timeout、exception、null/unknown 都 fail closed；
+- `STATIC_ALLOW` 仍经过 Guard，evaluator 调用 0 次；
+- Guard 从不执行业务 mutation/read side effect，只返回 decision。
 
-- `SystemDefinitionFixture`：多 source/顺序重排/重复 System；
-- `RuleViewCompositeFixture`：order/payment 同名 RuleView、缺 System、同 System 重名；
-- `ModelShapeFixture + ModelPathCompiler`：合法/未知/非复合 path；
-- `ModelAccessPolicyFixture`：READ/WRITE/EXECUTE allow/deny 矩阵；
-- `ModelAccessGuardSpy/RuntimeFactEvaluatorStub`：ALLOW/DENY/exception/unknown；
-- `MutationProbe`：记录 stateVersion、writeCount、externalEffectCount，证明 DENY 无副作用；
-- `ContextPairFixture`：两个 Context 同名 RuleView 与不同 policy 隔离；
-- `LegacyBoundaryScan`：证明新 production path 不调用 `ConfigInfo.getRuleViewInfo(String)`/`DataUtil.getRuleViewInfo(String)` 作为 fallback。
+当前 P2 没有 source-authored predicate DSL，因此 AC-006 的动态分支由 Guard 自身的 `EXACT_RUNTIME_BINDING` validator 完成。若未来 Requirement 正式引入业务 predicate，再以新 Requirement/Design revision 扩展 evaluator，不得在 Development 偷加。
 
-## 18. P2-T01～T12 设计映射 {#p2-task-map}
+## 6. RuntimeFactValue
 
-| P2 task | 设计落点 | 主要 TR |
-|---|---|---|
-| T01 System Raw/Compiled | §4、§10 | TR-001/008/009 |
-| T02 System loader | §4、§9 | TR-001/008 |
-| T03 ModelAccessRule | §7 | TR-004/006/007 |
-| T04 ModelPathCompiler | §6 | TR-005 |
-| T05 RuleViewKey/registry | §5 | TR-002/003 |
-| T06 Parser/Diagnostic owner | §3.3、§5、§11 | TR-002/003/009 |
-| T07 static permission | §7、§9 | TR-004/005/008 |
-| T08 runtime Guard | §8、§13 | TR-006/007 |
-| T09 composite call | §5.2、§15 | TR-003 |
-| T10 same-name isolation | §5、§12 | TR-002/003 |
-| T11 unauthorized matrix | §7/8/13 | TR-004/006/007/009 |
-| T12 declaration boundary | §14 | TR-010 |
+R05 的 closed Java-8 value 方案继续有效：
 
-## 19. 需求追踪 {#p2-traceability}
+- `public final class RuntimeFactValue`；
+- private constructor；
+- STRING/BOOLEAN/DECIMAL/INSTANT/LIST/OBJECT 六个 typed factories；
+- LIST/OBJECT 递归防御性复制并不可变；
+- 无 `Object value()` generic payload getter；
+- typed visitor；
+- deterministic canonical form；
+- 外部无法 subclass。
 
-| TR | 设计引用 |
-|---|---|
-| TR-P2-SYSTEM-RULEVIEW-001 | §4 System 编译、§9 Pipeline |
-| TR-P2-SYSTEM-RULEVIEW-002 | §5 RuleView 注册、§10 Context |
-| TR-P2-SYSTEM-RULEVIEW-003 | §5.2 Runtime lookup、§15 时序 |
-| TR-P2-SYSTEM-RULEVIEW-004 | §7 权限模型、§13 fail-closed |
-| TR-P2-SYSTEM-RULEVIEW-005 | §6 ModelPath、§7 静态校验 |
-| TR-P2-SYSTEM-RULEVIEW-006 | §7 RuntimeGuardRequired、§8 Guard |
-| TR-P2-SYSTEM-RULEVIEW-007 | §8 无旁路、§15 时序 |
-| TR-P2-SYSTEM-RULEVIEW-008 | §9/§10 原子发布、§12 Context 隔离 |
-| TR-P2-SYSTEM-RULEVIEW-009 | §11 Diagnostic、§12 deterministic |
-| TR-P2-SYSTEM-RULEVIEW-010 | §14 declaration/P7 边界 |
+RuntimeFacts 可用于未来经过 Requirement 授权的 evaluator 扩展，但不是当前 AC-006 reachability 的前置条件。
 
-## 20. 停止条件 {#p2-stop}
+## 7. Timeout / cancellation / unavailable
 
-出现以下任一情况必须回到 Requirement/Business Model，而不是在实现阶段自行决定：默认允许未声明 WRITE、允许 bare RuleView fallback 进入新调用、需要第二全局 Registry/Context、需要删除 declaration runtime、需要提前实现 P3～P7 完整语义，或现有配置无法用显式 System/RuleView/ModelPath 无损表达且会改变已冻结业务语义。
+继承 R04：
+
+- Guard owns bounded evaluation executor and timeout budget；
+- Java 8 `Duration timeoutBudget` + injected monotonic `GuardTimeSource.nanoTime()`；
+- timed Future/get、timeout cancel(true)、interrupt restore、rejection/exception/null/unknown fail closed；
+- no `Thread.sleep` oracle；
+- unavailable Guard 使用非 null fail-closed sentinel，返回 `GUARD_UNAVAILABLE`；
+- evaluator unavailable 与 Guard unavailable reason 分离。
+
+`EXACT_RUNTIME_BINDING` 本身为同步、纯验证，不需要异步 evaluator；bounded executor 不得被无条件触发。
+
+## 8. EngineContext 兼容
+
+保留现有：
+
+```java
+public final class EngineContext {
+    public EngineContext(CompiledModelSet compiledModelSet);
+    public CompiledModelSet compiledModelSet();
+    public ModelSet modelSet();
+    public CoreConfigProjection projection();
+}
+```
+
+P2 只增加兼容 overload/read surfaces，包括 contextId、owner-qualified System/RuleView lookup、policy status 和 non-null Guard。现有 equals/hashCode/toString 语义不得因新增字段被静默改变；禁止 `findRuleView(String bareName)` 新入口。
+
+## 9. Diagnostic / denial reasons
+
+Compile 至少稳定区分：
+
+- `MIX-SYSTEM-DUPLICATE`
+- `MIX-RULEVIEW-SYSTEM-REQUIRED`
+- `MIX-RULEVIEW-DUPLICATE`
+- `MIX-RULEVIEW-UNKNOWN`
+- `MIX-MODEL-PATH-INVALID`
+- wildcard unsupported/empty expansion
+- `MIX-MODEL-ACCESS-DENIED`
+
+Runtime 至少稳定区分：
+
+- `POLICY_NOT_FOUND`
+- `CONTEXT_IDENTITY_MISMATCH`
+- `RUNTIME_BINDING_REQUIRED`
+- `RUNTIME_BINDING_MISMATCH`
+- `GUARD_UNAVAILABLE`
+- `RUNTIME_EVALUATOR_UNAVAILABLE`
+- `RUNTIME_EVALUATOR_EXCEPTION`
+- `RUNTIME_EVALUATOR_NULL`
+- `RUNTIME_EVALUATOR_TIMEOUT`
+- `RUNTIME_EVALUATOR_UNKNOWN`
+- `STATIC_ALLOW`
+- `RUNTIME_ALLOW`
+- `RUNTIME_DENY`
+
+## 10. Source -> Compiler -> Runtime AC-006 chain
+
+Canonical required flow：
+
+```text
+existing source syntax + declared model-access
+  -> Canonical/Raw access IR
+  -> exact static authorization
+  -> DynamicBindingClassification
+       STATIC_BOUND              -> STATIC_ALLOW
+       RUNTIME_OBJECT_BOUND      -> derived RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)
+                                    + RUNTIME_GUARD_REQUIRED
+  -> immutable CompiledModelSet publication
+  -> runtime resolves actual object/path
+  -> RuntimeAccessBinding
+  -> Guard exact selected rule + requirement validation
+  -> ALLOW or DENY before side effects
+```
+
+Production compiler must have at least one test fixture that reaches `RUNTIME_OBJECT_BOUND`; a design where no production source can ever emit `RUNTIME_GUARD_REQUIRED` is non-conforming even if Guard unit tests pass。
+
+## 11. Concurrency / immutability
+
+- CompiledModelSet/Rule/Requirement/RuntimeFactValue/Binding are immutable；
+- PolicyIndex immutable and context-local；
+- no global mutable cache/current context；
+- concurrent authorization cannot mutate shared policy；
+- bounded executor queue/thread ownership and replacement/degraded behavior remain R04 contracts；
+- timed-out evaluator has no authority to execute protected operation or mutate protected state。
+
+## 12. Declaration compatibility boundary
+
+`DEC-EXPAND-DECLARATION` remains retired historical fact。P2 surviving boundary is read-only legacy compatibility (`ConfigInfo.getRuleViewInfo(String)` / `DataUtil.getRuleViewInfo(String)` or equivalent existing surface) until P7。P2 must not restore retired module, dual-write registries, or create a second runtime authority。
+
+## 13. Review / lifecycle gate
+
+`DESIGN-P2-R06` is **not PASSED**。Before Design can pass it requires the current RC9 lifecycle to bind the exact revision and independent reviews appropriate to current detected risks, including at least：
+
+- ApiContractReviewAgent
+- ConcurrencyReviewAgent
+- ArchitectureReviewAgent
+- BusinessModelReviewAgent
+- DevelopAgent
+- RequirementReviewAgent
+- TestDesignAgent
+- ImpactAnalysisReviewAgent
+- CrossModuleIntegrationReviewAgent
+- DataMigrationReviewAgent or a contract-valid waiver
+
+The installed common-develop baseline currently reports `INVALID_BASELINE` because `common-develop-v2.44-rc9` is missing。This document does not repair that Skill baseline, fabricate repository Evidence, or claim machine closure。
