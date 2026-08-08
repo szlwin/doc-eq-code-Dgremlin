@@ -7,8 +7,8 @@ scope:
   targetIds:
     - P1-COMPILER-F01
     - FEATURE-DESC-3361AD2E54FC
-revision: BM-R06@6a0bce4fa0ae
-baseRevision: 'REQAN-R05@7de35e8dc15b'
+revision: BM-R07@7d7bf504ca9d
+baseRevision: 'BM-R06@6a0bce4fa0ae'
 nodes:
   - id: P1-COMPILER-F01
     type: FEATURE
@@ -103,6 +103,18 @@ nodes:
       - TR-P2-SYSTEM-RULEVIEW-007
       - TR-P2-SYSTEM-RULEVIEW-008
       - TR-P2-SYSTEM-RULEVIEW-009
+      - TR-P2-SYSTEM-RULEVIEW-010
+  - id: DEC-COMPILER-DOC-LEGACY
+    type: MODULE
+    name: Legacy compiler document identity DEC_COMPILER
+    module: COMPILER
+    status: SUPERSEDED
+    refs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P2-SYSTEM-RULEVIEW-001
       - TR-P2-SYSTEM-RULEVIEW-010
 relationships:
   - id: REL-P1-COMPILER-IMPLEMENTS
@@ -237,6 +249,21 @@ relationships:
       - TR-P2-SYSTEM-RULEVIEW-010
     evidenceRefs:
       - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
+  - id: REL-COMPILER-DOC-LINEAGE
+    from: DEC-CORE-COMPILER
+    to: DEC-COMPILER-DOC-LEGACY
+    type: SUPERSEDES
+    direction: DIRECTED
+    rationale: COMPILER is the canonical current documentation identity for the same logical compiler modeled historically under DEC_COMPILER; this is a documentation/module-code normalization only and must not create a second compiler, registry, context, or runtime authority.
+    conditions: []
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-010
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml
+      - version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml
 impactPolicies:
   - id: IMP-P1-COMPILER-PUBLICATION
     sourceRef: P1-COMPILER-F01

@@ -1,0 +1,40 @@
+schemaVersion: 1
+changeSet:
+  id: CHG-V_1.0-COMPILER-P2-BM-R07
+  version: V_1.0
+  module: COMPILER
+  featureCode: P2-SYSTEM-RULEVIEW
+  reason: 'Business Model rework: preserve BM-R05 stable facts, make DEC_COMPILER→COMPILER lineage explicit, and restore a complete human-readable projection without silently changing BM-R06 P2 semantics.'
+  baseRevisions:
+    business_model: BM-R06@6a0bce4fa0ae
+  resultRevisions:
+    business_model: BM-R07@7d7bf504ca9d
+  affectedTraceIds:
+    - TR-P2-SYSTEM-RULEVIEW-001
+    - TR-P2-SYSTEM-RULEVIEW-002
+    - TR-P2-SYSTEM-RULEVIEW-003
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+    - TR-P2-SYSTEM-RULEVIEW-009
+    - TR-P2-SYSTEM-RULEVIEW-010
+operations:
+  - artifact: business_model
+    collection: terms
+    operation: add
+    targetId: TERM-COMPILER-DOCUMENT-LINEAGE
+    after:
+      id: TERM-COMPILER-DOCUMENT-LINEAGE
+      name: Compiler document module lineage
+      definition: DEC_COMPILER（BM-R05 及更早）与 COMPILER（BM-R06 起）是同一个逻辑 compiler 业务模型的连续文档谱系；模块代码规范化只改变当前事实路径，不创建第二套 compiler、Registry、Context 或运行时权威。下游必须消费当前 COMPILER Revision，并可沿 lineage 回查 DEC_COMPILER 历史 Evidence。
+      forbiddenSynonyms:
+        - parallel compiler module
+        - second compiler runtime
+        - independent DEC_COMPILER current model
+      sourceRefs:
+        - BM-R05@4ecb1f8c09f4
+        - BM-R06@6a0bce4fa0ae
+        - FEATURE-DESC-3361AD2E54FC
+    reason: Prevent DEC_COMPILER historical documents and COMPILER current documents from being interpreted as parallel logical modules or runtimes.

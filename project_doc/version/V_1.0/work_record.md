@@ -2574,6 +2574,65 @@
 | 测试与验证 | 登记 Evidence 8 项；命令 Evidence 3 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P2-BMODEL-001-I003-A001","event_id":"EVENT-ATTEMPT-TASK-P2-BMODEL-001-I003-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000049","EVD-000050","EVD-000051","EVD-000052","EVD-000053","EVD-000054","EVD-000055","EVD-000056","EVD-000057","EVD-000058"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"REQAN-P2-R01@d08612768131","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003","iteration_no":3,"modified_files_summary":["version/V_1.0/doc/COMPILER/COMPILER_business_model.md","version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml","version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml","docs/_relations/dependency_impact.yaml","docs/_relations/dependency_graph.md","version/V_1.0/requirement_list.md"],"next_action":"冻结 BM-R07 并执行六项独立 Review","next_agent":"BusinessModelReviewAgent","output_revision":"BM-R07@7d7bf504ca9d","phase":"business_model","record_id":"WR-20260808-041244-TASK-P2-BMODEL-001-PASSED","render_digest":"819460fa3ba1cda1e6268244873a718caf3d8595a6d55f00238b44080bc19d64","schema_version":4,"scope":"建立 P2 System、RuleView 与 model-access 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P2-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"BM-R07 candidate 完成：BM-R05 stable ID 全量继承、DEC_COMPILER→COMPILER lineage 显式化、完整 17 节 Markdown 恢复，并保持 BM-R06 P2 核心语义。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-BMODEL-001","task_type":"business_model","timestamp":"2026-08-08T04:12:44+00:00","validation_summary":"登记 Evidence 10 项；命令 Evidence 6 项","version":"V_1.0"} -->
+## WR-20260808-041244-TASK-P2-BMODEL-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-08T04:12:44+00:00 |
+| 执行 Agent | BusinessModelAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 建立 P2 System、RuleView 与 model-access 业务模型 |
+| 阶段 | business_model |
+| 任务类型 | business_model |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | BM-R07 candidate 完成：BM-R05 stable ID 全量继承、DEC_COMPILER→COMPILER lineage 显式化、完整 17 节 Markdown 恢复，并保持 BM-R06 P2 核心语义。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-BMODEL-001: RUNNING → PASSED |
+| Task | TASK-P2-BMODEL-001 |
+| Attempt | ATTEMPT-TASK-P2-BMODEL-001-I003-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003 / 3 |
+| 输入 Revision | REQAN-P2-R01@d08612768131 |
+| 输出 Revision | BM-R07@7d7bf504ca9d |
+| StageOutcome | 无 |
+| Evidence | EVD-000049、EVD-000050、EVD-000051、EVD-000052、EVD-000053、EVD-000054、EVD-000055、EVD-000056、EVD-000057、EVD-000058 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | BusinessModelReviewAgent |
+| 后续事项 | 冻结 BM-R07 并执行六项独立 Review |
+
+### 变更摘要
+
+- BM-R07 candidate 完成：BM-R05 stable ID 全量继承、DEC_COMPILER→COMPILER lineage 显式化、完整 17 节 Markdown 恢复，并保持 BM-R06 P2 核心语义。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/COMPILER/COMPILER_business_model.md`
+- `version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml`
+- `version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml`
+- `docs/_relations/dependency_impact.yaml`
+- `docs/_relations/dependency_graph.md`
+- `version/V_1.0/requirement_list.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 10 项；命令 Evidence 6 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
