@@ -1,48 +1,42 @@
 # COMPILER P2 设计测试接缝
 
-> Revision：`DESIGN-P2-R06`。正式 Test Design：`TESTDESIGN-P2-R07`。
+> Revision：`DESIGN-P2-R07`。正式 Test Design candidate：`TESTDESIGN-P2-R08`。
 
-## 1. Compile seams
+## 1. Production classifier fixtures
 
-- deterministic System source provider；
-- duplicate System and composite RuleView fixtures；
-- exact model-shape/path catalog；
-- real `systems.xml` READ `path="*"` expansion fixture；
-- declared/undeclared READ/WRITE/EXECUTE matrix；
-- `DynamicBindingClassifierStub(STATIC_BOUND|RUNTIME_OBJECT_BOUND)`，用于证明 production compiler 能产生 `RUNTIME_GUARD_REQUIRED`；
-- source fixture for dynamic container-element/object selection under an exact authorized path。
+AC-006/classifier acceptance MUST 使用真实当前 grammar，不能使用 classifier stub：
 
-## 2. Runtime seams
+- source：`dec-demo/src/main/resources/mix/system/systems.xml` -> `order` -> information `ordered` -> `rule-data`；
+- direct access `status = 1` -> production classifier MUST return `STATIC_BOUND`；
+- `every(orderDetailList, status = 1)` element `status` READ -> production classifier MUST return `RUNTIME_OBJECT_BOUND`；
+- 对应真实 `read path="*"` expansion 必须包含 exact readable element member path，否则 compile ERROR，禁止 parent-path fallback；
+- unsupported dynamic selector fixture -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`。
 
-- immutable Context A/B；
-- exact PolicyIndex spy (lookup count must be one)；
-- `RuntimeAccessBinding` allow/mismatch fixtures；
-- Guard spy + unavailable sentinel；
-- optional evaluator ALLOW/DENY/THROW/NULL/UNKNOWN/non-returning stubs；
-- bounded executor/fake monotonic time source；
-- Mutation/Read/Execute probes recording protected operation count, state version and external-effect count。
+`DynamicBindingClassifierStub` 仅允许用于 production classifier 已单独证明后的下游 Guard/plan unit isolation。
 
-## 3. AC-006 end-to-end seam
+## 2. Runtime proof fixtures
 
-Required oracle：
+- actual element A 来自当前 `OrderInfo.orderDetailList`，由 framework resolver 解析并签发 opaque handle A -> verify MATCH；
+- element B 来自不同 OrderInfo/collection，但 request 的 static System/target/path/operation 相同 -> handle B -> verify DENY；
+- stale prior-Context handle、replay 到另一 plan/rule、unknown/forged resolution id -> DENY；
+- business test code 无 handle mint API，Guard API 不暴露 raw POJO。
+
+## 3. AC-006 end-to-end oracle
 
 ```text
-source with legal dynamic object binding
- -> compiler succeeds
- -> selected rule = RUNTIME_GUARD_REQUIRED
- -> compiler-derived RuntimeAccessRequirement is traceable
+real systems.xml + real rule-data IR
+ -> exact read authorization
+ -> production classifier
+      direct status = STATIC_BOUND
+      every(orderDetailList,status) = RUNTIME_OBJECT_BOUND
+ -> RuntimeBindingPlan + EXACT_RUNTIME_BINDING requirement
  -> Context publishes
- -> runtime binding A matches -> ALLOW -> protected operation once
- -> runtime binding B escapes/mismatches -> DENY -> protected operation zero, side effects zero
+ -> framework resolves element A and issues handle A -> Guard ALLOW -> protected read once
+ -> foreign element B handle with same static tuple -> Guard DENY -> protected read zero / side effects zero
 ```
 
-A test starting by directly constructing a `CompiledModelAccessRule` is useful unit coverage but cannot satisfy this end-to-end acceptance by itself。
+手工构造 `CompiledModelAccessRule`、classifier stub 或四字段 static binding object 均不能满足 AC-006。
 
-## 4. Oracle rules
+## 4. Other seams/oracles
 
-- expected identity/path/operation comes from Requirement/BM/Design, never implementation output；
-- compile/setup/missing-symbol failure is not a valid TDD RED；
-- initial API-shape RED uses reflection/source/bytecode contract checks that compile before new symbols exist；
-- runtime DENY asserts zero protected operation and zero external side effects；
-- no `Thread.sleep` timeout oracle；
-- wildcard never appears in runtime key lookup。
+继续保留 deterministic System source provider、composite RuleView fixtures、wildcard exact expansion、exact PolicyIndex lookup-count spy、unavailable Guard sentinel、RuntimeFactValue immutability、bounded evaluator/fake time、protected operation probes。Compile/setup/missing-symbol failure 是 INVALID_RED；timeout oracle 禁止 `Thread.sleep`。
