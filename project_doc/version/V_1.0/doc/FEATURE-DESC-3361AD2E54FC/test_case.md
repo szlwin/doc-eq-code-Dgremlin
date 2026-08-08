@@ -1,23 +1,24 @@
 # FEATURE-DESC-3361AD2E54FC Test Design
 
-> Revision：`TESTDESIGN-P2-R07`。
-> Base：`TESTDESIGN-P2-R06`。
-> Inputs：Requirement `REQAN-P2-R01`、Business Model candidate `BM-R09`、Design candidate `DESIGN-P2-R06`。
-> Status：`NEEDS_CHANGES_CANDIDATE_FIXED / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`，即本文件是返修后的 canonical Test Design candidate，但在 Design exact-revision Review、RC9 reopen/publish 与 machine-valid Evidence 完成前不得 PASSED。
+> Revision：`TESTDESIGN-P2-R08`。
+> Base：`TESTDESIGN-P2-R07`。
+> Inputs：Requirement `REQAN-P2-R01`、Business Model candidate `BM-R10`、Design candidate `DESIGN-P2-R07`。
+> Status：`NEEDS_CHANGES_CANDIDATE_FIXED / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`。本文件是当前 canonical Test Design candidate；在 exact-revision Review、RC9 reopen/publish、machine-valid risk Evidence 完成前不得 PASSED。
 
 ## 1. Test Design principles
 
-1. Acceptance must be tested from public/source-observable behavior, not only internal helper behavior.
-2. Every protected READ/WRITE/EXECUTE must prove Guard entry; STATIC_ALLOW is Guard-internal only.
-3. Runtime wildcard lookup is forbidden; real source `read path="*"` is compile-time expansion only.
-4. AC-006 must prove **Source -> Compiler -> published Context -> Runtime Guard -> ALLOW/DENY**, not just direct construction of an internal compiled rule.
-5. A valid TDD RED must compile the target test, start the intended test and fail the intended behavioral/contract assertion.
-6. Missing module/test/production symbol, testCompile error, dependency/plugin/setup failure or upstream reactor failure is `INVALID_RED`.
-7. No production code, API skeleton or implementation is created in Test Design.
+1. Acceptance 从真实 source/public behavior 出发，不以 helper/stub 自证。
+2. 所有 protected READ/WRITE/EXECUTE 均证明进入 Guard；`STATIC_ALLOW` 仅为 Guard 内 fast path。
+3. Runtime lookup exact-only；真实 `read path="*"` 只允许 compile-time finite expansion。
+4. AC-006 必须证明真实 source/IR -> production classifier -> compiler-published plan/rule -> Context -> framework resolver -> opaque binding handle -> Guard ALLOW/DENY。
+5. classifier stub 只能隔离下游 unit，不得作为 production classifier 或 AC-006 Evidence。
+6. caller 不得 mint binding handle、提交 replacement rule/requirement/plan 或通过 raw POJO/boolean 声明“在边界内”。
+7. valid TDD RED 必须 testCompile 成功、目标 test 启动、因目标行为/contract assertion 失败；missing symbol/module/test/setup/compile failure 均为 `INVALID_RED`。
+8. Test Design 不创建生产 skeleton/实现。
 
 ## 2. Formal Maven / valid-RED contract
 
-Dependency/bootstrap preparation, when required:
+Bootstrap only:
 
 ```bash
 ./mvnw -pl <target-module> -am -Dmaven.test.skip=true install
@@ -29,255 +30,181 @@ Formal target test:
 ./mvnw -pl <target-module> -Dtest=<TestClass> -Dsurefire.failIfNoSpecifiedTests=true test
 ```
 
-The target-test step MUST NOT use `-am`.
+目标 test step 禁止 `-am`。新 API 尚不存在时，首个 RED 用 reflection/string/source/bytecode contract inspection；合法 TDD skeleton 建立后才允许直接 typed test。
 
-Before a new API symbol exists, the initial API-shape RED uses reflection/string/source/bytecode contract inspection that itself compiles. Direct typed tests become eligible only after the legal TDD lifecycle has produced the minimal frozen API skeleton.
+## 3. AC-006 production classifier — FND-018 blocking case
 
-## 3. Requirement acceptance matrix
+### CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R08 — BLOCKING
 
-### AC-001 — deterministic System compilation
+Real fixture 固定为：
 
-**CASE-P2-SYSTEM-DETERMINISM-001-R07**
+`dec-demo/src/main/resources/mix/system/systems.xml`
 
-- compile the real `systems.xml` and semantically identical reordered/multi-source forms;
-- assert identical SystemKey set, canonical ordering and semantic digest;
-- duplicate/conflicting System emits stable ERROR;
-- failed candidate does not publish partial Context.
+Use `system=order`, `information=ordered`, existing `rule-data`:
 
-### AC-002 — RuleView composite identity
+```text
+status = 1
+and
+every(orderDetailList, status = 1)
+```
 
-**CASE-P2-RULEVIEW-COMPOSITE-001-R07**
+Required production-classifier assertions:
 
-- same RuleView name in two Systems publishes as two `(SystemKey,name)` keys;
-- duplicate within one System fails;
-- missing System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`;
-- no bare-name registration fallback.
+1. compiler 解析真实 source 到 resolved access-consumer IR；
+2. direct `status = 1` access node 是 `DIRECT_EXACT`，MUST classify `STATIC_BOUND`；
+3. `every(orderDetailList, status = 1)` 是当前冻结的 `EVERY_COLLECTION_ELEMENT` IR；
+4. 其 element `status` READ MUST classify `RUNTIME_OBJECT_BOUND`；
+5. target/model-shape 必须证明 `orderDetailList` 是 collection，并 exact resolve element-relative `status`；
+6. 真实 `read path="*"` expansion 必须包含该 exact readable element-member rule；parent-path permission fallback 禁止；
+7. output 含稳定 reason 与 deterministic `RuntimeBindingPlan(COLLECTION_ELEMENT_MEMBERSHIP)`；
+8. source reorder/canonical-equivalent input 得到同 classification/plan key/digest；
+9. unsupported runtime index/key/filter/find selector fixture -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。
 
-### AC-003 — RuleView composite call
+`DynamicBindingClassifierStub(STATIC_BOUND|RUNTIME_OBJECT_BOUND)` 明确不能满足本 Case。
 
-**CASE-P2-RULEVIEW-CALL-001-R07**
+## 4. AC-006 runtime object proof — FND-017 blocking case
 
-- correct System+name resolves exact RuleView;
-- wrong System/name and bare-name attempts fail deterministically;
-- no cross-System search/fallback.
+### CASE-P2-RUNTIME-BINDING-PROOF-001-R08 — BLOCKING
 
-### AC-004 — model-access permission matrix
+Precondition：上一 Case 已产生 element `status` 的 exact selected READ rule，status=`RUNTIME_GUARD_REQUIRED`，并包含 `RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)` + one `RuntimeBindingPlan`。
 
-**CASE-P2-ACCESS-MATRIX-001-R07**
+Required runtime setup/oracles:
 
-For READ/WRITE/EXECUTE independently:
+1. candidate 发布到 immutable EngineContext C1；
+2. framework resolver 从 C1 当前 `OrderInfo.orderDetailList` 解析实际 element A 并签发 opaque handle A；
+3. handle A 绑定 C1 + exact selected rule + exact plan + resolver-owned membership/provenance；business code 无 mint API；
+4. Guard exact PolicyIndex lookup count = 1；
+5. Guard verify A -> ALLOW；protected read exactly once；
+6. 从**不同 OrderInfo 或不同 collection**解析 element B，同时 request static System/target/path/operation 保持与 A 相同；
+7. handle B 因实际 membership/provenance 不同 MUST DENY；
+8. B DENY -> protected read 0、state version unchanged、external-effect count 0；
+9. old Context C0 handle used in C1 -> `RUNTIME_BINDING_STALE` 或等价稳定 DENY；
+10. replay A against another plan/rule -> `RUNTIME_BINDING_PLAN_MISMATCH`；
+11. unknown/forged resolution id -> `RUNTIME_BINDING_PROOF_INVALID`；
+12. Guard API/test observation 暴露 raw POJO/object reference = 0；
+13. caller-created `{context,target,path,operation}` 四字段对象不能满足 requirement，且不属于 R07 API。
 
-- declared operation -> authorized according to compiled rule;
-- undeclared operation -> fail closed;
-- shared WRITE is denied unless explicitly declared;
-- denial executes zero protected operation and zero external side effects.
+该 Case 证明同一静态 tuple 下两个 runtime object 可以产生不同 decision，而无需 source-authored business predicate DSL。
 
-### AC-005 — unified ModelPath / static blocking
+## 5. Source -> Compiler -> Context -> Guard AC-006 chain
 
-**CASE-P2-MODEL-PATH-001-R07**
+### CASE-P2-DYNAMIC-SOURCE-TO-GUARD-001-R08 — BLOCKING
 
-- same logical path used by rule/change/query/access yields same canonical identity;
-- unknown segment/non-composite intermediate/target mismatch fails at compile time;
-- no fuzzy/prefix/suffix/cross-target lookup.
+```text
+real systems.xml / order.ordered rule-data
+ -> compiler exact static READ authorization
+ -> production classifier
+      direct status -> STATIC_BOUND
+      every(orderDetailList,status) -> RUNTIME_OBJECT_BOUND
+ -> RuntimeBindingPlan + EXACT_RUNTIME_BINDING requirement
+ -> exact CompiledModelAccessRule = RUNTIME_GUARD_REQUIRED
+ -> semantic digest includes plan/requirement identity
+ -> immutable EngineContext publishes
+ -> framework resolves actual element A -> opaque handle A -> Guard ALLOW -> protected read once
+ -> foreign element B under same static tuple -> opaque handle B -> Guard DENY -> protected read zero / effects zero
+```
 
-### AC-006 — dynamic access from Source to runtime Guard
+手工 new compiled rule、classifier stub、四字段 binding object 均不能关闭 AC-006。
 
-**CASE-P2-DYNAMIC-SOURCE-TO-GUARD-001-R07** — **blocking**
+## 6. Existing acceptance matrix carried forward
 
-Purpose: prove the production Compiler can actually generate a legal `RUNTIME_GUARD_REQUIRED` fact from current source semantics.
+### AC-001 System determinism — CASE-P2-SYSTEM-DETERMINISM-001-R08
 
-Fixture contract:
+Real systems.xml + reordered/multi-source equivalent input -> identical SystemKey set/order/digest；duplicate/conflicting System -> stable ERROR and no partial publication。
 
-- use existing source grammar only; do not invent a runtime-predicate XML/YAML DSL;
-- declare an exact legal model-access surface;
-- use a rule/change/custom-action/read fixture whose **final object instance or collection element is chosen at runtime** under that exact authorized target/path. A representative fixture may use an authorized container path such as `orderDetailList` with runtime element traversal; the exact fixture chosen by TDD must already be expressible by existing source syntax and remain within P2 scope.
+### AC-002 RuleView identity — CASE-P2-RULEVIEW-COMPOSITE-001-R08
 
-Required chain/oracles:
+Cross-System same name legal；same-System duplicate fails；missing System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；no bare-name registration fallback。
 
-1. source parses and compiles successfully;
-2. static System/target/path/operation authorization is valid;
-3. `DynamicBindingClassification = RUNTIME_OBJECT_BOUND` (or exact frozen equivalent);
-4. compiler emits one exact `CompiledModelAccessRule` with `status=RUNTIME_GUARD_REQUIRED`;
-5. that rule owns a deterministic compiler-derived `RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)` traceable to the rule/SourceRef;
-6. semantic digest includes the derived requirement identity;
-7. candidate publishes into an immutable EngineContext;
-8. runtime binding A resolves to the same Context/target/exact authorized path/operation -> Guard ALLOW -> protected operation exactly once;
-9. runtime binding B mismatches Context/target/path/operation or escapes the authorized binding -> Guard DENY;
-10. DENY path executes protected operation zero times, state version unchanged and external-effect count zero;
-11. Guard unavailable also DENY/fail-closed;
-12. compiler must not require or invent `FACT_EQUALS/ALL_OF/ANY_OF/NOT` source predicates for this case.
+### AC-003 RuleView call — CASE-P2-RULEVIEW-CALL-001-R08
 
-A unit test that manually creates `CompiledModelAccessRule`/`RuntimeAccessRequirement` does **not** satisfy this case.
+Only exact `(SystemKey,name)` resolves；wrong/bare name fails without cross-System fallback。
 
-### AC-007 — no bypass from all protected entry types
+### AC-004 permission matrix — CASE-P2-ACCESS-MATRIX-001-R08
 
-**CASE-P2-GUARD-NO-BYPASS-001-R07**
+READ/WRITE/EXECUTE independent；undeclared denied；shared WRITE denied unless explicit；every DENY executes zero protected operation/effects。
 
-- Rule, change, custom action and protected query/read all call Guard;
-- STATIC_ALLOW still records one Guard entry and zero evaluator submissions;
-- DENY blocks before read/write/execute and side effects.
+### AC-005 ModelPath — CASE-P2-MODEL-PATH-001-R08
 
-### AC-008 — atomic publication / Context isolation
+Same logical path across consumers -> same canonical identity；unknown/non-composite/target mismatch compile ERROR；no fuzzy/prefix/suffix/cross-target lookup。
 
-**CASE-P2-CONTEXT-ATOMICITY-001-R07**
+### AC-007 Guard no-bypass — CASE-P2-GUARD-NO-BYPASS-001-R08
 
-- valid new compilation publishes whole closure;
-- failed P2 candidate leaves old Context unchanged;
-- two contexts have independent registries/policies/guards and no mutable global current.
+Rule/change/custom action/protected query-read all enter Guard。STATIC_ALLOW => Guard entry 1, evaluator 0。DENY precedes protected read/write/execute。
 
-### AC-009 — stable diagnostic/denial
+### AC-008 Context atomicity — CASE-P2-CONTEXT-ATOMICITY-001-R08
 
-**CASE-P2-DIAGNOSTIC-001-R07**
+Successful candidate publishes whole closure；failed candidate preserves old Context；contexts do not share mutable registry/policy/current。
 
-Repeated runs produce stable codes/order/source location for duplicate System, missing RuleView owner, unknown composite key, invalid path and access denial. Runtime reasons distinguish policy/context/binding/Guard/evaluator failures and do not leak complete runtime data.
+### AC-009 diagnostics — CASE-P2-DIAGNOSTIC-001-R08
 
-### AC-010 — declaration compatibility boundary
+Stable code/order/source for duplicate System、missing owner、invalid path、static denial、unsupported dynamic binding、proof invalid/stale/plan mismatch。
 
-**CASE-P2-DECLARATION-BOUNDARY-001-R07**
+### AC-010 declaration boundary — CASE-P2-DECLARATION-BOUNDARY-001-R08
 
-- retired `DEC-EXPAND-DECLARATION` is not restored to repository/reactor/dependencies;
-- surviving legacy RuleView/Config read surface is read-only;
-- new P2 compiler/runtime does not write legacy registry or create second authority;
-- final removal remains P7.
+Retired module not restored；surviving compatibility read-only；no second registry/runtime；final removal remains P7。
 
-## 4. Selected-rule delivery / FND-009 regression
+## 7. Selected-rule / wildcard / immutable-value regressions
 
-**CASE-P2-SELECTED-RULE-001-R07**
+### CASE-P2-SELECTED-RULE-001-R08
 
-- exact PolicyIndex lookup count = 1;
-- Guard passes the exact selected `CompiledModelAccessRule` to any evaluator/validator seam;
-- no evaluator PolicyIndex re-selection;
-- request cannot supply a replacement rule/requirement;
-- selected rule/request key mismatch -> DENY before protected operation.
+PolicyIndex exact lookup count=1；request cannot replace rule/requirement/plan；verifier uses exact selected rule；mismatch fails before operation。
 
-For current P2 `EXACT_RUNTIME_BINDING`, authorization is decided from selected rule + runtime binding facts. Future business predicates require a future Requirement revision.
+### CASE-P2-SYSTEMS-WILDCARD-READ-001-R08
 
-## 5. Real source wildcard / FND-010 regression
+`order/OrderInfo` and `payment/OrderInfo` READ `*` expand only against exact target catalogs into finite sorted/deduplicated exact READ rules；runtime has zero wildcard keys；wildcard WRITE/EXECUTE/empty expansion fail；shape change changes digest/requires recompile。
 
-**CASE-P2-SYSTEMS-WILDCARD-READ-001-R07**
+### CASE-P2-RUNTIME-FACT-VALUE-001-R08
 
-Fixture: `dec-demo/src/main/resources/mix/system/systems.xml`.
+public final；constructor externally inaccessible；six typed factories；deep immutable LIST/OBJECT；exhaustive visitor；no generic mutable payload；deterministic canonical form。
 
-Required assertions:
+## 8. Cross-module construction — FND-015
 
-- `order/OrderInfo` and `payment/OrderInfo` source READ `path="*"` are accepted;
-- each expands only against its exact target `CompiledTargetPathCatalog`;
-- result is finite, canonical-sorted and deduplicated exact READ rules;
-- explicit exact overlap preserves provenance without duplicate rule key;
-- runtime policy index contains zero wildcard keys;
-- wildcard WRITE/EXECUTE rejected;
-- empty expansion rejected;
-- target model-shape change changes digest/forces recompile; old Context does not silently expand permission.
+### CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R08
 
-## 6. Closed RuntimeFactValue / FND-011 regression
+Context owns immutable `RuntimeBindingPlan`/`RuntimeAccessRequirement` factories callable by compiler without split package/reverse dependency。Factory visibility grants no runtime authority。`RuntimeBindingHandle` has no public mint factory。
 
-**CASE-P2-RUNTIME-FACT-VALUE-001-R07**
-
-- class modifier is public+final;
-- constructor is not externally accessible;
-- only frozen typed factories are public construction seams;
-- LIST/OBJECT deep-copy recursively and expose unmodifiable values;
-- external subclassing impossible;
-- visitor exhaustively handles six kinds;
-- no generic mutable payload getter;
-- canonical form deterministic.
-
-## 7. Cross-module construction / FND-015 regression
-
-**CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R07**
-
-- `RuntimeAccessRequirement` lives in `dec-core-context` neutral fact package;
-- production `dec-core-compiler` can construct it through the frozen public validated factory without split package or reflection;
-- context has no dependency on compiler;
-- public factory does not grant authorization: a caller-created requirement not present in current selected rule/CompiledModelSet cannot affect Guard decision;
-- `RuntimeRequirementKey` cannot be caller-chosen/overridden.
-
-This case includes a Java 8 compile/API architecture check, not merely documentation inspection.
-
-## 8. Guard unavailable / timeout / cancellation / fail-closed matrix
-
-Carry forward R04/R05/R06 coverage:
+## 9. Fail-closed matrix
 
 | Condition | Expected |
 |---|---|
 | policy missing | DENY / POLICY_NOT_FOUND |
 | Context mismatch | DENY / CONTEXT_IDENTITY_MISMATCH |
-| RUNTIME_GUARD_REQUIRED but runtime binding missing | DENY / RUNTIME_BINDING_REQUIRED |
-| binding target/path/operation mismatch | DENY / RUNTIME_BINDING_MISMATCH |
-| Guard unavailable sentinel | DENY / GUARD_UNAVAILABLE |
-| evaluator required but unavailable | DENY / RUNTIME_EVALUATOR_UNAVAILABLE |
-| evaluator exception | DENY / RUNTIME_EVALUATOR_EXCEPTION |
-| evaluator null | DENY / RUNTIME_EVALUATOR_NULL |
-| evaluator timeout/non-return | DENY / RUNTIME_EVALUATOR_TIMEOUT + cancellation |
-| evaluator unknown | DENY / RUNTIME_EVALUATOR_UNKNOWN |
+| runtime plan/requirement missing in runtime rule | DENY / invalid compiled state |
+| runtime handle missing | DENY / RUNTIME_BINDING_REQUIRED |
+| foreign/forged handle | DENY / RUNTIME_BINDING_PROOF_INVALID |
+| stale Context handle | DENY / RUNTIME_BINDING_STALE |
+| rule/plan replay mismatch | DENY / RUNTIME_BINDING_PLAN_MISMATCH |
+| Guard unavailable | DENY / GUARD_UNAVAILABLE |
+| future evaluator unavailable/exception/null/timeout/unknown | DENY / stable evaluator reason |
 | STATIC_ALLOW | Guard entry 1, evaluator submit 0, ALLOW |
-| runtime binding matches | ALLOW only after exact selected-rule validation |
+| valid runtime member handle | ALLOW only after exact rule+plan verification |
 
-Every DENY asserts protected read/write/execute count = 0 and external-effect count = 0.
+Every DENY -> protected operation count 0 + external effects 0。Timeout test 使用 controlled Future/fake monotonic time，禁止 `Thread.sleep` 作为 oracle。
 
-Timeout tests use injected fake monotonic time / controlled Future; `Thread.sleep` is not the oracle.
+## 10. Java 8 / EngineContext compatibility
 
-## 9. Java 8 / EngineContext compatibility
+### CASE-P2-JAVA8-ENGINE-CONTEXT-001-R08
 
-**CASE-P2-JAVA8-ENGINE-CONTEXT-001-R07**
+Production API compiles with release 8；no record/Java9 collection factories；EngineContext remains final；existing constructor/core accessors callable；P2 additive only；no new bare-name RuleView API。
 
-- production P2 API compiles with Java release 8;
-- no record / Java 9 collection factory/copy API in production source;
-- `EngineContext` remains `public final class`;
-- existing single-arg constructor and `compiledModelSet()/modelSet()/projection()` remain callable;
-- P2 APIs are additive;
-- no new `findRuleView(String)` bare-name API;
-- existing equals/hashCode/toString behavior is not silently changed by P2 metadata.
+## 11. TDD RED examples
 
-## 10. Runtime requirement API security
-
-**CASE-P2-RUNTIME-REQUIREMENT-AUTHORITY-001-R07**
-
-- public validated factory accepts only a complete authorized rule key, frozen kind and SourceRef;
-- deterministic key derived inside factory;
-- caller cannot inject the constructed value into `ModelAccessRequest` as authority;
-- Guard uses only requirement embedded in current selected rule from current Context;
-- requirement can only validate/narrow runtime binding against the statically authorized surface.
-
-## 11. Formal TDD RED examples
-
-Initial API shape, before symbols exist:
-
-- reflection/string lookup for class/modifier/method signature;
-- source/bytecode contract scan that compiles against existing code.
-
-After legal minimal API skeleton exists:
-
-- direct typed behavior tests;
-- expected RED is failed assertion/behavior, not compilation failure.
-
-Evidence for each RED must record command, target test, intended failing oracle and actual failure category.
+Before symbols exist：reflection/string/source/bytecode shape assertions that compile。After legal skeleton：direct typed behavior tests。Evidence 记录 command、target test、intended failing oracle、actual failure category。
 
 ## 12. Traceability
 
-| Acceptance / Finding | Blocking case |
+| Acceptance/Finding | Blocking evidence |
 |---|---|
-| AC-001 | CASE-P2-SYSTEM-DETERMINISM-001-R07 |
-| AC-002 | CASE-P2-RULEVIEW-COMPOSITE-001-R07 |
-| AC-003 | CASE-P2-RULEVIEW-CALL-001-R07 |
-| AC-004 | CASE-P2-ACCESS-MATRIX-001-R07 |
-| AC-005 | CASE-P2-MODEL-PATH-001-R07 |
-| AC-006 / FND-014 / FND-016 | CASE-P2-DYNAMIC-SOURCE-TO-GUARD-001-R07 |
-| AC-007 / FND-001 | CASE-P2-GUARD-NO-BYPASS-001-R07 |
-| AC-008 | CASE-P2-CONTEXT-ATOMICITY-001-R07 |
-| AC-009 | CASE-P2-DIAGNOSTIC-001-R07 |
-| AC-010 / FND-003 | CASE-P2-DECLARATION-BOUNDARY-001-R07 |
-| FND-009 | CASE-P2-SELECTED-RULE-001-R07 |
-| FND-010 | CASE-P2-SYSTEMS-WILDCARD-READ-001-R07 |
-| FND-011 | CASE-P2-RUNTIME-FACT-VALUE-001-R07 |
-| FND-012 | §2 valid-RED command/oracle contract |
-| FND-015 | CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R07 |
-| FND-008 | CASE-P2-JAVA8-ENGINE-CONTEXT-001-R07 |
+| AC-006 / FND-014 / FND-016 / FND-018 | CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R08 + CASE-P2-DYNAMIC-SOURCE-TO-GUARD-001-R08 |
+| AC-006 / FND-017 | CASE-P2-RUNTIME-BINDING-PROOF-001-R08 |
+| FND-009 | CASE-P2-SELECTED-RULE-001-R08 |
+| FND-010 | CASE-P2-SYSTEMS-WILDCARD-READ-001-R08 |
+| FND-011 | CASE-P2-RUNTIME-FACT-VALUE-001-R08 |
+| FND-012 | §2 / §11 valid RED contract |
+| FND-015 | CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R08 |
+| FND-008 | CASE-P2-JAVA8-ENGINE-CONTEXT-001-R08 |
 
 ## 13. Review and phase gate
 
-`TESTDESIGN-P2-R07` cannot pass before exact `DESIGN-P2-R06` passes and RC9 machine lifecycle binds the current revisions.
-
-After Design closure, exact R07 requires independent Test Design reviewers including RequirementReviewAgent, DesignReviewAgent, TDDReviewAgent and TestEvidenceReviewAgent under the current RC9 contract.
-
-Implementation Plan / TDD / Development remain BLOCKED while any effective P0/P1 is open.
+`TESTDESIGN-P2-R08` cannot pass before exact `DESIGN-P2-R07` passes and RC9 machine lifecycle binds current revisions。Exact Test Design Review still requires current-contract independent Requirement/Design/TDD/TestEvidence reviewers。Implementation Plan / TDD / Development remain BLOCKED while any effective P0/P1 is open。
