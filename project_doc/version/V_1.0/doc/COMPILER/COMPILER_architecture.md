@@ -1,47 +1,93 @@
 # COMPILER P2 架构增量
 
-> Revision：`DESIGN-P2-R07`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> Revision：`DESIGN-P2-R08`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
 ## 1. Dependency direction
 
 ```text
-dec-core-context        <- neutral immutable facts, Guard, RuntimeBindingPlan/Handle contracts
+dec-core-context
+  <- neutral immutable facts
+  <- exact Guard/capability contracts
+  <- RuntimeBindingPlan/Requirement contracts
        ^
        |
-dec-core-compiler       <- access IR, production DynamicBindingClassifier, plan publication
+dec-core-compiler
+  <- resolved access IR
+  <- production DynamicBindingClassifier
+  <- plan/rule publication
        ^
        |
-frontends / starter / execution consumers
+framework execution runtime
+  <- RuntimeResolutionContext ownership
+  <- actual object resolution
+  <- one-shot ResolvedProtectedAccess issuance
+  <- ProtectedAccessGateway verify+execute
 ```
 
-禁止 context -> compiler、compiler -> concrete parser、split package、global current Context。
+禁止 context -> compiler、compiler -> concrete parser、split package、global mutable current Context。
 
-## 2. Compile-time classification authority
+## 2. Compile-time authority
 
-`DynamicBindingClassifier` 是 production compiler logic。它在 exact target/path/static authorization 完成后消费 resolved access-consumer IR。R07 当前只冻结：
+Production classifier remains deterministic：
 
 - `DIRECT_EXACT -> STATIC_BOUND`；
 - current grammar `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND`；
-- 其它未冻结 dynamic IR -> compile ERROR `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`。
+- any other unresolved/unsupported dynamic selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。
 
-Test stub 只可用于隔离下游 unit，不能证明 production classifier correctness。
+真实 `systems.xml / order.ordered` fixture 是 production classifier acceptance source；stub 不能作为 classifier correctness Evidence。
 
-## 3. Runtime binding authority
+## 3. Runtime resolution ownership
 
-Compiler 发布 immutable `RuntimeBindingPlan(COLLECTION_ELEMENT_MEMBERSHIP)` 并把 plan key 绑定到 exact selected rule / `RuntimeAccessRequirement(EXACT_RUNTIME_BINDING)`。
+`RuntimeResolutionContext` belongs to the framework execution pipeline, not business code。It is scoped to one current EngineContext、resolved access-consumer IR、execution frame/root owner and optional collection cursor。It exposes no raw domain object API and cannot be reused across Context/frame/cursor boundaries。
 
-Framework-owned resolver 在真实 collection element 被解析时签发 opaque `RuntimeBindingHandle`。Handle 无 public mint API；resolver/verifier 内部可保存 object/collection-owner identity 与 provenance，但 Guard API 不暴露 raw POJO。
+Compiler-published `RuntimeBindingPlan(COLLECTION_ELEMENT_MEMBERSHIP)` describes the exact runtime membership boundary。Framework runtime resolves the actual element under that plan。
 
-Handle 仅在 current EngineContext + exact selected rule + exact plan + actual membership 全部匹配时有效。来自另一 collection/OrderInfo/context/plan/rule 的 handle 即使静态 request tuple 完全相同也 DENY。
+## 4. Operation-bound capability
 
-## 4. Publication closure
+The runtime resolver does not hand a detached authorization proof to a caller that can later choose another target。It creates one one-shot `ResolvedProtectedAccess` capability whose hidden framework state binds：
 
-System、RuleView、exact ModelPath rule、`DynamicBindingClassification`、`RuntimeBindingPlan`、`RuntimeAccessRequirement`、Diagnostic、digest、PolicyIndex 属于同一 immutable `CompiledModelSet` closure。Plan key/model-shape digest 必须进入 semantic digest。
+- actual target identity；
+- collection owner/membership provenance；
+- current frame/cursor；
+- current EngineContext；
+- exact selected rule and plan；
+- exact protected operation intent。
 
-## 5. Protected operation integration
+Business code has no capability mint API and no raw target getter。
 
-固定顺序：framework resolver 解析实际对象并签发 handle -> Guard exact lookup/verification -> 只有 ALLOW 执行 protected operation。Business caller 不得提交 `withinBoundary=true`、raw object、replacement rule/requirement/plan 或 caller-minted proof。
+## 5. ProtectedAccessGateway is the supported execution boundary
 
-## 6. Compatibility / concurrency
+For `RUNTIME_GUARD_REQUIRED`：
 
-现有 final EngineContext/P1 API 保持兼容。R04 bounded evaluator executor 仅保留给未来 Requirement-authorized predicate extension；当前 binding verification 同步、纯验证、fail-closed。Legacy Config/RuleView compatibility 到 P7 仍只读。
+```text
+framework resolves actual target A
+ -> issues ResolvedProtectedAccess A
+ -> ProtectedAccessGateway.execute(A)
+      -> exact policy lookup once
+      -> Guard verifies the same capability/proof
+      -> revalidates frame/cursor/membership
+      -> executes the target+operation internally bound to A
+      -> consumes A
+```
+
+Architecture forbids：
+
+```text
+Guard ALLOW for proof A
+ -> caller chooses arbitrary object B
+ -> protected operation on B
+```
+
+There is no supported `execute(capability, target)` / `execute(handle, rawObject)` / callback API that can select a second protected object。If a low-level invariant seam observes executor target identity != capability target identity, it DENY before side effects。
+
+## 6. TOCTOU / concurrency
+
+Resolve-to-execute membership/frame changes invalidate the capability。Gateway revalidates immediately before operation under a context-local resolution registry/version/critical section equivalent。Capability consumption is atomic；concurrent replay yields at most one terminal consumer。No global mutable proof registry。
+
+## 7. Publication closure
+
+System、RuleView、exact rules、classifier result、RuntimeBindingPlan、RuntimeAccessRequirement、Diagnostic、digest、PolicyIndex remain in one immutable `CompiledModelSet` closure。Runtime capability state is execution-time context-local state and never mutates compiled facts。
+
+## 8. Compatibility
+
+Existing final EngineContext/P1 APIs remain compatible and additive。Current AC-006 binding verification is framework runtime logic；future business predicate evaluator remains out of scope without a new Requirement。Legacy Config/RuleView compatibility remains read-only until P7。
