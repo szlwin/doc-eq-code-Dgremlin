@@ -1,80 +1,57 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R10`。Base：`DESIGN-P2-R09`，输入 Business Model candidate：`BM-R12`。
-> 状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。本 Revision 专门收敛 FND-P2-REV-004 的 repository-valid implementation ownership；不新增 FND-020，不改变 BM-R12 业务语义。
+> Revision：`DESIGN-P2-R11`。Base：`DESIGN-P2-R10`，输入 Business Model candidate：`BM-R12`。
+> 状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。本 Revision 只收敛 FND-P2-REV-004 剩余的两个 implementation-readiness contract：framework-owned context/intent 的不可伪造 issuance authority，以及 Compiler -> CompiledModelSet -> EngineContext -> Guard 的唯一 immutable PolicyIndex authority；不新增 FND-020，不改变 BM-R12 业务语义。
 > 当前 canonical Business Model 仍是历史 BM-R07；正式 RC9 reopen/publish、current-revision risk Evidence 与 exact independent Review 完成前，本 Design 不得 PASSED。
 
 ## 1. 设计目标与不可绕过约束
 
 1. System 是显式一等身份；RuleView 唯一身份为 `(SystemKey,name)`。
 2. READ/WRITE/EXECUTE 独立授权，未声明即拒绝；共享 WRITE 默认拒绝。
-3. 所有 protected READ/WRITE/EXECUTE 必须通过同一个 protected-access runtime；`STATIC_ALLOW` 只能是 Guard exact lookup 后的内部 fast path。
-4. Runtime ModelPath lookup exact-only；wildcard 只允许 compile-time finite expansion。
+3. 所有 protected READ/WRITE/EXECUTE 必须通过同一个 starter-owned protected runtime；`STATIC_ALLOW` 只能是 Guard exact lookup 后的内部 fast path。
+4. Runtime ModelPath lookup exact-only；wildcard 只允许 compile-time finite canonical expansion。
 5. Java 生产 API 保持 release 8；`EngineContext` 现有 final class、单参 constructor、`compiledModelSet()/modelSet()/projection()` 保持兼容。
 6. `RuntimeBindingPlan` 只属于 `RUNTIME_GUARD_REQUIRED`；STATIC_ALLOW 不得伪造或要求 runtime plan。
 7. 被 Guard 验证的 actual target 与最终 operation target 必须是同一个 framework binding；capability/proof A 不得授权 B。
-8. DENY 必须先于模型访问、状态推进和外部副作用。
-9. P2 只交付访问控制执行边界所需 runtime plumbing，不实现 P3～P7 的 Information/Rule/Change/Action/QueryPlan 完整执行语义。
+8. **`ProtectedAccessResolutionContext` 与 `ProtectedOperationIntent` 的公开 getter 不是 authority。生产 runtime 只接受 starter context-local registry 已签发并按对象身份登记的 exact issued pair。**
+9. **唯一 policy authority 是 compiler-published、CompiledModelSet-owned 的 immutable `ModelAccessPolicyIndex`。Guard 不得扫描 definitions、复制第二个 Map、或从 resolver/gateway/verifier/adapter 重新选择 policy。**
+10. DENY 必须先于 target resolution、capability issuance、policy lookup、模型访问、状态推进和外部副作用中与该失败点对应的任何后续动作。
+11. P2 只交付访问控制执行边界所需 runtime plumbing，不实现 P3～P7 的 Information/Rule/Change/Action/QueryPlan 完整执行语义。
 
-## 2. R10 repository-valid Maven ownership
-
-真实 reactor 已存在 `dec-core-context`、`dec-core-compiler`、`dec-core-frontends`、`dec-core-starter`、`dec-demo` 等模块；R10 **不新增 `dec-core-runtime` 或任何新 Maven module**。
-
-冻结依赖/ownership：
+## 2. Repository-valid Maven ownership（R10 保持）
 
 ```text
 dec-core-context
-  package: dec.core.context.model.access.*
-  owns: neutral immutable contracts/facts only
-        CompiledModelAccessRule / RuntimeBindingPlan / RuntimeAccessRequirement
-        ProtectedAccessResolutionContext / ProtectedOperationIntent
-        ResolvedProtectedAccess / ModelAccessDecision / reasons
-        public neutral interfaces required across modules
+  dec.core.context.model.access.*
+  -> neutral immutable contracts/facts
+  -> ModelAccessPolicyIndex + issued-input read interfaces
 
        ^ existing dependency
        |
 dec-core-compiler
-  package: dec.core.compiler.access.*
-  owns: resolved access-consumer IR
-        production DynamicBindingClassifier
-        exact access-rule assembly
-        RuntimeBindingPlan/Requirement publication
+  dec.core.compiler.access.*
+  -> resolved access-consumer IR
+  -> production DynamicBindingClassifier
+  -> exact CompiledModelAccessRule / RuntimeBindingPlan publication
+  -> ModelAccessPolicyIndex assembly + semantic-digest contribution
 
        ^ existing composition dependency
        |
 dec-core-starter
-  package: dec.core.starter.access.*
-  owns: concrete protected runtime composition and implementations
-        DefaultProtectedAccessResolver
-        DefaultProtectedAccessGateway
-        DefaultModelAccessGuard
-        DefaultRuntimeBindingVerifier
-        ContextLocalProtectedAccessRegistry
-        ProtectedAccessRuntime
-        ProtectedAccessRuntimeFactory
+  dec.core.starter.access.*
+  -> concrete resolver / gateway / guard / verifier / registry / runtime
+  -> package-private issued context/intent implementations
+  dec.core.starter.access.spi.*
+  -> trusted composition-time execution adapters
 
-  package: dec.core.starter.access.spi.*
-  owns: bootstrap-time trusted framework adapter SPI
-        ProtectedTargetResolutionPort
-        ProtectedOperationExecutionPort
-        ProtectedAccessAdapterRegistry
-
-       ^ application/composition consumer
+       ^ application/composition dependency
 dec-demo and future P3-P7 execution modules
-  use starter runtime / provide trusted adapters at composition time
-  MUST NOT perform independent PolicyIndex lookup or protected-operation bypass
+  -> consume starter runtime / provide trusted adapters
 ```
 
-禁止：context -> compiler/starter、compiler -> starter、starter -> `dec-core-model` 仅为 P2 access control 而新增的反向/业务耦合、split package、global mutable current Context。
+R11 不新增 `dec-core-runtime` 或其他 Maven module。禁止 context -> compiler/starter、compiler -> starter、starter 为 P2 access control 新增对 `dec-core-model` 的业务耦合、split package、global mutable current Context。
 
-### 2.1 为什么 concrete runtime 归属 `dec-core-starter`
-
-- `dec-core-starter` 已是当前真实 production composition root：它依赖 compiler/frontends 并拥有 `CompilerBootstrap` / `CompilerStarter`。
-- `dec-demo` 已显式依赖 `dec-core-starter`，因此上层应用已有稳定的 composition 方向。
-- 将 concrete Guard/Gateway/registry 放 context 会污染 neutral context；放 compiler 会把 execution runtime 反向塞入 compile-time module；新增 runtime module 会无必要扩大 P2 reactor scope。
-- Starter concrete runtime 只依赖 context/compiler contracts，不直接理解 OrderInfo/POJO、Rule/Change/Action/QueryPlan 业务语义。
-
-## 3. Production classifier / compiled rule invariant
+## 3. Compile-time access rule invariant
 
 ```java
 public enum AccessCompilationStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
@@ -84,8 +61,6 @@ public enum DynamicBindingClassification { STATIC_BOUND, RUNTIME_OBJECT_BOUND }
 - `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`；真实 fixture：`systems.xml / order.ordered / status = 1`。
 - `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`；真实 fixture：`every(orderDetailList,status = 1)` element `status` READ。
 - 其它未冻结 runtime index/key/filter/find/selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。
-
-Compiled state：
 
 ```text
 STATIC_ALLOW
@@ -97,11 +72,79 @@ RUNTIME_GUARD_REQUIRED
  -> exactly one compiler-published RuntimeBindingPlan present
 ```
 
-Classifier correctness 不得由 Test stub 自证。
+## 4. 唯一 immutable `ModelAccessPolicyIndex` authority
 
-## 4. Context-owned neutral contracts
+### 4.1 Context-owned neutral API
 
-`dec-core-context` 只冻结跨模块稳定 contract；不包含 starter concrete implementation。
+`dec-core-context / dec.core.context.model.access` 增加唯一 runtime access-policy index：
+
+```java
+public final class ModelAccessPolicyIndex {
+    public Optional<CompiledModelAccessRule> find(ModelAccessRuleKey key);
+    public Set<ModelAccessRuleKey> keys();
+}
+```
+
+Normative：
+
+- immutable snapshot；`find` 只接受 exact `ModelAccessRuleKey`，禁止 wildcard/prefix/suffix/parent/child/bare-name fallback；
+- index key 必须与 `CompiledModelAccessRule.key()` 完全一致；duplicate/mismatch 在 publish 前失败；
+- runtime index 中不得保存 wildcard key；READ `*` 已在 compiler 阶段 finite expansion；
+- `keys()` deterministic/read-only，仅用于 diagnostics/tests，不允许 caller 重建 runtime authority。
+
+### 4.2 `CompiledModelSet` publication contract
+
+`CompiledModelSet` 必须把 policy index 作为同一个 immutable publication closure 的一部分：
+
+```java
+public final class CompiledModelSet {
+    // existing constructor/API remain compatible via additive implementation strategy
+    public ModelAccessPolicyIndex modelAccessPolicyIndex();
+}
+```
+
+生产构造/assembly 必须使 `sourceManifest + definitions + typedRegistries + deferred + modelAccessPolicyIndex + diagnostics + versions + digestPair` 一次冻结。Compiler 是 index 的唯一生产发布者。
+
+Semantic digest 必须覆盖 policy index 的 canonical ordered entries，至少包括 exact rule key、status、runtime requirement identity、runtime binding plan identity 与影响授权语义的稳定 rule fields。要求：
+
+- 等价 source/order -> same index canonical form + same semantic digest；
+- policy rule/status/plan/requirement 的语义变化 -> semantic digest 必须变化；
+- runtime capability/registry/one-shot state 不进入 semantic digest。
+
+### 4.3 `EngineContext` read authority
+
+`EngineContext` 保持 existing constructor，不复制 policy：
+
+```java
+public final class EngineContext {
+    public ModelAccessPolicyIndex modelAccessPolicyIndex();
+}
+```
+
+该 accessor 必须直接返回 `compiledModelSet().modelAccessPolicyIndex()` 的同一个 immutable authority（允许等价实现，但不得创建第二套可漂移 registry）。
+
+### 4.4 Guard 的唯一 lookup
+
+`DefaultModelAccessGuard` 只允许：
+
+```text
+engineContext.modelAccessPolicyIndex().find(access.requestedRuleKey())
+```
+
+恰好一次 exact lookup。禁止：
+
+- 扫描 `definitions()` 推断权限；
+- 在 starter 创建/缓存第二个 `Map<ModelAccessRuleKey,...>` 作为 authority；
+- resolver/gateway/verifier/adapter 做 policy lookup；
+- 从 `TypedDefinitionRegistries`、business caller 或 capability getter 重建 policy。
+
+`POLICY_NOT_FOUND` 只能由上述唯一 index 的 exact miss 产生。
+
+## 5. Framework-issued input authority
+
+### 5.1 Public read contracts are not mint authority
+
+为了保持 context-neutral cross-module contract，以下类型仍可为 public read interfaces：
 
 ```java
 public interface ProtectedAccessResolutionContext {
@@ -112,73 +155,66 @@ public interface ProtectedAccessResolutionContext {
     Optional<RuntimeCollectionCursorId> collectionCursorId();
 }
 
-public final class ResolvedProtectedAccess {
-    public String capabilityId();
-    public String engineContextId();
-    public ModelAccessRuleKey requestedRuleKey();
-    public AccessOperation operation();
-    public RuntimeExecutionFrameId executionFrameId();
-    // no public/protected constructor, mint API or raw-target getter
-}
-
-public interface ModelAccessGuard {
-    ModelAccessDecision authorize(ResolvedProtectedAccess access);
-}
-
-public interface RuntimeBindingVerifier {
-    RuntimeBindingVerification verify(
-        ResolvedProtectedAccess access,
-        CompiledModelAccessRule selectedRule,
-        RuntimeBindingPlan plan,
-        String engineContextId);
+public interface ProtectedOperationIntent {
+    ModelAccessRuleKey requestedRuleKey();
+    AccessOperation operation();
 }
 ```
 
-`EngineContext` 继续只持 compiled immutable context。R10 **不要求 EngineContext 依赖 starter concrete types**；protected runtime 由 starter composition 针对某个 immutable EngineContext 创建并注入到上层 execution consumer。
+这些 getter 只用于 diagnostics/read-only inspection。**任何 caller 自行实现接口并填写 getter 值都不获得 authority。** Resolver/Guard 不得把 getter 值本身当作“framework-owned”的证明。
 
-## 5. Starter concrete package ownership
+### 5.2 Production implementation ownership
 
-### 5.1 `dec.core.starter.access.DefaultProtectedAccessResolver`
+生产实现只允许 starter package-private classes：
 
-职责：
-- 接受 framework-owned `ProtectedAccessResolutionContext + ProtectedOperationIntent`；
-- 通过 bootstrap-time adapter registry 解析 actual target；
-- 在 context-local registry 内原子绑定 target identity + operation + owner/frame/cursor/provenance；
-- 产生 one-shot generic `ResolvedProtectedAccess`；
-- 不查询 PolicyIndex、不决定 STATIC/RUNTIME、不接受 RuntimeBindingPlan 作为 universal input。
+```text
+dec.core.starter.access.IssuedProtectedAccessResolutionContext
+dec.core.starter.access.IssuedProtectedOperationIntent
+```
 
-### 5.2 `dec.core.starter.access.DefaultModelAccessGuard`
+无 public/protected constructor/factory；不从 `ProtectedAccessRuntime` 暴露 public mint API。
 
-职责：
-- 对 capability `requestedRuleKey` 在 current EngineContext PolicyIndex 做 **唯一一次 exact lookup**；
-- STATIC_ALLOW：确认 plan/requirement empty，verifier=0/evaluator=0，返回 Guard-internal fast-path ALLOW；
-- RUNTIME_GUARD_REQUIRED：require exact plan/requirement，调用 `DefaultRuntimeBindingVerifier`；
-- policy missing、Context mismatch、invalid/stale capability、invalid compiled state 全部 fail closed。
+### 5.3 `ContextLocalProtectedAccessRegistry` issuance record
 
-### 5.3 `dec.core.starter.access.DefaultRuntimeBindingVerifier`
+同一个 context-local registry 除 capability state 外，还保存 package-private `IssuedInvocationRecord`。每条 record 绑定：
 
-职责：只在 selected runtime-required rule 下验证 hidden membership/provenance 与 current Context/rule/plan/frame/cursor；STATIC_ALLOW 调用数必须为 0。
+```text
+exact context object identity
+exact intent object identity
+EngineContext identity + engineContextId
+AccessConsumerIrKey
+RuntimeExecutionFrameId
+RuntimeResolutionOwnerId
+optional RuntimeCollectionCursorId
+exact requested ModelAccessRuleKey
+AccessOperation
+hidden operation payload/action identity
+trusted adapter binding / consumer kind
+issuance lifecycle state
+```
 
-### 5.4 `dec.core.starter.access.DefaultProtectedAccessGateway`
+Authority 来自 registry record，不来自接口 getter。生产必须按 **reference identity + exact pair relationship** 验证。
 
-职责：
-1. atomically reserve capability；
-2. 调用 Guard 恰好一次，自己不做第二次 PolicyIndex lookup；
-3. ALLOW 后调用 context-local registry 中与 capability 同时绑定的 trusted operation adapter；
-4. executor actual target 必须等于 capability hidden target；
-5. terminal ALLOW execution 或 DENY 后 consume capability；
-6. 禁止 `execute(capability,target)`、`execute(handle,rawObject)`、caller callback 选第二 target。
+### 5.4 Trusted issuance path
 
-### 5.5 `ContextLocalProtectedAccessRegistry`
+Issued pair 只能由 starter 内部 issuance path 根据 composition-time trusted framework adapter/execution state 创建：
 
-- starter-owned、per-runtime/per-EngineContext；无 global current/singleton。
-- 保存 opaque capability -> hidden target/adapter/operation/frame/provenance/one-shot state。
-- 不进入 CompiledModelSet，不改变 semantic digest。
-- reserve/consume 与并发 replay 判定原子化；Context replacement/frame expiry/member change使 capability fail closed。
+```text
+trusted execution adapter registered/frozen at runtime composition
+ -> starter internal issuance path
+ -> ContextLocalProtectedAccessRegistry.issueInvocation(...)
+ -> exact IssuedProtectedAccessResolutionContext A
+ -> exact IssuedProtectedOperationIntent A
+ -> registry stores authoritative pair A
+```
 
-### 5.6 `ProtectedAccessRuntime` / `ProtectedAccessRuntimeFactory`
+`issueInvocation(...)` 为 starter-internal/package-private implementation detail；business caller、Rule source、change/custom action code、future executor business logic均无 public mint/factory。未来 execution adapter 只能通过 composition-time trusted integration 得到/转交 issued pair，不能每次调用提交任意 raw facts 让 starter“签名”。
 
-这是上层 consumer 唯一需要看到的 starter facade/composition surface。概念 contract：
+Host/application composition 对 adapter registration 是 framework trust boundary；per-business-operation caller 不是该 trust boundary。
+
+## 6. `ProtectedAccessRuntime.execute` authenticity gate
+
+Public facade 继续保持：
 
 ```java
 public final class ProtectedAccessRuntime {
@@ -186,19 +222,89 @@ public final class ProtectedAccessRuntime {
         ProtectedAccessResolutionContext context,
         ProtectedOperationIntent intent);
 }
+```
 
-public final class ProtectedAccessRuntimeFactory {
-    public static ProtectedAccessRuntime create(
-        EngineContext engineContext,
-        ProtectedAccessAdapterRegistry trustedAdapters);
+但执行顺序现在冻结为：
+
+```text
+STEP 0  registry.requireIssuedPair(context,intent)
+        - exact object identity known
+        - exact context+intent pair known
+        - EngineContext/frame/owner/cursor/consumer/rule/op facts match authoritative record
+        - issuance still active
+
+        unknown caller implementation
+          -> DENY PROTECTED_ACCESS_INPUT_UNTRUSTED
+
+        issued context A + issued intent B / pair mismatch
+          -> DENY PROTECTED_ACCESS_INPUT_PAIR_MISMATCH
+
+        both failures happen BEFORE:
+          target resolution = 0
+          capability issuance = 0
+          PolicyIndex lookup = 0
+          protected operation = 0
+          external effects = 0
+
+STEP 1  resolver uses authoritative IssuedInvocationRecord, not caller getter values,
+        to resolve target and create one-shot ResolvedProtectedAccess
+STEP 2  gateway -> Guard
+STEP 3  Guard exact ModelAccessPolicyIndex lookup once
+STEP 4  static fast path OR runtime proof verification
+STEP 5  same capability-bound target operation
+```
+
+Operation substitution READ -> WRITE/EXECUTE cannot be achieved by supplying a new `ProtectedOperationIntent` implementation；it fails STEP 0。A legitimately issued intent's operation is immutable and registry-bound。
+
+## 7. `ResolvedProtectedAccess` authority
+
+```java
+public final class ResolvedProtectedAccess {
+    public String capabilityId();
+    public String engineContextId();
+    public ModelAccessRuleKey requestedRuleKey();
+    public AccessOperation operation();
+    public RuntimeExecutionFrameId executionFrameId();
+    // no public/protected constructor, mint API, raw target getter or selected-policy setter
 }
 ```
 
-Factory 创建 resolver/registry/guard/verifier/gateway 的同一 immutable composition，不使用全局 current Context。
+Capability is issued only after STEP 0 succeeds。Its public getters are views；hidden registry binding remains authoritative for actual target, operation payload/action identity, frame/owner/cursor/provenance and one-shot lifecycle。
 
-## 6. Trusted adapter SPI 与 actual operation ownership
+## 8. Starter concrete responsibilities
 
-P2 需要冻结 access-control execution port，但不能提前实现 P3～P7 业务执行器。因此 adapter SPI 归属 `dec-core-starter`：
+### 8.1 `DefaultProtectedAccessResolver`
+
+- first consumes validated `IssuedInvocationRecord` only；
+- target resolution occurs after input-authenticity gate；
+- binds actual target + exact operation + adapter + frame/owner/cursor/provenance；
+- creates capability；
+- PolicyIndex lookup = 0。
+
+### 8.2 `DefaultModelAccessGuard`
+
+- owns current immutable EngineContext；
+- calls **only** `engineContext.modelAccessPolicyIndex().find(requestedRuleKey)` exactly once；
+- STATIC_ALLOW: plan/requirement empty, verifier=0/evaluator=0；
+- RUNTIME_GUARD_REQUIRED: require exact compiler-published plan/requirement and call `DefaultRuntimeBindingVerifier`；
+- no copied/secondary policy map。
+
+### 8.3 `DefaultProtectedAccessGateway`
+
+- atomically reserves capability；
+- Guard exactly once；Gateway policy lookup=0；
+- ALLOW 后只能执行 capability issuance 时登记的 same target + execution port + operation；
+- consume on terminal ALLOW/DENY；no second target/callback。
+
+### 8.4 `DefaultRuntimeBindingVerifier`
+
+- runtime-required branch only；
+- verifies hidden membership/provenance against selected exact rule/plan/current Context/frame/cursor；
+- policy lookup=0；STATIC_ALLOW calls=0。
+
+## 9. Trusted adapter SPI / consumer integration
+
+R10 ownership保持：
 
 ```text
 dec.core.starter.access.spi.ProtectedTargetResolutionPort
@@ -206,105 +312,88 @@ dec.core.starter.access.spi.ProtectedOperationExecutionPort
 dec.core.starter.access.spi.ProtectedAccessAdapterRegistry
 ```
 
-规则：
-- adapters **只在 bootstrap/runtime-factory composition 时注册并冻结**；不是每次 execute 的 caller callback。
-- resolver 根据 `accessConsumerIrKey/consumerKind` 选择可信 target-resolution port，并把选择结果与 capability 一起登记。
-- gateway 只能调用 capability issuance 时登记的 execution port；caller 无法在 Guard ALLOW 后换 adapter/target。
-- 未配置支持某 consumer kind 的 production adapter -> `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE` DENY；不得 fallback direct operation。
-- `dec-core-starter` 不新增对 `dec-core-model` 的 P2 直接依赖；未来 P3～P7 module 若实现 Rule/change/action/query execution adapter，应位于 starter 之上并依赖 starter SPI，而不是让 starter 依赖业务 executor。
+新增明确 invariant：composition-time adapter registration 是 trusted framework boundary；per-call business code cannot register adapters or ask runtime to issue context/intent from caller-selected facts。
 
-## 7. Production consumer integration
-
-冻结唯一接入规则：
+Production consumer chain：
 
 ```text
-Rule / change / custom action / protected query / future execution consumer
- -> obtain one context-bound ProtectedAccessRuntime from application composition
- -> construct framework-owned resolution context + operation intent through its execution adapter
- -> ProtectedAccessRuntime.execute(context,intent)
- -> starter resolver -> capability -> gateway -> guard -> same-bound adapter operation
+framework execution adapter/current execution state
+ -> starter-issued exact context+intent pair
+ -> ProtectedAccessRuntime.execute(pair)
+ -> authenticity gate
+ -> resolver -> capability
+ -> gateway -> Guard -> one immutable policy index lookup
+ -> static/runtime branch
+ -> same-bound operation
 ```
 
-禁止 consumer：
-- 自己读取 `CompiledModelAccessRule.status()` 后直接操作；
-- 自己查询 PolicyIndex；
-- 自己 new/mint capability；
-- 在 Guard 之后提交第二 raw target/callback；
-- 建立第二套权限 registry/runtime authority。
+禁止 consumer：自己 new/implement context/intent 作为 authority、改 consumerIrKey/frame/owner/cursor/rule/op、自己查询 policy、自己 mint capability、Guard 后换 target/adapter、建立第二权限 registry。
 
-当前仓库尚未实现完整 Rule/change/custom action/query execution engine 时，P2 只提供上述 runtime boundary + fail-closed adapter SPI；后续 phase 的真实 consumer 必须接入该边界，不能重新设计权限通道。
-
-## 8. P2 / P3～P7 scope boundary
-
-P2 **IN SCOPE**：
-- exact access-policy facts/classification/plan；
-- context-neutral contracts；
-- starter concrete resolver/guard/verifier/gateway/registry/factory；
-- one-shot target binding、TOCTOU/replay fail closed；
-- trusted adapter SPI 与 no-bypass integration rule。
-
-P2 **OUT OF SCOPE**：
-- Information/Rule/change/action/query 的完整业务 evaluator/executor；
-- datasource transaction orchestration；
-- QueryPlan；
-- source-authored per-object permission predicate DSL；
-- 为 P3～P7 提前实现业务 side effects。
-
-## 9. Unified STATIC/RUNTIME path
+## 10. Unified STATIC/RUNTIME behavior
 
 ```text
-all protected access
- -> starter ProtectedAccessRuntime
- -> DefaultProtectedAccessResolver binds actual target + operation
- -> generic ResolvedProtectedAccess
- -> DefaultProtectedAccessGateway
- -> DefaultModelAccessGuard exact lookup once
-      STATIC_ALLOW
-        -> no runtime plan
+issued exact pair
+ -> authenticity gate PASS
+ -> resolver capability
+ -> gateway
+ -> Guard ModelAccessPolicyIndex exact lookup = 1
+      STATIC_ALLOW(no plan)
         -> verifier 0 / evaluator 0
-        -> internal ALLOW
-      RUNTIME_GUARD_REQUIRED
-        -> exact plan+requirement
-        -> DefaultRuntimeBindingVerifier
- -> gateway executes the same capability-bound adapter+target once
- -> consume capability
+      RUNTIME_GUARD_REQUIRED(plan+requirement)
+        -> verifier 1
+ -> same target operation once on ALLOW
 ```
 
-任何 caller-side STATIC direct path为 `MODEL_ACCESS_GUARD_BYPASS`。任何 proof/capability A + target B 为 `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`。
+`STATIC_ALLOW` caller-side direct path仍是 `MODEL_ACCESS_GUARD_BYPASS`。Capability/proof A + target B仍是 `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`。
 
-## 10. TOCTOU / concurrency
+## 11. TOCTOU / concurrency
 
-- capability reserve/consume atomic；concurrent execute 最多一个 terminal successful consumer。
-- runtime path operation 前 revalidate Context/frame/cursor/rule/plan/membership；static path revalidate Context/frame/capability binding。
-- stale/replay/unknown capability/adapter mismatch均 operation=0/effects=0。
-- registry context-local；禁止 global mutable proof registry。
+- issued invocation record 与 capability reserve/consume均 context-local；不得 global mutable。
+- issued pair replay/expired frame -> fail closed；capability concurrent execute最多一个 terminal success。
+- runtime path operation 前 revalidate Context/frame/cursor/rule/plan/membership；static path revalidate Context/frame/target binding。
+- policy index immutable，运行期不存在“先查 index A、后切到 copied index B”的 TOCTOU。
 
-## 11. ModelPath / wildcard / selected-rule authority
+## 12. ModelPath / wildcard / digest
 
-Runtime ModelPath exact-only。READ `path="*"` compile-time finite canonical expansion；runtime wildcard key=0；wildcard WRITE/EXECUTE、empty expansion、parent/fuzzy fallback compile ERROR。
-Guard 对 requested rule key 只做一次 exact lookup；Gateway/resolver/verifier/adapter不得重新选 policy。
+Runtime `ModelAccessPolicyIndex` 只含 exact keys。READ `path="*"` compile-time finite expansion；wildcard WRITE/EXECUTE、empty expansion、parent/fuzzy fallback compile ERROR。
 
-## 12. EngineContext / Java 8 compatibility
+Semantic digest必须覆盖最终 exact policy index；等价 source ordering deterministic，任何授权语义变化改变 semantic digest。
 
-- `EngineContext` 继续 `public final`；现有单参 constructor/core accessors保持。
-- Starter runtime composition 使用该 immutable EngineContext；不引入 context -> starter dependency。
-- 新 API 使用 Java 8 类型；禁止 record、`Map.of/copyOf` 等 Java 9+ API。
+## 13. EngineContext / Java 8 compatibility
 
-## 13. Stable reasons
+- `EngineContext` 保持 `public final`、现有单参 constructor/core accessors；只 additive `modelAccessPolicyIndex()`。
+- Context 不依赖 starter concrete types。
+- Public read interfaces + starter package-private issued implementations兼容 Java 8；禁止 sealed class/record/Java9 collection factories。
+
+## 14. Stable reasons
 
 Compile 至少：`MIX-SYSTEM-DUPLICATE`、`MIX-RULEVIEW-SYSTEM-REQUIRED`、`MIX-MODEL-PATH-INVALID`、wildcard unsupported/empty、`MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`、`MIX-MODEL-ACCESS-DENIED`。
 
-Runtime 至少：`POLICY_NOT_FOUND`、`CONTEXT_IDENTITY_MISMATCH`、`MODEL_ACCESS_GUARD_BYPASS`、`PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`、`RUNTIME_BINDING_REQUIRED`、`RUNTIME_BINDING_PROOF_INVALID`、`RUNTIME_BINDING_STALE`、`RUNTIME_BINDING_PLAN_MISMATCH`、`RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`、`RUNTIME_BINDING_CAPABILITY_CONSUMED`、`GUARD_UNAVAILABLE`、`STATIC_ALLOW`、`RUNTIME_ALLOW`、`RUNTIME_DENY`。
+Runtime 至少：
 
-## 14. Repository-valid test ownership
+- `PROTECTED_ACCESS_INPUT_UNTRUSTED`
+- `PROTECTED_ACCESS_INPUT_PAIR_MISMATCH`
+- `POLICY_NOT_FOUND`
+- `CONTEXT_IDENTITY_MISMATCH`
+- `MODEL_ACCESS_GUARD_BYPASS`
+- `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`
+- `RUNTIME_BINDING_REQUIRED`
+- `RUNTIME_BINDING_PROOF_INVALID`
+- `RUNTIME_BINDING_STALE`
+- `RUNTIME_BINDING_PLAN_MISMATCH`
+- `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`
+- `RUNTIME_BINDING_CAPABILITY_CONSUMED`
+- `GUARD_UNAVAILABLE`
+- `STATIC_ALLOW`
+- `RUNTIME_ALLOW`
+- `RUNTIME_DENY`
 
-- `dec-core-context`: neutral contract/API shape/immutability tests。
-- `dec-core-compiler`: classifier/rule/plan publication unit tests。
-- `dec-core-starter`: resolver/gateway/guard/verifier/registry/concurrency/no-bypass behavior tests。
-- `dec-demo`: existing real `systems.xml` source-to-operation integration tests because that resource and starter dependency already live there。
+## 15. P2 / P3-P7 scope boundary
 
-No Test Design case may use abstract `<target-module>` after R10；TESTDESIGN-P2-R11 freezes exact module/class/commands。
+P2 IN SCOPE：immutable exact policy index publication/read authority、trusted input issuance/authenticity gate、starter resolver/guard/verifier/gateway/registry/factory、one-shot target binding、TOCTOU/replay fail closed、adapter SPI/no-bypass rule。
 
-## 15. Review / lifecycle gate
+P2 OUT OF SCOPE：完整 Information/Rule/change/action/query evaluator/executor、QueryPlan、datasource transaction orchestration、source-authored per-object permission predicate DSL、P3-P7 business side effects。
 
-`DESIGN-P2-R10` **not PASSED**。FND-004 remains `PARTIAL_FIX_PROPOSED / OPEN` until exact Architecture + ApiContract + Develop + Impact + CrossModule + Concurrency Review confirms this ownership against the repository and RC9 machine lifecycle/risk Evidence is valid。FND-001/FND-019 candidate semantics remain substantively fixed but formally OPEN。Implementation Plan / TDD / Development remain BLOCKED。
+## 16. Review / lifecycle gate
+
+`DESIGN-P2-R11` **not PASSED**。FND-004 remains `PARTIAL_FIX_PROPOSED / OPEN` until exact Architecture + ApiContract + Develop + Impact + CrossModule + Concurrency Review confirms trusted issuance + single PolicyIndex authority and RC9 machine lifecycle/risk Evidence is valid。FND-001/FND-019 candidate semantics remain substantively fixed but formally OPEN。Implementation Plan / TDD / Development remain BLOCKED。

@@ -1,152 +1,228 @@
 # COMPILER P2 架构增量
 
-> Revision：`DESIGN-P2-R10`。Base：`DESIGN-P2-R09`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
-> 本 Revision 将 R09 抽象的 “framework execution runtime” 映射到真实 Maven reactor；不新增 runtime module，不新增 FND-020。
+> Revision：`DESIGN-P2-R11`。Base：`DESIGN-P2-R10`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> 本 Revision 保持 R10 的真实 Maven ownership，只补两个架构 authority：trusted issued invocation input 与 single immutable ModelAccessPolicyIndex。无新 FND-020。
 
 ## 1. Repository-valid dependency direction
 
 ```text
 dec-core-context
   dec.core.context.model.access.*
-  <- neutral compiled/access contracts only
+  <- neutral access contracts
+  <- immutable ModelAccessPolicyIndex
        ^
        | existing compiler dependency
 dec-core-compiler
   dec.core.compiler.access.*
   <- classifier / exact rule / runtime-plan publication
+  <- ModelAccessPolicyIndex assembly + digest contribution
        ^
        | existing starter composition dependency
 dec-core-starter
   dec.core.starter.access.*
-  <- concrete protected-access runtime
+  <- concrete protected runtime
+  <- issued input implementations + context-local issuance registry
   dec.core.starter.access.spi.*
-  <- trusted bootstrap-time execution adapters
+  <- trusted composition-time execution adapters
        ^
        | application/composition dependency
 dec-demo / future P3-P7 execution modules
 ```
 
-Root reactor remains unchanged；there is no P2 `dec-core-runtime` module。Context never depends on compiler/starter；compiler never depends on starter；starter must not add a P2-only dependency on `dec-core-model` to understand business POJOs。
+Root reactor unchanged；no P2 `dec-core-runtime`。Context never depends on compiler/starter；compiler never depends on starter；starter does not gain P2-only `dec-core-model` business coupling。
 
-## 2. Why `dec-core-starter` owns runtime enforcement
+## 2. Compile-time authority
 
-`dec-core-starter` already owns `CompilerBootstrap` / `CompilerStarter`, depends on compiler + frontends, and is explicitly consumed by `dec-demo`。It is therefore the existing repository composition boundary where concrete runtime infrastructure can be assembled without contaminating context/compiler or inventing a new module。
-
-This does **not** make starter the owner of P3-P7 business execution semantics。Starter owns only the access-control boundary and trusted adapter SPI。
-
-## 3. Compile-time authority stays in compiler
+Compiler remains sole producer of exact runtime access facts：
 
 - `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW(no plan)`；
 - `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED(plan+requirement)`；
 - unsupported dynamic form -> compile ERROR。
 
-Compiler publishes immutable facts into CompiledModelSet。No runtime registry/capability state lives in compiler or semantic digest。
+Compiler deterministically assembles one `ModelAccessPolicyIndex` from final exact `CompiledModelAccessRule`s and publishes it in the same `CompiledModelSet` closure。
 
-## 4. Neutral contract authority stays in context
-
-Context package owns stable facts/interfaces shared by compiler/starter：rules, plan, requirement, resolution context, operation intent, capability, decision/reasons, Guard/verifier contracts。
-
-`EngineContext` remains immutable data/context; starter concrete runtime is composed around an EngineContext rather than injected as a concrete starter type into context。This preserves no context->starter dependency and existing EngineContext API compatibility。
-
-## 5. Starter concrete runtime graph
+## 3. Single policy authority architecture
 
 ```text
-ProtectedAccessRuntimeFactory
-  + immutable EngineContext
-  + immutable ProtectedAccessAdapterRegistry
-      |
-      v
+compiler exact rules
+ -> ModelAccessPolicyIndex (immutable, exact-only)
+ -> CompiledModelSet.modelAccessPolicyIndex()
+ -> EngineContext.modelAccessPolicyIndex()
+ -> DefaultModelAccessGuard.find(exact key) exactly once
+```
+
+This is the only runtime authorization authority。
+
+Forbidden alternative authorities：
+
+- scan `CompiledModelSet.definitions()` for access rules；
+- rebuild rules from `TypedDefinitionRegistries`；
+- starter-side independent `Map<ModelAccessRuleKey,...>`；
+- resolver/gateway/verifier/adapter policy lookup；
+- caller-supplied rule/status/plan。
+
+The semantic digest covers canonical exact policy entries；runtime capability/issuance state does not。
+
+## 4. EngineContext preserves one immutable authority
+
+`EngineContext` remains immutable and context-owned。Its additive `modelAccessPolicyIndex()` exposes the same immutable policy object/authority already inside `CompiledModelSet`; it is not a derived cache。
+
+Therefore context replacement is also policy-authority replacement：a capability/input issued for C0 cannot be authorized against C1 even if individual rule keys happen to match。
+
+## 5. Public input interfaces are only read views
+
+`ProtectedAccessResolutionContext` and `ProtectedOperationIntent` stay in context to avoid starter reverse coupling, but interface implementation is not authority。
+
+Production objects are package-private starter implementations：
+
+```text
+IssuedProtectedAccessResolutionContext
+IssuedProtectedOperationIntent
+```
+
+Their exact object identities are registered in a `ContextLocalProtectedAccessRegistry.IssuedInvocationRecord`。
+
+## 6. Trusted issuance architecture
+
+```text
+application/framework composition
+ -> immutable trusted ProtectedAccessAdapterRegistry
+ -> current trusted framework execution adapter/state
+ -> starter internal issueInvocation(...)
+ -> exact issued context A + exact issued intent A
+ -> context-local authoritative IssuedInvocationRecord A
+```
+
+There is no public per-business-call mint/sign API。A caller implementing the public interfaces itself receives no authority。
+
+Composition-time adapter registration is a trusted framework boundary；Rule source/business operation callers are outside that boundary。
+
+## 7. Authenticity enforcement point
+
+Every call begins：
+
+```text
+ProtectedAccessRuntime.execute(context,intent)
+ -> ContextLocalProtectedAccessRegistry.requireIssuedPair(context,intent)
+```
+
+The registry validates exact reference identity and pair relationship before any target resolution。
+
+```text
+unknown caller context/intent
+ -> PROTECTED_ACCESS_INPUT_UNTRUSTED
+
+issued context A + issued intent B
+ -> PROTECTED_ACCESS_INPUT_PAIR_MISMATCH
+```
+
+For these failures：
+
+```text
+target resolver = 0
+capability issuance = 0
+PolicyIndex lookup = 0
+protected operation = 0
+external effect = 0
+```
+
+Getter values are diagnostic projections only；downstream resolver uses authoritative registry record values。
+
+## 8. Starter protected runtime graph
+
+```text
 ProtectedAccessRuntime
+  -> input-authenticity gate (registry)
   -> DefaultProtectedAccessResolver
-       -> ContextLocalProtectedAccessRegistry
-       -> trusted ProtectedTargetResolutionPort
+       -> trusted target-resolution port
+       -> one-shot capability registry binding
   -> DefaultProtectedAccessGateway
        -> DefaultModelAccessGuard
-            -> exact PolicyIndex lookup once
+            -> EngineContext.ModelAccessPolicyIndex exact lookup once
             -> DefaultRuntimeBindingVerifier only for runtime-required rule
        -> registry-bound ProtectedOperationExecutionPort
        -> same hidden target operation
 ```
 
-All components are context-bound; no global mutable `currentContext` or global proof registry。
+No global mutable current Context, no global issuance registry, no secondary policy registry。
 
-## 6. Adapter architecture / no reverse business dependency
+## 9. STATIC_ALLOW architecture
 
-`dec.core.starter.access.spi.*` defines framework extension ports registered only at runtime composition：
+```text
+issued pair PASS
+ -> resolver binds actual target
+ -> capability
+ -> gateway -> Guard policy index lookup=1
+ -> selected STATIC_ALLOW(no plan)
+ -> verifier=0 / evaluator=0
+ -> same target operation once
+```
+
+No caller-side static direct path and no runtime plan synthesis。
+
+## 10. Runtime-required architecture
+
+```text
+issued pair PASS
+ -> resolver binds current actual element
+ -> capability
+ -> gateway -> Guard policy index lookup=1
+ -> selected runtime rule + exact compiler plan
+ -> verifier validates current membership/provenance
+ -> same target operation once on match
+```
+
+A/B substitution and stale membership remain fail closed。
+
+## 11. Input substitution and policy substitution are separate protections
+
+Input authenticity prevents caller authority escalation **before capability creation**：
+
+- forged consumerIrKey/frame/owner/cursor；
+- forged requestedRuleKey；
+- READ -> WRITE/EXECUTE intent substitution；
+- context A + intent B mixing。
+
+Policy authority prevents runtime implementation divergence **after capability creation**：
+
+- no copied policy Map；
+- no definitions scan；
+- no resolver/gateway/verifier/adapter rule selection；
+- Guard exact current-context index is final authority。
+
+Both must hold；one does not replace the other。
+
+## 12. TOCTOU / concurrency
+
+IssuedInvocationRecord and capability state are context-local and lifecycle-bound。Expired frame/cursor/context or replay fails closed。Capability reserve/consume atomic；concurrent execute yields at most one terminal success。
+
+Because policy index is immutable and retained by EngineContext, Guard cannot observe two policy registries during one operation。Context replacement invalidates issued state rather than hot-swapping policy under an existing capability。
+
+## 13. Adapter/no-bypass architecture
+
+Adapters remain composition-time frozen SPI：
 
 - `ProtectedTargetResolutionPort`
 - `ProtectedOperationExecutionPort`
 - `ProtectedAccessAdapterRegistry`
 
-Adapter choice is frozen in the runtime composition and selected by framework-owned consumer identity。A business call may not pass a target resolver/executor callback into `execute(...)`。
+No per-call raw target/callback/adapter selection。Missing adapter -> `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE` before operation。Future P3-P7 modules integrate above starter and cannot create their own access-policy authority。
 
-Future Rule/change/action/query modules may provide adapters by depending on starter SPI (or an upper composition module may bind them), but starter does not depend on those future business modules。Missing adapter is fail-closed `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`。
+## 14. P2 / P3-P7 boundary
 
-## 7. Production consumer integration
+P2 includes only access-control publication, issued-input authenticity, runtime Guard/Gateway/registry/verifier/factory and adapter SPI plumbing。
 
-All protected consumers use one flow：
+P2 excludes full Rule/change/action/query evaluators, QueryPlan, datasource transaction semantics, source-authored object ACL predicates and business side effects。
 
-```text
-consumer execution frame
- -> framework-owned ProtectedAccessResolutionContext + ProtectedOperationIntent
- -> context-bound ProtectedAccessRuntime.execute(...)
- -> resolver binds target
- -> one-shot capability
- -> gateway
- -> Guard exact lookup once
- -> static fast path OR runtime proof verification
- -> same registry-bound execution adapter+target
-```
+## 15. Test ownership
 
-Consumer cannot query PolicyIndex itself、inspect STATIC_ALLOW and bypass、mint capability、replace target after ALLOW or own a second permission registry。
+- `dec-core-context`: `ModelAccessPolicyIndex` immutable/exact API + neutral input read contracts。
+- `dec-core-compiler`: policy index publication + semantic digest determinism。
+- `dec-core-starter`: forged-input rejection, issued-pair matching, Guard single-index lookup, no secondary map, static/runtime/proof/concurrency behavior。
+- `dec-demo`: real `systems.xml` source -> published index -> issued runtime -> operation integration。
 
-If a future phase introduces a new execution consumer, its Architecture Review must show this integration edge before it may execute protected model access。
+TESTDESIGN-P2-R12 freezes exact TestClass/commands。
 
-## 8. STATIC_ALLOW architecture
+## 16. Review gate
 
-STATIC access still allocates a generic one-shot capability because target+operation binding is independent of runtime proof：
-
-```text
-DIRECT_EXACT -> STATIC_ALLOW(no plan)
- -> starter resolver binds actual target
- -> gateway -> Guard lookup=1
- -> verifier=0 / evaluator=0
- -> same target operation once
-```
-
-No plan is synthesized。No caller-side static path exists。
-
-## 9. Runtime-required architecture
-
-```text
-EVERY_COLLECTION_ELEMENT -> runtime rule+plan
- -> starter resolver binds current actual element
- -> gateway -> Guard lookup=1
- -> DefaultRuntimeBindingVerifier validates membership/provenance
- -> same element operation once on match
-```
-
-Proof and operation remain atomically bound；A proof cannot authorize B。
-
-## 10. TOCTOU / concurrency
-
-`ContextLocalProtectedAccessRegistry` owns atomic reserve/consume state。Runtime path revalidates Context/frame/cursor/rule/plan/membership immediately before operation；static path revalidates Context/frame/target binding。Concurrent replay yields at most one terminal success；all stale/mismatch paths perform zero protected operation/effects。
-
-## 11. P2 / P3-P7 architecture boundary
-
-P2 implementation may add only starter runtime plumbing + adapter SPI needed to enforce authorization. It must not add Information/Rule/Change/Action/QueryPlan business evaluators, datasource transaction orchestration or source-authored per-object ACL semantics。
-
-Future P3-P7 executors integrate into the starter boundary as trusted adapters/consumers；they do not move the access policy authority out of Guard。
-
-## 12. Exact test-module ownership
-
-- context API/immutability: `dec-core-context`
-- classifier/rule compilation: `dec-core-compiler`
-- concrete Guard/Gateway/registry/concurrency/no-bypass: `dec-core-starter`
-- real existing `systems.xml` end-to-end: `dec-demo`
-
-TESTDESIGN-P2-R11 supplies exact planned TestClass/commands；abstract `<target-module>` is no longer acceptable for P2 blocking cases。
-
-## 13. Review gate
-
-FND-004 remains `PARTIAL_FIX_PROPOSED / OPEN` until this module/package/dependency mapping receives exact Architecture + ApiContract + Develop + Impact + CrossModule + Concurrency Review and valid machine/risk Evidence。No production implementation is claimed by this document。
+FND-004 remains `PARTIAL_FIX_PROPOSED / OPEN` until exact Architecture + ApiContract + Develop + Impact + CrossModule + Concurrency Review validates both authorities and machine/risk Evidence binds the revision。No production implementation is claimed。
