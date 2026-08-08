@@ -1,0 +1,37 @@
+name: Temporary Local Source Export
+
+on:
+  push:
+    branches:
+      - tmp/local-source-export-20260808-1156
+    paths:
+      - .local-source-export/EXPORT
+
+permissions:
+  contents: read
+
+jobs:
+  export-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Package repository source
+        run: |
+          git rev-parse HEAD > SOURCE_COMMIT.txt
+          git rev-parse HEAD^{tree} > SOURCE_TREE.txt
+          tar --exclude=.git --exclude=.local-source-export --exclude=.github/workflows/_temp-local-source-export.yml -cJf /tmp/doc-eq-code-Dgremlin-source.tar.xz .
+          cp SOURCE_COMMIT.txt /tmp/SOURCE_COMMIT.txt
+          cp SOURCE_TREE.txt /tmp/SOURCE_TREE.txt
+      - name: Upload source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-source-export
+          path: |
+            /tmp/doc-eq-code-Dgremlin-source.tar.xz
+            /tmp/SOURCE_COMMIT.txt
+            /tmp/SOURCE_TREE.txt
+          if-no-files-found: error
+          retention-days: 1
