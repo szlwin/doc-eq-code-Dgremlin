@@ -35,7 +35,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-016",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-SYSTEM-COMPILATION"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-system",
+      "version/V_1.0/doc/COMPILER/COMPILER_architecture.md#2-发布闭包"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -77,7 +80,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-017",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-RULEVIEW-COMPOSITE-IDENTITY"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-ruleview",
+      "version/V_1.0/doc/COMPILER/COMPILER_api_contract.md#7-ruleviewresolver"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -119,7 +125,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-RULEVIEW-RESOLUTION",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-017"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-ruleview",
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-api-contract"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -163,7 +172,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-018",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-model-access",
+      "version/V_1.0/doc/COMPILER/COMPILER_api_contract.md#5-modelaccessrule"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -204,7 +216,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-021",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-MODEL-PATH-COMPILATION"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-model-path",
+      "version/V_1.0/doc/COMPILER/COMPILER_api_contract.md#3-modelpath"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -247,7 +262,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-019",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-MODEL-ACCESS-AUTHORIZATION"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-model-access",
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-pipeline"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -289,7 +307,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#SVC-MODEL-ACCESS-AUTHORIZATION",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-runtime-guard",
+      "version/V_1.0/doc/COMPILER/COMPILER_architecture.md#3-动态权限边界"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -333,7 +354,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-COMPILATION-SESSION",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-019"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-pipeline",
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-context"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -374,7 +398,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-DIAGNOSTIC"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-diagnostics",
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-concurrency"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],
@@ -416,7 +443,10 @@
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-DEFERRED-BOUNDARY",
       "version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#VO-DEFERRED-DEFINITION"
     ],
-    "design_refs": [],
+    "design_refs": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-compatibility",
+      "version/V_1.0/doc/COMPILER/COMPILER_architecture.md#4-迁移架构"
+    ],
     "test_case_ids": [],
     "plan_task_ids": [],
     "contract_refs": [],

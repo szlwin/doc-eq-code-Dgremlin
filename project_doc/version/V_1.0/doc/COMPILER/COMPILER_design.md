@@ -1,299 +1,296 @@
-# DEC_COMPILER 详细设计
+# COMPILER P2 详细设计
 
-> 候选 Revision：`DESIGN-R05@0b37a9b4dd48`。`DESIGN-R04@1c14c8e89779` 已被 `REV-000038` 退回；当前为 DESIGN I007 返修候选，不复用旧 Review/Evidence。
-> 输入：`REQAN-R05@7de35e8dc15b`、`BM-R05@4ecb1f8c09f4`。稳定模型 ID、错误码和 9 条 TR 在本文中保持可追踪。
+> Revision：`DESIGN-P2-R01@8875f042898c`。Base Design：`DESIGN-R05@0b37a9b4dd48`。输入：`REQAN-P2-R01@d08612768131`、`BM-R07@7d7bf504ca9d`。
+> 本 Revision 是同一 COMPILER 设计谱系上的 P2 增量：P1 的 Source/Canonical/Raw/Symbol/Deferred/Diagnostic/digest/原子发布保持有效；P2 只消费 System、RuleView 与 model-access 的 Deferred 所有权/授权边界，不建立第二 Compiler、Registry、Context 或 runtime authority。
 
-## 1. 设计目标 {#design-goals}
+## 1. 设计目标与冻结决策 {#p2-design-goals}
 
-P1 建立统一、确定性、安全、可诊断的配置编译骨架。P1 负责源发现、Canonical、Raw、强类型符号、引用绑定、Deferred 分类、CompiledModelSet 与原子发布；P2～P7 的权限、Information 求值、Action/Produce、Directory、Query、Transaction 均只登记 Deferred，不在本阶段执行。
+P2 把已经存在于 P1 类型系统中的 `SystemKey`、`RuleViewKey(SystemKey,name)` 从“可表达”推进为端到端强制语义，并补齐 `CompiledSystem`、统一 `ModelPath`、`ModelAccessRule` 与 fail-closed Guard。冻结决策如下：
 
-## 2. 包与类型布局 {#design-packages}
+1. System 身份只来自显式 System 定义；路径、文件名、包名和调用上下文都不是身份来源。
+2. RuleView 唯一身份始终是 `(SystemKey,name)`；新编译/发布/调用不提供裸名称 fallback。
+3. P1 `SharedModelPath + selector` 继续承担配置 selector 解析；P2 新增的 `ModelPath` 是面向运行语义消费者的已编译、强类型路径身份，两者职责不合并。
+4. `READ/WRITE/EXECUTE` 独立授权；未声明即 DENY，尤其共享模型 WRITE 默认拒绝。
+5. 静态可判定的非法访问在候选发布前失败；只有结构合法但资源事实确实依赖运行时的访问可形成 `RuntimeGuardRequired`。
+6. Guard 必须位于任何受保护模型读取/写入/执行的共同前置边界；DENY 发生在 mutation、状态推进或外部副作用之前。
+7. 旧 `ConfigInfo/RuleViewInfo` 裸名称能力仅作为 P7 前的兼容读取边界；P2 不允许其向新 Registry 注册事实，也不复制 declaration runtime。
 
-```text
-dec.core.compiler.api
-  ModelCompiler, CompilationRequest, CompilationResult, CompilationOptions
+## 2. P1 基线复用与 P2 增量 {#p2-baseline-delta}
 
-dec.core.compiler.source
-  DocumentSource, DocumentSourceProvider, MixSourceResolver,
-  MixSourceGraph, SourceEdge, SourceManifest, SourcePolicy
+| P1 已有事实 | P2 处理 | 禁止 |
+|---|---|---|
+| `SystemKey` | 直接复用并强制来源于显式 System | 新建第二 SystemId 或按路径推断 |
+| `RuleViewKey(SystemKey,name)` | 直接作为注册、发布、lookup 唯一 Key | `Map<String,RuleView>` 新注册、跨 System 搜索 |
+| `TypedDefinitionRegistries.systems()/ruleViews()` | 继续作为低层 typed registry；增加领域化只读查询 facade | 第二份可变 Registry |
+| `ModelAccessBinding` / `SharedModelPath` | 继续完成 P1 selector 精确绑定 | 把 selector 当成 P2 运行路径重新解释 |
+| `CompiledModelSet` / `EngineContext` | 扩展不可变发布事实闭包 | 全局 current Context |
+| P1 Deferred | P2 消费 System/RuleView/model-access 权限语义；P3～P8 仍 Deferred | 提前实现 P3～P7 |
 
-dec.core.compiler.canonical
-  DocumentFrontend, FrontendRegistry, CanonicalDocumentNode
+## 3. 模块与包边界 {#p2-modules}
 
-dec.core.compiler.raw
-  RawDefinitionSet, Raw*Definition, RawDefinitionBuilder
+### 3.1 `dec-core-context`
 
-dec.core.compiler.symbol
-  SymbolTableBuilder, ReferenceResolver
+新增/收敛中立不可变类型：
 
-dec.core.compiler.information
-  InformationExpressionAst, InformationReferenceResolver,
-  InformationOwnershipValidator, CommonSystemValidator
+- `CompiledSystem`：SystemKey、SourceRef、成员 Key 集合、RuleViewKey 集合、access rule key 集合；
+- `ModelPath`：`targetKey + immutable segments`；
+- `AccessOperation`：闭集 `READ|WRITE|EXECUTE`；
+- `ModelAccessRule`：`systemKey + targetKey + modelPath + operation + sourceRef + decisionRequirement`；
+- `AccessDecisionRequirement`：`STATIC_ALLOW|RUNTIME_GUARD_REQUIRED`，不存在 STATIC_DENY 发布值；静态 DENY 必须转 Diagnostic 并阻断发布；
+- `ModelAccessDecision`：运行时 `ALLOW|DENY`；
+- `ModelAccessRequest`：调用方明确提供 Context、System、Target、ModelPath、Operation 和必要 runtime facts；
+- `ModelAccessGuard`：只读判定接口，不执行 mutation。
 
-dec.core.compiler.modelaccess
-  SharedModelPath, SystemViewSelector, ModelAccessBinding,
-  ModelAccessSelectorResolver
+Context 不依赖 compiler、parser 或执行模块；所有集合防御性复制并不可变。
 
-dec.core.compiler.deferred
-  DeferredDefinitionBuilder, DeferredClassificationPolicy
+### 3.2 `dec-core-compiler`
 
-dec.core.compiler.pass
-  CompilerPass, PassContext, PassResult, CompilerPipeline
+在现有 Pipeline 中增加 P2 owner-qualified pass/service：
 
-dec.core.compiler.diagnostic
-  DiagnosticCollector, DiagnosticOrder
+- `SystemCompilationService` / `SystemCompilationPass`；
+- `RuleViewResolutionService` / `RuleViewOwnershipPass`；
+- `ModelPathCompiler` / `ModelPathCompilationPass`；
+- `ModelAccessAuthorizationService` / `StaticAccessValidationPass`；
+- `P2CompiledFactsAssembler`，把 System、RuleView、ModelPath 与 access rules 放入候选 `CompiledModelSet`。
 
-dec.core.compiler.compiled
-  SemanticDigestInput, CompiledModelSetBuilder
+Compiler 仍是唯一候选构建与原子发布协调者，不依赖具体 XML parser 实现。
 
-dec.core.context.model
-  SourceRef, Diagnostic, DiagnosticCode, DefinitionKey, *Key, Registry,
-  DeferredKind, RequiredStage, DeferredDefinition, DeferredRegistry,
-  CompiledDefinition, DigestPair, CompiledModelSet
+### 3.3 frontend / legacy XML parser
 
-dec.core.context
-  EngineContext, CoreConfigProjection
-```
+安全 Canonical frontend 继续只提供节点、属性与 SourceRef。`dec-context-config-parse-xml` 中旧 `RuleParser -> ConfigContextUtil -> ConfigInfo` 属于兼容历史路径：P2 设计要求显式标记为 legacy read boundary；它不得成为新 `RuleViewKey` Registry 的来源、不得通过裸 name 为新调用提供 fallback。新 `mix` 的 RuleView `system` 属性必须在 Canonical/Raw 输入中保留并进入 Compiler。
 
-`dec-core-context` 只拥有发布边界两侧共享的中立不可变值对象，不依赖 compiler。`CompiledModelSet` 可达的类型闭包，包括 Diagnostic/Code、SourceRef、Key、Deferred、CompiledDefinition 和 Digest，全部在 context；compiler 只保留 collector、order 与各类 builder。`dec-core-compiler` 依赖 context 并拥有所有可变 builder、Session、Pass 和发布协调；因此不存在 `compiler -> context -> compiler` 循环。
+### 3.4 `dec-core-starter` 与后续执行入口
 
-## 3. 编译入口与 Session {#design-compilation-session}
+Starter 只组装 Compiler/Context 与统一 Guard；不得保存全局权限表。后续 Rule/change/custom action/query 消费者只接收已发布 Context 中的 owner-qualified facts，并通过共同 Guard seam 请求动态授权。
 
-`ModelCompiler.compileAndPublish(request, publicationRequest)` 每次创建一个 `CompilationSession`。Session 持有 request、publication request、source graph、canonical set、raw set、symbol table builder、diagnostic collector、deferred builder 和 timing collector；不得放入 static/thread-local 全局容器。compile-only 能力仅作为包内 PassHarness 接缝存在，不得作为可绕过发布状态机的公共成功入口。
+## 4. System 编译设计（P2-T01/T02） {#p2-system}
 
-状态机：
+### 4.1 输入
 
-```text
-CREATED -> SOURCES_DISCOVERED -> PARSED -> RAW_BUILT
-        -> STRUCTURALLY_VALIDATED -> SYMBOLS_REGISTERED
-        -> REFERENCES_RESOLVED -> GRAPH_PREPARED
-        -> SEMANTICALLY_VALIDATED -> PUBLISHED
-任一阶段 -> FAILED
-```
+`RawSystemDefinition` 必须携带：显式 name、SourceRef、稳定 source ordinal，以及其声明的 Data/View/rule-file/Information/model-access 引用。`system-file-info` 可以产生多个 System source；Source discovery 的输入顺序只影响读取过程，不影响最终 identity 集合。
 
-状态名与顺序严格复用需求 `6.1.7` 和 BM-R05 `TRANS-COMP-001`～`TRANS-COMP-009`，不增加 `COMPILED` 等平行状态。`PARSED` 表示所有 Frontend 已产生 Canonical 节点；`STRUCTURALLY_VALIDATED` 表示 Canonical/Raw 结构校验完成；`GRAPH_PREPARED` 表示 P1 引用已解析且 P2～P7 Deferred 已完整分类。只有 `SEMANTICALLY_VALIDATED` 且无 ERROR 才可执行发布转换；该转换先构造完整候选，再通过显式 ContextPublisher 原子暴露，成功后进入 `PUBLISHED`。任何 ERROR、timeout、cancel、候选构造失败或 CAS conflict 都进入 `FAILED`，具体原因分别由 `MIX-PUBLICATION-BLOCKED`、`MIX-COMPILATION-TIMED-OUT`、`MIX-COMPILATION-CANCELLED`、`MIX-CONTEXT-CONSTRUCTION-FAILED`、`MIX-PUBLICATION-CONFLICT` 表达；Publisher 返回 null 或抛异常使用 `MIX-PUBLICATION-FAILURE`。FAILED 为终态，新重试创建新 Session。
+### 4.2 两阶段算法
 
-## 4. MixSourceResolver {#design-mix-source-resolver}
+1. **Register phase**：按 `(SystemKey.canonical, SourceRef stable order)` 排序，先注册全部显式 SystemKey；重复 Key 收集双方/多方 SourceRef 并产生 `MIX-SYSTEM-DUPLICATE`。
+2. **Link phase**：在完整 System symbol set 上解析成员与前向引用，构造 `CompiledSystem`。任何 unknown/mismatch 只产生 Diagnostic，不创建“半 System”。
 
-输入：root SourceReference、Provider、scheme 白名单、根路径、maxDepth、maxSources、maxTotalBytes。算法：
+### 4.3 发布不变量
 
-1. 解析 root 并提取 `ROOT_DATA_FILESET`、`ROOT_VIEW_FILESET`、`ROOT_SYSTEM_FILE`、`ROOT_BUSINESS_FILE` 声明边；System 文件提取 `SYSTEM_RULE_FILE`；
-2. 规范化 URI 和相对路径，检查根目录逃逸；
-3. 展开 file set 后按 sourceId 排序；
-4. 最小解析 System 文件，提取 rule-file edge；
-5. 每条边构造 `SourceGraphEdge(edgeType,fromSourceId,targetReference,declarationSourceRef)`；`declarationSourceRef` 指向父 Source 中声明该引用的位置，根边使用 synthetic root SourceRef；
-6. 使用 `(sourceId, contentDigest)` 去重；相同 ID 不同内容报错；
-7. 检测 edge cycle、深度和数量限制；
-8. 输出稳定 `MixSourceGraph` 与 `SourceManifest`，source 和 edge 均按规范化稳定键排序；
-9. 发现阶段不登记业务定义。
+`CompiledSystem` 只出现在无 ERROR 候选；`TypedDefinitionRegistries.systems()` 与 `CompiledSystemRegistry` 必须由同一 `CompiledModelSet` 派生并保持 Key 集合一致。语义摘要纳入排序后的 System identity、成员 identity 与 access rule canonical form。
 
-## 5. CanonicalDocumentNode {#design-canonical-document-node}
+## 5. RuleView 复合身份与解析（P2-T05/T06/T09/T10） {#p2-ruleview}
 
-```text
-nodeName: String
-orderedAttributes: List<CanonicalAttribute>
-scalar: Optional<CanonicalScalar>
-orderedChildren: List<CanonicalDocumentNode>
-sourceRef: SourceRef
-format: XML|YAML
-schemaVersion: String
-```
+### 5.1 注册
 
-XML/YAML Frontend 只负责安全解析与语法规范化；业务默认值、owner、Key 和引用规则属于 Raw builder/Compiler Pass。Canonical 不持有 DOM、SAX handler、JAXB 或 YAML Node，并统一引用 `dec.core.context.model.SourceRef`。
+- Raw RuleView 必须包含 owner System；缺失 owner -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；
+- Key 固定使用现有 `RuleViewKey(SystemKey owner,String name)`；
+- 同 System 同名 -> `MIX-RULEVIEW-DUPLICATE`；
+- 跨 System 同名合法，Registry 中形成两个不同 Key；
+- RuleView 引用的 View/Rule 必须在同 owner System 允许范围内，否则使用 source-aware mismatch Diagnostic。
 
-## 6. RawDefinitionSet {#design-raw-definition-set}
+### 5.2 Runtime lookup
 
-覆盖 RootConfig、DataSource、Connection、Data、View、System、RuleView、Rule、BusinessScope、Information、ModelAccess、Directory、Action、Produce。每个 RawDefinition 保存 stable source ordinal、SourceRef、owner token、name、ordered attributes、raw references 和 normalized body。未知元素在 P1 一律产生 `MIX-STRUCTURE-UNKNOWN` ERROR，不提供可静默发布的 lenient 模式。未来扩展必须先由版本化 Frontend/Raw builder 显式声明节点语义。
+Context 暴露 `RuleViewResolver.resolve(SystemKey,String)` 或等价 facade，内部只构造 `RuleViewKey` 做精确查找。新 API 不提供 `resolve(String bareName)`。兼容读取若仍存在，必须在命名上明确 `LegacyRuleViewReadAdapter`，只读旧 `ConfigInfo`，不得写新 Registry，且不得被新业务调用链依赖。
 
-## 7. TypedKey 与 SymbolTable {#design-typed-key-symbol-table}
+## 6. 统一 ModelPath（P2-T04） {#p2-model-path}
 
-TypedKey 类型至少包括 `DataSourceKey/ConnectionKey/DataKey/ViewKey/SystemKey/RuleViewKey/BusinessScopeKey/InformationKey/DirectoryKey/ActionKey/ProduceKey`。
-
-- `InformationKey(SystemKey owner, String name)`，不再绑定 BusinessScope；
-- `RuleViewKey(SystemKey owner, String name)`；
-- `ActionKey(DirectoryKey owner, String actionName)`；
-- 无名 Produce 以 `(ActionKey, sourceOrdinal)` 形成稳定 Key；
-- 注册分两遍：先顶层/owner Key，再解析子定义和前向引用；
-- 同类型重复 Key 报 `ERR-MIX-SYMBOL-DUPLICATE`，不同类型同名互不覆盖；
-- Registry 使用有序不可变 map，禁止最后写入覆盖。
-
-## 8. System-owned Information 与 common expression {#design-information-expression}
-
-`RawInformationDefinition` 包含 owner System、kind、expression/rule-data/change-data body 与 SourceRef。P1：
-
-1. 创建 `InformationKey`；
-2. expression 解析为 `InformationExpressionAst`；
-3. 完整限定引用解析为强类型 `InformationKey`；
-4. 普通 System 的依赖 owner 必须等于当前 owner；
-5. 跨 System 依赖仅允许 owner=`common`；
-6. common 不得包含 Data/View/RuleView/ModelAccess，且 Information 必须是 expression；
-7. 未限定引用、未知引用、非法 owner 产生 Diagnostic；
-8. 将 AST、resolved keys 和 SourceRef 登记为 P3 Deferred；P1 不求值、不建运行时缓存。
-
-当前 fixture 的 `common.paySuccess` 精确依赖 `payment.success`、`order.paySuccessStatus`；`common.payError` 精确依赖 `payment.error`、`order.payErrorStatus`。
-
-## 9. ModelAccess selector {#design-model-access-selector}
+`ModelPath` 与 P1 selector 分层：
 
 ```text
-ModelAccessBinding
-  ownerSystem: SystemKey
-  sourcePath: SharedModelPath
-  targetView: ViewKey
-  selector: SystemViewSelector
-  resolvedTarget: TargetPropertyPath
-  accessMode: READ|WRITE
-  sourceRef: SourceRef
+配置 selector: SharedModelPath + SystemViewSelector -> ModelAccessBinding
+运行语义路径: target DefinitionKey + exact segments -> ModelPath
 ```
 
-解析算法：
+`ModelPathCompiler` 只接受明确 target shape；逐段大小写敏感精确解析：
 
-1. `ref@view` 必须精确命中当前 System `view-info` 已声明 View；
-2. 将 `ref@property` 与目标 View 的 `target-main` 做区分大小写的完整精确匹配；
-3. 未命中时按 `.` 分段遍历 property path；
-4. 每段必须唯一，中间段必须是复合属性；
-5. 同一 sourcePath 的完全重复 ref、重叠 WRITE、多候选均拒绝；
-6. 不跨 View/System 搜索，不做前缀/后缀/模糊匹配，不回退 root-property。
+- unknown segment -> `MIX-MODEL-PATH-INVALID`；
+- non-composite intermediate -> 同 code + 精确 failing segment；
+- 禁止 wildcard、前/后缀、跨 target 搜索、root-property fallback；
+- canonical form 为 `targetKey.canonical + '/' + escapedSegments`，供 rule/change/query/access 共用；
+- 编译结果不可保存 parser-specific DOM/YAML node。
 
-输出为 P2 Deferred 的已解析 `ModelAccessBinding`；P1 不判断运行时读写权限。
+## 7. ModelAccessRule 与静态授权（P2-T03/T07/T11） {#p2-model-access}
 
-## 10. 引用解析 {#design-reference-resolution}
+### 7.1 规则结构
 
-P1 必须类型化解析：connection→datasource、view→data/property、system→data/view、rule file→system、ruleView→system/view、information expression→InformationKey、business action→system/ruleView、directory→information/subdirectory、produce→information（存在时）、ModelAccess→View/property。未知、类型不匹配、owner 不一致均聚合 Diagnostic，绝不猜测。
+每条规则必须完整绑定：`SystemKey`、`targetKey`、`ModelPath`、`AccessOperation`、`SourceRef`。READ/WRITE/EXECUTE 作为闭集独立值，不做层级继承。
 
-## 11. DeferredDefinition {#design-deferred-definition}
+### 7.2 静态判定
 
-```java
-public final class DeferredDefinition {
-    private final DefinitionKey ownerKey;
-    private final DeferredKind kind;
-    private final RequiredStage requiredStage;
-    private final String reasonCode;
-    private final SourceRef sourceRef;
-    private final NormalizedBody body;
-    private final List<DefinitionKey> resolvedReferences;
+`ModelAccessAuthorizationService.compile(...)` 的候选结果只有：
 
-    public DeferredDefinition(
-            DefinitionKey ownerKey,
-            DeferredKind kind,
-            RequiredStage requiredStage,
-            String reasonCode,
-            SourceRef sourceRef,
-            NormalizedBody body,
-            List<DefinitionKey> resolvedReferences) {
-        this.ownerKey = Objects.requireNonNull(ownerKey, "ownerKey");
-        this.kind = Objects.requireNonNull(kind, "kind");
-        this.requiredStage = Objects.requireNonNull(requiredStage, "requiredStage");
-        this.reasonCode = Objects.requireNonNull(reasonCode, "reasonCode");
-        this.sourceRef = Objects.requireNonNull(sourceRef, "sourceRef");
-        this.body = Objects.requireNonNull(body, "body");
-        this.resolvedReferences = Collections.unmodifiableList(
-            new ArrayList<DefinitionKey>(
-                Objects.requireNonNull(resolvedReferences, "resolvedReferences")));
-    }
+- `STATIC_ALLOW`：System、target、path、operation 均可静态确定且显式授权；
+- `RUNTIME_GUARD_REQUIRED`：身份/结构/声明均合法，但资源实例或动态边界确实只能运行时确定；
+- `Diagnostic ERROR`：未声明、错误 System/target/path、operation 不匹配、共享 WRITE 未授权等。
 
-    public DefinitionKey ownerKey() { return ownerKey; }
-    public DeferredKind kind() { return kind; }
-    public RequiredStage requiredStage() { return requiredStage; }
-    public String reasonCode() { return reasonCode; }
-    public SourceRef sourceRef() { return sourceRef; }
-    public NormalizedBody body() { return body; }
-    public List<DefinitionKey> resolvedReferences() { return resolvedReferences; }
-}
-```
+没有 `UNKNOWN_ALLOW`。未声明权限、Guard 不可用、Context 不匹配均 fail-closed。
 
-所有 Key、Definition、Request、Result 等值对象采用相同 Java 8 不可变实现约束，并基于全部语义字段实现 `equals/hashCode/toString`。映射：P2 System/ModelAccess；P3 Information DAG/循环/求值；P4 Action/Produce；P5 Directory；P6 Query/SQL；P7 Session/Transaction。缺 requiredStage、reason、SourceRef 或可解析但未类型化的引用时，报 `ERR-MIX-DEFERRED-INCOMPLETE`。
+### 7.3 权限索引
 
-## 12. Compiler Pipeline {#design-compiler-pipeline}
+发布时派生不可变 `ModelAccessPolicyIndex`：主键 `(SystemKey,targetKey,ModelPath,AccessOperation)`；只由 `ModelAccessRule` 构造。运行时不得重新解析 XML/YAML，也不得遍历全局名称空间。
 
-| # | Pass | 产出 | 失败行为 |
+## 8. Runtime Guard（P2-T08/T11） {#p2-runtime-guard}
+
+`ModelAccessGuard.authorize(request)` 是唯一动态授权 seam：
+
+1. 验证 request 的 Context identity 与 policy index 同源；
+2. 使用精确四元组定位 rule；缺失即 DENY；
+3. `STATIC_ALLOW` 可直接 ALLOW；
+4. `RUNTIME_GUARD_REQUIRED` 调用注入的 runtime fact evaluator，只允许产生 ALLOW/DENY；异常、null、超时或无法确定均 DENY；
+5. 返回决定与稳定 reason code，不执行模型写入或外部操作。
+
+调用顺序必须是：`build request -> authorize -> if ALLOW then execute mutation/read/execute`。Guard 不能被 Rule/change/custom action 自己替换；测试 seam 必须能断言 DENY 后 mutation counter、state version、external-effect spy 均未变化。
+
+## 9. Pipeline 与状态转换 {#p2-pipeline}
+
+在 P1 `REFERENCES_RESOLVED -> GRAPH_PREPARED -> SEMANTICALLY_VALIDATED -> PUBLISHED` 语义内插入 P2 pass，不增加第二生命周期：
+
+| 顺序 | Pass | 输出 | ERROR |
 |---:|---|---|---|
-| 1 | SourceGraphValidationPass | validated graph | 缺失/冲突/逃逸阻断 |
-| 2 | StructuralValidationPass | validated canonical/raw | 未知/缺字段聚合 |
-| 3 | SymbolRegistrationPass | typed symbol table | 重复 Key 聚合 |
-| 4 | ReferenceResolutionPass | linked raw definitions | 未知/类型不匹配聚合 |
-| 5 | InformationOwnershipPass | expression AST + keys | owner/common 违规阻断 |
-| 6 | ModelAccessBindingPass | exact bindings | not-found/ambiguous 阻断 |
-| 7 | DeferredClassificationPass | complete deferred registry | 不完整阻断 |
-| 8 | P1SemanticValidationPass | invariant result | 违反 P1 不变量阻断 |
-| 9 | DigestPass | source/semantic digest | 非确定性阻断 |
-| 10 | PublicationPass | model/context | 仅无 ERROR 执行 |
+| 1 | existing Source/Structural/Symbol passes | Raw + symbols | P1 codes |
+| 2 | `SystemCompilationPass` | `CompiledSystem` candidates | duplicate/unknown System |
+| 3 | `RuleViewOwnershipPass` | owner-qualified RuleView facts | missing owner/duplicate/mismatch |
+| 4 | `ModelPathCompilationPass` | canonical ModelPath set | invalid/non-composite path |
+| 5 | `StaticAccessValidationPass` | access rules + decision requirement | denied/undeclared operation |
+| 6 | existing Deferred classification | only P3～P8 remaining Deferred | incomplete boundary |
+| 7 | digest/candidate/publication | immutable Context | P1 publication codes |
 
-所有 Pass 只通过 `PassContext` 读写 Session 内 builder；Diagnostic 排序后才形成结果。
+任何 P2 ERROR 沿用 P1 原子发布规则：本轮 FAILED，Publisher 不接收候选，旧 Context 不变。
 
-## 13. CompiledModelSet 与 EngineContext {#design-compiled-model-set}
+## 10. CompiledModelSet / EngineContext 扩展 {#p2-context}
 
-摘要构造分两步：先冻结 `SemanticDigestInput(SourceManifest semantic view, typed registries, resolved keys, Deferred metadata, compiler/schema/options version)`，该输入明确不包含 DigestPair、metrics 和 SourceRef 物理行列；计算 DigestPair 后再构造 `CompiledModelSet(content,digests,versions)`。因此不存在“CompiledModelSet 包含 digest、digest 又依赖 CompiledModelSet”的循环。
+`CompiledModelSet` 增加不可变 P2 视图，不复制 `definitions`：
 
-`CompiledModelSet` 位于 `dec-core-context`，最终包含 SourceManifest 的中立发布视图、各 TypedKey Registry、DeferredRegistry、DigestPair、compiler/schema/options version。它不引用 compiler 的 Raw、Pass、Session 或 builder。构造完成后所有集合不可变。`EngineContext` 只通过构造函数接收完整模型；无 public mutator、无 static current、无隐式 register。
+- `systems(): Registry<SystemKey,CompiledSystem>`；
+- `ruleViews(): Registry<RuleViewKey,CompiledDefinition|CompiledRuleView>`；
+- `modelAccessRules(): ModelAccessPolicyIndex`；
+- `resolveRuleView(SystemKey,String)` facade 可位于 EngineContext/专用 resolver，但底层只查同一 model set。
 
-Publication 先完整构造候选 Context，再执行一次原子暴露。构造、验证、timeout、cancel 或 CAS 失败时旧 Context 保持有效，候选对象不可见并可回收。
+构造时验证：所有 P2 map key 与内部 key 一致；RuleView owner 必须存在；rule target/path 必须属于同一发布闭包；不能包含静态 DENY；Diagnostics 不能含 ERROR。Context 间不共享可变 cache。
 
-## 14. CoreConfigProjection {#design-core-config-projection}
+## 11. Diagnostic 与拒绝契约 {#p2-diagnostics}
 
-只读投影覆盖旧调用仍需读取的 Data/View/Rule 基础结构；每次由新 Registry 计算或在 Context 构造时不可变缓存。写 API 产生 `MIX-PROJECTION-WRITE` 并抛专用 UnsupportedOperationException。不得包含 SystemDesc、BusinessDesc、Producer、Consumer、declaration 类型或第二 Registry。
+设计冻结以下 P2 稳定 code（与 BM-R07 error IDs 一一对应）：
 
-## 15. Diagnostic 与错误映射 {#design-diagnostic-catalog}
+| code | 触发 | 阶段 |
+|---|---|---|
+| `MIX-SYSTEM-DUPLICATE` | SystemKey 重复/冲突 | compile |
+| `MIX-RULEVIEW-SYSTEM-REQUIRED` | 新 RuleView 缺显式 System | compile |
+| `MIX-RULEVIEW-DUPLICATE` | 同 System 同名 | compile |
+| `MIX-RULEVIEW-UNKNOWN` | 复合 Key 不存在/错误 owner | compile/runtime lookup |
+| `MIX-MODEL-PATH-INVALID` | 路径未知、非复合、越目标 | compile |
+| `MIX-MODEL-ACCESS-DENIED` | 静态未授权/operation 不匹配 | compile |
+| `MIX-MODEL-ACCESS-RUNTIME-DENIED` | Guard 拒绝/不可判定 | runtime |
+| `MIX-P2-DECLARATION-BOUNDARY` | P2 删除/复制旧 runtime 或形成第二 authority | verification |
 
-`Diagnostic(code,severity,messageKey,definitionKey,sourceRef,relatedRefs,recoveryHint,pass)`；其中需求排序字段 `entityKey` 定义为 `definitionKey.map(DefinitionKey::canonical).orElse("")`。稳定排序键严格为 `sourceId,line,column,code,entityKey,pass`，不再维护 `passId` 或其它平行别名。以下 BM-R05 错误均有设计映射：
+所有 Diagnostic/denial 只携带定位所需的 SystemKey、RuleViewKey（适用时）、operation、canonical path、SourceRef/reason code；不回显凭据或完整 runtime value。
 
-| 业务错误 ID | 设计 Diagnostic |
+## 12. 并发、幂等与原子性 {#p2-concurrency}
+
+- System/RuleView/access 编译器均无静态可变状态；状态只在当前 CompilationSession；
+- 所有 registry/index 在发布前冻结；同 Context 多线程只读；
+- 相同语义输入的 SystemKey/RuleViewKey/ModelPath/rule 排序与 digest 稳定；
+- Guard 不写 policy index；runtime evaluator 若需要业务状态，由调用方通过 request snapshot 显式提供；
+- 并行 Context A/B 使用各自 model set，禁止按“最新全局 Context”判定；
+- 编译错误和 runtime DENY 均无需补偿，因为副作用边界之前即失败。
+
+## 13. 安全设计 {#p2-security}
+
+- 权限默认 DENY；WRITE 无显式声明必须失败；
+- Operation 不提升：READ 不蕴含 WRITE/EXECUTE；
+- Guard evaluator 异常/null/timeout/unknown -> DENY；
+- 路径 canonicalization 在授权前完成，防止不同字符串指向同一资源却绕过 policy key；
+- Diagnostic 对 runtime value 做最小披露；
+- legacy adapter 不得写新 registry 或获得 wildcard 权限。
+
+## 14. 兼容与 P7 declaration 边界 {#p2-compatibility}
+
+P2 不删除旧 `ConfigInfo/RuleConfig/RuleViewInfo`、不恢复已退役 `dec-expand-declaration`，也不复制它们形成新 runtime。兼容边界只有：
+
+1. 允许旧调用在明确 legacy adapter 内读取旧裸名称事实；
+2. 新 Compiler/Context facts 不反向写旧 Config；
+3. 新调用链不得依赖裸名称 adapter；
+4. 无法无损映射的 declaration 差异记录为 P7 migration fact；
+5. P7 删除条件至少包括：所有新调用完成 composite lookup、所有动态 mutation 接入 Guard、无新注册流入 legacy registry、回归 fixture 全绿。
+
+## 15. 跨模块时序 {#p2-cross-module}
+
+```text
+Frontend/Source
+  -> Compiler: explicit System + RuleView owner + model-access + SourceRef
+Compiler
+  -> Context candidate: CompiledSystem + RuleViewKey + ModelPath + policy index
+Compiler
+  -> ContextPublisher: one atomic publish (only no ERROR)
+Caller/Starter
+  -> EngineContext: resolve RuleView(SystemKey,name)
+Caller/Executor
+  -> ModelAccessGuard: authorize(Context,System,target,path,operation,runtimeFacts)
+ModelAccessGuard
+  -> Caller: ALLOW | DENY
+Caller
+  -> protected operation: only after ALLOW
+```
+
+该时序落实 `CMI-P2-SYSTEM-RULEVIEW-001` 四个 CMSTEP；任何 compile ERROR 停在发布前，runtime DENY 停在 protected operation 前。
+
+## 16. API/实现契约边界 {#p2-api-contract}
+
+完整签名见 `COMPILER_api_contract.md`。设计要求：
+
+- 复用现有 `SystemKey` / `RuleViewKey`，不改 canonical equality；
+- 新值对象均 Java 8 immutable；
+- 所有 public collection 返回 immutable snapshot/view；
+- lookup 返回 `Optional` 或显式 typed result，不以 null-success 表达 unknown；
+- Guard 只判定，不执行业务副作用；
+- 新 API 不提供 bare-name RuleView lookup；
+- API contract 的 runtime-denial 与 compile Diagnostic 区分，但共享 canonical System/path/operation identity。
+
+## 17. 测试接缝 {#p2-test-seams}
+
+Design 必须为 Test Design 提供以下稳定 seam：
+
+- `SystemDefinitionFixture`：多 source/顺序重排/重复 System；
+- `RuleViewCompositeFixture`：order/payment 同名 RuleView、缺 System、同 System 重名；
+- `ModelShapeFixture + ModelPathCompiler`：合法/未知/非复合 path；
+- `ModelAccessPolicyFixture`：READ/WRITE/EXECUTE allow/deny 矩阵；
+- `ModelAccessGuardSpy/RuntimeFactEvaluatorStub`：ALLOW/DENY/exception/unknown；
+- `MutationProbe`：记录 stateVersion、writeCount、externalEffectCount，证明 DENY 无副作用；
+- `ContextPairFixture`：两个 Context 同名 RuleView 与不同 policy 隔离；
+- `LegacyBoundaryScan`：证明新 production path 不调用 `ConfigInfo.getRuleViewInfo(String)`/`DataUtil.getRuleViewInfo(String)` 作为 fallback。
+
+## 18. P2-T01～T12 设计映射 {#p2-task-map}
+
+| P2 task | 设计落点 | 主要 TR |
+|---|---|---|
+| T01 System Raw/Compiled | §4、§10 | TR-001/008/009 |
+| T02 System loader | §4、§9 | TR-001/008 |
+| T03 ModelAccessRule | §7 | TR-004/006/007 |
+| T04 ModelPathCompiler | §6 | TR-005 |
+| T05 RuleViewKey/registry | §5 | TR-002/003 |
+| T06 Parser/Diagnostic owner | §3.3、§5、§11 | TR-002/003/009 |
+| T07 static permission | §7、§9 | TR-004/005/008 |
+| T08 runtime Guard | §8、§13 | TR-006/007 |
+| T09 composite call | §5.2、§15 | TR-003 |
+| T10 same-name isolation | §5、§12 | TR-002/003 |
+| T11 unauthorized matrix | §7/8/13 | TR-004/006/007/009 |
+| T12 declaration boundary | §14 | TR-010 |
+
+## 19. 需求追踪 {#p2-traceability}
+
+| TR | 设计引用 |
 |---|---|
-| ERR-MIX-SOURCE-POLICY | MIX-SOURCE-POLICY |
-| ERR-MIX-SOURCE-NOT-FOUND | MIX-SOURCE-NOT-FOUND |
-| ERR-MIX-SOURCE-PATH-ESCAPE | MIX-SOURCE-PATH-ESCAPE |
-| ERR-MIX-SOURCE-DUPLICATE-ID | MIX-SOURCE-DUPLICATE-ID |
-| ERR-MIX-XML-UNSAFE | MIX-FRONTEND-XML-UNSAFE |
-| ERR-MIX-YAML-UNSAFE | MIX-FRONTEND-YAML-UNSAFE |
-| ERR-MIX-SYMBOL-DUPLICATE | MIX-SYMBOL-DUPLICATE |
-| ERR-MIX-REF-UNKNOWN | MIX-REF-UNKNOWN |
-| ERR-MIX-REF-RULE-SYSTEM-MISMATCH | MIX-REF-RULE-SYSTEM-MISMATCH |
-| ERR-MIX-INFORMATION-OWNER | MIX-INFORMATION-OWNER |
-| ERR-MIX-INFORMATION-CROSS-SYSTEM | MIX-INFORMATION-CROSS-SYSTEM |
-| ERR-MIX-COMMON-MEMBER | MIX-COMMON-MEMBER |
-| ERR-MIX-COMMON-UNQUALIFIED | MIX-COMMON-UNQUALIFIED |
-| ERR-MIX-REF-VIEW-NOT-DECLARED | MIX-REF-VIEW-NOT-DECLARED |
-| ERR-MIX-MODEL-ACCESS-NOT-FOUND | MIX-MODEL-ACCESS-NOT-FOUND |
-| ERR-MIX-MODEL-ACCESS-AMBIGUOUS | MIX-MODEL-ACCESS-AMBIGUOUS |
-| ERR-MIX-MODEL-ACCESS-NON-COMPOSITE | MIX-MODEL-ACCESS-NON-COMPOSITE |
-| ERR-MIX-DEFERRED-INCOMPLETE | MIX-DEFERRED-INCOMPLETE |
-| ERR-MIX-PUBLICATION-BLOCKED | MIX-PUBLICATION-BLOCKED |
-| ERR-MIX-DIGEST-NONDETERMINISTIC | MIX-DIGEST-NONDETERMINISTIC |
-| ERR-MIX-CONTEXT-MUTATION | MIX-CONTEXT-MUTATION |
-| ERR-MIX-PROJECTION-WRITE | MIX-PROJECTION-WRITE |
-| ERR-MIX-RETIREMENT-RESIDUE | MIX-RETIREMENT-RESIDUE |
+| TR-P2-SYSTEM-RULEVIEW-001 | §4 System 编译、§9 Pipeline |
+| TR-P2-SYSTEM-RULEVIEW-002 | §5 RuleView 注册、§10 Context |
+| TR-P2-SYSTEM-RULEVIEW-003 | §5.2 Runtime lookup、§15 时序 |
+| TR-P2-SYSTEM-RULEVIEW-004 | §7 权限模型、§13 fail-closed |
+| TR-P2-SYSTEM-RULEVIEW-005 | §6 ModelPath、§7 静态校验 |
+| TR-P2-SYSTEM-RULEVIEW-006 | §7 RuntimeGuardRequired、§8 Guard |
+| TR-P2-SYSTEM-RULEVIEW-007 | §8 无旁路、§15 时序 |
+| TR-P2-SYSTEM-RULEVIEW-008 | §9/§10 原子发布、§12 Context 隔离 |
+| TR-P2-SYSTEM-RULEVIEW-009 | §11 Diagnostic、§12 deterministic |
+| TR-P2-SYSTEM-RULEVIEW-010 | §14 declaration/P7 边界 |
 
-以下为技术状态机补充 code，不改写 BM-R05 的 23 个业务错误：`MIX-STRUCTURE-UNKNOWN`、`MIX-COMPILATION-CANCELLED`、`MIX-COMPILATION-TIMED-OUT`、`MIX-CONTEXT-CONSTRUCTION-FAILED`、`MIX-PUBLICATION-CONFLICT`、`MIX-PUBLICATION-FAILURE`、`MIX-OBSERVER-FAILURE`。它们同样是稳定公共契约。
+## 20. 停止条件 {#p2-stop}
 
-## 16. Digest {#design-digest}
-
-`sourceDigest` 基于规范化 sourceId 与原始字节 SHA-256；`semanticDigest` 使用 `DEC-SEMANTIC-DIGEST-V1`：将 SemanticDigestInput 编码为 UTF-8 canonical JSON，object key 按 Unicode code point 升序，数组按各领域 canonical key 升序，数字使用十进制规范形式，字符串使用 JSON 标准转义，缺失可选值编码为 JSON null，再计算 SHA-256。输入不包含 DigestPair、metrics 或 SourceRef 物理行列。compilerVersion、schemaVersion、optionsDigest 与 digestAlgorithmVersion 进入版本域，并由 PublishedCompilationResult 单独暴露。禁止依赖 HashMap、文件系统枚举或线程调度顺序。
-
-### 16.1 Timing 与 Observer {#design-timing-observer}
-
-编译器通过注入的 `MonotonicClock.nanoTime()` 采集 discovery、parse、每个 pass 和 digest 的纳秒耗时，并向 `CompilationObserver` 发送不可变 `CompilationTiming` 和 `SessionStateTransition`。Deadline 使用同一 MonotonicClock 的绝对纳秒域，因此测试可确定性推进时间。Observer 不参与 semanticDigest，也不得改变 Session 状态；Observer 抛出的异常转为非 ERROR 的 `MIX-OBSERVER-FAILURE` Diagnostic 后继续原流程。该 Diagnostic 可增加，但原 status、context 与 digest 不变。
-
-## 17. 跨模块调用与恢复 {#design-cross-module-contract}
-
-- Frontend 同步返回 Canonical 或 Diagnostic；不自动重试不安全输入；
-- Compiler 请求支持 deadline/cancel token；取消只影响当前 Session；
-- Starter 注入显式 PublicationRequest 并只接收 PUBLISHED/FAILED result；不得在 compileAndPublish 返回后再次发布；
-- 无远程副作用，不存在“部分模型成功”；任何错误都回到旧 Context；
-- 配置修复后通过新 CompilationSession 重编译；仓库恢复通过 Git revert。
-
-## 18. dec-expand-declaration 退役 {#design-declaration-retirement}
-
-删除模块、POM、依赖、服务注册、反射字符串、文档和测试引用。不提供 LegacyDeclarationAdapter、不保留双写。仓库扫描与 dependency tree 是阻断验收。
-
-## 19. 追踪映射 {#design-traceability}
-
-| TR | 设计锚点 |
-|---|---|
-| TR-P1-COMPILER-001 | `#design-mix-source-resolver`, `#design-compiler-pipeline` |
-| TR-P1-COMPILER-002 | `#design-canonical-document-node`, `#design-raw-definition-set` |
-| TR-P1-COMPILER-003 | `#design-typed-key-symbol-table`, `#design-information-expression` |
-| TR-P1-COMPILER-004 | `#design-deferred-definition` |
-| TR-P1-COMPILER-005 | `#design-compiled-model-set`, `#design-digest` |
-| TR-P1-COMPILER-006 | `#design-core-config-projection` |
-| TR-P1-COMPILER-007 | `#design-declaration-retirement` |
-| TR-P1-COMPILER-008 | `#design-information-expression` |
-| TR-P1-COMPILER-009 | `#design-model-access-selector` |
+出现以下任一情况必须回到 Requirement/Business Model，而不是在实现阶段自行决定：默认允许未声明 WRITE、允许 bare RuleView fallback 进入新调用、需要第二全局 Registry/Context、需要删除 declaration runtime、需要提前实现 P3～P7 完整语义，或现有配置无法用显式 System/RuleView/ModelPath 无损表达且会改变已冻结业务语义。

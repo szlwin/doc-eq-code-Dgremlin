@@ -262,6 +262,119 @@
       "EVD-000057",
       "EVD-000058"
     ]
+  },
+  {
+    "id": "TASK-P2-DESIGN-001",
+    "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-DESIGN",
+    "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-003",
+    "iteration_no": 3,
+    "supersedes_iteration_id": "",
+    "revision_reason": "BM-R07 已通过并显式冻结 DEC_COMPILER→COMPILER 单一谱系；当前 Design I003 首次将 P2 System、RuleView composite identity、ModelPath 与 model-access 静态/运行时权限边界落到可实现且可测试的模块、接口、状态与失败契约。",
+    "title": "设计 P2 System、RuleView 与 model-access 编译/运行边界",
+    "objective": "在 P1 编译器既有 SystemKey、RuleViewKey 与不可变 Context 基线上，形成 P2 增量详细设计，明确 CompiledSystem、复合 RuleView lookup、ModelPath、ModelAccessRule、静态授权、运行时 Guard、原子发布和 P7 兼容边界，不建立第二套 Compiler/Registry/Context。",
+    "phase": "design",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P2-BMODEL-001"
+    ],
+    "owner_agent": "DesignAgent",
+    "reviewer_agents": [
+      "ArchitectureReviewAgent",
+      "BusinessModelReviewAgent",
+      "DevelopAgent",
+      "RequirementReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
+    ],
+    "input_revisions": {
+      "business_model": "BM-R07@7d7bf504ca9d"
+    },
+    "allowed_files": [
+      "version/V_1.0/doc/COMPILER/COMPILER_design.md",
+      "version/V_1.0/doc/COMPILER/COMPILER_api_contract.md",
+      "version/V_1.0/doc/COMPILER/COMPILER_architecture.md",
+      "version/V_1.0/doc/COMPILER/COMPILER_test_seams.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_state.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_attempts.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/stage_outcomes.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/acceptance_assertions.json",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/review_issues.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/decision_log.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**",
+      "version/V_1.0/work_record.md",
+      "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md",
+      "project_doc/version/V_1.0/doc/COMPILER/COMPILER_api_contract.md",
+      "project_doc/version/V_1.0/doc/COMPILER/COMPILER_architecture.md",
+      "project_doc/version/V_1.0/doc/COMPILER/COMPILER_test_seams.md"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002",
+      "TR-P2-SYSTEM-RULEVIEW-003",
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-005",
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-008",
+      "TR-P2-SYSTEM-RULEVIEW-009",
+      "TR-P2-SYSTEM-RULEVIEW-010"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-CONFIG-COMPILE-01",
+      "STEP-CONFIG-COMPILE-03",
+      "STEP-CONFIG-COMPILE-04",
+      "STEP-CONFIG-COMPILE-05",
+      "STEP-CONFIG-COMPILE-06",
+      "STEP-CONFIG-COMPILE-07"
+    ],
+    "validation_commands": [
+      "python3 -c \"from pathlib import Path; p=Path('project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md'); s=p.read_text(); assert 'DESIGN-P2-R01@8875f042898c' in s; assert all(x in s for x in ['#p2-system','#p2-ruleview','#p2-model-path','#p2-model-access','#p2-runtime-guard','#p2-traceability'])\"",
+      "python3 -c \"import json; from pathlib import Path; s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); i=s.index('[',s.index('traceability')); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); p=[x for x in a if str(x.get('id','')).startswith('TR-P2-SYSTEM-RULEVIEW-')]; assert len(p)==10 and all(x.get('design_refs') for x in p)\"",
+      "python3 /mnt/data/common-develop/scripts/long_task.py validate -g DesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+      "git diff --check"
+    ],
+    "expected_results": [
+      "ArchitectureReviewAgent 独立确认 P2 复用单一 compiler/context 发布闭包、依赖方向与 Guard 边界，不产生第二 Registry 或反向依赖。",
+      "BusinessModelReviewAgent 独立确认详细设计完整承接 BM-R07 的 CompiledSystem、RuleView composite identity、ModelPath、ModelAccessRule 与 fail-closed 不变量。",
+      "DevelopAgent 独立确认设计具有明确模块落点、接口职责、算法顺序、失败语义与兼容边界，可在后续计划阶段拆分实现而无需重新决定核心语义。",
+      "RequirementReviewAgent 独立确认 Design 覆盖 P2 十条 trace/验收且未扩展到 P3～P8 运行语义。",
+      "TestDesignAgent 独立确认 System determinism、RuleView 隔离、ModelPath、权限矩阵、静态拒绝、runtime Guard、原子发布与兼容边界均暴露稳定测试 seam。",
+      "ImpactAnalysisReviewAgent 独立确认 compiler/context/frontend/starter/declaration 的影响、依赖顺序、兼容窗口和失败传播完整。",
+      "CrossModuleIntegrationReviewAgent 独立确认 P2 跨模块编译—发布—调用链无双写、无裸名称新回退、无第二 runtime authority。"
+    ],
+    "stop_conditions": [
+      "设计要求裸 RuleView 名称全局 fallback 或隐式 System 推断",
+      "设计默认允许未声明 WRITE/EXECUTE 或允许 Guard 后置于副作用",
+      "设计要求在 P2 删除 declaration runtime 或实现 P3～P8 语义",
+      "出现必须改变 BM-R07 已冻结业务语义的 P0/P1 决策"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "DESIGN-P2-R01@8875f042898c",
+    "validation_evidence_ids": [
+      "EVD-000070",
+      "EVD-000071",
+      "EVD-000072",
+      "EVD-000073",
+      "EVD-000074",
+      "EVD-000075",
+      "EVD-000076",
+      "EVD-000077",
+      "EVD-000078",
+      "EVD-000079",
+      "EVD-000080",
+      "EVD-000081",
+      "EVD-000082",
+      "EVD-000083"
+    ]
   }
 ]
 ```

@@ -369,6 +369,221 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-08-08T04:17:24+00:00",
       "reason": "Compiler/Context/Starter/Frontend 责任链与 FLOW-CONFIG-COMPILE 保持单一；RuleView composite lookup 和 runtime Guard 均无裸名称或权限旁路。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DES-R01-ARCH-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "ArchitectureReviewAgent 独立确认 P2 复用单一 compiler/context 发布闭包、依赖方向与 Guard 边界，不产生第二 Registry 或反向依赖。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-DESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000070",
+        "EVD-000071",
+        "EVD-000072",
+        "EVD-000073",
+        "EVD-000078",
+        "EVD-000079",
+        "EVD-000080",
+        "EVD-000081",
+        "EVD-000082",
+        "EVD-000083",
+        "EVD-000076",
+        "EVD-000089",
+        "EVD-000074",
+        "EVD-000075"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-08T05:35:49+00:00",
+      "reason": "单一发布闭包、context→compiler 禁止反向依赖、Guard 前置边界、原子失败隔离与 P7 演进边界一致，架构 Review 通过。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DES-R01-BM-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-004",
+      "statement": "BusinessModelReviewAgent 独立确认详细设计完整承接 BM-R07 的 CompiledSystem、RuleView composite identity、ModelPath、ModelAccessRule 与 fail-closed 不变量。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-DESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000075",
+        "EVD-000070",
+        "EVD-000071",
+        "EVD-000072",
+        "EVD-000073",
+        "EVD-000076",
+        "EVD-000074",
+        "EVD-000077"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-08-08T05:35:55+00:00",
+      "reason": "Design 完整承接 BM-R07 的 System/RuleView/ModelPath/ModelAccess 不变量与失败语义，没有引入平行业务模型，业务模型一致性 Review 通过。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DES-R01-DEV-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "DevelopAgent 独立确认设计具有明确模块落点、接口职责、算法顺序、失败语义与兼容边界，可在后续计划阶段拆分实现而无需重新决定核心语义。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-DESIGN-001#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000070",
+        "EVD-000071",
+        "EVD-000072",
+        "EVD-000073",
+        "EVD-000078",
+        "EVD-000079",
+        "EVD-000080",
+        "EVD-000081",
+        "EVD-000082",
+        "EVD-000083",
+        "EVD-000089"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-08T05:36:02+00:00",
+      "reason": "设计已对齐现有 SystemKey、RuleViewKey、TypedDefinitionRegistries、CompiledModelSet/EngineContext，并明确旧 bare-name gap 与后续落点，实现可行性 Review 通过。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DES-R01-REQ-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "RequirementReviewAgent 独立确认 Design 覆盖 P2 十条 trace/验收且未扩展到 P3～P8 运行语义。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-DESIGN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000074",
+        "EVD-000075",
+        "EVD-000070",
+        "EVD-000071",
+        "EVD-000072",
+        "EVD-000073",
+        "EVD-000089",
+        "EVD-000076"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-08T05:36:09+00:00",
+      "reason": "十条 P2 trace 均有 Design 引用，范围保持在 System/RuleView/model-access P2 边界且没有提前执行 P3～P8，需求 Review 通过。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DES-R01-TD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "TestDesignAgent 独立确认 System determinism、RuleView 隔离、ModelPath、权限矩阵、静态拒绝、runtime Guard、原子发布与兼容边界均暴露稳定测试 seam。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-DESIGN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000089",
+        "EVD-000070",
+        "EVD-000071",
+        "EVD-000072",
+        "EVD-000073",
+        "EVD-000074"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-08T05:36:15+00:00",
+      "reason": "Design 已为十项 AC 提供稳定 seam/oracle 与预计 Case 族，并排除环境错误作为未来 TDD RED，测试设计可行性 Review 通过。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DES-R01-IMP-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "ImpactAnalysisReviewAgent 独立确认 compiler/context/frontend/starter/declaration 的影响、依赖顺序、兼容窗口和失败传播完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-DESIGN-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000075",
+        "EVD-000070",
+        "EVD-000071",
+        "EVD-000072",
+        "EVD-000073",
+        "EVD-000074",
+        "EVD-000089"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-08T05:36:32+00:00",
+      "reason": "compiler/context/frontend/starter/declaration 影响、单向依赖、兼容窗口、失败传播与测试映射均明确，影响分析 Review 通过。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DES-R01-XMOD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-003",
+      "statement": "CrossModuleIntegrationReviewAgent 独立确认 P2 跨模块编译—发布—调用链无双写、无裸名称新回退、无第二 runtime authority。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-DESIGN-001#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000072",
+        "EVD-000070",
+        "EVD-000071",
+        "EVD-000073",
+        "EVD-000076",
+        "EVD-000075",
+        "EVD-000089"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-08T05:37:13+00:00",
+      "reason": "跨模块编译—发布—调用链的参与者、顺序、接口/Guard 契约、原子可见性、失败恢复与测试映射完整；无双写、无新 bare-name fallback、无第二 runtime authority。"
     }
   ]
 }
