@@ -1,96 +1,135 @@
 # COMPILER P2 设计测试接缝
 
-> Revision：`DESIGN-P2-R09`。正式 Test Design candidate：`TESTDESIGN-P2-R10`。
+> Revision：`DESIGN-P2-R10`。正式 Test Design candidate：`TESTDESIGN-P2-R11`。
+> 本 Revision 冻结 repository-valid module/package seams；不创建 production skeleton，也不执行 TDD。
 
-## 1. Production classifier fixtures
+## 1. Module seams
 
-AC-006/classifier acceptance MUST 使用真实当前 grammar：
+| Seam | Exact module | Production owner |
+|---|---|---|
+| Neutral access contracts/API shape | `dec-core-context` | `dec.core.context.model.access.*` |
+| Dynamic classifier/rule/plan | `dec-core-compiler` | `dec.core.compiler.access.*` |
+| Resolver/Gateway/Guard/verifier/registry | `dec-core-starter` | `dec.core.starter.access.*` |
+| Bootstrap-time trusted adapters | `dec-core-starter` | `dec.core.starter.access.spi.*` |
+| Real source integration | `dec-demo` | existing `systems.xml` + starter dependency |
 
-- source：`dec-demo/src/main/resources/mix/system/systems.xml` -> `order` -> information `ordered` -> `rule-data`；
-- direct `status = 1` -> production classifier MUST `STATIC_BOUND`；
-- `every(orderDetailList, status = 1)` element `status` READ -> MUST `RUNTIME_OBJECT_BOUND`；
-- source READ `*` expansion 必须包含 exact readable element member；禁止 parent-path fallback；
-- unsupported dynamic selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`。
+No test may target a nonexistent `framework execution runtime`/`dec-core-runtime` module。
 
-`DynamicBindingClassifierStub` 仅可隔离下游 unit，不得证明 classifier correctness/AC-006。
+## 2. Starter runtime ownership seams — FND-004
 
-## 2. Generic `ProtectedAccessResolutionContext` fixtures
-
-提供 framework-owned execution frame fixtures：
-
-- STATIC：C1 / frame FS / owner OrderInfo-A / no collection cursor / direct `status` target；
-- RUNTIME：C1 / frame FR / owner OrderInfo-A / cursor element-A；
-- same Context but owner OrderInfo-B / different collection cursor；
-- prior Context C0；
-- expired frame/cursor；
-- context replacement/member removal before gateway execution。
-
-Business test code 不得通过 public constructor/factory 创建 production context，也不获得 raw domain object getter。
-
-## 3. STATIC_ALLOW Guard-path fixtures（FND-001）
-
-Real source direct `status = 1` MUST produce `STATIC_BOUND -> STATIC_ALLOW` with：
-
-- selected compiled rule `runtimeBindingPlan().isPresent() == false`；
-- selected compiled rule `runtimeRequirement().isPresent() == false`；
-- generic resolver creates one `ResolvedProtectedAccess` without RuntimeBindingPlan input；
-- `ProtectedAccessGateway.execute(access)` invocation count = 1；
-- `ModelAccessGuard.authorize(access)` invocation count = 1；
-- Guard-owned exact PolicyIndex lookup count = 1；
-- RuntimeBindingVerifier invocation count = 0；
-- runtime evaluator submit count = 0；
-- same hidden target protected operation count = 1；
-- any public/supported caller-side direct STATIC_ALLOW protected executor is an architecture/API test failure。
-
-Required bypass seam：attempt to invoke a protected read/write/execute without the generic resolver/gateway/Guard path must be impossible by supported API or trip `MODEL_ACCESS_GUARD_BYPASS` before operation。
-
-## 4. Runtime operation-bound capability fixtures（FND-017/FND-019）
-
-- generic resolver resolves actual element A and protected READ intent -> one-shot capability A；
-- Guard exact lookup selects runtime-required rule and RuntimeBindingVerifier verifies A against exact plan；
-- gateway executes A -> **A protected read count = 1**；
-- lower-level invariant seam pairs A capability metadata with actual target B -> `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH` -> A/B operation count = 0 for rejected attempt；
-- public/runtime API inspection must find no `execute(capability,target)`、`execute(handle,rawObject)` or caller-selected second-target callback；
-- replay -> `RUNTIME_BINDING_CAPABILITY_CONSUMED`；
-- remove/move A after resolve but before execute -> DENY before operation；
-- concurrent execute(A) -> at most one terminal successful consumer。
-
-## 5. Unified Guard branch oracle
+Architecture/API inspection must require planned production classes in `dec-core-starter`：
 
 ```text
-same generic capability/gateway/Guard entry
- -> Guard exact lookup once
- -> selected STATIC_ALLOW
-      -> runtime verifier 0
-      -> evaluator 0
-      -> same bound target execute once
- OR selected RUNTIME_GUARD_REQUIRED
-      -> exact plan/requirement present
-      -> runtime verifier 1
-      -> same bound target execute once only on proof match
+dec.core.starter.access.ProtectedAccessRuntime
+dec.core.starter.access.ProtectedAccessRuntimeFactory
+dec.core.starter.access.DefaultProtectedAccessResolver
+dec.core.starter.access.DefaultProtectedAccessGateway
+dec.core.starter.access.DefaultModelAccessGuard
+dec.core.starter.access.DefaultRuntimeBindingVerifier
+dec.core.starter.access.ContextLocalProtectedAccessRegistry
 ```
 
-This oracle prevents implementation from treating STATIC_ALLOW as a caller-side bypass and prevents runtime proof from becoming a prerequisite for static capability creation。
-
-## 6. AC-006 end-to-end oracle
+SPI owner：
 
 ```text
-real systems.xml + real rule-data IR
- -> exact read authorization
- -> production classifier
-      direct status = STATIC_BOUND -> STATIC_ALLOW(no plan)
-      every(orderDetailList,status) = RUNTIME_OBJECT_BOUND -> runtime rule+plan
- -> immutable Context
- -> framework generic ProtectedAccessResolutionContext
- -> ProtectedAccessResolver binds actual target + operation into ResolvedProtectedAccess
- -> ProtectedAccessGateway.execute
- -> ModelAccessGuard exact lookup once
-      static: verifier/evaluator 0
-      runtime: exact runtime proof verification
- -> framework executes same hidden target
- -> no static bypass and no proof-A/target-B substitution
+dec.core.starter.access.spi.ProtectedTargetResolutionPort
+dec.core.starter.access.spi.ProtectedOperationExecutionPort
+dec.core.starter.access.spi.ProtectedAccessAdapterRegistry
 ```
 
-## 7. Other seams/oracles
+Assertions：
+- no new Maven runtime module required；
+- no context -> starter/compiler reverse dependency；
+- no compiler -> starter dependency；
+- no P2 starter -> dec-core-model dependency merely to access POJO；
+- adapters registered at runtime composition, not passed per execution as target/callback。
 
-继续保留 deterministic System source provider、composite RuleView fixtures、wildcard exact expansion、exact PolicyIndex lookup-count spy、unavailable Guard sentinel、RuntimeFactValue immutability、bounded evaluator/fake time、protected operation probes。Compile/setup/missing-symbol failure 是 INVALID_RED；timeout oracle 禁止 `Thread.sleep`。
+## 3. Production classifier fixtures
+
+Real source is `dec-demo/src/main/resources/mix/system/systems.xml`：
+- direct `status = 1` -> `STATIC_BOUND`；
+- `every(orderDetailList,status = 1)` element `status` READ -> `RUNTIME_OBJECT_BOUND`；
+- unsupported dynamic selector -> compile ERROR；
+- READ `*` expands compile-time to exact member rule；no parent fallback。
+
+Classifier stub cannot prove production correctness。
+
+## 4. STATIC_ALLOW Guard path — FND-001 regression
+
+Starter harness must observe：
+- generic resolver capability created without RuntimeBindingPlan；
+- Gateway=1；Guard=1；Guard PolicyIndex lookup=1；Gateway lookup=0；
+- selected STATIC_ALLOW plan/requirement empty；
+- RuntimeBindingVerifier=0；evaluator=0；
+- same hidden target operation=1；
+- direct caller static executor outside starter runtime unavailable or `MODEL_ACCESS_GUARD_BYPASS` before operation。
+
+## 5. Runtime binding / substitution — FND-017/FND-019
+
+Starter harness provides C1/frame/owner/cursor fixtures and context-local registry probe：
+- actual element A -> runtime-required rule -> verifier match -> A operation=1；
+- foreign B under same static tuple -> DENY；
+- capability A + forced executor target B -> `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`, A/B operation=0；
+- member removal/frame expiry/Context replacement -> stale DENY；
+- replay -> consumed DENY；concurrent replay -> at most one success。
+
+## 6. Adapter integration/no-bypass seam
+
+Use an immutable starter test `ProtectedAccessAdapterRegistry` with deterministic fake framework ports。Tests must prove：
+- registry is supplied when `ProtectedAccessRuntimeFactory` composes the runtime；
+- per-call `execute(context,intent)` has no adapter/raw-target/callback argument；
+- resolver records the selected adapter with capability；
+- gateway invokes only that bound execution port；
+- absent adapter -> `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`, operation/effects=0。
+
+Future production adapter implementations are out of P2 Test Design；only their mandatory integration contract is tested here。
+
+## 7. P2/P3 boundary seam
+
+Repository inspection must fail the P2 architecture test if the P2 change introduces：
+- full Rule/change/action/query business executors；
+- QueryPlan semantics；
+- datasource transaction orchestration；
+- source-authored runtime permission predicate DSL；
+- starter direct dependency on a future business-executor module。
+
+Starter may implement only access-control runtime plumbing and SPI。
+
+## 8. Real end-to-end seam (`dec-demo`)
+
+`dec-demo` is the exact module for real `systems.xml` source-to-operation integration because it already contains the resource and depends on `dec-core-starter`。
+
+Oracle：
+
+```text
+real systems.xml
+ -> production compiler/classifier
+ -> immutable EngineContext
+ -> context-bound starter ProtectedAccessRuntime
+ -> trusted test adapter registry
+ -> direct status static branch: Guard=1/verifier=0/op=1
+ -> every element runtime branch: Guard=1/verifier=1/op=1 on valid A
+ -> invalid proof/substitution: op=0/effects=0
+```
+
+## 9. Exact planned test classes
+
+- `dec-core-context`: `dec.core.context.model.access.ProtectedAccessApiContractTest`
+- `dec-core-compiler`: `dec.core.compiler.access.ModelAccessRuleCompilationContractTest`
+- `dec-core-starter`: `dec.core.starter.access.ProtectedAccessRuntimeOwnershipTest`
+- `dec-core-starter`: `dec.core.starter.access.ProtectedAccessStaticAllowPathTest`
+- `dec-core-starter`: `dec.core.starter.access.RuntimeBindingProofIntegrationTest`
+- `dec-core-starter`: `dec.core.starter.access.ProtectedAccessOperationBindingTest`
+- `dec-core-starter`: `dec.core.starter.access.UnifiedProtectedAccessBranchTest`
+- `dec-demo`: `dec.demo.p2.P2DynamicClassifierRealFixtureTest`
+- `dec-demo`: `dec.demo.p2.P2DynamicSourceToOperationTest`
+
+These are **planned TDD targets**, not claims that the files currently exist。
+
+## 10. RED validity
+
+For every planned TestClass：bootstrap dependencies with `-am -Dmaven.test.skip=true install`, then run the exact target module **without `-am`** and `-Dsurefire.failIfNoSpecifiedTests=true`。Missing module/test/symbol/setup failure is `INVALID_RED`; pre-skeleton first RED must use a compilable reflection/source/API-shape test when needed。
+
+## 11. Other carried seams
+
+Continue deterministic System source provider、RuleView composite identity、wildcard exact expansion、PolicyIndex lookup spy、RuntimeFactValue immutability、unavailable Guard sentinel、controlled Future/fake monotonic time and protected-operation/effect probes。Timeout oracle must not use `Thread.sleep`。

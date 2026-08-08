@@ -1,43 +1,146 @@
 # FEATURE-DESC-3361AD2E54FC Test Design
 
-> Revision：`TESTDESIGN-P2-R10`。
-> Base：`TESTDESIGN-P2-R09`。
-> Inputs：Requirement `REQAN-P2-R01`、Business Model candidate `BM-R12`、Design candidate `DESIGN-P2-R09`。
-> Status：`NEEDS_CHANGES_CANDIDATE_FIXED / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`。本文件是当前 canonical Test Design candidate；在 exact-revision Review、RC9 reopen/publish、machine-valid risk Evidence 完成前不得 PASSED。
+> Revision：`TESTDESIGN-P2-R11`。
+> Base：`TESTDESIGN-P2-R10`。
+> Inputs：Requirement `REQAN-P2-R01`、Business Model candidate `BM-R12`、Design candidate `DESIGN-P2-R10`。
+> Status：`NEEDS_CHANGES_CANDIDATE_FIXED / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`。本 Revision 专门把 blocking cases 映射到真实 Maven module / planned TestClass / exact RED command；Test Design 不创建 skeleton、不执行 TDD。
 
 ## 1. Principles
 
-1. Acceptance 从真实 source/public framework behavior 出发，不以 helper/stub 自证。
-2. **所有 protected READ/WRITE/EXECUTE，包括 STATIC_ALLOW，都必须证明进入同一个 Gateway -> Guard 路径。**
-3. `STATIC_ALLOW` 只能是 Guard exact rule lookup 后的内部 fast path；不得伪造 RuntimeBindingPlan，也不得 caller-side bypass。
-4. Runtime lookup exact-only；真实 `read path="*"` 只允许 compile-time finite expansion。
-5. AC-006 必须证明 real source/IR -> production classifier -> compiler-published rule/plan -> Context -> generic resolution capability -> Guard -> same-target operation。
-6. classifier stub 只能隔离下游 unit；detached handle/proof verification不能替代 final same-target execution Evidence。
-7. caller 不得 mint capability、提交 replacement rule/plan/target 或通过 raw POJO/callback 选择第二 protected target。
-8. valid TDD RED 必须 testCompile 成功、目标 test 启动、因目标 behavior/contract assertion 失败；missing symbol/module/test/setup/compile failure 均 `INVALID_RED`。
-9. Test Design 不创建 production skeleton/实现。
+1. 所有 protected READ/WRITE/EXECUTE，包括 STATIC_ALLOW，都必须进入同一 starter-owned protected runtime -> Gateway -> Guard path。
+2. `STATIC_ALLOW` 只能是 Guard exact lookup 后内部 fast path；无 RuntimeBindingPlan/verifier/evaluator。
+3. Runtime binding proof 只属于 selected `RUNTIME_GUARD_REQUIRED`。
+4. actual target 与 operation one-shot binding 不可替换；proof/capability A 不得授权 B。
+5. P2 concrete runtime owner 是真实 `dec-core-starter`；不使用抽象 `<target-module>` 或不存在的 `dec-core-runtime`。
+6. Real `systems.xml` integration owner 是 `dec-demo`，因为 resource 与 starter dependency 已存在于该 module。
+7. valid RED：bootstrap 可以 `-am`，正式 target test **禁止 `-am`**；missing module/test/symbol/setup/compile failure 是 INVALID_RED。
+8. Implementation Plan/TDD/Development 在 exact Design Review 与 machine gate 前仍 BLOCKED。
 
-## 2. Formal Maven / valid RED
+## 2. Exact Maven / planned TestClass contract
 
-Bootstrap only：
+> 下表中的 TestClass 是下一阶段 TDD 的**冻结目标名称**，不是当前已存在/已执行 Evidence。
+
+| Purpose | Exact module | Planned TestClass |
+|---|---|---|
+| Neutral access API/module shape | `dec-core-context` | `dec.core.context.model.access.ProtectedAccessApiContractTest` |
+| Rule status/plan invariant | `dec-core-compiler` | `dec.core.compiler.access.ModelAccessRuleCompilationContractTest` |
+| Starter module/package ownership | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessRuntimeOwnershipTest` |
+| STATIC_ALLOW Guard path | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessStaticAllowPathTest` |
+| Runtime membership proof | `dec-core-starter` | `dec.core.starter.access.RuntimeBindingProofIntegrationTest` |
+| A-proof/B-target substitution + TOCTOU | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessOperationBindingTest` |
+| Unified static/runtime branch counts | `dec-core-starter` | `dec.core.starter.access.UnifiedProtectedAccessBranchTest` |
+| Real production classifier fixture | `dec-demo` | `dec.demo.p2.P2DynamicClassifierRealFixtureTest` |
+| Full real source -> operation | `dec-demo` | `dec.demo.p2.P2DynamicSourceToOperationTest` |
+
+Exact command pattern for any row：
 
 ```bash
-./mvnw -pl <target-module> -am -Dmaven.test.skip=true install
+./mvnw -pl <EXACT-MODULE> -am -Dmaven.test.skip=true install
+./mvnw -pl <EXACT-MODULE> -Dtest=<EXACT-TESTCLASS> -Dsurefire.failIfNoSpecifiedTests=true test
 ```
 
-Formal target test：
+The second command must not use `-am`。
+
+## 3. FND-004 repository ownership — BLOCKING
+
+### CASE-P2-RUNTIME-OWNERSHIP-001-R11
+
+**Module/TestClass**
+
+```text
+dec-core-starter
+dec.core.starter.access.ProtectedAccessRuntimeOwnershipTest
+```
+
+**Bootstrap**
 
 ```bash
-./mvnw -pl <target-module> -Dtest=<TestClass> -Dsurefire.failIfNoSpecifiedTests=true test
+./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install
 ```
 
-目标 test step 禁止 `-am`。新 API 尚不存在时首个 RED 使用 reflection/string/source/bytecode contract inspection；合法 TDD skeleton 建立后才允许直接 typed test。
+**Formal RED/target**
 
-## 3. Production classifier — FND-018 blocking
+```bash
+./mvnw -pl dec-core-starter -Dtest=dec.core.starter.access.ProtectedAccessRuntimeOwnershipTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
 
-### CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R10 — BLOCKING
+Required architecture/API oracles：
 
-Real fixture：`dec-demo/src/main/resources/mix/system/systems.xml`，`system=order`，`information=ordered`：
+1. root reactor contains `dec-core-starter` and does not require a P2 `dec-core-runtime` module；
+2. starter owns package `dec.core.starter.access.*` planned concrete runtime classes：
+   - `ProtectedAccessRuntime`
+   - `ProtectedAccessRuntimeFactory`
+   - `DefaultProtectedAccessResolver`
+   - `DefaultProtectedAccessGateway`
+   - `DefaultModelAccessGuard`
+   - `DefaultRuntimeBindingVerifier`
+   - `ContextLocalProtectedAccessRegistry`；
+3. trusted SPI owner is `dec.core.starter.access.spi.*`；
+4. context contracts remain under `dec.core.context.model.access.*`；compiler publication remains under `dec.core.compiler.access.*`；
+5. no context->starter/compiler reverse dependency；no compiler->starter dependency；
+6. P2 starter runtime must not add a direct `dec-core-model` dependency merely to understand business POJOs；
+7. adapter registry is composition-time immutable; public per-call execute surface has no raw target/executor callback；
+8. starter source in P2 contains no full Rule/change/action/query business execution implementation。
+
+This Case is mandatory for FND-004 closure。
+
+## 4. FND-001 STATIC_ALLOW Guard path — BLOCKING
+
+### CASE-P2-STATIC-ALLOW-GUARD-PATH-001-R11
+
+**Module/TestClass**
+
+```text
+dec-core-starter
+dec.core.starter.access.ProtectedAccessStaticAllowPathTest
+```
+
+**Commands**
+
+```bash
+./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install
+./mvnw -pl dec-core-starter -Dtest=dec.core.starter.access.ProtectedAccessStaticAllowPathTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
+
+Compile precondition from compiler fixture：`DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW` and selected rule has no plan/requirement。
+
+Runtime oracle：
+
+```text
+ProtectedAccessRuntime.execute(context,intent)
+ -> DefaultProtectedAccessResolver binds target A
+ -> generic one-shot capability A (no runtime plan input)
+ -> DefaultProtectedAccessGateway = 1
+ -> DefaultModelAccessGuard = 1
+ -> Guard exact PolicyIndex lookup = 1
+ -> selected STATIC_ALLOW
+ -> DefaultRuntimeBindingVerifier = 0
+ -> evaluator = 0
+ -> same bound target A operation = 1
+ -> capability consumed
+```
+
+Negative：caller-side/direct `STATIC_ALLOW` operation outside starter runtime is impossible through supported API or fails `MODEL_ACCESS_GUARD_BYPASS` before operation；operation/effects=0。
+
+## 5. Production classifier real fixture — BLOCKING
+
+### CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R11
+
+**Module/TestClass**
+
+```text
+dec-demo
+dec.demo.p2.P2DynamicClassifierRealFixtureTest
+```
+
+**Commands**
+
+```bash
+./mvnw -pl dec-demo -am -Dmaven.test.skip=true install
+./mvnw -pl dec-demo -Dtest=dec.demo.p2.P2DynamicClassifierRealFixtureTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
+
+Real source：`dec-demo/src/main/resources/mix/system/systems.xml` / `system=order` / information `ordered`：
 
 ```text
 status = 1
@@ -46,198 +149,213 @@ every(orderDetailList, status = 1)
 ```
 
 Required：
+- production parser/compiler generates real resolved IR；
+- direct status -> `DIRECT_EXACT -> STATIC_BOUND`；
+- every element status -> `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND`；
+- real READ `*` expansion includes exact readable member；no parent fallback；
+- unsupported dynamic selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`；
+- classifier stub cannot satisfy this Case。
 
-1. production parser/compiler produces resolved access-consumer IR；
-2. direct `status = 1` -> `DIRECT_EXACT -> STATIC_BOUND`；
-3. `every(orderDetailList,status = 1)` element `status` READ -> `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND`；
-4. collection/element relative path exact-resolve；真实 READ `*` expansion 含 exact readable member；禁止 parent fallback；
-5. deterministic classification/plan key/digest under equivalent source order；
-6. unsupported index/key/filter/find/selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR；
-7. `DynamicBindingClassifierStub` 不得满足本 Case。
+## 6. Compiled rule/plan invariant
 
-## 4. STATIC_ALLOW unified Guard path — FND-001 blocking
+### CASE-P2-RULE-PLAN-INVARIANT-001-R11
 
-### CASE-P2-STATIC-ALLOW-GUARD-PATH-001-R10 — BLOCKING
-
-Purpose：证明 STATIC_ALLOW 不依赖 RuntimeBindingPlan，同时也不能成为 caller-side Guard bypass。
-
-Fixture：同一真实 `systems.xml / order.ordered` 的 direct `status = 1` protected READ。
-
-Compile oracles：
-
-1. production classifier -> `STATIC_BOUND`；
-2. exact compiled rule -> `status=STATIC_ALLOW`；
-3. `runtimeBindingPlan().isPresent() == false`；
-4. `runtimeRequirement().isPresent() == false`；
-5. semantic digest 不包含伪造 runtime-plan identity。
-
-Runtime positive oracle：
+**Module/TestClass**
 
 ```text
-framework ProtectedAccessResolutionContext for direct status target A
- -> ProtectedAccessResolver.resolve(context, READ intent)
- -> legal generic ResolvedProtectedAccess A created with no RuntimeBindingPlan input
- -> ProtectedAccessGateway.execute(A) = 1
- -> ModelAccessGuard.authorize(A) = 1
- -> Guard exact PolicyIndex lookup = 1
- -> selected rule = STATIC_ALLOW
- -> RuntimeBindingVerifier = 0
- -> runtime evaluator submit = 0
- -> same hidden target A protected READ = 1
- -> capability consumed
+dec-core-compiler
+dec.core.compiler.access.ModelAccessRuleCompilationContractTest
 ```
 
-Runtime negative/bypass oracle：
+**Commands**
 
-- no supported caller-side API can perform the same protected READ directly after observing `STATIC_ALLOW`；
-- no `executeStatic(target)` / `if STATIC_ALLOW then directOperation` privileged path outside Gateway/Guard；
-- attempting a lower-level direct protected operation without a valid generic capability/gateway/Guard path must fail architecture/API inspection or return `MODEL_ACCESS_GUARD_BYPASS` before operation；
-- bypass attempt protected operation count = 0, state unchanged, external effects = 0。
+```bash
+./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install
+./mvnw -pl dec-core-compiler -Dtest=dec.core.compiler.access.ModelAccessRuleCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
 
-This Case is mandatory for FND-001 closure；a test that only asserts `STATIC_ALLOW` exists is insufficient。
+Oracle：
+- STATIC_ALLOW -> plan empty / requirement empty；
+- RUNTIME_GUARD_REQUIRED -> exact plan present / EXACT_RUNTIME_BINDING present；
+- illegal mixed state cannot publish；
+- semantic digest includes runtime plan identity only when runtime-required。
 
-## 5. Runtime object proof — FND-017 regression
+## 7. Runtime membership proof — BLOCKING
 
-### CASE-P2-RUNTIME-BINDING-PROOF-001-R10 — BLOCKING
+### CASE-P2-RUNTIME-BINDING-PROOF-001-R11
 
-Precondition：production compiler creates element `status` exact `RUNTIME_GUARD_REQUIRED` rule + `RuntimeBindingPlan(COLLECTION_ELEMENT_MEMBERSHIP)` + `EXACT_RUNTIME_BINDING` requirement。
+**Module/TestClass**
+
+```text
+dec-core-starter
+dec.core.starter.access.RuntimeBindingProofIntegrationTest
+```
+
+**Commands**
+
+```bash
+./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install
+./mvnw -pl dec-core-starter -Dtest=dec.core.starter.access.RuntimeBindingProofIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
 
 Required：
+- context-bound starter runtime uses trusted adapter registry；
+- actual element A under current owner/cursor -> runtime rule -> verifier MATCH -> A op=1；
+- B from another OrderInfo/collection under same static tuple -> DENY；
+- stale Context/frame/cursor, wrong rule/plan, forged provenance -> DENY；
+- no raw target/capability mint public API；
+- absent trusted adapter -> `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`, op/effects=0。
 
-1. immutable EngineContext C1 publish；
-2. framework generic `ProtectedAccessResolutionContext` uses current every element frame/cursor；
-3. resolver binds actual element A into generic capability A without caller-provided plan/proof；
-4. Guard exact lookup selects runtime rule and RuntimeBindingVerifier verifies A against exact compiler plan；
-5. foreign element B from another OrderInfo/collection under same static tuple cannot satisfy A membership；
-6. stale Context、wrong plan/rule、unknown/forged provenance DENY；
-7. no raw POJO/object reference exposed by Guard/capability public contract。
+## 8. Operation substitution / TOCTOU — BLOCKING
 
-## 6. Operation substitution / TOCTOU — FND-019 blocking
+### CASE-P2-RUNTIME-BINDING-OPERATION-SUBSTITUTION-001-R11
 
-### CASE-P2-RUNTIME-BINDING-OPERATION-SUBSTITUTION-001-R10 — BLOCKING
-
-Positive：
+**Module/TestClass**
 
 ```text
-ResolvedProtectedAccess A
- -> Gateway.execute(A)
- -> Guard verifies A
- -> same internally-bound A executes once
- -> B executes zero
+dec-core-starter
+dec.core.starter.access.ProtectedAccessOperationBindingTest
 ```
 
-Substitution negative：
+**Commands**
+
+```bash
+./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install
+./mvnw -pl dec-core-starter -Dtest=dec.core.starter.access.ProtectedAccessOperationBindingTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
+
+Positive：capability A -> Guard verifies A -> exact registry-bound execution port operates A once。
+
+Negative：valid A capability + forced target B -> supported API impossible OR invariant seam `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`；A/B operation=0、state unchanged、effects=0。
+
+TOCTOU/replay：membership change、frame/cursor/Context invalidation -> DENY；second execute -> consumed；two concurrent execute -> at most one terminal success。
+
+## 9. Unified branch counts — BLOCKING
+
+### CASE-P2-UNIFIED-PROTECTED-ACCESS-BRANCH-001-R11
+
+**Module/TestClass**
 
 ```text
-valid capability/proof A + attempted actual target B
- => supported API construction impossible
- OR lower-level invariant detects executorTarget != capabilityTarget
- => DENY / RUNTIME_BINDING_OPERATION_TARGET_MISMATCH
- => A/B operation count = 0 for rejected attempt
- => state unchanged
- => external effects = 0
+dec-core-starter
+dec.core.starter.access.UnifiedProtectedAccessBranchTest
 ```
 
-API-shape assertions：no `execute(capability,target)`、no `execute(handle,rawObject)`、no caller callback selecting B、no public capability mint/factory/raw-target getter。
+**Commands**
 
-TOCTOU/replay：member removal/move after resolve -> DENY；frame/cursor/Context invalidation -> DENY；second execute -> `RUNTIME_BINDING_CAPABILITY_CONSUMED`；concurrent execute -> at most one terminal success。
+```bash
+./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install
+./mvnw -pl dec-core-starter -Dtest=dec.core.starter.access.UnifiedProtectedAccessBranchTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
 
-## 7. Unified static/runtime branch contract
+| Branch | Resolver | Gateway | Guard | Policy lookup | Runtime verifier | Evaluator | Operation |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| STATIC_ALLOW | 1 | 1 | 1 | 1 | 0 | 0 | 1 same target |
+| RUNTIME + valid proof | 1 | 1 | 1 | 1 | 1 | 0 | 1 same target |
+| RUNTIME + invalid proof | 1 | 1 | 1 | 1 | 1 | 0 | 0 |
+| missing adapter | 1 attempt | 0 operation | 0/blocked before policy as designed | 0 | 0 | 0 | 0 |
 
-### CASE-P2-UNIFIED-PROTECTED-ACCESS-BRANCH-001-R10 — BLOCKING
+Adapter failure must be fail-closed and must not create a direct fallback path。
 
-Using one Gateway/Guard spy harness：
+## 10. Full real source -> protected operation — BLOCKING
 
-| Branch | Gateway | Guard | Policy lookup | Runtime verifier | Evaluator | Protected operation |
-|---|---:|---:|---:|---:|---:|---:|
-| STATIC_ALLOW | 1 | 1 | 1 | 0 | 0 | 1 on same bound target |
-| RUNTIME_GUARD_REQUIRED + valid proof | 1 | 1 | 1 | 1 | 0 for current AC-006 | 1 on same bound target |
-| RUNTIME_GUARD_REQUIRED + invalid proof | 1 | 1 | 1 | 1 | 0 | 0 |
+### CASE-P2-DYNAMIC-SOURCE-TO-OPERATION-001-R11
 
-This matrix prevents both static Guard bypass and unnecessary runtime-plan/evaluator coupling。
-
-## 8. Full AC-006 source-to-operation chain
-
-### CASE-P2-DYNAMIC-SOURCE-TO-OPERATION-001-R10 — BLOCKING
+**Module/TestClass**
 
 ```text
-real systems.xml / order.ordered
- -> exact static READ authorization
- -> production classifier
-      direct status -> STATIC_BOUND -> STATIC_ALLOW(no plan)
-      every(orderDetailList,status) -> RUNTIME_OBJECT_BOUND -> runtime rule+plan
- -> immutable Context publishes
- -> generic ProtectedAccessResolutionContext
- -> ProtectedAccessResolver binds actual target + exact READ intent
- -> ProtectedAccessGateway.execute
- -> ModelAccessGuard exact lookup once
-      static branch: verifier/evaluator 0
-      runtime branch: exact runtime plan/proof verification
- -> same internally-bound target is read once
- -> no static bypass
- -> proof/capability A cannot authorize B
- -> every DENY zero operation / zero external effects
+dec-demo
+dec.demo.p2.P2DynamicSourceToOperationTest
 ```
 
-Manual compiled rule、classifier stub、detached handle-only test、four-field static binding object or caller-side static fast path cannot close AC-006/FND-001。
+**Commands**
 
-## 9. Existing acceptance matrix carried forward
+```bash
+./mvnw -pl dec-demo -am -Dmaven.test.skip=true install
+./mvnw -pl dec-demo -Dtest=dec.demo.p2.P2DynamicSourceToOperationTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
 
-- **AC-001 / CASE-P2-SYSTEM-DETERMINISM-001-R10**：reordered/multi-source equivalent input -> same SystemKey/order/digest；duplicate/conflict -> stable ERROR/no partial publish。
-- **AC-002 / CASE-P2-RULEVIEW-COMPOSITE-001-R10**：cross-System same name legal；same-System duplicate fails；missing System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；no bare-name fallback。
-- **AC-003 / CASE-P2-RULEVIEW-CALL-001-R10**：only exact `(SystemKey,name)` resolves。
-- **AC-004 / CASE-P2-ACCESS-MATRIX-001-R10**：READ/WRITE/EXECUTE independent；undeclared denied；shared WRITE denied unless explicit；all operations through Gateway/Guard。
-- **AC-005 / CASE-P2-MODEL-PATH-001-R10**：same logical path -> same canonical identity；invalid path compile ERROR；no fuzzy/prefix/suffix/cross-target lookup。
-- **AC-007 / CASE-P2-GUARD-NO-BYPASS-001-R10**：Rule/change/custom action/protected query-read all use generic capability/Gateway/Guard；STATIC fast path remains internal。
-- **AC-008 / CASE-P2-CONTEXT-ATOMICITY-001-R10**：whole closure publish；failed candidate preserves old Context；no shared mutable policy/resolution global current。
-- **AC-009 / CASE-P2-DIAGNOSTIC-001-R10**：stable diagnostic/runtime reason ordering including `MODEL_ACCESS_GUARD_BYPASS`、proof/stale/plan/substitution/consumed capability。
-- **AC-010 / CASE-P2-DECLARATION-BOUNDARY-001-R10**：retired module not restored；legacy compatibility read-only；no second runtime authority。
+```text
+real systems.xml
+ -> production compiler/classifier
+ -> immutable EngineContext
+ -> ProtectedAccessRuntimeFactory(context, trusted test adapters)
+ -> static direct status branch: no plan, Guard=1, verifier=0, same target op=1
+ -> runtime every element branch: exact plan, Guard=1, verifier=1, valid A op=1
+ -> foreign/stale/substituted case: DENY, op=0, effects=0
+```
 
-## 10. Selected rule / wildcard / immutable value regressions
+Manual compiled rule、classifier stub、detached proof-only test、caller-side static fast path cannot satisfy this Case。
 
-- `CASE-P2-SELECTED-RULE-001-R10`：Guard owns exact PolicyIndex lookup count=1；Gateway lookup count=0；request/capability cannot replace rule/plan/status。
-- `CASE-P2-SYSTEMS-WILDCARD-READ-001-R10`：real order/payment READ `*` compile-time finite exact expansion only；runtime wildcard keys=0；wildcard WRITE/EXECUTE/empty expansion fail。
-- `CASE-P2-RUNTIME-FACT-VALUE-001-R10`：public final/private constructor/six typed factories/deep immutable/typed visitor/deterministic canonical form。
+## 11. Neutral API / Java8 compatibility
 
-## 11. Cross-module / Java8 compatibility
+### CASE-P2-PROTECTED-ACCESS-API-001-R11
 
-- `CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R10`：context-owned immutable plan/requirement factories callable by compiler without split package/reverse dependency；factory visibility grants no runtime authority。
-- `CASE-P2-JAVA8-ENGINE-CONTEXT-001-R10`：release 8；no Java9+ API；EngineContext existing constructor/accessors compatible；P2 additive only；no bare-name RuleView API。
+**Module/TestClass**
 
-## 12. Fail-closed matrix
+```text
+dec-core-context
+dec.core.context.model.access.ProtectedAccessApiContractTest
+```
+
+**Commands**
+
+```bash
+./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install
+./mvnw -pl dec-core-context -Dtest=dec.core.context.model.access.ProtectedAccessApiContractTest -Dsurefire.failIfNoSpecifiedTests=true test
+```
+
+Oracle：Java 8 source/API；neutral contracts contain no starter implementation dependency；EngineContext existing constructor/accessors remain；capability has no public mint/raw-target/selected-policy setter；RuntimeFactValue remains closed immutable typed value。
+
+## 12. Existing acceptance matrix carried forward
+
+- AC-001 System determinism: same canonical SystemKey/order/digest; duplicate/conflict stable ERROR/no partial publish。
+- AC-002 RuleView identity: `(SystemKey,name)`；missing owner stable ERROR；no bare-name fallback。
+- AC-003 exact RuleView call only。
+- AC-004 READ/WRITE/EXECUTE independent；undeclared/shared-write defaults denied；all protected operations use starter runtime boundary。
+- AC-005 exact canonical ModelPath only。
+- AC-007 no bypass: current/future consumer integration must use context-bound `ProtectedAccessRuntime`。
+- AC-008 immutable whole-context publication；runtime registry is context-local and outside compiled facts。
+- AC-009 stable diagnostics/reasons including adapter unavailable, Guard bypass, proof/stale/plan/substitution/consumed。
+- AC-010 retired declaration module remains read-only compatibility only。
+
+## 13. Wildcard / selected rule / value regressions
+
+- Guard owns exact PolicyIndex lookup=1；Gateway/resolver/verifier/adapter lookup=0。
+- READ `*` compile-time finite exact expansion；runtime wildcard key=0；wildcard WRITE/EXECUTE/empty expansion fail。
+- `RuntimeFactValue` public final/private constructor/six typed factories/deep immutable/typed visitor/deterministic canonical form。
+
+## 14. Fail-closed matrix
 
 | Condition | Expected |
 |---|---|
 | policy missing | DENY / POLICY_NOT_FOUND |
 | Context mismatch | DENY / CONTEXT_IDENTITY_MISMATCH |
-| direct protected operation outside Gateway/Guard | DENY / MODEL_ACCESS_GUARD_BYPASS |
-| STATIC_ALLOW rule contains runtime plan/requirement | invalid compiled state |
+| direct operation outside starter runtime | DENY / MODEL_ACCESS_GUARD_BYPASS |
+| trusted adapter missing | DENY / PROTECTED_ACCESS_ADAPTER_UNAVAILABLE |
+| STATIC rule contains runtime plan | invalid compiled state |
 | runtime plan/requirement missing | DENY / invalid compiled state |
-| runtime proof invalid | DENY / RUNTIME_BINDING_PROOF_INVALID |
+| proof invalid | DENY / RUNTIME_BINDING_PROOF_INVALID |
 | stale frame/membership | DENY / RUNTIME_BINDING_STALE |
 | wrong rule/plan | DENY / RUNTIME_BINDING_PLAN_MISMATCH |
-| executor target substitution | DENY / RUNTIME_BINDING_OPERATION_TARGET_MISMATCH |
+| target substitution | DENY / RUNTIME_BINDING_OPERATION_TARGET_MISMATCH |
 | capability replay | DENY / RUNTIME_BINDING_CAPABILITY_CONSUMED |
 | Guard unavailable | DENY / GUARD_UNAVAILABLE |
-| STATIC_ALLOW | Gateway 1 / Guard 1 / lookup 1 / verifier 0 / evaluator 0 / operation 1 |
 
-Every DENY -> protected operation count 0 + external effects 0。Timeout tests use controlled Future/fake monotonic time；禁止 `Thread.sleep` oracle。
+Every DENY -> protected operation=0 + external effects=0。
 
-## 13. Traceability
+## 15. Traceability
 
-| Acceptance/Finding | Blocking evidence |
+| Finding/Acceptance | Blocking case |
 |---|---|
-| FND-001 / AC-007 | CASE-P2-STATIC-ALLOW-GUARD-PATH-001-R10 + CASE-P2-UNIFIED-PROTECTED-ACCESS-BRANCH-001-R10 + CASE-P2-GUARD-NO-BYPASS-001-R10 |
-| AC-006 / FND-014 / FND-016 / FND-018 | CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R10 + CASE-P2-DYNAMIC-SOURCE-TO-OPERATION-001-R10 |
-| AC-006 / FND-017 | CASE-P2-RUNTIME-BINDING-PROOF-001-R10 |
-| FND-019 | CASE-P2-RUNTIME-BINDING-OPERATION-SUBSTITUTION-001-R10 |
-| FND-009 | CASE-P2-SELECTED-RULE-001-R10 |
-| FND-010 | CASE-P2-SYSTEMS-WILDCARD-READ-001-R10 |
-| FND-011 | CASE-P2-RUNTIME-FACT-VALUE-001-R10 |
-| FND-012 | §2 valid RED contract |
-| FND-015 | CASE-P2-RUNTIME-REQUIREMENT-MODULE-BOUNDARY-001-R10 |
-| FND-008 | CASE-P2-JAVA8-ENGINE-CONTEXT-001-R10 |
+| FND-004 | CASE-P2-RUNTIME-OWNERSHIP-001-R11 + CASE-P2-PROTECTED-ACCESS-API-001-R11 |
+| FND-001 / AC-007 | CASE-P2-STATIC-ALLOW-GUARD-PATH-001-R11 + CASE-P2-UNIFIED-PROTECTED-ACCESS-BRANCH-001-R11 |
+| FND-018 / AC-006 | CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R11 |
+| FND-014/FND-016 / AC-006 | CASE-P2-DYNAMIC-SOURCE-TO-OPERATION-001-R11 |
+| FND-017 | CASE-P2-RUNTIME-BINDING-PROOF-001-R11 |
+| FND-019 | CASE-P2-RUNTIME-BINDING-OPERATION-SUBSTITUTION-001-R11 |
+| FND-008/FND-015 | CASE-P2-PROTECTED-ACCESS-API-001-R11 + compiler module-boundary test |
 
-## 14. Review and phase gate
+## 16. Review / phase gate
 
-`TESTDESIGN-P2-R10` cannot pass before exact `DESIGN-P2-R09` passes and RC9 machine lifecycle binds current revisions。FND-001 is `PARTIAL_FIX_PROPOSED` until the new static Guard path receives exact independent Review/Evidence。Implementation Plan / TDD / Development remain BLOCKED while any effective P0/P1 is open。
+`TESTDESIGN-P2-R11` remains BLOCKED until exact `DESIGN-P2-R10` passes Architecture/ApiContract/Develop/Impact/CrossModule/Concurrency and other required Reviews and RC9 machine lifecycle/risk Evidence binds current revisions。Planned TestClass names/commands are contract only；no TDD execution is legal while effective P1 remains open。

@@ -1,136 +1,152 @@
 # COMPILER P2 架构增量
 
-> Revision：`DESIGN-P2-R09`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> Revision：`DESIGN-P2-R10`。Base：`DESIGN-P2-R09`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> 本 Revision 将 R09 抽象的 “framework execution runtime” 映射到真实 Maven reactor；不新增 runtime module，不新增 FND-020。
 
-## 1. Dependency direction
+## 1. Repository-valid dependency direction
 
 ```text
 dec-core-context
-  <- neutral immutable facts
-  <- exact Guard / generic capability contracts
-  <- RuntimeBindingPlan / Requirement contracts
+  dec.core.context.model.access.*
+  <- neutral compiled/access contracts only
        ^
-       |
+       | existing compiler dependency
 dec-core-compiler
-  <- resolved access IR
-  <- production DynamicBindingClassifier
-  <- exact rule / runtime-plan publication
+  dec.core.compiler.access.*
+  <- classifier / exact rule / runtime-plan publication
        ^
-       |
-framework execution runtime
-  <- ProtectedAccessResolutionContext ownership
-  <- actual target resolution for static + runtime access
-  <- generic one-shot ResolvedProtectedAccess issuance
-  <- ProtectedAccessGateway -> ModelAccessGuard -> same-target execution
-  <- RuntimeBindingVerifier only for selected runtime-required rules
+       | existing starter composition dependency
+dec-core-starter
+  dec.core.starter.access.*
+  <- concrete protected-access runtime
+  dec.core.starter.access.spi.*
+  <- trusted bootstrap-time execution adapters
+       ^
+       | application/composition dependency
+dec-demo / future P3-P7 execution modules
 ```
 
-禁止 context -> compiler、compiler -> concrete parser、split package、global mutable current Context。
+Root reactor remains unchanged；there is no P2 `dec-core-runtime` module。Context never depends on compiler/starter；compiler never depends on starter；starter must not add a P2-only dependency on `dec-core-model` to understand business POJOs。
 
-## 2. Compile-time authority
+## 2. Why `dec-core-starter` owns runtime enforcement
 
-Production classifier remains deterministic：
+`dec-core-starter` already owns `CompilerBootstrap` / `CompilerStarter`, depends on compiler + frontends, and is explicitly consumed by `dec-demo`。It is therefore the existing repository composition boundary where concrete runtime infrastructure can be assembled without contaminating context/compiler or inventing a new module。
 
-- `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`；
-- current grammar `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`；
-- other unsupported dynamic selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED` compile ERROR。
+This does **not** make starter the owner of P3-P7 business execution semantics。Starter owns only the access-control boundary and trusted adapter SPI。
 
-`STATIC_ALLOW` compiled rule has no RuntimeBindingPlan/RuntimeAccessRequirement。Runtime-required rule must carry exactly one compiler-published plan + requirement。
+## 3. Compile-time authority stays in compiler
 
-## 3. Generic execution resolution authority
+- `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW(no plan)`；
+- `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED(plan+requirement)`；
+- unsupported dynamic form -> compile ERROR。
 
-R09 replaces the runtime-only capability-creation architecture with a generic protected-access resolution layer。
+Compiler publishes immutable facts into CompiledModelSet。No runtime registry/capability state lives in compiler or semantic digest。
 
-`ProtectedAccessResolutionContext` is framework-owned and scoped to one current EngineContext, one resolved access-consumer IR, one execution frame/root owner and an optional collection cursor。DIRECT_EXACT normally has no collection cursor; EVERY element evaluation binds the current cursor/element frame。
+## 4. Neutral contract authority stays in context
 
-`ProtectedAccessResolver` resolves the **actual operation target** in that frame and issues one generic one-shot `ResolvedProtectedAccess`。Capability creation does not query PolicyIndex and does not require RuntimeBindingPlan。
+Context package owns stable facts/interfaces shared by compiler/starter：rules, plan, requirement, resolution context, operation intent, capability, decision/reasons, Guard/verifier contracts。
 
-This separates two independent concerns：
+`EngineContext` remains immutable data/context; starter concrete runtime is composed around an EngineContext rather than injected as a concrete starter type into context。This preserves no context->starter dependency and existing EngineContext API compatibility。
 
-1. actual target + operation binding — required for every protected access；
-2. runtime membership proof — required only when the exact selected rule status is `RUNTIME_GUARD_REQUIRED`。
-
-## 4. Generic operation-bound capability
-
-Every protected access capability internally binds：
-
-- actual target identity；
-- current EngineContext；
-- exact requested ModelAccessRuleKey；
-- operation + payload/action identity；
-- execution frame/root owner；
-- optional collection cursor/provenance；
-- one-shot lifecycle state。
-
-Business code has no capability mint API, no raw target getter and no ability to inject selected policy status/plan/proof。
-
-## 5. ProtectedAccessGateway is the only protected execution boundary
-
-For **both** STATIC_ALLOW and runtime-required access：
+## 5. Starter concrete runtime graph
 
 ```text
-framework resolves actual target A
- -> generic ResolvedProtectedAccess A
- -> ProtectedAccessGateway.execute(A)
-      -> ModelAccessGuard.authorize(A) exactly once
-           -> exact PolicyIndex lookup exactly once
-           -> selected rule
-           -> static or runtime branch
-      -> execute only hidden target+operation bound to A
-      -> consume A
+ProtectedAccessRuntimeFactory
+  + immutable EngineContext
+  + immutable ProtectedAccessAdapterRegistry
+      |
+      v
+ProtectedAccessRuntime
+  -> DefaultProtectedAccessResolver
+       -> ContextLocalProtectedAccessRegistry
+       -> trusted ProtectedTargetResolutionPort
+  -> DefaultProtectedAccessGateway
+       -> DefaultModelAccessGuard
+            -> exact PolicyIndex lookup once
+            -> DefaultRuntimeBindingVerifier only for runtime-required rule
+       -> registry-bound ProtectedOperationExecutionPort
+       -> same hidden target operation
 ```
 
-Gateway performs no second policy lookup。The Guard owns the single exact lookup。
+All components are context-bound; no global mutable `currentContext` or global proof registry。
 
-### 5.1 STATIC_ALLOW architecture
+## 6. Adapter architecture / no reverse business dependency
+
+`dec.core.starter.access.spi.*` defines framework extension ports registered only at runtime composition：
+
+- `ProtectedTargetResolutionPort`
+- `ProtectedOperationExecutionPort`
+- `ProtectedAccessAdapterRegistry`
+
+Adapter choice is frozen in the runtime composition and selected by framework-owned consumer identity。A business call may not pass a target resolver/executor callback into `execute(...)`。
+
+Future Rule/change/action/query modules may provide adapters by depending on starter SPI (or an upper composition module may bind them), but starter does not depend on those future business modules。Missing adapter is fail-closed `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`。
+
+## 7. Production consumer integration
+
+All protected consumers use one flow：
 
 ```text
-selected rule = STATIC_ALLOW
- -> selected rule plan/requirement MUST be empty
- -> RuntimeBindingVerifier calls = 0
- -> evaluator calls = 0
- -> Guard internal fast-path ALLOW
- -> gateway executes same capability-bound target once
+consumer execution frame
+ -> framework-owned ProtectedAccessResolutionContext + ProtectedOperationIntent
+ -> context-bound ProtectedAccessRuntime.execute(...)
+ -> resolver binds target
+ -> one-shot capability
+ -> gateway
+ -> Guard exact lookup once
+ -> static fast path OR runtime proof verification
+ -> same registry-bound execution adapter+target
 ```
 
-Architecture forbids a caller-side branch such as `if STATIC_ALLOW then direct operation`。Such a path is `MODEL_ACCESS_GUARD_BYPASS` even when the static authorization itself is valid。
+Consumer cannot query PolicyIndex itself、inspect STATIC_ALLOW and bypass、mint capability、replace target after ALLOW or own a second permission registry。
 
-### 5.2 RUNTIME_GUARD_REQUIRED architecture
+If a future phase introduces a new execution consumer, its Architecture Review must show this integration edge before it may execute protected model access。
+
+## 8. STATIC_ALLOW architecture
+
+STATIC access still allocates a generic one-shot capability because target+operation binding is independent of runtime proof：
 
 ```text
-selected rule = RUNTIME_GUARD_REQUIRED
- -> exact compiler-published plan + requirement MUST exist
- -> RuntimeBindingVerifier verifies capability hidden membership/provenance
-    against current Context/rule/plan/frame/cursor
- -> Guard ALLOW only on match
- -> gateway executes same capability-bound target once
+DIRECT_EXACT -> STATIC_ALLOW(no plan)
+ -> starter resolver binds actual target
+ -> gateway -> Guard lookup=1
+ -> verifier=0 / evaluator=0
+ -> same target operation once
 ```
 
-Thus RuntimeBindingPlan is conditional verification metadata, not a prerequisite to universal capability construction。
+No plan is synthesized。No caller-side static path exists。
 
-## 6. Substitution / TOCTOU / one-shot
-
-Supported architecture has no `execute(capability,target)`, `execute(handle,rawObject)` or callback that receives ALLOW for A and chooses B。A low-level invariant seam observing executor target != capability target must DENY before side effects。
-
-Capability reserve/consume is atomic。For runtime-required access, membership/frame/cursor/Context/plan/rule are revalidated immediately before operation inside the gateway execution boundary。For static access, Context/frame/capability target binding is revalidated and caller still cannot substitute another target。Concurrent replay yields at most one terminal successful consumer。
-
-## 7. Publication closure
-
-System、RuleView、exact ModelPath rules、classifier result、RuntimeBindingPlan/Requirement when applicable、Diagnostic、digest and PolicyIndex remain in one immutable `CompiledModelSet` closure。Execution capability state is context-local runtime state and never mutates compiled facts。
-
-## 8. Guard coverage invariant
-
-The architectural enforcement point for BR-P2-013 / FND-001 is：
+## 9. Runtime-required architecture
 
 ```text
-all protected READ/WRITE/EXECUTE
- -> ProtectedAccessResolver
- -> ProtectedAccessGateway
- -> ModelAccessGuard
+EVERY_COLLECTION_ELEMENT -> runtime rule+plan
+ -> starter resolver binds current actual element
+ -> gateway -> Guard lookup=1
+ -> DefaultRuntimeBindingVerifier validates membership/provenance
+ -> same element operation once on match
 ```
 
-`STATIC_ALLOW` is not a separate architecture path；it is only a decision branch inside Guard after exact lookup。
+Proof and operation remain atomically bound；A proof cannot authorize B。
 
-## 9. Compatibility
+## 10. TOCTOU / concurrency
 
-Existing final EngineContext/P1 APIs remain compatible and additive。Current AC-006 runtime binding verification stays framework runtime logic；future business predicate evaluator remains out of scope without new Requirement。Legacy Config/RuleView compatibility remains read-only until P7。
+`ContextLocalProtectedAccessRegistry` owns atomic reserve/consume state。Runtime path revalidates Context/frame/cursor/rule/plan/membership immediately before operation；static path revalidates Context/frame/target binding。Concurrent replay yields at most one terminal success；all stale/mismatch paths perform zero protected operation/effects。
+
+## 11. P2 / P3-P7 architecture boundary
+
+P2 implementation may add only starter runtime plumbing + adapter SPI needed to enforce authorization. It must not add Information/Rule/Change/Action/QueryPlan business evaluators, datasource transaction orchestration or source-authored per-object ACL semantics。
+
+Future P3-P7 executors integrate into the starter boundary as trusted adapters/consumers；they do not move the access policy authority out of Guard。
+
+## 12. Exact test-module ownership
+
+- context API/immutability: `dec-core-context`
+- classifier/rule compilation: `dec-core-compiler`
+- concrete Guard/Gateway/registry/concurrency/no-bypass: `dec-core-starter`
+- real existing `systems.xml` end-to-end: `dec-demo`
+
+TESTDESIGN-P2-R11 supplies exact planned TestClass/commands；abstract `<target-module>` is no longer acceptable for P2 blocking cases。
+
+## 13. Review gate
+
+FND-004 remains `PARTIAL_FIX_PROPOSED / OPEN` until this module/package/dependency mapping receives exact Architecture + ApiContract + Develop + Impact + CrossModule + Concurrency Review and valid machine/risk Evidence。No production implementation is claimed by this document。
