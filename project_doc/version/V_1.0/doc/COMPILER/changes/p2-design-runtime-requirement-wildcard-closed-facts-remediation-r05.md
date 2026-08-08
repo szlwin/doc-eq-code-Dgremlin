@@ -20,7 +20,7 @@ R05 fixes these gaps without changing the R04 Java-8/EngineContext/Guard timeout
 
 ### 2.1 Business declaration versus compiled authorization rule
 
-`ModelAccessRule` remains the Business Model declaration fact from BM-R08. Design introduces an immutable compiled representation used by Guard:
+`ModelAccessRule` remains the Business Model declaration fact from BM-R08. Design introduces an immutable compiled representation used by Guard. Java blocks in this document are **signature sketches with method bodies intentionally elided**, not copy-paste compilation units:
 
 ```java
 public final class CompiledModelAccessRule {
@@ -58,9 +58,9 @@ public final class RuntimeAccessRequirement {
         RuntimePredicate predicate,
         SourceRef sourceRef);
 
-    public static RuntimeAccessRequirement of(
+    static RuntimeAccessRequirement compile(
         RuntimePredicate predicate,
-        SourceRef sourceRef);
+        SourceRef sourceRef); // framework/package-private factory
     public RuntimeRequirementKey key();
     public RuntimePredicate predicate();
     public SourceRef sourceRef();
@@ -71,6 +71,7 @@ public final class RuntimeRequirementKey {
     private final String value;
 
     private RuntimeRequirementKey(String value);
+    static RuntimeRequirementKey fromCanonicalPredicate(String canonicalPredicate);
     public String value();
 }
 
@@ -108,6 +109,7 @@ public final class RuntimePredicate {
 
 Construction rules:
 
+- `RuntimeAccessRequirement.compile(...)` and `RuntimeRequirementKey.fromCanonicalPredicate(...)` are framework/package-private construction seams; public runtime callers can read a compiled requirement but cannot mint or override one.
 - `RuntimeRequirementKey` is compiler-owned and deterministic: `rrq:` + lowercase SHA-256 of `predicate.canonicalForm()`; callers do not choose or override the key.
 - fact names are non-empty canonical strings.
 - `FACT_PRESENT` has exactly one fact name and no expected value/operands.
