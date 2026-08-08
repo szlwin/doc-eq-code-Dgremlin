@@ -1,6 +1,6 @@
 # FEATURE-DESC-3361AD2E54FC Review 问题台账
 
-> 2026-08-08 independent re-review against common-develop 2.44 RC9 found `P0=0, P1=7` on PR #36 head `cdf4c5813a1c386612cd48a5dbe68ee66d71ca6c`. Historical PASSED evidence for BM-R07 / DESIGN-P2-R01 / TESTDESIGN-P2-R02 is retained for audit but is not sufficient to close the findings below.
+> 2026-08-08 second independent re-review against PR #36 head `d91a20088e57f8d62280799529c1153eec7d5038` confirms `P0=0` and `effective OPEN P1=8`. Findings 001-007 remain OPEN; proposed remediation is not closure evidence. New `FND-P2-REV-008` blocks DESIGN-P2-R02 because its frozen Java-facing contract is incompatible with the repository Java 8 production target and existing `EngineContext` API.
 
 ```json review-issues
 [
@@ -24,11 +24,11 @@
     "affected_artifacts": ["business_model", "design", "test_design"],
     "affected_trace_ids": ["TR-P2-SYSTEM-RULEVIEW-004", "TR-P2-SYSTEM-RULEVIEW-006", "TR-P2-SYSTEM-RULEVIEW-007"],
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R08 / DESIGN-P2-R02 / TESTDESIGN-P2-R03",
-    "resolution_evidence": "doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml; doc/COMPILER/changes/p2-design-api-review-remediation-r02.md; doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r03_review_remediation.md",
+    "resolution_revision": "BM-R08 / DESIGN-P2-R03 / TESTDESIGN-P2-R04",
+    "resolution_evidence": "doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml; doc/COMPILER/changes/p2-design-java8-api-compat-remediation-r03.md; doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r04_api_compat_remediation.md",
     "verified_by_agent": "",
     "verified_at": "",
-    "defer_reason": "Await independent re-review of new revisions"
+    "defer_reason": "CANDIDATE_FIXED; await independent exact-revision review"
   },
   {
     "id": "FND-P2-REV-002",
@@ -54,7 +54,7 @@
     "resolution_evidence": "doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml",
     "verified_by_agent": "",
     "verified_at": "",
-    "defer_reason": "Await Business Model independent re-review"
+    "defer_reason": "CANDIDATE_FIXED; await Business Model exact-revision independent review"
   },
   {
     "id": "FND-P2-REV-003",
@@ -76,11 +76,11 @@
     "affected_artifacts": ["business_model", "impact", "design"],
     "affected_trace_ids": ["TR-P2-SYSTEM-RULEVIEW-010"],
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R08 / DESIGN-P2-R02",
-    "resolution_evidence": "doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml; doc/COMPILER/changes/p2-design-api-review-remediation-r02.md",
+    "resolution_revision": "BM-R08 / DESIGN-P2-R03",
+    "resolution_evidence": "doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml; doc/COMPILER/changes/p2-design-java8-api-compat-remediation-r03.md",
     "verified_by_agent": "",
     "verified_at": "",
-    "defer_reason": "Await impact and cross-module re-review"
+    "defer_reason": "CANDIDATE_FIXED; await Business Model/Impact/CrossModule exact-revision review"
   },
   {
     "id": "FND-P2-REV-004",
@@ -95,18 +95,18 @@
     "raised_by_agent": "IndependentReview",
     "owner_agent": "DesignAgent",
     "title": "P2 API contract is not implementation-ready",
-    "description": "Key element types, runtime-facts shape, timeout ownership, optional decision metadata and EngineContext read signatures were not frozen.",
+    "description": "Key element types, runtime-facts shape, timeout ownership, optional decision metadata and EngineContext read signatures were not frozen; R02 improved this but introduced FND-P2-REV-008 compatibility defects.",
     "impact": "Development would have to make architectural/API decisions that belong to Design.",
-    "motivating_evidence": ["COMPILER_api_contract.md", "COMPILER_design.md#p2-runtime-guard"],
-    "recommendation": "Freeze Java-facing P2 records/interfaces, deadline ownership, optionality and EngineContext methods.",
+    "motivating_evidence": ["COMPILER_api_contract.md", "COMPILER_design.md#p2-runtime-guard", "doc/COMPILER/changes/p2-design-api-review-remediation-r02.md"],
+    "recommendation": "Verify the corrected Java-8-compatible exact API contract in DESIGN-P2-R03.",
     "affected_artifacts": ["design", "api_contract", "test_design"],
     "affected_trace_ids": ["TR-P2-SYSTEM-RULEVIEW-002", "TR-P2-SYSTEM-RULEVIEW-004", "TR-P2-SYSTEM-RULEVIEW-006", "TR-P2-SYSTEM-RULEVIEW-007"],
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "DESIGN-P2-R02",
-    "resolution_evidence": "doc/COMPILER/changes/p2-design-api-review-remediation-r02.md",
+    "resolution_revision": "DESIGN-P2-R03",
+    "resolution_evidence": "doc/COMPILER/changes/p2-design-java8-api-compat-remediation-r03.md",
     "verified_by_agent": "",
     "verified_at": "",
-    "defer_reason": "Await ApiContractReviewAgent and other Design re-reviews"
+    "defer_reason": "Await ApiContractReviewAgent and other exact DESIGN-P2-R03 re-reviews"
   },
   {
     "id": "FND-P2-REV-005",
@@ -122,17 +122,17 @@
     "owner_agent": "ProjectManagerAgent",
     "title": "Risk detection is not closed by required specialist reviews",
     "description": "Detected concurrency/data_migration/security/API-contract risk is not reflected by complete specialist review or waiver state.",
-    "impact": "Existing REV-000022..REV-000028 cannot prove complete risk-driven Design closure.",
+    "impact": "Existing historical Design reviews cannot prove complete risk-driven closure for the current remediation revision.",
     "motivating_evidence": ["task/FEATURE-DESC-3361AD2E54FC/risk_detection.json", "task/FEATURE-DESC-3361AD2E54FC/task_state.md"],
-    "recommendation": "Run required specialist reviews against DESIGN-P2-R02 or record contract-valid waivers; handle security only at an RC9-allowed stage.",
+    "recommendation": "Run required specialist reviews against DESIGN-P2-R03 or record contract-valid waivers; handle security only at an RC9-allowed stage.",
     "affected_artifacts": ["design", "risk_detection", "task_state"],
     "affected_trace_ids": [],
     "decision": "BLOCKED_PENDING_REVIEW",
-    "resolution_revision": "DESIGN-P2-R02",
-    "resolution_evidence": "doc/COMPILER/changes/p2-design-api-review-remediation-r02.md#5-risk-driven-review-closure",
+    "resolution_revision": "DESIGN-P2-R03",
+    "resolution_evidence": "doc/COMPILER/changes/p2-design-java8-api-compat-remediation-r03.md#8-review-and-impact-requirements",
     "verified_by_agent": "",
     "verified_at": "",
-    "defer_reason": "common-develop 2.44 RC9 baseline_guard is INVALID_BASELINE because common-develop-v2.44-rc9 tag is missing; do not fabricate specialist PASSED evidence"
+    "defer_reason": "Required specialist reviews/waiver are still missing; do not fabricate PASSED evidence"
   },
   {
     "id": "FND-P2-REV-006",
@@ -154,11 +154,11 @@
     "affected_artifacts": ["test_design", "test_evidence"],
     "affected_trace_ids": [],
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "TESTDESIGN-P2-R03",
-    "resolution_evidence": "doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r03_review_remediation.md#1-command-contract",
+    "resolution_revision": "TESTDESIGN-P2-R04",
+    "resolution_evidence": "doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r04_api_compat_remediation.md#1-revision-binding-rule",
     "verified_by_agent": "",
     "verified_at": "",
-    "defer_reason": "Await TestEvidenceReviewAgent on R03"
+    "defer_reason": "CANDIDATE_FIXED; R04 is blocked by Design review and then requires TestEvidenceReviewAgent"
   },
   {
     "id": "FND-P2-REV-007",
@@ -180,18 +180,47 @@
     "affected_artifacts": ["test_design", "security"],
     "affected_trace_ids": ["TR-P2-SYSTEM-RULEVIEW-006", "TR-P2-SYSTEM-RULEVIEW-007"],
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "TESTDESIGN-P2-R03",
-    "resolution_evidence": "doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r03_review_remediation.md#3-fail-closed-matrix",
+    "resolution_revision": "TESTDESIGN-P2-R04",
+    "resolution_evidence": "doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r04_api_compat_remediation.md#7-carried-forward-guardno-bypass-and-fail-closed-cases",
     "verified_by_agent": "",
     "verified_at": "",
-    "defer_reason": "Await Requirement/Design/TDD/TestEvidence independent re-review on R03"
+    "defer_reason": "CANDIDATE_FIXED; await Design closure then exact R04 independent review"
+  },
+  {
+    "id": "FND-P2-REV-008",
+    "issue_type": "REVIEW_FINDING",
+    "axis": "API_CONTRACT",
+    "severity": "P1",
+    "confidence": 10,
+    "status": "OPEN",
+    "phase": "design",
+    "round": "P2-INDEPENDENT-REVIEW-20260808-R02",
+    "artifact_revision": "DESIGN-P2-R02",
+    "raised_by_agent": "IndependentReview",
+    "owner_agent": "DesignAgent",
+    "title": "Frozen P2 Java API violates Java 8 and existing EngineContext compatibility",
+    "description": "DESIGN-P2-R02 freezes record/Map.copyOf/Map.of APIs unavailable under maven.compiler.release=8 and replaces the existing public final EngineContext class contract with an interface example. RuntimeFacts also remains shallowly immutable, timing mixes absolute Instant with monotonic elapsed time, and GUARD_UNAVAILABLE lacks a stable observable assembly seam.",
+    "impact": "P2 production code would not compile to the repository Java 8 target or would require Development to reinterpret/break an existing public API; fail-closed timing/unavailable behavior would remain underdesigned.",
+    "motivating_evidence": ["pom.xml:<maven.compiler.release>8</maven.compiler.release>", "dec-core-context/src/main/java/dec/core/context/EngineContext.java", "doc/COMPILER/changes/p2-design-api-review-remediation-r02.md#2-frozen-java-facing-p2-contracts", "doc/COMPILER/changes/p2-design-api-review-remediation-r02.md#3-enginecontext-p2-read-surface"],
+    "recommendation": "Freeze Java 8 final-class value objects, preserve/extend existing EngineContext final class, deeply immutable canonical RuntimeFacts, a single deterministic monotonic time contract, and a non-null fail-closed Guard-unavailable sentinel seam.",
+    "affected_artifacts": ["design", "api_contract", "impact", "test_design"],
+    "affected_trace_ids": ["TR-P2-SYSTEM-RULEVIEW-002", "TR-P2-SYSTEM-RULEVIEW-004", "TR-P2-SYSTEM-RULEVIEW-006", "TR-P2-SYSTEM-RULEVIEW-007"],
+    "decision": "FIX_PROPOSED",
+    "resolution_revision": "DESIGN-P2-R03 / TESTDESIGN-P2-R04",
+    "resolution_evidence": "doc/COMPILER/changes/p2-design-java8-api-compat-remediation-r03.md; doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r04_api_compat_remediation.md",
+    "verified_by_agent": "",
+    "verified_at": "",
+    "defer_reason": "OPEN_PENDING ApiContractReviewAgent/ConcurrencyReviewAgent and exact revision reviews; proposed fix is not closure"
   }
 ]
 ```
 
 ## 当前状态解释
 
-- `FIX_PROPOSED` 表示修订内容已落盘，但 finding 仍为 `OPEN`；必须由独立 reviewer 针对新的 exact revision 验证后才能关闭。
-- `FND-P2-REV-005` 明确保持阻塞，不使用 waiver 代替事实，也不在 `INVALID_BASELINE` 下伪造 `PASSED`。
-- `IMPLEMENTATION_PLAN / TDD / DEVELOPMENT` 在 P1 全部关闭前保持阻断。
-- 历史 Review Evidence 不删除；它们只证明旧 revision 当时的检查结果，不覆盖本轮 independent re-review。
+- `FIX_PROPOSED` / `CANDIDATE_FIXED` 只表示返修内容已落盘，finding 仍为 `OPEN`；必须由独立 reviewer 针对 exact revision 验证后才能关闭。
+- `FND-P2-REV-001`～`003`：`BM-R08` 内容上为 candidate fixed，等待 Business Model exact-revision Review。
+- `FND-P2-REV-004` 与 `008`：等待 `DESIGN-P2-R03` exact-revision Review；008 是当前 Design 的新增 P1 blocker。
+- `FND-P2-REV-005`：风险专项 Review/waiver 尚未闭合，持续阻塞。
+- `FND-P2-REV-006`～`007`：内容返修沿用到 R04，但 R04 先受 Design Review 阻塞。
+- `IMPLEMENTATION_PLAN / TDD / DEVELOPMENT` 在有效 P1 全部关闭前保持阻断。
+- 历史 `task_state.md` / Review Evidence 不删除、不改写；它们只记录旧 revision 当时的事实，不覆盖新的 independent Review conclusion。
