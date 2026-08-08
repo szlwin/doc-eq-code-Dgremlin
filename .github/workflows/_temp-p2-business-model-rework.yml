@@ -97,5 +97,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          sed -i 's/Y.width = 120/Y.width = 1000000/' /tmp/p2_bm_rework.py
           export EXPECTED_BASE="$(git rev-parse HEAD)"
           python3 /tmp/p2_bm_rework.py
