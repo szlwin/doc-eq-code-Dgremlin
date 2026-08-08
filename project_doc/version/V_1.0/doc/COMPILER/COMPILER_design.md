@@ -1,126 +1,185 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R13`。Base：`DESIGN-P2-R12`，输入 Business Model candidate：`BM-R12`。
-> 状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。本 Revision 按用户明确决策撤销 R12 的 `ProtectedExecutionToken / ProtectedExecutionStatePort.recognizes(...) / bridge receiver` 模型，改为 production consumer 直接调用参数式 `ProtectedExecutionBridge.execute(ruleKey, operation, frameId, ...)`。当前阶段**不把 caller 可选择 rule/op 作为阻断问题**；该取舍属于本 Revision 明确接受的 P2 设计边界。不新增 FND-020，不改变 BM-R12 的 Guard/PolicyIndex/target-binding 业务语义。
-> 当前 canonical Business Model 仍是历史 BM-R07；正式 RC9 reopen/publish、current-revision risk Evidence 与 exact independent Review 完成前，本 Design 不得 PASSED。
+> Revision：`DESIGN-P2-R14`。Base：`DESIGN-P2-R13`。Inputs：Requirement `REQAN-P2-R01` + formal Decision `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` + canonical Business Model candidate `BM-R12`。
+> 状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。本 Revision 是 consolidated Design：恢复 System / RuleView / composite-call / atomic-publication 主设计，并保留 R13 direct-argument bridge、PolicyIndex、runtime binding、one-shot capability 设计。不新增 FND-020。
 
-## 1. 设计目标与本轮取舍
+<a id="p2-system"></a>
+## 1. P2 System 一等编译设计
 
-1. 所有 protected READ/WRITE/EXECUTE 继续通过 starter-owned runtime -> Gateway -> Guard；`STATIC_ALLOW` 仍只是 Guard exact lookup 后的内部 fast path。
-2. Runtime ModelPath lookup exact-only；wildcard 只允许 compiler finite canonical expansion。
-3. 唯一权限 authority 继续是 compiler-published、`CompiledModelSet`-owned immutable `ModelAccessPolicyIndex`。
-4. `DefaultModelAccessGuard` 继续只允许 current `EngineContext.modelAccessPolicyIndex()` exact lookup 一次。
-5. actual target 与最终 operation target 必须由同一个 invocation/capability 绑定；capability A 不得执行 target B。
-6. **撤销 execution-token trust model。不存在 `ProtectedExecutionToken`、`recognizes(token)`、token replay/claim/lease/snapshot contract。**
-7. **外部 production API 改成显式参数式 bridge invocation。caller 可以在当前 Revision 直接提交 `ModelAccessRuleKey`、`AccessOperation`、frame/owner/cursor 等调用事实。**
-8. 本轮按用户明确授权，暂不把“caller 可以选择另一个 ruleKey / READ 改 WRITE/EXECUTE”的 authority 扩大问题作为 P1；后续若重新要求收紧，再单独 Review，不在本 Revision 通过 token 隐式解决。
-9. 每次 `bridge.execute(...)` 都是一个独立 invocation；相同参数被调用两次时默认可产生两个独立 invocation/capability，不定义 execution-token replay DENY。
-10. capability 自身仍 one-shot；同一 capability 并发执行最多一个 terminal success。
-11. P2 不实现 P3～P7 完整 Rule/change/action/query 业务执行语义。
+### 1.1 模块归属
 
-## 2. Repository-valid Maven ownership
+- `dec-core-context`：拥有 neutral `SystemKey`、不可变 `CompiledSystem` read contract；
+- `dec-core-compiler`：拥有 System discovery/registration/reference resolution/deterministic publication；
+- XML/YAML frontend：只保留显式 System 与 SourceRef，不自行推断身份；
+- `dec-core-starter`：不维护第二份 System registry。
 
-```text
-dec-core-context
-  dec.core.context.model.access.*
-  -> neutral access contracts / rule / plan / policy index
-  -> CompiledModelSet / EngineContext policy read surface
-
-       ^ existing dependency
-       |
-dec-core-compiler
-  -> model-access compilation/classification
-  -> ModelAccessPolicyIndex construction
-  -> semantic digest + DigestBoundCompiledInput publication
-
-       ^ existing starter composition dependency
-       |
-dec-core-starter
-  dec.core.starter.access.*
-  -> ProtectedAccessRuntime / Factory
-  -> ProtectedExecutionBridge
-  -> resolver / gateway / guard / verifier / context-local registry
-  dec.core.starter.access.spi.*
-  -> target-resolution / operation-execution ports
-
-       ^ application/composition dependency
-dec-demo / future P3-P7 execution modules
-  -> obtain/use public ProtectedExecutionBridge
-  -> call execute(ruleKey, operation, frame/owner/cursor...)
-```
-
-不新增 `dec-core-runtime`。禁止 context -> compiler/starter、compiler -> starter reverse dependency；starter 不为 P2 新增对 `dec-core-model` 的业务耦合。
-
-## 3. Compile-time access rule invariant
+### 1.2 核心值与 Registry
 
 ```java
+public final class SystemKey implements Comparable<SystemKey> {
+    public static SystemKey of(String value);
+    public String value();
+}
+
+public final class CompiledSystem {
+    public SystemKey key();
+    public SourceRef sourceRef();
+}
+```
+
+Compiler 构建期 registry exact-keyed by `SystemKey`。System identity 只来自配置显式 System name/key，不来自文件名、路径、加载顺序或 RuleView 名称。
+
+### 1.3 pipeline
+
+```text
+source discovery
+ -> canonical parse
+ -> collect explicit System declarations
+ -> register all SystemKey symbols
+ -> reject exact duplicates
+ -> resolve forward System refs / owned definitions
+ -> deterministic sort
+ -> semantic digest input
+ -> candidate publication
+```
+
+规则：
+
+- duplicate exact SystemKey -> `MIX-SYSTEM-DUPLICATE`；
+- unknown System ref -> `MIX-SYSTEM-UNKNOWN`；
+- source order changes cannot change final key set/digest；
+- any ERROR prevents candidate publication and keeps old Context unchanged。
+
+<a id="p2-ruleview"></a>
+## 2. RuleView `(SystemKey,name)` 完整设计
+
+### 2.1 RuleViewKey
+
+```java
+public final class RuleViewKey implements Comparable<RuleViewKey> {
+    public static RuleViewKey of(SystemKey systemKey, String localName);
+    public SystemKey systemKey();
+    public String localName();
+}
+```
+
+`equals/hashCode/compareTo` include both fields。Different Systems may own the same local name; same-System duplicate is invalid。
+
+### 2.2 CompiledRuleView
+
+```java
+public final class CompiledRuleView {
+    public RuleViewKey key();
+    public SourceRef sourceRef();
+    public List<RuleKey> resolvedRuleRefs();
+}
+```
+
+New mix RuleView must explicitly supply System. Missing -> `MIX-RULEVIEW-SYSTEM-REQUIRED`。Unknown System / Rule -> stable ERROR。No implicit fallback from file location or caller context。
+
+<a id="p2-ruleview-resolver"></a>
+### 2.3 RuleViewResolver / composite call
+
+```java
+public interface RuleViewResolver {
+    Optional<CompiledRuleView> find(RuleViewKey key);
+    CompiledRuleView require(SystemKey systemKey, String localName);
+}
+```
+
+Composite invocation source fact:
+
+```text
+system-ref + rule-ref
+ -> SystemKey exact resolve
+ -> RuleViewKey(SystemKey, rule-ref)
+ -> RuleViewResolver exact lookup
+```
+
+Prohibited new-code shapes:
+
+```text
+find("ruleViewName")
+require("ruleViewName")
+global bare-name registration
+fallback to first matching RuleView across Systems
+```
+
+A legacy read-only bare-name adapter may survive only at the explicitly documented compatibility boundary; it may not register new facts, become canonical resolver, or resolve ambiguous cross-System names。
+
+<a id="p2-model-access"></a>
+## 3. ModelAccessRule / ModelPath compile-time design
+
+```java
+public enum AccessOperation { READ, WRITE, EXECUTE }
 public enum AccessCompilationStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
 public enum DynamicBindingClassification { STATIC_BOUND, RUNTIME_OBJECT_BOUND }
 ```
 
-- `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`；无 RuntimeBindingPlan/RuntimeAccessRequirement。
-- `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`；exact plan + EXACT_RUNTIME_BINDING requirement。
-- unsupported dynamic selector compile ERROR。
+`ModelAccessRuleKey` remains exact over the compiled authorization identity defined by BM-R12: System + target + canonical ModelPath + operation。
 
-## 4. 唯一 immutable ModelAccessPolicyIndex authority（R12 保持）
+`DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`。
+
+`EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`。
+
+READ `path="*"` is finite-expanded during compilation to exact child keys. Runtime `PolicyIndex` never stores wildcard/fuzzy keys。Unsupported selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`。
+
+## 4. RuntimeAccessRequirement / RuntimeBindingPlan
+
+STATIC_ALLOW invariant:
+
+```text
+runtimeRequirement = empty
+runtimeBindingPlan = empty
+```
+
+RUNTIME_GUARD_REQUIRED invariant:
+
+```text
+EXACT_RUNTIME_BINDING requirement present
+exact compiler-published RuntimeBindingPlan present
+```
+
+Runtime proof may prove actual element membership/provenance for the selected exact policy rule; it cannot create a new policy rule or change requested rule/op。
+
+<a id="p2-policy-index"></a>
+## 5. 唯一 immutable ModelAccessPolicyIndex
 
 Context-owned API：
 
 ```java
 public final class ModelAccessPolicyIndex {
     public static ModelAccessPolicyIndex empty();
-    public static ModelAccessPolicyIndex of(
-        Iterable<CompiledModelAccessRule> rules);
+    public static ModelAccessPolicyIndex of(Iterable<CompiledModelAccessRule> rules);
     public Optional<CompiledModelAccessRule> find(ModelAccessRuleKey key);
     public Set<ModelAccessRuleKey> keys();
 }
 ```
 
-`of(...)` 必须拒绝 duplicate/null/key mismatch/illegal STATIC-RUNTIME state/non-canonical runtime key，并返回 deterministic immutable snapshot。
+`of(...)` rejects duplicate exact keys, nulls, invalid STATIC/RUNTIME state and non-canonical runtime keys; output is immutable/deterministic。
 
-唯一 publication chain：
+Policy authority chain：
 
 ```text
-compiled access rules
+compiled rules
  -> ModelAccessPolicyIndex.of(...)
  -> SemanticDigestInput(same immutable index)
- -> digest compute
+ -> CompilerDigestService
  -> DigestBoundCompiledInput(same index + digest)
  -> CompiledModelSetBuilder.FrozenInput
- -> CompiledModelSet.published(...same index + digest...)
+ -> CompiledModelSet.published(...same index...)
  -> EngineContext.modelAccessPolicyIndex()
- -> DefaultModelAccessGuard.find(exact key) once
+ -> DefaultModelAccessGuard.find(exact key) exactly once
 ```
 
-禁止 Guard 扫 `definitions()`、从 typed registries 重建权限、starter 维护第二份 authorization Map、resolver/gateway/verifier/adapter 重查 policy。
+Forbidden：Guard scan `definitions()`；rebuild from `TypedDefinitionRegistries`；starter second permission `Map`；resolver/gateway/verifier/adapter policy reselection。
 
-## 5. CompiledModelSet publication + legacy compatibility（R12 保持）
+<a id="p2-context"></a>
+## 6. CompiledModelSet / EngineContext publication
 
-现有八参数 constructor 保持 source compatibility：
+Existing 8-arg `CompiledModelSet` constructor remains source-compatible and deterministically attaches `ModelAccessPolicyIndex.empty()`; it never reconstructs policy。
 
-```java
-public CompiledModelSet(
-    PublishedSourceManifest sourceManifest,
-    Registry<DefinitionKey, CompiledDefinition> definitions,
-    DeferredRegistry deferred,
-    List<Diagnostic> diagnostics,
-    DigestPair digestPair,
-    String compilerVersion,
-    String schemaVersion,
-    String optionsVersion);
-```
-
-其确定性语义：
-
-```text
-legacy 8-arg constructor
- -> existing facts behavior unchanged
- -> ModelAccessPolicyIndex.empty()
- -> never reconstruct policy from definitions()/typedRegistries()
- -> protected access exact miss => POLICY_NOT_FOUND
-```
-
-P2 production compiler 使用：
+P2 production publication uses：
 
 ```java
 public static CompiledModelSet published(
@@ -133,20 +192,21 @@ public static CompiledModelSet published(
     String compilerVersion,
     String schemaVersion,
     String optionsVersion);
+
+public ModelAccessPolicyIndex modelAccessPolicyIndex();
 ```
 
-`EngineContext.modelAccessPolicyIndex()` 直接转交 `compiledModelSet().modelAccessPolicyIndex()`，不得复制或重建 authority。
+`EngineContext(CompiledModelSet)` remains unchanged and adds direct read-through `modelAccessPolicyIndex()`。
 
-## 6. ProtectedExecutionBridge public API — 直接参数式调用
+System, RuleView, PolicyIndex and digest are part of the same immutable publication closure。Any System/RuleView/model-access ERROR -> no new Context; caller-held old Context remains visible。Parallel Context instances never share mutable registries。
 
-R13 正式 production invocation contract：
+<a id="p2-direct-bridge"></a>
+## 7. Direct-argument ProtectedExecutionBridge
+
+Formal decision：`DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`。
 
 ```java
-package dec.core.starter.access;
-
 public final class ProtectedExecutionBridge {
-    // created by ProtectedAccessRuntimeFactory; no public/protected constructor
-
     public ProtectedAccessResult execute(
         ModelAccessRuleKey requestedRuleKey,
         AccessOperation operation,
@@ -156,160 +216,132 @@ public final class ProtectedExecutionBridge {
 }
 ```
 
-如 WRITE/EXECUTE 后续需要业务 payload/action 参数，由后续 P3～P7 executor 与 `ProtectedOperationExecutionPort` 定义；P2 当前不把业务 payload 语义塞进 access-control API。
+Bridge composition binds current `EngineContext/runtime`, `AccessConsumerIrKey`, target-resolution port and operation-execution port。Per-call caller supplies rule/op/frame/owner/cursor。
 
-一个 bridge 在 composition 时只固定：
+Current P2 accepted semantics：
 
-```text
-EngineContext / ProtectedAccessRuntime identity
-AccessConsumerIrKey
-ProtectedTargetResolutionPort
-ProtectedOperationExecutionPort
-```
+- caller may choose any exact ruleKey/op that is actually present and valid in current compiler-published PolicyIndex；
+- `AccessConsumerIrKey` is provenance/diagnostic only, not an authorization-key dimension；
+- P2 does not implement consumer -> rule/op binding；
+- requested key/op absent/mismatched in PolicyIndex -> DENY；
+- future per-consumer hardening requires new Requirement/Decision Review。
 
-每次调用显式提供：
+No `ProtectedExecutionToken` / `recognizes()` / claim/replay contract exists。
 
-```text
-requestedRuleKey
-operation
-frameId
-ownerResolutionId
-optional collectionCursorId
-```
-
-本 Revision 明确允许 caller 提供这些事实；starter 负责 null/context/shape 校验并进入 Guard，不再通过 token/state-port 验证“这些事实是否由 framework 签发”。
-
-## 7. 删除的 R12 token contracts
-
-以下类型/行为不再属于 P2 Design：
+<a id="p2-runtime-guard"></a>
+## 8. Runtime execution path
 
 ```text
-ProtectedExecutionToken
-ProtectedExecutionStatePort
-ProtectedExecutionBridgeReceiver
-recognizes(token)
-frameId(token)
-ownerResolutionId(token)
-collectionCursorId(token)
-token claim / lease / replay / stale-token authority
-PROTECTED_EXECUTION_TOKEN_UNTRUSTED
+bridge.execute(ruleKey,op,frame,owner,cursor)
+ -> validate required argument shape/current Context
+ -> starter internal issueInvocation(exact invocation facts)
+ -> internal issued context+intent pair
+ -> resolver resolves actual target using bound target port
+ -> one-shot ResolvedProtectedAccess capability binds target + op + invocation provenance
+ -> Gateway atomically reserves capability
+ -> Guard exact current-context PolicyIndex lookup = 1
+ -> STATIC_ALLOW fast path OR RuntimeBindingVerifier exact proof
+ -> same capability-bound operation port + target
+ -> terminal consume
 ```
 
-Test Design 也不得继续要求 fake-token、foreign-token、same-token concurrent claim 等 oracle。
+STATIC_ALLOW still enters Gateway/Guard。Runtime verifier calls = 0 for static; runtime-required uses exact selected rule/plan。
 
-## 8. Per-invocation execution flow
+## 9. Direct invocation validation
+
+Stable fail-closed cases before protected operation：
+
+- null/invalid ruleKey/op/frame/owner/cursor shape；
+- key missing from current PolicyIndex -> `POLICY_NOT_FOUND`；
+- requested `operation` inconsistent with `requestedRuleKey` -> invalid invocation / no operation；
+- Context mismatch/stale frame/cursor；
+- adapter unavailable；
+- Guard unavailable；
+- runtime proof missing/invalid/stale/plan mismatch；
+- capability/target substitution。
+
+Caller selecting another **valid** compiler-published key/op is not treated as forged authority in current P2, per formal decision。
+
+<a id="p2-concurrency"></a>
+## 10. Concurrency / TOCTOU
+
+Bridge is immutable/stateless and may receive concurrent independent calls。Two calls with identical scalar arguments are two independent invocations and may each create a distinct capability；P2 does not implement duplicate suppression/business idempotency。
+
+Mandatory atomicity is per capability：
+
+- same `ResolvedProtectedAccess` capability concurrent Gateway execution -> terminal success `<= 1`；
+- capability A cannot be used for target B or operation B；
+- runtime branch revalidates Context/frame/cursor/rule/plan/membership immediately before operation；
+- static branch revalidates Context/frame/target binding immediately before operation；
+- PolicyIndex is immutable, so no authority swap between lookup and execution。
+
+<a id="p2-pipeline"></a>
+## 11. Consolidated P2 compiler pipeline
 
 ```text
-future executor
- -> bridge.execute(ruleKey, operation, frameId, ownerId, optional cursorId)
- -> validate required call arguments
- -> internal issueInvocation(
-      bridge-bound consumer,
-      caller-supplied rule/op/frame/owner/cursor)
- -> ContextLocalProtectedAccessRegistry stores exact internal issued pair
- -> requireIssuedPair(pair)
- -> DefaultProtectedAccessResolver resolves actual target
- -> one-shot ResolvedProtectedAccess capability
- -> Gateway
- -> Guard exact ModelAccessPolicyIndex lookup once
- -> STATIC_ALLOW fast path OR runtime proof verification
- -> same capability-bound target operation
- -> terminal capability consume
+1 source discovery + secure canonical parse
+2 register all System symbols
+3 register RuleViewKey(SystemKey,name) and other symbols
+4 resolve System/RuleView/rule/view references
+5 compile canonical ModelPath
+6 classify direct/dynamic access
+7 build exact CompiledModelAccessRule set
+8 ModelAccessPolicyIndex.of(...)
+9 include System/RuleView/PolicyIndex semantics in SemanticDigestInput
+10 DigestBoundCompiledInput freezes same facts + digest
+11 CompiledModelSet.published(...same facts...)
+12 caller-scoped atomic Context publication
 ```
 
-参数 validation 失败时必须在 target resolution/capability/Guard/policy lookup/operation/effects 前 fail closed。
+No partial Context on any ERROR。
 
-## 9. Internal issued pair
+<a id="p2-diagnostics"></a>
+## 12. Diagnostics
 
-`ProtectedAccessResolutionContext` / `ProtectedOperationIntent` 可继续作为 starter 内部 read contracts；其 production issued implementations 与 `IssuedInvocationRecord` 仍可 package-private。
+At least：
 
-区别是：R13 中 internal pair 的 authoritative facts 来自**本次 public bridge 调用参数 + bridge-bound consumer/context/ports**，而不是 execution token/state port。
+- `MIX-SYSTEM-DUPLICATE`
+- `MIX-SYSTEM-UNKNOWN`
+- `MIX-RULEVIEW-SYSTEM-REQUIRED`
+- `MIX-RULEVIEW-DUPLICATE`
+- `MIX-RULEVIEW-UNKNOWN-SYSTEM`
+- `MIX-RULEVIEW-UNKNOWN-RULE`
+- `MIX-MODEL-PATH-INVALID`
+- `MIX-MODEL-ACCESS-DENIED`
+- `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`
 
-低层实现仍必须阻止 internal A-pair/B-pair object substitution，但不再把 caller-selected rule/op 本身视为伪造。
+Diagnostic ordering must be deterministic and SourceRef-aware。Equivalent source ordering yields identical ordered diagnostics。
 
-## 10. Guard / Gateway / target binding
+<a id="p2-compatibility"></a>
+## 13. Compatibility / migration
 
-`DefaultModelAccessGuard`：
+- Java release 8；
+- no new `dec-core-runtime` module；
+- context never depends on compiler/starter；compiler never depends on starter；
+- existing `EngineContext(CompiledModelSet)` and existing 8-arg `CompiledModelSet` constructor remain；
+- legacy RuleView bare-name surface is read-only compatibility only and may not register into new composite registry；
+- P2 does not restore retired `dec-expand-declaration`；surviving declaration/System compatibility is retained unchanged until P7；
+- failure preserves old Context；no hidden migration or second runtime authority。
 
-```text
-engineContext.modelAccessPolicyIndex().find(requestedRuleKey)
-```
+## 14. Requirement coverage map
 
-exact lookup = 1。
+| AC | Design coverage |
+|---|---|
+| AC-001 System deterministic compile | §1 + §11 + §12 |
+| AC-002 RuleView System ownership/isolation | §2 |
+| AC-003 composite lookup/call | §2.3 |
+| AC-004 READ/WRITE/EXECUTE matrix | §3 + §5 + Decision |
+| AC-005 ModelPath | §3 |
+| AC-006 dynamic access | §4 + §8 |
+| AC-007 unified Guard/no bypass | §8 + §13; actual future P3-P7 executor implementation remains contract-only |
+| AC-008 atomic publication/context isolation | §6 + §11 |
+| AC-009 deterministic/source-aware diagnostics | §12 |
+| AC-010 declaration migration boundary | §13 |
 
-- STATIC_ALLOW：plan/requirement absent；verifier=0；evaluator=0。
-- RUNTIME_GUARD_REQUIRED：selected exact rule/plan/requirement -> verifier once。
-- resolver/gateway/verifier/ports policy lookup=0。
+AC-007 is design-contract coverage only until later concrete execution modules exist; Test Design must not claim implementation proof。
 
-`DefaultProtectedAccessGateway` 只能执行 resolver/capability 已绑定的 actual target + operation execution port。即使 caller 提交同一组参数两次，也形成两个独立 invocation；但单个 capability 内禁止 target A -> B substitution。
+## 15. Gate
 
-## 11. Concurrency semantics（R13）
+`DESIGN-P2-R14 = NEEDS_REVIEW / MACHINE_BLOCKED`。
 
-### 11.1 支持的并发
-
-`ProtectedExecutionBridge` 是 immutable/stateless facade，可被多个线程并发调用：
-
-```text
-Thread A -> execute(ruleA, READ, frameA, ownerA, cursorA)
-Thread B -> execute(ruleB, WRITE, frameB, ownerB, cursorB)
-```
-
-每次调用创建独立 internal issued pair/capability。
-
-### 11.2 相同参数并发
-
-R13 **不定义** frame/rule/op 参数组合为 one-shot execution occurrence：
-
-```text
-Thread A -> execute(ruleX, READ, frameF, ownerO, cursorC)
-Thread B -> execute(ruleX, READ, frameF, ownerO, cursorC)
-```
-
-两次都是独立 invocation；如果两次均满足 Guard/target/runtime proof，可以各自产生 operation。当前阶段不以 replay/duplicate execution 为 access-control DENY 条件。
-
-### 11.3 仍必须原子的一层
-
-单个 `ResolvedProtectedAccess` capability 仍必须 reserve/consume atomic：
-
-```text
-same capability + concurrent gateway execute
- -> terminal success <= 1
-```
-
-runtime-required operation 前仍 revalidate current Context/frame/cursor/rule/plan/membership；如果 stale 则 DENY，不自动换成别的 target/frame。
-
-## 12. Stable runtime reasons
-
-至少保留：
-
-- `PROTECTED_ACCESS_ARGUMENT_INVALID`
-- `PROTECTED_ACCESS_INPUT_UNTRUSTED` / `PROTECTED_ACCESS_INPUT_PAIR_MISMATCH`（仅 starter internal invariant）
-- `POLICY_NOT_FOUND`
-- `CONTEXT_IDENTITY_MISMATCH`
-- `MODEL_ACCESS_GUARD_BYPASS`
-- `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`
-- `RUNTIME_BINDING_REQUIRED`
-- `RUNTIME_BINDING_PROOF_INVALID`
-- `RUNTIME_BINDING_STALE`
-- `RUNTIME_BINDING_PLAN_MISMATCH`
-- `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`
-- `RUNTIME_BINDING_CAPABILITY_CONSUMED`
-- `GUARD_UNAVAILABLE`
-- `STATIC_ALLOW`
-- `RUNTIME_ALLOW`
-- `RUNTIME_DENY`
-
-`PROTECTED_EXECUTION_TOKEN_UNTRUSTED` 从 R13 移除。
-
-## 13. Finding interpretation
-
-- FND-004：direct public bridge 使 `dec-demo` / future executor production-reachable；仍需 exact specialist Review，formal OPEN。
-- FND-015：validated PolicyIndex construction + policy-aware publication/legacy compatibility 保持 candidate-fixed；formal OPEN。
-- FND-016：source -> runtime reachability 改为 direct bridge 参数调用；formal OPEN。
-- FND-019：不再包含 token claim/recognizes TOCTOU 问题；只保留 capability actual-target/operation atomic binding，candidate 为 `FIX_PROPOSED / OPEN`。
-- FND-007：不再要求 token replay matrix；现有 fail-closed matrix按 direct-argument API 重新定义，candidate 为 `FIX_PROPOSED / OPEN`。
-- 不创建 FND-020。
-
-## 14. Review / lifecycle gate
-
-本 Design 是新的 candidate，不是 PASSED Evidence。下一步需要 exact `DESIGN-P2-R13` 的 Architecture / ApiContract / Develop / Impact / CrossModule / Concurrency Review。`risk_detection.json` 与 `task_state.md` 未经正式 lifecycle 不得手工推进。Implementation Plan/TDD/Development remain BLOCKED。
+Required exact-revision Review：Architecture、ApiContract、Develop、Impact、CrossModule、Concurrency；DataMigration remains conditional on migration-impact detection。Until exact Review + machine lifecycle close, Implementation Plan/TDD/Development remain BLOCKED。

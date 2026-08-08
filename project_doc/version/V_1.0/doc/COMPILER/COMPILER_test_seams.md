@@ -1,225 +1,170 @@
 # COMPILER P2 设计测试接缝
 
-> Revision：`DESIGN-P2-R13`。正式 Test Design candidate：`TESTDESIGN-P2-R14`。
-> 本 Revision 删除 token/state-port/receiver seams，改为 direct-argument bridge reachability；PolicyIndex construction/publication seams 保持。
+> Revision：`DESIGN-P2-R14`。Formal Test Design candidate：`TESTDESIGN-P2-R15`。
+> 本 Revision 恢复 AC-001～AC-010 的 System/RuleView/permission/publication/diagnostic/migration seams，并保留 direct bridge + PolicyIndex runtime remediation。No skeleton / no TDD execution。
 
-## 1. Module seams
+## 1. Exact module seams
 
-| Seam | Exact module | Production owner |
+| Seam | Module | Planned production owner |
 |---|---|---|
-| Policy-index factory / CompiledModelSet compatibility | `dec-core-context` | access contracts + model classes |
-| Classifier/rule/plan/index publication/digest | `dec-core-compiler` | modelaccess/compiled/pass |
-| Direct bridge/runtime/Guard/Gateway/registry | `dec-core-starter` | `dec.core.starter.access.*` |
-| Target/operation ports | `dec-core-starter` | `dec.core.starter.access.spi.*` |
-| Real direct-bridge reachability | `dec-demo` | existing `systems.xml` + starter dependency |
+| SystemKey / RuleViewKey / immutable compiled facts | `dec-core-context` | context model |
+| System/RuleView/path/access compiler | `dec-core-compiler` | compiler/pass/modelaccess |
+| PolicyIndex factory/publication/digest | `dec-core-context` + `dec-core-compiler` | access + compiled pipeline |
+| Direct bridge/runtime/Guard/Gateway | `dec-core-starter` | `dec.core.starter.access.*` |
+| real configuration E2E | `dec-demo` | existing mix fixture |
 
-## 2. Policy-index construction seam — FND-015
+## 2. AC-001 System deterministic compile
 
-必须覆盖：
+Required cases：
 
-```text
-ModelAccessPolicyIndex.empty()
-ModelAccessPolicyIndex.of(Iterable<CompiledModelAccessRule>)
-find(exact key)
-keys()
-```
+- `CASE-P2-TD-SYSTEM-DETERMINISM-001`
+- `CASE-P2-TD-SYSTEM-DUPLICATE-001`
+- `CASE-P2-TD-SYSTEM-FORWARD-REF-001`
 
-Negative：duplicate/null/key mismatch/illegal STATIC-RUNTIME state/wildcard runtime key/mutability 均拒绝。
+Oracles：same semantic source with different discovery order -> same SystemKey set + same semantic digest；duplicate exact key -> `MIX-SYSTEM-DUPLICATE` and no publication；forward refs resolve only after complete symbol registration。
 
-## 3. CompiledModelSet publication compatibility seam — FND-015
+## 3. AC-002 RuleView System ownership/isolation
 
-冻结：
+- `CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001`
+- `CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001`
+- `CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001`
 
-```text
-existing 8-arg constructor -> empty policy index
-CompiledModelSet.published(...policyIndex...)
-CompiledModelSet.modelAccessPolicyIndex()
-EngineContext.modelAccessPolicyIndex()
-```
+Missing System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`。Same System/name duplicate -> ERROR。Cross-System same local name -> two distinct RuleViewKey values and no contamination。
 
-Legacy 不重建 policy；P2 production path 必须走 policy-aware factory；equals/hashCode 区分 policy index。
+## 4. AC-003 composite lookup/call
 
-## 4. Compiler digest/publication seam — FND-015
+- `CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001`
+- `CASE-P2-TD-RULEVIEW-BARE-NAME-REJECT-001`
+- `CASE-P2-TD-LEGACY-NO-NEW-BARE-FALLBACK-001`
 
-```text
-compiled access rules
- -> ModelAccessPolicyIndex.of
- -> SemanticDigestInput(same index)
- -> DigestBoundCompiledInput(same index + digest)
- -> FrozenInput
- -> CompiledModelSet.published(same index + digest)
-```
+Production lookup must use `SystemKey + localName` / `system-ref + rule-ref`。No canonical `find(String)` path。Legacy read-only adapter cannot register or resolve ambiguous cross-System same name。
 
-必须证明 index 在 digest 前建立、same snapshot 被 digest 与 publication 共同使用、policy semantic change 改变 semantic digest。
+## 5. AC-004 READ/WRITE/EXECUTE matrix
 
-## 5. Direct execution bridge API seam — FND-004/FND-016
+- `CASE-P2-TD-ACCESS-READ-MATRIX-001`
+- `CASE-P2-TD-ACCESS-WRITE-MATRIX-001`
+- `CASE-P2-TD-ACCESS-EXECUTE-MATRIX-001`
+- `CASE-P2-TD-STATIC-DENY-001`
 
-Starter API inspection 必须存在：
+Current Decision `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` must be applied：caller may choose another exact compiler-published ruleKey/op；that is not a forged-authority oracle in current P2。Missing key/op, undeclared WRITE/EXECUTE, invalid path or invalid rule state must still DENY/compile-error。
 
-```java
-ProtectedAccessResult execute(
-    ModelAccessRuleKey requestedRuleKey,
-    AccessOperation operation,
-    RuntimeExecutionFrameId frameId,
-    RuntimeResolutionOwnerId ownerResolutionId,
-    Optional<RuntimeCollectionCursorId> collectionCursorId);
-```
+## 6. AC-005 ModelPath
 
-必须不存在：
+- `CASE-P2-TD-MODEL-PATH-UNKNOWN-001`
+- `CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001`
 
-```text
-ProtectedExecutionToken
-ProtectedExecutionStatePort
-ProtectedExecutionBridgeReceiver
-bridge.execute(token)
-recognizes(token)
-claim(token)
-```
+Read wildcard must expand to finite exact children before policy publication。Runtime wildcard/fuzzy/parent lookup is forbidden。
 
-Bridge 可由 runtime factory 创建并供 external module 直接调用；不要求 external caller 先取得 issued pair。
+## 7. AC-006 dynamic access
 
-## 6. Direct argument validation seam
+- `CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R15`
+- `CASE-P2-RUNTIME-BINDING-PROOF-001-R15`
 
-Negative：
+Real `systems.xml` proves direct `status = 1` -> STATIC and `every(orderDetailList,status=1)` -> runtime-object-bound。Verifier proves actual element membership/provenance against exact selected plan。Unsupported dynamic selector compile ERROR。
 
-- null ruleKey；
-- null operation；
-- null frameId；
-- null ownerId；
-- null Optional wrapper；
-- closed runtime/context；
-- runtime-required path 上不满足 exact plan/cursor/membership 的事实。
+## 8. AC-007 unified Guard/no bypass
 
-API shape/argument failure 必须在 resolver/capability/Guard/policy lookup/operation/effects 前失败；候选 reason：`PROTECTED_ACCESS_ARGUMENT_INVALID`。
+- `CASE-P2-TD-GUARD-NO-BYPASS-001`
+- `CASE-P2-STATIC-ALLOW-GUARD-PATH-001-R15`
+- `CASE-P2-DIRECT-BRIDGE-REACHABILITY-001-R15`
 
-当前 Revision **不把 caller 选择另一个 valid ruleKey/operation 当成 forged-input test**。
+P2 oracle：all protected operations exposed by P2 runtime go bridge -> issuance -> resolver -> Gateway -> Guard。STATIC_ALLOW still Guard=1/policy lookup=1/verifier=0。Direct Guard/Gateway operation shortcut cannot satisfy E2E。
 
-## 7. Direct bridge reachability seam — FND-016
+Important：actual P3-P7 Rule/change/custom-action/query executors are not yet implemented here, so AC-007 final implementation status remains `CONTRACT_ONLY` rather than VERIFIED/PASSED。
 
-`dec-demo` 必须只使用 public production API：
+## 9. AC-008 atomic publication / Context isolation
 
-```text
-EngineContext
- -> ProtectedAccessRuntimeFactory
- -> public ProtectedExecutionBridge
- -> bridge.execute(ruleKey, READ, frame, owner, cursor)
- -> internal issuance
- -> resolver
- -> Gateway
- -> Guard
- -> operation
-```
+- `CASE-P2-TD-ATOMIC-PUBLICATION-001`
+- `CASE-P2-TD-CONTEXT-ISOLATION-001`
 
-禁止 reflection、package-private access、test-only mint helper、manual issued context/intent、direct Guard/Gateway shortcut。
+Any System/RuleView/path/policy ERROR leaves old Context unchanged。Two successful EngineContexts retain independent immutable System/RuleView/PolicyIndex state。No global current mutable registry。
 
-## 8. Internal issued-pair seam
+## 10. AC-009 deterministic/source-aware diagnostics
 
-Starter same-package tests只验证 internal object/pair consistency：
+- `CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001`
 
-- unknown internal implementation rejected；
-- A-context+B-intent rejected；
-- issued record/capability target binding 不可替换；
-- failure before resolver/policy when internal invariant is broken。
+Shuffle input discovery order and assert same ordered diagnostic tuples `(code, definition identity, SourceRef)`。Cover System duplicate, missing RuleView System, same-system duplicate, unknown composite ref, invalid path and denied access。
 
-这些不是 external caller authority tests。
+## 11. AC-010 declaration migration boundary
 
-## 9. STATIC_ALLOW Guard path — FND-001
+- `CASE-P2-TD-DECLARATION-BOUNDARY-001`
+
+P2 must not restore retired `dec-expand-declaration`；surviving read-only declaration/System compatibility remains unchanged；no write/register into canonical System/RuleView registry；final retirement remains P7。
+
+## 12. PolicyIndex construction/publication
+
+- `CASE-P2-POLICY-INDEX-CONSTRUCTION-001-R15`
+- `CASE-P2-POLICY-PUBLICATION-COMPATIBILITY-001-R15`
+- `CASE-P2-POLICY-INDEX-PUBLICATION-001-R15`
+- `CASE-P2-POLICY-INDEX-AUTHORITY-001-R15`
+
+Must prove：validated `of(Iterable)` duplicate/state/path checks；legacy 8-arg CompiledModelSet -> empty policy；new `published(...)` retains exact same index；System/RuleView/PolicyIndex enter digest-bound input before digest；Guard lookup exactly once；no second policy map/rebuild。
+
+## 13. Direct bridge API / argument validation
+
+- `CASE-P2-DIRECT-BRIDGE-CONTRACT-001-R15`
+- `CASE-P2-DIRECT-BRIDGE-ARGUMENT-VALIDATION-001-R15`
+- `CASE-P2-DIRECT-BRIDGE-CONCURRENCY-001-R15`
+
+API accepts exact ruleKey/op/frame/owner/optional cursor。No token/recognizes/claim API。Null/invalid/mismatched scalar facts fail before operation。Different concurrent calls must not cross-wire frame/owner/cursor/target/capability。Identical scalar calls are independent and Test Design must not assert replay suppression。
+
+## 14. Capability target/operation binding — FND-019
+
+- `CASE-P2-OPERATION-BINDING-001-R15`
+
+Capability A cannot execute target B or operation B。Same capability concurrent terminal execution success <= 1。Stale Context/frame/cursor/plan/membership before operation -> DENY/effects=0。Use barriers/latches, never `Thread.sleep` as concurrency oracle。
+
+## 15. Full real E2E
+
+- `CASE-P2-DYNAMIC-SOURCE-TO-OPERATION-001-R15`
 
 ```text
-bridge.execute(staticRuleKey, READ, frame, owner, cursor)
- -> internal issuance
- -> resolver target A
- -> Gateway=1
- -> Guard=1
- -> PolicyIndex exact lookup=1
- -> STATIC_ALLOW
- -> RuntimeBindingVerifier=0
- -> operation A=1
-```
-
-Direct operation outside Guard/runtime 仍必须被 bypass gate 阻止。
-
-## 10. Runtime binding / target substitution — FND-017/FND-019
-
-- valid element A -> verifier match -> A operation=1；
-- foreign B -> DENY；
-- capability A + forced target B -> `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`；
-- stale Context/frame/cursor/rule/plan/membership -> DENY；
-- same capability replay/concurrent execute -> at most one terminal success。
-
-**不测试 same bridge arguments / same frame 的 replay suppression**；R13 将其定义为独立 invocation。
-
-## 11. Bridge concurrency seam
-
-必须证明一个 immutable bridge 可被并发共享：
-
-```text
-Thread A -> execute(argsA)
-Thread B -> execute(argsB)
-```
-
-两次都建立独立 invocation/capability，状态不得串线。
-
-如果 `argsA == argsB`，测试不得要求 successes <= 1；允许两个独立 invocation 分别完成。P2 只要求每个 invocation 的 capability one-shot。
-
-不得再存在 token barrier/latch/claim replay Case。
-
-## 12. Single policy authority seam
-
-Spy counts：
-
-```text
-Guard current EngineContext policy lookup = 1
-Resolver = 0
-Gateway = 0
-RuntimeBindingVerifier = 0
-TargetResolutionPort = 0
-OperationExecutionPort = 0
-```
-
-Repository inspection 禁止 starter secondary policy Map 或 definitions/typed-registry reconstruction。
-
-## 13. Real source integration
-
-```text
-systems.xml
- -> production compiler/classifier
- -> policy index + semantic digest
- -> policy-aware CompiledModelSet
+real systems.xml
+ -> production parser/compiler
+ -> System registry + RuleView composite registry
+ -> exact rules + PolicyIndex
+ -> digest-bound CompiledModelSet.published
  -> EngineContext
- -> starter runtime
- -> public bridge.execute(...)
- -> static status branch: Guard=1/verifier=0/op=1
- -> every(orderDetailList,status=1) runtime branch: Guard=1/verifier=1/op=1 for valid member
- -> invalid runtime proof/target substitution: op=0/effects=0
+ -> direct public bridge
+ -> Gateway/Guard
+ -> static or runtime-proof branch
+ -> same target protected operation
 ```
 
-No manual compiled rule, no token, no direct Gateway shortcut。
+No manual compiled rule、manual PolicyIndex bypass、manual issued pair、classifier stub or direct Guard invocation may satisfy this E2E。
 
-## 14. Planned test ownership
+## 16. Exact TestClass map
 
-至少：
+| Purpose | Module | Planned TestClass |
+|---|---|---|
+| System compile | `dec-core-compiler` | `dec.core.compiler.p2.SystemCompilationContractTest` |
+| RuleView composite | `dec-core-compiler` | `dec.core.compiler.p2.RuleViewCompositeContractTest` |
+| Model access matrix/path | `dec-core-compiler` | `dec.core.compiler.access.ModelAccessRuleCompilationContractTest` |
+| Policy factory | `dec-core-context` | `dec.core.context.model.access.ModelAccessPolicyIndexContractTest` |
+| Publication compatibility | `dec-core-context` | `dec.core.context.model.ModelAccessPolicyPublicationCompatibilityTest` |
+| Policy publication/digest | `dec-core-compiler` | `dec.core.compiler.access.ModelAccessPolicyIndexPublicationTest` |
+| Direct bridge contract | `dec-core-starter` | `dec.core.starter.access.ProtectedExecutionBridgeContractTest` |
+| Direct bridge concurrency | `dec-core-starter` | `dec.core.starter.access.ProtectedExecutionBridgeConcurrencyTest` |
+| Guard authority | `dec-core-starter` | `dec.core.starter.access.ModelAccessPolicyAuthorityIntegrationTest` |
+| Static path | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessStaticAllowPathTest` |
+| runtime proof | `dec-core-starter` | `dec.core.starter.access.RuntimeBindingProofIntegrationTest` |
+| target binding | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessOperationBindingTest` |
+| atomic publication/diagnostic | `dec-core-compiler` | `dec.core.compiler.p2.P2PublicationDiagnosticContractTest` |
+| real classifier | `dec-demo` | `dec.demo.p2.P2DynamicClassifierRealFixtureTest` |
+| direct bridge reachability | `dec-demo` | `dec.demo.p2.P2DirectBridgeReachabilityTest` |
+| full E2E | `dec-demo` | `dec.demo.p2.P2DynamicSourceToOperationTest` |
 
-- `dec-core-context`: `ModelAccessPolicyIndexContractTest`
-- `dec-core-context`: `ModelAccessPolicyPublicationCompatibilityTest`
-- `dec-core-compiler`: `ModelAccessPolicyIndexPublicationTest`
-- `dec-core-starter`: `ProtectedExecutionBridgeContractTest`
-- `dec-core-starter`: `ProtectedExecutionBridgeConcurrencyTest`
-- `dec-core-starter`: `ProtectedAccessInputAuthorityTest`
-- `dec-core-starter`: `ModelAccessPolicyAuthorityIntegrationTest`
-- `dec-core-starter`: static/runtime/proof/substitution tests
-- `dec-demo`: `P2DirectBridgeReachabilityTest`
-- `dec-demo`: `P2DynamicSourceToOperationTest`
+## 17. Valid RED contract
 
-## 15. RED validity
+For every planned target：
 
 ```bash
 ./mvnw -pl <EXACT-MODULE> -am -Dmaven.test.skip=true install
 ./mvnw -pl <EXACT-MODULE> -Dtest=<EXACT-TESTCLASS> -Dsurefire.failIfNoSpecifiedTests=true test
 ```
 
-第二步禁止 `-am`。Missing module/test/symbol/setup/compile failure = INVALID_RED。
+Second command MUST NOT use `-am`。Missing module/test/symbol/setup/compile failure = INVALID_RED。Before skeleton exists, API-shape cases must remain compilable through reflection/source inspection when needed。
 
-## 16. Review gate
+## 18. Gate
 
-这些 seams 只是 `DESIGN-P2-R13 / TESTDESIGN-P2-R14` candidate。FND-004/FND-015/FND-016 formal OPEN；FND-007/FND-019 不再包含 execution-token concurrency/replay gate。TDD 仍 BLOCKED。
+These seams only define `DESIGN-P2-R14 / TESTDESIGN-P2-R15` candidate coverage。No TDD skeleton and no execution Evidence is claimed。Test Design remains BLOCKED_BY_DESIGN_REVIEW until exact Design Review passes。

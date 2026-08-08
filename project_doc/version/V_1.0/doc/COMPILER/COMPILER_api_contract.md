@@ -1,35 +1,71 @@
 # COMPILER P2 API 契约
 
-> Revision：`DESIGN-P2-R13`。输入：`BM-R12` candidate。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
-> 本 Revision 保持 R12 的 PolicyIndex construction/publication 结论，撤销 `ProtectedExecutionToken` 模型，改为 direct-argument `ProtectedExecutionBridge.execute(...)`。生产实现必须 Java 8 compatible。
+> Revision：`DESIGN-P2-R14`。Inputs：`REQAN-P2-R01` + `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` + `BM-R12`。状态：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> 本文是 consolidated API contract；恢复 System/RuleView API，同时保留 PolicyIndex/publication/direct bridge runtime contract。Java 8 only。
 
 ## 1. Maven / package ownership
 
-| Concern | Maven module | Package / owner |
+| Concern | Module | Owner package |
 |---|---|---|
-| Neutral access contracts/policy index | `dec-core-context` | `dec.core.context.model.access.*` |
-| `CompiledModelSet` / `EngineContext` publication/read API | `dec-core-context` | existing packages |
-| Rule/plan/index publication + digest binding | `dec-core-compiler` | compiler/modelaccess/pass/compiled packages |
-| Bridge/runtime/Guard/Gateway/registry | `dec-core-starter` | `dec.core.starter.access.*` |
-| Target/operation SPI | `dec-core-starter` | `dec.core.starter.access.spi.*` |
-| Real direct-bridge integration | `dec-demo` | tests/resources |
+| SystemKey / RuleViewKey / compiled neutral facts | `dec-core-context` | existing context model packages / `dec.core.context.model.*` |
+| ModelAccessPolicyIndex / compiled access neutral contracts | `dec-core-context` | `dec.core.context.model.access.*` |
+| System/RuleView/model-access compiler passes | `dec-core-compiler` | existing compiler/pass/modelaccess packages |
+| CompiledModelSet / EngineContext publication/read API | `dec-core-context` | existing packages |
+| Protected runtime/Bridge/Gateway/Guard | `dec-core-starter` | `dec.core.starter.access.*` |
+| Target/operation adapters | `dec-core-starter` | `dec.core.starter.access.spi.*` |
 
-No new Maven runtime module；no context -> starter/compiler reverse dependency；no compiler -> starter dependency；starter 不新增 P2-only `dec-core-model` 业务依赖。
+No new runtime Maven module and no reverse context -> compiler/starter dependency。
 
-## 2. Java / compatibility
+## 2. Java 8 compatibility
 
-- Java release 8 only；禁止 record/sealed/Java9+ collection factories。
-- `EngineContext` 保持 final、现有 `EngineContext(CompiledModelSet)`、`compiledModelSet()/modelSet()/projection()`。
-- `CompiledModelSet` 现有八参数 public constructor 保持原 signature。
-- P2 API additive；legacy constructor = empty-policy fail closed。
+- no records/sealed types/`Map.of`/`Map.copyOf`；
+- `EngineContext` remains `public final` with existing `EngineContext(CompiledModelSet)`；
+- existing 8-arg public `CompiledModelSet` constructor remains unchanged；
+- additive APIs only。
 
-## 3. Compiled access rule
+<a id="3-systemkey-compiledsystem"></a>
+## 3. SystemKey / CompiledSystem
 
 ```java
-public enum AccessCompilationStatus {
-    STATIC_ALLOW,
-    RUNTIME_GUARD_REQUIRED
+public final class SystemKey implements Comparable<SystemKey> {
+    public static SystemKey of(String value);
+    public String value();
 }
+
+public final class CompiledSystem {
+    public SystemKey key();
+    public SourceRef sourceRef();
+}
+```
+
+Contract：non-null/non-blank canonical key；exact equality；deterministic compare/order；no filename/path-derived identity。
+
+<a id="4-ruleviewkey"></a>
+## 4. RuleViewKey / CompiledRuleView
+
+```java
+public final class RuleViewKey implements Comparable<RuleViewKey> {
+    public static RuleViewKey of(SystemKey systemKey, String localName);
+    public SystemKey systemKey();
+    public String localName();
+}
+
+public final class CompiledRuleView {
+    public RuleViewKey key();
+    public SourceRef sourceRef();
+    public List<RuleKey> resolvedRuleRefs();
+}
+```
+
+`equals/hashCode/compareTo` include systemKey + localName。No public constructor/factory accepting only bare name for canonical P2 key。
+
+<a id="5-modelaccessrule"></a>
+## 5. CompiledModelAccessRule / ModelAccessPolicyIndex
+
+```java
+public enum AccessOperation { READ, WRITE, EXECUTE }
+public enum AccessCompilationStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
+public enum DynamicBindingClassification { STATIC_BOUND, RUNTIME_OBJECT_BOUND }
 
 public final class CompiledModelAccessRule {
     public ModelAccessRuleKey key();
@@ -38,50 +74,20 @@ public final class CompiledModelAccessRule {
     public Optional<RuntimeBindingPlan> runtimeBindingPlan();
     public SourceRef sourceRef();
 }
-```
 
-STATIC_ALLOW 无 plan/requirement；RUNTIME_GUARD_REQUIRED 必须有 exact plan + EXACT_RUNTIME_BINDING requirement。
-
-## 4. ModelAccessPolicyIndex
-
-```java
 public final class ModelAccessPolicyIndex {
     public static ModelAccessPolicyIndex empty();
-    public static ModelAccessPolicyIndex of(
-        Iterable<CompiledModelAccessRule> rules);
-    public Optional<CompiledModelAccessRule> find(
-        ModelAccessRuleKey key);
+    public static ModelAccessPolicyIndex of(Iterable<CompiledModelAccessRule> rules);
+    public Optional<CompiledModelAccessRule> find(ModelAccessRuleKey key);
     public Set<ModelAccessRuleKey> keys();
 }
 ```
 
-`of(...)` 必须验证 duplicate/null/exact-key/canonical path/STATIC-RUNTIME state invariant，并冻结 immutable deterministic snapshot。不得暴露 mutable raw-map authority constructor。
+`of(...)` validates duplicate exact key/null/state/path and returns immutable deterministic snapshot。STATIC_ALLOW cannot carry runtime requirement/plan；runtime-required must carry exact requirement/plan。
 
-## 5. CompiledModelSet publication
+## 6. CompiledModelSet / EngineContext publication
 
-Legacy constructor 保持：
-
-```java
-public CompiledModelSet(
-    PublishedSourceManifest sourceManifest,
-    Registry<DefinitionKey, CompiledDefinition> definitions,
-    DeferredRegistry deferred,
-    List<Diagnostic> diagnostics,
-    DigestPair digestPair,
-    String compilerVersion,
-    String schemaVersion,
-    String optionsVersion);
-```
-
-其 policy 语义固定：
-
-```text
-ModelAccessPolicyIndex.empty()
-no reconstruction from definitions()/typedRegistries()
-protected access exact miss -> POLICY_NOT_FOUND
-```
-
-P2 production path：
+Existing constructor remains exact existing signature and attaches empty policy index。
 
 ```java
 public static CompiledModelSet published(
@@ -98,19 +104,48 @@ public static CompiledModelSet published(
 public ModelAccessPolicyIndex modelAccessPolicyIndex();
 ```
 
-`equals/hashCode` 必须把 policy index 视为 published model fact。
-
-## 6. EngineContext read surface
+`published(...)` requires same immutable index used by digest-bound compiler input。`equals/hashCode` include policy index semantics。
 
 ```java
 public final class EngineContext {
-    public ModelAccessPolicyIndex modelAccessPolicyIndex();
+    public EngineContext(CompiledModelSet compiledModelSet); // existing
+    public CompiledModelSet compiledModelSet();              // existing
+    public ModelAccessPolicyIndex modelAccessPolicyIndex();  // additive read-through
 }
 ```
 
-直接返回 `compiledModelSet().modelAccessPolicyIndex()` 的 immutable authority，不复制、不 rebuild。
+<a id="7-ruleviewresolver"></a>
+## 7. RuleViewResolver
 
-## 7. Compiler digest/publication contract
+```java
+public interface RuleViewResolver {
+    Optional<CompiledRuleView> find(RuleViewKey key);
+    CompiledRuleView require(SystemKey systemKey, String localName);
+}
+```
+
+Required behavior：
+
+- exact composite key only；
+- same local name across Systems resolves independently；
+- unknown System/RuleView -> stable failure；
+- no `find(String name)` / `require(String name)` canonical new path；
+- legacy bare-name adapter, if retained, is a separate read-only compatibility API and cannot mutate/register canonical RuleView registry。
+
+## 8. System / RuleView compiler internal contract
+
+Implementation-ready compiler seams：
+
+```text
+registerSystem(SystemKey, SourceRef)
+registerRuleView(RuleViewKey, SourceRef, unresolvedRuleRefs)
+resolveRuleViewReferences(...)
+publish deterministic immutable registries
+```
+
+Exact class names may follow existing pass conventions; semantic contract is frozen：all System symbols register before cross-reference resolution；forward refs allowed；duplicates/unknown refs are stable ERROR；candidate publication occurs only after complete semantic validation。
+
+## 9. Compiler digest/publication internal contract
 
 ```java
 static DigestBoundCompiledInput bind(
@@ -126,27 +161,16 @@ static DigestBoundCompiledInput bind(
 public ModelAccessPolicyIndex modelAccessPolicyIndex();
 ```
 
-Production sequence：
+SemanticDigestInput must include canonical System identities, RuleView composite identities and PolicyIndex authorization-significant entries before digest computation。
 
-```text
-ModelAccessPolicyIndex.of(compiledRules)
- -> SemanticDigestInput(same index)
- -> digest compute
- -> DigestBoundCompiledInput(same index + digest)
- -> CompiledModelSetBuilder.FrozenInput
- -> CompiledModelSet.published(...same index + digest...)
-```
+P2 candidate publication must call `CompiledModelSet.published(...)`, not legacy 8-arg constructor。
 
-Policy authorization semantics 进入 semantic digest；runtime bridge/capability/registry state不进入 digest。
+## 10. ProtectedExecutionBridge direct invocation API
 
-## 8. ProtectedExecutionBridge — R13 public production API
+Formal decision：`DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`。
 
 ```java
-package dec.core.starter.access;
-
 public final class ProtectedExecutionBridge {
-    // no public/protected constructor
-
     public ProtectedAccessResult execute(
         ModelAccessRuleKey requestedRuleKey,
         AccessOperation operation,
@@ -156,148 +180,65 @@ public final class ProtectedExecutionBridge {
 }
 ```
 
-Bridge 由 `ProtectedAccessRuntimeFactory` 创建，composition 时固定：
+No token/recognizes/claim API。
+
+Bridge creation occurs from current EngineContext/runtime composition and binds：
 
 ```text
 EngineContext/runtime identity
-AccessConsumerIrKey
+AccessConsumerIrKey (provenance only in current P2)
 ProtectedTargetResolutionPort
 ProtectedOperationExecutionPort
 ```
 
-Per-call 显式接受：
+Per call rule/op/frame/owner/cursor are explicit arguments。
+
+Current P2 authorization interpretation：requested exact key/op is allowed only if current `ModelAccessPolicyIndex.find(key)` returns the matching compiler-published rule；no consumer->rule/op binding is required in this Revision。
+
+## 11. Internal issued-pair contract
+
+External caller does not call `issueInvocation(...)` or construct issued objects。Starter may keep package-private internal：
 
 ```text
-requestedRuleKey
-operation
-frameId
-ownerResolutionId
-optional collectionCursorId
-```
-
-当前 Revision 按用户决策允许 caller 提供这些值；API 不增加 token/claim/recognized-execution authority 层。
-
-## 9. 参数校验
-
-以下必须在 resolver/capability/Guard/policy lookup/operation 前拒绝：
-
-- null ruleKey；
-- null operation；
-- null frameId；
-- null ownerResolutionId；
-- null Optional wrapper；
-- cursor 与 runtime-required plan 明确不兼容时的 stable validation/runtme DENY；
-- bridge/runtime 已关闭或 Context identity 不可用。
-
-Stable candidate reason：
-
-```text
-PROTECTED_ACCESS_ARGUMENT_INVALID
-```
-
-该 reason 是 direct invocation 输入形态错误，不是 policy DENY。
-
-## 10. Removed token API
-
-R13 明确**不存在**以下 public P2 contract：
-
-```text
-ProtectedExecutionToken
-ProtectedExecutionStatePort
-ProtectedExecutionBridgeReceiver
-recognizes(token)
-claim(token)
-beginExecution(token)
-token lease/replay/consumed state
-PROTECTED_EXECUTION_TOKEN_UNTRUSTED
-```
-
-也不存在 `bridge.execute(token)`。
-
-## 11. ProtectedAccessRuntime / internal issuance
-
-`ProtectedAccessRuntime` 可以继续作为 public composition holder。以下为 starter package-private internal seam：
-
-```text
-issueInvocation(...)
-executeIssuedPair(...)
+issueInvocation(ruleKey,op,frame,owner,cursor,...)
 IssuedProtectedAccessResolutionContext
 IssuedProtectedOperationIntent
 IssuedInvocationRecord
+requireIssuedPair(...)
 ```
 
-Public bridge invocation 参数与 bridge-bound consumer/context/ports 一起生成 internal issued pair。
+Internal pair exists to bind one invocation to resolved target/capability and prevent implementation substitution after issuance；it is not a token authority system。
 
-## 12. Execution sequence
+## 12. Guard / Gateway
+
+Guard exact policy selection：
 
 ```text
-bridge.execute(ruleKey, operation, frameId, ownerId, cursorId)
- -> validate call arguments
- -> internal issueInvocation(
-      bridge consumer,
-      ruleKey/op/frame/owner/cursor)
- -> internal pair check
- -> resolver binds actual target
- -> one-shot capability
- -> Gateway
- -> Guard EngineContext.modelAccessPolicyIndex().find(ruleKey) exactly once
- -> STATIC_ALLOW or runtime verifier
- -> same capability-bound target operation
- -> consume capability
+engineContext.modelAccessPolicyIndex().find(requestedRuleKey)
 ```
 
-## 13. Concurrency contract
+exactly once。
 
-`ProtectedExecutionBridge` 必须可被多线程并发调用。
+- key absent -> `POLICY_NOT_FOUND`；
+- operation inconsistent with key -> invalid invocation / DENY；
+- STATIC_ALLOW -> verifier/evaluator 0；
+- RUNTIME_GUARD_REQUIRED -> exact selected plan/requirement -> verifier；
+- resolver/gateway/verifier/adapters perform zero policy lookup。
 
-不同参数并发：独立 invocation。
+Gateway reserves/consumes one capability atomically and executes only capability-bound target + operation port。
 
-相同参数并发：**仍视为两个独立 invocation**；R13 不提供 execution-occurrence replay suppression，也不要求只成功一次。
+## 13. Concurrency API semantics
 
-唯一 one-shot 原子性要求：
+`ProtectedExecutionBridge.execute(...)` is thread-safe/stateless with respect to independent invocations。Identical scalar arguments submitted concurrently are independent calls and may both succeed if each independently passes policy/proof。P2 does not expose duplicate-suppression/idempotency API。
 
-```text
-same ResolvedProtectedAccess capability
- -> concurrent reserve/execute
- -> terminal success <= 1
-```
+Same capability concurrent terminal execution must succeed at most once。
 
-runtime verifier 仍需在实际 operation 前做 Context/frame/cursor/rule/plan/membership stale revalidation。
+## 14. Stable compile/runtime failures
 
-## 14. Guard / Gateway
+Compile：`MIX-SYSTEM-DUPLICATE`、`MIX-SYSTEM-UNKNOWN`、`MIX-RULEVIEW-SYSTEM-REQUIRED`、`MIX-RULEVIEW-DUPLICATE`、`MIX-RULEVIEW-UNKNOWN-SYSTEM`、`MIX-RULEVIEW-UNKNOWN-RULE`、`MIX-MODEL-PATH-INVALID`、`MIX-MODEL-ACCESS-DENIED`、`MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`。
 
-Guard exact lookup：
+Runtime：`POLICY_NOT_FOUND`、`CONTEXT_IDENTITY_MISMATCH`、`MODEL_ACCESS_GUARD_BYPASS`、`PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`、`RUNTIME_BINDING_REQUIRED`、`RUNTIME_BINDING_PROOF_INVALID`、`RUNTIME_BINDING_STALE`、`RUNTIME_BINDING_PLAN_MISMATCH`、`RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`、`RUNTIME_BINDING_CAPABILITY_CONSUMED`、`GUARD_UNAVAILABLE`。
 
-```text
-engineContext.modelAccessPolicyIndex().find(requestedRuleKey) = 1
-```
+## 15. Gate
 
-Resolver/Gateway/verifier/target port/operation port policy lookup = 0。
-
-Gateway 只能执行 resolver/capability 已绑定的 actual target 与 operation port；禁止 `execute(capability,targetB)` 等二次 target substitution。
-
-## 15. Stable runtime reasons
-
-至少：
-
-- `PROTECTED_ACCESS_ARGUMENT_INVALID`
-- `PROTECTED_ACCESS_INPUT_UNTRUSTED`
-- `PROTECTED_ACCESS_INPUT_PAIR_MISMATCH`
-- `POLICY_NOT_FOUND`
-- `CONTEXT_IDENTITY_MISMATCH`
-- `MODEL_ACCESS_GUARD_BYPASS`
-- `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`
-- `RUNTIME_BINDING_REQUIRED`
-- `RUNTIME_BINDING_PROOF_INVALID`
-- `RUNTIME_BINDING_STALE`
-- `RUNTIME_BINDING_PLAN_MISMATCH`
-- `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`
-- `RUNTIME_BINDING_CAPABILITY_CONSUMED`
-- `GUARD_UNAVAILABLE`
-- `STATIC_ALLOW`
-- `RUNTIME_ALLOW`
-- `RUNTIME_DENY`
-
-## 16. Review gate
-
-本 API 是 candidate contract。FND-004/FND-015/FND-016 仍 formal OPEN；FND-007/FND-019 不再承担 token replay/atomic-claim 问题。Implementation Plan/TDD/Development 在 exact `DESIGN-P2-R13` specialist Review 与 machine lifecycle 前继续 BLOCKED。
+`DESIGN-P2-R14 = NEEDS_REVIEW / MACHINE_BLOCKED`。Exact Architecture/ApiContract/Develop/Impact/CrossModule/Concurrency Review required before TestDesign can be accepted or TDD may begin。

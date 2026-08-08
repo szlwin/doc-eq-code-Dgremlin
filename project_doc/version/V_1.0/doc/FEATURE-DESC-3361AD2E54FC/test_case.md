@@ -1,319 +1,321 @@
 # FEATURE-DESC-3361AD2E54FC Test Design
 
-> Revision：`TESTDESIGN-P2-R14`。
-> Base：`TESTDESIGN-P2-R13`。
-> Inputs：Requirement `REQAN-P2-R01`、Business Model candidate `BM-R12`、Design candidate `DESIGN-P2-R13`。
-> Status：`NEEDS_CHANGES_CANDIDATE_FIXED / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`。本 Revision 按用户明确决策删除 execution-token/recognizes/claim/replay 测试模型，把所有 production E2E 改为 direct-argument `ProtectedExecutionBridge.execute(ruleKey, operation, frameId, ...)`；不创建 skeleton、不执行 TDD。
+> Revision：`TESTDESIGN-P2-R15`。
+> Base：`TESTDESIGN-P2-R14`。
+> Inputs：Requirement `REQAN-P2-R01`、Decision `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`、Business Model `BM-R12`、Design `DESIGN-P2-R14`。
+> Status：`NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`。本 Revision 重新 materialize AC-001～AC-010 全量 Case，并保留 R14 runtime remediation；不创建 skeleton、不执行 TDD。
 
-## 1. Principles
+## 1. Test Design principles
 
-1. 所有 protected READ/WRITE/EXECUTE，包括 STATIC_ALLOW，都必须进入 starter-owned bridge -> internal issuance -> Gateway -> Guard。
-2. External consumer 不调用 package-private `issueInvocation(...)`，但可直接调用 public bridge 并提交 rule/op/frame/owner/cursor 参数。
-3. 不存在 `ProtectedExecutionToken`、`ProtectedExecutionStatePort.recognizes()`、token claim/replay gate。
-4. 相同 bridge 参数被调用两次视为两个独立 invocation；Test Design 不要求 duplicate suppression。
-5. 唯一 runtime policy authority 是 compiler-published、CompiledModelSet-owned、EngineContext-retained immutable `ModelAccessPolicyIndex`。
-6. PolicyIndex 必须在 semantic digest 前建立并进入同一 digest-bound publication closure。
-7. Legacy 八参数 CompiledModelSet constructor = deterministic empty-policy fail closed。
-8. STATIC_ALLOW 只能是 Guard exact lookup 后 fast path；runtime proof 只属于 RUNTIME_GUARD_REQUIRED。
-9. capability actual target + operation binding 不可替换；同一 capability concurrent execute 最多一次 terminal success。
-10. valid RED：bootstrap 可 `-am`，target test 禁止 `-am`。
-11. Implementation Plan/TDD/Development 在 exact Design Review/machine gate 前 BLOCKED。
+1. 当前 Test Design 的所有 traceability `test_case_ids` 必须在本文件真实存在。
+2. 所有 Design refs 必须指向 `DESIGN-P2-R14` consolidated artifact，而不是过期 R01/R12 章节。
+3. System / RuleView / ModelAccess / publication / diagnostics / migration 与 runtime remediation 同时覆盖，不能只保留近期 FND Case。
+4. Direct bridge 采用用户确认的 direct-argument authority decision：caller 选择另一个有效 compiler-published ruleKey/op 不作为 forged-authority failure。
+5. AC-007 当前只能证明 P2 protected runtime seam 无旁路；P3-P7 实际 executor 尚未实现，因此最终状态为 `CONTRACT_ONLY`。
+6. 每个 target RED 第二条 Maven command 禁止 `-am`。
+7. Design exact Review / machine gate 前不进入 TDD。
 
-## 2. Exact Maven / planned TestClass contract
+## 2. AC-001 System deterministic compile
+
+### CASE-P2-TD-SYSTEM-DETERMINISM-001 — BLOCKING
+
+Module/TestClass：`dec-core-compiler / dec.core.compiler.p2.SystemCompilationContractTest`
+
+Fixture：相同 System definitions，以至少两种 source discovery order 输入。
+
+Oracle：
+
+- exact same ordered SystemKey set；
+- same semantic digest；
+- same ordered diagnostics；
+- no filename/path/order-derived identity。
+
+### CASE-P2-TD-SYSTEM-DUPLICATE-001 — BLOCKING
+
+Two sources declare same exact SystemKey。
+
+Expected：`MIX-SYSTEM-DUPLICATE`；candidate publication=0；old EngineContext unchanged。
+
+### CASE-P2-TD-SYSTEM-FORWARD-REF-001 — BLOCKING
+
+A System-owned definition references a System/member discovered later。
+
+Expected：all System symbols register before reference resolution；valid forward ref succeeds independent of source order；unknown ref emits stable ERROR。
+
+## 3. AC-002 RuleView ownership / duplicate / isolation
+
+### CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001 — BLOCKING
+
+New mix RuleView omits System。
+
+Expected：`MIX-RULEVIEW-SYSTEM-REQUIRED`；no bare-name fallback；no candidate publication。
+
+### CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001 — BLOCKING
+
+Two RuleViews with same `(SystemKey,name)`。
+
+Expected：duplicate ERROR + SourceRefs for both definitions；no publication。
+
+### CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001 — BLOCKING
+
+System A and B both define RuleView `summary`。
+
+Expected：`RuleViewKey(A,summary) != RuleViewKey(B,summary)`；both coexist；lookup/call in A never returns B and vice versa；parallel Contexts remain isolated。
+
+## 4. AC-003 composite RuleView lookup/call
+
+### CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001 — BLOCKING
+
+Input call supplies `system-ref + rule-ref`。
+
+Expected：exact SystemKey resolution -> exact RuleViewKey -> exact RuleView；wrong system or wrong local name fails deterministically。
+
+### CASE-P2-TD-RULEVIEW-BARE-NAME-REJECT-001 — BLOCKING
+
+Production canonical resolver inspection + runtime fixture。
+
+Expected：no canonical public `find(String)`/`require(String)` new path；bare `summary` cannot select one of multiple Systems。
+
+### CASE-P2-TD-LEGACY-NO-NEW-BARE-FALLBACK-001 — BLOCKING
+
+Legacy read-only adapter may read only when legacy compatibility rule permits；it cannot register new canonical RuleView or silently resolve ambiguous cross-System local names。
+
+## 5. AC-004 READ / WRITE / EXECUTE authorization matrix
+
+### CASE-P2-TD-ACCESS-READ-MATRIX-001 — BLOCKING
+
+Cover declared exact READ、undeclared READ、read wildcard finite expansion、unknown exact path。
+
+Expected：only compiler-published exact READ keys can ALLOW；unknown/missing key fail closed。
+
+### CASE-P2-TD-ACCESS-WRITE-MATRIX-001 — BLOCKING
+
+Cover explicit WRITE allow and undeclared shared WRITE。
+
+Expected：undeclared shared WRITE compile/runtime DENY；no default allow。
+
+### CASE-P2-TD-ACCESS-EXECUTE-MATRIX-001 — BLOCKING
+
+Cover explicit EXECUTE allow and undeclared EXECUTE。
+
+Expected：missing exact EXECUTE rule DENY。
+
+### CASE-P2-TD-STATIC-DENY-001 — BLOCKING
+
+Static invalid/undeclared access must fail before candidate publication or protected operation。
+
+Decision oracle：caller choosing another **valid** exact PolicyIndex ruleKey/op is allowed by current P2 decision and is not a negative fixture。
+
+## 6. AC-005 canonical ModelPath
+
+### CASE-P2-TD-MODEL-PATH-UNKNOWN-001 — BLOCKING
+
+Unknown/non-canonical/fuzzy runtime path -> compile ERROR / exact runtime miss；no parent/bare fallback。
+
+### CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001 — BLOCKING
+
+Real `read path="*"` expands at compile-time to finite exact child rules。Published PolicyIndex contains no wildcard key；equivalent source ordering yields same exact expansion order/digest。
+
+## 7. AC-006 dynamic access
+
+### CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R15 — BLOCKING
+
+Module/TestClass：`dec-demo / dec.demo.p2.P2DynamicClassifierRealFixtureTest`
+
+Real source：existing `dec-demo/src/main/resources/mix/system/systems.xml`。
+
+Required：
+
+- direct `status = 1` -> `STATIC_BOUND / STATIC_ALLOW`；
+- `every(orderDetailList,status=1)` -> `RUNTIME_OBJECT_BOUND / RUNTIME_GUARD_REQUIRED`；
+- unsupported dynamic selector -> `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`；
+- no classifier stub can satisfy。
+
+### CASE-P2-RUNTIME-BINDING-PROOF-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-starter / dec.core.starter.access.RuntimeBindingProofIntegrationTest`
+
+Actual element A belonging to exact frame/cursor/collection -> proof ALLOW；foreign B、stale frame/cursor/context、wrong plan/provenance -> DENY/effects=0。Verifier cannot select another policy rule。
+
+## 8. AC-007 unified Guard / no bypass
+
+### CASE-P2-TD-GUARD-NO-BYPASS-001 — BLOCKING CONTRACT
+
+Repository/API inspection + starter harness：protected operation exposed by P2 runtime cannot execute by direct target/port call bypassing Gateway/Guard。Direct Guard/Gateway test helper does not count as E2E。
+
+### CASE-P2-STATIC-ALLOW-GUARD-PATH-001-R15 — BLOCKING
+
+`DIRECT_EXACT -> STATIC_ALLOW` via direct bridge：Gateway=1、Guard=1、PolicyIndex lookup=1、RuntimeBindingVerifier=0、operation=1。Caller-side direct STATIC shortcut must not exist。
+
+### CASE-P2-DIRECT-BRIDGE-REACHABILITY-001-R15 — BLOCKING
+
+Module/TestClass：`dec-demo / dec.demo.p2.P2DirectBridgeReachabilityTest`
+
+Different module/package uses only public production bridge：
+
+```text
+EngineContext
+ -> runtime composition
+ -> direct bridge
+ -> execute(ruleKey,op,frame,owner,cursor)
+ -> internal issuance
+ -> resolver/capability
+ -> Gateway/Guard
+ -> operation
+```
+
+Forbidden：reflection、package-private access、manual issued pair、manual Guard shortcut。
+
+AC-007 final status remains `CONTRACT_ONLY` until concrete P3-P7 Rule/change/custom-action/query executors exist and integrate this seam。
+
+## 9. AC-008 atomic publication / Context isolation
+
+### CASE-P2-TD-ATOMIC-PUBLICATION-001 — BLOCKING
+
+Inject System duplicate、missing RuleView System、invalid model path、invalid policy construction before publication。
+
+Expected：publisher call=0 or publication failure leaves prior Context unchanged；no partial System/RuleView/PolicyIndex visible。
+
+### CASE-P2-TD-CONTEXT-ISOLATION-001 — BLOCKING
+
+Compile two valid independent contexts with different System/RuleView/policy facts。
+
+Expected：no mutable registry sharing；Context A lookup/Guard never sees B facts；no global current。
+
+## 10. AC-009 Diagnostic deterministic / source aware
+
+### CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001 — BLOCKING
+
+Run same invalid semantic set under different source discovery order。
+
+Cover at least：System duplicate、missing RuleView System、same-System duplicate、unknown composite RuleView ref、invalid path、denied access。
+
+Expected identical ordered tuples：stable code + definition identity + SourceRef/relatedRefs。
+
+## 11. AC-010 declaration migration boundary
+
+### CASE-P2-TD-DECLARATION-BOUNDARY-001 — BLOCKING
+
+Repository/source inspection + compatibility harness。
+
+Expected：retired `dec-expand-declaration` not restored；surviving declaration/System compatibility read-only；no new canonical System/RuleView registration through legacy surface；P7 retirement marker remains explicit。
+
+## 12. FND-015 PolicyIndex construction / publication
+
+### CASE-P2-POLICY-INDEX-CONSTRUCTION-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-context / dec.core.context.model.access.ModelAccessPolicyIndexContractTest`
+
+Required API `empty()/of(Iterable)/find/keys`。Reject duplicate exact key、null、STATIC with runtime plan、runtime-required missing exact plan/requirement、runtime wildcard/fuzzy key。Snapshot immutable/deterministic。
+
+### CASE-P2-POLICY-PUBLICATION-COMPATIBILITY-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-context / dec.core.context.model.ModelAccessPolicyPublicationCompatibilityTest`
+
+Assert existing 8-arg constructor remains；its policy index is immutable empty and no reconstruction occurs。`CompiledModelSet.published(...policyIndex...)` retains exact authority。`EngineContext.modelAccessPolicyIndex()` is direct read-through。Different policy index changes equality/hash semantics。
+
+### CASE-P2-POLICY-INDEX-PUBLICATION-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-compiler / dec.core.compiler.access.ModelAccessPolicyIndexPublicationTest`
+
+Required production order：System/RuleView/access semantic facts -> exact PolicyIndex -> SemanticDigestInput -> digest -> DigestBoundCompiledInput -> `CompiledModelSet.published`。Same immutable index snapshot used for digest and final model。Authorization/System/RuleView semantic change changes semantic digest。
+
+### CASE-P2-POLICY-INDEX-AUTHORITY-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-starter / dec.core.starter.access.ModelAccessPolicyAuthorityIntegrationTest`
+
+Guard current-context index lookup=1；resolver/gateway/verifier/target port/operation port policy lookups=0；no starter second permission map；no definitions/typedRegistries reconstruction。
+
+## 13. Direct bridge argument / concurrency contract
+
+### CASE-P2-DIRECT-BRIDGE-CONTRACT-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-starter / dec.core.starter.access.ProtectedExecutionBridgeContractTest`
+
+Required public shape accepts `(ModelAccessRuleKey, AccessOperation, frameId, ownerId, Optional<cursorId>)`。No token/recognizes/claim API。Bridge composition retains context + consumer provenance + target/operation ports。
+
+### CASE-P2-DIRECT-BRIDGE-ARGUMENT-VALIDATION-001-R15 — BLOCKING
+
+Null/blank/malformed frame/owner、invalid optional cursor、ruleKey missing PolicyIndex、operation inconsistent with key -> deterministic DENY before operation/effects。
+
+Caller selecting another valid exact PolicyIndex key/op is explicitly **not** a forged-authority failure under Decision `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`。
+
+### CASE-P2-DIRECT-BRIDGE-CONCURRENCY-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-starter / dec.core.starter.access.ProtectedExecutionBridgeConcurrencyTest`
+
+Use barriers/latches, never `Thread.sleep`。
+
+- two different concurrent calls -> no cross-wiring of rule/op/frame/owner/cursor/target/capability；
+- two identical scalar calls are independent invocations; Test does not assert replay suppression；
+- each produced capability remains separately one-shot。
+
+## 14. FND-019 capability actual-target/operation binding
+
+### CASE-P2-OPERATION-BINDING-001-R15 — BLOCKING
+
+Module/TestClass：`dec-core-starter / dec.core.starter.access.ProtectedAccessOperationBindingTest`
+
+- capability A + forced target B -> `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH` / op=0；
+- operation substitution after capability issuance -> DENY；
+- same capability concurrent terminal execution success <= 1；
+- stale Context/frame/cursor/plan/membership immediately before operation -> DENY/effects=0。
+
+## 15. Full real source -> operation
+
+### CASE-P2-DYNAMIC-SOURCE-TO-OPERATION-001-R15 — BLOCKING
+
+Module/TestClass：`dec-demo / dec.demo.p2.P2DynamicSourceToOperationTest`
+
+```text
+real systems.xml
+ -> production source/frontend/compiler
+ -> deterministic System registry
+ -> RuleView composite registry
+ -> ModelPath/access classification
+ -> ModelAccessPolicyIndex
+ -> semantic digest-bound CompiledModelSet.published
+ -> EngineContext
+ -> direct bridge
+ -> Gateway/Guard
+ -> static or runtime-proof branch
+ -> capability-bound protected operation
+```
+
+Positive + negative assertions include System/RuleView lookup isolation、policy miss、runtime proof stale、target substitution and no bypass。
+
+## 16. Exact Maven / planned TestClass map
 
 | Purpose | Exact module | Planned TestClass |
 |---|---|---|
-| Neutral protected-access API/Java8 | `dec-core-context` | `dec.core.context.model.access.ProtectedAccessApiContractTest` |
-| Validated policy-index factory | `dec-core-context` | `dec.core.context.model.access.ModelAccessPolicyIndexContractTest` |
-| CompiledModelSet publication compatibility | `dec-core-context` | `dec.core.context.model.ModelAccessPolicyPublicationCompatibilityTest` |
-| Rule status/plan invariant | `dec-core-compiler` | `dec.core.compiler.access.ModelAccessRuleCompilationContractTest` |
-| Policy publication + digest closure | `dec-core-compiler` | `dec.core.compiler.access.ModelAccessPolicyIndexPublicationTest` |
-| Starter ownership | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessRuntimeOwnershipTest` |
-| Direct bridge API | `dec-core-starter` | `dec.core.starter.access.ProtectedExecutionBridgeContractTest` |
-| Direct bridge concurrency | `dec-core-starter` | `dec.core.starter.access.ProtectedExecutionBridgeConcurrencyTest` |
-| Internal issued-pair invariant | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessInputAuthorityTest` |
-| Single policy authority | `dec-core-starter` | `dec.core.starter.access.ModelAccessPolicyAuthorityIntegrationTest` |
-| STATIC_ALLOW path | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessStaticAllowPathTest` |
-| Runtime membership proof | `dec-core-starter` | `dec.core.starter.access.RuntimeBindingProofIntegrationTest` |
-| A-proof/B-target substitution + capability replay | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessOperationBindingTest` |
-| Unified static/runtime counts | `dec-core-starter` | `dec.core.starter.access.UnifiedProtectedAccessBranchTest` |
-| Real classifier fixture | `dec-demo` | `dec.demo.p2.P2DynamicClassifierRealFixtureTest` |
-| Direct production reachability | `dec-demo` | `dec.demo.p2.P2DirectBridgeReachabilityTest` |
-| Full real source -> operation | `dec-demo` | `dec.demo.p2.P2DynamicSourceToOperationTest` |
+| System compile | `dec-core-compiler` | `dec.core.compiler.p2.SystemCompilationContractTest` |
+| RuleView composite | `dec-core-compiler` | `dec.core.compiler.p2.RuleViewCompositeContractTest` |
+| access/path classifier | `dec-core-compiler` | `dec.core.compiler.access.ModelAccessRuleCompilationContractTest` |
+| policy factory | `dec-core-context` | `dec.core.context.model.access.ModelAccessPolicyIndexContractTest` |
+| publication compatibility | `dec-core-context` | `dec.core.context.model.ModelAccessPolicyPublicationCompatibilityTest` |
+| policy publication/digest | `dec-core-compiler` | `dec.core.compiler.access.ModelAccessPolicyIndexPublicationTest` |
+| direct bridge | `dec-core-starter` | `dec.core.starter.access.ProtectedExecutionBridgeContractTest` |
+| bridge concurrency | `dec-core-starter` | `dec.core.starter.access.ProtectedExecutionBridgeConcurrencyTest` |
+| policy authority | `dec-core-starter` | `dec.core.starter.access.ModelAccessPolicyAuthorityIntegrationTest` |
+| static guard path | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessStaticAllowPathTest` |
+| runtime proof | `dec-core-starter` | `dec.core.starter.access.RuntimeBindingProofIntegrationTest` |
+| target binding | `dec-core-starter` | `dec.core.starter.access.ProtectedAccessOperationBindingTest` |
+| publication/diagnostics | `dec-core-compiler` | `dec.core.compiler.p2.P2PublicationDiagnosticContractTest` |
+| real classifier | `dec-demo` | `dec.demo.p2.P2DynamicClassifierRealFixtureTest` |
+| direct reachability | `dec-demo` | `dec.demo.p2.P2DirectBridgeReachabilityTest` |
+| source E2E | `dec-demo` | `dec.demo.p2.P2DynamicSourceToOperationTest` |
 
-Command pattern：
+Formal command pattern：
 
 ```bash
 ./mvnw -pl <EXACT-MODULE> -am -Dmaven.test.skip=true install
 ./mvnw -pl <EXACT-MODULE> -Dtest=<EXACT-TESTCLASS> -Dsurefire.failIfNoSpecifiedTests=true test
 ```
 
-Second command must not use `-am`。
+Second command MUST NOT use `-am`。Missing module/test/symbol/setup/compile failure = INVALID_RED。
 
-## 3. FND-004 / FND-016 direct production reachability — BLOCKING
+## 17. Gate
 
-### CASE-P2-DIRECT-BRIDGE-REACHABILITY-001-R14
+`TESTDESIGN-P2-R15 = NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`。
 
-**Module/TestClass**
-
-```text
-dec-demo
-dec.demo.p2.P2DirectBridgeReachabilityTest
-```
-
-**Positive production oracle**
-
-```text
-immutable EngineContext
- -> starter runtime/factory
- -> public ProtectedExecutionBridge
- -> bridge.execute(
-      exactRuleKey,
-      READ,
-      frameId,
-      ownerResolutionId,
-      optionalCursor)
- -> internal issueInvocation
- -> internal exact pair
- -> resolver/capability/Gateway/Guard
- -> same target operation
-```
-
-Mandatory：
-
-1. test stays in `dec-demo`；
-2. no reflection/package-private starter access；
-3. no test-only mint helper；
-4. no manual issued pair；
-5. no direct Guard/Gateway shortcut；
-6. public bridge has direct argument method；
-7. public API does not contain `ProtectedExecutionToken` or `bridge.execute(token)`。
-
-## 4. Direct bridge argument validation — BLOCKING
-
-### CASE-P2-DIRECT-BRIDGE-ARGUMENT-VALIDATION-001-R14
-
-**Module/TestClass**
-
-```text
-dec-core-starter
-dec.core.starter.access.ProtectedExecutionBridgeContractTest
-```
-
-Negative fixtures：
-
-- null ruleKey；
-- null operation；
-- null frameId；
-- null ownerId；
-- null Optional cursor wrapper；
-- runtime/context closed/unavailable；
-- runtime-required rule with incompatible/missing cursor/membership at verifier stage。
-
-Expected for API-shape invalid inputs：
-
-```text
-PROTECTED_ACCESS_ARGUMENT_INVALID
-internal issued pair = 0
-target resolution = 0
-capability = 0
-Gateway = 0
-Guard = 0
-PolicyIndex lookup = 0
-operation/effects = 0
-```
-
-Current Revision intentionally does **not** treat choosing a different valid `ruleKey` or `AccessOperation` as forged authority。
-
-## 5. Direct bridge concurrency — BLOCKING
-
-### CASE-P2-DIRECT-BRIDGE-CONCURRENCY-001-R14
-
-**Module/TestClass**
-
-```text
-dec-core-starter
-dec.core.starter.access.ProtectedExecutionBridgeConcurrencyTest
-```
-
-Use barriers/latches, never `Thread.sleep`。
-
-Oracle A — different arguments：
-
-```text
-Thread A execute(argsA)
-Thread B execute(argsB)
- -> independent invocation A/B
- -> no frame/owner/cursor/target/capability cross-talk
-```
-
-Oracle B — identical arguments：
-
-```text
-Thread A execute(ruleX, READ, frameF, ownerO, cursorC)
-Thread B execute(ruleX, READ, frameF, ownerO, cursorC)
-```
-
-R14 explicitly **does not require success <= 1**。If both satisfy Guard/proof, they may each create their own capability/operation。The test only proves state isolation and no shared mutable invocation record corruption。
-
-Oracle C — same capability：
-
-```text
-one ResolvedProtectedAccess capability
- -> two concurrent Gateway executions
- -> terminal success <= 1
- -> loser = RUNTIME_BINDING_CAPABILITY_CONSUMED or equivalent stable consumed denial
-```
-
-## 6. Internal issued-pair invariant — BLOCKING DEFENSE-IN-DEPTH
-
-### CASE-P2-INTERNAL-ISSUED-PAIR-001-R14
-
-`dec-core-starter / dec.core.starter.access.ProtectedAccessInputAuthorityTest`
-
-Low-level negative：unknown internal read-interface implementation、A-context+B-intent、record/capability identity substitution。
-
-这些只验证 starter internal consistency；不把 caller-selected rule/op 当成 external forgery。
-
-## 7. FND-015 PolicyIndex construction — BLOCKING
-
-### CASE-P2-POLICY-INDEX-CONSTRUCTION-001-R14
-
-`dec-core-context / dec.core.context.model.access.ModelAccessPolicyIndexContractTest`
-
-Required：`empty()`、`of(Iterable)`、exact `find`、read-only `keys`；duplicate/null/illegal state/non-canonical key rejected；immutable/deterministic。
-
-## 8. FND-015 publication compatibility — BLOCKING
-
-### CASE-P2-POLICY-PUBLICATION-COMPATIBILITY-001-R14
-
-`dec-core-context / dec.core.context.model.ModelAccessPolicyPublicationCompatibilityTest`
-
-Required：legacy 8-arg constructor retained、empty policy/no reconstruction/fail closed；new `CompiledModelSet.published(...policyIndex...)`；EngineContext same authority；equals/hashCode includes policy。
-
-## 9. FND-015 compiler digest closure — BLOCKING
-
-### CASE-P2-POLICY-INDEX-PUBLICATION-001-R14
-
-`dec-core-compiler / dec.core.compiler.access.ModelAccessPolicyIndexPublicationTest`
-
-```text
-compiled rules
- -> ModelAccessPolicyIndex.of
- -> SemanticDigestInput(same index)
- -> DigestBoundCompiledInput(same index + digest)
- -> FrozenInput
- -> CompiledModelSet.published(same index + digest)
-```
-
-Index before digest；same immutable snapshot；policy semantic change changes semantic digest；P2 production path不走 legacy constructor。
-
-## 10. Single policy authority — BLOCKING
-
-### CASE-P2-POLICY-INDEX-AUTHORITY-001-R14
-
-`dec-core-starter / dec.core.starter.access.ModelAccessPolicyAuthorityIntegrationTest`
-
-Through direct bridge invocation：
-
-```text
-Guard PolicyIndex exact lookup = 1
-Resolver = 0
-Gateway = 0
-RuntimeBindingVerifier = 0
-TargetResolutionPort = 0
-OperationExecutionPort = 0
-```
-
-No starter secondary policy Map；no definitions/typed-registry reconstruction。
-
-## 11. STATIC_ALLOW Guard path — BLOCKING
-
-### CASE-P2-STATIC-ALLOW-GUARD-PATH-001-R14
-
-```text
-bridge.execute(staticRuleKey, READ, frame, owner, cursor)
- -> resolver
- -> capability
- -> Gateway=1
- -> Guard=1
- -> PolicyIndex exact lookup=1
- -> STATIC_ALLOW
- -> verifier=0
- -> operation=1
-```
-
-Direct protected operation outside Guard path = bypass rejection。
-
-## 12. Production classifier real fixture — BLOCKING
-
-### CASE-P2-DYNAMIC-CLASSIFIER-REAL-FIXTURE-001-R14
-
-`dec-demo / dec.demo.p2.P2DynamicClassifierRealFixtureTest`
-
-Real `systems.xml`：direct status -> STATIC_BOUND；`every(orderDetailList,status=1)` -> RUNTIME_OBJECT_BOUND；unsupported dynamic selector compile ERROR；classifier stub cannot satisfy。
-
-## 13. Rule/plan invariant
-
-### CASE-P2-RULE-PLAN-INVARIANT-001-R14
-
-STATIC_ALLOW plan/requirement empty；RUNTIME_GUARD_REQUIRED exact plan + EXACT_RUNTIME_BINDING；illegal mixed state cannot enter PolicyIndex/publication。
-
-## 14. Runtime binding proof — BLOCKING
-
-### CASE-P2-RUNTIME-BINDING-PROOF-001-R14
-
-Direct bridge call provides rule/op/frame/owner/cursor。Resolver binds actual element A；verifier validates exact compiler plan/membership。Foreign B/stale frame/cursor/wrong plan/provenance -> DENY；no raw target public mint。
-
-## 15. A/B target substitution + TOCTOU — BLOCKING
-
-### CASE-P2-RUNTIME-BINDING-OPERATION-SUBSTITUTION-001-R14
-
-- capability produced for target A cannot execute target B；
-- ALLOW decision cannot be followed by caller callback selecting B；
-- operation uses exact registry-bound target/port；
-- frame/cursor/membership stale immediately before operation -> DENY；
-- same capability replay/concurrent execute -> at most one success。
-
-This is the remaining FND-019 concurrency/TOCTOU scope。No token claim/replay assertions。
-
-## 16. Unified STATIC/RUNTIME branch counts
-
-### CASE-P2-UNIFIED-PROTECTED-ACCESS-BRANCH-001-R14
-
-STATIC：Guard=1, policy=1, verifier=0, op=1。
-Runtime：Guard=1, policy=1, verifier=1, valid op=1。
-DENY：op/effects=0。
-
-## 17. Real source -> protected operation — BLOCKING
-
-### CASE-P2-DYNAMIC-SOURCE-TO-OPERATION-001-R14
-
-```text
-systems.xml
- -> production parser/compiler
- -> PolicyIndex + digest-bound CompiledModelSet
- -> EngineContext
- -> starter public bridge
- -> bridge.execute(exactRuleKey, operation, frame, owner, cursor)
- -> Guard
- -> static/runtime branch
- -> same target operation
-```
-
-No token、manual compiled rule、manual issued pair、classifier stub、direct Gateway shortcut。
-
-## 18. Valid RED rules
-
-每个 target 两步命令保持；第二步禁止 `-am`。Missing module/test/symbol/setup/compile failure = INVALID_RED；pre-skeleton API shape tests可使用 compilable reflection/source assertions。
-
-## 19. Finding / Gate
-
-- FND-004：direct bridge reachability candidate-fixed，formal OPEN。
-- FND-015：construction/publication candidate-fixed，formal OPEN。
-- FND-016：source->runtime direct bridge candidate-fixed，formal OPEN。
-- FND-007：`FIX_PROPOSED / OPEN`；不再要求 token concurrent replay matrix。
-- FND-019：`FIX_PROPOSED / OPEN`；只保留 actual target/operation capability binding + capability replay/TOCTOU。
-- no FND-020。
-
-`TESTDESIGN-P2-R14` 仍 `BLOCKED_BY_DESIGN_REVIEW / NEEDS_REVIEW / MACHINE_BLOCKED`；TDD/Development 不得启动。
+No Test Case above is execution Evidence yet。No skeleton exists。Design R14 exact Review must pass first；then Test Design R15 receives its own independent Requirement/Design/TDD/TestEvidence Review before TDD can begin。
