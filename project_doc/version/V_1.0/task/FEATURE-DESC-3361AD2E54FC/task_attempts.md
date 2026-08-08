@@ -225,6 +225,82 @@
     ],
     "summary": "DESIGN-P2-R01 完成：复用 P1 typed identities/registries，冻结 CompiledSystem、composite RuleView lookup、ModelPath、ModelAccessRule、static authorization、runtime Guard、单一发布闭包与 P7 兼容边界。",
     "next_action": "发布 DESIGN-P2-R01 候选并执行七项独立 Review"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-TESTDESIGN-001-I003-A001",
+    "task_id": "TASK-P2-TESTDESIGN-001",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-003",
+    "iteration_no": 3,
+    "attempt_no": 1,
+    "agent": "TestDesignAgent",
+    "phase": "test_design",
+    "status": "PASSED",
+    "input_revision": "DESIGN-P2-R01@8875f042898c",
+    "output_revision": "TESTDESIGN-P2-R01@a9b12b4e15fa",
+    "started_at": "2026-08-08T05:44:44+00:00",
+    "completed_at": "2026-08-08T05:47:21+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md",
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000090",
+      "EVD-000091",
+      "EVD-000092",
+      "EVD-000093",
+      "EVD-000094"
+    ],
+    "evidence_ids": [
+      "EVD-000095",
+      "EVD-000096",
+      "EVD-000097",
+      "EVD-000098",
+      "EVD-000099",
+      "EVD-000100",
+      "EVD-000101"
+    ],
+    "summary": "24 个正式 P2 Test Design Case、10/10 TR、10/10 AC、T01-T12 覆盖及 RED/证据合同本地验证通过",
+    "next_action": "发布 Test Design artifact 并进入四项独立 Review"
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-TESTDESIGN-001-I004-A001",
+    "task_id": "TASK-P2-TESTDESIGN-001",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
+    "iteration_no": 4,
+    "attempt_no": 1,
+    "agent": "TestDesignAgent",
+    "phase": "test_design",
+    "status": "PASSED",
+    "input_revision": "DESIGN-P2-R01@8875f042898c",
+    "output_revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+    "started_at": "2026-08-08T05:59:24+00:00",
+    "completed_at": "2026-08-08T06:02:28+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"
+    ],
+    "command_evidence_ids": [
+      "EVD-000104",
+      "EVD-000105",
+      "EVD-000106",
+      "EVD-000107",
+      "EVD-000108"
+    ],
+    "evidence_ids": [
+      "EVD-000109",
+      "EVD-000110",
+      "EVD-000111",
+      "EVD-000112",
+      "EVD-000113",
+      "EVD-000114",
+      "EVD-000115"
+    ],
+    "summary": "I004/R02 completed as byte-format-only normalization. Final test_case bytes preserve all I003 semantics: 24 cases, 10/10 TR, 10/10 AC, T01-T12, operation matrices, fail-closed Guard, zero-side-effect deny, atomic publication, context isolation, P7 boundary and valid RED contract. All validations executed locally.",
+    "next_action": "Publish R02 for independent Requirement/Design/TDD/TestEvidence review."
   }
 ]
 ```

@@ -176,6 +176,70 @@
     "open_risks": [],
     "started_at": "2026-08-08T05:33:50+00:00",
     "completed_at": "2026-08-08T05:37:43+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-TEST_DESIGN-I003",
+    "phase": "test_design",
+    "round": "TEST_DESIGN-I003",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-003",
+    "iteration_no": 3,
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
+    "status": "PASSED",
+    "produced_by_agent": "TestDesignAgent",
+    "input_revisions": {
+      "design": "DESIGN-P2-R01@8875f042898c"
+    },
+    "output_revision": "TESTDESIGN-P2-R01@a9b12b4e15fa",
+    "evidence_ids": [
+      "EVD-000095",
+      "EVD-000096",
+      "EVD-000097",
+      "EVD-000098",
+      "EVD-000099",
+      "EVD-000100",
+      "EVD-000101",
+      "EVD-000090",
+      "EVD-000091",
+      "EVD-000092",
+      "EVD-000093",
+      "EVD-000094"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-08T05:47:30+00:00",
+    "completed_at": "2026-08-08T05:50:28+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-TEST_DESIGN-I004",
+    "phase": "test_design",
+    "round": "TEST_DESIGN-I004",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
+    "iteration_no": 4,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TestDesignAgent",
+    "input_revisions": {
+      "design": "DESIGN-P2-R01@8875f042898c"
+    },
+    "output_revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+    "evidence_ids": [
+      "EVD-000109",
+      "EVD-000110",
+      "EVD-000111",
+      "EVD-000112",
+      "EVD-000113",
+      "EVD-000114",
+      "EVD-000115",
+      "EVD-000104",
+      "EVD-000105",
+      "EVD-000106",
+      "EVD-000107",
+      "EVD-000108"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-08T06:02:37+00:00",
+    "completed_at": "2026-08-08T06:06:32+00:00"
   }
 ]
 ```

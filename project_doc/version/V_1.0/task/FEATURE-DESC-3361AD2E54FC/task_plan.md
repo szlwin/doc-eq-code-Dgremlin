@@ -375,6 +375,102 @@
       "EVD-000082",
       "EVD-000083"
     ]
+  },
+  {
+    "id": "TASK-P2-TESTDESIGN-001",
+    "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-TEST-DESIGN",
+    "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-003",
+    "revision_reason": "本地 Git checkpoint 的 diff --check 发现 test_case.md 文件末尾一个额外空行；保持 I003/R01 历史 Evidence 不变，新建 Test Design iteration 仅规范化 EOF 格式并重新绑定最终字节，无业务语义变化。",
+    "title": "设计 P2 System、RuleView 与 model-access 可执行测试矩阵",
+    "objective": "把 P2 十条 trace、十项 AC 与 P2-T01～T12 收敛为可执行 Case，明确 fixture、稳定 seam、observable oracle、禁止副作用及未来 TDD 有效 RED，确保静态/运行时权限和兼容边界可独立验证。",
+    "phase": "test_design",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P2-DESIGN-001"
+    ],
+    "owner_agent": "TestDesignAgent",
+    "reviewer_agents": [
+      "RequirementReviewAgent",
+      "DesignReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "input_revisions": {
+      "design": "DESIGN-P2-R01@8875f042898c"
+    },
+    "allowed_files": [
+      "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md",
+      "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md",
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_state.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_attempts.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/stage_outcomes.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/acceptance_assertions.json",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/review_issues.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/decision_log.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**",
+      "version/V_1.0/work_record.md"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002",
+      "TR-P2-SYSTEM-RULEVIEW-003",
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-005",
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-008",
+      "TR-P2-SYSTEM-RULEVIEW-009",
+      "TR-P2-SYSTEM-RULEVIEW-010"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-CONFIG-COMPILE-01",
+      "STEP-CONFIG-COMPILE-03",
+      "STEP-CONFIG-COMPILE-04",
+      "STEP-CONFIG-COMPILE-05",
+      "STEP-CONFIG-COMPILE-06",
+      "STEP-CONFIG-COMPILE-07"
+    ],
+    "validation_commands": [
+      "python3 -c \"from pathlib import Path; import re; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); assert 'TESTDESIGN-P2-R02@d0514b9ac591' in s; assert 'TEST_DESIGN-I004' in s; ids=set(re.findall(r'CASE-P2-TD-[A-Z0-9-]+-001',s)); assert len(ids)==24, len(ids)\"",
+      "python3 -c \"import json; from pathlib import Path; t=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); i=s.index('[',s.index('traceability')); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); p=[x for x in a if str(x.get('id','')).startswith('TR-P2-SYSTEM-RULEVIEW-')]; assert len(p)==10 and all(x.get('test_case_ids') for x in p) and all(all(cid in t for cid in x['test_case_ids']) for x in p)\"",
+      "python3 /mnt/data/common-develop/scripts/long_task.py validate -g TestDesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+      "git diff --check"
+    ],
+    "expected_results": [
+      "RequirementReviewAgent 独立确认 Test Design 对 P2 十项 AC、十条 trace 与 T01～T12 全覆盖，且没有改变冻结需求范围。",
+      "DesignReviewAgent 独立确认所有 Case 使用 DESIGN-P2-R01 暴露的复合 Key、ModelPath、权限、Guard、发布与兼容 seam，oracle 与 Design 一致。",
+      "TDDReviewAgent 独立确认每个 Case 有可执行未来测试入口和有效 RED 合同，明确排除模块/类不存在、编译错误、依赖失败等伪 RED。",
+      "TestEvidenceReviewAgent 独立确认正常/负向/权限/并发/原子发布/兼容边界的证据采集方式可重复，并能证明 DENY 无副作用与失败不发布。"
+    ],
+    "stop_conditions": [
+      "Design Revision 变化或被重开",
+      "测试需要接受裸名称 fallback、默认 WRITE allow 或 Guard fail-open",
+      "测试设计扩大到 P3～P7 完整运行语义",
+      "任一 required Reviewer 非 PASSED 或形成开放 P0/P1"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+    "validation_evidence_ids": [
+      "EVD-000109",
+      "EVD-000110",
+      "EVD-000111",
+      "EVD-000112",
+      "EVD-000113",
+      "EVD-000114",
+      "EVD-000115"
+    ]
   }
 ]
 ```

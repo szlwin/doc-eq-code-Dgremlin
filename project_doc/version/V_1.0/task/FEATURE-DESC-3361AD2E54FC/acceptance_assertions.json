@@ -584,6 +584,117 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-08-08T05:37:13+00:00",
       "reason": "跨模块编译—发布—调用链的参与者、顺序、接口/Guard 契约、原子可见性、失败恢复与测试映射完整；无双写、无新 bare-name fallback、无第二 runtime authority。"
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R02-REQ-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "RequirementReviewAgent 独立确认 R02 对 P2 十项 AC、十条 trace 与 T01～T12 全覆盖；I004 仅规范化最终字节，未改变冻结需求范围。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000109",
+        "EVD-000113",
+        "EVD-000110"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-08T06:05:14+00:00",
+      "reason": "R02 preserves the full 24-case Test Design contract and maps 10/10 AC, 10/10 P2 trace and P2-T01–T12 to observable oracles; the I004 byte-only normalization does not alter frozen requirement scope or failure/side-effect semantics."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R02-DES-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "DesignReviewAgent 独立确认 R02 的所有 Case 继续使用 DESIGN-P2-R01 的复合 Key、ModelPath、权限、Guard、发布与兼容 seam，且 I004 无语义变更。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000109",
+        "EVD-000111",
+        "EVD-000112",
+        "EVD-000113",
+        "EVD-000114"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-08-08T06:05:23+00:00",
+      "reason": "R02 continues to exercise DESIGN-P2-R01 composite RuleView identity, ModelPath, independent access operations, fail-closed Guard, atomic publication, context isolation and P7 compatibility seams; I004 changes no test semantics."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R02-TDD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "TDDReviewAgent 独立确认 R02 每个 Case 具有未来可执行入口和有效 RED 合同，继续排除类/模块不存在、编译错误、依赖失败等伪 RED；本阶段未执行 TDD。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000109",
+        "EVD-000104",
+        "EVD-000105",
+        "EVD-000106",
+        "EVD-000107",
+        "EVD-000108",
+        "EVD-000115"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-08T06:05:31+00:00",
+      "reason": "Each R02 case retains a stable future execution seam and a valid business-assertion RED contract; environment/class/module/dependency/compile/fixture failures remain explicitly invalid RED, and no TDD execution is claimed in this phase."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R02-EVID-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-009",
+      "statement": "TestEvidenceReviewAgent 独立确认 R02 的本地命令证据与未来证据采集合同可重复，能够证明 DENY 无副作用、失败不发布和 Context 隔离；GitHub 不承担验证。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000109",
+        "EVD-000104",
+        "EVD-000105",
+        "EVD-000106",
+        "EVD-000107",
+        "EVD-000108",
+        "EVD-000115",
+        "EVD-000113"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-08T06:05:40+00:00",
+      "reason": "R02 has five local current-revision command-result records including byte-equivalence/semantic audit, plus a frozen case contract for future Surefire/Diagnostic/MutationProbe/publication/context/architecture evidence; no future TDD or Testing execution is claimed."
     }
   ]
 }

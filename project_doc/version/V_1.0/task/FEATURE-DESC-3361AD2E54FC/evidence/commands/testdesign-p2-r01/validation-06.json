@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 -c \"from pathlib import Path; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); assert 'TESTDESIGN-P2-R01@a9b12b4e15fa' in s; ids=[x for x in s.split() if x.startswith('CASE-P2-TD-')]; assert len(set(x.strip('`|,') for x in ids)) >= 24\"",
+  "exit_code": 2,
+  "executed_at": "2026-08-08T05:46:39.711067+00:00",
+  "revision": "TESTDESIGN-P2-R01@a9b12b4e15fa",
+  "output": "/bin/sh: 1: Syntax error: EOF in backquote substitution\n",
+  "output_digest": "9e31ca707c396fa63152e1c6e2d78a0910e77c76a998623df158c0a9d757aedb"
+}
