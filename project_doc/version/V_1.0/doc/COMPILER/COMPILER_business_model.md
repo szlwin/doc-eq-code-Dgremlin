@@ -1,253 +1,216 @@
 # COMPILER 业务模型
 
-> Revision：`BM-R12`。Base：`BM-R07@7d7bf504ca9d` + R09/R10/R11/R12 remediation changesets。
-> 状态：`MATERIALIZED_CANONICAL_CANDIDATE / NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。
-> 本文把此前仅存在于 changeset/candidate 中的 P2 System、RuleView、model-access 业务事实合并回 canonical `COMPILER_business_model.md/.yaml`。P1 已通过的 Source/Canonical/Raw/TypedKey/Reference/Deferred/Diagnostic/digest/原子发布事实保持继承且不改变；machine `task_state` 仍是历史 BM-R07，RC9 reopen/publish 前不得称 BM-R12 PASSED。
+> Revision：`BM-R13`。Base：`BM-R12`。  
+> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809` + persistent decisions `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` / `DEC-P2-AC007-STAGE-BOUNDARY-001`。  
+> Status：`NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。
 
-## 1. 模块使命与阶段边界
+BM-R13 保留 BM-R12 已 materialize 的 System / RuleView / ModelAccess / Guard / PolicyIndex 主语义，并补齐本轮 Review 指出的 first-class ownership/version 与 RuleView→View 关系。P1 的 Source/Canonical/Raw/TypedKey/Reference/Deferred/Diagnostic/digest/atomic publication 事实继续从 `BM-R07@7d7bf504ca9d` 继承，不在本 Revision 重定义。
 
-COMPILER 将配置 Source 编译为不可变、确定性、可追踪的 `CompiledModelSet` 与实例级 `EngineContext`。P2 在 P1 编译基线上完成三项业务闭包：
+## 1. P2 业务目标
 
-1. System 成为显式一等编译身份；
-2. RuleView 唯一身份为 `(SystemKey,name)`，调用使用 `system-ref + rule-ref`；
-3. model-access 把 READ/WRITE/EXECUTE 收敛为 compiler-published policy + 统一 runtime Guard，静态或运行时都 fail closed。
+P2 在同一 immutable `CompiledModelSet` / `EngineContext` 中形成：
 
-P3～P7 仍拥有 Information/Rule/Change/Action/QueryPlan/事务等完整业务执行语义；P2 只冻结这些未来执行入口必须复用的身份、路径和访问控制边界。
+1. 可查询、可验证、可摘要的 first-class System ownership snapshot；
+2. `RuleViewKey=(SystemKey,name)`、resolved View、resolved Rule refs 的完整 RuleView compiled fact；
+3. rule/change/query/model-access 共用的 canonical `ModelPath`；
+4. compiler-published immutable `ModelAccessPolicyIndex`；
+5. 所有 P2 protected READ/WRITE/EXECUTE 统一进入 production Bridge→Gateway→Guard seam；
+6. static/runtime fail-closed、actual-target/operation one-shot capability binding；
+7. System/RuleView/ownership/policy/digest 同一 atomic publication closure。
 
 ## 2. 统一语言
 
-| ID | 术语 | 业务定义 |
+| ID | 术语 | 定义 |
 |---|---|---|
-| TERM-SYSTEM-COMPILED-IDENTITY | System compiled identity | System 以显式 `SystemKey` 作为一等身份；不得由文件名、目录、加载顺序或 RuleView 名称推断。 |
-| TERM-RULEVIEW-COMPOSITE-IDENTITY | RuleView composite identity | RuleView 唯一身份是 `(SystemKey,name)`；跨 System 同名合法，同一 System 重复非法，new mix 不允许裸 name 注册/解析。 |
-| TERM-MODEL-PATH | ModelPath | 经 compiler 规范化的 exact path；rule/change/query/permission 共享同一语义。runtime 不允许 fuzzy/parent/bare-name fallback。 |
-| TERM-MODEL-ACCESS-RULE | ModelAccessRule | 由 System、target、exact ModelPath、AccessOperation、SourceRef 构成的 compiler 授权事实；未声明不产生隐式允许。 |
-| TERM-MODEL-ACCESS-POLICY-INDEX | ModelAccessPolicyIndex | compiler 从最终 exact `CompiledModelAccessRule` 集构造并随 `CompiledModelSet` 发布的唯一 immutable runtime policy authority。 |
-| TERM-RUNTIME-BINDING | Runtime binding | 编译期确认访问类型合法，但 actual collection element/target 必须在运行时证明属于编译时允许的 exact binding。 |
-| TERM-PROTECTED-ACCESS | Protected access | 任何受 P2 model-access 约束的 READ/WRITE/EXECUTE；STATIC_ALLOW 也必须进入 Gateway/Guard。 |
+| TERM-SYSTEM-COMPILED-IDENTITY | System compiled identity | 显式 `SystemKey` + `SystemVersionIdentity` + `SourceRef` + immutable ownership snapshot。不得由文件名、路径或加载顺序推断。 |
+| TERM-SYSTEM-VERSION-IDENTITY | SystemVersionIdentity | declared version（配置存在时）+ mandatory source semantic digest + schema/compiler compatibility identity。配置未声明 version 时不得伪造业务版本，使用 empty declaredVersion + digest identity。 |
+| TERM-SYSTEM-OWNERSHIP-SNAPSHOT | System ownership snapshot | 一个 System 在当前 compiled revision 中拥有的 Data/View/RuleView/Rule/Information/ModelAccessRule exact key 集合；集合不可变、确定性排序并进入 semantic digest。 |
+| TERM-RULEVIEW-COMPOSITE-IDENTITY | RuleView composite identity | 唯一身份 `(SystemKey,name)`；同 System 同名非法，跨 System 同名合法。 |
+| TERM-COMPILED-RULEVIEW | CompiledRuleView | `RuleViewKey + resolvedViewKey + resolvedRuleKeys + SourceRef`；所有引用编译时 exact resolve。 |
+| TERM-MODEL-PATH | ModelPath | rule/change/query-contract/model-access 共用的 exact canonical path value；不同 consumer 不得各自解释。 |
+| TERM-MODEL-ACCESS-POLICY-INDEX | ModelAccessPolicyIndex | compiler 从 exact rules 构造并随 Context 发布的唯一 immutable runtime policy authority。 |
+| TERM-PROTECTED-ACCESS-SEAM | Protected access seam | P2 唯一受支持 production protected-operation 路径：Bridge→internal issuance→resolver→one-shot capability→Gateway→Guard→operation。 |
 
-## 3. P2 场景模型
+## 3. System first-class ownership model
 
-### SCN-P2-SYSTEM-MULTISOURCE
-
-Given 多个 `system-file-info` 输入、输入顺序可变化；When compiler 注册 System；Then：
-
-- 相同语义输入得到相同 `SystemKey` 集和 semantic digest；
-- 同一 `SystemKey` 重复定义 -> `MIX-SYSTEM-DUPLICATE`；
-- forward reference 在完整 symbol registration 后解析；
-- 任一 ERROR 都不得发布部分 Context。
-
-追踪：`TR-P2-SYSTEM-RULEVIEW-001 / 008 / 009`。
-
-### SCN-P2-RULEVIEW-COMPOSITE
-
-Given 两个 System 可以声明同名 RuleView；When 注册、解析或调用 RuleView；Then：
-
-- key = `(SystemKey,name)`；
-- new RuleView 缺 System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；
-- 同 System 同名 -> duplicate ERROR；
-- 不同 System 同名相互隔离；
-- `system-ref + rule-ref` exact resolve；
-- bare-name fallback 对新路径禁止。
-
-追踪：`TR-P2-SYSTEM-RULEVIEW-002 / 003 / 009 / 010`。
-
-### SCN-P2-STATIC-ACCESS
-
-Given exact System/target/path/operation 可在编译期确定；When model-access compilation 完成；Then：
-
-- 合法 exact access -> `STATIC_ALLOW`；
-- STATIC_ALLOW 没有 runtime requirement/plan；
-- 未声明访问、未知 path、共享 WRITE 未授权 -> compile ERROR；
-- READ `path="*"` 只允许 compiler 做 finite exact expansion，runtime index 不保存 wildcard key。
-
-追踪：`TR-P2-SYSTEM-RULEVIEW-004 / 005`。
-
-### SCN-P2-RUNTIME-ACCESS
-
-Given `every(orderDetailList,status=1)` 等访问在编译期可确认规则、但 actual element 只能运行时确定；When compiler classification；Then：
-
-- `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`；
-- `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`；
-- runtime-required 必须携带 exact `RuntimeAccessRequirement + RuntimeBindingPlan`；
-- unsupported dynamic selector -> compile ERROR，不允许 fail-open。
-
-运行时所有 protected access：
-
-`Bridge/Runtime -> internal issuance -> resolver -> one-shot capability -> Gateway -> Guard -> exact PolicyIndex lookup -> static fast path OR runtime proof -> same bound target operation`。
-
-追踪：`TR-P2-SYSTEM-RULEVIEW-006 / 007`。
-
-## 4. 聚合与发布边界
-
-### AGG-COMPILATION-SESSION
-
-P1 原子发布不变量继续有效：一个 compilation session 内构建完整候选；任一 ERROR、取消、deadline、publication conflict 都不得替换 caller 已持有的旧 `EngineContext`。
-
-P2 追加成员：
-
-- `ENT-COMPILED-SYSTEM`
-- `VO-RULEVIEW-KEY`
-- `ENT-COMPILED-RULEVIEW`
-- `VO-MODEL-PATH`
-- `VO-MODEL-ACCESS-RULE`
-- `ENT-MODEL-ACCESS-POLICY-INDEX`
-
-### AGG-SYSTEM-COMPILED-CONFIG
-
-根：`ENT-COMPILED-SYSTEM`。
-
-成员：System-owned RuleViews、model-access rules、相关 SourceRef/Diagnostic。
-
-一致性：同一 compiled publication closure 中，System/RuleView/PolicyIndex/digest 必须来自同一冻结输入；禁止 System registry 来自一次编译、PolicyIndex 来自另一次编译。
-
-## 5. 实体与值对象
-
+<a id="ENT-COMPILED-SYSTEM"></a>
 ### ENT-COMPILED-SYSTEM
 
-- identity：`SystemKey`；
-- required：explicit system name/key、SourceRef；
-- deterministic equality/order；
-- duplicate exact key 在候选发布前失败。
+Identity：`SystemKey`。
 
+Required facts：
+
+- `systemKey`；
+- `sourceRef`；
+- `versionIdentity`；
+- `ownedDataKeys`；
+- `ownedViewKeys`；
+- `ownedRuleViewKeys`；
+- `ownedRuleKeys`；
+- `ownedInformationKeys`；
+- `ownedModelAccessRuleKeys`。
+
+`versionIdentity` 必须至少含：
+
+- optional declared version；
+- normalized source semantic digest；
+- schema/compiler compatibility identity。
+
+如果真实配置没有 declared version，`declaredVersion` 必须为空；禁止用时间戳、文件顺序或随机值伪造版本。
+
+<a id="AGG-SYSTEM-COMPILED-CONFIG"></a>
+### AGG-SYSTEM-COMPILED-CONFIG
+
+聚合根是当前 compiled System snapshot。所有 owned key set 在 candidate build 完成后冻结并确定性排序。
+
+不变量：
+
+- `INV-COMPILER-016`：同一 current candidate 中 exact SystemKey 只允许一个 System definition；source order 不影响结果。
+- `INV-COMPILER-016A`：每个 owner-qualified compiled fact 必须映射到 exactly one System ownership snapshot；不存在 orphan RuleView/View/ModelAccess rule。
+- `INV-COMPILER-016B`：ownership snapshot 与最终 typed registries/definitions 必须一致；不得出现 ownership index 指向不存在 key 或 registry 中存在 System-owned fact 但 snapshot 漏项。
+- `INV-COMPILER-016C`：ownership key sets、version identity 与 source semantic digest 都进入 semantic digest；ownership/version 改变必须改变 semantic digest。
+- `INV-COMPILER-016D`：两个 EngineContext 的 ownership snapshot 互不共享可变 collection。
+
+<a id="SVC-SYSTEM-COMPILATION"></a>
+### SVC-SYSTEM-COMPILATION
+
+Compiler 顺序：发现所有 System source → 注册 SystemKey → 收集 owner-qualified facts → resolve refs → 构造 ownership snapshot → validate completeness → 纳入 digest-bound closure → atomic publication。
+
+失败：duplicate System、unknown owner、ownership mismatch、orphan owned fact、invalid version identity 均产生稳定 ERROR 且 candidate publication=0。
+
+## 4. RuleView compiled relation
+
+<a id="VO-RULEVIEW-KEY"></a>
 ### VO-RULEVIEW-KEY
 
 `RuleViewKey = (SystemKey systemKey, String localName)`。
 
-不变量：
-
-- 两字段都 non-null/non-blank；
-- equality/hashCode 同时包含 SystemKey 与 name；
-- 不提供 canonical new-code bare-name key。
-
+<a id="ENT-COMPILED-RULEVIEW"></a>
 ### ENT-COMPILED-RULEVIEW
 
-必须持有 exact `RuleViewKey`、SourceRef、resolved rule refs；new mix System 缺失或未知时不得构造。
+Required facts：
 
-### VO-MODEL-PATH
+- `RuleViewKey key`；
+- `ViewKey resolvedViewKey`；
+- deterministic immutable `List<RuleKey> resolvedRuleKeys`；
+- `SourceRef sourceRef`。
 
-exact、case-sensitive、canonical；runtime policy key 不支持 wildcard/fuzzy/parent inference。
+不变量：
 
-### VO-MODEL-ACCESS-RULE
+- `INV-COMPILER-017`：RuleView System 必填；同 System 同名 duplicate ERROR；跨 System 同名隔离。
+- `INV-COMPILER-017A`：`resolvedViewKey` 必须 exact resolve，并且 View ownership 必须与 RuleView owner System 一致，除非 existing explicit cross-System contract 明确允许；P2 默认不推断跨 owner View。
+- `INV-COMPILER-017B`：每个 `resolvedRuleKey` 必须 exact resolve；unknown Rule/View reference stable ERROR。
+- `INV-COMPILER-017C`：RuleView key、resolved View、ordered Rule refs 与 SourceRef identity 进入 semantic digest。
 
-业务 identity 至少包含：`SystemKey + target identity + ModelPath + AccessOperation`。状态为：
-
-- `STATIC_ALLOW`；或
-- `RUNTIME_GUARD_REQUIRED`。
-
-STATIC_ALLOW 不得携带 runtime plan；runtime-required 必须拥有 exact requirement/plan。
-
-### ENT-MODEL-ACCESS-POLICY-INDEX
-
-唯一 runtime authorization authority。compiler 从最终 exact rule 集构造；`CompiledModelSet` 和 `EngineContext` 只读持有；Guard exact lookup 一次；starter 不得维护第二份 permission map。
-
-## 6. 业务服务
-
-### SVC-SYSTEM-COMPILATION
-
-职责：收集 System 定义、exact key 注册、duplicate/unknown 检查、deterministic ordering、SourceRef Diagnostic。
-
+<a id="SVC-RULEVIEW-RESOLUTION"></a>
 ### SVC-RULEVIEW-RESOLUTION
 
-职责：
+新调用只接受 `system-ref + rule-ref`/完整 `RuleViewKey`。bare name 只允许 existing read-only compatibility Adapter，不能注册新 fact、不能跨 System fallback。
 
-- 注册 `(SystemKey,name)`；
-- resolve `system-ref + rule-ref`；
-- 拒绝 missing System、same-system duplicate、unknown System/Rule、new-code bare-name lookup。
+## 5. ModelPath shared contract
 
-### SVC-MODEL-PATH-COMPILATION
+<a id="VO-MODEL-PATH"></a>
+### VO-MODEL-PATH
 
-职责：统一 exact path；READ wildcard 只在 compile-time finite expansion；非法/未知/unsupported dynamic path compile ERROR。
+Canonical `ModelPath` 是 value identity，不是 consumer-specific string。
 
+`INV-COMPILER-018`：rule-data、change-data、query-contract 与 model-access 对同一 System/target/raw segments 必须产出 value-equal canonical ModelPath；case/segment/root semantics 完全一致。
+
+禁止：
+
+- rule parser 有 parent fallback 而 change parser exact；
+- query consumer 重新按裸字符串搜索；
+- model-access wildcard 在 runtime 继续模糊匹配。
+
+`read path="*"` 必须 compile-time finite expansion 为 exact child paths 后再进入 policy rule/index。
+
+## 6. ModelAccess authorization
+
+<a id="VO-MODEL-ACCESS-RULE"></a>
+### VO-MODEL-ACCESS-RULE
+
+Rule identity 至少包含：System、target、canonical ModelPath、AccessOperation。READ/WRITE/EXECUTE 独立。
+
+`INV-COMPILER-018A`：一种 operation permission 不隐含另一种；同 path 有 READ 不代表 WRITE/EXECUTE。
+
+Classifier：
+
+- `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`；
+- `EVERY_COLLECTION_ELEMENT -> RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`；
+- unsupported dynamic selector -> compile ERROR。
+
+<a id="POL-MODEL-ACCESS-AUTHORIZATION"></a>
+### POL-MODEL-ACCESS-AUTHORIZATION
+
+所有 protected READ/WRITE/EXECUTE（含 STATIC_ALLOW）进入 Gateway→Guard。Guard 对 current Context 的 `ModelAccessPolicyIndex` 做 exact lookup；missing/invalid DENY。
+
+Direct bridge decision 生效：caller 当前可选择 exact compiler-published ruleKey/op；consumer provenance 不进入 authorization key。但 requested op 必须与 exact rule key/rule 一致，不得 fallback/upgrade。
+
+<a id="SVC-MODEL-ACCESS-AUTHORIZATION"></a>
 ### SVC-MODEL-ACCESS-AUTHORIZATION
 
-职责分为 compile-time publication 与 runtime enforcement：
+Runtime-required branch 使用 compiler-published exact requirement/plan 验证 current frame/owner/cursor/actual target membership。target/operation 在 resolver 后绑定到 one-shot capability；Guard 通过后不能替换 target/op。
 
-- compiler 构造 exact `CompiledModelAccessRule`、`ModelAccessPolicyIndex`；
-- semantic digest 覆盖 policy authorization semantics；
-- runtime Guard 对 current EngineContext PolicyIndex exact lookup；
-- STATIC_ALLOW 也经过 Guard；
-- runtime-required 追加 binding proof；
-- DENY 发生在 protected operation/外部副作用之前。
+## 7. Protected-access seam 与阶段边界
 
-## 7. P2 核心不变量
+<a id="INV-COMPILER-020"></a>
+`INV-COMPILER-020`：P2 唯一受支持 production protected-operation seam 为 Bridge→Gateway→Guard；不存在 public capability mint、public issued-pair mint、compatibility write bypass 或 secondary permission authority。
 
-- `INV-COMPILER-016`：System 必须以显式 `SystemKey` 一等注册；同 key duplicate ERROR；顺序变化不得改变 semantic result。
-- `INV-COMPILER-017`：RuleView key 必须是 `(SystemKey,name)`；new RuleView System required；bare-name new lookup/register 禁止。
-- `INV-COMPILER-018`：ModelAccessRule 按 System/target/path/operation exact 表达；未声明权限默认 DENY，共享 WRITE 默认 DENY。
-- `INV-COMPILER-019`：System/RuleView/model-access 任一 ERROR 都不得发布部分 `CompiledModelSet/EngineContext`；旧 Context 保持。
-- `INV-COMPILER-020`：所有 protected READ/WRITE/EXECUTE 都必须经过统一 Gateway/Guard；STATIC_ALLOW 只能是 Guard 内 fast path。
-- `INV-COMPILER-021`：动态访问只能收窄 compiler-published policy；runtime proof 不得创建新的 rule/path/operation allowance。
-- `INV-COMPILER-022`：P2 不恢复 retired `dec-expand-declaration`；只保留明确 read-only compatibility boundary，最终删除留给 P7。
-- `INV-COMPILER-023`：PolicyIndex 是唯一 runtime permission authority；Guard lookup exact once；definitions/typedRegistries/starter secondary map 不得成为权限来源。
-- `INV-COMPILER-024`：被 Guard 验证的 actual target + operation 与最终执行必须由同一个 one-shot capability 绑定；A capability 不得授权 B target。
+根据 `DEC-P2-AC007-STAGE-BOUNDARY-001`：
 
-## 8. 失败与稳定结果
+- P2 验收 seam/visibility/dependency no-bypass；
+- P3 Rule/Information、P4 change/custom-action/produce、P6 QueryPlan concrete executor integration 是 downstream acceptance obligation；
+- 后续阶段必须复用 P2 seam，不得建立旁路。
 
-Compile 至少：
+## 8. Publication / digest / Context
 
-- `MIX-SYSTEM-DUPLICATE`
-- `MIX-SYSTEM-UNKNOWN`
-- `MIX-RULEVIEW-SYSTEM-REQUIRED`
-- `MIX-RULEVIEW-DUPLICATE`
-- `MIX-RULEVIEW-UNKNOWN-SYSTEM`
-- `MIX-RULEVIEW-UNKNOWN-RULE`
-- `MIX-MODEL-PATH-INVALID`
-- `MIX-MODEL-ACCESS-DENIED`
-- `MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED`
+<a id="INV-COMPILER-019"></a>
+`INV-COMPILER-019`：System snapshot、CompiledRuleView、canonical ModelPath facts、ModelAccessPolicyIndex 与 semantic digest 必须来自同一个 immutable digest-bound closure。
 
-Runtime 至少：
+顺序：
 
-- `POLICY_NOT_FOUND`
-- `CONTEXT_IDENTITY_MISMATCH`
-- `MODEL_ACCESS_GUARD_BYPASS`
-- `PROTECTED_ACCESS_ADAPTER_UNAVAILABLE`
-- `RUNTIME_BINDING_REQUIRED`
-- `RUNTIME_BINDING_PROOF_INVALID`
-- `RUNTIME_BINDING_STALE`
-- `RUNTIME_BINDING_PLAN_MISMATCH`
-- `RUNTIME_BINDING_OPERATION_TARGET_MISMATCH`
-- `RUNTIME_BINDING_CAPABILITY_CONSUMED`
-- `GUARD_UNAVAILABLE`
-- `STATIC_ALLOW / RUNTIME_ALLOW / RUNTIME_DENY`
+```text
+compiled systems + ownership
+ -> compiled ruleviews + resolved view/rules
+ -> canonical model paths
+ -> compiled access rules
+ -> ModelAccessPolicyIndex.of(rules)
+ -> SemanticDigestInput(same immutable facts)
+ -> digest
+ -> DigestBoundCompiledInput(same facts + digest)
+ -> CompiledModelSet.published(...)
+ -> EngineContext
+```
 
-## 9. 原子发布、Context 与 Diagnostic
+不得在 digest 后重建 ownership/policy；failed candidate 不替换 old Context。
 
-- System/RuleView/PolicyIndex 必须进入同一 immutable `CompiledModelSet` publication closure；
-- semantic digest 包含 System/RuleView identity 与 PolicyIndex authorization-significant fields；
-- equivalent input order -> same semantic digest；
-- authorization/System/RuleView semantic change -> digest changes；
-- failed candidate 保留 old Context；并行 Context 无全局 mutable registry；
-- Diagnostic 按 stable code + definition identity + SourceRef deterministic 排序，包含相关 System/RuleView/model-access 来源。
+## 9. Diagnostic / denial contract
 
-## 10. P2 direct bridge Requirement/Decision delta
+<a id="INV-COMPILER-021"></a>
+`INV-COMPILER-021`：compile ERROR 与 runtime DENY 必须 deterministic/source-aware。
 
-BM-R12 的权限业务事实仍是“只有 compiler-published PolicyIndex 中存在的 exact rule/op 才可能 ALLOW”。
+Runtime denial 对相同 current facts 重复执行必须稳定关联适用字段：
 
-当前 P2 另有用户明确确认的设计决策 `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`：production caller 可以在 `ProtectedExecutionBridge.execute(...)` 逐次提交 exact `ModelAccessRuleKey + AccessOperation + frame/owner/cursor`。因此在当前 P2：
+- denial code；
+- SystemKey；
+- optional RuleViewKey/provenance；
+- AccessOperation；
+- canonical ModelPath；
+- SourceRef / policy source provenance；
+- 不泄露 actual sensitive runtime values。
 
-- `AccessConsumerIrKey` 是 provenance/diagnostic 维度，不是 rule authorization key 的组成部分；
-- P2 不要求 consumer -> rule/op binding；
-- caller 仍不能使 PolicyIndex 中不存在的 rule/op 获得 ALLOW；
-- 后续若要恢复 per-consumer authority binding，必须作为新的 Requirement/Decision Review，不在本 Revision 隐式加入。
+至少覆盖 `POLICY_NOT_FOUND`、stale proof、wrong plan、target substitution、Guard unavailable。
 
-该 decision 是对 Requirement 的显式解释偏差，不能被描述为 REQAN-P2-R01 原文已经包含的语义。
+## 10. Compatibility / migration
 
-## 11. Traceability / downstream contract
+<a id="INV-COMPILER-022"></a>
+`INV-COMPILER-022`：P2 保留 surviving read-only declaration/System compatibility boundary 到 P7；不恢复 `dec-expand-declaration`，不允许 legacy adapter 写新 Registry/PolicyIndex。
 
-- AC-001 System：`ENT-COMPILED-SYSTEM / INV-COMPILER-016 / SVC-SYSTEM-COMPILATION`。
-- AC-002/003 RuleView：`VO-RULEVIEW-KEY / INV-COMPILER-017 / SVC-RULEVIEW-RESOLUTION`。
-- AC-004～007 model-access：`VO-MODEL-ACCESS-RULE / ENT-MODEL-ACCESS-POLICY-INDEX / INV-COMPILER-018/020/021/023/024 / SVC-MODEL-ACCESS-AUTHORIZATION`。
-- AC-008 publication/context：`AGG-COMPILATION-SESSION / INV-COMPILER-019`。
-- AC-009 diagnostics：System/RuleView/model-access stable diagnostics。
-- AC-010 migration：`INV-COMPILER-022`。
+## 11. Gate
 
-下游 Design/TestDesign 必须使用当前 BM-R12 IDs，不得继续把 R09～R12 changeset 当作唯一事实源。
+BM-R13 只是一轮 content remediation candidate：
 
-## 12. Gate
-
-BM-R12 已在 canonical 文件中 materialize，但**尚未 machine-published，也尚未完成 BM-R12 exact independent Review**。因此当前状态只能是：
-
-`MATERIALIZED_CANONICAL_CANDIDATE / NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`
-
-不得据此进入 Implementation Plan/TDD/Development。
+- exact BusinessModel/Requirement/Impact/CrossModule Review 未发生；
+- `risk_detection.json` 仍 NOT_SCANNED；
+- task_state/stage_outcomes/acceptance assertions 仍是历史 machine state；
+- 不得标记 PASSED，不得进入 Implementation Plan/TDD/Development。

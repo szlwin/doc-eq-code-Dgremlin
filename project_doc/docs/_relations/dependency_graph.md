@@ -1,103 +1,107 @@
-<!-- GENERATED/RESYNCED from project_doc/docs/_relations/dependency_impact.yaml for BM-R12 candidate. -->
+<!-- GENERATED-CANDIDATE from project_doc/docs/_relations/dependency_impact.yaml; Revision BM-R13. -->
 # 需求关联、影响策略与跨模块实现映射
 
 - Project：`doc-eq-code`
 - Version：`V_1.0`
-- Revision：`BM-R12`
-- Status：`CANDIDATE_SYNCED / MACHINE_BLOCKED`
+- Revision：`BM-R13`
+- Status：`CANDIDATE / NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`
 
-## 功能—模块影响图
+## P2 关系图
 
 ```mermaid
 flowchart LR
-  F["FEATURE-DESC-3361AD2E54FC\nP2 System/RuleView/protected access"]
-  C["DEC-CORE-COMPILER\nSystem/RuleView/path/policy compile"]
-  X["DEC-CORE-CONTEXT\nimmutable keys/registries/PolicyIndex"]
-  S["DEC-CORE-STARTER\ndirect bridge/Gateway/Guard"]
-  D["DEC-DEMO / future P3-P7\nfixtures + consumers"]
-  L["LEGACY-DECLARATION-SYSTEM-COMPAT\nread-only until P7"]
-  F -->|IMPLEMENTED_BY| C
-  F -->|AFFECTS| X
-  F -->|AFFECTS| S
-  F -->|AFFECTS| L
-  D -->|CONSUMES| S
-  C -->|PUBLISHES| X
-  S -->|READS EXACT POLICY| X
+  P2["FEATURE-DESC-3361AD2E54FC\nP2 System/RuleView ownership"]
+  C["dec-core-compiler"]
+  X["dec-core-context"]
+  S["dec-core-starter"]
+  D["read-only declaration compat"]
+  P3["P3 downstream consumer obligation"]
+  P4["P4 downstream consumer obligation"]
+  P6["P6 downstream consumer obligation"]
+
+  P2 -->|IMPLEMENTED_BY| C
+  P2 -->|AFFECTS| X
+  P2 -->|AFFECTS| S
+  P2 -->|AFFECTS| D
+  P2 -->|CREATES_OBLIGATION| P3
+  P2 -->|CREATES_OBLIGATION| P4
+  P2 -->|CREATES_OBLIGATION| P6
+  C -->|publishes immutable snapshots| X
 ```
 
-## 关系明细
+## P2 publication closure
 
-| ID | From | Type | To | Rationale | Trace IDs |
-|---|---|---|---|---|---|
-| REL-P2-SYSTEM-RULEVIEW-COMPILER | FEATURE-DESC-3361AD2E54FC | IMPLEMENTED_BY | DEC-CORE-COMPILER | Compiler owns explicit System registration, RuleView composite resolution, ModelPath/access compilation, PolicyIndex construction and atomic candidate publication. | TR-001/002/003/004/005/008/009 |
-| REL-P2-SYSTEM-RULEVIEW-CONTEXT | FEATURE-DESC-3361AD2E54FC | AFFECTS | DEC-CORE-CONTEXT | Context owns immutable System/RuleView/PolicyIndex facts and context isolation. | TR-002/003/004/008 |
-| REL-P2-SYSTEM-RULEVIEW-STARTER | FEATURE-DESC-3361AD2E54FC | AFFECTS | DEC-CORE-STARTER | Starter owns direct protected bridge, Gateway, Guard and runtime proof enforcement. | TR-003/006/007 |
-| REL-P2-SYSTEM-RULEVIEW-DECLARATION | FEATURE-DESC-3361AD2E54FC | AFFECTS | LEGACY-DECLARATION-SYSTEM-COMPAT | P2 keeps only read-only compatibility and leaves final retirement to P7. | TR-010 |
+```mermaid
+flowchart LR
+  SRC["System/RuleView/model-access source facts"]
+  OWN["CompiledSystem ownership + version"]
+  RV["CompiledRuleView\nresolved View + Rules"]
+  MP["shared canonical ModelPath"]
+  PI["ModelAccessPolicyIndex"]
+  DG["SemanticDigestInput"]
+  CMS["CompiledModelSet.published"]
+  CTX["EngineContext"]
 
-## 影响策略
-
-### IMP-P2-SYSTEM-RULEVIEW-PUBLICATION
-
-```text
-System/RuleView/path/policy semantic ERROR
- -> reject candidate publication
- -> old EngineContext remains visible
- -> no partial System/RuleView/PolicyIndex registry
+  SRC --> OWN --> RV --> MP --> PI --> DG --> CMS --> CTX
 ```
 
-Cases：System deterministic/duplicate、RuleView required/duplicate、atomic publication、diagnostic determinism。
+任一 ownership / RuleView ref / ModelPath / policy ERROR 都在 publication 前失败，old Context 保留。
 
-### IMP-P2-MODEL-ACCESS-AUTHORIZATION
-
-```text
-direct bridge invocation
- -> exact current PolicyIndex selection
- -> Gateway/Guard
- -> static fast path OR runtime proof
- -> same capability-bound target/operation
-```
-
-DENY occurs before protected operation/effects。Same capability terminal success <= 1。Identical direct bridge scalar calls are independent invocations。
-
-Decision：`DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` permits caller-selected exact ruleKey/op among compiler-published PolicyIndex rules in current P2；consumer identity is provenance, not an authorization dimension。
-
-### IMP-P2-DECLARATION-BOUNDARY
-
-P2 does not restore retired `dec-expand-declaration`, does not write through legacy compatibility, and does not create a second registry/runtime authority。
-
-# 跨模块实现映射
-
-<a id="CMI-P2-SYSTEM-RULEVIEW-001"></a>
-## CMI-P2-SYSTEM-RULEVIEW-001 Consolidated P2 compile/runtime handoff
+## Protected-access seam
 
 ```mermaid
 sequenceDiagram
-  participant FRONTEND
-  participant COMPILER
-  participant CONTEXT
-  participant CONSUMER
-  participant STARTER
+  participant Caller
+  participant Bridge
+  participant Resolver
+  participant Capability
+  participant Gateway
+  participant Guard
+  participant Operation
 
-  FRONTEND->>COMPILER: explicit System/RuleView/model-access + SourceRef
-  COMPILER->>COMPILER: register SystemKey + RuleViewKey, resolve refs, compile paths/rules
-  COMPILER->>CONTEXT: publish System/RuleView/PolicyIndex/digest as one candidate
-  CONSUMER->>CONTEXT: resolve RuleView via system-ref + rule-ref
-  CONSUMER->>STARTER: bridge.execute(ruleKey,op,frame,owner,cursor)
-  STARTER->>CONTEXT: Guard exact current PolicyIndex lookup
-  STARTER->>CONSUMER: ALLOW same capability-bound op OR DENY before effect
+  Caller->>Bridge: execute(exact ruleKey, operation, frame, owner, cursor)
+  Bridge->>Resolver: internal issued invocation
+  Resolver->>Capability: bind exact actual target + operation
+  Capability->>Gateway: one-shot capability
+  Gateway->>Guard: exact current PolicyIndex lookup
+  alt STATIC_ALLOW
+    Guard-->>Gateway: ALLOW
+  else RUNTIME_GUARD_REQUIRED
+    Guard->>Guard: verify exact plan/proof/membership
+    Guard-->>Gateway: ALLOW or DENY
+  end
+  Gateway->>Operation: execute bound target/op only when ALLOW
 ```
 
-### 成功条件
+## Current requirement decisions
 
-- explicit/deterministic System identity；
-- RuleView composite identity and cross-System isolation；
-- exact ModelPath + single PolicyIndex authority；
-- STATIC_ALLOW also passes Guard；
-- runtime-required proof only narrows compiler-published policy；
-- no partial Context or second runtime authority。
+- `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`：caller 当前可以选择 exact compiler-published ruleKey/op；无 token/recognizes/claim。
+- `DEC-P2-AC007-STAGE-BOUNDARY-001`：P2 验收唯一 production seam 与无合法旁路；P3/P4/P6 concrete consumer integration 是 downstream obligation。
 
-### 当前限制
+## Impact policies
 
-- AC-007 concrete Rule/change/custom-action/query executor integration is `CONTRACT_ONLY` until P3-P7 implementation exists；
-- current direct caller rule/op authority follows the formal Decision record；
-- candidate docs are not machine-published or PASSED。
+| ID | 核心约束 | Blocking Case |
+|---|---|---|
+| IMP-P2-SYSTEM-OWNERSHIP | ownership/version snapshot 与 typed facts 完整一致并进入 digest | CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001 / SYSTEM-VERSION-IDENTITY-001 |
+| IMP-P2-SHARED-MODEL-PATH | rule/change/query-contract/model-access 共用同一 canonical ModelPath | CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001 |
+| IMP-P2-MODEL-ACCESS-AUTHORIZATION | exact operation-qualified policy；一种权限不隐含另一种 | CASE-P2-TD-ACCESS-NON-IMPLICATION-001 |
+| IMP-P2-PROTECTED-SEAM | Bridge→Gateway→Guard 是唯一 P2 production protected path | CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001 |
+| IMP-P2-DIAGNOSTIC-DENIAL | compile ERROR/runtime DENY 重复执行稳定、可定位、不泄密 | CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001 |
+| IMP-P2-ATOMIC-PUBLICATION | ownership/RuleView/policy/digest 同一原子候选 | CASE-P2-TD-ATOMIC-PUBLICATION-001 |
+| IMP-P2-DECLARATION-BOUNDARY | legacy 只读直到 P7；不恢复第二 runtime | CASE-P2-TD-DECLARATION-BOUNDARY-001 |
+
+## Downstream obligations
+
+```text
+P3 Rule/Information consumer
+  -> MUST integrate through P2 protected seam
+
+P4 change/custom-action/produce consumer
+  -> MUST integrate through P2 protected seam
+
+P6 QueryPlan consumer
+  -> MUST reuse shared ModelPath contract
+  -> MUST integrate protected model read through P2 seam
+```
+
+这些 obligation 不是当前 P2 implementation evidence；只有对应后续阶段的 current-revision integration test 才能关闭。

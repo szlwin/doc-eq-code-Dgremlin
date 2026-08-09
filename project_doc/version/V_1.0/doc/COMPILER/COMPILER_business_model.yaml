@@ -3,248 +3,159 @@ artifact: business_model
 module:
   code: COMPILER
   name: dec-core-compiler
-revision: BM-R12
-baseRevision: BM-R07@7d7bf504ca9d
-status: MATERIALIZED_CANONICAL_CANDIDATE
-machineStatus: MACHINE_BLOCKED
-lineage:
-  inheritedP1Revision: BM-R07@7d7bf504ca9d
-  remediationSources:
-    - changes/p2-business-model-review-remediation-r09.yaml
-    - changes/p2-business-model-runtime-binding-proof-remediation-r10.yaml
-    - changes/p2-business-model-operation-bound-capability-remediation-r11.yaml
-    - changes/p2-business-model-unified-protected-access-remediation-r12.yaml
-  note: P1 Source/Canonical/Raw/TypedKey/Reference/Deferred/Diagnostic/digest/atomic-publication semantics are inherited unchanged.
+revision: BM-R13
+baseRevision: BM-R12
+inputs:
+  - REQAN-P2-R01@d08612768131
+  - REQAN-P2-R01+DEC-OVERLAY-20260809
+  - DEC-P2-DIRECT-BRIDGE-AUTHORITY-001
+  - DEC-P2-AC007-STAGE-BOUNDARY-001
+status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
+inherits:
+  - BM-R07@7d7bf504ca9d:P1-stable-compiler-facts
 terms:
   - id: TERM-SYSTEM-COMPILED-IDENTITY
     name: System compiled identity
-    definition: System uses an explicit SystemKey as first-class compiled identity; filename, directory, load order and RuleView name are never identity sources.
+    definition: explicit SystemKey plus version/source identity and immutable ownership snapshot
+  - id: TERM-SYSTEM-VERSION-IDENTITY
+    name: SystemVersionIdentity
+    definition: optional declared version plus mandatory source semantic digest and schema/compiler compatibility identity; no fabricated version
+  - id: TERM-SYSTEM-OWNERSHIP-SNAPSHOT
+    name: System ownership snapshot
+    definition: immutable deterministic sets of Data/View/RuleView/Rule/Information/ModelAccessRule keys owned by one System in one compiled revision
   - id: TERM-RULEVIEW-COMPOSITE-IDENTITY
     name: RuleView composite identity
-    definition: RuleView identity is exactly (SystemKey,name); same name across Systems is legal, same name within one System is duplicate, and new paths do not use bare-name lookup.
+    definition: RuleViewKey(SystemKey,name)
   - id: TERM-MODEL-PATH
     name: ModelPath
-    definition: Canonical exact path shared by rule/change/query/access-control consumers; runtime wildcard/fuzzy/parent fallback is forbidden.
-  - id: TERM-MODEL-ACCESS-RULE
-    name: ModelAccessRule
-    definition: Compiler authorization fact over System, target, exact ModelPath, AccessOperation and SourceRef; undeclared access has no implicit allow.
-  - id: TERM-MODEL-ACCESS-POLICY-INDEX
-    name: ModelAccessPolicyIndex
-    definition: Single immutable runtime policy authority built by compiler from final exact compiled access rules and published with CompiledModelSet.
-  - id: TERM-PROTECTED-ACCESS
-    name: Protected access
-    definition: Any P2-controlled READ/WRITE/EXECUTE; STATIC_ALLOW also passes Gateway and Guard.
-scenarios:
-  - id: SCN-P2-SYSTEM-MULTISOURCE
-    given:
-      - multiple system-file-info inputs
-      - input order may vary
-    when: compiler registers Systems and resolves references
-    then:
-      - equivalent semantics yield the same SystemKey set and semantic digest
-      - duplicate exact SystemKey is MIX-SYSTEM-DUPLICATE
-      - forward references resolve after symbol registration
-      - any ERROR prevents candidate publication
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009]
-  - id: SCN-P2-RULEVIEW-COMPOSITE
-    given:
-      - RuleViews are System-owned
-    when: compiler registers or runtime resolves a RuleView
-    then:
-      - key is exactly (SystemKey,name)
-      - missing System is MIX-RULEVIEW-SYSTEM-REQUIRED
-      - same-System duplicate is ERROR
-      - cross-System same name is isolated
-      - system-ref plus rule-ref resolves exactly
-      - new bare-name fallback is rejected
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010]
-  - id: SCN-P2-MODEL-ACCESS-STATIC
-    given:
-      - System, target, path and operation are compile-time exact
-    when: model access compilation completes
-    then:
-      - valid direct exact access becomes STATIC_ALLOW
-      - STATIC_ALLOW has no runtime requirement or plan
-      - undeclared access, unknown path or unauthorized shared WRITE is compile ERROR
-      - read wildcard is finite-expanded at compile time only
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005]
-  - id: SCN-P2-MODEL-ACCESS-RUNTIME
-    given:
-      - access rule is legal but actual collection element is known only at runtime
-    when: compiler classifies dynamic binding
-    then:
-      - EVERY_COLLECTION_ELEMENT becomes RUNTIME_OBJECT_BOUND/RUNTIME_GUARD_REQUIRED
-      - exact RuntimeAccessRequirement and RuntimeBindingPlan are required
-      - unsupported dynamic selector is compile ERROR
-      - runtime proof can narrow but never create new compiler authorization
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007]
+    definition: exact canonical path shared by rule/change/query-contract/model-access consumers
+entities:
+  - id: ENT-COMPILED-SYSTEM
+    name: CompiledSystem
+    identity: systemKey
+    requiredAttributes:
+      - systemKey
+      - sourceRef
+      - versionIdentity
+      - ownedDataKeys
+      - ownedViewKeys
+      - ownedRuleViewKeys
+      - ownedRuleKeys
+      - ownedInformationKeys
+      - ownedModelAccessRuleKeys
+  - id: ENT-COMPILED-RULEVIEW
+    name: CompiledRuleView
+    identity: RuleViewKey
+    requiredAttributes:
+      - key
+      - resolvedViewKey
+      - resolvedRuleKeys
+      - sourceRef
+valueObjects:
+  - id: VO-RULEVIEW-KEY
+    name: RuleViewKey
+    fields: [systemKey, localName]
+  - id: VO-MODEL-PATH
+    name: ModelPath
+    fields: [canonicalSegments]
+  - id: VO-MODEL-ACCESS-RULE
+    name: CompiledModelAccessRule
+    fields: [systemKey, targetKey, modelPath, operation, sourceRef, status, runtimeRequirement, runtimePlan]
 aggregates:
-  - id: AGG-COMPILATION-SESSION
-    root: CompilationSession
+  - id: AGG-SYSTEM-COMPILED-CONFIG
+    name: System compiled config
+    root: ENT-COMPILED-SYSTEM
     members:
-      - ENT-COMPILED-SYSTEM
-      - VO-RULEVIEW-KEY
       - ENT-COMPILED-RULEVIEW
       - VO-MODEL-PATH
       - VO-MODEL-ACCESS-RULE
-      - ENT-MODEL-ACCESS-POLICY-INDEX
-    consistency: ATOMIC
-    publicationRule: Any ERROR leaves the previously held EngineContext unchanged.
-  - id: AGG-SYSTEM-COMPILED-CONFIG
-    root: ENT-COMPILED-SYSTEM
-    consistency: STRONG
-    invariantRefs: [INV-COMPILER-016, INV-COMPILER-017, INV-COMPILER-018, INV-COMPILER-019]
-entities:
-  - id: ENT-COMPILED-SYSTEM
-    identity: SystemKey
-    required: [systemKey, sourceRef]
-    rules:
-      - explicit identity only
-      - deterministic ordering
-      - duplicate exact key rejected before publication
-  - id: ENT-COMPILED-RULEVIEW
-    identity: VO-RULEVIEW-KEY
-    required: [ruleViewKey, sourceRef, resolvedRuleRefs]
-  - id: ENT-MODEL-ACCESS-POLICY-INDEX
-    identity: CompiledModelSet publication closure
-    rules:
-      - immutable
-      - exact keys only
-      - single runtime authorization authority
-      - compiler-published before semantic digest binding
-valueObjects:
-  - id: VO-RULEVIEW-KEY
-    fields: [SystemKey systemKey, String localName]
-    rules:
-      - both fields required
-      - equality and hashCode include both fields
-      - no canonical new-code bare-name key
-  - id: VO-MODEL-PATH
-    rules:
-      - exact
-      - case-sensitive
-      - canonical
-      - no runtime wildcard or fuzzy fallback
-  - id: VO-MODEL-ACCESS-RULE
-    identityFields: [SystemKey, targetIdentity, ModelPath, AccessOperation]
-    states: [STATIC_ALLOW, RUNTIME_GUARD_REQUIRED]
-    rules:
-      - STATIC_ALLOW has no runtime plan or requirement
-      - RUNTIME_GUARD_REQUIRED has exact runtime requirement and plan
+    invariants:
+      - INV-COMPILER-016
+      - INV-COMPILER-016A
+      - INV-COMPILER-016B
+      - INV-COMPILER-016C
+      - INV-COMPILER-016D
+invariants:
+  - id: INV-COMPILER-016
+    statement: exact SystemKey is unique and deterministic across source discovery order
+  - id: INV-COMPILER-016A
+    statement: every owner-qualified compiled fact belongs to exactly one System ownership snapshot; no orphan RuleView/View/ModelAccess fact
+  - id: INV-COMPILER-016B
+    statement: ownership snapshot is complete and exactly consistent with final typed registries/definitions
+  - id: INV-COMPILER-016C
+    statement: System version identity and ownership key sets participate in semantic digest
+  - id: INV-COMPILER-016D
+    statement: ownership snapshots are immutable and isolated across EngineContext instances
+  - id: INV-COMPILER-017
+    statement: RuleView requires System; same-System duplicate is ERROR; cross-System same name is isolated
+  - id: INV-COMPILER-017A
+    statement: CompiledRuleView resolvedViewKey exact-resolves and is ownership-compatible with RuleView System
+  - id: INV-COMPILER-017B
+    statement: every CompiledRuleView resolvedRuleKey exact-resolves; unknown View/Rule is stable ERROR
+  - id: INV-COMPILER-017C
+    statement: RuleView key/resolvedView/ordered rules/source identity participate in semantic digest
+  - id: INV-COMPILER-018
+    statement: rule/change/query-contract/model-access consumers produce value-equal canonical ModelPath for equal System/target/path input
+  - id: INV-COMPILER-018A
+    statement: READ WRITE EXECUTE are independent and one permission never implies another
+  - id: INV-COMPILER-019
+    statement: System ownership RuleView ModelPath PolicyIndex and digest are one immutable atomic publication closure
+  - id: INV-COMPILER-020
+    statement: Bridge to Gateway to Guard is the only supported P2 production protected-operation seam; no public mint or compatibility write bypass
+  - id: INV-COMPILER-021
+    statement: compile ERROR and runtime DENY are deterministic/source-aware and do not expose sensitive runtime values
+  - id: INV-COMPILER-022
+    statement: declaration compatibility stays read-only until P7 and never becomes a second runtime authority
 services:
   - id: SVC-SYSTEM-COMPILATION
     responsibilities:
-      - explicit System registration
-      - duplicate detection
-      - forward reference resolution after symbol registration
-      - deterministic diagnostics and digest input
+      - register all SystemKey symbols before reference resolution
+      - collect and validate immutable ownership snapshot
+      - build version identity without fabricating declared version
+      - include ownership/version in digest-bound closure
   - id: SVC-RULEVIEW-RESOLUTION
     responsibilities:
-      - register exact (SystemKey,name)
-      - resolve system-ref plus rule-ref
-      - reject missing System, same-System duplicate, unknown System/Rule and new bare-name fallback
+      - resolve RuleViewKey by system-ref plus rule-ref
+      - exact-resolve ViewKey and ordered RuleKeys
+      - reject bare-name new-path fallback
   - id: SVC-MODEL-PATH-COMPILATION
     responsibilities:
-      - canonical exact path
-      - finite compile-time read wildcard expansion
-      - reject unknown/invalid/unsupported dynamic path
+      - canonicalize exact path for rule change query-contract model-access
+      - finite-expand read wildcard before policy publication
+      - reject consumer-specific fallback semantics
   - id: SVC-MODEL-ACCESS-AUTHORIZATION
     responsibilities:
-      - compile exact access rules
-      - publish one immutable ModelAccessPolicyIndex
-      - include authorization semantics in semantic digest
-      - route STATIC_ALLOW and runtime-required access through Gateway/Guard
-      - deny before protected operation or external effect
+      - build one immutable ModelAccessPolicyIndex
+      - route STATIC_ALLOW and RUNTIME_GUARD_REQUIRED through Guard
+      - bind actual target and operation to one-shot capability
+      - emit deterministic denial facts
 policies:
   - id: POL-RULEVIEW-COMPOSITE-IDENTITY
-    rule: RuleView registration and new lookup require exact SystemKey plus local name.
+    statement: RuleView identity is RuleViewKey(SystemKey,name)
   - id: POL-MODEL-ACCESS-AUTHORIZATION
-    rule: Only exact compiler-published policy rules may allow protected READ/WRITE/EXECUTE; Guard is mandatory for STATIC_ALLOW and runtime-required branches.
+    statement: exact compiler-published rule and operation required; missing/invalid is DENY; direct caller rule/op selection follows DEC-P2-DIRECT-BRIDGE-AUTHORITY-001
+  - id: POL-PROTECTED-SEAM
+    statement: P2 verifies sole production seam; P3/P4/P6 concrete executor integrations are downstream obligations under DEC-P2-AC007-STAGE-BOUNDARY-001
   - id: POL-DEFERRED-BOUNDARY
-    rule: P2 does not restore retired dec-expand-declaration and does not implement P3-P7 complete business execution semantics.
-invariants:
-  - id: INV-COMPILER-016
-    rule: System is explicit first-class SystemKey; duplicate exact key is ERROR and input order cannot change semantic result.
-  - id: INV-COMPILER-017
-    rule: RuleView key is (SystemKey,name); new RuleView System is required; bare-name new registration/lookup is forbidden.
-  - id: INV-COMPILER-018
-    rule: ModelAccessRule is exact over System/target/path/operation; undeclared access and shared WRITE are denied by default.
-  - id: INV-COMPILER-019
-    rule: Any P2 semantic ERROR prevents partial CompiledModelSet/EngineContext publication and preserves old Context.
-  - id: INV-COMPILER-020
-    rule: All protected READ/WRITE/EXECUTE pass the unified Gateway/Guard; STATIC_ALLOW is Guard-internal fast path only.
-  - id: INV-COMPILER-021
-    rule: Runtime proof only narrows compiler-published authorization and cannot create a new allowance.
-  - id: INV-COMPILER-022
-    rule: P2 keeps only explicit read-only declaration compatibility boundary; final retirement remains P7.
-  - id: INV-COMPILER-023
-    rule: ModelAccessPolicyIndex is the only runtime permission authority; Guard exact lookup occurs once and no definitions/typedRegistries/starter secondary policy map may substitute.
-  - id: INV-COMPILER-024
-    rule: Guard-verified actual target and operation remain bound to one one-shot capability; capability A cannot authorize target B.
-diagnostics:
-  compile:
-    - MIX-SYSTEM-DUPLICATE
-    - MIX-SYSTEM-UNKNOWN
-    - MIX-RULEVIEW-SYSTEM-REQUIRED
-    - MIX-RULEVIEW-DUPLICATE
-    - MIX-RULEVIEW-UNKNOWN-SYSTEM
-    - MIX-RULEVIEW-UNKNOWN-RULE
-    - MIX-MODEL-PATH-INVALID
-    - MIX-MODEL-ACCESS-DENIED
-    - MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED
-  runtime:
+    statement: P2 does not implement P3/P4/P5/P6/P7 complete execution semantics
+runtimeDenialContract:
+  stableFields:
+    - denialCode
+    - systemKey
+    - optionalRuleViewKey
+    - operation
+    - canonicalModelPath
+    - policySourceRef
+  minimumClasses:
     - POLICY_NOT_FOUND
-    - CONTEXT_IDENTITY_MISMATCH
-    - MODEL_ACCESS_GUARD_BYPASS
-    - PROTECTED_ACCESS_ADAPTER_UNAVAILABLE
-    - RUNTIME_BINDING_REQUIRED
-    - RUNTIME_BINDING_PROOF_INVALID
     - RUNTIME_BINDING_STALE
-    - RUNTIME_BINDING_PLAN_MISMATCH
-    - RUNTIME_BINDING_OPERATION_TARGET_MISMATCH
-    - RUNTIME_BINDING_CAPABILITY_CONSUMED
+    - RUNTIME_PLAN_MISMATCH
+    - TARGET_SUBSTITUTION
     - GUARD_UNAVAILABLE
-    - STATIC_ALLOW
-    - RUNTIME_ALLOW
-    - RUNTIME_DENY
-publication:
-  policyAuthorityChain:
-    - compiled exact access rules
-    - ModelAccessPolicyIndex.of
-    - SemanticDigestInput same immutable policy index
-    - DigestBoundCompiledInput same index plus digest
-    - CompiledModelSet.published same index
-    - EngineContext.modelAccessPolicyIndex
-    - DefaultModelAccessGuard exact lookup once
-  rules:
-    - System, RuleView, PolicyIndex and digest come from the same immutable publication closure
-    - equivalent ordering yields the same semantic digest
-    - System/RuleView/authorization semantic change changes semantic digest
-    - failed publication preserves old Context
-requirementDecisionDelta:
-  id: DEC-P2-DIRECT-BRIDGE-AUTHORITY-001
-  status: USER_CONFIRMED
-  decision: Current P2 production caller may submit exact ModelAccessRuleKey and AccessOperation per bridge invocation.
-  semantics:
-    - AccessConsumerIrKey is provenance/diagnostic, not an authorization-key dimension in current P2
-    - current P2 does not require consumer-to-rule/op binding
-    - caller cannot obtain allow for a rule/op absent from current compiler-published PolicyIndex
-    - any future per-consumer authority hardening requires a new Requirement/Decision review
-traceability:
-  AC-P2-SYSTEM-RULEVIEW-001: [ENT-COMPILED-SYSTEM, INV-COMPILER-016, SVC-SYSTEM-COMPILATION]
-  AC-P2-SYSTEM-RULEVIEW-002: [VO-RULEVIEW-KEY, INV-COMPILER-017, SVC-RULEVIEW-RESOLUTION]
-  AC-P2-SYSTEM-RULEVIEW-003: [VO-RULEVIEW-KEY, SVC-RULEVIEW-RESOLUTION]
-  AC-P2-SYSTEM-RULEVIEW-004: [VO-MODEL-ACCESS-RULE, POL-MODEL-ACCESS-AUTHORIZATION]
-  AC-P2-SYSTEM-RULEVIEW-005: [VO-MODEL-PATH, SVC-MODEL-PATH-COMPILATION]
-  AC-P2-SYSTEM-RULEVIEW-006: [INV-COMPILER-021, SVC-MODEL-ACCESS-AUTHORIZATION]
-  AC-P2-SYSTEM-RULEVIEW-007: [INV-COMPILER-020, INV-COMPILER-024]
-  AC-P2-SYSTEM-RULEVIEW-008: [AGG-COMPILATION-SESSION, INV-COMPILER-019]
-  AC-P2-SYSTEM-RULEVIEW-009: [SVC-SYSTEM-COMPILATION, SVC-RULEVIEW-RESOLUTION]
-  AC-P2-SYSTEM-RULEVIEW-010: [INV-COMPILER-022, POL-DEFERRED-BOUNDARY]
+  sensitiveRuntimeValuesIncluded: false
 gate:
-  contentMaterialized: true
-  exactIndependentReview: false
-  machinePublished: false
-  implementationPlanAllowed: false
-  tddAllowed: false
-  developmentAllowed: false
+  openP1: 19
+  riskDetection: NOT_SCANNED
+  implementationPlan: BLOCKED
+  tdd: BLOCKED
+  development: BLOCKED
