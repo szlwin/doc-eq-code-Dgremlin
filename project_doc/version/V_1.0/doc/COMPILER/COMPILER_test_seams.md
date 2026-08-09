@@ -1,27 +1,33 @@
 # COMPILER P2 Test Seams
 
-> Revision `DESIGN-P2-R28`; Impact `P2-IMPACT-R27`; TestDesign `TESTDESIGN-P2-R29`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
+> Revision `DESIGN-P2-R29`; inputs `BM-R20 / FLOW-R11`; Impact `P2-IMPACT-R28`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
 
-## CompiledModelSet aggregate seam
+## Plan/origin same-invocation seam
 
-Compiler fixture builds two equivalent candidates and one candidate with a different materialization descriptor. Assert `CompiledModelSet.viewMaterializationIndex`, delegated `EngineContext.viewMaterializationIndex`, equals/hashCode and semantic digest all change/stay equal consistently. A dynamic target View with no exact descriptor must fail before `EngineContext` publication. Instrument MODEL to prove runtime `NormalizedBody`/XML/YAML/ViewData/default Context reads are zero.
+MODEL-package fixture drives the package-private production invocation assembler from one active production invocation A. Assert token A has no public/protected constructor/factory/rebind; root A loads A successfully; root B loading token A yields `INVOCATION_ROOT_MISMATCH`; root A reusing A yields `INVOCATION_ALREADY_CONSUMED`. Public API inspection must show no `of(plan, originObject)` trusted request. A Plan A/Object B substitution cannot be expressed through public production API.
 
-## MODEL execution-root seam
+## Production Container seam
 
-Use a real origin object, captured Context and an existing MODEL `Container`. `RuntimeModelExecutionRoot.load` must invoke typed ModelDataFactory, construct the existing three-argument ModelLoader, call owned `Container.load`, and freeze a handle around the exact same ModelData. Spy/identity assertions must prove STARTER never creates/injects ModelData. `accessScope` is unavailable before a trusted load and after root close, and no thread-local/global/default registry can recover it.
+Public root creation accepts `ProductionContainerKind`, not `Container`. Instrument existing `ContainerFactory` to prove production COMMIT/SYNCHRONIZED selection creates the real supported container and trusted load calls that exact root-owned container. A fake/test Container may be used only by MODEL unit harness; AC-007 real-production tests fail if a fake/injected Container is used.
 
-## Scope/session failure seam
+## MODEL effect provider seam
 
-Drive each setup failure separately and assert exact public codes/results: inactive/stale scope, provenance mismatch, duplicate registration, ownership conflict, already-sealed/closed session. Each failure returns no `ProtectedAccessComposition`; resolver/capability/Guard/MODEL effect invocation count is zero. Missing class/setup failure is `INVALID_RED`.
+After STARTER validates scope and seals the exact session, composition must call `scope.effectProvider().bind(theSameSession)` once and privately retain the returned operation port. Guard DENY yields operation-port call count zero. Guard ALLOW READ/WRITE invokes that bound port once with a resolved target whose session/object belong to the same registered handle. Cross-session port binding or substituted object fails before model mutation with the stable code/denial.
 
-## FLOW-R11 success seam
+## Consumer no-bypass seam
 
-Normal path remains validate frame -> begin session -> register all trusted handles -> seal -> resolve -> access/capability -> Guard -> MODEL effect. Representative Rule/Change/CustomAction consumers share the same STARTER composition.
+Compile-time dependency scan proves Rule/Change/CustomAction production consumers import STARTER entries and CONTEXT values only; they do not import `RuntimeModelAccessScope`, `RuntimeModelEffectProvider`, or `RuntimeModelOperationPort`. `ProtectedAccessComposition` exposes no provider/port getter, and no production factory overload accepts an injected port or Guard.
 
-## Explicit excluded transaction behavior
+## Context/materialization and API seams
 
-Do **not** make post-copy POJO/Map restoration after a later legacy commit failure a blocking assertion. The user confirmed that behavior needs no change. Keep only successful real-origin write-back reachability and pre-effect fail-closed assertions that are already part of BM/Flow.
+Retain R28 checks: `CompiledViewMaterializationIndex` is a `CompiledModelSet` aggregate member in equality/hash/digest/publication; MODEL reads only captured exact View descriptor; all public construction factories compile in their legal owner modules; superseded R26 fresh-snapshot/open API remains absent.
 
-## Gate
+## Transaction/write-back scope
 
-R29 is planned TestDesign only. Risk scan, same-revision specialist Review and machine Evidence remain required before TDD.
+Successful Guard-allowed WRITE must reach the same production ModelData and existing successful originData write-back. MODEL mutation failure before successful production completion returns no success receipt. Per user directive, do not require restoration of a POJO/Map already copied before a later legacy commit failure.
+
+## TestDesign quality gate
+
+R30 must contain explicit Fixture/Action/Expected/Forbidden/Ref for every blocking Case. Template phrases such as “named behavior/case remains...” are forbidden. Each Expected must state the observable success/failure outcome specific to its Case. Target RED never uses `-am`; pre-assert compile/setup/missing class is `INVALID_RED`.
+
+Risk scan, same-revision specialist Review and machine Evidence remain required before TDD.

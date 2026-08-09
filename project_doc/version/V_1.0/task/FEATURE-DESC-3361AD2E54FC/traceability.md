@@ -1,24 +1,28 @@
-# P2 Traceability
+# FEATURE-DESC-3361AD2E54FC Traceability
 
-Current candidate authority:
+- Review baseline: `8f8e3b9e5525d065f0ce4288062f872c56b67f3f`.
+- Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30`.
+- Requirement + Overlay R04: semantic PASS / MACHINE_BLOCKED.
+- BM-R20: semantic PASS / MACHINE_BLOCKED; unchanged.
+- FLOW-R11: semantic PASS / MACHINE_BLOCKED; unchanged.
+- Impact projection: `P2-IMPACT-R28` (parallel/non-authoritative).
+- Design: `DESIGN-P2-R29`.
+- TestDesign: `TESTDESIGN-P2-R30`.
 
 ```text
 REQAN-P2-R01@d08612768131 + Overlay R04
-        -> BM-R20
-        -> FLOW-R11
-        -> DESIGN-P2-R28
-        -> TESTDESIGN-P2-R29
-parallel/non-authoritative: P2-IMPACT-R27
+        ↓
+BM-R20
+        ↓
+FLOW-R11
+        ↓
+DESIGN-P2-R29
+        ↓
+TESTDESIGN-P2-R30
+
+parallel: P2-IMPACT-R28
 ```
 
-| Trace | Requirement / Flow | Current implementation projection | Current TestDesign |
-|---|---|---|---|
-| TR-P2-005 | compile exact binding/publication | `CMI-P2-COMPILE-005`; `CompiledModelSet.viewMaterializationIndex` aggregate + digest/publication closure | materialization aggregate/publication cases |
-| TR-P2-006 | trusted runtime binding / fail closed | `RuntimeModelExecutionRoot.load` -> typed ModelDataFactory -> existing ModelLoader/Container -> trusted handle/scope | root load, scope producer, composition/session failure cases |
-| TR-P2-007 | Guard before actual MODEL effect | FLOW-R11 STEP-03..06 unchanged; STARTER composition only after stable STEP-01/02 setup | production composition, target, capability/Guard cases |
-| TR-P2-008 | atomic Context publication | missing/duplicate materialization descriptor blocks the complete candidate; old Context retained | atomic publication + materialization closure cases |
-| TR-P2-009 | real production reachability | same ModelData is loaded into existing Container and frozen in trusted handle; successful existing originData write-back preserved | registration-binding + real fixture/write-back success cases |
+R29 adds no business authority. It closes: MODEL effect provider binding to the same sealed session/handle, MODEL-minted same-invocation plan+origin provenance, MODEL-created production Container trust, and current TestDesign oracle specificity.
 
-Explicit current user directive: do not change or require a blocking test for restoration of a POJO/Map already copied before a later legacy commit failure. This does not reopen BM-R20/FLOW-R11.
-
-Formal lifecycle remains blocked by current same-revision Reviews, risk scan and machine Evidence. Historical PASSED revisions are not rewritten.
+Formal state: 20 OPEN P1; no FND-021; risk NOT_SCANNED; current execution Evidence none; Implementation Plan/TDD/Development BLOCKED. User-confirmed legacy post-copy POJO/Map restoration remains outside scope.

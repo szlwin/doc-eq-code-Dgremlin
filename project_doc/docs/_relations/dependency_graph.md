@@ -3,7 +3,7 @@
 
 - Project：`doc-eq-code`
 - Version：`V_1.0`
-- Revision：`P2-IMPACT-R27`
+- Revision：`P2-IMPACT-R28`
 
 ## 需求—需求关系图
 
@@ -19,40 +19,37 @@
 flowchart LR
   N_c1cf93fb1a["COMP<br/>dec-core-compiler<br/>MODULE"]
   N_696d0447f4["CTX<br/>dec-core-context<br/>MODULE"]
+  N_d7baf549df["EFFECT<br/>RuntimeModelEffectProvider<br/>DATA_OBJECT"]
   N_c8b6c094bb["MODEL<br/>dec-core-model<br/>MODULE"]
-  N_fed4199357["ROOT<br/>RuntimeModelExecutionRoot<br/>DATA_OBJECT"]
-  N_f035065747["SCOPE<br/>RuntimeModelAccessScope<br/>DATA_OBJECT"]
+  N_4e6d974be6["PROD_INV<br/>RuntimeModelProductionInvocation<br/>DATA_OBJECT"]
   N_546a424e1f["STARTER<br/>dec-core-starter<br/>MODULE"]
-  N_94ee059335["TEST<br/>TestDesign R29<br/>TEST_CASE"]
-  N_93056517ae["VIEW_INDEX<br/>CompiledViewMaterializationIndex<br/>DATA_OBJECT"]
+  N_94ee059335["TEST<br/>TestDesign R30<br/>TEST_CASE"]
   N_c1cf93fb1a -->|"DEPENDS_ON"| N_696d0447f4
-  N_696d0447f4 -->|"IMPLEMENTED_BY"| N_93056517ae
   N_c8b6c094bb -->|"DEPENDS_ON"| N_696d0447f4
-  N_c8b6c094bb -->|"IMPLEMENTED_BY"| N_fed4199357
-  N_fed4199357 -->|"IMPLEMENTED_BY"| N_f035065747
+  N_c8b6c094bb -->|"IMPLEMENTED_BY"| N_4e6d974be6
+  N_c8b6c094bb -->|"IMPLEMENTED_BY"| N_d7baf549df
   N_546a424e1f -->|"DEPENDS_ON"| N_c8b6c094bb
-  N_94ee059335 -->|"VERIFIED_BY"| N_fed4199357
+  N_94ee059335 -->|"VERIFIED_BY"| N_d7baf549df
 ```
 
 ## 关系明细
 
 | ID | From | 类型 | To | 条件 | 理由 | Trace IDs |
 |---|---|---|---|---|---|---|
-| REL-P2-R27-1 | COMP | DEPENDS_ON | CTX |  | Compiler publishes neutral policy/binding plus the typed materialization index inside one CompiledModelSet aggregate. | TR-P2-005<br>TR-P2-008 |
-| REL-P2-R27-2 | CTX | IMPLEMENTED_BY | VIEW_INDEX |  | CompiledModelSet owns the immutable index; EngineContext exposes only a delegated accessor. | TR-P2-005<br>TR-P2-006 |
-| REL-P2-R27-3 | MODEL | DEPENDS_ON | CTX |  | MODEL execution root consumes the captured aggregate and typed ModelDataFactory path; no runtime raw-config/default-context reinterpretation. | TR-P2-006<br>TR-P2-009 |
-| REL-P2-R27-4 | MODEL | IMPLEMENTED_BY | ROOT |  | MODEL owns the explicit production root that creates ModelData, ModelLoader, Container binding, handle and scope. | TR-P2-006<br>TR-P2-009 |
-| REL-P2-R27-5 | ROOT | IMPLEMENTED_BY | SCOPE |  | Only an active root can expose an active RuntimeModelAccessScope after at least one successful trusted load. | TR-P2-006<br>TR-P2-009 |
-| REL-P2-R27-6 | STARTER | DEPENDS_ON | MODEL | FLOW-R11 protected access only | STARTER consumes the scope, maps stable scope/session failures, resolves/Guards, and delegates MODEL effect. | TR-P2-006<br>TR-P2-007 |
-| REL-P2-R27-7 | TEST | VERIFIED_BY | ROOT |  | R29 verifies aggregate publication, root integration, scope lifetime and stable failure algebra. | TR-P2-009 |
+| REL-P2-R28-1 | COMP | DEPENDS_ON | CTX |  | Compiler publishes exact policy/binding plus typed materialization aggregate. | TR-P2-005<br>TR-P2-008 |
+| REL-P2-R28-2 | MODEL | DEPENDS_ON | CTX |  | MODEL consumes only captured immutable context/materialization contracts. | TR-P2-006 |
+| REL-P2-R28-3 | MODEL | IMPLEMENTED_BY | PROD_INV |  | MODEL production adapter mints the one-shot root-bound production invocation token. | TR-P2-006<br>TR-P2-009 |
+| REL-P2-R28-4 | MODEL | IMPLEMENTED_BY | EFFECT |  | MODEL owns the scope-bound effect provider and actual operation port. | TR-P2-007<br>TR-P2-009 |
+| REL-P2-R28-5 | STARTER | DEPENDS_ON | MODEL | FLOW-R11 protected access only | STARTER consumes trusted scope/effect provider, never caller-injected operation implementation. | TR-P2-006<br>TR-P2-007 |
+| REL-P2-R28-6 | TEST | VERIFIED_BY | EFFECT |  | R30 proves effect binding, same-handle execution and no-bypass behavior. | TR-P2-009 |
 
 ## 关联对象处置策略
 
 | ID | 来源动作 | 目标 | 策略 | 条件 | 一致性 | 失败/补偿 | Case |
 |---|---|---|---|---|---|---|---|
-| IMP-P2-CONTEXT-PUBLICATION-R27 | FLOW-CONFIG-COMPILE.publish P2 binding/policy plus typed View materialization index | COMP<br>CTX<br>VIEW_INDEX | REJECT_OPERATION | any P2 RuntimeBindingPlan target View lacks exactly one typed materialization descriptor<br>duplicate materialization ViewKey<br>candidate digest/equality closure incomplete | ATOMIC | compile/publication ERROR; new Context is not exposed; 补偿: retain previously published Context | CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001<br>CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001<br>CASE-P2-TD-ATOMIC-PUBLICATION-001 |
-| IMP-P2-MODEL-ROOT-R27 | FLOW-PROTECTED-ACCESS-EXECUTE.establish MODEL-owned trusted RuntimeModelFrame precondition through the existing production lifecycle | CTX<br>MODEL<br>ROOT<br>SCOPE | REJECT_OPERATION | plan not in captured Context<br>typed materialization descriptor missing<br>origin object incompatible<br>Container load fails<br>execution root closed/no trusted load | ATOMIC | stable RuntimeModelLoadFailure/RuntimeModelScopeFailure; no scope enters STARTER; 补偿: discard unexposed handle/scope association; no fallback/global lookup | CASE-P2-TD-MODEL-EXECUTION-ROOT-LOAD-001<br>CASE-P2-TD-MODEL-SCOPE-PRODUCER-001<br>CASE-P2-TD-TRUSTED-MATERIALIZATION-EXACT-VIEW-001<br>CASE-P2-TD-RUNTIME-SCOPE-PROVENANCE-001 |
-| IMP-P2-COMPOSITION-FAILURE-R27 | FLOW-PROTECTED-ACCESS-EXECUTE.STARTER validates scope and registers/seals the MODEL session before target resolution | STARTER<br>MODEL<br>SCOPE | REJECT_OPERATION | scope inactive/stale<br>provenance mismatch<br>duplicate registration<br>cross-session ownership conflict<br>session already sealed/closed | ATOMIC | stable code in ProtectedAccessCompositionFailure or RuntimeModelSessionException; capability/Guard/effect=0; 补偿: close any partial failed session; no fallback session | CASE-P2-TD-COMPOSITION-FAILURE-ALGEBRA-001<br>CASE-P2-TD-SESSION-FAILURE-ALGEBRA-001<br>CASE-P2-TD-PRODUCTION-SESSION-HANDOFF-001 |
+| IMP-P2-CONTEXT-PUBLICATION-R28 | FLOW-CONFIG-COMPILE.publish exact policy/binding/materialization aggregate | COMP<br>CTX | REJECT_OPERATION | dynamic target lacks exactly one materialization descriptor<br>candidate aggregate/digest incomplete | ATOMIC | compile/publication ERROR; previous Context remains visible; 补偿: discard unpublished candidate | CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001<br>CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001<br>CASE-P2-TD-ATOMIC-PUBLICATION-001 |
+| IMP-P2-TRUSTED-PRODUCTION-R28 | FLOW-PROTECTED-ACCESS-EXECUTE.establish trusted production frame from one MODEL invocation and production Container | MODEL<br>CTX<br>PROD_INV | REJECT_OPERATION | token from another root<br>token reused<br>plan absent from captured Context<br>origin not materializable<br>production Container load rejected | ATOMIC | stable load failure; no scope/handle reaches STARTER; 补偿: discard unexposed association | CASE-P2-TD-PRODUCTION-PLAN-ORIGIN-SAME-INVOCATION-001<br>CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001<br>CASE-P2-TD-MODEL-EXECUTION-ROOT-LOAD-001 |
+| IMP-P2-EFFECT-BINDING-R28 | FLOW-PROTECTED-ACCESS-EXECUTE.bind MODEL effect port to same sealed scope/session then execute only after Guard ALLOW | STARTER<br>MODEL<br>EFFECT | REJECT_OPERATION | scope/session mismatch<br>session unsealed/closed<br>resolved object not registered in bound session<br>Guard DENY<br>MODEL operation failure | ATOMIC | stable composition/operation denial; no unauthorized effect or success receipt; 补偿: close failed partial composition/session; no fallback provider | CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001<br>CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001<br>CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001<br>CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001 |
 
 # 跨模块实现映射
 
@@ -62,62 +59,60 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
-  participant P_ed53e68da2 as dec-core-compiler: Resolve selectors/View materialization once, cross-check every dynamic plan, compute digest input and coordinate publication.
-  participant P_5b9bc1ab88 as dec-core-context: Own immutable CompiledModelSet including CompiledViewMaterializationIndex and expose it through EngineContext.
-  P_ed53e68da2->>P_5b9bc1ab88: CMSTEP-P2-COMPILE-R27-01 / Construct CompiledViewMaterializationPlan/Index from resolved View semantics and require exactly one descriptor for every P2 runtime target View.
-  Note over P_ed53e68da2,P_5b9bc1ab88: 失败: stable compile ERROR; publication=0
-  P_ed53e68da2->>P_5b9bc1ab88: CMSTEP-P2-COMPILE-R27-02 / Construct CompiledModelSet with the index as a constructor member; include it in equals/hashCode and semantic digest canonical input.
-  Note over P_ed53e68da2,P_5b9bc1ab88: 失败: candidate construction fails
-  P_ed53e68da2->>P_5b9bc1ab88: CMSTEP-P2-COMPILE-R27-03 / Publish EngineContext(CompiledModelSet) atomically; EngineContext.viewMaterializationIndex delegates to the aggregate and owns no side registry.
-  Note over P_ed53e68da2,P_5b9bc1ab88: 失败: retain old Context
+  participant P_9288863e3a as dec-core-compiler: resolve exact target/materialization and coordinate atomic publication
+  participant P_cf61b92a1f as dec-core-context: own immutable CompiledModelSet aggregate and EngineContext projection
+  P_9288863e3a->>P_cf61b92a1f: CMSTEP-P2-COMPILE-R28-01 / construct complete CompiledViewMaterializationIndex and validate every dynamic target
+  Note over P_9288863e3a,P_cf61b92a1f: 失败: publication=0
+  P_9288863e3a->>P_cf61b92a1f: CMSTEP-P2-COMPILE-R28-02 / construct/publish one CompiledModelSet including index in equality/hash/digest
+  Note over P_9288863e3a,P_cf61b92a1f: 失败: retain old Context
 ```
 
 ### 成功条件
 
-- No materialization side-state outside CompiledModelSet.
-- Missing descriptor is compile/publication failure, never runtime repair.
-- Context isolation/equality/digest include the typed index.
+- typed index is aggregate-owned
+- no runtime materialization repair
+- atomic Context publication
 
 ### 失败与补偿
 
-- `CMFAIL-P2-COMPILE-R27-01` @ `CMSTEP-P2-COMPILE-R27-01`：required descriptor absent/duplicate → compile ERROR; publication=0；补偿：无；人工恢复：fix compiled View semantics and submit a fresh candidate
+- `CMFAIL-P2-COMPILE-R28-01` @ `CMSTEP-P2-COMPILE-R28-01`：required descriptor absent/duplicate → compile ERROR; publication=0；补偿：无；人工恢复：fix configuration and submit fresh candidate
 
-## CMI-P2-PROTECTED-ACCESS-007 Explicit MODEL execution root and stable FLOW-R11 composition failures
+## CMI-P2-PROTECTED-ACCESS-008 Trusted production invocation plus bound MODEL effect under FLOW-R11
 
 - 触发：FLOW-PROTECTED-ACCESS-EXECUTE
 
 ```mermaid
 sequenceDiagram
-  participant P_cffaf097c9 as dec-core-model: Own RuntimeModelExecutionRoot, captured Context, existing Container, typed ModelData/ModelLoader construction, trusted handle/scope/session and actual effect.
-  participant P_c1db53f886 as dec-core-starter: Consume only RuntimeModelAccessScope; validate, register/seal, map stable setup failures, resolve/capability/Guard and delegate effect.
-  participant P_dca4ad07ae as dec-core-context: Provide immutable aggregate/materialization index and neutral access/result contracts.
-  P_cffaf097c9->>P_cffaf097c9: CMSTEP-P2-ACCESS-R27-00 / RuntimeModelExecutionRoot.load(RuntimeModelLoadRequest) validates the exact plan in captured Context, resolves viewMaterializationIndex, creates ModelData from the real origin object, constructs ModelLoader with explicit connectionName, calls owned Container.load, then freezes the same ModelData in a trusted handle.
-  Note over P_cffaf097c9,P_cffaf097c9: 失败: no handle/scope exposure; no default/thread-local/global fallback
-  P_cffaf097c9->>P_c1db53f886: CMSTEP-P2-ACCESS-R27-01 / After at least one successful load, MODEL root.accessScope returns only an active MODEL-minted RuntimeModelAccessScope; STARTER validates scope.frame handle provenance against captured Context.
-  Note over P_cffaf097c9,P_c1db53f886: 失败: SCOPE_INACTIVE/SCOPE_STALE/PROVENANCE_MISMATCH; composition absent
-  P_c1db53f886->>P_cffaf097c9: CMSTEP-P2-ACCESS-R27-02 / STARTER calls scope.beginSession(), registers exactly the trusted frame handles and seals. MODEL session throws stable RuntimeModelSessionException codes for inactive scope, duplicate registration, ownership conflict or illegal sealed-state transition.
-  Note over P_c1db53f886,P_cffaf097c9: 失败: stable mapped ProtectedAccessCompositionFailure; capability/Guard/effect=0
-  P_c1db53f886->>P_cffaf097c9: CMSTEP-P2-ACCESS-R27-03 / Resolve exact RuntimeBindingPlan to one registered handle.
-  Note over P_c1db53f886,P_cffaf097c9: 失败: NOT_FOUND/AMBIGUOUS
-  P_c1db53f886->>P_c1db53f886: CMSTEP-P2-ACCESS-R27-04 / Freeze READ access or WRITE intent+stamp and one-shot capability.
-  Note over P_c1db53f886,P_c1db53f886: 失败: intent 0/N fails closed
-  P_c1db53f886->>P_dca4ad07ae: CMSTEP-P2-ACCESS-R27-05 / Guard exact ModelAccessRuleKey with the same target/proof.
-  Note over P_c1db53f886,P_dca4ad07ae: 失败: DENY; MODEL effect=0
-  P_c1db53f886->>P_cffaf097c9: CMSTEP-P2-ACCESS-R27-06 / After ALLOW execute actual READ/WRITE over the same production ModelData; successful existing originData write-back semantics are preserved unchanged.
-  Note over P_c1db53f886,P_cffaf097c9: 失败: existing MODEL operation failure semantics; no new POJO/Map post-copy rollback requirement is introduced by this remediation
+  participant P_6332d0f957 as dec-core-model: mint root-bound production invocation, create production Container, load same ModelData, mint scope/session/effect provider and own actual operation
+  participant P_18545aa412 as dec-core-starter: validate scope, register/seal, bind effect provider, resolve/capability/Guard, invoke bound effect only after ALLOW
+  participant P_883c7ed22d as dec-core-context: provide immutable binding/policy/materialization/result contracts
+  P_6332d0f957->>P_6332d0f957: CMSTEP-P2-ACCESS-R28-00 / one active MODEL production invocation atomically mints a root-bound one-shot token; root uses ContainerFactory-selected production Container, exact captured plan/materialization and real origin to create/load one ModelData and trusted handle
+  Note over P_6332d0f957,P_6332d0f957: 失败: no scope/handle exposure
+  P_6332d0f957->>P_18545aa412: CMSTEP-P2-ACCESS-R28-01 / provide active MODEL-minted scope/frame; STARTER validates every handle plan/provenance against captured Context
+  Note over P_6332d0f957,P_18545aa412: 失败: fail closed
+  P_18545aa412->>P_6332d0f957: CMSTEP-P2-ACCESS-R28-02 / begin session, register exact frame handles, seal once, then bind scope.effectProvider to that same sealed session; retain operation port privately in composition
+  Note over P_18545aa412,P_6332d0f957: 失败: stable session/effect binding code; capability/Guard/effect=0
+  P_18545aa412->>P_6332d0f957: CMSTEP-P2-ACCESS-R28-03 / resolve exact plan to exactly one object registered in that sealed session
+  Note over P_18545aa412,P_6332d0f957: 失败: NOT_FOUND/AMBIGUOUS/PROVENANCE_MISMATCH
+  P_18545aa412->>P_18545aa412: CMSTEP-P2-ACCESS-R28-04 / freeze READ access or WRITE intent+stamp and one-shot capability for that exact target/path/version
+  Note over P_18545aa412,P_18545aa412: 失败: intent 0/N fails closed
+  P_18545aa412->>P_883c7ed22d: CMSTEP-P2-ACCESS-R28-05 / Guard exact ModelAccessRuleKey for the frozen target/proof
+  Note over P_18545aa412,P_883c7ed22d: 失败: DENY; effect=0
+  P_18545aa412->>P_6332d0f957: CMSTEP-P2-ACCESS-R28-06 / after ALLOW invoke the privately bound MODEL RuntimeModelOperationPort; provider/port rechecks same sealed session and registered runtimeObjectId before actual READ/WRITE
+  Note over P_18545aa412,P_6332d0f957: 失败: scope/object/write mismatch fails closed; no fabricated success
 ```
 
 ### 成功条件
 
-- CMI maps to FLOW-R11 STEP-01..06; root load realizes the existing trusted-frame precondition.
-- CompiledModelSet is the only captured materialization source.
-- Scope/frame IDs are MODEL-minted.
-- Composition/session setup has stable failure codes.
-- No thread-local/global/default Context/plan/scope fallback.
-- User-confirmed legacy post-copy POJO/Map rollback is outside this remediation scope.
+- public API cannot compose Plan A + Object B trusted load
+- production Container is MODEL-created, not caller-injected
+- effect provider is bound to same sealed scope/session
+- Guard precedes actual MODEL effect
+- same STEP-03 object is used by STEP-06
+- business consumers have no MODEL effect bypass
 
 ### 失败与补偿
 
-- `CMFAIL-P2-ACCESS-R27-01` @ `CMSTEP-P2-ACCESS-R27-00`：plan/descriptor/origin/container load invalid → stable RuntimeModelLoadFailure; no scope；补偿：无；人工恢复：supply a valid current request on an active root
-- `CMFAIL-P2-ACCESS-R27-02` @ `CMSTEP-P2-ACCESS-R27-01`：scope inactive/stale or provenance mismatch → stable ProtectedAccessCompositionFailure; no composition/capability/Guard/effect；补偿：无；人工恢复：obtain a fresh active scope from the MODEL root
-- `CMFAIL-P2-ACCESS-R27-03` @ `CMSTEP-P2-ACCESS-R27-02`：duplicate registration/ownership conflict/illegal seal state → stable session code mapped to composition failure; no composition/capability/Guard/effect；补偿：close partial session；人工恢复：use one active session with each handle registered once
+- `CMFAIL-P2-ACCESS-R28-01` @ `CMSTEP-P2-ACCESS-R28-00`：token/root mismatch or token reuse or trusted load failure → stable load failure; no scope/effect；补偿：无；人工恢复：start a fresh valid production invocation
+- `CMFAIL-P2-ACCESS-R28-02` @ `CMSTEP-P2-ACCESS-R28-02`：session/effect provider cannot bind same scope/session → no composition; capability/Guard/effect=0；补偿：close partial session；人工恢复：fresh active scope/session
+- `CMFAIL-P2-ACCESS-R28-03` @ `CMSTEP-P2-ACCESS-R28-06`：resolved object/session mismatches bound effect or MODEL operation fails → stable denial/failure; no unauthorized success；补偿：无；人工恢复：fresh valid intent when allowed

@@ -1,21 +1,20 @@
 # COMPILER P2 API Contract
 
-> Revision `DESIGN-P2-R28`; base `DESIGN-P2-R27`.
-> Inputs: `REQAN-P2-R01@d08612768131 + Overlay R04 + BM-R20 + FLOW-R11`; parallel projection `P2-IMPACT-R27`.
+> Revision `DESIGN-P2-R29`; base `DESIGN-P2-R28`.
+> Inputs: `REQAN-P2-R01@d08612768131 + Overlay R04 + BM-R20 + FLOW-R11`; parallel projection `P2-IMPACT-R28`.
 > Status: `NEEDS_REVIEW / MACHINE_BLOCKED`. This is the complete current P2 cross-module contract.
 
-## 1. Ownership and preserved current factories
+## 1. Ownership and preserved public construction surfaces
 
 - CONTEXT `dec.core.context.runtime`: policy/binding/value/invocation/result contracts.
 - CONTEXT `dec.core.context.model`: `CompiledModelSet` aggregate + typed View materialization contracts.
 - CONTEXT `dec.core.context.data`: typed `ModelDataFactory` overload.
-- MODEL `dec.core.model.runtime`: production execution root, trusted handle/frame/scope/session/locator and MODEL effect implementation.
+- MODEL `dec.core.model.runtime`: production invocation/root, trusted handle/frame/scope/session, effect provider and MODEL operation implementation.
 - STARTER `dec.core.starter.access`: composition/result/failure, target resolution, capability/Guard and Rule/Change/CustomAction entries.
 
-All R27/R25 public factories remain current, including `RuleKey.of`, `TargetKey.of`, `ModelPath.of`, `ModelAccessRuleKey.of`, `CompiledTargetBinding.targetMain/propertyPath`, `RuntimeBindingPlan.exact`, `CompiledModelAccessRule.of`, `ModelAccessPolicyIndex.of`, opaque-ID `of(String)`, `RuntimeMutationVersion.of`, all `RuntimeFactValue` factories, `ProtectedAccessInvocation.of`, `RuntimeBindingProof.exact`, `ResolvedRuntimeTarget.of`, `RuntimeMutationStamp.of`, `ResolvedProtectedReadAccess.of`, `ResolvedWriteIntent.of`, `ResolvedProtectedWriteAccess.of`, `ProtectedReadValue.of`, `ProtectedWriteReceipt.of`, `ProtectedAccessDenial.of`, `ProtectedAccessResult.allowRead/allowWrite/deny`, and `RuntimeTargetResolution.resolved/denied`. No current revision may remove these construction surfaces.
+All R28/R27/R25 factories remain current: `RuleKey.of`, `TargetKey.of`, `ModelPath.of`, `ModelAccessRuleKey.of`, `CompiledTargetBinding.targetMain/propertyPath`, `RuntimeBindingPlan.exact`, `CompiledModelAccessRule.of`, `ModelAccessPolicyIndex.of`, opaque-ID `of(String)`, `RuntimeMutationVersion.of`, all `RuntimeFactValue` factories, `ProtectedAccessInvocation.of`, `RuntimeBindingProof.exact`, `ResolvedRuntimeTarget.of`, `RuntimeMutationStamp.of`, `ResolvedProtectedReadAccess.of`, `ResolvedWriteIntent.of`, `ResolvedProtectedWriteAccess.of`, `ProtectedReadValue.of`, `ProtectedWriteReceipt.of`, `ProtectedAccessDenial.of`, `ProtectedAccessResult.allowRead/allowWrite/deny`, and `RuntimeTargetResolution.resolved/denied`.
 
-
-## 1A. Preserved current neutral runtime signatures (self-contained)
+## 2. Preserved neutral runtime contracts
 
 ```java
 package dec.core.context.runtime;
@@ -56,7 +55,7 @@ public final class ModelAccessPolicyIndex {
 }
 ```
 
-Opaque IDs `ProtectedInvocationId`, `RuntimeObjectId`, `RuntimeWriteIntentId`, `RuntimeExecutionFrameId`, `RuntimeResolutionOwnerId`, `RuntimeCollectionCursorId`, `RuntimeModelSessionId` are each `public final`, immutable, exact/case-sensitive, reject null/blank, and expose `public static of(String)`, `value()`, structural `equals/hashCode`.
+Opaque IDs `ProtectedInvocationId`, `RuntimeObjectId`, `RuntimeWriteIntentId`, `RuntimeExecutionFrameId`, `RuntimeResolutionOwnerId`, `RuntimeCollectionCursorId`, `RuntimeModelSessionId`, `RuntimeProductionInvocationId` are immutable exact/case-sensitive `public final` values, reject null/blank, and expose `public static of(String)`, `value()`, structural `equals/hashCode` except `RuntimeProductionInvocationId`, whose construction is MODEL-internal only and has no public/protected factory.
 
 ```java
 public final class RuntimeMutationVersion { public static RuntimeMutationVersion of(long nonNegative); public long value(); }
@@ -111,9 +110,15 @@ public final class ResolvedProtectedWriteAccess {
   public static ResolvedProtectedWriteAccess of(ProtectedInvocationId id, ResolvedWriteIntent intent);
   public ProtectedInvocationId invocationId(); public ResolvedWriteIntent writeIntent();
 }
+public enum RuntimeModelOperationFailureCode {
+  SESSION_SCOPE_MISMATCH, OBJECT_NOT_REGISTERED, OBJECT_STALE, WRITE_FAILED
+}
+public final class RuntimeModelOperationException extends Exception {
+  public RuntimeModelOperationFailureCode code(); public String stableMessage();
+}
 public interface RuntimeModelOperationPort {
-  RuntimeFactValue read(ResolvedProtectedReadAccess access);
-  ProtectedWriteReceipt write(ResolvedProtectedWriteAccess access);
+  RuntimeFactValue read(ResolvedProtectedReadAccess access) throws RuntimeModelOperationException;
+  ProtectedWriteReceipt write(ResolvedProtectedWriteAccess access) throws RuntimeModelOperationException;
 }
 public final class ProtectedReadValue {
   public static ProtectedReadValue of(ProtectedInvocationId id, RuntimeFactValue value);
@@ -147,18 +152,16 @@ public final class ProtectedAccessResult {
 ```
 
 <a id="context-publication-aggregate"></a>
-## 2. CONTEXT publication aggregate
+## 3. CONTEXT publication aggregate
 
 ```java
 package dec.core.context.model;
-
 public enum MaterializationNodeKind { SCALAR, OBJECT, LIST }
 public final class CompiledMaterializationNode {
   public static CompiledMaterializationNode scalar(String fieldName);
   public static CompiledMaterializationNode object(String fieldName, List<CompiledMaterializationNode> children);
   public static CompiledMaterializationNode list(String fieldName, List<CompiledMaterializationNode> elementShape);
-  public String fieldName(); public MaterializationNodeKind kind();
-  public List<CompiledMaterializationNode> children();
+  public String fieldName(); public MaterializationNodeKind kind(); public List<CompiledMaterializationNode> children();
 }
 public final class CompiledViewMaterializationPlan {
   public static CompiledViewMaterializationPlan of(ViewKey viewKey, List<CompiledMaterializationNode> rootFields);
@@ -166,45 +169,25 @@ public final class CompiledViewMaterializationPlan {
 }
 public final class CompiledViewMaterializationIndex {
   public static CompiledViewMaterializationIndex of(Collection<CompiledViewMaterializationPlan> plans);
-  public Optional<CompiledViewMaterializationPlan> find(ViewKey viewKey);
-  public Set<ViewKey> viewKeys();
+  public Optional<CompiledViewMaterializationPlan> find(ViewKey viewKey); public Set<ViewKey> viewKeys();
 }
-```
-
-`CompiledViewMaterializationIndex` is not EngineContext side state. It is a mandatory `CompiledModelSet` constructor member:
-
-```java
 public final class CompiledModelSet {
-  public CompiledModelSet(
-      PublishedSourceManifest sourceManifest,
+  public CompiledModelSet(PublishedSourceManifest sourceManifest,
       Registry<DefinitionKey, CompiledDefinition> definitions,
       CompiledViewMaterializationIndex viewMaterializationIndex,
-      DeferredRegistry deferred,
-      List<Diagnostic> diagnostics,
-      DigestPair digestPair,
-      String compilerVersion,
-      String schemaVersion,
-      String optionsVersion);
+      DeferredRegistry deferred, List<Diagnostic> diagnostics, DigestPair digestPair,
+      String compilerVersion, String schemaVersion, String optionsVersion);
   public CompiledViewMaterializationIndex viewMaterializationIndex();
 }
 public final class EngineContext {
   public EngineContext(CompiledModelSet compiledModelSet);
-  public CompiledModelSet compiledModelSet();
-  public CompiledModelSet modelSet();
-  public CompiledViewMaterializationIndex viewMaterializationIndex(); // delegates to compiledModelSet
+  public CompiledModelSet compiledModelSet(); public CompiledModelSet modelSet();
+  public CompiledViewMaterializationIndex viewMaterializationIndex();
   public CoreConfigProjection projection();
 }
 ```
 
-Mandatory aggregate rules:
-1. compiler resolves View materialization once and builds the index before `CompiledModelSet` construction;
-2. every P2 `RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING` plan target View has exactly one descriptor; missing/duplicate descriptors are compile/publication errors;
-3. `CompiledModelSet.equals/hashCode` include the index;
-4. canonical stable serialization of the index (ViewKey-sorted, node-order canonical) is included in semantic-digest input, so semantically different materialization plans cannot compare/publish as the same aggregate;
-5. `EngineContext` stores no independent materialization field/registry; isolation follows the immutable `CompiledModelSet` instance;
-6. MODEL may only obtain the index from the captured `EngineContext/CompiledModelSet`; no `NormalizedBody`, XML/YAML, `ViewData`, `ModelData.name`, thread-local/global/default Context repair is legal.
-
-Existing typed ModelData creation stays:
+The materialization index is a mandatory `CompiledModelSet` member, participates in equality/hash and canonical semantic-digest input, and is atomically published with the same Context. Missing or duplicate descriptor for a P2 dynamic target View blocks compile/publication. MODEL may consume only this captured aggregate; runtime `NormalizedBody`, XML/YAML, `ViewData`, `ModelData.name`, thread-local/global/default Context reconstruction is forbidden.
 
 ```java
 package dec.core.context.data;
@@ -214,79 +197,65 @@ public final class ModelDataFactory {
 }
 ```
 
-<a id="model-production-root"></a>
-## 3. MODEL production integration and scope producer
+<a id="trusted-production-invocation"></a>
+## 4. Trusted production invocation and Container boundary
 
-The production integration is now explicit and unique; `ModelLoader.load(String, ModelData, ...)` remains the final existing load anchor but STARTER/business code does not create the trusted ModelData itself.
+`DESIGN-P2-R28` public `RuntimeModelLoadRequest.of(plan, originObject, ...)` and `production(context, Container)` are superseded because they allow callers to compose trust inputs. Current R29 freezes an opaque single-invocation token and MODEL-created production container.
 
 ```java
 package dec.core.model.runtime;
 
-public final class RuntimeModelLoadRequest {
-  public static RuntimeModelLoadRequest of(
-      String ruleName,
-      String connectionName,
-      RuntimeBindingPlan exactPlan,
-      Object originObject);
-  public String ruleName(); public String connectionName();
-  public RuntimeBindingPlan runtimeBindingPlan(); public Object originObject();
+public enum ProductionContainerKind { COMMIT, SYNCHRONIZED }
+public final class RuntimeModelProductionInvocation {
+  // NO public/protected constructor/factory/rebind; minted only inside MODEL production adapter.
+  public RuntimeProductionInvocationId invocationId();
+  public RuntimeBindingPlan runtimeBindingPlan();
 }
 public enum RuntimeModelLoadFailureCode {
   EXECUTION_CLOSED,
+  INVOCATION_ROOT_MISMATCH,
+  INVOCATION_ALREADY_CONSUMED,
   PLAN_NOT_IN_CAPTURED_CONTEXT,
   MATERIALIZATION_DESCRIPTOR_NOT_FOUND,
   ORIGIN_NOT_MATERIALIZABLE,
   CONTAINER_LOAD_REJECTED
 }
-public final class RuntimeModelLoadFailure {
-  public RuntimeModelLoadFailureCode code(); public String stableMessage();
-}
+public final class RuntimeModelLoadFailure { public RuntimeModelLoadFailureCode code(); public String stableMessage(); }
 public final class RuntimeModelLoadResult {
-  public boolean loaded();
-  public Optional<RuntimeModelHandle> handle();
+  public boolean loaded(); public Optional<RuntimeModelHandle> handle();
   public Optional<RuntimeModelLoadFailure> failure();
 }
-public enum RuntimeModelScopeFailureCode {
-  NO_TRUSTED_MODEL,
-  EXECUTION_CLOSED,
-  SCOPE_INACTIVE,
-  SCOPE_STALE
-}
-public final class RuntimeModelScopeFailure {
-  public RuntimeModelScopeFailureCode code(); public String stableMessage();
-}
+public enum RuntimeModelScopeFailureCode { NO_TRUSTED_MODEL, EXECUTION_CLOSED, SCOPE_INACTIVE, SCOPE_STALE }
+public final class RuntimeModelScopeFailure { public RuntimeModelScopeFailureCode code(); public String stableMessage(); }
 public final class RuntimeModelScopeResult {
-  public boolean available();
-  public Optional<RuntimeModelAccessScope> scope();
+  public boolean available(); public Optional<RuntimeModelAccessScope> scope();
   public Optional<RuntimeModelScopeFailure> failure();
 }
 public interface RuntimeModelExecutionRoot extends AutoCloseable {
-  RuntimeModelLoadResult load(RuntimeModelLoadRequest request);
+  RuntimeModelLoadResult load(RuntimeModelProductionInvocation trustedInvocation);
   RuntimeModelScopeResult accessScope();
   @Override void close();
 }
 public final class RuntimeModelExecutionRoots {
   public static RuntimeModelExecutionRoot production(
-      EngineContext capturedEngineContext,
-      dec.core.model.container.Container ownedContainer);
+      EngineContext capturedEngineContext, ProductionContainerKind containerKind);
 }
 ```
 
-Mandatory `load(...)` algorithm:
-1. use only the root's final captured `EngineContext`; require exact plan membership there;
-2. lookup the exact descriptor through `capturedEngineContext.viewMaterializationIndex().find(plan.compiledTargetBinding().targetViewKey())`;
-3. call typed `ModelDataFactory.createData(descriptor, originObject)`;
-4. create an internal `ModelLoader` and call its existing three-argument `load(ruleName, modelData, connectionName)`; the two-argument default-connection overload is not used by this path;
-5. call the root-owned `Container.load(loader)`;
-6. freeze `RuntimeModelProvenance` + `RuntimeModelHandle` around that same `ModelData` reference;
-7. after at least one successful trusted load, `accessScope()` may expose one MODEL-minted active scope; scope validity ends when the root/execution closes.
-
-`ruleName`/`connectionName` are execution routing facts only; they never replace `RuntimeBindingPlan/CompiledViewMaterializationPlan` as target identity. No thread-local/global/default Context, plan, handle or scope lookup is permitted.
+Mandatory production rules:
+1. `RuntimeModelExecutionRoots.production` creates the supported existing MODEL container internally through `ContainerFactory`; there is no public production overload accepting `Container`, provider, ModelData or operation port.
+2. A package-private MODEL production adapter captures **one active production invocation** into one immutable `RuntimeModelProductionInvocation`: exact current `RuntimeBindingPlan`, the real origin object, explicit rule name, explicit connection name and root identity are captured atomically before ModelData creation. Ordinary business/application/STARTER code has no constructor/factory for this token.
+3. `root.load(token)` accepts only a token minted for that root and consumes it once. Cross-root token use returns `INVOCATION_ROOT_MISMATCH`; reuse returns `INVOCATION_ALREADY_CONSUMED`.
+4. The exact plan is verified in the root's captured Context; the exact materialization descriptor is selected by target ViewKey; typed `ModelDataFactory` creates ModelData from the token's captured real origin object; MODEL uses the existing three-argument `ModelLoader.load(ruleName, modelData, connectionName)` and root-owned production Container.
+5. The same created/loaded ModelData reference is frozen in the trusted handle. No public API accepts `RuntimeBindingPlan + Object` as independently composable trusted inputs.
+6. `COMMIT`/`SYNCHRONIZED` map only to production container implementations selected by existing `ContainerFactory`; fake/test Container may exist in unit tests but is not AC-007 production evidence.
 
 <a id="trusted-runtime-scope"></a>
-## 4. MODEL trusted scope/session and stable session failures
+## 5. MODEL scope/session and effect provider
 
 ```java
+package dec.core.model.runtime;
+
 public final class RuntimeModelProvenance {
   // no public/protected constructor/factory
   public RuntimeBindingPlan runtimeBindingPlan();
@@ -297,26 +266,14 @@ public final class RuntimeModelHandle {
 }
 public final class RuntimeModelFrame {
   // no public/protected constructor/factory/rebind
-  public RuntimeExecutionFrameId frameId();
-  public RuntimeResolutionOwnerId ownerResolutionId();
-  public Optional<RuntimeCollectionCursorId> cursorId();
-  public List<RuntimeModelHandle> handles();
+  public RuntimeExecutionFrameId frameId(); public RuntimeResolutionOwnerId ownerResolutionId();
+  public Optional<RuntimeCollectionCursorId> cursorId(); public List<RuntimeModelHandle> handles();
 }
 public enum RuntimeModelSessionFailureCode {
-  SCOPE_INACTIVE,
-  SESSION_CLOSED,
-  SESSION_ALREADY_SEALED,
-  DUPLICATE_REGISTRATION,
-  OWNERSHIP_CONFLICT
+  SCOPE_INACTIVE, SESSION_CLOSED, SESSION_ALREADY_SEALED, DUPLICATE_REGISTRATION, OWNERSHIP_CONFLICT
 }
 public final class RuntimeModelSessionException extends Exception {
-  public RuntimeModelSessionFailureCode code();
-  public String stableMessage();
-}
-public final class RuntimeModelAccessScope {
-  // no public/protected constructor/factory; created only by RuntimeModelExecutionRoot
-  public RuntimeModelFrame frame();
-  public RuntimeModelSession beginSession() throws RuntimeModelSessionException;
+  public RuntimeModelSessionFailureCode code(); public String stableMessage();
 }
 public interface RuntimeModelSession extends AutoCloseable {
   RuntimeModelSessionId sessionId();
@@ -326,50 +283,56 @@ public interface RuntimeModelSession extends AutoCloseable {
   RuntimeMutationVersion currentVersion(ResolvedRuntimeTarget target, ModelPath path);
   @Override void close();
 }
+public enum RuntimeModelEffectBindingFailureCode {
+  SCOPE_INACTIVE, SESSION_NOT_SEALED, SESSION_CLOSED, SESSION_SCOPE_MISMATCH
+}
+public final class RuntimeModelEffectBindingFailure {
+  public RuntimeModelEffectBindingFailureCode code(); public String stableMessage();
+}
+public final class RuntimeModelEffectBindingResult {
+  public boolean bound(); public Optional<RuntimeModelOperationPort> operationPort();
+  public Optional<RuntimeModelEffectBindingFailure> failure();
+}
+public interface RuntimeModelEffectProvider {
+  RuntimeModelEffectBindingResult bind(RuntimeModelSession sealedSession);
+}
+public final class RuntimeModelAccessScope {
+  // no public/protected constructor/factory; MODEL-minted only
+  public RuntimeModelFrame frame();
+  public RuntimeModelSession beginSession() throws RuntimeModelSessionException;
+  public RuntimeModelEffectProvider effectProvider();
+}
+public final class LocatedRuntimeObject {
+  public RuntimeModelSessionId sessionId(); public RuntimeObjectId runtimeObjectId();
+  public RuntimeModelProvenance provenance();
+}
 ```
 
+The provider belongs to the same scope/root/handle set. `bind(session)` succeeds only after that exact session is sealed and proves the same scope/root. The returned `RuntimeModelOperationPort` is private to STARTER composition; it is never exposed by `ProtectedAccessComposition`, Rule/Change/CustomAction entry interfaces, or business APIs. A bound operation port validates every resolved access session/object against the same sealed session and registered handle before touching ModelData; operation mismatch maps to existing fail-closed denial codes and performs zero effect.
+
 <a id="composition-failure-algebra"></a>
-## 5. STARTER composition failure algebra
+## 6. STARTER composition and actual effect binding
 
 ```java
 package dec.core.starter.access;
 
 public enum ProtectedAccessCompositionFailureCode {
-  SCOPE_INACTIVE,
-  SCOPE_STALE,
-  PROVENANCE_MISMATCH,
-  SESSION_DUPLICATE_REGISTRATION,
-  SESSION_OWNERSHIP_CONFLICT,
-  SESSION_ALREADY_SEALED,
-  SESSION_CLOSED
+  SCOPE_INACTIVE, SCOPE_STALE, PROVENANCE_MISMATCH,
+  SESSION_DUPLICATE_REGISTRATION, SESSION_OWNERSHIP_CONFLICT,
+  SESSION_ALREADY_SEALED, SESSION_CLOSED,
+  EFFECT_SESSION_NOT_SEALED, EFFECT_SESSION_CLOSED, EFFECT_SESSION_SCOPE_MISMATCH
 }
 public final class ProtectedAccessCompositionFailure {
-  public ProtectedAccessCompositionFailureCode code();
-  public String stableMessage();
+  public ProtectedAccessCompositionFailureCode code(); public String stableMessage();
 }
 public final class ProtectedAccessCompositionResult {
-  public boolean created();
-  public Optional<ProtectedAccessComposition> composition();
+  public boolean created(); public Optional<ProtectedAccessComposition> composition();
   public Optional<ProtectedAccessCompositionFailure> failure();
 }
 public final class ProtectedAccessRuntimeFactory {
   public static ProtectedAccessRuntimeFactory production(EngineContext capturedEngineContext);
   public ProtectedAccessCompositionResult create(RuntimeModelAccessScope trustedScope);
 }
-```
-
-`create(scope)` must: validate active scope/frame/provenance against the same captured Context; call `beginSession`; register every trusted handle exactly once; seal once; return a composition only after all setup succeeds. A stale/inactive scope or provenance mismatch returns the corresponding composition code. MODEL `RuntimeModelSessionException` duplicate/ownership/seal/closed codes are mapped one-to-one to the corresponding composition code. Failure returns `created=false`, `composition=empty`, one stable failure, and capability/Guard/MODEL effect count zero. No null/unchecked-exception-as-contract/fallback session is legal.
-
-## 6. Remaining current STARTER/MODEL signatures
-
-```java
-package dec.core.model.runtime;
-public final class LocatedRuntimeObject {
-  public RuntimeModelSessionId sessionId(); public RuntimeObjectId runtimeObjectId();
-  public RuntimeModelProvenance provenance();
-}
-
-package dec.core.starter.access;
 public enum RuntimeTargetResolutionStatus {
   RESOLVED, NOT_FOUND, AMBIGUOUS, CONTEXT_MISMATCH, PROVENANCE_MISMATCH
 }
@@ -401,10 +364,12 @@ public final class ProtectedAccessComposition implements AutoCloseable {
 }
 ```
 
-The closed result/value algebra, one-shot capability, exact mutation stamp and `ModelAccessRuleKey` sole permission authority remain unchanged.
+`create(scope)` performs FLOW-R11 STEP-01/02 exactly: validate frame/provenance, begin one session, register all handles, seal once, then call `scope.effectProvider().bind(theSameSealedSession)`. A composition is returned only after effect binding succeeds; it privately retains that operation port. STEP-03/04 resolves/freezes the same session/object/path authority; STEP-05 invokes Guard; only ALLOW reaches the private bound operation port at STEP-06. DENY never invokes the port. `RuntimeModelOperationException` is mapped to existing `DenialCode` and no success receipt/value is fabricated.
 
-## 7. Explicit scope exclusion from this remediation
+Production dependency rule: only `dec-core-starter` may consume MODEL scope/effect-provider/operation-port contracts. Rule/Change/CustomAction business consumers depend on STARTER entry interfaces and CONTEXT values, not on `dec.core.model.runtime`. Architecture tests must reject production imports of `RuntimeModelAccessScope`, `RuntimeModelEffectProvider`, or `RuntimeModelOperationPort` outside MODEL/STARTER.
 
-Per the current user directive, **legacy `ModelContainer` POJO/Map copy-back behavior after a later commit failure is not changed and is not a current P2 blocker**. R28 preserves successful existing originData write-back reachability but introduces no new requirement to restore a POJO/Map already copied before a downstream legacy commit failure. TestDesign must not require that behavior for this remediation.
+## 7. Explicit scope exclusion
+
+Per user directive, restoration of a POJO/Map already copied by legacy `ModelContainer` before a later commit failure is outside this remediation scope. Current P2 still requires normal successful production write-back reachability and pre-effect fail-closed behavior, but no new post-copy restoration design/test blocker is introduced.
 
 No production Java, TDD execution, risk Evidence or lifecycle promotion is claimed.
