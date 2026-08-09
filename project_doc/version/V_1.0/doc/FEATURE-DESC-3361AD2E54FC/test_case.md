@@ -1,9 +1,9 @@
 # FEATURE-DESC-3361AD2E54FC Test Design
 
-> Revision：`TESTDESIGN-P2-R22`  
-> Base：`TESTDESIGN-P2-R21`  
-> Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R19` + `FLOW-R09@p2-system-ruleview-protected-access` + `DESIGN-P2-R21`  
-> Decisions：AC-007 Option B ACTIVE；AccessOperation READ/WRITE-only ACTIVE  
+> Revision：`TESTDESIGN-P2-R22`
+> Base：`TESTDESIGN-P2-R21`
+> Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R19` + `FLOW-R09@p2-system-ruleview-protected-access` + `DESIGN-P2-R21`
+> Decisions：AC-007 Option B ACTIVE；AccessOperation READ/WRITE-only ACTIVE
 > Status：`NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`
 
 R22 preserves the broad R21 coverage and adds executable oracles for the remaining runtime authority/locator/atomicity/concurrency gaps. Every blocking Case ID in this document is mapped to one exact planned TestClass, Maven module, source path and target RED command. No TDD execution is claimed.
