@@ -21,8 +21,8 @@
     "category": "BUSINESS_RULE",
     "question": "P2 protected-access runtime 是否继续使用 execution-token/claim 权威模型，还是允许 caller 直接提交 exact compiler-published ModelAccessRuleKey + AccessOperation？",
     "options_considered": ["execution-token / recognizes / atomic claim", "direct bridge.execute(ruleKey, operation, frameId, ownerResolutionId, cursorId)"],
-    "decision": "采用 direct bridge invocation。当前 P2 caller 可以逐次选择 exact ModelAccessRuleKey 与 AccessOperation；AccessConsumerIrKey 仅作为 provenance/diagnostic，不作为 authorization key 维度。只有当前 compiler-published ModelAccessPolicyIndex 中 exact 存在且状态合法的规则才可能 ALLOW，其他情况 fail closed。",
-    "rationale": "用户在 P2 Design Review 中明确要求撤销 token 方案并采用 direct bridge；该选择不取消 PolicyIndex、Gateway/Guard、runtime proof、actual-target/operation capability binding 或 fail-closed policy miss。",
+    "decision": "采用 direct bridge invocation。caller 可逐次提交 exact ModelAccessRuleKey 与 current P2 AccessOperation；当前 AccessOperation 范围由 DEC-P2-ACCESS-OPERATIONS-001 冻结为 READ/WRITE。AccessConsumerIrKey 仅作为 provenance/diagnostic，不是 authorization-key 维度。",
+    "rationale": "用户明确撤销 token 方案并采用 direct bridge；PolicyIndex、Gateway/Guard、runtime proof、actual-target/operation capability binding 与 fail-closed policy miss 继续有效。",
     "decided_by": "user",
     "decided_at": "2026-08-09T09:41:00+08:00",
     "affects": ["requirement_analysis","business_model","design","test_design","implementation_plan","tdd","development"],
@@ -32,30 +32,39 @@
     "id": "DEC-P2-AC007-STAGE-BOUNDARY-001",
     "status": "ACTIVE",
     "category": "SCOPE",
-    "question": "AC-P2-SYSTEM-RULEVIEW-007 最终由 P2 验收 seam/no-bypass 并下沉 concrete integrations，还是 P2 本身提供代表性 production consumers 执行原 literal AC？",
-    "options_considered": [
-      "A: P2 验收唯一 production protected-access seam、visibility/dependency 无合法旁路；真实 Rule/change/custom-action/query integration 下沉 P3/P4/P6",
-      "B: P2 提供足以真实执行原 AC-007 的 representative production Rule/change/custom-action consumers"
-    ],
-    "decision": "采用 Option B。P2 必须交付并通过真实 production main-source 的 Rule、change、custom-action 三类 representative protected-access consumers；三类入口都必须实际执行授权/未授权场景，并证明权限结果不因 consumer kind 改变、所有允许/拒绝都经过同一个 ProtectedExecutionBridge -> Gateway -> Guard 路径、拒绝发生在副作用之前。P3/P4 的完整业务执行语义与 P6 QueryPlan 完整执行仍留在后续阶段。",
-    "rationale": "用户于 2026-08-09 明确选择 AC-007 Option B。该选择保留原 AC-007 的 concrete-entry acceptance semantics，而不是以 seam-only 解释 supersede 原验收；同时把 P2 新增范围限制为代表性 production protected-access entry adapters，不提前实现 P3/P4 完整 Rule/Action/Produce 状态机或 P6 QueryPlan。",
+    "question": "AC-P2-SYSTEM-RULEVIEW-007 最终由 P2 验收 seam/no-bypass并下沉 concrete integrations，还是 P2 本身提供代表性 production consumers 执行原 literal AC？",
+    "options_considered": ["A: P2 seam/no-bypass；真实 integrations 下沉 P3/P4/P6", "B: P2 提供真实 production Rule/change/custom-action representative consumers"],
+    "decision": "采用 Option B。P2 必须交付并通过真实 production main-source Rule、change、custom-action 三类 representative protected-access consumers；三类入口都真实执行授权/未授权场景并经过同一个 production composition -> ProtectedExecutionBridge -> Gateway -> Guard 权限链。P3/P4/P6 完整业务语义仍留后续阶段。",
+    "rationale": "用户明确选择 Option B；保留原 AC-007 concrete-entry acceptance，不用 seam-only 替代。",
     "decided_by": "user",
     "decided_at": "2026-08-09T11:55:00+08:00",
     "affects": ["requirement_analysis","business_model","business_flow","design","test_design","impact_analysis","cross_module_integration","P3","P4","P6"],
-    "supersedes": ""
+    "supersedes": "Only the AC-007 future-only/contract-only consequence in p2-direct-bridge-authority-decision-r01.md; DEC-P2-DIRECT-BRIDGE-AUTHORITY-001 authority decision remains ACTIVE"
+  },
+  {
+    "id": "DEC-P2-ACCESS-OPERATIONS-001",
+    "status": "ACTIVE",
+    "category": "BUSINESS_RULE",
+    "question": "Current P2 model-access operation 集合是否包含 EXECUTE？",
+    "options_considered": ["READ/WRITE/EXECUTE", "READ/WRITE only"],
+    "decision": "Current P2 model-access 只有 READ 与 WRITE，没有 EXECUTE。AccessOperation current contract exactly = READ|WRITE；不新增 EXECUTE source syntax/raw IR/policy/runtime/test contract。",
+    "rationale": "用户明确说明当前只有 READ、WRITE，没有 EXECUTE；真实 P1 AccessMode 也只有 READ/WRITE。",
+    "decided_by": "user",
+    "decided_at": "2026-08-09T12:36:00+08:00",
+    "affects": ["requirement_analysis","business_model","business_flow","design","test_design","impact_analysis","implementation_plan","tdd","development"],
+    "supersedes": "Current-candidate EXECUTE portions of historical REQAN-P2-R01 acceptance semantics; historical R01 text is preserved"
   }
 ]
 ```
 
 ## 当前记录结构
 
-字段集合以 `assets/long-task/record-contract.json#records.decisionLogItem` 为准。
-
-只记录会影响后续 Agent 判断的持久决策。被替代的决策改为 `SUPERSEDED` 并填写新记录关联关系，不删除历史证据。
+字段集合以 `assets/long-task/record-contract.json#records.decisionLogItem` 为准。只记录会影响后续 Agent 判断的持久决策；历史事实不删除。
 
 ## 当前 Gate
 
-- `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`：真实用户授权，ACTIVE。
-- `DEC-P2-AC007-STAGE-BOUNDARY-001`：真实用户选择 **Option B**，ACTIVE；原 AC-007 concrete-entry acceptance 保持有效。
-- 当前决策已消除 AC-007 的用户选择阻断，但 Requirement exact Review、BM/Flow/Design/TestDesign exact Review、risk detection 与 machine lifecycle 仍未闭环。
-- 本地 `$common-develop` lifecycle scripts 当前不可用，因此本文件只 materialize 持久决策事实，不伪称 machine reopen/publish。
+- Direct Bridge authority：ACTIVE / user-decided。
+- AC-007：ACTIVE Option B / user-decided；旧 future-only consequence 已局部 supersede。
+- Access operations：ACTIVE READ/WRITE-only / user-decided。
+- Requirement exact Review、BM/Flow/Design/TestDesign exact Review、risk detection 与 machine lifecycle 仍未闭环。
+- 本地 `$common-develop` lifecycle scripts 当前不可用，因此不伪称 machine reopen/publish/risk scan。
