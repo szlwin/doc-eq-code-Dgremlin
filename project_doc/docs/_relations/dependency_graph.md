@@ -1,13 +1,9 @@
 # P2 Dependency Graph
 
-- Project：`doc-eq-code`
-- Version：`V_1.0`
-- Current authoritative candidate：`BM-R20 / FLOW-R10 / DESIGN-P2-R24 / TESTDESIGN-P2-R25`
-- CrossModule / Impact projection：`P2-IMPACT-R23`
-- Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
-- Decisions：AC-007 `OPTION_B / ACTIVE`；AccessOperation `READ_WRITE_ONLY / ACTIVE`
-
-## Authoritative revision direction
+- Project: `doc-eq-code`
+- Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R24 / DESIGN-P2-R25 / TESTDESIGN-P2-R26`
+- Status: `NEEDS_REVIEW / MACHINE_BLOCKED`
+- Decisions: Direct Bridge ACTIVE; AC-007 Option B ACTIVE; AccessOperation READ/WRITE-only
 
 ```text
 REQAN-P2-R01@d08612768131 + Overlay R04
@@ -16,98 +12,31 @@ REQAN-P2-R01@d08612768131 + Overlay R04
 BM-R20
         |
         v
-FLOW-R10
+FLOW-R11
+        |------------------> P2-IMPACT-R24 (parallel projection)
+        v
+DESIGN-P2-R25
         |
         v
-DESIGN-P2-R24
-        |
-        v
-TESTDESIGN-P2-R25
+TESTDESIGN-P2-R26
 ```
 
-`P2-IMPACT-R23` is a parallel impact/cross-module projection and not an authoritative upstream Design input.
+No downstream artifact is an authoritative upstream input. BM uses stable trace/flow refs; exact current linkage is owned by this graph + task traceability projection.
 
-BM-R20 / FLOW-R10 use stable downstream artifact/trace refs. Exact downstream revision linkage lives here and in the central traceability projection.
-
-## Compiler -> runtime binding transport
+## Trusted runtime association chain
 
 ```text
-P1 ModelAccessBinding
-  ViewKey targetView
-  SystemViewSelector                 compiler-only lexical input
-  TargetPropertyPath(kind,value)     compiler-resolved
-        |
-        v
-dec-core-compiler
-  CompiledTargetBinding(
-    targetViewKey,
-    TARGET_MAIN|PROPERTY_PATH,
-    exactResolvedValue)
-  RuntimeBindingPlan(sourceTargetKey, compiledBinding)
-        |
-        v
-dec-core-context
-  immutable EngineContext / PolicyIndex
-        |
-        v
-dec-core-starter production assembly
-  RuntimeModelRegistrationInput(
-    sourceTargetKey,
-    compiledBinding,
-    ModelData)
-  exact EngineContext membership validation
-        |
-        v
-dec-core-model RuntimeModelSession
-  sealed typed association
-        |
-        v
-RuntimeTargetResolver
-  exact sourceTargetKey + compiledBinding + typed context
+Compiler/P1 target resolution
+ -> CONTEXT RuntimeBindingPlan(TargetKey + CompiledTargetBinding)
+ -> MODEL trusted materialization creates ModelData + immutable RuntimeModelHandle provenance atomically
+ -> MODEL RuntimeModelFrame freezes frame/owner/cursor + handles
+ -> STARTER validates handle provenance against captured EngineContext
+ -> MODEL RuntimeModelSession.register(handle) / seal
+ -> STARTER RuntimeTargetResolver exact match
+ -> one-shot capability + Guard
+ -> MODEL actual READ / rollback-safe WRITE
 ```
 
-No stage may infer the binding from ModelData name, ViewData, list order, raw definitions, selector parsing or first-match iteration.
+Forbidden: public `binding + arbitrary ModelData` association, handle rebind, frame relabel, metadata/list-order/raw-selector inference, first-match fallback, Guard bypass.
 
-## Protected operation path
-
-```text
-typed invocation
- -> composition frame/owner equality
- -> exact typed runtime registration match
- -> unique ResolvedRuntimeTarget
- -> WRITE intent 0/1/N if WRITE
- -> one-shot capability
- -> Guard(ModelAccessRuleKey + same target/proof)
- -> dec-core-model actual READ or transactional WRITE
-```
-
-## Actual ModelData concurrency boundary
-
-```text
-actual ModelData/runtime handle
-        |
-        1:1
-        v
-RuntimeModelCoordinationCell
-  activeSessionLease
-  per-ModelPath lock + RuntimeMutationVersion
-```
-
-Registration provenance is not permission authority. `ModelAccessRuleKey + PolicyIndex + Guard` remains the sole READ/WRITE authority.
-
-## Dependency direction
-
-```text
-compiler -> context              allowed
-starter -> context               allowed
-starter -> model                 allowed production assembly
-model -> context                 allowed/existing
-context -> compiler              forbidden
-model -> starter                 forbidden
-P3/P4/P6 core -> context         allowed
-P3/P4/P6 core -> starter         forbidden
-```
-
-## Gate
-
-20 formal P1 findings remain OPEN. Current same-revision specialist Review, risk scan, TDD and execution Evidence are still required; Implementation Plan/TDD/Development remain BLOCKED.
+Current CMI IDs: `CMI-P2-COMPILE-004`, `CMI-P2-PROTECTED-ACCESS-004`.

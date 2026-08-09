@@ -1,72 +1,35 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R24`
-> Inputs：`BM-R20 / FLOW-R10`；CrossModule projection `P2-IMPACT-R23`
-> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
+> Revision: `DESIGN-P2-R25`
+> Inputs: `BM-R20 / FLOW-R11`; Impact projection `P2-IMPACT-R24`
+> Status: `NEEDS_REVIEW / MACHINE_BLOCKED`
 
-## Compile-side seams
+## Trusted provenance seam
 
-- real P1-style fixture resolves `targetView + SystemViewSelector` exactly once to `TargetPropertyPath(kind,value)`;
-- compiler adapts that fact to neutral `CompiledTargetBinding(targetViewKey, TARGET_MAIN|PROPERTY_PATH, exactResolvedValue)`;
-- runtime-visible plan contains no raw selector lexical authority;
-- atomic publication remains compiler-coordinated and context-carried.
+Use a model-package fixture around the mandatory package-private `RuntimeModelFrameAssembler`, producing at least two immutable handles:
+- handle A: provenance `(TargetKey A, CompiledTargetBinding A)`, internal actual ModelData A;
+- handle B: provenance `(TargetKey B, CompiledTargetBinding B)`, internal actual ModelData B.
 
-## Production registration provenance seam
+Assert public/reflection surface has no public/protected constructor/static wrapper capable of `RuntimeModelHandle(ModelData, binding)` or rebinding provenance, and no public ModelData accessor. `RuntimeExecutionFrameSnapshot` can only derive from trusted `RuntimeModelFrame`.
 
-Use at least two distinct actual `ModelData` instances and at least two distinct compiler-produced binding pairs.
+Negative substitution oracle: plan A + handle B must fail before capability/Guard/effect; handle B cannot be relabeled as A; cross-frame trusted frame cannot be relabeled by caller-supplied frame/owner/cursor; list order/metadata/raw selector inference count=0.
 
-The production fixture must construct:
+## API seams by owner module
 
-```text
-RuntimeModelRegistrationInput(TargetKey A, CompiledTargetBinding A, ModelData A)
-RuntimeModelRegistrationInput(TargetKey B, CompiledTargetBinding B, ModelData B)
-```
+- `dec-core-context`: `ProtectedAccessContextApiContractTest` compiles/reflects all CONTEXT public neutral types/results and explicit public visibility.
+- `dec-core-model`: `ProtectedAccessModelApiContractTest` compiles/reflects MODEL public frame/handle/session/locator types, `RuntimeModelSession extends AutoCloseable`, and verifies trusted provenance construction/rebind surfaces are not public.
+- `dec-core-starter`: `ProtectedAccessStarterApiContractTest` compiles/reflects STARTER composition/resolver/entry APIs and legally consumes CONTEXT+MODEL public contracts without reverse dependencies.
 
-Then acquire the normal `ProtectedAccessRuntimeFactory.production(exact EngineContext).create(frameSnapshot)` path.
+A compile/setup failure before intended assertion is `INVALID_RED`, not valid RED.
 
-Instrument/spy all prohibited inference paths and assert invocation count = 0 for:
+## Runtime/effect seams
 
-- `ModelData.getName()` as binding authority;
-- `ViewData`/property-tree binding discovery;
-- list-position pairing;
-- raw XML/YAML/definition lookup;
-- selector parsing/trim/normalization;
-- first-match scan;
-- any global mutable association registry.
+Resolver exact-matches sourceTargetKey+compiled binding against sealed trusted handles; 0/1/N deterministic. MODEL-owned actual effect receives same resolved target/stamp after Guard. READ mutates zero; WRITE commits once or rollback/restores. Concurrency uses latch/barrier, never sleep.
 
-A registration pair not present in the exact captured EngineContext must fail composition before RuntimeTargetResolver/capability/Guard/model effect. A valid registration pair does not grant READ/WRITE authority; exact PolicyIndex/Guard checks remain required.
+## Case-level self-containment
 
-## Runtime target / model seams
-
-- sealed RuntimeModelSession stores the exact validated `TargetKey + CompiledTargetBinding + ModelData` association;
-- resolver exact-matches both `sourceTargetKey` and `compiledTargetBinding`;
-- resolver result freezes `RuntimeModelSessionId + RuntimeObjectId + RuntimeBindingProof`;
-- `RuntimeMutationStamp` binds the same session/object/path/version;
-- identity-preserving fixtures register the same actual ModelData in one/two active sessions to verify lease/coordination rules;
-- transaction failure restores observable ModelData/origin state while capability remains CONSUMED.
-
-## Current API compile seam
-
-`ProtectedAccessCurrentApiContractTest` compiles/reflects every P2-added type and factory using only `DESIGN-P2-R24` + current source. It must specifically prove:
-
-```java
-public interface RuntimeModelSession extends AutoCloseable
-```
-
-and reject any generated/current contract using `interface ... implements AutoCloseable`. The current API test also compiles the typed `RuntimeModelRegistrationInput` / `RuntimeExecutionFrameSnapshot` construction surface.
-
-## RED validity
-
-Exact target commands remain those declared by TESTDESIGN-P2-R25. Missing TestClass/symbol/setup or a compile failure before the intended assertion is `INVALID_RED`, never valid RED.
-
-## Concurrency
-
-Use latch/barrier only, never sleep. Same actual ModelData/path/version may commit at most once; the stale loser mutates zero times.
-
-## P2/P7 boundary
-
-Tests may use RuntimeModelSession only as a composition/frame locator and protected-operation atomicity seam; they must not turn it into a user session, cross-request transaction manager or P7 lifecycle abstraction.
+TESTDESIGN-P2-R26 provides Fixture, Action, Expected, Forbidden side effects and current Flow/Failure refs for **every** blocking Case, not only group summaries. Tests must not consult R25/R24 for missing oracle semantics.
 
 ## Gate
 
-No TDD or current execution Evidence is claimed. Risk scan and same-revision TestDesign/TDD/TestEvidence Review remain required.
+Risk scan, same-revision TestDesign/TDD/TestEvidence Review and machine Evidence remain required before TDD execution.
