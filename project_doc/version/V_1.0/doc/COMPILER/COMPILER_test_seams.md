@@ -1,40 +1,27 @@
 # COMPILER P2 Test Seams
 
-> Revision `DESIGN-P2-R27`; inputs `BM-R20 / FLOW-R11`; Impact `P2-IMPACT-R26`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
+> Revision `DESIGN-P2-R28`; Impact `P2-IMPACT-R27`; TestDesign `TESTDESIGN-P2-R29`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
 
-## Typed materialization seam
+## CompiledModelSet aggregate seam
 
-Compiler fixture publishes a `CompiledViewMaterializationPlan` for a real ViewKey with nested SCALAR/OBJECT/LIST shape. MODEL test uses the new `ModelDataFactory.createData(compiledPlan, originObject)` path and instruments accesses to prove runtime reads of `CompiledDefinition.normalizedBody`, XML/YAML, legacy ViewData, String-name View lookup and default `ConfigContextUtil` are zero.
+Compiler fixture builds two equivalent candidates and one candidate with a different materialization descriptor. Assert `CompiledModelSet.viewMaterializationIndex`, delegated `EngineContext.viewMaterializationIndex`, equals/hashCode and semantic digest all change/stay equal consistently. A dynamic target View with no exact descriptor must fail before `EngineContext` publication. Instrument MODEL to prove runtime `NormalizedBody`/XML/YAML/ViewData/default Context reads are zero.
 
-## Existing production object / write-back seam
+## MODEL execution-root seam
 
-Use a real mutable POJO as origin object. The existing MODEL lifecycle must create the actual ModelData from the compiled plan, retain the same POJO as originData, load that same ModelData into ModelLoader/ModelContainer, and mint the trusted handle around the same reference. After Guard ALLOW and successful WRITE, `ModelContainer` completion writes the committed value back to that exact POJO. Guard DENY, stale version and injected write/commit failure leave the POJO unchanged. A test that only inspects a detached internal copy is invalid.
+Use a real origin object, captured Context and an existing MODEL `Container`. `RuntimeModelExecutionRoot.load` must invoke typed ModelDataFactory, construct the existing three-argument ModelLoader, call owned `Container.load`, and freeze a handle around the exact same ModelData. Spy/identity assertions must prove STARTER never creates/injects ModelData. `accessScope` is unavailable before a trusted load and after root close, and no thread-local/global/default registry can recover it.
 
-## Trusted scope provenance seam
+## Scope/session failure seam
 
-A MODEL-package fixture drives the active ModelContainer execution-root integration and obtains one `RuntimeModelAccessScope`. Assert scope/frame/handle have no public/protected construction/rebind surface, frame/owner/cursor are minted by MODEL and cannot be passed into a frame request, and stale/cross-execution scope use fails before capability/Guard/effect. Invocation IDs may be caller-created, but frame/owner/cursor equality is checked against independently minted frame facts.
+Drive each setup failure separately and assert exact public codes/results: inactive/stale scope, provenance mismatch, duplicate registration, ownership conflict, already-sealed/closed session. Each failure returns no `ProtectedAccessComposition`; resolver/capability/Guard/MODEL effect invocation count is zero. Missing class/setup failure is `INVALID_RED`.
 
-## FLOW-R11 session seam
+## FLOW-R11 success seam
 
-STARTER `create(scope)` must perform exactly: validate trusted frame -> `scope.beginSession()` -> register every trusted handle -> seal -> resolve. Instrument MODEL session to prove registration/seal happen under STARTER orchestration and no R26 MODEL-open pre-sealed-session path exists.
+Normal path remains validate frame -> begin session -> register all trusted handles -> seal -> resolve -> access/capability -> Guard -> MODEL effect. Representative Rule/Change/CustomAction consumers share the same STARTER composition.
 
-## API constructibility seam
+## Explicit excluded transaction behavior
 
-- `dec-core-compiler`: compile a contract test that actually invokes public factories for CONTEXT-owned `CompiledModelAccessRule`, `ModelAccessPolicyIndex`, `CompiledViewMaterializationPlan/Index` and related binding values.
-- `dec-core-context`: verify all neutral factories/results and the typed `ModelDataFactory` overload.
-- `dec-core-model`: verify trusted scope/frame/handle are intentionally non-constructible while session register/seal are public to legal STARTER consumption.
-- `dec-core-starter`: compile/invoke public factories for `ProtectedAccessInvocation`, resolved access, denial/result and target-resolution outputs through legal dependencies.
-
-Reflection-only class existence is insufficient; the test must compile and call each required construction surface.
-
-## Failure matrix seam
-
-Current R27 has no public MODEL-open failure algebra. Verify: missing compiled materialization descriptor makes P2 candidate publication invalid; incompatible real origin object fails MODEL load/precondition establishment and emits no trusted frame; duplicate trusted handle registration fails at FLOW STEP-02; stale scope fails before capability; internal MODEL write failure rolls back and writes back nothing. Also assert superseded R26 fresh-snapshot/open types are absent from current API.
-
-## Concurrency/effect
-
-Use barriers/latches, never sleep. Same actual handle/path/version commits at most once. Operation failure restores ModelData and real origin object. READ returns deep immutable `RuntimeFactValue` without mutation.
+Do **not** make post-copy POJO/Map restoration after a later legacy commit failure a blocking assertion. The user confirmed that behavior needs no change. Keep only successful real-origin write-back reachability and pre-effect fail-closed assertions that are already part of BM/Flow.
 
 ## Gate
 
-R28 is planned TestDesign only. Risk scan, same-revision specialist Review and machine Evidence remain required before TDD.
+R29 is planned TestDesign only. Risk scan, same-revision specialist Review and machine Evidence remain required before TDD.

@@ -1,24 +1,24 @@
-# FEATURE-DESC-3361AD2E54FC Traceability
+# P2 Traceability
 
-> Current candidate projection only. Historical lifecycle PASSED revisions remain immutable.
+Current candidate authority:
 
 ```text
 REQAN-P2-R01@d08612768131 + Overlay R04
- -> BM-R20
- -> FLOW-R11
- -> DESIGN-P2-R27
- -> TESTDESIGN-P2-R28
-parallel: P2-IMPACT-R26
+        -> BM-R20
+        -> FLOW-R11
+        -> DESIGN-P2-R28
+        -> TESTDESIGN-P2-R29
+parallel/non-authoritative: P2-IMPACT-R27
 ```
 
-| Trace | Current focus | BM | Flow | Impact | Design | TestDesign |
-|---|---|---|---|---|---|---|
-| `TR-P2-001` | System/RuleView compile | BM-R20 | FLOW-R11 | P2-IMPACT-R26 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
-| `TR-P2-004` | READ/WRITE authority | BM-R20 | FLOW-R11 STEP-01..06 | P2-IMPACT-R26 CMI-006 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
-| `TR-P2-005` | TargetKey/ModelPath/binding/materialization descriptor | BM-R20 | FLOW-R11 compile | P2-IMPACT-R26 CMI-004 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
-| `TR-P2-006` | trusted actual-object provenance / target fail closed | BM-R20 | FLOW-R11 STEP-01..03 | P2-IMPACT-R26 CMI-006 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
-| `TR-P2-007` | Guard / MODEL effect / no bypass | BM-R20 | FLOW-R11 STEP-04..06 | P2-IMPACT-R26 CMI-006 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
-| `TR-P2-008` | atomic Context publication | BM-R20 | FLOW-R11 compile | P2-IMPACT-R26 CMI-004 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
-| `TR-P2-009` | actual-object/session/concurrency/write-back | BM-R20 | FLOW-R11 | P2-IMPACT-R26 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
+| Trace | Requirement / Flow | Current implementation projection | Current TestDesign |
+|---|---|---|---|
+| TR-P2-005 | compile exact binding/publication | `CMI-P2-COMPILE-005`; `CompiledModelSet.viewMaterializationIndex` aggregate + digest/publication closure | materialization aggregate/publication cases |
+| TR-P2-006 | trusted runtime binding / fail closed | `RuntimeModelExecutionRoot.load` -> typed ModelDataFactory -> existing ModelLoader/Container -> trusted handle/scope | root load, scope producer, composition/session failure cases |
+| TR-P2-007 | Guard before actual MODEL effect | FLOW-R11 STEP-03..06 unchanged; STARTER composition only after stable STEP-01/02 setup | production composition, target, capability/Guard cases |
+| TR-P2-008 | atomic Context publication | missing/duplicate materialization descriptor blocks the complete candidate; old Context retained | atomic publication + materialization closure cases |
+| TR-P2-009 | real production reachability | same ModelData is loaded into existing Container and frozen in trusted handle; successful existing originData write-back preserved | registration-binding + real fixture/write-back success cases |
 
-R26 fresh-snapshot/open types are superseded. Current runtime object provenance is based on the existing MODEL production ModelData/originData lifecycle plus compiler-published typed materialization descriptor and MODEL-minted runtime scope.
+Explicit current user directive: do not change or require a blocking test for restoration of a POJO/Map already copied before a later legacy commit failure. This does not reopen BM-R20/FLOW-R11.
+
+Formal lifecycle remains blocked by current same-revision Reviews, risk scan and machine Evidence. Historical PASSED revisions are not rewritten.

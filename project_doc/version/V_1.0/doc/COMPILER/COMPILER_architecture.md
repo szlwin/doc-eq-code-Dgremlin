@@ -1,43 +1,41 @@
 # COMPILER P2 Architecture
 
-> Revision `DESIGN-P2-R27`; inputs `BM-R20 / FLOW-R11`; parallel `P2-IMPACT-R26`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
+> Revision `DESIGN-P2-R28`; inputs `BM-R20 / FLOW-R11`; parallel `P2-IMPACT-R27`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
 
-## Compile publication boundary
+## Context publication boundary
 
-`COMPILER -> CONTEXT`: compiler resolves selectors and View materialization semantics once and publishes `RuntimeBindingPlan + CompiledViewMaterializationPlan + policy` in the same immutable Context candidate. `CompiledViewMaterializationPlan` is a neutral field/relation tree; MODEL is forbidden to reconstruct it from `CompiledDefinition.normalizedBody`, XML/YAML, ViewData, ModelData.name or default Context.
+`CompiledViewMaterializationIndex` is a constructor-owned member of `CompiledModelSet`, not side state on `EngineContext`. The compiler publishes one aggregate containing definitions + typed materialization index + deferred/diagnostics/digest/version facts. Aggregate equality/hash and semantic digest include the index; `EngineContext.viewMaterializationIndex()` delegates to the same `CompiledModelSet`. Missing/duplicate required descriptors block compile/publication; runtime repair is forbidden.
 
-## Existing production MODEL boundary
+## Existing production MODEL integration
 
 ```text
-real production origin object
-  -> CONTEXT ModelDataFactory.createData(compiled materialization plan, origin object)
-  -> actual ModelData used by existing MODEL ModelLoader/ModelContainer
-  -> MODEL package-private binder freezes exact RuntimeBindingPlan + same ModelData in RuntimeModelHandle
-  -> active MODEL execution root mints RuntimeModelAccessScope(frame/owner/cursor + handles)
-  -> STARTER consumes the scope
+captured EngineContext + existing MODEL Container
+        -> RuntimeModelExecutionRoot.production(...)
+real origin object + exact RuntimeBindingPlan + explicit rule/connection
+        -> root.load(request)
+        -> captured Context index lookup
+        -> typed ModelDataFactory
+        -> internal ModelLoader.load(rule, same ModelData, connection)
+        -> owned Container.load(loader)
+        -> same ModelData trusted handle
+        -> root.accessScope()
+        -> MODEL-minted RuntimeModelAccessScope/frame/owner/cursor
+        -> STARTER
 ```
 
-No detached RuntimeFactValue source-copy runtime exists in current R27. Existing non-Map `originData` copy-back and Map live-value behavior remain the real production WRITE destination.
+The root is the only current production seam that connects origin object + plan + captured Context to the existing ModelLoader/Container lifecycle. STARTER/business code cannot inject an existing ModelData into the trusted association. No thread-local/global/default Context/plan/scope fallback is legal.
 
-## Runtime scope / effect
+## FLOW-R11 composition boundary
 
-MODEL mints scope IDs from the active execution root; public code cannot construct/relabel scope/frame/handles. STARTER validates the frame, begins a session from the same scope, registers trusted handles and seals it exactly as FLOW-R11 requires. STARTER owns resolver/intent/capability/Guard; MODEL owns session implementation/locator/coordination and the actual READ/WRITE + real write-back.
+STARTER consumes only the scope returned by MODEL root. STEP-01 validates scope/frame provenance. STEP-02 begins one MODEL session, registers each trusted handle once and seals. Setup failures are closed enums/result types, not implementation-chosen null/unchecked behavior. STEP-03..06 remain exact resolution -> access/capability -> Guard -> MODEL effect.
 
 ## Dependency direction
 
-```text
-compiler -> context        allowed
-model    -> context        allowed
-starter  -> context+model  allowed
-context  -> compiler/model/starter forbidden
-model    -> starter        forbidden
-P3/P4/P6 core -> context   allowed
-P3/P4/P6 core -> starter   forbidden
-```
+`compiler -> context`, `model -> context`, `starter -> context+model` only; reverse dependencies remain forbidden. `RuntimeModelExecutionRoot` and session failure types are MODEL-owned; composition result/failure types are STARTER-owned.
 
-## Compatibility anchors
+## Explicit non-goal
 
-Existing production anchors remain the intended integration points: `ModelDataFactory.createData(name,Object)` semantics, `ModelLoader.load(String,ModelData,...)`, and `ModelContainer` success copy-back/commit/rollback lifecycle. P2 adds a typed materialization overload and trusted internal binding around those semantics; it does not replace them with a second runtime.
+The user explicitly excluded changing or testing restoration of a POJO/Map already copied by legacy `ModelContainer` before a later commit failure. Existing successful write-back remains production reachability; this remediation adds no post-copy rollback mechanism.
 
 ## Gate
 
