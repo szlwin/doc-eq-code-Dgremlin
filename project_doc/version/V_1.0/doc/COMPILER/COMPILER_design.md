@@ -1,28 +1,55 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R15`。Base：`DESIGN-P2-R14`。  
-> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809` + `BM-R13` + persistent decisions。  
-> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> Revision：`DESIGN-P2-R16`。Base：`DESIGN-P2-R15`。  
+> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809-R02` + `BM-R14` + `FLOW-R04@p2-system-ruleview-protected-access`。  
+> Decisions：ACTIVE `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001`；PROPOSED/PENDING_USER_DECISION `DEC-P2-AC007-STAGE-BOUNDARY-001`。  
+> Status：`NEEDS_REVIEW / MACHINE_BLOCKED / AC007_PENDING_USER_DECISION`。
 
-R15 保留 R14 已恢复的 System/RuleView/PolicyIndex/direct bridge/Guard/atomic publication 主设计，并补齐 System ownership/version、RuleView resolved View、cross-consumer ModelPath、AC-007 production seam、cross-operation independence 和 runtime DENY deterministic contract。
+R16 保留 System/RuleView/PolicyIndex/direct bridge/Guard/atomic publication 主设计，补齐 SystemVersion compiler compatibility、ownership authoritative source、existing key source compatibility、P1→P2 path/operation migration，并把 compile/runtime Business Flow 分开。
 
 <a id="p2-system"></a>
 ## 1. System first-class compiled snapshot
 
-### 1.1 Context-owned public values
+### 1.1 Existing SystemKey API MUST remain
+
+```java
+// existing public surface; MUST remain source-compatible
+public SystemKey(String name);
+public String name();
+
+// optional additive aliases only
+public static SystemKey of(String name);
+public String value();
+```
+
+Development 不得为了 R16 删除 constructor/name() 或要求调用方迁移后才能编译。
+
+### 1.2 SystemVersionIdentity
 
 ```java
 public final class SystemVersionIdentity {
     public Optional<String> declaredVersion();
     public String sourceSemanticDigest();
     public String schemaVersion();
+    public String compilerVersion();
 }
+```
 
+Contract：
+
+- no declared source version -> `Optional.empty()`；
+- `schemaVersion()` == enclosing published `CompiledModelSet.schemaVersion`；
+- `compilerVersion()` == enclosing published `CompiledModelSet.compilerVersion`；
+- no timestamp/random/load-order identity；
+- options digest/version remains enclosing compiled-set/digest input fact, not a fabricated System business version。
+
+### 1.3 CompiledSystem read model
+
+```java
 public final class CompiledSystem {
     public SystemKey key();
     public SourceRef sourceRef();
     public SystemVersionIdentity versionIdentity();
-
     public Set<DataKey> ownedDataKeys();
     public Set<ViewKey> ownedViewKeys();
     public Set<RuleViewKey> ownedRuleViewKeys();
@@ -32,41 +59,59 @@ public final class CompiledSystem {
 }
 ```
 
-所有集合必须 defensive-copy + immutable + deterministic order。若 source 没有 declared version，`declaredVersion()` 返回 empty；禁止生成时间戳/随机/文件顺序版本。
+所有集合 immutable + deterministic。这个对象是**派生 read snapshot**，不是新的 registry/authorization authority。
 
-### 1.2 Ownership construction
-
-Compiler 先注册所有 System symbols，再收集 owner-qualified facts。candidate freeze 前执行：
+### 1.4 Ownership authoritative source and construction
 
 ```text
-SystemKey registry
- -> resolve Data/View/RuleView/Rule/Information/model-access ownership
- -> build CompiledSystem ownership snapshot
- -> validate snapshot == final typed registries for that owner
- -> digest-bound freeze
+A. final typed Data registry ---------\
+B. final typed View registry ----------\
+C. final typed RuleView registry -------+-> derive CompiledSystem ownership snapshot
+D. final typed Information registry ----/
+E. CompiledRuleView rule closure -------/
+F. ModelAccessPolicyIndex.keys() -------/
 ```
 
-任何 orphan/missing/mismatched owner 都是 compile ERROR，candidate publication=0。
+Exact mapping：
 
-### 1.3 CompiledModelSet read surface
+- Data/View/RuleView/Information keys：来自对应 owner-qualified final typed registry；
+- Rule keys：来自 final `CompiledRuleView` compiled/nested rule closure，**不为 snapshot 新增 duplicate global Rule registry**；
+- ModelAccessRule keys：来自 final compiled policy rules / `ModelAccessPolicyIndex.keys()` filtered by System。
 
-```java
-public Optional<CompiledSystem> system(SystemKey key);
-public Set<SystemKey> systemKeys();
+Candidate freeze order：
+
+```text
+freeze typed registries
+ -> freeze CompiledRuleViews/rule closure
+ -> ModelAccessPolicyIndex.of(final rules)
+ -> derive ownership snapshot exactly once
+ -> validate both directions (authority -> snapshot and snapshot -> authority)
+ -> include same snapshot in SemanticDigestInput
+ -> publish same snapshot
 ```
 
-这里不是第二 registry；它读取同一个 immutable compiled snapshot。
+Runtime 不重建 ownership；snapshot 也不能反向写 authoritative facts。
 
 <a id="p2-ruleview"></a>
-## 2. RuleView composite identity and resolved View relation
+## 2. RuleView composite identity / resolved View / source compatibility
 
 ```java
 public final class RuleViewKey {
+    // existing; MUST remain
+    public RuleViewKey(SystemKey owner, String name);
+    public SystemKey owner();
+    public String name();
+
+    // additive aliases allowed
     public static RuleViewKey of(SystemKey systemKey, String localName);
     public SystemKey systemKey();
     public String localName();
 }
+```
 
+Alias pairs must be value-identical: `owner()==systemKey()` and `name().equals(localName())`。
+
+```java
 public final class CompiledRuleView {
     public RuleViewKey key();
     public ViewKey resolvedViewKey();
@@ -75,81 +120,87 @@ public final class CompiledRuleView {
 }
 ```
 
-Rules：
-
-1. new mix RuleView 缺 System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`；
-2. same System + same localName duplicate -> stable ERROR；
-3. `view-ref` 必须 exact resolve，unknown View -> stable source-aware ERROR；
-4. every rule-ref exact resolve，unknown Rule -> stable source-aware ERROR；
-5. resolved View ownership 默认必须与 RuleView System 一致；任何 cross-System View 必须来自显式 future contract，P2 不猜测；
-6. key/resolvedView/ordered rules/source identity 进入 semantic digest。
+View/rule refs exact-resolve before publication；unknown/wrong-owner View/Rule -> stable source-aware ERROR。Rule closure 是 ownedRuleKeys 的 authority source。
 
 <a id="p2-ruleview-resolver"></a>
-## 3. RuleViewResolver / composite call
+## 3. RuleViewResolver
 
 ```java
 public interface RuleViewResolver {
     Optional<CompiledRuleView> find(RuleViewKey key);
-
     CompiledRuleView require(SystemKey systemKey, String localName);
 }
 ```
 
-Production new path 只接受 `system-ref + rule-ref` / full `RuleViewKey`。不提供 new bare-name resolver；legacy bare-name read adapter 不能写新 registry。
+New production path 无 bare-name fallback；legacy compatibility read-only，不可注册新 composite facts。
 
 <a id="p2-model-path"></a>
-## 4. One canonical ModelPath compiler for all consumers
+## 4. One canonical P2 ModelPath compiler
 
 ```java
-public enum ModelPathConsumerKind {
-    RULE,
-    CHANGE,
-    QUERY_CONTRACT,
-    MODEL_ACCESS
-}
-
-public final class ModelPathInput {
-    public ModelPathConsumerKind consumerKind();
-    public SystemKey systemKey();
-    public TargetKey targetKey();
-    public String rawPath();
-    public SourceRef sourceRef();
-}
+public enum ModelPathConsumerKind { RULE, CHANGE, QUERY_CONTRACT, MODEL_ACCESS }
 
 public interface ModelPathCompiler {
     ModelPath compile(ModelPathInput input);
 }
 ```
 
-Invariant：`consumerKind` 只用于 provenance/Diagnostic，**不得改变 canonicalization semantics**。相同 System/target/raw segments 经 RULE/CHANGE/QUERY_CONTRACT/MODEL_ACCESS 编译必须得到 value-equal `ModelPath`。
+`consumerKind` 仅 provenance/Diagnostic；equal System/target/path across all consumer kinds -> value-equal ModelPath。Query execution 仍属 P6。
 
-QueryPlan execution 属 P6；P2 只冻结其 future compile/IR boundary 必须消费这个 shared ModelPath contract。
+<a id="p2-p1-migration"></a>
+## 5. P1 SharedModelPath / AccessMode -> P2 canonical facts
 
-`read path="*"` 先由 compiler 在已知 target schema 上有限展开成 exact child ModelPath，runtime 不保留 wildcard authority。
+### 5.1 SharedModelPath
 
-<a id="p2-model-access"></a>
-## 5. ModelAccess rule / operation independence
-
-`ModelAccessRuleKey` exact identity 包含 System、target、ModelPath、AccessOperation。READ/WRITE/EXECUTE 是 mutually independent dimensions。
-
-必须满足：
+P1 `SharedModelPath` 保留 source/compatibility input，不再是 P2 runtime policy type。
 
 ```text
-READ-only rule:
-  READ    -> can evaluate
-  WRITE   -> POLICY_NOT_FOUND / operation mismatch DENY
-  EXECUTE -> DENY
-
-WRITE-only rule:
-  READ    -> DENY
-  WRITE   -> can evaluate
-  EXECUTE -> DENY
+SharedModelPath exact
+ -> SharedModelPathToModelPathAdapter/compiler normalization
+ -> ModelPathCompiler
+ -> one exact ModelPath
 ```
 
-不得把“path 存在任意 permission”实现成 allow。
+`SharedModelPath("*")` 只在现有 source contract 合法的位置存在：
+
+```text
+"*"
+ -> resolve exact target schema
+ -> stable sorted finite child paths
+ -> compile each child through same ModelPath canonicalization
+ -> exact ModelPath set
+```
+
+Post-condition：`CompiledModelAccessRule`、`ModelAccessPolicyIndex`、Bridge、Guard 中 wildcard count == 0，且不再查询 `SharedModelPath`。
+
+### 5.2 AccessMode
+
+```text
+AccessMode.READ  -> AccessOperation.READ
+AccessMode.WRITE -> AccessOperation.WRITE
+```
+
+`AccessMode` 无 EXECUTE；禁止默认/推断 EXECUTE。EXECUTE 只来自 explicit P2/new-source operation declaration。
+
+Post-condition：PolicyIndex/Bridge/Guard lookup 只使用 `AccessOperation`，不同时维护 `AccessMode` authority。
+
+### 5.3 Single-authority migration rule
+
+Conversion 完成前可以保留 old source objects；conversion 完成后：
+
+- `SharedModelPath/AccessMode` = provenance/compat source fact；
+- `ModelPath/AccessOperation` = canonical compiled fact；
+- `ModelAccessPolicyIndex` = runtime authorization authority。
+
+禁止“双读后取更宽权限”。
+
+<a id="p2-model-access"></a>
+## 6. Operation-qualified authorization
+
+`ModelAccessRuleKey` exact identity 包含 System + target + ModelPath + AccessOperation。READ/WRITE/EXECUTE independent；same path 上其它 operation policy irrelevant。
 
 <a id="p2-policy-index"></a>
-## 6. Validated immutable ModelAccessPolicyIndex
+## 7. ModelAccessPolicyIndex
 
 ```java
 public final class ModelAccessPolicyIndex {
@@ -160,55 +211,31 @@ public final class ModelAccessPolicyIndex {
 }
 ```
 
-`of` 在 collapse 前检查 duplicate/null/invalid key/status/plan/wildcard，并构造 canonical immutable order。Guard 每次 protected access 对 current Context exact lookup once；无 secondary permission map。
+`of` 在 collapse 前拒绝 duplicate/null/wildcard/invalid status-plan，输出 immutable canonical order。ModelAccess ownership snapshot 从这里读取 keys，不建立第二 policy map。
 
 <a id="p2-context"></a>
-## 7. CompiledModelSet / EngineContext publication
+## 8. CompiledModelSet / EngineContext publication
 
-Legacy existing eight-argument constructor 保留 source compatibility，并 deterministically attach `ModelAccessPolicyIndex.empty()`；它不从 definitions/typedRegistries 重建 P2 policy。
+Existing eight-argument public constructor MUST remain source-compatible，确定性 attach `ModelAccessPolicyIndex.empty()`，不得从 definitions/registries 重建 policy。
 
-P2 production path：
+P2 `published(...)` 路径携带同一 policy-aware digest closure。Additive reads：System/RuleView/PolicyIndex。
 
-```java
-public static CompiledModelSet published(
-    PublishedSourceManifest sourceManifest,
-    Registry<DefinitionKey, CompiledDefinition> definitions,
-    DeferredRegistry deferred,
-    ModelAccessPolicyIndex modelAccessPolicyIndex,
-    List<Diagnostic> diagnostics,
-    DigestPair digestPair,
-    String compilerVersion,
-    String schemaVersion,
-    String optionsDigest);
-
-public ModelAccessPolicyIndex modelAccessPolicyIndex();
-public Optional<CompiledSystem> system(SystemKey key);
-public Optional<CompiledRuleView> ruleView(RuleViewKey key);
-```
-
-`EngineContext` additive read-through 返回同一 immutable authority/snapshots。
-
-### 7.1 Digest order
+Digest/publication order：
 
 ```text
-resolve Systems + ownership snapshots
- -> resolve RuleViews + view/rule refs
- -> compile canonical ModelPaths
- -> compile exact access rules
- -> ModelAccessPolicyIndex.of(rules)
- -> SemanticDigestInput(all same immutable facts)
- -> digest
- -> DigestBoundCompiledInput(same facts + digest)
- -> CompiledModelSet.published(...)
- -> EngineContext
+final typed registries
+ -> final CompiledRuleViews/rule closure
+ -> P1 compatibility conversion -> P2 exact ModelPaths/AccessOperations
+ -> exact access rules -> PolicyIndex
+ -> derived ownership snapshots + SystemVersionIdentity(schema+compiler)
+ -> SemanticDigestInput(same facts + compile identity)
+ -> digest -> DigestBoundCompiledInput -> CompiledModelSet.published -> EngineContext
 ```
 
-Ownership/version/RuleView resolved View/Rule refs/access policy semantics 改变必须改变 semantic digest。runtime Bridge/capability state 不进入 digest。
-
 <a id="p2-direct-bridge"></a>
-## 8. Direct public protected-access bridge
+## 9. Direct public bridge
 
-Persistent decision `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` 生效：
+ACTIVE user decision：
 
 ```java
 public final class ProtectedExecutionBridge {
@@ -221,101 +248,67 @@ public final class ProtectedExecutionBridge {
 }
 ```
 
-Caller 当前可以选择 exact compiler-published ruleKey/op。Bridge 必须在 internal issuance 前检查 non-null/shape/context binding；requested `operation` 与 exact rule key/rule 不一致即 DENY，不做 operation upgrade/fallback。
-
-相同参数的两个 `bridge.execute(...)` 是两个独立 invocation；P2 不定义业务幂等 token/replay 语义。
+No token/recognizes/claim。Same arguments = independent invocations。Operation mismatch/policy miss fail closed。
 
 <a id="p2-runtime-guard"></a>
-## 9. Production protected-access seam / AC-007
+## 10. FLOW-PROTECTED-ACCESS-EXECUTE and AC-007 pending decision
 
-根据 `DEC-P2-AC007-STAGE-BOUNDARY-001`，P2 的可完成验收是**唯一 production seam + 无合法旁路**，而不是提前实现 P3/P4/P6 concrete executors。
-
-唯一 supported path：
+Common runtime foundation：
 
 ```text
-ProtectedExecutionBridge.execute(...)
- -> starter internal issueInvocation
+Bridge.execute
+ -> internal issueInvocation
  -> exact target resolver
- -> one-shot ResolvedProtectedAccess capability
- -> ProtectedAccessGateway
- -> ModelAccessGuard
- -> protected operation
+ -> one-shot capability(target + operation)
+ -> Gateway
+ -> Guard exact current PolicyIndex lookup + proof
+ -> bound operation OR deterministic DENY
 ```
 
-冻结 visibility/dependency：
+No public issued-pair/capability mint，no raw operation authority exposed to business caller，no secondary permission map。
 
-- `issueInvocation` / issued pair implementations package-private/internal；
-- capability constructor/mint internal；
-- Guard 不暴露“先 allow 再让 caller 自己选择 target”的 API；
-- operation execution port 只由 starter composition 绑定，不通过 EngineContext/Bridge getter 暴露给 business consumer；
-- compatibility adapter read-only，不能执行 protected write/mint capability；
-- Context 只有一个 PolicyIndex authority。
+但是 `DEC-P2-AC007-STAGE-BOUNDARY-001` **不是 ACTIVE**。R16 只记录：
 
-P3 Rule/Information、P4 change/custom-action/produce、P6 QueryPlan concrete integration 必须创建 downstream acceptance，且只能接入此 seam。
+- Option A：以上 seam/no-bypass 成为 P2 final AC，concrete consumers 下沉；
+- Option B：在 P2 增加 representative production consumers 执行原 literal AC。
+
+用户明确选择前，Design 不把任何 option 作为完成标准；TestDesign 对 AC-007 必须 `BLOCKED_BY_USER_DECISION`。
 
 <a id="p2-operation-binding"></a>
-## 10. Actual-target / operation one-shot capability
+## 11. One-shot actual target/operation binding
 
-Resolver 基于 current invocation + compiler plan 得到 actual target，随后产生 immutable one-shot capability，绑定：
-
-- current EngineContext identity；
-- exact rule key；
-- exact AccessOperation；
-- exact actual target identity；
-- runtime proof/plan identity（适用时）。
-
-Gateway/Guard 只能执行 capability-bound target/op。A capability 不能替换为 B target。same capability concurrent terminal success <= 1。
+Capability exact binds context/rule/op/actual target/runtime proof-plan identity。A capability 不能操作 B target；same capability concurrent terminal success <=1。
 
 <a id="p2-runtime-denial"></a>
-## 11. Deterministic runtime denial contract
+## 12. Deterministic runtime denial
 
-```java
-public interface ProtectedAccessDenial {
-    ProtectedAccessDenialCode code();
-    SystemKey systemKey();
-    Optional<RuleViewKey> ruleViewKey();
-    AccessOperation operation();
-    ModelPath modelPath();
-    SourceRef policySourceRef();
-}
-```
-
-相同 current facts 重复 DENY 时必须稳定：same code、System、optional RuleView provenance、operation、canonical ModelPath、policy SourceRef。
-
-至少冻结：
-
-- `POLICY_NOT_FOUND`；
-- `RUNTIME_BINDING_STALE`；
-- `RUNTIME_PLAN_MISMATCH`；
-- `TARGET_SUBSTITUTION`；
-- `GUARD_UNAVAILABLE`。
-
-Denial 不携带敏感 actual value、对象 dump、secret/config payload。
+Stable fields：code、SystemKey、optional RuleView provenance、AccessOperation、canonical ModelPath、policy SourceRef；不返回 sensitive actual value/object dump/credential。至少覆盖 POLICY_NOT_FOUND、RUNTIME_BINDING_STALE、RUNTIME_PLAN_MISMATCH、TARGET_SUBSTITUTION、GUARD_UNAVAILABLE。
 
 <a id="p2-pipeline"></a>
-## 12. Compiler pipeline / atomic publication
+## 13. Business Flow split
 
-任何 System ownership、RuleView View/rule reference、ModelPath、access rule ERROR 都使 candidate 全量失败；old EngineContext 保持。并行 Context ownership/RuleView/PolicyIndex snapshots 不共享 mutable state。
+Current flow revision `FLOW-R04@p2-system-ruleview-protected-access`：
+
+- `FLOW-CONFIG-COMPILE`：AC-001～005、008、compile diagnostic、010；
+- `FLOW-PROTECTED-ACCESS-EXECUTE`：runtime AC-004、006、runtime diagnostic；AC-007 仅挂 `PENDING_USER_DECISION`。
+
+不再用纯 compile flow 表示 Bridge/Gateway/Guard execution。
 
 <a id="p2-diagnostics"></a>
-## 13. Compile Diagnostic determinism
+## 14. Compile Diagnostic
 
-重复 System、ownership mismatch、missing RuleView System、unknown View/Rule、invalid path、static permission error 必须 stable code + definition identity + SourceRef/relatedRefs，排序可重复。
+Duplicate System、ownership mismatch、unknown View/Rule、invalid path、static permission/conversion error -> stable source-aware ERROR + publication=0。
 
 <a id="p2-compatibility"></a>
-## 14. Compatibility / migration
+## 15. Compatibility / migration
 
-P2 不恢复 `dec-expand-declaration`。surviving legacy bare RuleView read compatibility 只能 read，不得注册新 composite facts、不写 policy、不成为 protected-operation bypass。最终删除/transaction/resource convergence 属 P7。
+Java 8。SystemKey/RuleViewKey existing constructors/accessors、EngineContext existing constructor、legacy CompiledModelSet constructor保留。`dec-expand-declaration` 保持 retired；surviving legacy adapters read-only。
 
 <a id="p2-concurrency"></a>
-## 15. Concurrency
+## 16. Concurrency
 
-- different bridge invocations 可并发，bridge 本身 immutable/stateless；
-- ownership/RuleView/PolicyIndex snapshots immutable；
-- same capability concurrent execution <= 1 terminal success；
-- stale Context/frame/cursor/membership 在 operation 前 fail closed；
-- 不使用 token/recognizes/claim 模型。
+Immutable snapshots/index；different bridge invocation 可并发；same capability <=1 terminal success；stale context/frame/cursor/membership fail closed。无 token model。
 
-## 16. Gate
+## 17. Gate
 
-DESIGN-P2-R15 仍是 candidate：Requirement overlay、BM-R13、Architecture/API/Develop/Impact/CrossModule/Concurrency exact Reviews 与 risk scan 尚未完成；不得进入 Implementation Plan/TDD/Development。
+DESIGN-P2-R16 = `NEEDS_REVIEW / MACHINE_BLOCKED / AC007_PENDING_USER_DECISION`。Requirement decision、BusinessFlow、Architecture/API/Develop/Impact/CrossModule/Concurrency exact Review 与 risk scan 未完成；Implementation Plan/TDD/Development BLOCKED。
