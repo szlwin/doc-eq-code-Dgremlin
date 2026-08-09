@@ -3,15 +3,14 @@
 <a id="DEC-P2-DIRECT-BRIDGE-AUTHORITY-001"></a>
 ## DEC-P2-DIRECT-BRIDGE-AUTHORITY-001
 
-- Status: `USER_CONFIRMED / ACTIVE_FOR_P2_CANDIDATE`
+- Status: `USER_CONFIRMED / ACTIVE`
 - Date: 2026-08-09
-- Applies to: `BM-R12 / DESIGN-P2-R14 / TESTDESIGN-P2-R15`
-- Supersedes: R12 execution-token/recognizes/claim trust model for P2 invocation
-- Does not supersede: compiler-published PolicyIndex, unified Guard, fail-closed policy miss, actual-target/capability binding
+- Authority decision: direct `bridge.execute(ruleKey, operation, frame, owner, cursor)`; no execution-token/claim model
+- Operation scope: current P2 `AccessOperation = READ | WRITE` per `DEC-P2-ACCESS-OPERATIONS-001`
+- Supersedes: R12 execution-token/recognizes/claim invocation authority model
+- Does not supersede: compiler-published PolicyIndex, unified Guard, fail-closed policy miss, actual-target/operation capability binding
 
 ## Decision
-
-Current P2 production API uses a direct invocation shape:
 
 ```java
 bridge.execute(
@@ -22,49 +21,43 @@ bridge.execute(
     optionalCursorId);
 ```
 
-The caller is permitted, for current P2, to choose the exact `ModelAccessRuleKey` and `AccessOperation` supplied on each invocation.
-
-`AccessConsumerIrKey` remains available as provenance/diagnostic context but is **not** part of the authorization key and P2 does not require a `consumer -> ruleKey/op` binding check.
+Current caller may choose an exact compiler-published `ModelAccessRuleKey` and current `AccessOperation` (`READ` or `WRITE`) on each invocation. `AccessConsumerIrKey` remains provenance/diagnostic context and is not part of the authorization key.
 
 ## Authorization boundary retained
 
-This decision does **not** make the runtime default-allow. A request can ALLOW only when:
-
-1. the exact requested key is present in the current compiler-published immutable `ModelAccessPolicyIndex`;
-2. the explicit operation is consistent with that exact key/rule;
-3. STATIC_ALLOW or runtime-required state is valid;
-4. runtime-required proof/plan checks pass when applicable;
-5. actual target + operation remain bound to the same one-shot capability through Guard/Gateway;
-6. Context/frame/cursor/adapter/Guard state is valid at execution time.
-
-Absent/invalid policy remains DENY before protected operation/effects.
+ALLOW remains possible only when the exact requested key exists in the current immutable compiler-published `ModelAccessPolicyIndex`, operation matches, policy state is valid, required runtime proof succeeds, and actual target + operation remain bound through the same one-shot capability/Gateway/Guard path. Missing or invalid authority DENY before effects.
 
 ## Requirement delta
 
-`REQAN-P2-R01` states that downstream Rule/change/custom-action/future consumers must not expand compiler-declared authorization and that unprovable access must DENY.
+The direct-caller trust model is an explicit user Decision. It does not permit caller-created permissions, fuzzy key fallback, alternate operation fallback, PolicyIndex mutation or Guard bypass.
 
-For the current P2 candidate, this decision interprets **compiler-declared authorization** at the global exact PolicyIndex level rather than a per-consumer authorization level. Therefore:
+## Consequences that remain ACTIVE
 
-```text
-caller may select any exact ruleKey/op already published in current PolicyIndex
-!=
-caller may create a new permission or bypass Guard
-```
+- `ProtectedExecutionToken`, `recognizes`, token claim/replay/lease semantics remain removed.
+- Same bridge arguments invoked twice are independent invocations; business idempotency is not provided by P2.
+- Consumer provenance does not alter authorization key/equality semantics.
+- FND-019 concerns actual-target/operation/one-shot capability binding and concurrency, not token claim atomicity.
 
-This is an explicit Requirement/Design decision delta. Documents and Reviews must not claim that REQAN-P2-R01 originally froze this caller-trust model.
+## Amendment — AC-007 consequence partially superseded
 
-## Consequences
+The original version of this file also said:
 
-- `ProtectedExecutionToken`, `ProtectedExecutionStatePort.recognizes`, token claim/replay/lease semantics remain removed.
-- Same scalar bridge arguments called twice are two independent invocations; P2 does not provide duplicate suppression/business idempotency.
-- FND-019 remains about capability actual-target/operation atomic binding, not token claim atomicity.
-- Test Design must not use “caller chooses another valid compiler-published rule/op” as a forged-authority negative case.
-- AC-007 remains contract-only for future P3-P7 executor integration; this decision does not prove those future entrypoints are already non-bypassable.
+> AC-007 remains contract-only for future P3-P7 executor integration; no P3-P7 business executor implementation is pulled into P2.
+
+That **future-only/contract-only AC-007 consequence is SUPERSEDED** by the later user Decision `DEC-P2-AC007-STAGE-BOUNDARY-001:OPTION_B`.
+
+Current effective AC-007 is:
+
+- P2 must provide real main-source `RuleProtectedAccessEntry`, `ChangeProtectedAccessEntry`, `CustomActionProtectedAccessEntry` representative consumers;
+- they must be acquired through normal P2 production composition and execute allow/deny/no-bypass/parity acceptance through the same Bridge/Gateway/Guard seam;
+- full P3/P4/P6 business engines remain downstream.
+
+This amendment **does not supersede the Direct Bridge authority decision itself**.
 
 ## Future change rule
 
-If the project later requires per-consumer permission isolation, the project must explicitly revise Requirement/Decision and introduce a consumer-aware policy binding/key or equivalent enforceable contract. That hardening must not be silently introduced during Development under the current decision.
+Per-consumer permission isolation or any operation beyond READ/WRITE requires a new explicit Requirement/Decision Review; Development must not introduce it silently.
 
 ## Gate
 
-This Decision is a documented user-authorized input to the candidate artifacts. It is not Design Review Evidence, machine lifecycle Evidence, or a PASSED state.
+This Decision is a user-authorized candidate input, not Review Evidence or machine PASSED state.
