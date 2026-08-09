@@ -1,11 +1,12 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R23`。Base：`DESIGN-P2-R22`。
-> Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R20` + `FLOW-R10@p2-system-ruleview-protected-access` + `P2-IMPACT-R22`。
+> Revision：`DESIGN-P2-R24`。Base：`DESIGN-P2-R23`。
+> Authoritative Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R20` + `FLOW-R10@p2-system-ruleview-protected-access`。
+> CrossModule Projection：`P2-IMPACT-R23`（non-authoritative review projection）。
 > Decisions：Direct Bridge ACTIVE；AC-007 Option B ACTIVE；READ/WRITE-only ACTIVE。
-> Status：`NEEDS_REVIEW / BLOCKED_BY_BM_REVIEW / MACHINE_BLOCKED`。
+> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
-R22 保留已独立 Review 确认正确的 P1 `TargetKey(shared ViewKey)`、READ/WRITE-only、两行 Policy truth table、`ModelAccessRuleKey` WRITE authority、单一 WRITE ModelPath、0/1/N WriteIntent、typed IDs、`RuntimeFactValue` 与 R22 exact RED registry 方向。本 revision 只关闭 current snapshot/API completeness、compile-side responsibility/impact、runtime target selection、object/version atomic binding、explicit composition input、cross-session alias concurrency 和 P2/P7 boundary。
+R24 保留独立 Review 已确认正确的 P1 `TargetKey(shared ViewKey)`、READ/WRITE-only、两行 Policy truth table、`ModelAccessRuleKey` WRITE authority、单一 WRITE ModelPath、0/1/N WriteIntent、typed IDs、`RuntimeFactValue`、compiler-produced `CompiledTargetBinding`、explicit EngineContext composition、RuntimeMutationStamp、actual-ModelData coordination 和 P2/P7 boundary。本 revision 只关闭 production `CompiledTargetBinding ↔ ModelData` registration provenance、Java interface contract 和 downstream trace/Impact 同步问题。
 
 ## 1. Revision DAG
 
@@ -13,12 +14,11 @@ R22 保留已独立 Review 确认正确的 P1 `TargetKey(shared ViewKey)`、READ
 REQAN-P2-R01@d08612768131 + Overlay R04
  -> BM-R20
  -> FLOW-R10
- -> P2-IMPACT-R22
- -> DESIGN-P2-R23
- -> TESTDESIGN-P2-R24
+ -> DESIGN-P2-R24
+ -> TESTDESIGN-P2-R25
 ```
 
-`BM-R20` 是完整 current snapshot；`baseRevision` 仅表达 lineage，不代表省略的 BM-R18/R19 事实会被工具隐式继承。
+`P2-IMPACT-R23` is a parallel cross-module/impact projection of the same current facts, not an authoritative upstream input to Design. BM/Flow canonical artifacts use stable trace/artifact refs for downstream projection so future Design/TestDesign revision increments do not invalidate upstream business semantics.
 
 ## 2. Compile identity / policy semantics
 
@@ -66,7 +66,7 @@ CONTEXT is representation holder, not publication coordinator. P2 introduces no 
 <a id="compiled-runtime-binding-plan"></a>
 ## 4. Compiler-produced neutral RuntimeBindingPlan
 
-R23 fixes the last independent semantic Review residual without changing BM-R20/FLOW-R10/P2-IMPACT-R22. P1 already resolves `targetView + selector` during compilation into a typed `TargetPropertyPath(kind,value)`. P2 therefore must publish that resolved meaning, not downgrade it back to raw Strings.
+R24 preserves the independently verified R23 compiler-resolved binding without changing BM-R20/FLOW-R10 business semantics. P1 already resolves `targetView + selector` during compilation into a typed `TargetPropertyPath(kind,value)`. P2 therefore must publish that resolved meaning, not downgrade it back to raw Strings.
 
 ```text
 P1 compiler facts
@@ -100,37 +100,53 @@ Rules:
 <a id="current-api-contract"></a>
 ## 5. Current API completeness
 
-`COMPILER_api_contract.md@DESIGN-P2-R23` is the complete current P2 API contract. Every P2-added cross-module immutable value has an explicit Java-8-compatible `of(...)`/factory construction path, not just getters. Pre-P2 stable `SystemKey/RuleViewKey/ViewKey/EngineContext/CompiledModelSet` are explicitly treated as existing source-compatible APIs.
+`COMPILER_api_contract.md@DESIGN-P2-R24` is the complete current P2 API contract. Every P2-added cross-module immutable value has an explicit Java-8-compatible `of(...)`/factory construction path, not just getters. Pre-P2 stable `SystemKey/RuleViewKey/ViewKey/EngineContext/CompiledModelSet` are explicitly treated as existing source-compatible APIs.
 
 The current contract fully defines policy enums/plan, IDs, invocation, runtime target, mutation stamp, resolved READ/WRITE, operation port, results/denials, factory/composition and all new construction surfaces. No superseded R19/R20/R21 design document is required to implement P2.
 
-## 6. Explicit production composition
+## 6. Explicit production registration provenance and composition
 
-Production assembly is explicit:
+<a id="runtime-registration-provenance"></a>
+The production factory no longer accepts a bare list of ModelData handles. The association required by `RuntimeModelSession.register(...)` is explicit typed assembly input:
 
 ```text
-ProtectedAccessRuntimeFactory.production(exact EngineContext)
-        |
-        + create(RuntimeExecutionFrameSnapshot)
-                  frameId
-                  ownerResolutionId
-                  Optional<cursorId>
-                  immutable runtime ModelData handles
-        |
-        v
-ProtectedAccessComposition
-  exact EngineContext
-  exact frame/owner
-  sealed RuntimeModelSession
-  production RuntimeTargetResolver
-  production model adapter
-  Gateway / Guard
-  shared Rule/Change/CustomAction Bridge
+RuntimeModelRegistrationInput
+  TargetKey sourceTargetKey
+  CompiledTargetBinding compiledTargetBinding
+  ModelData modelData
 ```
 
-A factory implementation may not read a global/default Context. Runtime `ModelData` handles enter only through the assembly snapshot.
+Ownership and authority rules:
 
-<a id="runtime-target-resolution"></a>
+1. `RuntimeModelRegistrationInput` is a `dec-core-starter` production/internal assembly value because starter may depend on both neutral context contracts and `dec-core-model`.
+2. It is not exposed through `ProtectedAccessPort` and is not permission authority.
+3. `ProtectedAccessRuntimeFactory.production(exact EngineContext)` captures one immutable Context.
+4. `create(RuntimeExecutionFrameSnapshot)` receives frame/owner/cursor plus immutable `RuntimeModelRegistrationInput` values.
+5. Before model-session registration, starter validates `(sourceTargetKey, compiledTargetBinding)` is an exact current `RuntimeBindingPlan` pair in that captured EngineContext.
+6. Only after that membership check may starter call model-session `register(frame, owner, cursor, sourceTargetKey, compiledTargetBinding, modelData)` and seal the session.
+7. The association must never be reconstructed from `ModelData.name`, `ViewData`, list order, raw XML/YAML/definitions, first-match iteration or selector parsing.
+8. Passing a valid binding pair does not grant READ/WRITE permission; permission remains exclusively `ModelAccessRuleKey + PolicyIndex + Guard`.
+
+```text
+explicit EngineContext
++ RuntimeExecutionFrameSnapshot(
+    frameId,
+    ownerResolutionId,
+    optional cursorId,
+    List<RuntimeModelRegistrationInput>)
+        |
+        v
+starter registration provenance validation
+        |
+        v
+sealed RuntimeModelSession
+        |
+        v
+RuntimeTargetResolver
+```
+
+Composition construction fails closed if association provenance is missing, not present in the captured Context, duplicated incompatibly, or conflicts with actual ModelData active ownership. No protected invocation is created from a partially built session.
+
 ## 7. Unique RuntimeTargetResolver
 
 Direct caller supplies `ModelAccessRuleKey + typed frame/owner/cursor`, not a RuntimeObjectId.
@@ -149,7 +165,7 @@ Then the **only** resolver is:
 ```text
 RuntimeBindingPlan(sourceTargetKey + compiler-produced CompiledTargetBinding)
 + exact composition-bound frame/owner/cursor
-+ sealed RuntimeModelSession containing exact CompiledTargetBinding registration facts
++ sealed RuntimeModelSession containing explicit validated (sourceTargetKey + CompiledTargetBinding + ModelData) registration facts
         |
         v
 RuntimeTargetResolver
@@ -164,12 +180,14 @@ RuntimeTargetResolver
   N -> RUNTIME_TARGET_AMBIGUOUS
 ```
 
-No “first object”, frame-only, owner-only, cursor-only, `ModelData.name` or alternate fallback is legal. Guard and operation consume the same immutable `ResolvedRuntimeTarget`.
+No “first object”, frame-only, owner-only, cursor-only, `ModelData.name`, `ViewData`, list-order, raw-definition or alternate fallback is legal. Guard and operation consume the same immutable `ResolvedRuntimeTarget`.
 
 <a id="runtime-model-session"></a>
 ## 8. Session scope without opaque-ID inference
 
 Each production session has a separate opaque `RuntimeModelSessionId`. `RuntimeObjectId` remains opaque and never encodes scope.
+
+Registration storage is explicit: every session entry stores the exact `TargetKey + CompiledTargetBinding + ModelData` association supplied by the validated production assembly. Model never derives either binding key from ModelData metadata. `RuntimeModelSession` is a Java interface and **extends `AutoCloseable`**.
 
 ```text
 target.sessionId != currentSession.sessionId
@@ -186,7 +204,7 @@ Therefore cross-session classification is deterministic without a global registr
 
 ## 9. Actual ModelData ownership and cross-session concurrency
 
-Session-local locks/versions are insufficient because current `ModelLoader` directly holds mutable `ModelData`. The preserved R22 fix freezes the concurrency owner at the actual runtime model identity:
+Session-local locks/versions are insufficient because current `ModelLoader` directly holds mutable `ModelData`. R22 freezes the concurrency owner at the actual runtime model identity:
 
 ```text
 actual ModelData/runtime handle
@@ -287,7 +305,7 @@ No automatic retry/reselection occurs.
 
 ## 13. Cross-module closure
 
-`P2-IMPACT-R22` contains both required CMIs.
+`P2-IMPACT-R23` contains both required CMIs.
 
 Compile CMI:
 
@@ -316,7 +334,7 @@ starter -> dec-core-model          : allowed production assembly
 
 ## 14. P2 / P7 boundary
 
-The preserved runtime session/transaction/version concepts are deliberately narrow P2 internal seams:
+The R22 runtime session/transaction/version concepts are deliberately narrow P2 internal seams:
 
 - `RuntimeModelSession` = one composition/frame protected-operation locator scope;
 - transaction = one protected WRITE atomic mutation;
@@ -326,4 +344,4 @@ P2 **does not** define user/session lifecycle, cross-request transaction scope, 
 
 ## 15. Gate
 
-No production Java, risk Evidence or TDD execution is claimed. `DESIGN-P2-R23` still requires same-revision ApiContract/Architecture/Develop/Impact/CrossModule/Concurrency Review and current risk scan. Implementation Plan/TDD/Development remain BLOCKED.
+No production Java, risk Evidence or TDD execution is claimed. `DESIGN-P2-R24` requires same-revision ApiContract/Architecture/Develop/Impact/CrossModule/Concurrency Review and current risk scan. Implementation Plan/TDD/Development remain BLOCKED.

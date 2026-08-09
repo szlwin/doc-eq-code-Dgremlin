@@ -2,7 +2,8 @@
 
 - Project：`doc-eq-code`
 - Version：`V_1.0`
-- Current candidate：`BM-R20 / FLOW-R10 / P2-IMPACT-R22 / DESIGN-P2-R23 / TESTDESIGN-P2-R24`
+- Current authoritative candidate：`BM-R20 / FLOW-R10 / DESIGN-P2-R24 / TESTDESIGN-P2-R25`
+- CrossModule / Impact projection：`P2-IMPACT-R23`
 - Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 - Decisions：AC-007 `OPTION_B / ACTIVE`；AccessOperation `READ_WRITE_ONLY / ACTIVE`
 
@@ -12,76 +13,75 @@
 REQAN-P2-R01@d08612768131 + Overlay R04
         |
         v
-BM-R20 (complete current business-model snapshot)
+BM-R20
         |
         v
 FLOW-R10
         |
-        +--> P2-IMPACT-R22
+        v
+DESIGN-P2-R24
         |
         v
-DESIGN-P2-R23
-        |
-        v
-TESTDESIGN-P2-R24
+TESTDESIGN-P2-R25
 ```
 
-No downstream artifact is an authoritative upstream input.
+`P2-IMPACT-R23` is a parallel impact/cross-module projection and not an authoritative upstream Design input.
 
-## Compile / publication relationship
+BM-R20 / FLOW-R10 use stable downstream artifact/trace refs. Exact downstream revision linkage lives here and in the central traceability projection.
 
-```text
-FLOW-CONFIG-COMPILE
-  |
-  +-> dec-core-compiler
-  |    symbol/reference/path/policy validation
-  |        |
-  |        v
-  +-> dec-core-context
-  |    immutable EngineContext + PolicyIndex candidate representation
-  |        |
-  |        v
-  +-> dec-core-compiler
-       atomic publication coordinator
-       -> whole new Context or unchanged old Context
-```
-
-`CMI-P2-COMPILE-003` is the structured cross-module implementation contract for this flow. CONTEXT is not publication owner and no global/default current Context is introduced.
-
-## Runtime protected-access relationship
+## Compiler -> runtime binding transport
 
 ```text
-explicit EngineContext + RuntimeExecutionFrameSnapshot
+P1 ModelAccessBinding
+  ViewKey targetView
+  SystemViewSelector                 compiler-only lexical input
+  TargetPropertyPath(kind,value)     compiler-resolved
         |
         v
-dec-core-starter / ProtectedAccessRuntimeFactory
+dec-core-compiler
+  CompiledTargetBinding(
+    targetViewKey,
+    TARGET_MAIN|PROPERTY_PATH,
+    exactResolvedValue)
+  RuntimeBindingPlan(sourceTargetKey, compiledBinding)
         |
         v
-ProtectedAccessComposition
-  exact frame/owner/session
+dec-core-context
+  immutable EngineContext / PolicyIndex
+        |
+        v
+dec-core-starter production assembly
+  RuntimeModelRegistrationInput(
+    sourceTargetKey,
+    compiledBinding,
+    ModelData)
+  exact EngineContext membership validation
+        |
+        v
+dec-core-model RuntimeModelSession
+  sealed typed association
         |
         v
 RuntimeTargetResolver
-  RuntimeBindingPlan(
-    sourceTargetKey + CompiledTargetBinding(
-      targetViewKey + TARGET_MAIN|PROPERTY_PATH + exactResolvedValue))
-  + frame/owner/cursor + sealed session
-        |
-        v
-ResolvedRuntimeTarget(sessionId, objectId, compiledTargetBinding, proof)
-        |
-        +-- READ --> Guard --> dec-core-model immutable snapshot
-        |
-        `-- WRITE -> RuntimeMutationStamp(sessionId,objectId,path,version)
-                    -> intent 0/1/N
-                    -> capability
-                    -> Guard
-                    -> dec-core-model actual-ModelData coordination/transaction
+  exact sourceTargetKey + compiledBinding + typed context
 ```
 
-`CMI-P2-PROTECTED-ACCESS-003` remains the structured cross-module implementation contract; DESIGN-P2-R23 clarifies that runtime selection consumes only compiler-produced neutral compiled target facts and never raw selector syntax.
+No stage may infer the binding from ModelData name, ViewData, list order, raw definitions, selector parsing or first-match iteration.
 
-## Actual runtime-object concurrency boundary
+## Protected operation path
+
+```text
+typed invocation
+ -> composition frame/owner equality
+ -> exact typed runtime registration match
+ -> unique ResolvedRuntimeTarget
+ -> WRITE intent 0/1/N if WRITE
+ -> one-shot capability
+ -> Guard(ModelAccessRuleKey + same target/proof)
+ -> dec-core-model actual READ or transactional WRITE
+```
+
+## Actual ModelData concurrency boundary
 
 ```text
 actual ModelData/runtime handle
@@ -93,7 +93,7 @@ RuntimeModelCoordinationCell
   per-ModelPath lock + RuntimeMutationVersion
 ```
 
-One actual ModelData cannot have two active session registrations. This prevents cross-session aliases from creating independent version/lock domains.
+Registration provenance is not permission authority. `ModelAccessRuleKey + PolicyIndex + Guard` remains the sole READ/WRITE authority.
 
 ## Dependency direction
 
@@ -102,14 +102,12 @@ compiler -> context              allowed
 starter -> context               allowed
 starter -> model                 allowed production assembly
 model -> context                 allowed/existing
+context -> compiler              forbidden
+model -> starter                 forbidden
 P3/P4/P6 core -> context         allowed
 P3/P4/P6 core -> starter         forbidden
 ```
 
-## P2 / P7 boundary
-
-P2 RuntimeModelSession and WRITE transaction are internal protected-operation seams only. User/session lifecycle, cross-request transaction/resource lifetime and P7 convergence remain outside P2.
-
 ## Gate
 
-All 20 formal P1 findings remain OPEN. Current risk scan and same-revision specialist Review/TDD Evidence remain absent; Implementation Plan/TDD/Development remain BLOCKED.
+20 formal P1 findings remain OPEN. Current same-revision specialist Review, risk scan, TDD and execution Evidence are still required; Implementation Plan/TDD/Development remain BLOCKED.

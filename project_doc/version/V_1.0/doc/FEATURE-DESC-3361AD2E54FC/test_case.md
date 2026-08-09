@@ -1,148 +1,105 @@
 # FEATURE-DESC-3361AD2E54FC Test Design
 
-> Revision：`TESTDESIGN-P2-R24`
-> Base：`TESTDESIGN-P2-R23`
-> Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R20` + `FLOW-R10@p2-system-ruleview-protected-access` + `P2-IMPACT-R22` + `DESIGN-P2-R23`
-> Decisions：AC-007 Option B ACTIVE；AccessOperation READ/WRITE-only ACTIVE
+> Revision：`TESTDESIGN-P2-R25`
+ > Base：`TESTDESIGN-P2-R24`
+> Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R20` + `FLOW-R10` + `P2-IMPACT-R23` + `DESIGN-P2-R24`
 > Status：`NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`
 
-R24 keeps R23's 68 blocking Case IDs and 19 exact TestClasses. It tests one new Design refinement only: compiler-resolved P1 target semantics are published losslessly as neutral `CompiledTargetBinding`; runtime selector re-resolution is forbidden. Each Case record references a fixture profile defined in this current revision and supplies action, expected observable result, forbidden side effects, and current flow/failure ref. No superseded TestDesign is required and no TDD execution is claimed.
+R25 preserves R24 and adds production registration provenance: **69 blocking Case IDs -> 19 exact TestClasses**. No TDD/Evidence is claimed.
 
-## 1. Formal RED contract
+## Formal RED
+For every registry row `(M,C)`: bootstrap=`./mvnw -pl M -am -Dmaven.test.skip=true install`; target RED=`./mvnw -pl M -Dtest=C -Dsurefire.failIfNoSpecifiedTests=true test`. Target RED never uses `-am`; missing class/symbol/setup or pre-assert compile failure=`INVALID_RED`.
 
-For every registry row `(module M, class C)`:
-- Exact bootstrap = `./mvnw -pl M -am -Dmaven.test.skip=true install`
-- Exact target RED = `./mvnw -pl M -Dtest=C -Dsurefire.failIfNoSpecifiedTests=true test`
-- Target RED never uses `-am`.
-- Missing TestClass/symbol/setup or compile failure before intended assertion = `INVALID_RED`.
+## Exact registry
 
-## 2. Exact TestClass registry
-
-| Key | Module | TestClass | Planned source |
+|Key|Module|TestClass|Planned source|
 |---|---|---|---|
-| `DAG` | `dec-core-compiler` | `P2RevisionDependencyDagContractTest` | `dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java` |
-| `SYSTEM` | `dec-core-compiler` | `SystemCompilationContractTest` | `dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java` |
-| `RULEVIEW` | `dec-core-compiler` | `RuleViewCompilationContractTest` | `dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java` |
-| `TARGET` | `dec-core-compiler` | `TargetKeyModelPathContractTest` | `dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java` |
-| `POLICY` | `dec-core-compiler` | `ModelAccessPolicyContractTest` | `dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java` |
-| `API` | `dec-core-context` | `ProtectedAccessCurrentApiContractTest` | `dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessCurrentApiContractTest.java` |
-| `VALUE` | `dec-core-context` | `RuntimeFactValueContractTest` | `dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java` |
-| `ID` | `dec-core-context` | `OpaqueRuntimeIdContractTest` | `dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java` |
-| `INTENT` | `dec-core-starter` | `ProtectedWriteIntentResolutionTest` | `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java` |
-| `ADAPTER` | `dec-core-starter` | `ProtectedRuntimeModelAdapterIntegrationTest` | `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java` |
-| `LOCATOR` | `dec-core-model` | `RuntimeObjectLocatorIntegrationTest` | `dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java` |
-| `TXN` | `dec-core-model` | `ProtectedWriteTransactionIntegrationTest` | `dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java` |
-| `COMPOSE` | `dec-core-starter` | `ProtectedAccessProductionCompositionTest` | `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java` |
-| `CONC` | `dec-core-starter` | `ProtectedAccessConcurrencyTest` | `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java` |
-| `DEP` | `dec-core-starter` | `ProtectedAccessDependencyDirectionTest` | `dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java` |
-| `PUB` | `dec-core-compiler` | `AtomicPublicationContractTest` | `dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java` |
-| `DIAG` | `dec-core-compiler` | `P2DiagnosticDeterminismTest` | `dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java` |
-| `FIXTURE` | `dec-demo` | `P2RealFixtureIntegrationTest` | `dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java` |
-| `COMPAT` | `dec-core-compiler` | `P2DeclarationCompatibilityContractTest` | `dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java` |
+|`DAG`|`dec-core-compiler`|`P2RevisionDependencyDagContractTest`|`dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java`|
+|`SYSTEM`|`dec-core-compiler`|`SystemCompilationContractTest`|`dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java`|
+|`RULEVIEW`|`dec-core-compiler`|`RuleViewCompilationContractTest`|`dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java`|
+|`TARGET`|`dec-core-compiler`|`TargetKeyModelPathContractTest`|`dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java`|
+|`POLICY`|`dec-core-compiler`|`ModelAccessPolicyContractTest`|`dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java`|
+|`API`|`dec-core-context`|`ProtectedAccessCurrentApiContractTest`|`dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessCurrentApiContractTest.java`|
+|`VALUE`|`dec-core-context`|`RuntimeFactValueContractTest`|`dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java`|
+|`ID`|`dec-core-context`|`OpaqueRuntimeIdContractTest`|`dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java`|
+|`INTENT`|`dec-core-starter`|`ProtectedWriteIntentResolutionTest`|`dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java`|
+|`ADAPTER`|`dec-core-starter`|`ProtectedRuntimeModelAdapterIntegrationTest`|`dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java`|
+|`LOCATOR`|`dec-core-model`|`RuntimeObjectLocatorIntegrationTest`|`dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java`|
+|`TXN`|`dec-core-model`|`ProtectedWriteTransactionIntegrationTest`|`dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java`|
+|`COMPOSE`|`dec-core-starter`|`ProtectedAccessProductionCompositionTest`|`dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java`|
+|`CONC`|`dec-core-starter`|`ProtectedAccessConcurrencyTest`|`dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java`|
+|`DEP`|`dec-core-starter`|`ProtectedAccessDependencyDirectionTest`|`dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java`|
+|`PUB`|`dec-core-compiler`|`AtomicPublicationContractTest`|`dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java`|
+|`DIAG`|`dec-core-compiler`|`P2DiagnosticDeterminismTest`|`dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java`|
+|`FIXTURE`|`dec-demo`|`P2RealFixtureIntegrationTest`|`dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java`|
+|`COMPAT`|`dec-core-compiler`|`P2DeclarationCompatibilityContractTest`|`dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java`|
 
-## 3. Fixture profiles
+## Blocking cases by exact TestClass
 
-- `ADAPTER` = Acquire normal production starter composition over explicit EngineContext + RuntimeExecutionFrameSnapshot + real ModelData.
-- `API` = Compile/reflect only current source against the signatures written in DESIGN-P2-R23; superseded design text is unavailable.
-- `COMPAT` = Compile current P1-compatible declarations and verify P2 adds no retired-module or EXECUTE dependency.
-- `COMPOSE` = Build factory with explicit EngineContext and frame snapshot; obtain Rule/Change/CustomAction entries only from normal composition.
-- `CONC` = Use barriers/latches, never sleeps; operate on the same actual ModelData/path when testing contention.
-- `DAG` = Read only current Requirement/Overlay, BM-R20, FLOW-R10, P2-IMPACT-R22, DESIGN-P2-R23 and TESTDESIGN-P2-R24 revision headers/refs.
-- `DEP` = Inspect Maven/module dependencies and current P2 type ownership using source/build metadata.
-- `DIAG` = Run equivalent compile/runtime failures repeatedly with ordering perturbations and non-sensitive fixtures.
-- `FIXTURE` = Use repository real P1/P2 XML/demo fixture and normal production composition, not a fake callback-only seam.
-- `ID` = Construct every current opaque ID wrapper using null/blank/mixed-case/exact strings.
-- `INTENT` = Create an exact ModelAccessRuleKey, frozen ResolvedRuntimeTarget and controlled write-intent candidates before Guard.
-- `LOCATOR` = Create sealed model sessions and controlled RuntimeBindingPlan/frame/owner/cursor fixtures over explicit ModelData handles.
-- `POLICY` = Compile legal and illegal READ/WRITE model-access rules over exact TargetKey/ModelPath facts.
-- `PUB` = Build one valid and one invalid immutable candidate Context while retaining a previously published Context.
-- `RULEVIEW` = Compile Systems plus RuleViews with explicit System ownership and shared View symbols.
-- `SYSTEM` = Compile a minimal current P2 fixture with two Systems and deterministic declaration order permutations.
-- `TARGET` = Compile a real P1-style model-access sourceModel/sourcePath fixture with shared Views and owner Systems.
-- `TXN` = Acquire real ModelData through normal composition, capture pre-write state, then inject mutation or commit failures after Guard ALLOW.
-- `VALUE` = Create nested mutable input values, snapshot them to RuntimeFactValue, then mutate original input.
+### `DAG` — Resolve only current chain/projections; exact DAG, no stale current authority/cycle.
+`CASE-P2-TD-REVISION-DAG-001`
 
-## 4. Blocking Case contracts (68)
+### `SYSTEM` — Compile deterministic System fixtures; duplicates/missing/ordering fail stably; no order fallback/mutation leak.
+`CASE-P2-TD-SYSTEM-DETERMINISM-001` `CASE-P2-TD-SYSTEM-DUPLICATE-001` `CASE-P2-TD-SYSTEM-FORWARD-REF-001` `CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001` `CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001` `CASE-P2-TD-BM-CANONICAL-PAIR-001`
 
-- `CASE-P2-TD-REVISION-DAG-001` — F=DAG; A=Resolve every current authoritative input/ref edge.; E=Exactly REQAN-P2-R01 + Overlay R04 -> BM-R20 -> FLOW-R10 -> P2-IMPACT-R22/DESIGN-P2-R23 -> TESTDESIGN-P2-R24; no downstream-as-upstream cycle.; X=No R19/R09/R21/R22 current authority remains except explicit base/supersedes/history refs.; R=revision DAG / no runtime flow.
-- `CASE-P2-TD-SYSTEM-DETERMINISM-001` — F=SYSTEM; A=Compile equivalent System declarations in multiple source orders.; E=SystemKey set, ownership projection and diagnostics are identical.; X=No order-dependent System identity or policy facts.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-01.
-- `CASE-P2-TD-SYSTEM-DUPLICATE-001` — F=SYSTEM; A=Compile duplicate System identity declarations.; E=Stable duplicate-System compile error and publication=0.; X=No first/last declaration win.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-01.
-- `CASE-P2-TD-SYSTEM-FORWARD-REF-001` — F=SYSTEM; A=Compile valid forward references between current System-related declarations.; E=Reference resolution is deterministic after symbol registration.; X=No source-order fallback.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-01.
-- `CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001` — F=SYSTEM; A=Publish a valid candidate then mutate source parse objects.; E=Published CompiledSystem ownership remains immutable.; X=No live mutable source collection leaks.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-01.
-- `CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001` — F=SYSTEM; A=Compile equal semantic inputs and then a semantic change.; E=Equal inputs preserve deterministic version/digest identity; semantic change changes it.; X=No nondeterministic timestamp/object-identity contribution.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-01.
-- `CASE-P2-TD-BM-CANONICAL-PAIR-001` — F=SYSTEM; A=Validate BM-R20 YAML and compare human BM claims to canonical IDs/invariants/errors.; E=BM-R20 is a complete current snapshot and key human/canonical statements agree.; X=No omitted BM-R18 fact is assumed inherited only from baseRevision.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-01.
-- `CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001` — F=RULEVIEW; A=Compile a RuleView with missing System owner.; E=Stable required-owner compile error; publication=0.; X=No implicit/default System.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001` — F=RULEVIEW; A=Compile duplicate RuleView identity in one System.; E=Stable duplicate RuleView error and publication=0.; X=No first/last declaration win.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001` — F=RULEVIEW; A=Compile same RuleView local name under two Systems.; E=Distinct RuleViewKey identities coexist without collision.; X=No bare local-name authority lookup.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001` — F=RULEVIEW; A=Compile RuleView referencing an existing then missing shared View.; E=Existing resolves exactly; missing yields stable compile error.; X=No owner-System-qualified invention for shared source View.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-RULEKEY-CONTRACT-001` — F=RULEVIEW; A=Construct RuleKey.of(ownerRuleViewKey, localRuleName) equality/hash cases.; E=Exact case-sensitive value identity is stable.; X=No runtime permission inference from RuleKey.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001` — F=RULEVIEW; A=Lookup RuleViews by exact composite key across Systems.; E=Only exact owner+local identity resolves.; X=No bare-name fallback.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-KEY-SOURCE-COMPAT-001` — F=RULEVIEW; A=Compile existing P1 key/source callers against current APIs.; E=Existing stable key/source surfaces remain source compatible.; X=No forced migration to a new source namespace.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001` — F=RULEVIEW; A=Attempt P2 permission lookup using only a local/bare name.; E=Lookup is rejected/not found unless exact composite/current key is provided.; X=No compatibility fallback that widens authority.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-02.
-- `CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001` — F=TARGET; A=Compile two owner Systems authorizing the same shared sourceModel.; E=TargetKey values are equal shared ViewKey wrappers while ModelAccessRuleKey differs by owner System.; X=No owner System embedded in TargetKey.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-03.
-- `CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001` — F=TARGET; A=Change sourcePath while holding sourceModel constant, then change sourceModel.; E=Path changes only ModelPath; sourceModel changes TargetKey.; X=No path-derived target identity.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-03.
-- `CASE-P2-TD-MODEL-PATH-UNKNOWN-001` — F=TARGET; A=Compile an unknown sourcePath segment.; E=Stable source-aware path compile error; publication=0.; X=No runtime wildcard/name search fallback.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-03.
-- `CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001` — F=TARGET; A=Compile a finite wildcard source path.; E=Compiler expands to a finite exact set of ModelPath values before publication.; X=No wildcard reaches runtime.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-03.
-- `CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001` — F=TARGET; A=Compare exact ModelPath observed by compiler, Guard and operation adapter.; E=All consumers observe value-equal canonical path.; X=No second path representation or renormalization.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-03.
-- `CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001` — F=TARGET; A=Compile existing P1 path declarations into P2 READ/WRITE rules.; E=Migration produces exact ModelPath and only READ/WRITE operations.; X=No EXECUTE or path=* runtime branch.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-03.
-- `CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001` — F=POLICY; A=Compile/authorize READ and WRITE independently for the same target/path.; E=READ and WRITE permissions are independent exact ModelAccessRuleKey entries.; X=No READ-implies-WRITE or WRITE-implies-READ.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-04.
-- `CASE-P2-TD-NO-EXECUTE-CONTRACT-001` — F=POLICY; A=Search current enum/source/schema/design/test contracts and try to construct EXECUTE.; E=No P2 EXECUTE source/API/policy/runtime value exists.; X=No hidden enum/default string EXECUTE.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-04.
-- `CASE-P2-TD-STATIC-DENY-001` — F=POLICY; A=Invoke an access with no exact allowed policy entry.; E=Deterministic DENY before protected operation.; X=No allow-by-absence/fallback.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-04.
-- `CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001` — F=POLICY; A=Construct all status/requirement/plan presence combinations.; E=Only the two frozen legal rows are constructible/publishable.; X=Runtime never repairs malformed classification.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-04.
-- `CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001` — F=POLICY* (P1 ModelAccessBinding has typed ViewKey targetView, SystemViewSelector, resolved TargetPropertyPath(kind,value)); A=Compile dynamic P2 policy and inspect only published RuntimeBindingPlan/context value.; E=Plan contains sourceTargetKey + CompiledTargetBinding(targetViewKey, TARGET_MAIN or PROPERTY_PATH, exactResolvedValue), preserving resolved P1 kind/value and exposing no raw selectorExpression API.; X=No String selector downgrade, kind loss, or runtime lexical interpretation.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-04.
-- `CASE-P2-TD-RUNTIME-BINDING-PROOF-001` — F=POLICY; A=Resolve one dynamic target then alter frame/owner/cursor/target proof before Guard.; E=Guard accepts only the exact frozen proof matching plan and target.; X=No proof recomputation that widens authority.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-04.
-- `CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001` — F=POLICY; A=Use a resolved target/proof that does not satisfy the compiled plan.; E=RUNTIME_PLAN_MISMATCH/DENY before model effect.; X=No runtime reclassification.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-04.
-- `CASE-P2-TD-CURRENT-API-SELF-CONTAINED-001` — F=API; A=Compile/reflect every P2-added type/factory/result/resolver in DESIGN-P2-R23.; E=Every cross-module P2 immutable type has an explicit construction surface and all referenced P2 types are defined/current.; X=Test may not read R19/R20/R21 to discover missing constructors or semantics.; R=DESIGN-P2-R23 current API contract.
-- `CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001` — F=VALUE; A=Construct all NULL/BOOLEAN/INTEGER/DECIMAL/STRING/LIST/OBJECT values and unsupported raw objects.; E=Closed domain, canonical numbers, deterministic equality/hash/json; unsupported arbitrary object has no construction surface.; X=No raw Object accessor/reference leak.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-06.
-- `CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001` — F=VALUE; A=Mutate nested source lists/maps after snapshot and attempt to mutate returned collections.; E=Snapshot is unchanged and returned collections are immutable.; X=No live nested reference leak.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-06.
-- `CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001` — F=ID; A=Construct all runtime ID wrappers with null/blank/case variants.; E=Null/blank rejected; exact case-sensitive equals/hash/value preserved, including explicit RuntimeModelSessionId.; X=No permission/scope inference from RuntimeObjectId text.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-02.
-- `CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001` — F=INTENT; A=Provide zero WRITE intent candidates for the frozen authority/target.; E=WRITE_INTENT_NOT_FOUND; capability/Guard/operation=0.; X=No synthesized default mutation.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-03.
-- `CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001` — F=INTENT; A=Provide two WRITE intent candidates for the same frozen authority/target.; E=WRITE_INTENT_AMBIGUOUS; capability/Guard/operation=0.; X=No first/last candidate choice.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-03.
-- `CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001` — F=INTENT; A=Freeze one intent then mutate candidate provider/frame/cursor state.; E=Frozen target/stamp/intent remain unchanged or stale-deny; no reselection.; X=No post-Guard intent replacement.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-03.
-- `CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001` — F=INTENT; A=Invoke Rule/Change/CustomAction paths with same ModelAccessRuleKey and optional RuleKey provenance.; E=Authorization depends only on exact ModelAccessRuleKey; RuleKey may be absent.; X=No RuleKey-based permission authority.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-03.
-- `CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001` — F=INTENT; A=Reflect ResolvedWriteIntent/ResolvedProtectedWriteAccess/operation port signatures.; E=Only key.modelPath/stamp.modelPath (required equal) represent WRITE path; port has no extra path argument.; X=No independently supplied second ModelPath.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-03.
-- `CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001` — F=INTENT; A=Carry frame/owner/optional cursor from invocation through target/intent.; E=Typed wrappers remain exact end-to-end.; X=No raw String/null/N-A cursor sentinel.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-03.
-- `CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001` — F=INTENT; A=Attempt to build intent from target object A and stamp session/object/path/version from B or a different path.; E=Construction rejects mismatch; valid stamp exactly equals target session/object and key path.; X=No version proof borrowed from another runtime object/path.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-03.
-- `CASE-P2-TD-REAL-READ-OPERATION-001` — F=ADAPTER; A=ALLOW READ through normal production composition and mutate source after return.; E=Value equals actual ModelData/path snapshot; write/version count=0; snapshot remains immutable.; X=No fake-only reachability or mutation.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-06.
-- `CASE-P2-TD-REAL-WRITE-OPERATION-001` — F=ADAPTER; A=ALLOW WRITE through normal production composition with one valid frozen target/stamp.; E=Actual ModelData/path mutates exactly once, version increments once, receipt binds same intent.; X=No effect before Guard or second target/path.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-06.
-- `CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001` — F=ADAPTER; A=Acquire operation path only from ProtectedAccessRuntimeFactory.production(engineContext).create(frameSnapshot).; E=Normal composition reaches dec-core-model production adapter/session and actual ModelData.; X=Fake adapter/effect counter alone cannot satisfy case.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-06.
-- `CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001` — F=ADAPTER; A=Inspect public business/consumer constructors and try to inject RuntimeModelOperationPort/callback.; E=No caller injection/replacement surface exists.; X=No operation callback substitution after Guard.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-06.
-- `CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001` — F=LOCATOR; A=Register a ModelData pre-seal, seal, resolve in owner session, then close it.; E=Owner session resolves exact object; post-seal registration rejected; closed binding becomes stale.; X=No static/global locator.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-02.
-- `CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001` — F=LOCATOR; A=Exercise explicit session mismatch, active-session missing object and closed/expired binding separately.; E=Mismatch -> RUNTIME_SESSION_SCOPE_MISMATCH; active missing -> RUNTIME_OBJECT_NOT_FOUND; closed/expired -> RUNTIME_OBJECT_STALE.; X=No attempt to infer cross-session state from RuntimeObjectId text.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-02.
-- `CASE-P2-TD-RUNTIME-TARGET-SELECTION-001` — F=LOCATOR* (compiler-produced CompiledTargetBinding with matching/nonmatching sealed registrations under typed frame/owner/cursor); A=Give RuntimeTargetResolver controlled 0,1,2 exact compiled-binding candidates while instrumenting raw XML/YAML/View/property-tree/selector-parser access.; E=0 -> RUNTIME_TARGET_NOT_FOUND; 1 -> immutable ResolvedRuntimeTarget carrying the exact same CompiledTargetBinding; 2 -> RUNTIME_TARGET_AMBIGUOUS; raw-definition/parser access count=0.; X=No selector reparse/trim/normalize, raw definition/property-tree scan, or first/name/frame/owner/cursor fallback.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-02.
-- `CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001` — F=TXN; A=Trigger mutation failure and commit failure separately after Guard ALLOW.; E=Observable ModelData/origin equals pre-write state, receipt absent, capability CONSUMED, RUNTIME_WRITE_FAILED.; X=No partial publication, automatic retry or reselection.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-06 / FAIL-P2-ACCESS-OPERATION-001.
-- `CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001` — F=COMPOSE; A=Attempt protected operation through normal public consumer surfaces without Bridge/Guard.; E=No legal public bypass reaches model operation.; X=No direct Gateway/Guard/model-port access by business callers.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001` — F=COMPOSE; A=Create one production composition from explicit Context/frame snapshot.; E=Composition exposes one shared bridge/context/frame/session to representative entries.; X=No entry-specific authority instance or global Context.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001` — F=COMPOSE; A=Invoke representative Rule entry through composition.; E=Rule path reaches same Bridge/resolver/Guard/model seam.; X=No Rule-only bypass.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001` — F=COMPOSE; A=Invoke representative Change entry without RuleKey provenance.; E=Change path authorizes via ModelAccessRuleKey and same Bridge.; X=No mandatory RuleKey authority.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001` — F=COMPOSE; A=Invoke representative CustomAction entry without RuleKey provenance.; E=CustomAction path authorizes via ModelAccessRuleKey and same Bridge.; X=No custom-action bypass or RuleKey requirement.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-AC007-CONSUMER-PARITY-001` — F=COMPOSE; A=Run equivalent access through Rule, Change and CustomAction entries.; E=Equivalent authority/context yields equivalent allow/deny and operation semantics.; X=No consumer-specific permission widening.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001` — F=COMPOSE; A=Reflect production entry structure and dependency injection.; E=Entries receive neutral/shared Bridge only, not mutable authority internals.; X=No per-entry Guard/PolicyIndex/model port injection.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001` — F=COMPOSE; A=Use real fixture and normal factory/composition for representative entries.; E=At least one representative path reaches actual model state under production assembly.; X=Manual new Entry(testBridge) alone is insufficient.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001` — F=COMPOSE; A=Create composition with frame/owner A, invoke with A then with mismatching frame or owner B.; E=A may proceed to resolver; mismatch -> RUNTIME_CONTEXT_MISMATCH with resolver/capability/Guard/effect=0.; X=No runtime target selection under mismatched composition context.; R=FLOW-PROTECTED-ACCESS-EXECUTE / composition preconditions.
-- `CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001` — F=CONC; A=Release multiple threads against one capability.; E=Exactly one consumes/proceeds; all others receive capability-consumed denial.; X=No double Guard or effect.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-04,06.
-- `CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001` — F=CONC; A=Freeze two capabilities with same actual ModelData/path/stamp version and race them.; E=Exactly one commit/receipt/version increment; one stale loser with mutation=0.; X=No lost update, partial state or session-local split lock domain.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-04,06.
-- `CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001` — F=CONC; A=Register exact same ModelData instance twice in one session, then in two active sessions; close owner then retry.; E=Same-session duplicate -> ALREADY_REGISTERED; cross-session active -> OWNERSHIP_CONFLICT; after close lease may transfer without version reset.; X=No two active coordination/version domains for one actual ModelData.; R=FLOW-PROTECTED-ACCESS-EXECUTE / STEP-P2-ACCESS-04,06.
-- `CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001` — F=DEP; A=Inspect P3/P4/P6 core dependencies and starter/model/context edges.; E=P3/P4/P6 -> context allowed; -> starter forbidden; starter -> model allowed for production assembly.; X=No core dependency on starter internals.; R=P2-IMPACT-R22 dependency rules.
-- `CASE-P2-TD-ATOMIC-PUBLICATION-001` — F=PUB; A=Construct valid candidate then fail candidate construction/publication around swap.; E=Only whole new candidate or whole previous Context is observable; COMPILER coordinates swap.; X=No partial Context or Context-initiated publication.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-05,06.
-- `CASE-P2-TD-CONTEXT-ISOLATION-001` — F=PUB; A=Keep old EngineContext reference while compiling/publishing another candidate.; E=Old snapshot remains immutable/usable; new snapshot is separate.; X=No mutation of existing Context or global-current dependency.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-05,06.
-- `CASE-P2-TD-POLICY-INDEX-PUBLICATION-001` — F=PUB; A=Publish valid exact policy set and attempt invalid classification publication.; E=Valid immutable PolicyIndex publishes with closure; invalid input publishes nothing.; X=No runtime repair/partial index.; R=FLOW-CONFIG-COMPILE / STEP-P2-COMPILE-05,06.
-- `CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001` — F=DIAG; A=Repeat equivalent compile failures with declaration-order changes.; E=Stable error code/source-aware non-sensitive diagnostics ordering.; X=No object identity/hash iteration leakage.; R=compile/runtime failurePaths in FLOW-R10.
-- `CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001` — F=DIAG; A=Repeat equivalent runtime denials with scheduling/order perturbations.; E=Stable non-sensitive denial code/message ordering.; X=No object identity/hash iteration leakage.; R=compile/runtime failurePaths in FLOW-R10.
-- `CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001` — F=FIXTURE; A=Compile real dynamic fixture requiring EXACT_RUNTIME_BINDING and run target resolution.; E=Compiler emits legal runtime plan and production resolver/Guard path is reachable.; X=No fake-only dynamic classifier or static allow substitution.; R=FLOW-CONFIG-COMPILE -> FLOW-PROTECTED-ACCESS-EXECUTE.
-- `CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001` — F=FIXTURE; A=From real source model-access declarations, compile then execute representative READ and WRITE.; E=Source identity/path/op map to exact policy, target selection and real operation end-to-end.; X=No EXECUTE or different runtime path semantics.; R=FLOW-CONFIG-COMPILE -> FLOW-PROTECTED-ACCESS-EXECUTE.
-- `CASE-P2-TD-DECLARATION-BOUNDARY-001` — F=COMPAT; A=Compile current declarations and inspect module/source references.; E=P2 declaration boundary points only at active/current P1-compatible modules and current P2 contracts.; X=No retired P1 module dependency or P7 scope creep.; R=P2 declaration compatibility boundary.
+### `RULEVIEW` — Compile RuleView ownership/key/lookup fixtures; exact composite identity; no bare-name/cross-System fallback.
+`CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001` `CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001` `CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001` `CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001` `CASE-P2-TD-RULEKEY-CONTRACT-001` `CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001` `CASE-P2-TD-KEY-SOURCE-COMPAT-001` `CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001`
 
-## 5. R24 typed-binding blocker
+### `TARGET` — Compile shared ViewKey TargetKey + exact ModelPath; orthogonal axes/wildcard finite expansion; stable errors.
+`CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001` `CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001` `CASE-P2-TD-MODEL-PATH-UNKNOWN-001` `CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001` `CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001` `CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001`
 
-- `CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001`: compiler maps P1 `ViewKey targetView + TargetPropertyPath(kind,value)` to `CompiledTargetBinding(targetViewKey, TARGET_MAIN|PROPERTY_PATH, exactResolvedValue)`; raw `selectorExpression` or String target-view runtime API is forbidden.
-- `CASE-P2-TD-RUNTIME-TARGET-SELECTION-001`: resolver consumes only the compiler-produced binding plus typed composition/session facts; raw XML/YAML/definition/property-tree/selector-parser access count must be zero for deterministic 0/1/N resolution.
-- Residual mapping remains `FND-P2-REV-004 / 009 / 017 / 019`; no `FND-P2-REV-021`.
+### `POLICY` — Compile READ/WRITE two-row policy + compiler-resolved binding; invalid tuples/plans deny/publish=0; no runtime repair/reparse.
+`CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001` `CASE-P2-TD-NO-EXECUTE-CONTRACT-001` `CASE-P2-TD-STATIC-DENY-001` `CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001` `CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001` `CASE-P2-TD-RUNTIME-BINDING-PROOF-001` `CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001`
 
-## 6. Preserved directions
+### `API` — Compile/reflect current R24 API only; Java8 surfaces complete, including RuntimeModelSession extends AutoCloseable and typed registration input.
+`CASE-P2-TD-CURRENT-API-SELF-CONTAINED-001`
 
-P1 shared ViewKey TargetKey, READ/WRITE-only, two-row policy classification, `ModelAccessRuleKey` WRITE authority, one WRITE ModelPath, 0/1/N intent, typed runtime IDs, closed RuntimeFactValue, atomic mutation stamp, actual-ModelData coordination, explicit EngineContext composition and P2/P7 boundary remain unchanged. BM-R20, FLOW-R10 and P2-IMPACT-R22 are unchanged.
+### `VALUE` — Exercise closed deep-immutable RuntimeFactValue canonical domain/equality/serialization; no live/raw Object leak.
+`CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001` `CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001`
 
-## 7. Review / Evidence gate
+### `ID` — Opaque runtime IDs exact/case-sensitive/nonblank; no permission or scope inference from text.
+`CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001`
 
-`risk_detection.json` remains NOT_SCANNED and current execution Evidence IDs remain none. Exact RED commands are planned, not executed Evidence. `TESTDESIGN-P2-R24` remains `NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`; Implementation Plan/TDD/Development remain BLOCKED.
+### `INTENT` — Resolve WRITE authority/path/typed context/stamp 0/1/N; one immutable intent pre-Guard; no post-Guard reselection/splice.
+`CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001` `CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001` `CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001` `CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001` `CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001` `CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001` `CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001`
+
+### `ADAPTER` — Normal production adapter performs real READ/WRITE; DENY invokes model effect zero times; no caller operation injection.
+`CASE-P2-TD-REAL-READ-OPERATION-001` `CASE-P2-TD-REAL-WRITE-OPERATION-001` `CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001` `CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001`
+
+### `LOCATOR` — Sealed session + exact sourceTargetKey/compiledBinding/context selects 0/1/N; deterministic scope/not-found/stale; no fallback inference.
+`CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001` `CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001` `CASE-P2-TD-RUNTIME-TARGET-SELECTION-001`
+
+### `TXN` — Guard-approved WRITE commits once or rollback/restores; stale/failure no receipt/model change; capability consumed.
+`CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001`
+
+### `COMPOSE` — Normal production composition uses one Context/bridge, explicit typed registrations, representative Rule/Change/CustomAction parity, no legal bypass.
+`CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001` `CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001` `CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001` `CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001` `CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001` `CASE-P2-TD-AC007-CONSUMER-PARITY-001` `CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001` `CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001` `CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001` `CASE-P2-TD-PRODUCTION-RUNTIME-REGISTRATION-BINDING-001`
+
+### `CONC` — Latch/barrier concurrency: one capability consumes once; same actual ModelData/path/version has one commit; cross-session ownership fail closed.
+`CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001` `CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001` `CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001`
+
+### `DEP` — Dependency direction: core->context allowed; core->starter forbidden; starter->model production assembly allowed.
+`CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001`
+
+### `PUB` — Compiler coordinates atomic whole-Context publication; old snapshot immutable; PolicyIndex no partial/runtime repair.
+`CASE-P2-TD-ATOMIC-PUBLICATION-001` `CASE-P2-TD-CONTEXT-ISOLATION-001` `CASE-P2-TD-POLICY-INDEX-PUBLICATION-001`
+
+### `DIAG` — Compile/runtime diagnostics stable and non-sensitive; no object/hash/iteration-order leakage.
+`CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001` `CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001`
+
+### `FIXTURE` — Real P1 fixture reaches compiler plan -> production resolver/Guard -> READ/WRITE; no fake/static-allow substitution.
+`CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001` `CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001`
+
+### `COMPAT` — Current P2 declaration boundary preserves active P1 compatibility; no retired module/P7 scope creep.
+`CASE-P2-TD-DECLARATION-BOUNDARY-001`
+
+## Normative R25 blocker oracles
+
+- `CASE-P2-TD-REVISION-DAG-001`: exact authority is `REQAN+Overlay -> BM-R20 -> FLOW-R10 -> DESIGN-P2-R24 -> TESTDESIGN-P2-R25`; `P2-IMPACT-R23` is parallel/non-authoritative; BM/Flow use stable downstream projections; stale R22/R23/R24 current authority or Impact<->Design cycle forbidden.
+- `CASE-P2-TD-CURRENT-API-SELF-CONTAINED-001`: R24 alone compiles/reflects all P2-added APIs; MUST contain `public interface RuntimeModelSession extends AutoCloseable`; `interface ... implements AutoCloseable` makes RED `INVALID_RED`; typed registration/frame constructors compile.
+- `CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001`: P1 `targetView + TargetPropertyPath(kind,value)` -> neutral `CompiledTargetBinding` losslessly; raw selector/parser/property-tree/definition runtime access count=0.
+- `CASE-P2-TD-PRODUCTION-RUNTIME-REGISTRATION-BINDING-001`: normal factory + exact EngineContext + >=2 explicit `RuntimeModelRegistrationInput(TargetKey,CompiledTargetBinding,ModelData)` pairs. Valid pairs register/resolve exact ModelData; pair absent from Context fails composition before resolver/capability/Guard/effect. `ModelData.name`, ViewData/property-tree, list-order/first-match, raw-definition, selector-reparse access counts=0. Registration cannot grant permission.
+- `CASE-P2-TD-RUNTIME-TARGET-SELECTION-001`: exact sourceTargetKey + compiler binding + typed composition/session yields 0=>NOT_FOUND, 1=>one immutable target, N=>AMBIGUOUS; no metadata/order/raw-selector fallback.
+
+## Gate
+`risk_detection.json` remains `NOT_SCANNED`; current execution Evidence IDs are none. Same-revision Design/Impact/TestDesign specialist Review and risk Evidence are required before lifecycle/TDD closure. Implementation Plan, TDD and Development remain BLOCKED.

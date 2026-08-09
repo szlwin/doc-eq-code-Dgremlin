@@ -1,48 +1,72 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R23`
-> Inputs：`BM-R20 / FLOW-R10 / P2-IMPACT-R22`
+> Revision：`DESIGN-P2-R24`
+> Inputs：`BM-R20 / FLOW-R10`；CrossModule projection `P2-IMPACT-R23`
 > Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 
-## Compile/publication seams
+## Compile-side seams
 
-- construct a valid/invalid immutable Context candidate separately from publication;
-- assert CONTEXT only constructs/holds representation;
-- assert COMPILER coordinates the atomic swap;
-- inject candidate-construction/publication failures and assert old Context remains;
-- no global/default Context lookup seam is permitted.
+- real P1-style fixture resolves `targetView + SystemViewSelector` exactly once to `TargetPropertyPath(kind,value)`;
+- compiler adapts that fact to neutral `CompiledTargetBinding(targetViewKey, TARGET_MAIN|PROPERTY_PATH, exactResolvedValue)`;
+- runtime-visible plan contains no raw selector lexical authority;
+- atomic publication remains compiler-coordinated and context-carried.
 
-## Runtime-target seams
+## Production registration provenance seam
 
-- factory must accept explicit EngineContext and explicit `RuntimeExecutionFrameSnapshot`;
-- invocation frame/owner mismatch is observable before resolver/capability/Guard;
-- compiler fixture converts P1 targetView + resolved TargetPropertyPath(kind,value) into neutral CompiledTargetBinding without raw selector leakage;
-- sealed RuntimeModelSession registrations carry that exact CompiledTargetBinding; controlled fixtures provide 0/1/N exact-match candidate sets;
+Use at least two distinct actual `ModelData` instances and at least two distinct compiler-produced binding pairs.
+
+The production fixture must construct:
+
+```text
+RuntimeModelRegistrationInput(TargetKey A, CompiledTargetBinding A, ModelData A)
+RuntimeModelRegistrationInput(TargetKey B, CompiledTargetBinding B, ModelData B)
+```
+
+Then acquire the normal `ProtectedAccessRuntimeFactory.production(exact EngineContext).create(frameSnapshot)` path.
+
+Instrument/spy all prohibited inference paths and assert invocation count = 0 for:
+
+- `ModelData.getName()` as binding authority;
+- `ViewData`/property-tree binding discovery;
+- list-position pairing;
+- raw XML/YAML/definition lookup;
+- selector parsing/trim/normalization;
+- first-match scan;
+- any global mutable association registry.
+
+A registration pair not present in the exact captured EngineContext must fail composition before RuntimeTargetResolver/capability/Guard/model effect. A valid registration pair does not grant READ/WRITE authority; exact PolicyIndex/Guard checks remain required.
+
+## Runtime target / model seams
+
+- sealed RuntimeModelSession stores the exact validated `TargetKey + CompiledTargetBinding + ModelData` association;
+- resolver exact-matches both `sourceTargetKey` and `compiledTargetBinding`;
 - resolver result freezes `RuntimeModelSessionId + RuntimeObjectId + RuntimeBindingProof`;
-- tests can prove there is one production resolver path and no raw-selector parse, raw-definition/property-tree scan, first/name/frame-only fallback.
+- `RuntimeMutationStamp` binds the same session/object/path/version;
+- identity-preserving fixtures register the same actual ModelData in one/two active sessions to verify lease/coordination rules;
+- transaction failure restores observable ModelData/origin state while capability remains CONSUMED.
 
-## Runtime object ownership seams
+## Current API compile seam
 
-- identity-preserving fixtures register the exact same ModelData instance twice in one session or in two active sessions;
-- same-session duplicate -> `RUNTIME_OBJECT_ALREADY_REGISTERED`;
-- cross-session active alias -> `RUNTIME_OBJECT_OWNERSHIP_CONFLICT`;
-- close/reopen may transfer active lease but cannot reset per-path mutation version.
+`ProtectedAccessCurrentApiContractTest` compiles/reflects every P2-added type and factory using only `DESIGN-P2-R24` + current source. It must specifically prove:
 
-## WRITE stamp / rollback seams
+```java
+public interface RuntimeModelSession extends AutoCloseable
+```
 
-- construct `RuntimeMutationStamp(sessionId, objectId, path, version)` only from one frozen target;
-- mismatch session/object/path must fail construction or deny before Guard/effect;
-- latch/barrier same-version race proves exactly one commit;
-- mutation failure and commit failure both restore observable ModelData/origin state while capability stays CONSUMED.
+and reject any generated/current contract using `interface ... implements AutoCloseable`. The current API test also compiles the typed `RuntimeModelRegistrationInput` / `RuntimeExecutionFrameSnapshot` construction surface.
 
-## API self-containedness seam
+## RED validity
 
-`ProtectedAccessCurrentApiContractTest` compiles/reflects every P2-added type and factory using only `DESIGN-P2-R23` + current source. Superseded design text is not a fixture.
+Exact target commands remain those declared by TESTDESIGN-P2-R25. Missing TestClass/symbol/setup or a compile failure before the intended assertion is `INVALID_RED`, never valid RED.
 
-## Production reachability
+## Concurrency
 
-A fake adapter/resolver may support unit tests but cannot satisfy production reachability. Production Evidence must acquire normal `ProtectedAccessRuntimeFactory.production(engineContext).create(frameSnapshot)` and observe real dec-core-model state.
+Use latch/barrier only, never sleep. Same actual ModelData/path/version may commit at most once; the stale loser mutates zero times.
 
 ## P2/P7 boundary
 
-Tests must reject use of P2 RuntimeModelSession as a generic user/business session, cross-request transaction manager or P7 resource lifecycle abstraction.
+Tests may use RuntimeModelSession only as a composition/frame locator and protected-operation atomicity seam; they must not turn it into a user session, cross-request transaction manager or P7 lifecycle abstraction.
+
+## Gate
+
+No TDD or current execution Evidence is claimed. Risk scan and same-revision TestDesign/TDD/TestEvidence Review remain required.
