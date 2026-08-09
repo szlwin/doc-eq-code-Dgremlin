@@ -1,385 +1,130 @@
 schemaVersion: 1
 artifact: dependency_impact
-scope:
-  project: doc-eq-code
-  version: V_1.0
-  module: COMPILER
-  targetIds:
-    - P1-COMPILER-F01
-    - FEATURE-DESC-3361AD2E54FC
-revision: BM-R13
-baseRevision: BM-R12
-nodes:
-  - id: P1-COMPILER-F01
-    type: FEATURE
-    name: Unified mix compiler
-    module: COMPILER
-    status: ACTIVE
-    refs:
-      - version/V_1.0/doc/P1-COMPILER-F01/requirement.md#P1-COMPILER-F01
-  - id: FEATURE-DESC-3361AD2E54FC
-    type: FEATURE
-    name: P2 System and RuleView ownership
-    module: COMPILER
-    status: ACTIVE_CANDIDATE
-    refs:
-      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01
-      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement_decision_overlay_20260809.md
-  - id: DEC-CORE-COMPILER
-    type: MODULE
-    name: Compiler core
-    module: COMPILER
-    status: ACTIVE
-  - id: DEC-CORE-CONTEXT
-    type: MODULE
-    name: Immutable context model
-    module: CONTEXT
-    status: ACTIVE
-  - id: DEC-DOCUMENT-FRONTENDS
-    type: MODULE
-    name: XML and YAML frontends
-    module: FRONTEND
-    status: ACTIVE
-  - id: DEC-CORE-STARTER
-    type: MODULE
-    name: Protected runtime composition
-    module: STARTER
-    status: ACTIVE
-  - id: DEC-DEMO
-    type: MODULE
-    name: Mix contract fixtures
-    module: DEMO
-    status: ACTIVE
-  - id: LEGACY-DECLARATION-SYSTEM-COMPAT
-    type: MODULE
-    name: Surviving read-only declaration/System compatibility boundary
-    module: DECLARATION
-    status: ACTIVE
-  - id: DEC-EXPAND-DECLARATION
-    type: MODULE
-    name: Retired declaration expansion
-    module: DECLARATION
-    status: SUPERSEDED
-  - id: DOWNSTREAM-P3-PROTECTED-CONSUMER
-    type: OBLIGATION
-    name: P3 Rule/Information protected-access consumer integration
-    module: P3
-    status: DEFERRED
-  - id: DOWNSTREAM-P4-PROTECTED-CONSUMER
-    type: OBLIGATION
-    name: P4 change/custom-action/produce protected-access consumer integration
-    module: P4
-    status: DEFERRED
-  - id: DOWNSTREAM-P6-PROTECTED-CONSUMER
-    type: OBLIGATION
-    name: P6 QueryPlan protected-access consumer integration
-    module: P6
-    status: DEFERRED
-relationships:
-  - id: REL-P1-COMPILER-IMPLEMENTS
-    from: P1-COMPILER-F01
-    to: DEC-CORE-COMPILER
-    type: IMPLEMENTED_BY
-    direction: DIRECTED
-    rationale: P1 compiler baseline remains inherited and unchanged.
-    conditions: []
-    traceIds: [TR-P1-COMPILER-001]
-    evidenceRefs:
-      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md
-  - id: REL-COMPILER-CONTEXT
-    from: DEC-CORE-COMPILER
-    to: DEC-CORE-CONTEXT
-    type: DEPENDS_ON
-    direction: DIRECTED
-    rationale: Compiler constructs context-owned immutable compiled snapshots; context never depends on compiler.
-    conditions: [candidate has no ERROR]
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-008]
-    evidenceRefs:
-      - version/V_1.0/doc/COMPILER/COMPILER_architecture.md#2-发布闭包
-  - id: REL-FRONTENDS-COMPILER
-    from: DEC-DOCUMENT-FRONTENDS
-    to: DEC-CORE-COMPILER
-    type: DEPENDS_ON
-    direction: DIRECTED
-    rationale: Frontends preserve explicit owner/path/source facts; compiler owns semantic resolution.
-    conditions: []
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-005]
-    evidenceRefs:
-      - version/V_1.0/doc/COMPILER/COMPILER_architecture.md#1-module-boundaries
+project: doc-eq-code
+version: V_1.0
+revision: BM-R14
+baseRevision: BM-R13
+status: NEEDS_REVIEW_MACHINE_BLOCKED_AC007_PENDING_USER_DECISION
+inputs:
+  - REQAN-P2-R01@d08612768131
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R02
+  - FLOW-R04@p2-system-ruleview-protected-access
+  - DESIGN-P2-R16
+  - TESTDESIGN-P2-R17
+inherits:
+  - P1 compiler/context/frontend/starter relations remain unchanged unless explicitly superseded below
+relations:
   - id: REL-P2-SYSTEM-RULEVIEW-COMPILER
     from: FEATURE-DESC-3361AD2E54FC
-    to: DEC-CORE-COMPILER
     type: IMPLEMENTED_BY
-    direction: DIRECTED
-    rationale: Compiler owns System ownership/version snapshots, RuleView resolved View/rules, shared ModelPath, access rules/index and atomic publication.
-    conditions: []
-    traceIds:
-      - TR-P2-SYSTEM-RULEVIEW-001
-      - TR-P2-SYSTEM-RULEVIEW-002
-      - TR-P2-SYSTEM-RULEVIEW-004
-      - TR-P2-SYSTEM-RULEVIEW-005
-      - TR-P2-SYSTEM-RULEVIEW-008
-      - TR-P2-SYSTEM-RULEVIEW-009
-    evidenceRefs:
-      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-SYSTEM-COMPILED-CONFIG
+    to: DEC-CORE-COMPILER
+    reason: Compiler owns System/RuleView resolution, P1 compatibility conversion, exact access rule construction, ownership derivation and digest-bound publication.
+    traces: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009]
   - id: REL-P2-SYSTEM-RULEVIEW-CONTEXT
     from: FEATURE-DESC-3361AD2E54FC
-    to: DEC-CORE-CONTEXT
     type: AFFECTS
-    direction: DIRECTED
-    rationale: Context exposes immutable System ownership/version, CompiledRuleView relation and one PolicyIndex authority.
-    conditions: [candidate has no ERROR]
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-008]
-    evidenceRefs:
-      - version/V_1.0/doc/COMPILER/COMPILER_api_contract.md#2-compiledsystem
+    to: DEC-CORE-CONTEXT
+    reason: Context exposes immutable source-compatible System/RuleView/P2 ModelPath/PolicyIndex facts; no second mutable authority.
+    traces: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-008]
   - id: REL-P2-SYSTEM-RULEVIEW-STARTER
     from: FEATURE-DESC-3361AD2E54FC
+    type: AFFECTS
     to: DEC-CORE-STARTER
-    type: AFFECTS
-    direction: DIRECTED
-    rationale: Starter owns the sole P2 production protected-access seam and no secondary permission authority.
-    conditions: []
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-009]
-    evidenceRefs:
-      - version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-runtime-guard
-      - version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/decision_log.md
-  - id: REL-P2-SYSTEM-RULEVIEW-DECLARATION
-    from: FEATURE-DESC-3361AD2E54FC
-    to: LEGACY-DECLARATION-SYSTEM-COMPAT
-    type: AFFECTS
-    direction: DIRECTED
-    rationale: P2 retains only surviving read-only compatibility until P7; retired declaration module is not restored.
-    conditions: [current phase is P2, compatibility is read-only]
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-010]
-    evidenceRefs:
-      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
-  - id: REL-P2-P3-PROTECTED-CONSUMER
-    from: FEATURE-DESC-3361AD2E54FC
-    to: DOWNSTREAM-P3-PROTECTED-CONSUMER
-    type: CREATES_OBLIGATION
-    direction: DIRECTED
-    rationale: P3 concrete Rule/Information consumers must integrate through the P2 seam; P2 does not implement them.
-    conditions: [P3 begins concrete execution implementation]
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-007]
-    evidenceRefs:
-      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement_decision_overlay_20260809.md#downstream-obligations
-  - id: REL-P2-P4-PROTECTED-CONSUMER
-    from: FEATURE-DESC-3361AD2E54FC
-    to: DOWNSTREAM-P4-PROTECTED-CONSUMER
-    type: CREATES_OBLIGATION
-    direction: DIRECTED
-    rationale: P4 concrete change/custom-action/produce consumers must use the P2 seam.
-    conditions: [P4 begins concrete execution implementation]
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-007]
-    evidenceRefs:
-      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement_decision_overlay_20260809.md#downstream-obligations
-  - id: REL-P2-P6-PROTECTED-CONSUMER
-    from: FEATURE-DESC-3361AD2E54FC
-    to: DOWNSTREAM-P6-PROTECTED-CONSUMER
-    type: CREATES_OBLIGATION
-    direction: DIRECTED
-    rationale: P6 QueryPlan must consume the shared ModelPath and P2 protected seam without reinterpreting permission.
-    conditions: [P6 begins QueryPlan implementation]
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-007]
-    evidenceRefs:
-      - version/V_1.0/doc/COMPILER/COMPILER_design.md#p2-model-path
-impactPolicies:
-  - id: IMP-P1-COMPILER-PUBLICATION
-    sourceRef: P1-COMPILER-F01
-    sourceAction: compileAndPublish
-    targetRefs: [DEC-CORE-CONTEXT, DEC-CORE-STARTER]
-    policy: REJECT_OPERATION
-    conditions: [compilation contains ERROR, candidate construction or compare-and-set fails]
-    consistency: ATOMIC
-    transactionBoundary: inherited P1 one-candidate atomic publication
-    idempotency: equal semantic input and versions produce equal semanticDigest
-    failureHandling: old EngineContext remains unchanged
-    compensation: none
-    historyHandling: previous revisions remain immutable
-    traceIds: [TR-P1-COMPILER-005]
-    testCaseIds: [CASE-P1-PUBLISH-ATOMIC-001]
-    evidenceRefs: [version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md#api-publication]
+    reason: Starter owns FLOW-PROTECTED-ACCESS-EXECUTE composition and hides issuance/capability/operation authority behind the public Bridge.
+    traces: [TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-009]
+impacts:
   - id: IMP-P2-SYSTEM-OWNERSHIP
-    sourceRef: FEATURE-DESC-3361AD2E54FC
-    sourceAction: compileSystemOwnershipSnapshot
-    targetRefs: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
-    policy: REJECT_OPERATION
-    conditions: [orphan owned fact, missing owned fact, ownership mismatch, invalid version identity]
-    consistency: ATOMIC
-    transactionBoundary: ownership/version snapshots are frozen with the same digest-bound candidate
-    idempotency: equal semantic source produces equal ownership/version identity independent of discovery order
-    failureHandling: stable ERROR and no candidate publication
-    compensation: discard candidate
-    historyHandling: old Context remains immutable
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-008]
-    testCaseIds: [CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001, CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001]
-    evidenceRefs: [version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-016A]
+    sourceAction: compileSystemOwnership
+    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
+    strategy: DERIVE_IMMUTABLE_READ_INDEX
+    authoritativeSources:
+      ownedDataKeys: final owner-qualified typed Data registry
+      ownedViewKeys: final owner-qualified typed View registry
+      ownedRuleViewKeys: final owner-qualified typed RuleView registry
+      ownedInformationKeys: final owner-qualified typed Information registry
+      ownedRuleKeys: final CompiledRuleView rule closure
+      ownedModelAccessRuleKeys: final ModelAccessPolicyIndex keys / compiled policy rules
+    invariant: CompiledSystem snapshot is not an authority and cannot rebuild any source authority.
+    failure: any two-way coherence mismatch rejects whole candidate and preserves old Context
+    cases: [CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001, CASE-P2-TD-SYSTEM-OWNERSHIP-REAL-FIXTURE-001]
+  - id: IMP-P2-SYSTEM-VERSION
+    sourceAction: bindSystemVersionIdentity
+    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
+    strategy: VALUE_BINDING
+    invariant: declaredVersion optional; sourceSemanticDigest mandatory; schemaVersion/compilerVersion equal enclosing CompiledModelSet values; options identity remains enclosing compile fact
+    cases: [CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001]
   - id: IMP-P2-SHARED-MODEL-PATH
-    sourceRef: FEATURE-DESC-3361AD2E54FC
-    sourceAction: canonicalizeModelPath
-    targetRefs: [DEC-CORE-COMPILER, DOWNSTREAM-P6-PROTECTED-CONSUMER]
-    policy: REJECT_OPERATION
-    conditions: [consumer-specific path interpretation, invalid segment, fuzzy fallback]
-    consistency: DETERMINISTIC
-    transactionBoundary: compile-time path IR construction
-    idempotency: equal System target raw path yields value-equal ModelPath for all consumer kinds
-    failureHandling: stable source-aware ERROR
-    compensation: none
-    historyHandling: none
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-005]
-    testCaseIds: [CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001]
-    evidenceRefs: [version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-018]
+    sourceAction: compileCanonicalModelPath
+    targets: [DEC-CORE-COMPILER]
+    strategy: SINGLE_CANONICAL_COMPILER
+    invariant: RULE CHANGE QUERY_CONTRACT MODEL_ACCESS equal path inputs produce value-equal P2 ModelPath
+    cases: [CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001, CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001]
+  - id: IMP-P2-P1-P2-PATH-OPERATION-MIGRATION
+    sourceAction: convertLegacyModelAccessFacts
+    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT, DEC-CORE-STARTER]
+    strategy: ONE_WAY_COMPATIBILITY_CONVERSION
+    mapping:
+      SharedModelPathExact: P2 exact ModelPath
+      SharedModelPathWildcard: finite deterministic exact P2 ModelPaths before policy publication
+      AccessModeREAD: AccessOperation.READ
+      AccessModeWRITE: AccessOperation.WRITE
+      AccessModeToEXECUTE: FORBIDDEN
+    invariant: SharedModelPath and AccessMode never remain PolicyIndex/Bridge/Guard runtime authorities after conversion
+    cases: [CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001]
   - id: IMP-P2-MODEL-ACCESS-AUTHORIZATION
-    sourceRef: FEATURE-DESC-3361AD2E54FC
     sourceAction: compileAndAuthorizeModelAccess
-    targetRefs: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT, DEC-CORE-STARTER]
-    policy: REJECT_OPERATION
-    conditions: [static access invalid, exact policy missing, runtime proof invalid, Guard denies]
-    consistency: ATOMIC
-    transactionBoundary: static denial blocks publication; runtime denial occurs before protected operation/effect
-    idempotency: same immutable facts produce same decision classification
-    failureHandling: fail closed and preserve state
-    compensation: none
-    historyHandling: previous Context/Evidence immutable
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-006]
-    testCaseIds: [CASE-P2-TD-ACCESS-NON-IMPLICATION-001, CASE-P2-TD-RUNTIME-BINDING-PROOF-001]
-    evidenceRefs: [version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION]
-  - id: IMP-P2-PROTECTED-SEAM
-    sourceRef: FEATURE-DESC-3361AD2E54FC
-    sourceAction: executeProtectedAccess
-    targetRefs: [DEC-CORE-STARTER, DOWNSTREAM-P3-PROTECTED-CONSUMER, DOWNSTREAM-P4-PROTECTED-CONSUMER, DOWNSTREAM-P6-PROTECTED-CONSUMER]
-    policy: REQUIRE_SINGLE_ENTRY
-    conditions: [protected READ WRITE EXECUTE]
-    consistency: FAIL_CLOSED
-    transactionBoundary: Bridge to Gateway to Guard must complete before protected operation
-    idempotency: direct bridge invocations are independent; same one-shot capability terminal success <= 1
-    failureHandling: unsupported/bypass path blocks P2 or downstream integration
-    compensation: none before side effect
-    historyHandling: downstream obligations remain open until their stage
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-007]
-    testCaseIds: [CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001, CASE-P2-TD-GUARD-NO-BYPASS-001]
-    evidenceRefs: [version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/decision_log.md]
-  - id: IMP-P2-DIAGNOSTIC-DENIAL
-    sourceRef: FEATURE-DESC-3361AD2E54FC
-    sourceAction: emitDiagnosticOrDenial
-    targetRefs: [DEC-CORE-COMPILER, DEC-CORE-STARTER]
-    policy: REQUIRE_DETERMINISTIC_RESULT
-    conditions: [compile ERROR, runtime DENY]
-    consistency: DETERMINISTIC
-    transactionBoundary: result emitted before publication/operation as applicable
-    idempotency: same immutable facts repeat same code/provenance
-    failureHandling: unstable/missing provenance blocks completion
-    compensation: none
-    historyHandling: no sensitive runtime values persisted
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-009]
-    testCaseIds: [CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001, CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001]
-    evidenceRefs: [version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-021]
+    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT, DEC-CORE-STARTER]
+    strategy: EXACT_OPERATION_QUALIFIED_POLICY
+    invariant: READ WRITE EXECUTE do not imply each other; current compiler-published PolicyIndex is sole authorization authority
+    failure: policy miss/mismatch/proof failure DENY before operation/effects
+    cases: [CASE-P2-TD-ACCESS-NON-IMPLICATION-001, CASE-P2-TD-RUNTIME-BINDING-PROOF-001]
   - id: IMP-P2-ATOMIC-PUBLICATION
-    sourceRef: FEATURE-DESC-3361AD2E54FC
     sourceAction: publishP2Candidate
-    targetRefs: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
-    policy: REJECT_OPERATION
-    conditions: [any System RuleView ownership path policy ERROR]
-    consistency: ATOMIC
-    transactionBoundary: one immutable digest-bound candidate
-    idempotency: equal facts yield equal digest
-    failureHandling: old Context retained
-    compensation: discard candidate
-    historyHandling: previous Context immutable
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-008]
-    testCaseIds: [CASE-P2-TD-ATOMIC-PUBLICATION-001]
-    evidenceRefs: [version/V_1.0/doc/COMPILER/COMPILER_architecture.md#2-发布闭包]
+    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
+    strategy: ATOMIC
+    invariant: registries RuleView closure P2 canonical facts PolicyIndex derived ownership version identity digest are one closure
+    failure: any ERROR -> no new candidate and old Context remains active
+    cases: [CASE-P2-TD-ATOMIC-PUBLICATION-001, CASE-P2-TD-POLICY-INDEX-PUBLICATION-001]
+  - id: IMP-P2-PROTECTED-SEAM
+    sourceAction: executeProtectedAccess
+    targets: [DEC-CORE-STARTER]
+    strategy: SINGLE_PRODUCTION_SEAM_FOUNDATION
+    invariant: existing P2 supported protected operations use Bridge->internal issuance->resolver->capability->Gateway->Guard->operation; no public mint/secondary authority
+    ac007Status: PENDING_USER_DECISION
+    note: Seam foundation is valid independent architecture, but whether it alone closes P2 AC007 depends on user Option A/B decision.
+    cases: [CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001, CASE-P2-TD-GUARD-NO-BYPASS-001]
+  - id: IMP-P2-RUNTIME-DENIAL
+    sourceAction: denyProtectedAccess
+    targets: [DEC-CORE-STARTER, DEC-CORE-CONTEXT]
+    strategy: DETERMINISTIC_FAIL_CLOSED
+    invariant: repeated equal denial retains stable code/System/optional RuleView/AccessOperation/P2 ModelPath/policy SourceRef and exposes no sensitive actual values
+    cases: [CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001]
   - id: IMP-P2-DECLARATION-BOUNDARY
-    sourceRef: FEATURE-DESC-3361AD2E54FC
     sourceAction: preserveReadOnlyDeclarationCompatibilityBoundary
-    targetRefs: [LEGACY-DECLARATION-SYSTEM-COMPAT]
-    policy: RETAIN_UNCHANGED
-    conditions: [current phase is P2, compatibility is read-only]
-    consistency: ATOMIC
-    transactionBoundary: P2 never restores retired declaration runtime
-    idempotency: repeated compile keeps same boundary
-    failureHandling: write/second authority blocks completion
-    compensation: revert offending P2 change
-    historyHandling: final deletion belongs P7
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-010]
-    testCaseIds: [CASE-P2-TD-DECLARATION-BOUNDARY-001]
-    evidenceRefs: [version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022]
+    targets: [LEGACY-DECLARATION-SYSTEM-COMPAT]
+    strategy: RETAIN_UNCHANGED
+    invariant: no write second registry or second runtime authority; deletion remains P7
+    cases: [CASE-P2-TD-DECLARATION-BOUNDARY-001]
 crossModuleImplementations:
   - id: CMI-P2-SYSTEM-RULEVIEW-001
-    businessFlowRef: FLOW-CONFIG-COMPILE
-    name: P2 owner-qualified compilation, publication and protected runtime seam
-    trigger: caller compiles System/RuleView/model-access facts and then uses a P2 protected access
-    participants:
-      - id: CMPART-P2-FRONTEND
-        module: FRONTEND
-        responsibility: preserve explicit ownership/path/source facts
-      - id: CMPART-P2-COMPILER
-        module: COMPILER
-        responsibility: construct ownership RuleView ModelPath policy digest candidate
-      - id: CMPART-P2-CONTEXT
-        module: CONTEXT
-        responsibility: expose immutable current snapshots and one PolicyIndex authority
-      - id: CMPART-P2-STARTER
-        module: STARTER
-        responsibility: expose Bridge and enforce resolver capability Gateway Guard operation seam
-    steps:
-      - id: CMSTEP-P2-01
-        order: 1
-        from: CMPART-P2-FRONTEND
-        to: CMPART-P2-COMPILER
-        interactionType: DATA_WRITE
-        action: provide explicit System RuleView view/rule model-access path SourceRef facts
-      - id: CMSTEP-P2-02
-        order: 2
-        from: CMPART-P2-COMPILER
-        to: CMPART-P2-CONTEXT
-        interactionType: DATA_WRITE
-        action: atomically publish ownership RuleView PolicyIndex digest candidate
-      - id: CMSTEP-P2-03
-        order: 3
-        from: CMPART-P2-STARTER
-        to: CMPART-P2-CONTEXT
-        interactionType: SYNC_API
-        action: execute exact protected request through Bridge Gateway Guard using current Context
-    successCriteria:
-      - ownership/version and RuleView resolved relations are complete
-      - shared ModelPath is canonical across consumer contracts
-      - operation permissions do not imply each other
-      - all P2 protected production operations use the one seam
-      - denial occurs before effect
-    failurePaths:
-      - id: CMFAIL-P2-COMPILE
-        atStep: CMSTEP-P2-02
-        condition: ownership RuleView path policy or digest error
-        result: no candidate publication; old Context retained
-      - id: CMFAIL-P2-RUNTIME
-        atStep: CMSTEP-P2-03
-        condition: policy/proof/plan/target/Guard invalid
-        result: deterministic DENY; operation/effect zero
-    traceIds:
-      - TR-P2-SYSTEM-RULEVIEW-001
-      - TR-P2-SYSTEM-RULEVIEW-002
-      - TR-P2-SYSTEM-RULEVIEW-004
-      - TR-P2-SYSTEM-RULEVIEW-005
-      - TR-P2-SYSTEM-RULEVIEW-006
-      - TR-P2-SYSTEM-RULEVIEW-007
-      - TR-P2-SYSTEM-RULEVIEW-008
-      - TR-P2-SYSTEM-RULEVIEW-009
+    flow: FLOW-CONFIG-COMPILE
+    sequence: [frontend/source, compiler symbols, compiler references, P1 compatibility conversion, policy construction, ownership derivation, digest, context publication]
+    status: CANDIDATE
+  - id: CMI-P2-PROTECTED-ACCESS-001
+    flow: FLOW-PROTECTED-ACCESS-EXECUTE
+    sequence: [public bridge, starter internal issuance, target resolver, one-shot capability, gateway, guard, operation-or-denial]
+    status: CANDIDATE
   - id: CMI-P2-DOWNSTREAM-PROTECTED-CONSUMERS
-    businessFlowRef: FLOW-CONFIG-COMPILE
-    name: Downstream consumer obligations created by P2 seam decision
-    trigger: P3/P4/P6 begins concrete executor implementation
-    participants:
-      - id: CMPART-DOWNSTREAM-P3
-        module: P3
-        responsibility: integrate Rule/Information access through P2 seam
-      - id: CMPART-DOWNSTREAM-P4
-        module: P4
-        responsibility: integrate change/custom-action/produce access through P2 seam
-      - id: CMPART-DOWNSTREAM-P6
-        module: P6
-        responsibility: integrate QueryPlan shared ModelPath/protected read through P2 seam
-    successCriteria:
-      - no downstream module introduces a bypass or second permission authority
-    failurePaths: []
-    traceIds: [TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-007]
+    status: PENDING_USER_DECISION
+    optionA: P3/P4/P6 concrete integration becomes downstream acceptance
+    optionB: representative Rule/change/custom-action consumers must be delivered in P2
+    note: no downstream obligation is treated as ACTIVE until user chooses A/B
+reviewGate:
+  businessFlowReview: REQUIRED
+  impactReview: REQUIRED
+  crossModuleReview: REQUIRED
+  ac007UserDecision: REQUIRED
+  riskDetection: NOT_SCANNED
+  implementationPlan: BLOCKED
+  tdd: BLOCKED
+  development: BLOCKED
