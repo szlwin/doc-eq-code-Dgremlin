@@ -1,7 +1,7 @@
 # P2 Dependency Graph
 
 - Project: `doc-eq-code`
-- Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R25 / DESIGN-P2-R26 / TESTDESIGN-P2-R27`
+- Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R26 / DESIGN-P2-R27 / TESTDESIGN-P2-R28`
 - Status: `NEEDS_REVIEW / MACHINE_BLOCKED`
 - Decisions: Direct Bridge ACTIVE; AC-007 Option B ACTIVE; AccessOperation READ/WRITE-only
 
@@ -13,34 +13,32 @@ BM-R20
         |
         v
 FLOW-R11
-        |------------------> P2-IMPACT-R25 (parallel projection)
+        |------------------> P2-IMPACT-R26 (parallel projection)
         v
-DESIGN-P2-R26
+DESIGN-P2-R27
         |
         v
-TESTDESIGN-P2-R27
+TESTDESIGN-P2-R28
 ```
 
-BM-R20 and FLOW-R11 retain their independently reviewed semantic PASS. Exact downstream revision linkage is owned by this graph and task traceability; downstream artifacts are not authoritative upstream inputs.
+BM-R20 and FLOW-R11 remain the authoritative business semantics. R27 withdraws the R26 fresh-snapshot/open lifecycle and returns to the FLOW-R11 precondition: a MODEL-owned trusted runtime frame already exists before protected access begins.
 
-## Trusted MODEL production chain
+## Compile-to-production identity chain
 
 ```text
-Compiler/P1 target resolution
- -> CONTEXT RuntimeBindingPlan(TargetKey + CompiledTargetBinding)
- -> STARTER builds RuntimeModelFrameRequest(plan + deep-immutable source snapshot)
- -> MODEL RuntimeModelRuntimes.production(captured EngineContext)
- -> MODEL RuntimeModelRuntime.open(request)
-      -> verify exact plan membership
-      -> exact target view = plan.compiledTargetBinding.targetViewKey
-      -> create NEW ModelData under that captured-context view definition
-      -> atomically freeze provenance + handle
-      -> after all inputs succeed create frame + sealed session
- -> MODEL returns RuntimeModelExecution(frame + session) to STARTER
- -> STARTER exact resolver + one-shot capability + Guard
- -> MODEL actual READ / rollback-safe WRITE
+COMPILER resolves View semantics once
+ -> CONTEXT CompiledViewMaterializationPlan(ViewKey + immutable field/relation shape)
+ -> existing MODEL production lifecycle receives exact RuntimeBindingPlan + real origin object
+ -> CONTEXT ModelDataFactory.createData(compiledPlan, originObject) (no default Context / no NormalizedBody parse)
+ -> MODEL freezes RuntimeModelHandle(plan + same actual ModelData) while loading that ModelData into the active ModelContainer
+ -> MODEL execution root mints RuntimeModelAccessScope(frameId/owner/cursor + handles)
+ -> STARTER validates scope.frame against captured EngineContext
+ -> STARTER begins session from scope, registers trusted handles, seals session
+ -> exact target -> one-shot capability -> Guard
+ -> MODEL actual READ / rollback-safe WRITE over the same ModelData
+ -> existing ModelContainer success path writes committed values back to the same originData object
 ```
 
-Forbidden: existing ModelData as trusted input, `ModelData.name`/metadata/default-context identity inference, raw selector reparse, partial frame/session publication, caller-injected runtime/session/Guard/operation port, handle rebind, frame relabel, first-match fallback or Guard bypass.
+Forbidden: R26 `RuntimeFactValue sourceSnapshot` as model-object source, public frame/scope identity input, runtime parsing of `CompiledDefinition.normalizedBody`, XML/YAML/ViewData/default Context identity inference, public handle wrap/rebind, or Guard bypass.
 
-Current CMI IDs: `CMI-P2-COMPILE-004`, `CMI-P2-PROTECTED-ACCESS-005`.
+Current CMIs: `CMI-P2-COMPILE-004`, `CMI-P2-PROTECTED-ACCESS-006`.

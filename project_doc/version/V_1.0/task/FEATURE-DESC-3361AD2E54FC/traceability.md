@@ -6,20 +6,19 @@
 REQAN-P2-R01@d08612768131 + Overlay R04
  -> BM-R20
  -> FLOW-R11
- -> DESIGN-P2-R26
- -> TESTDESIGN-P2-R27
-parallel: P2-IMPACT-R25
+ -> DESIGN-P2-R27
+ -> TESTDESIGN-P2-R28
+parallel: P2-IMPACT-R26
 ```
 
-| Trace | Requirement / decision | BM | Flow | Impact | Design | TestDesign |
+| Trace | Current focus | BM | Flow | Impact | Design | TestDesign |
 |---|---|---|---|---|---|---|
-| `TR-P2-001` | System/RuleView compilation | `BM-R20` | `FLOW-CONFIG-COMPILE@FLOW-R11` | `P2-IMPACT-R25` | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
-| `TR-P2-004` | READ/WRITE protected authority | `BM-R20` | `FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R11` | `P2-IMPACT-R25` | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
-| `TR-P2-005` | TargetKey/ModelPath/compiled binding | `BM-R20` | `FLOW-CONFIG-COMPILE@FLOW-R11` | `P2-IMPACT-R25` | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
-| `TR-P2-006` | runtime target/materialization fail closed | `BM-R20` | `FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R11` | `P2-IMPACT-R25` | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
-| `TR-P2-007` | Guard / MODEL effect / no bypass | `BM-R20` | `FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R11` | `P2-IMPACT-R25` | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
-| `TR-P2-008` | atomic Context publication | `BM-R20` | `FLOW-CONFIG-COMPILE@FLOW-R11` | `P2-IMPACT-R25` | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
-| `TR-P2-009` | mutation/concurrency/trusted materialization/handoff | `BM-R20` | `FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R11` | `P2-IMPACT-R25` | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
-| `TR-P2-REV-DAG` | current revision authority | `BM-R20` | `FLOW-R11` | `P2-IMPACT-R25` parallel | `DESIGN-P2-R26` | `TESTDESIGN-P2-R27` |
+| `TR-P2-001` | System/RuleView compile | BM-R20 | FLOW-R11 | P2-IMPACT-R26 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
+| `TR-P2-004` | READ/WRITE authority | BM-R20 | FLOW-R11 STEP-01..06 | P2-IMPACT-R26 CMI-006 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
+| `TR-P2-005` | TargetKey/ModelPath/binding/materialization descriptor | BM-R20 | FLOW-R11 compile | P2-IMPACT-R26 CMI-004 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
+| `TR-P2-006` | trusted actual-object provenance / target fail closed | BM-R20 | FLOW-R11 STEP-01..03 | P2-IMPACT-R26 CMI-006 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
+| `TR-P2-007` | Guard / MODEL effect / no bypass | BM-R20 | FLOW-R11 STEP-04..06 | P2-IMPACT-R26 CMI-006 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
+| `TR-P2-008` | atomic Context publication | BM-R20 | FLOW-R11 compile | P2-IMPACT-R26 CMI-004 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
+| `TR-P2-009` | actual-object/session/concurrency/write-back | BM-R20 | FLOW-R11 | P2-IMPACT-R26 | DESIGN-P2-R27 | TESTDESIGN-P2-R28 |
 
-Current materialization/handoff blockers are `CASE-P2-TD-TRUSTED-MATERIALIZATION-INPUT-001`, `CASE-P2-TD-TRUSTED-MATERIALIZATION-EXACT-VIEW-001`, `CASE-P2-TD-PRODUCTION-FRAME-HANDOFF-001`, and `CASE-P2-TD-PRODUCTION-SESSION-HANDOFF-001`. Wrong-target substitution remains `CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001`. Exact current linkage lives here and in the dependency graph, not in BM downstream refs.
+R26 fresh-snapshot/open types are superseded. Current runtime object provenance is based on the existing MODEL production ModelData/originData lifecycle plus compiler-published typed materialization descriptor and MODEL-minted runtime scope.
