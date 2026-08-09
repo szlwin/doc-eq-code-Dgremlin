@@ -1,104 +1,292 @@
 schemaVersion: 1
 artifact: business_flow_changeset
-module: COMPILER
-revision: FLOW-R07@p2-system-ruleview-protected-access
-baseRevision: FLOW-R06@p2-system-ruleview-protected-access
-authoritativeInputs:
-  - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809-R04
-  - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B
-  - DEC-P2-ACCESS-OPERATIONS-001:ACTIVE_READ_WRITE_ONLY
-  - BM-R17
-nonAuthoritativeDownstreamTraceRefs:
-  - DESIGN-P2-R19
-  - TESTDESIGN-P2-R20
-revisionInvariant: FLOW inputs contain only upstream Requirement/Decision/BM revisions; Design/TestDesign references are trace-only and never authoritative inputs
-status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
+changeSet:
+  id: FLOW-CHG-P2-R08
+  version: V_1.0
+  module: COMPILER
+  flowGroup: COMPILER
+  flowGroupName: P2 System RuleView protected access
+  reason: 'PR36 independent Review remediation: restore common-develop 2.44 changeset
+    structure, preserve P1 shared source View identity, freeze write-intent selection
+    and real production model operation path.'
+  baseRevision: FLOW-R07@p2-system-ruleview-protected-access
+  resultRevision: FLOW-R08@p2-system-ruleview-protected-access
+  affectedTraceIds:
+  - TR-P2-004
+  - TR-P2-005
+  - TR-P2-006
+  - TR-P2-007
+  - TR-P2-008
+  - TR-P2-009
 operations:
-  - op: upsert
-    flow:
-      id: FLOW-CONFIG-COMPILE
-      name: Deterministic System RuleView Target ModelPath Policy compilation and atomic publication
-      kind: COMPILE_PUBLICATION
-      acceptanceCriteria: [AC-P2-SYSTEM-RULEVIEW-001, AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-004:READ_WRITE_ONLY, AC-P2-SYSTEM-RULEVIEW-005, AC-P2-SYSTEM-RULEVIEW-008, AC-P2-SYSTEM-RULEVIEW-009:compile, AC-P2-SYSTEM-RULEVIEW-010]
-      steps:
-        - id: CMSTEP-P2-COMPILE-01
-          action: discover System sources and register canonical owner SystemKey symbols
-        - id: CMSTEP-P2-COMPILE-02
-          action: exact-resolve RuleView View Rule and other owner-qualified definitions
-        - id: CMSTEP-P2-COMPILE-03
-          action: exact-resolve each model-access sourceModel in its owner System and freeze one TargetKey(ownerSystemKey,canonicalSourceModelName)
-        - id: CMSTEP-P2-COMPILE-04
-          action: compile sourcePath independently through shared ModelPathCompiler; finite-expand legal wildcard before policy facts
-        - id: CMSTEP-P2-COMPILE-05
-          action: map AccessMode READ/WRITE one-way to AccessOperation READ/WRITE; no EXECUTE exists
-        - id: CMSTEP-P2-COMPILE-06
-          action: classify each exact rule into the frozen PolicyStatus x RuntimeAccessRequirement x RuntimeBindingPlan truth table
-        - id: CMSTEP-P2-COMPILE-07
-          action: for runtime-required rules freeze RuntimeBindingPlan(targetView,selector,resolved TargetKey,ModelPath,SourceRef); plan cannot reselect authority facts
-        - id: CMSTEP-P2-COMPILE-08
-          action: validate/build immutable ModelAccessPolicyIndex before collapse/publication
-        - id: CMSTEP-P2-COMPILE-09
-          action: derive System ownership/version and freeze same facts into SemanticDigestInput
-        - id: CMSTEP-P2-COMPILE-10
-          action: atomically publish CompiledModelSet EngineContext or preserve old Context on any ERROR
-      failureSemantics:
-        - unknown_or_ambiguous_source_model: stable ERROR; publication=0
-        - cross_system_target_resolution: stable ERROR; publication=0
-        - invalid_path_or_runtime_wildcard: stable ERROR; publication=0
-        - invalid_read_write_operation: stable ERROR; publication=0
-        - invalid_policy_truth_table_row: stable ERROR; publication=0
-        - ownership_or_reference_mismatch: stable ERROR; publication=0
-      businessModelRefs: [TERM-TARGET-KEY, VO-TARGET-KEY, VO-MODEL-PATH, VO-ACCESS-OPERATION, INV-COMPILER-024, INV-COMPILER-025, INV-COMPILER-026]
-      downstreamDesignTraceRefs: [COMPILER_design.md#p2-target-key, COMPILER_design.md#p2-policy-classification, COMPILER_design.md#p2-context]
-      downstreamTestTraceRefs: [CASE-P2-TD-REVISION-DAG-001, CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001, CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001]
-  - op: upsert
-    flow:
-      id: FLOW-PROTECTED-ACCESS-EXECUTE
-      name: Production representative protected READ WRITE through one runtime authority seam
-      kind: RUNTIME_PROTECTED_ACCESS
-      acceptanceCriteria: [AC-P2-SYSTEM-RULEVIEW-004:READ_WRITE_RUNTIME, AC-P2-SYSTEM-RULEVIEW-006, AC-P2-SYSTEM-RULEVIEW-007:OPTION_B_ACTIVE, AC-P2-SYSTEM-RULEVIEW-009:runtime]
-      steps:
-        - id: CMSTEP-P2-ACCESS-00
-          action: starter production root binds current immutable EngineContext and creates one ProtectedAccessComposition
-        - id: CMSTEP-P2-ACCESS-01
-          action: composition exposes same Bridge plus Rule Change CustomAction entries; Bridge implements neutral dec-core-context ProtectedAccessPort
-        - id: CMSTEP-P2-ACCESS-02
-          action: entry/direct caller submits exact ruleKey READ-or-WRITE frame owner cursor through neutral port/Bridge
-        - id: CMSTEP-P2-ACCESS-03
-          action: starter resolves exact actual target and current execution operation state; caller cannot inject operation callback
-        - id: CMSTEP-P2-ACCESS-04
-          action: starter mints one-shot capability bound to invocation TargetKey RuntimeObjectId ModelPath READ-or-WRITE and internal write intent when WRITE
-        - id: CMSTEP-P2-ACCESS-05
-          action: Gateway atomically consumes capability ISSUED-to-CONSUMED
-        - id: CMSTEP-P2-ACCESS-06
-          action: Guard performs exact current PolicyIndex lookup and, only for runtime-required truth-table row, validates exact RuntimeBindingPlan proof
-        - id: CMSTEP-P2-ACCESS-07
-          action: ALLOW dispatches capability-bound internal operation port; READ returns real immutable value snapshot without mutation; WRITE applies exactly one resolved mutation and returns write receipt
-        - id: CMSTEP-P2-ACCESS-08
-          action: DENY stops before operation port/effect and returns deterministic non-sensitive denial
-      downstreamDependencyBoundary:
-        neutralModule: dec-core-context
-        neutralContract: ProtectedAccessPort
-        starterImplementation: ProtectedExecutionBridge
-        futureCoreModules: [P3, P4, P6]
-        forbidden: core-to-dec-core-starter dependency
-      failureSemantics:
-        - policy_not_found: DENY before operation/effects
-        - invalid_policy_classification: never published; fail closed if encountered
-        - runtime_binding_stale_or_mismatch: DENY before operation/effects
-        - target_or_operation_substitution: DENY before operation/effects
-        - guard_unavailable: DENY before operation/effects
-        - capability_already_consumed: deterministic DENY; operation=0; effects=0
-      downstreamDesignTraceRefs: [COMPILER_design.md#p2-neutral-runtime-port, COMPILER_design.md#p2-production-composition, COMPILER_design.md#p2-operation-binding, COMPILER_design.md#p2-concurrency]
-      downstreamTestTraceRefs: [CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001, CASE-P2-TD-REAL-READ-OPERATION-001, CASE-P2-TD-REAL-WRITE-OPERATION-001, CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001, CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001]
-reviewGate:
-  requirementDecision: SATISFIED_OPTION_B_AND_READ_WRITE_ONLY
-  businessModelReview: REQUIRED
-  businessFlowReview: REQUIRED
-  impactReview: REQUIRED
-  crossModuleReview: REQUIRED
-  riskDetection: NOT_SCANNED
-  implementationPlan: BLOCKED
-  tdd: BLOCKED
-  development: BLOCKED
+- operation: update
+  targetId: FLOW-CONFIG-COMPILE
+  reason: Make source identity P1-compatible and schema-native.
+  after:
+    id: FLOW-CONFIG-COMPILE
+    name: P2 deterministic System/RuleView/model-access compilation and atomic publication
+    level: L1
+    type: MAIN
+    ownerModule: COMPILER
+    participantModules:
+    - COMPILER
+    - CONTEXT
+    - STARTER
+    goal: Compile P1-compatible shared source View identity, exact ModelPath and READ/WRITE
+      policy facts into one immutable EngineContext publication.
+    trigger: P2 configuration compilation starts for the current source set.
+    requirementRefs:
+    - id: REQAN-P2-R01@d08612768131
+      documentRef: version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md
+    featureRefs:
+    - id: FEATURE-DESC-3361AD2E54FC
+      module: COMPILER
+    ruleRefs:
+    - INV-COMPILER-025
+    - INV-COMPILER-026
+    - INV-COMPILER-029
+    acceptanceRefs:
+    - AC-P2-SYSTEM-RULEVIEW-001
+    - AC-P2-SYSTEM-RULEVIEW-002
+    - AC-P2-SYSTEM-RULEVIEW-003
+    - AC-P2-SYSTEM-RULEVIEW-004
+    - AC-P2-SYSTEM-RULEVIEW-005
+    - AC-P2-SYSTEM-RULEVIEW-008
+    - AC-P2-SYSTEM-RULEVIEW-009
+    - AC-P2-SYSTEM-RULEVIEW-010
+    traceIds:
+    - TR-P2-001
+    - TR-P2-002
+    - TR-P2-003
+    - TR-P2-004
+    - TR-P2-005
+    - TR-P2-006
+    - TR-P2-008
+    - TR-P2-009
+    - TR-P2-010
+    preconditions:
+    - Overlay R04 decisions are active.
+    - BM-R18 is the current upstream business model candidate.
+    steps:
+    - id: STEP-P2-COMPILE-01
+      order: 1
+      name: Register System and shared source View symbols
+      ownerModule: COMPILER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions: []
+      postconditions:
+      - SystemKey symbols and existing shared ViewKey namespace are available.
+    - id: STEP-P2-COMPILE-02
+      order: 2
+      name: Resolve RuleView ownership and sourceModel ViewKey
+      ownerModule: COMPILER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - STEP-P2-COMPILE-01 complete
+      postconditions:
+      - sourceModel resolves through shared ViewKey namespace; local targetView membership
+        is checked separately.
+    - id: STEP-P2-COMPILE-03
+      order: 3
+      name: Compile independent TargetKey and ModelPath
+      ownerModule: COMPILER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - source ViewKey exists
+      postconditions:
+      - TargetKey(ViewKey) and exact ModelPath are frozen independently.
+    - id: STEP-P2-COMPILE-04
+      order: 4
+      name: Classify READ/WRITE policy
+      ownerModule: COMPILER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - TargetKey and ModelPath exact
+      postconditions:
+      - Only legal two-row policy classification remains.
+    - id: STEP-P2-COMPILE-05
+      order: 5
+      name: Build and revalidate immutable PolicyIndex
+      ownerModule: CONTEXT
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - All rules pass classification validation
+      postconditions:
+      - PolicyIndex contains exact authorization owner System + TargetKey + ModelPath
+        + READ/WRITE facts.
+    - id: STEP-P2-COMPILE-06
+      order: 6
+      name: Atomically publish EngineContext
+      ownerModule: COMPILER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - PolicyIndex and ownership/version/digest closure valid
+      postconditions:
+      - New immutable Context published atomically or old Context retained.
+    variants: []
+    failurePaths:
+    - id: FAIL-P2-COMPILE-SOURCE-001
+      atStep: STEP-P2-COMPILE-02
+      condition: sourceModel shared ViewKey is missing or ambiguous
+      result: stable compile ERROR; publication=0
+      blocking: true
+      acceptanceRefs:
+      - AC-P2-SYSTEM-RULEVIEW-005
+    - id: FAIL-P2-COMPILE-POLICY-001
+      atStep: STEP-P2-COMPILE-04
+      condition: policy classification tuple is illegal
+      result: stable compile ERROR; publication=0
+      blocking: true
+      acceptanceRefs:
+      - AC-P2-SYSTEM-RULEVIEW-004
+    successCriteria:
+    - Source identity preserves P1 shared ViewKey semantics.
+    - No EXECUTE fact is published.
+    - PolicyIndex is immutable and sole runtime permission authority.
+    - Publication is atomic.
+    businessModelRefs:
+    - BM-R18
+    dependencyImpactRefs:
+    - P2-IMPACT-R20
+    designRefs:
+    - DESIGN-P2-R20
+    testCaseIds:
+    - CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001
+    - CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001
+    status: PROPOSED
+    createdVersion: V_1.0
+    lastChangedVersion: FLOW-R08
+    supersedes:
+    - FLOW-R07
+- operation: update
+  targetId: FLOW-PROTECTED-ACCESS-EXECUTE
+  reason: Freeze 0/1/N write intent and production dec-core-model operation path.
+  after:
+    id: FLOW-PROTECTED-ACCESS-EXECUTE
+    name: Production protected READ/WRITE through one authority seam
+    level: L1
+    type: MAIN
+    ownerModule: STARTER
+    participantModules:
+    - CONTEXT
+    - STARTER
+    - MODEL
+    goal: Authorize and execute one real capability-bound runtime READ or WRITE with
+      deterministic write-intent selection and no bypass.
+    trigger: Rule/Change/CustomAction representative entry or direct neutral-port
+      caller requests protected access.
+    requirementRefs:
+    - id: REQAN-P2-R01@d08612768131
+      documentRef: version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md
+    featureRefs:
+    - id: FEATURE-DESC-3361AD2E54FC
+      module: COMPILER
+    ruleRefs:
+    - INV-COMPILER-027
+    - INV-COMPILER-028
+    - INV-COMPILER-030
+    - INV-COMPILER-031
+    acceptanceRefs:
+    - AC-P2-SYSTEM-RULEVIEW-004
+    - AC-P2-SYSTEM-RULEVIEW-006
+    - AC-P2-SYSTEM-RULEVIEW-007
+    - AC-P2-SYSTEM-RULEVIEW-009
+    traceIds:
+    - TR-P2-004
+    - TR-P2-006
+    - TR-P2-007
+    - TR-P2-009
+    preconditions:
+    - Production ProtectedAccessComposition is bound to one immutable EngineContext.
+    steps:
+    - id: STEP-P2-ACCESS-01
+      order: 1
+      name: Submit neutral protected invocation
+      ownerModule: STARTER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions: []
+      postconditions:
+      - Bridge receives exact rule/op/frame/owner/cursor facts without caller operation
+        callback.
+    - id: STEP-P2-ACCESS-02
+      order: 2
+      name: Resolve runtime target and WRITE intent
+      ownerModule: STARTER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - Invocation is valid
+      postconditions:
+      - READ has exact target/path; WRITE has exactly one immutable frozen intent
+        or deterministic denial.
+    - id: STEP-P2-ACCESS-03
+      order: 3
+      name: Mint and atomically consume one-shot capability
+      ownerModule: STARTER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - ResolvedProtectedAccess is immutable
+      postconditions:
+      - At most one execution attempt can proceed.
+    - id: STEP-P2-ACCESS-04
+      order: 4
+      name: Guard exact current PolicyIndex facts
+      ownerModule: STARTER
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - Capability consumed once
+      postconditions:
+      - ALLOW or deterministic non-sensitive DENY; no operation yet.
+    - id: STEP-P2-ACCESS-05
+      order: 5
+      name: Execute real runtime model operation
+      ownerModule: MODEL
+      featureRef: FEATURE-DESC-3361AD2E54FC
+      preconditions:
+      - Guard ALLOW
+      postconditions:
+      - READ returns deep immutable RuntimeFactValue snapshot or WRITE applies frozen
+        intent exactly once and returns receipt.
+    variants: []
+    failurePaths:
+    - id: FAIL-P2-ACCESS-INTENT-001
+      atStep: STEP-P2-ACCESS-02
+      condition: WRITE candidate count is zero
+      result: WRITE_INTENT_NOT_FOUND; Guard=0; operation=0
+      blocking: true
+      acceptanceRefs:
+      - AC-P2-SYSTEM-RULEVIEW-006
+    - id: FAIL-P2-ACCESS-INTENT-002
+      atStep: STEP-P2-ACCESS-02
+      condition: WRITE candidate count is greater than one
+      result: WRITE_INTENT_AMBIGUOUS; Guard=0; operation=0
+      blocking: true
+      acceptanceRefs:
+      - AC-P2-SYSTEM-RULEVIEW-006
+    - id: FAIL-P2-ACCESS-GUARD-001
+      atStep: STEP-P2-ACCESS-04
+      condition: policy/proof mismatch, stale binding or Guard unavailable
+      result: DENY before operation; no value/receipt/effect
+      blocking: true
+      acceptanceRefs:
+      - AC-P2-SYSTEM-RULEVIEW-004
+      - AC-P2-SYSTEM-RULEVIEW-009
+    successCriteria:
+    - READ returns real immutable value without mutation.
+    - WRITE performs one real dec-core-model mutation from the frozen intent.
+    - Caller cannot inject operation implementation or change target/path/intent after
+      Guard.
+    businessModelRefs:
+    - BM-R18
+    dependencyImpactRefs:
+    - P2-IMPACT-R20
+    designRefs:
+    - DESIGN-P2-R20
+    testCaseIds:
+    - CASE-P2-TD-REAL-READ-OPERATION-001
+    - CASE-P2-TD-REAL-WRITE-OPERATION-001
+    - CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001
+    status: PROPOSED
+    createdVersion: V_1.0
+    lastChangedVersion: FLOW-R08
+    supersedes:
+    - FLOW-R07

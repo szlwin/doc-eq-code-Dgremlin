@@ -1,237 +1,93 @@
 # COMPILER P2 API Contract
 
-> Revision：`DESIGN-P2-R19`。Base：`DESIGN-P2-R18`。  
-> Inputs：Overlay R04 + `BM-R17` + `FLOW-R07`。  
+> Revision：`DESIGN-P2-R20`。Base：`DESIGN-P2-R19`。
+> Inputs：Overlay R04 + `BM-R18` + `FLOW-R08`。
 > Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
-## 1. Existing source-compatible keys
+## 1. Existing compatibility
 
-Existing public `SystemKey(String)/name()` and `RuleViewKey(SystemKey,String)/owner()/name()` MUST remain. Additive aliases are allowed only if old source keeps compiling.
+Existing public SystemKey/RuleViewKey/EngineContext/CompiledModelSet source surfaces remain source-compatible. P2 adds no EXECUTE and no bare-name runtime permission fallback.
 
-## 2. RuleKey
-
-```java
-package dec.core.context.model;
-
-public final class RuleKey {
-    public RuleKey(RuleViewKey ownerRuleViewKey, String localRuleName);
-    public static RuleKey of(RuleViewKey ownerRuleViewKey, String localRuleName);
-    public RuleViewKey ownerRuleViewKey();
-    public String localRuleName();
-}
-```
-
-Value identity/equality/hash = `(ownerRuleViewKey,localRuleName)`. Owning `CompiledRuleView` closure is the canonical store.
-
-## 3. TargetKey
+## 2. TargetKey
 
 ```java
-package dec.core.context.model.access;
-
 public final class TargetKey {
-    public TargetKey(SystemKey ownerSystemKey, String canonicalSourceModelName);
-    public static TargetKey of(SystemKey ownerSystemKey, String canonicalSourceModelName);
-    public SystemKey ownerSystemKey();
-    public String canonicalSourceModelName();
+    public TargetKey(ViewKey sourceViewKey);
+    public static TargetKey of(ViewKey sourceViewKey);
+    public ViewKey sourceViewKey();
 }
 ```
 
-Exact value identity only. Compiler maps source `sourceModel` to one TargetKey inside the owner System; no path-derived/fuzzy/cross-System fallback.
+Value identity is the existing canonical shared `ViewKey` resolved from P1 `sourceModel`. Authorization owner System is separate in `ModelAccessRuleKey`; local `targetView/selector/resolvedTarget` are separate binding facts.
 
-## 4. ModelPath / AccessOperation
-
-```java
-public final class ModelPath { /* immutable canonical exact segments */ }
-
-public enum AccessOperation {
-    READ,
-    WRITE
-}
-```
-
-No EXECUTE member. Runtime wildcard is invalid.
-
-## 5. ModelAccessRuleKey / policy types
+## 3. ModelAccessRuleKey / policy classification
 
 ```java
 public final class ModelAccessRuleKey {
-    public SystemKey systemKey();
+    public SystemKey authorizationOwnerSystemKey();
     public TargetKey targetKey();
     public ModelPath modelPath();
-    public AccessOperation operation();
-}
-
-public enum PolicyStatus {
-    STATIC_ALLOW,
-    RUNTIME_GUARD_REQUIRED
-}
-
-public enum RuntimeAccessRequirement {
-    NONE,
-    EXACT_RUNTIME_BINDING
+    public AccessOperation operation(); // READ | WRITE only
 }
 ```
 
-`ModelAccessRuleKey` equality/hash includes all four fields.
+Only `STATIC_ALLOW+NONE+no-plan` and `RUNTIME_GUARD_REQUIRED+EXACT_RUNTIME_BINDING+plan` are legal.
+
+## 4. RuntimeFactValue
 
 ```java
-public final class RuntimeBindingPlan {
-    public TargetKey resolvedTargetKey();
+public final class RuntimeFactValue {
+    public enum Kind { NULL, BOOLEAN, INTEGER, DECIMAL, STRING, LIST, OBJECT }
+    public Kind kind();
+    // kind-specific immutable accessors; no raw arbitrary Object accessor
+}
+```
+
+Contract: recursive deep snapshot; canonical BigInteger/normalized BigDecimal; ordered immutable LIST; immutable OBJECT with unique string keys and deterministic serialization order; structural equality/hash; deterministic JSON form; no live mutable runtime reference.
+
+## 5. Opaque IDs
+
+`RuntimeObjectId`, `ProtectedInvocationId`, `RuntimeWriteIntentId` are final immutable nonblank String wrappers with `of(String)` and `value()`, exact case-sensitive equals/hash, and no authority semantics.
+
+## 6. Resolved write intent
+
+```java
+public final class ResolvedWriteIntent {
+    public RuntimeWriteIntentId id();
+    public RuleKey ruleKey();
+    public TargetKey targetKey();
     public ModelPath modelPath();
-    public ViewKey targetViewKey();
-    public RuntimeSelectorPlanId selectorPlanId();
-    public SourceRef sourceRef();
+    public String frameId();
+    public String ownerResolutionId();
+    public String cursorId();
 }
 ```
 
-Legal rule construction rows are exactly:
+`WriteIntentResolver` returns zero/one/multiple candidates. Zero => `WRITE_INTENT_NOT_FOUND`; multiple => `WRITE_INTENT_AMBIGUOUS`; exactly one is frozen before Guard and never re-resolved after Guard.
 
-```text
-STATIC_ALLOW + NONE + no plan
-RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + plan
-```
+## 7. Production runtime operation port
 
-All other combinations reject before publication.
+Neutral context contract:
 
 ```java
-public final class CompiledModelAccessRule {
-    public ModelAccessRuleKey key();
-    public SourceRef sourceRef();
-    public PolicyStatus status();
-    public RuntimeAccessRequirement runtimeRequirement();
-    public Optional<RuntimeBindingPlan> runtimePlan();
-}
-
-public final class ModelAccessPolicyIndex {
-    public static ModelAccessPolicyIndex empty();
-    public static ModelAccessPolicyIndex of(Iterable<CompiledModelAccessRule> rules);
-    public Optional<CompiledModelAccessRule> find(ModelAccessRuleKey key);
-    public Set<ModelAccessRuleKey> keys();
+public interface RuntimeModelOperationPort {
+    RuntimeFactValue read(RuntimeObjectId objectId, ModelPath path);
+    ProtectedWriteReceipt write(ResolvedWriteIntent intent, RuntimeObjectId objectId, ModelPath path);
 }
 ```
 
-`of` revalidates duplicate/null/wildcard/READ-WRITE/truth-table invariants before collapse and returns immutable exact index.
+Production implementation belongs to `dec-core-model`; starter production assembly wires it into the starter-internal `ProtectedOperationExecutionAdapter`. Business callers never receive/inject this port.
 
-## 6. Neutral consumer-facing runtime contract (`dec-core-context`)
+## 8. Protected result algebra
 
-```java
-public interface ProtectedAccessPort {
-    ProtectedAccessResult execute(ProtectedAccessInvocation invocation);
-}
+`ProtectedAccessResult` enforces mutually exclusive states:
 
-public final class ProtectedAccessInvocation {
-    public static ProtectedAccessInvocation of(
-        ModelAccessRuleKey requestedRuleKey,
-        AccessOperation operation,
-        RuntimeExecutionFrameId frameId,
-        RuntimeResolutionOwnerId ownerResolutionId,
-        Optional<RuntimeCollectionCursorId> cursorId);
+- ALLOW+READ => `ProtectedReadValue` present only;
+- ALLOW+WRITE => `ProtectedWriteReceipt` present only;
+- DENY => `ProtectedAccessDenial` present only.
 
-    public ModelAccessRuleKey requestedRuleKey();
-    public AccessOperation operation();
-    public RuntimeExecutionFrameId frameId();
-    public RuntimeResolutionOwnerId ownerResolutionId();
-    public Optional<RuntimeCollectionCursorId> cursorId();
-}
-```
+Denial codes are stable and non-sensitive; no result leaks on DENY.
 
-Invocation immutable/non-null (except optional cursor contents); operation only READ/WRITE and must equal requested rule-key operation. Opaque runtime IDs are coordinates, never permission authority.
+## 9. Review gate
 
-## 7. Real operation result types
-
-```java
-public final class ProtectedReadValue {
-    public RuntimeObjectId runtimeObjectId();
-    public ModelPath modelPath();
-    public RuntimeFactValue value();
-}
-
-public final class ProtectedWriteReceipt {
-    public RuntimeObjectId runtimeObjectId();
-    public ModelPath modelPath();
-    public ProtectedInvocationId invocationId();
-    public RuntimeWriteIntentId writeIntentId();
-}
-
-public final class ProtectedAccessResult {
-    public boolean allowed();
-    public AccessOperation operation();
-    public Optional<ProtectedReadValue> readValue();
-    public Optional<ProtectedWriteReceipt> writeReceipt();
-    public Optional<ProtectedAccessDenial> denial();
-}
-```
-
-Result invariant:
-- ALLOW READ => readValue only;
-- ALLOW WRITE => writeReceipt only;
-- DENY => denial only;
-- all other combinations invalid.
-
-## 8. Starter implementation / production composition
-
-```java
-package dec.core.starter.access;
-
-public final class ProtectedExecutionBridge implements ProtectedAccessPort {
-    public ProtectedAccessResult execute(
-        ModelAccessRuleKey requestedRuleKey,
-        AccessOperation operation,
-        RuntimeExecutionFrameId frameId,
-        RuntimeResolutionOwnerId ownerResolutionId,
-        Optional<RuntimeCollectionCursorId> cursorId);
-
-    @Override
-    public ProtectedAccessResult execute(ProtectedAccessInvocation invocation);
-}
-
-public final class ProtectedAccessRuntimeFactory {
-    public ProtectedAccessComposition bind(EngineContext engineContext);
-}
-
-public final class ProtectedAccessComposition {
-    public EngineContext engineContext();
-    public ProtectedExecutionBridge bridge();
-    public RuleProtectedAccessEntry ruleEntry();
-    public ChangeProtectedAccessEntry changeEntry();
-    public CustomActionProtectedAccessEntry customActionEntry();
-}
-```
-
-All representative entries share exact same Bridge and Context. Gateway/Guard/resolver/operation port/capability are not public composition outputs.
-
-## 9. Starter-internal operation execution
-
-Not public API:
-
-```java
-interface ProtectedOperationExecutionPort {
-    ProtectedReadValue read(ResolvedProtectedAccess access);
-    ProtectedWriteReceipt write(ResolvedProtectedAccess access);
-}
-```
-
-`ResolvedProtectedAccess` is capability-bound internal state. WRITE intent is resolved internally from current frame/owner state; callers cannot inject an executable callback or raw operation port.
-
-## 10. Dependency direction
-
-```text
-dec-core-context: neutral keys/invocation/result/ProtectedAccessPort
-       ^
-       |
-dec-core-starter: Bridge/Gateway/Guard/capability/assembly/operation adapter
-
-P3/P4/P6 core -> dec-core-context
-P3/P4/P6 core -X-> dec-core-starter
-application/demo -> dec-core-starter composition
-```
-
-## 11. One-shot concurrency
-
-Capability state transition is atomic `ISSUED -> CONSUMED`; at most one concurrent consume invokes protected operation. Loser = `CAPABILITY_ALREADY_CONSUMED` with no readValue/writeReceipt/effect.
-
-## 12. Compatibility / gate
-
-Legacy `CompiledModelSet`/EngineContext constructors remain source-compatible and must not reconstruct permissions. Current P2 adds no bare-name RuleView adapter and no EXECUTE operation.
-
-API Contract R19 remains `NEEDS_REVIEW / MACHINE_BLOCKED`; exact ApiContract/Architecture/Develop/Impact/CrossModule/Concurrency Review required before closure.
+API remains candidate-only. No production implementation, same-revision independent Review, risk Evidence or TDD execution is claimed.

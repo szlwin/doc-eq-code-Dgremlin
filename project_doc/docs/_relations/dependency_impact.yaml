@@ -1,67 +1,308 @@
 schemaVersion: 1
 artifact: dependency_impact
-revision: BM-R17_DESIGN-P2-R19_TESTDESIGN-P2-R20
-status: PENDING_EXACT_REVIEW_MACHINE_BLOCKED
-inputs:
-  requirement: REQAN-P2-R01+DEC-OVERLAY-20260809-R04
-  businessModel: BM-R17
-  businessFlow: FLOW-R07@p2-system-ruleview-protected-access
-  design: DESIGN-P2-R19
-  testDesign: TESTDESIGN-P2-R20
-impacts:
-  - id: IMP-P2-REVISION-DAG
-    type: GOVERNANCE
-    statement: authoritative revisions form R04 -> BM-R17 -> FLOW-R07 -> DESIGN-R19 -> TESTDESIGN-R20 with no downstream-as-upstream cycle
-    affected: [business_model, business_flow, design, test_design, traceability]
-  - id: IMP-P2-TARGET-KEY
-    type: API_SEMANTIC
-    statement: P1/model-access sourceModel exact-resolves within owner System to TargetKey(SystemKey,canonicalSourceModelName); sourcePath independently maps to ModelPath
-    affectedModules: [dec-core-context, dec-core-compiler]
-    risks: [unknown_or_ambiguous_source_model, cross_system_target_resolution, dual_target_authority]
-  - id: IMP-P2-POLICY-CLASSIFICATION
-    type: POLICY_AUTHORITY
-    statement: only STATIC_ALLOW+NONE+no-plan and RUNTIME_GUARD_REQUIRED+EXACT_RUNTIME_BINDING+plan may enter PolicyIndex
-    affectedModules: [dec-core-context, dec-core-compiler, dec-core-starter]
-    risks: [invalid_mixed_status_plan, runtime_reclassification, fail_open]
-  - id: IMP-P2-REAL-READ-WRITE
-    type: RUNTIME_EFFECT
-    statement: READ returns capability-bound immutable value snapshot without mutation; WRITE executes one internally resolved capability-bound mutation and returns receipt only after Guard ALLOW
-    affectedModules: [dec-core-context, dec-core-starter]
-    risks: [caller_callback_injection, target_substitution, write_effect_before_guard, abstract_counter_only_tests]
-  - id: IMP-P2-NEUTRAL-PROTECTED-PORT
-    type: MODULE_BOUNDARY
-    statement: neutral ProtectedAccessPort/Invocation/Result live in dec-core-context; starter implements/enforces/assembles; future P3/P4/P6 core never depend on starter
-    affectedModules: [dec-core-context, dec-core-starter, future-P3, future-P4, future-P6, dec-demo]
-    allowedEdges:
-      - dec-core-starter -> dec-core-context
-      - P3/P4/P6 -> dec-core-context
-      - application/demo -> dec-core-starter
-    forbiddenEdges:
-      - P3/P4/P6 -> dec-core-starter
-  - id: IMP-P2-AC007-OPTION-B
-    type: CROSS_MODULE_RUNTIME
-    statement: production composition exposes one Bridge plus Rule/Change/CustomAction representative entries sharing same Context/Policy authority
-    affectedModules: [dec-core-starter, dec-demo]
-  - id: IMP-P2-CAPABILITY-CONCURRENCY
-    type: CONCURRENCY
-    statement: one-shot capability atomic consume permits at most one protected operation and one WRITE mutation per capability
-    affectedModules: [dec-core-starter]
-  - id: IMP-P2-PUBLICATION
-    type: ATOMIC_PUBLICATION
-    statement: TargetKey ModelPath READ/WRITE classification PolicyIndex ownership/version/digest publish as one immutable closure or old Context remains
-    affectedModules: [dec-core-context, dec-core-compiler, dec-core-starter]
-downstreamObligations:
-  P3:
-    - inject/use neutral ProtectedAccessPort; do not depend on starter internals
-    - real Rule executor must reuse P2 authorization seam
-  P4:
-    - inject/use neutral ProtectedAccessPort; do not depend on starter internals
-    - full change/custom-action engines must reuse P2 seam
-  P6:
-    - inject/use neutral ProtectedAccessPort; do not depend on starter internals
-    - QueryPlan path semantics must reuse canonical TargetKey/ModelPath facts
-reviewRequired: [BusinessFlowReview, ApiContractReview, ArchitectureReview, DevelopReview, ImpactAnalysisReview, CrossModuleIntegrationReview, ConcurrencyReview]
-riskDetection: NOT_SCANNED
-implementationPlan: BLOCKED
-tdd: BLOCKED
-development: BLOCKED
+scope:
+  project: doc-eq-code
+  version: V_1.0
+  module: COMPILER
+  targetIds:
+  - FEATURE-DESC-3361AD2E54FC
+  - FLOW-CONFIG-COMPILE
+  - FLOW-PROTECTED-ACCESS-EXECUTE
+revision: P2-IMPACT-R20
+baseRevision: BM-R17_DESIGN-P2-R19_TESTDESIGN-P2-R20
+nodes:
+- id: FEATURE_P2
+  type: FEATURE
+  name: P2 System RuleView model-access
+  module: COMPILER
+  status: PROPOSED
+  refs: [FEATURE-DESC-3361AD2E54FC]
+  traceIds: [TR-P2-001]
+- id: REQ_P2
+  type: REQUIREMENT
+  name: P2 requirement analysis plus Overlay R04
+  module: COMPILER
+  status: ACTIVE
+  refs: [REQAN-P2-R01@d08612768131, DEC-OVERLAY-20260809-R04]
+  traceIds: [TR-P2-001]
+- id: FLOW_COMPILE
+  type: PROCESS
+  name: Compile and publish
+  module: COMPILER
+  status: PROPOSED
+  refs: [FLOW-CONFIG-COMPILE, FLOW-R08]
+  traceIds: [TR-P2-005, TR-P2-008]
+- id: FLOW_ACCESS
+  type: PROCESS
+  name: Protected runtime access
+  module: STARTER
+  status: PROPOSED
+  refs: [FLOW-PROTECTED-ACCESS-EXECUTE, FLOW-R08]
+  traceIds: [TR-P2-004, TR-P2-006, TR-P2-007]
+- id: MOD_CONTEXT
+  type: MODULE
+  name: dec-core-context
+  module: CONTEXT
+  status: ACTIVE
+  refs: [dec-core-context]
+  traceIds: [TR-P2-004]
+- id: MOD_COMPILER
+  type: MODULE
+  name: dec-core-compiler
+  module: COMPILER
+  status: ACTIVE
+  refs: [dec-core-compiler]
+  traceIds: [TR-P2-005]
+- id: MOD_STARTER
+  type: MODULE
+  name: dec-core-starter
+  module: STARTER
+  status: ACTIVE
+  refs: [dec-core-starter]
+  traceIds: [TR-P2-007]
+- id: MOD_MODEL
+  type: MODULE
+  name: dec-core-model
+  module: MODEL
+  status: PROPOSED
+  refs: [dec-core-model, DESIGN-P2-R20#production-runtime-model-operation]
+  traceIds: [TR-P2-004, TR-P2-007]
+- id: API_RUNTIME_MODEL_PORT
+  type: API
+  name: RuntimeModelOperationPort
+  module: CONTEXT
+  status: PROPOSED
+  refs: [DESIGN-P2-R20#production-runtime-model-operation]
+  traceIds: [TR-P2-004]
+- id: TEST_P2_R21
+  type: TEST_CASE
+  name: P2 TestDesign R21 blockers
+  module: COMPILER
+  status: PROPOSED
+  refs: [TESTDESIGN-P2-R21]
+  traceIds: [TR-P2-004, TR-P2-005, TR-P2-006, TR-P2-007]
+relationships:
+- id: REL-P2-REQ-FEATURE
+  from: REQ_P2
+  to: FEATURE_P2
+  type: REFINES
+  direction: DIRECTED
+  rationale: Current candidate may only refine frozen Requirement/Overlay decisions.
+  conditions: []
+  traceIds: [TR-P2-001]
+- id: REL-P2-FEATURE-COMPILE
+  from: FEATURE_P2
+  to: FLOW_COMPILE
+  type: IMPLEMENTED_BY
+  direction: DIRECTED
+  rationale: P2 source/policy facts are materialized by compile/publication flow.
+  conditions: []
+  traceIds: [TR-P2-005, TR-P2-008]
+- id: REL-P2-FEATURE-ACCESS
+  from: FEATURE_P2
+  to: FLOW_ACCESS
+  type: IMPLEMENTED_BY
+  direction: DIRECTED
+  rationale: P2 protected READ/WRITE behavior is materialized by runtime flow.
+  conditions: []
+  traceIds: [TR-P2-004, TR-P2-007]
+- id: REL-P2-ACCESS-CONTEXT
+  from: FLOW_ACCESS
+  to: MOD_CONTEXT
+  type: DEPENDS_ON
+  direction: DIRECTED
+  rationale: Neutral invocation/result/value/ID and permission facts are context-owned.
+  conditions: []
+  traceIds: [TR-P2-006]
+- id: REL-P2-ACCESS-STARTER
+  from: FLOW_ACCESS
+  to: MOD_STARTER
+  type: DEPENDS_ON
+  direction: DIRECTED
+  rationale: Starter owns Bridge/Gateway/Guard/capability/production composition.
+  conditions: []
+  traceIds: [TR-P2-007]
+- id: REL-P2-ACCESS-MODEL
+  from: FLOW_ACCESS
+  to: MOD_MODEL
+  type: DEPENDS_ON
+  direction: DIRECTED
+  rationale: Actual runtime object/path read/write is a production model responsibility, not a test callback.
+  conditions: [wired through starter production assembly]
+  traceIds: [TR-P2-004, TR-P2-007]
+- id: REL-P2-RUNTIME-API
+  from: MOD_MODEL
+  to: API_RUNTIME_MODEL_PORT
+  type: IMPLEMENTED_BY
+  direction: DIRECTED
+  rationale: dec-core-model implements the neutral runtime model operation contract.
+  conditions: []
+  traceIds: [TR-P2-004]
+- id: REL-P2-TEST-VERIFY
+  from: TEST_P2_R21
+  to: FLOW_ACCESS
+  type: VERIFIED_BY
+  direction: DIRECTED
+  rationale: R21 defines exact production reachability/write-intent/value-domain test contracts.
+  conditions: []
+  traceIds: [TR-P2-004, TR-P2-006, TR-P2-007]
+impactPolicies:
+- id: IMP-P2-INVALID-POLICY
+  sourceRef: FLOW-CONFIG-COMPILE
+  sourceAction: construct or publish illegal policy classification
+  targetRefs: [MOD_CONTEXT, MOD_COMPILER]
+  policy: REJECT_OPERATION
+  conditions: [tuple is not one of the two legal rows]
+  consistency: ATOMIC
+  transactionBoundary: CompiledModelSet publication
+  idempotency: Repeated invalid input yields same stable error and no new Context.
+  failureHandling: Reject publication and retain previous Context.
+  compensation: No compensation; publication never occurs.
+  historyHandling: Historical PASSED revisions are unchanged.
+  traceIds: [TR-P2-006, TR-P2-008]
+  testCaseIds: [CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001]
+- id: IMP-P2-WRITE-INTENT
+  sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
+  sourceAction: resolve WRITE intent
+  targetRefs: [MOD_STARTER, MOD_MODEL]
+  policy: REJECT_OPERATION
+  conditions: [candidate count is zero or greater than one]
+  consistency: ATOMIC
+  transactionBoundary: one protected WRITE attempt
+  idempotency: Same immutable input tuple yields same selected intent or same denial.
+  failureHandling: Deny before Guard/operation; no mutation/receipt.
+  compensation: None; no effect occurred.
+  traceIds: [TR-P2-006, TR-P2-009]
+  testCaseIds: [CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001, CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001]
+- id: IMP-P2-PRODUCTION-OP
+  sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
+  sourceAction: execute Guard-approved READ or WRITE
+  targetRefs: [MOD_STARTER, MOD_MODEL]
+  policy: NO_ACTION
+  conditions: [Guard ALLOW and capability consumed exactly once]
+  consistency: ATOMIC
+  transactionBoundary: one capability-bound operation
+  idempotency: Capability is one-shot; replay is denied.
+  failureHandling: Operation failure is surfaced as stable denial/error without selecting another target/path/intent.
+  compensation: Runtime operation contract defines no silent retry or alternate mutation.
+  traceIds: [TR-P2-004, TR-P2-007]
+  testCaseIds: [CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001, CASE-P2-TD-REAL-READ-OPERATION-001, CASE-P2-TD-REAL-WRITE-OPERATION-001]
+crossModuleImplementations:
+- id: CMI-P2-COMPILE-001
+  name: P2 compile and immutable policy publication
+  trigger: FLOW-CONFIG-COMPILE begins
+  participants:
+  - id: CMPART-P2-COMPILE-COMPILER
+    module: dec-core-compiler
+    responsibility: Resolve P1-compatible source View identity, exact paths and classification.
+  - id: CMPART-P2-COMPILE-CONTEXT
+    module: dec-core-context
+    responsibility: Own neutral keys/values and immutable PolicyIndex representation.
+  steps:
+  - id: CMSTEP-P2-COMPILE-001
+    order: 1
+    from: dec-core-compiler
+    to: dec-core-context
+    interactionType: SYNC_API
+    action: Build exact TargetKey(ViewKey), ModelPath and ModelAccessRuleKey facts.
+    preconditions: [shared source ViewKey resolved]
+    postconditions: [authorization owner System remains separate from TargetKey]
+    idempotency: Same source snapshot yields value-equal immutable facts.
+    failureHandling: stable compile error; no publication
+    compensation: none
+    traceIds: [TR-P2-005]
+  - id: CMSTEP-P2-COMPILE-002
+    order: 2
+    from: dec-core-compiler
+    to: dec-core-context
+    interactionType: DATA_WRITE
+    action: Publish validated immutable PolicyIndex as part of one CompiledModelSet closure.
+    preconditions: [all classification rows valid]
+    postconditions: [new Context visible atomically]
+    idempotency: same semantic inputs yield same digest/facts
+    failureHandling: retain old Context
+    compensation: none
+    traceIds: [TR-P2-006, TR-P2-008]
+  successCriteria: [P1 shared source View identity preserved., No malformed policy row published., No downstream revision used as upstream input.]
+  failurePaths:
+  - id: CMFAIL-P2-COMPILE-001
+    atStep: CMSTEP-P2-COMPILE-001
+    condition: sourceModel unresolved or malformed
+    result: stable ERROR; publication=0
+    compensationSteps: []
+    manualRecovery: Correct source input and recompile.
+    traceIds: [TR-P2-005]
+  traceIds: [TR-P2-005, TR-P2-006, TR-P2-008]
+  testCaseIds: [CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001, CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001]
+  businessFlowRef: FLOW-CONFIG-COMPILE
+  businessStepRefs: [STEP-P2-COMPILE-02, STEP-P2-COMPILE-03, STEP-P2-COMPILE-04, STEP-P2-COMPILE-06]
+- id: CMI-P2-PROTECTED-ACCESS-001
+  name: Production protected READ/WRITE execution
+  trigger: FLOW-PROTECTED-ACCESS-EXECUTE begins
+  participants:
+  - id: CMPART-P2-ACCESS-CONTEXT
+    module: dec-core-context
+    responsibility: Neutral ProtectedAccessPort/value/ID/RuntimeModelOperationPort contracts and immutable policy facts.
+  - id: CMPART-P2-ACCESS-STARTER
+    module: dec-core-starter
+    responsibility: Bridge, intent resolver, capability, Gateway, Guard, adapter and production assembly.
+  - id: CMPART-P2-ACCESS-MODEL
+    module: dec-core-model
+    responsibility: Resolve RuntimeObjectId to actual runtime object and perform exact ModelPath read/frozen-intent mutation.
+  steps:
+  - id: CMSTEP-P2-ACCESS-001
+    order: 1
+    from: dec-core-starter
+    to: dec-core-starter
+    interactionType: COMMAND
+    action: Resolve exact runtime target and zero-or-one frozen write intent before Guard.
+    preconditions: [valid invocation]
+    postconditions: [ResolvedProtectedAccess immutable]
+    idempotency: same immutable tuple selects same intent or same denial
+    failureHandling: zero/multiple candidates deny
+    compensation: none
+    traceIds: [TR-P2-006, TR-P2-009]
+  - id: CMSTEP-P2-ACCESS-002
+    order: 2
+    from: dec-core-starter
+    to: dec-core-context
+    interactionType: QUERY
+    action: Guard exact PolicyIndex/runtime proof using consumed one-shot capability.
+    preconditions: [ResolvedProtectedAccess frozen]
+    postconditions: [ALLOW or DENY without operation effect]
+    idempotency: capability one-shot prevents duplicate effect
+    failureHandling: DENY fail closed
+    compensation: none
+    traceIds: [TR-P2-006, TR-P2-007]
+  - id: CMSTEP-P2-ACCESS-003
+    order: 3
+    from: dec-core-starter
+    to: dec-core-model
+    interactionType: SYNC_API
+    action: Delegate Guard-approved exact READ/WRITE to production RuntimeModelOperationPort.
+    preconditions: [Guard ALLOW]
+    postconditions: [immutable read snapshot or exact write receipt]
+    idempotency: one consumed capability permits at most one operation
+    failureHandling: surface stable operation failure; never reselect target/path/intent
+    compensation: no hidden alternate mutation
+    traceIds: [TR-P2-004, TR-P2-007]
+  successCriteria: [READ observes real runtime value and does not mutate., WRITE mutates real runtime state exactly once using frozen intent., No caller-supplied callback/operation implementation.]
+  failurePaths:
+  - id: CMFAIL-P2-ACCESS-001
+    atStep: CMSTEP-P2-ACCESS-001
+    condition: write-intent candidate count != 1
+    result: deterministic denial before Guard/effect
+    compensationSteps: []
+    manualRecovery: Correct execution state so exactly one intended mutation is resolvable.
+    traceIds: [TR-P2-006]
+  - id: CMFAIL-P2-ACCESS-002
+    atStep: CMSTEP-P2-ACCESS-002
+    condition: policy/proof/Guard failure
+    result: DENY; operation=0; value/receipt absent
+    compensationSteps: []
+    manualRecovery: Correct policy/proof/runtime availability and retry with a new capability.
+    traceIds: [TR-P2-006, TR-P2-009]
+  traceIds: [TR-P2-004, TR-P2-006, TR-P2-007, TR-P2-009]
+  testCaseIds: [CASE-P2-TD-REAL-READ-OPERATION-001, CASE-P2-TD-REAL-WRITE-OPERATION-001, CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001]
+  businessFlowRef: FLOW-PROTECTED-ACCESS-EXECUTE
+  businessStepRefs: [STEP-P2-ACCESS-02, STEP-P2-ACCESS-04, STEP-P2-ACCESS-05]
