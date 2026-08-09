@@ -1,35 +1,47 @@
 # COMPILER P2 Test Seams
 
-> Revision: `DESIGN-P2-R25`
-> Inputs: `BM-R20 / FLOW-R11`; Impact projection `P2-IMPACT-R24`
-> Status: `NEEDS_REVIEW / MACHINE_BLOCKED`
+> Revision `DESIGN-P2-R26`; inputs `BM-R20 / FLOW-R11`; Impact `P2-IMPACT-R25`. Status `NEEDS_REVIEW / MACHINE_BLOCKED`.
 
-## Trusted provenance seam
+## MODEL trusted materialization seam
 
-Use a model-package fixture around the mandatory package-private `RuntimeModelFrameAssembler`, producing at least two immutable handles:
-- handle A: provenance `(TargetKey A, CompiledTargetBinding A)`, internal actual ModelData A;
-- handle B: provenance `(TargetKey B, CompiledTargetBinding B)`, internal actual ModelData B.
+Owner-module fixture: `dec-core-model` / `RuntimeModelMaterializationIntegrationTest`.
 
-Assert public/reflection surface has no public/protected constructor/static wrapper capable of `RuntimeModelHandle(ModelData, binding)` or rebinding provenance, and no public ModelData accessor. `RuntimeExecutionFrameSnapshot` can only derive from trusted `RuntimeModelFrame`.
+The fixture must call the public production seam `RuntimeModelRuntimes.production(capturedEngineContext).open(RuntimeModelFrameRequest)` and assert:
 
-Negative substitution oracle: plan A + handle B must fail before capability/Guard/effect; handle B cannot be relabeled as A; cross-frame trusted frame cannot be relabeled by caller-supplied frame/owner/cursor; list order/metadata/raw selector inference count=0.
+- request input is exact `RuntimeBindingPlan + RuntimeFactValue sourceSnapshot`; no existing `ModelData` parameter exists;
+- plan membership is checked against the captured Context before materialization;
+- target view is selected only by `CompiledTargetBinding.targetViewKey()` in that same Context;
+- MODEL creates a new internal ModelData under that exact view and freezes `RuntimeModelProvenance(plan)` + handle in the same materialization operation;
+- incompatible source -> `SOURCE_NOT_MATERIALIZABLE`; non-member plan -> `PLAN_NOT_IN_CAPTURED_CONTEXT`; missing target view -> `TARGET_VIEW_NOT_FOUND`;
+- any input failure exposes zero frame/session/handle; success returns one `RuntimeModelExecution(frame + sealed session)`;
+- public/reflection surface has no `wrapExisting(ModelData,...)`, rebind, public ModelData accessor, or public session register/seal;
+- `ModelData.name`, caller ViewData, list order, raw definitions, selector reparsing and legacy default `ConfigContextUtil` lookup are never identity authority.
 
-## API seams by owner module
+Positive oracle: plan A + compatible source -> new A-view ModelData internal to trusted handle A. Negative oracle: existing ModelData B cannot be supplied; plan A cannot materialize using B identity; stale/non-member plan or incompatible source fails before handoff.
 
-- `dec-core-context`: `ProtectedAccessContextApiContractTest` compiles/reflects all CONTEXT public neutral types/results and explicit public visibility.
-- `dec-core-model`: `ProtectedAccessModelApiContractTest` compiles/reflects MODEL public frame/handle/session/locator types, `RuntimeModelSession extends AutoCloseable`, and verifies trusted provenance construction/rebind surfaces are not public.
-- `dec-core-starter`: `ProtectedAccessStarterApiContractTest` compiles/reflects STARTER composition/resolver/entry APIs and legally consumes CONTEXT+MODEL public contracts without reverse dependencies.
+## MODEL -> STARTER handoff seam
 
-A compile/setup failure before intended assertion is `INVALID_RED`, not valid RED.
+Owner-module fixture: `dec-core-starter` / `ProtectedAccessProductionCompositionTest`.
+
+`ProtectedAccessRuntimeFactory.production(exactEngineContext).create(frameRequest)` must internally obtain MODEL production runtime bound to the same Context, call `open`, retain the exact returned frame+session execution pair, and close that same execution with composition close. MODEL-open failure yields no `ProtectedAccessPort`, capability, Guard call or model effect.
+
+No production overload may inject `RuntimeModelRuntime`, `RuntimeModelSession`, `RuntimeModelFrame`, `RuntimeModelOperationPort`, Guard, existing ModelData, or separate frame/owner/cursor authority.
+
+## Existing owner-module API seams
+
+- CONTEXT: `ProtectedAccessContextApiContractTest` checks neutral public authority/value/result types only.
+- MODEL: `ProtectedAccessModelApiContractTest` checks current materialization/runtime/execution/frame/session/locator public signatures and constructor restrictions.
+- STARTER: `ProtectedAccessStarterApiContractTest` checks bootstrap/resolver/entry APIs and legal CONTEXT+MODEL consumption.
+- A compile/setup/missing-class failure before the intended assertion is `INVALID_RED`, never valid RED.
 
 ## Runtime/effect seams
 
-Resolver exact-matches sourceTargetKey+compiled binding against sealed trusted handles; 0/1/N deterministic. MODEL-owned actual effect receives same resolved target/stamp after Guard. READ mutates zero; WRITE commits once or rollback/restores. Concurrency uses latch/barrier, never sleep.
+Resolver exact-matches plan+trusted provenance in the retained execution; 0/1/N is deterministic. READ mutates zero. WRITE freezes the same session/object/path/version, Guard precedes effect, successful mutation commits once, failure restores observable state and produces no receipt. Concurrency uses latch/barrier, not sleep.
 
-## Case-level self-containment
+## TestDesign self-containment
 
-TESTDESIGN-P2-R26 provides Fixture, Action, Expected, Forbidden side effects and current Flow/Failure refs for **every** blocking Case, not only group summaries. Tests must not consult R25/R24 for missing oracle semantics.
+`TESTDESIGN-P2-R27` contains every blocking Case ID with a current-revision fixture/action/expected/forbidden/ref oracle and exact registry coordinates. It contains no literal truncation marker `...` or unicode ellipsis. Tests must not consult R26/R25 for missing expected behavior.
 
 ## Gate
 
-Risk scan, same-revision TestDesign/TDD/TestEvidence Review and machine Evidence remain required before TDD execution.
+Risk scan, same-revision specialist Review and required machine/Test Evidence remain required. No TDD execution is claimed.

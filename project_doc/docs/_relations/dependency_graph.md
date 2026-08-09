@@ -1,7 +1,7 @@
 # P2 Dependency Graph
 
 - Project: `doc-eq-code`
-- Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R24 / DESIGN-P2-R25 / TESTDESIGN-P2-R26`
+- Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R25 / DESIGN-P2-R26 / TESTDESIGN-P2-R27`
 - Status: `NEEDS_REVIEW / MACHINE_BLOCKED`
 - Decisions: Direct Bridge ACTIVE; AC-007 Option B ACTIVE; AccessOperation READ/WRITE-only
 
@@ -13,30 +13,34 @@ BM-R20
         |
         v
 FLOW-R11
-        |------------------> P2-IMPACT-R24 (parallel projection)
+        |------------------> P2-IMPACT-R25 (parallel projection)
         v
-DESIGN-P2-R25
+DESIGN-P2-R26
         |
         v
-TESTDESIGN-P2-R26
+TESTDESIGN-P2-R27
 ```
 
-No downstream artifact is an authoritative upstream input. BM uses stable trace/flow refs; exact current linkage is owned by this graph + task traceability projection.
+BM-R20 and FLOW-R11 retain their independently reviewed semantic PASS. Exact downstream revision linkage is owned by this graph and task traceability; downstream artifacts are not authoritative upstream inputs.
 
-## Trusted runtime association chain
+## Trusted MODEL production chain
 
 ```text
 Compiler/P1 target resolution
  -> CONTEXT RuntimeBindingPlan(TargetKey + CompiledTargetBinding)
- -> MODEL trusted materialization creates ModelData + immutable RuntimeModelHandle provenance atomically
- -> MODEL RuntimeModelFrame freezes frame/owner/cursor + handles
- -> STARTER validates handle provenance against captured EngineContext
- -> MODEL RuntimeModelSession.register(handle) / seal
- -> STARTER RuntimeTargetResolver exact match
- -> one-shot capability + Guard
+ -> STARTER builds RuntimeModelFrameRequest(plan + deep-immutable source snapshot)
+ -> MODEL RuntimeModelRuntimes.production(captured EngineContext)
+ -> MODEL RuntimeModelRuntime.open(request)
+      -> verify exact plan membership
+      -> exact target view = plan.compiledTargetBinding.targetViewKey
+      -> create NEW ModelData under that captured-context view definition
+      -> atomically freeze provenance + handle
+      -> after all inputs succeed create frame + sealed session
+ -> MODEL returns RuntimeModelExecution(frame + session) to STARTER
+ -> STARTER exact resolver + one-shot capability + Guard
  -> MODEL actual READ / rollback-safe WRITE
 ```
 
-Forbidden: public `binding + arbitrary ModelData` association, handle rebind, frame relabel, metadata/list-order/raw-selector inference, first-match fallback, Guard bypass.
+Forbidden: existing ModelData as trusted input, `ModelData.name`/metadata/default-context identity inference, raw selector reparse, partial frame/session publication, caller-injected runtime/session/Guard/operation port, handle rebind, frame relabel, first-match fallback or Guard bypass.
 
-Current CMI IDs: `CMI-P2-COMPILE-004`, `CMI-P2-PROTECTED-ACCESS-004`.
+Current CMI IDs: `CMI-P2-COMPILE-004`, `CMI-P2-PROTECTED-ACCESS-005`.

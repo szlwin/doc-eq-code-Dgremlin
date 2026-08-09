@@ -1,38 +1,37 @@
 # COMPILER P2 API Contract
 
-> Revision: `DESIGN-P2-R25`. Base: `DESIGN-P2-R24`.
-> Authoritative inputs: Overlay R04 + `BM-R20` + `FLOW-R11`.
-> CrossModule projection: `P2-IMPACT-R24`.
+> Revision: `DESIGN-P2-R26`; base `DESIGN-P2-R25`.
+> Inputs: Overlay R04 + `BM-R20` + `FLOW-R11`; Impact `P2-IMPACT-R25`.
 > Status: `NEEDS_REVIEW / MACHINE_BLOCKED`.
 
-This is the complete current P2 public/cross-module contract. Every type referenced by a public signature is defined here with owner module/package, external visibility, construction surface and accessors. Superseded Design text is not required.
-
-## 1. Ownership / visibility matrix
-
-| Owner | Package | Public contract |
-|---|---|---|
-| CONTEXT | `dec.core.context.runtime` | policy keys/plans, opaque IDs, values, invocation, resolved access, operation port, result/denial algebra |
-| MODEL | `dec.core.model.runtime` | trusted `RuntimeModelFrame`/`RuntimeModelHandle` provenance, session/locator API |
-| STARTER | `dec.core.starter.access` | production composition, target resolution, representative Rule/Change/CustomAction entries |
-
-All cross-module types below are explicitly `public`. Model-owned trusted provenance objects are externally readable but deliberately have **no public/protected constructor or static wrapping factory**; only model-internal framework materialization may create them. This prevents a caller from combining valid binding A with arbitrary existing `ModelData B`.
+This file is the complete current P2 cross-module contract. R25 authority, result algebra and owner-module visibility remain unchanged; R26 adds the concrete MODEL materialization producer and MODEL -> STARTER handoff and removes public session registration/seal.
 
 <a id="current-api-contract"></a>
-## 2. CONTEXT public neutral contracts
+## 1. Ownership and common rules
+
+- CONTEXT `dec.core.context.runtime`: neutral policy, compiled binding, invocation, resolved-access, values/results and operation-port contracts.
+- MODEL `dec.core.model.runtime`: trusted materialization, provenance/handle/frame, execution/session/locator and production operation implementation.
+- STARTER `dec.core.starter.access`: production bootstrap, target resolution, intent/capability/Guard and Rule/Change/CustomAction entries.
+- Every cross-module type named below is `public`; value objects are immutable, required fields reject null, and identity is structural. `RuntimeFactValue` is deep immutable and never exposes a live arbitrary `Object`.
+
+## 2. CONTEXT neutral authority
 
 ```java
-package dec.core.context.runtime;
-
-public final class RuleKey {
-  public static RuleKey of(RuleViewKey owner, String localName);
-  public RuleViewKey ownerRuleViewKey(); public String localRuleName();
+public final class TargetKey {
+  public static TargetKey of(ViewKey sourceViewKey);
+  public ViewKey sourceViewKey();
 }
-public final class TargetKey { public static TargetKey of(ViewKey sourceViewKey); public ViewKey sourceViewKey(); }
-public final class ModelPath { public static ModelPath of(List<String> canonicalSegments); public List<String> canonicalSegments(); }
+public final class ModelPath {
+  public static ModelPath of(List<String> canonicalSegments);
+  public List<String> canonicalSegments();
+}
 public enum AccessOperation { READ, WRITE }
 public final class ModelAccessRuleKey {
-  public static ModelAccessRuleKey of(SystemKey authorizationOwnerSystemKey, TargetKey targetKey, ModelPath modelPath, AccessOperation operation);
-  public SystemKey authorizationOwnerSystemKey(); public TargetKey targetKey(); public ModelPath modelPath(); public AccessOperation operation();
+  public static ModelAccessRuleKey of(SystemKey owner, TargetKey target, ModelPath path, AccessOperation operation);
+  public SystemKey authorizationOwnerSystemKey();
+  public TargetKey targetKey();
+  public ModelPath modelPath();
+  public AccessOperation operation();
 }
 public enum PolicyStatus { STATIC_ALLOW, RUNTIME_GUARD_REQUIRED }
 public enum RuntimeAccessRequirement { NONE, EXACT_RUNTIME_BINDING }
@@ -40,206 +39,230 @@ public enum ResolvedTargetKind { TARGET_MAIN, PROPERTY_PATH }
 public final class CompiledTargetBinding {
   public static CompiledTargetBinding targetMain(ViewKey targetViewKey, String exactResolvedValue);
   public static CompiledTargetBinding propertyPath(ViewKey targetViewKey, String exactResolvedValue);
-  public ViewKey targetViewKey(); public ResolvedTargetKind kind(); public String exactResolvedValue();
+  public ViewKey targetViewKey();
+  public ResolvedTargetKind kind();
+  public String exactResolvedValue();
 }
 public final class RuntimeBindingPlan {
   public static RuntimeBindingPlan exact(TargetKey sourceTargetKey, CompiledTargetBinding binding);
-  public TargetKey sourceTargetKey(); public CompiledTargetBinding compiledTargetBinding();
+  public TargetKey sourceTargetKey();
+  public CompiledTargetBinding compiledTargetBinding();
 }
 public final class CompiledModelAccessRule {
-  public static CompiledModelAccessRule of(ModelAccessRuleKey key, PolicyStatus status, RuntimeAccessRequirement requirement, Optional<RuntimeBindingPlan> plan);
-  public ModelAccessRuleKey key(); public PolicyStatus policyStatus(); public RuntimeAccessRequirement runtimeRequirement(); public Optional<RuntimeBindingPlan> runtimeBindingPlan();
+  public ModelAccessRuleKey key();
+  public PolicyStatus policyStatus();
+  public RuntimeAccessRequirement runtimeRequirement();
+  public Optional<RuntimeBindingPlan> runtimeBindingPlan();
 }
-public final class ModelAccessPolicyIndex {
-  public static ModelAccessPolicyIndex of(Collection<CompiledModelAccessRule> rules);
-  public Optional<CompiledModelAccessRule> find(ModelAccessRuleKey key);
+public interface ModelAccessPolicyIndex {
+  Optional<CompiledModelAccessRule> find(ModelAccessRuleKey key);
 }
 ```
 
-Only `STATIC_ALLOW + NONE + no plan` and `RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + plan` are legal. Compiler converts P1 `targetView + TargetPropertyPath(kind,value)` to `CompiledTargetBinding` exactly once. Runtime must never parse/normalize selector text or scan raw View definitions/property trees.
+Only `STATIC_ALLOW + NONE + no plan` and `RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + plan` are legal published rows. Runtime never reparses selector text or scans raw definitions to reconstruct target identity.
 
-The following opaque IDs are each `public final`, immutable, exact/case-sensitive, reject null/blank, expose `public static of(String)`, `public String value()`, structural `equals/hashCode`, and no permission semantics:
+Opaque immutable exact/case-sensitive IDs: `ProtectedInvocationId`, `RuntimeObjectId`, `RuntimeWriteIntentId`, `RuntimeExecutionFrameId`, `RuntimeResolutionOwnerId`, `RuntimeCollectionCursorId`, `RuntimeModelSessionId`. Each exposes `of(String)` and `value()` and carries no permission semantics.
 
-```text
-ProtectedInvocationId
-RuntimeObjectId
-RuntimeWriteIntentId
-RuntimeExecutionFrameId
-RuntimeResolutionOwnerId
-RuntimeCollectionCursorId
-RuntimeModelSessionId
-```
+`RuleKey` is owner `RuleViewKey + localRuleName` and is optional provenance only. `RuntimeMutationVersion` is a non-negative immutable long. `RuntimeFactValue` is a closed deep-immutable algebra `{NULL, BOOLEAN, INTEGER, DECIMAL, STRING, LIST, OBJECT}` with deterministic serialization.
 
 ```java
-public final class RuntimeMutationVersion { public static RuntimeMutationVersion of(long nonNegative); public long value(); }
-public final class RuntimeFactValue {
-  public enum Kind { NULL, BOOLEAN, INTEGER, DECIMAL, STRING, LIST, OBJECT }
-  public static RuntimeFactValue nullValue(); public static RuntimeFactValue ofBoolean(boolean v);
-  public static RuntimeFactValue ofInteger(BigInteger v); public static RuntimeFactValue ofDecimal(BigDecimal v);
-  public static RuntimeFactValue ofString(String v); public static RuntimeFactValue ofList(List<RuntimeFactValue> v);
-  public static RuntimeFactValue ofObject(Map<String,RuntimeFactValue> v);
-  public Kind kind(); public String deterministicJson();
-}
 public final class ProtectedAccessInvocation {
-  public static ProtectedAccessInvocation of(ProtectedInvocationId id, ModelAccessRuleKey key,
-      RuntimeExecutionFrameId frameId, RuntimeResolutionOwnerId ownerId, Optional<RuntimeCollectionCursorId> cursorId);
-  public ProtectedInvocationId invocationId(); public ModelAccessRuleKey modelAccessRuleKey();
-  public RuntimeExecutionFrameId frameId(); public RuntimeResolutionOwnerId ownerResolutionId();
+  public ProtectedInvocationId invocationId();
+  public ModelAccessRuleKey modelAccessRuleKey();
+  public RuntimeExecutionFrameId frameId();
+  public RuntimeResolutionOwnerId ownerResolutionId();
   public Optional<RuntimeCollectionCursorId> cursorId();
 }
 public interface ProtectedAccessPort { ProtectedAccessResult invoke(ProtectedAccessInvocation invocation); }
-public final class RuntimeBindingProof { public static RuntimeBindingProof exact(String digest); public String value(); }
+public final class RuntimeBindingProof { public String value(); }
 public final class ResolvedRuntimeTarget {
-  public static ResolvedRuntimeTarget of(RuntimeModelSessionId sessionId, RuntimeObjectId objectId, TargetKey targetKey,
-      CompiledTargetBinding binding, RuntimeExecutionFrameId frameId, RuntimeResolutionOwnerId ownerId,
-      Optional<RuntimeCollectionCursorId> cursorId, RuntimeBindingProof proof);
-  public RuntimeModelSessionId sessionId(); public RuntimeObjectId runtimeObjectId(); public TargetKey targetKey();
-  public CompiledTargetBinding compiledTargetBinding(); public RuntimeExecutionFrameId frameId();
-  public RuntimeResolutionOwnerId ownerResolutionId(); public Optional<RuntimeCollectionCursorId> cursorId();
+  public RuntimeModelSessionId sessionId();
+  public RuntimeObjectId runtimeObjectId();
+  public TargetKey targetKey();
+  public CompiledTargetBinding compiledTargetBinding();
+  public RuntimeExecutionFrameId frameId();
+  public RuntimeResolutionOwnerId ownerResolutionId();
+  public Optional<RuntimeCollectionCursorId> cursorId();
   public RuntimeBindingProof bindingProof();
 }
 public final class RuntimeMutationStamp {
-  public static RuntimeMutationStamp of(RuntimeModelSessionId sessionId, RuntimeObjectId objectId, ModelPath path, RuntimeMutationVersion version);
-  public RuntimeModelSessionId sessionId(); public RuntimeObjectId runtimeObjectId(); public ModelPath modelPath(); public RuntimeMutationVersion version();
+  public RuntimeModelSessionId sessionId();
+  public RuntimeObjectId runtimeObjectId();
+  public ModelPath modelPath();
+  public RuntimeMutationVersion version();
 }
 public final class ResolvedProtectedReadAccess {
-  public static ResolvedProtectedReadAccess of(ProtectedInvocationId id, ModelAccessRuleKey key, ResolvedRuntimeTarget target);
-  public ProtectedInvocationId invocationId(); public ModelAccessRuleKey modelAccessRuleKey(); public ResolvedRuntimeTarget resolvedRuntimeTarget();
+  public ProtectedInvocationId invocationId();
+  public ModelAccessRuleKey modelAccessRuleKey();
+  public ResolvedRuntimeTarget resolvedRuntimeTarget();
 }
 public final class ResolvedWriteIntent {
-  public static ResolvedWriteIntent of(RuntimeWriteIntentId id, ModelAccessRuleKey key, Optional<RuleKey> provenance,
-      ResolvedRuntimeTarget target, RuntimeMutationStamp stamp);
-  public RuntimeWriteIntentId id(); public ModelAccessRuleKey modelAccessRuleKey(); public Optional<RuleKey> ruleKeyProvenance();
-  public ResolvedRuntimeTarget resolvedRuntimeTarget(); public RuntimeMutationStamp mutationStamp();
+  public RuntimeWriteIntentId id();
+  public ModelAccessRuleKey modelAccessRuleKey();
+  public Optional<RuleKey> ruleKeyProvenance();
+  public ResolvedRuntimeTarget resolvedRuntimeTarget();
+  public RuntimeMutationStamp mutationStamp();
 }
 public final class ResolvedProtectedWriteAccess {
-  public static ResolvedProtectedWriteAccess of(ProtectedInvocationId id, ResolvedWriteIntent intent);
-  public ProtectedInvocationId invocationId(); public ResolvedWriteIntent writeIntent();
+  public ProtectedInvocationId invocationId();
+  public ResolvedWriteIntent writeIntent();
 }
 public interface RuntimeModelOperationPort {
   RuntimeFactValue read(ResolvedProtectedReadAccess access);
   ProtectedWriteReceipt write(ResolvedProtectedWriteAccess access);
 }
 public final class ProtectedReadValue {
-  public static ProtectedReadValue of(ProtectedInvocationId id, RuntimeFactValue value);
-  public ProtectedInvocationId invocationId(); public RuntimeFactValue value();
+  public ProtectedInvocationId invocationId();
+  public RuntimeFactValue value();
 }
 public final class ProtectedWriteReceipt {
-  public static ProtectedWriteReceipt of(ProtectedInvocationId id, RuntimeWriteIntentId intentId, RuntimeMutationVersion committedVersion);
-  public ProtectedInvocationId invocationId(); public RuntimeWriteIntentId writeIntentId(); public RuntimeMutationVersion committedVersion();
+  public ProtectedInvocationId invocationId();
+  public RuntimeWriteIntentId writeIntentId();
+  public RuntimeMutationVersion committedVersion();
 }
 public enum DenialCode {
-  POLICY_NOT_FOUND, POLICY_MISMATCH, RUNTIME_PLAN_MISMATCH, GUARD_UNAVAILABLE, CAPABILITY_ALREADY_CONSUMED,
-  RUNTIME_CONTEXT_MISMATCH, RUNTIME_MODEL_PROVENANCE_MISMATCH, RUNTIME_TARGET_NOT_FOUND, RUNTIME_TARGET_AMBIGUOUS,
-  WRITE_INTENT_NOT_FOUND, WRITE_INTENT_AMBIGUOUS, WRITE_INTENT_STALE, RUNTIME_SESSION_SCOPE_MISMATCH,
+  POLICY_NOT_FOUND, POLICY_MISMATCH, RUNTIME_PLAN_MISMATCH, GUARD_UNAVAILABLE,
+  CAPABILITY_ALREADY_CONSUMED, RUNTIME_CONTEXT_MISMATCH, RUNTIME_MODEL_PROVENANCE_MISMATCH,
+  RUNTIME_TARGET_NOT_FOUND, RUNTIME_TARGET_AMBIGUOUS, WRITE_INTENT_NOT_FOUND,
+  WRITE_INTENT_AMBIGUOUS, WRITE_INTENT_STALE, RUNTIME_SESSION_SCOPE_MISMATCH,
   RUNTIME_OBJECT_NOT_FOUND, RUNTIME_OBJECT_STALE, RUNTIME_OBJECT_ALREADY_REGISTERED,
   RUNTIME_OBJECT_OWNERSHIP_CONFLICT, RUNTIME_WRITE_FAILED
 }
 public final class ProtectedAccessDenial {
-  public static ProtectedAccessDenial of(ProtectedInvocationId id, DenialCode code, String stableMessage);
-  public ProtectedInvocationId invocationId(); public DenialCode code(); public String stableMessage();
+  public ProtectedInvocationId invocationId();
+  public DenialCode code();
+  public String stableMessage();
 }
 public final class ProtectedAccessResult {
-  public static ProtectedAccessResult allowRead(ProtectedReadValue value);
-  public static ProtectedAccessResult allowWrite(ProtectedWriteReceipt receipt);
-  public static ProtectedAccessResult deny(ProtectedAccessDenial denial);
-  public boolean allowed(); public Optional<ProtectedReadValue> readValue();
-  public Optional<ProtectedWriteReceipt> writeReceipt(); public Optional<ProtectedAccessDenial> denial();
+  public boolean allowed();
+  public Optional<ProtectedReadValue> readValue();
+  public Optional<ProtectedWriteReceipt> writeReceipt();
+  public Optional<ProtectedAccessDenial> denial();
 }
 ```
 
-Closed algebra: ALLOW READ has read value only; ALLOW WRITE has receipt only; DENY has denial only. `RuntimeFactValue` is deep immutable and never exposes arbitrary live `Object` references.
+ALLOW READ has read value only; ALLOW WRITE has receipt only; DENY has denial only.
 
-<a id="trusted-runtime-model-provenance"></a>
-## 3. MODEL public trusted provenance/session contracts
+<a id="trusted-runtime-model-materialization"></a>
+## 3. MODEL trusted producer/handoff contracts
 
 ```java
-package dec.core.model.runtime;
-
+public final class RuntimeModelMaterializationInput {
+  public static RuntimeModelMaterializationInput of(RuntimeBindingPlan exactPlan, RuntimeFactValue sourceSnapshot);
+  public RuntimeBindingPlan runtimeBindingPlan();
+  public RuntimeFactValue sourceSnapshot();
+}
+public final class RuntimeModelFrameRequest {
+  public static RuntimeModelFrameRequest of(
+      RuntimeExecutionFrameId frameId,
+      RuntimeResolutionOwnerId ownerId,
+      Optional<RuntimeCollectionCursorId> cursorId,
+      List<RuntimeModelMaterializationInput> inputs);
+  public RuntimeExecutionFrameId frameId();
+  public RuntimeResolutionOwnerId ownerResolutionId();
+  public Optional<RuntimeCollectionCursorId> cursorId();
+  public List<RuntimeModelMaterializationInput> inputs();
+}
 public final class RuntimeModelProvenance {
-  // NO public/protected constructor or public static factory.
-  public TargetKey sourceTargetKey();
-  public CompiledTargetBinding compiledTargetBinding();
+  // NO public/protected constructor/factory.
+  public RuntimeBindingPlan runtimeBindingPlan();
 }
 public final class RuntimeModelHandle {
-  // NO public/protected constructor or public static factory; no public ModelData accessor.
+  // NO public/protected constructor/factory/wrap/rebind; NO public ModelData accessor.
   public RuntimeModelProvenance provenance();
 }
 public final class RuntimeModelFrame {
-  // NO public/protected constructor or public static factory.
+  // NO public/protected constructor/factory/rebind.
   public RuntimeExecutionFrameId frameId();
   public RuntimeResolutionOwnerId ownerResolutionId();
   public Optional<RuntimeCollectionCursorId> cursorId();
   public List<RuntimeModelHandle> handles();
 }
 public final class LocatedRuntimeObject {
-  public RuntimeModelSessionId sessionId(); public RuntimeObjectId runtimeObjectId();
+  public RuntimeModelSessionId sessionId();
+  public RuntimeObjectId runtimeObjectId();
   public RuntimeModelProvenance provenance();
 }
 public interface RuntimeModelSession extends AutoCloseable {
-  RuntimeModelSessionId sessionId();
-  RuntimeObjectId register(RuntimeModelHandle trustedHandle);
-  void seal();
-  LocatedRuntimeObject locate(ResolvedRuntimeTarget target);
-  RuntimeMutationVersion currentVersion(ResolvedRuntimeTarget target, ModelPath path);
-  @Override void close();
+  public RuntimeModelSessionId sessionId();
+  public LocatedRuntimeObject locate(ResolvedRuntimeTarget target);
+  public RuntimeMutationVersion currentVersion(ResolvedRuntimeTarget target, ModelPath path);
+  @Override public void close();
+}
+public interface RuntimeModelRuntime {
+  RuntimeModelExecutionResult open(RuntimeModelFrameRequest request);
+}
+public final class RuntimeModelRuntimes {
+  public static RuntimeModelRuntime production(EngineContext capturedEngineContext);
+}
+public final class RuntimeModelExecution implements AutoCloseable {
+  public RuntimeModelFrame frame();
+  public RuntimeModelSession session();
+  @Override public void close();
+}
+public enum RuntimeModelOpenFailureCode {
+  PLAN_NOT_IN_CAPTURED_CONTEXT,
+  TARGET_VIEW_NOT_FOUND,
+  SOURCE_NOT_MATERIALIZABLE,
+  DUPLICATE_PLAN,
+  MATERIALIZATION_FAILED
+}
+public final class RuntimeModelOpenFailure {
+  public RuntimeModelOpenFailureCode code();
+  public String stableMessage();
+}
+public final class RuntimeModelExecutionResult {
+  public boolean opened();
+  public Optional<RuntimeModelExecution> execution();
+  public Optional<RuntimeModelOpenFailure> failure();
 }
 ```
 
-`RuntimeModelProvenance`, `RuntimeModelHandle`, and `RuntimeModelFrame` are instantiated only by model-internal framework materialization in package `dec.core.model.runtime`. That internal seam creates/loads `ModelData` and freezes compiler-produced target provenance in the **same trusted materialization operation**. There is no public `wrap(ModelData, TargetKey, CompiledTargetBinding)`, no public rebind, no public setter, and no public `ModelData` accessor on the handle. Therefore a business/application caller cannot construct `valid binding A + existing ModelData B`.
-
-`RuntimeModelFrame` also freezes frame/owner/cursor facts with its handles, so callers cannot reuse handles from frame X while independently claiming frame Y. `RuntimeModelSession.register` accepts only a trusted handle; it never accepts separate binding and ModelData arguments.
+Mandatory production algorithm: each request plan must be an exact member of the captured `EngineContext`; target identity comes only from `plan.compiledTargetBinding().targetViewKey()` and its frozen binding facts; MODEL resolves that exact view from the same Context, creates a **new internal ModelData** from that view + deep-immutable source snapshot, freezes provenance+handle atomically, and only after all inputs succeed creates frame+sealed session and returns them together. Existing ModelData, `ModelData.name`, caller ViewData, list order, raw definitions, selector reparsing and legacy default `ConfigContextUtil` lookup are forbidden identity evidence. Session register/seal have no public cross-module surface.
 
 <a id="runtime-target-resolution"></a>
-## 4. STARTER public composition / resolution contracts
+## 4. STARTER production composition
 
 ```java
-package dec.core.starter.access;
-
-public enum RuntimeTargetResolutionStatus { RESOLVED, NOT_FOUND, AMBIGUOUS, CONTEXT_MISMATCH, PROVENANCE_MISMATCH }
+public enum RuntimeTargetResolutionStatus {
+  RESOLVED, NOT_FOUND, AMBIGUOUS, CONTEXT_MISMATCH, PROVENANCE_MISMATCH
+}
 public final class RuntimeTargetResolution {
-  public static RuntimeTargetResolution resolved(ResolvedRuntimeTarget target);
-  public static RuntimeTargetResolution denied(RuntimeTargetResolutionStatus status, DenialCode code);
-  public RuntimeTargetResolutionStatus status(); public Optional<ResolvedRuntimeTarget> target(); public Optional<DenialCode> denialCode();
+  public RuntimeTargetResolutionStatus status();
+  public Optional<ResolvedRuntimeTarget> target();
+  public Optional<DenialCode> denialCode();
 }
 public interface RuntimeTargetResolver {
-  RuntimeTargetResolution resolve(RuntimeBindingPlan plan, ProtectedAccessInvocation invocation, RuntimeModelSession session);
-}
-public final class RuntimeExecutionFrameSnapshot {
-  public static RuntimeExecutionFrameSnapshot from(RuntimeModelFrame trustedFrame);
-  public RuntimeExecutionFrameId frameId(); public RuntimeResolutionOwnerId ownerResolutionId();
-  public Optional<RuntimeCollectionCursorId> cursorId(); public RuntimeModelFrame runtimeModelFrame();
+  RuntimeTargetResolution resolve(RuntimeBindingPlan plan, ProtectedAccessInvocation invocation, RuntimeModelExecution execution);
 }
 public interface RuleProtectedAccessEntry { ProtectedAccessResult invoke(ProtectedAccessInvocation invocation); }
 public interface ChangeProtectedAccessEntry { ProtectedAccessResult invoke(ProtectedAccessInvocation invocation); }
 public interface CustomActionProtectedAccessEntry { ProtectedAccessResult invoke(ProtectedAccessInvocation invocation); }
 public final class ProtectedAccessRuntimeFactory {
-  public static ProtectedAccessRuntimeFactory production(EngineContext engineContext);
-  public ProtectedAccessComposition create(RuntimeExecutionFrameSnapshot frameSnapshot);
+  public static ProtectedAccessRuntimeFactory production(EngineContext capturedEngineContext);
+  public ProtectedAccessCompositionResult create(RuntimeModelFrameRequest frameRequest);
+}
+public final class ProtectedAccessCompositionResult {
+  public boolean created();
+  public Optional<ProtectedAccessComposition> composition();
+  public Optional<RuntimeModelOpenFailure> modelOpenFailure();
 }
 public final class ProtectedAccessComposition implements AutoCloseable {
   public ProtectedAccessPort protectedAccessPort();
-  public RuntimeExecutionFrameId frameId(); public RuntimeResolutionOwnerId ownerResolutionId();
+  public RuntimeExecutionFrameId frameId();
+  public RuntimeResolutionOwnerId ownerResolutionId();
   public RuntimeModelSessionId runtimeModelSessionId();
-  public RuleProtectedAccessEntry ruleEntry(); public ChangeProtectedAccessEntry changeEntry();
+  public RuleProtectedAccessEntry ruleEntry();
+  public ChangeProtectedAccessEntry changeEntry();
   public CustomActionProtectedAccessEntry customActionEntry();
   @Override public void close();
 }
 ```
 
-`RuntimeExecutionFrameSnapshot.from(...)` derives context and handle set from the trusted model-owned frame; it does not accept a caller-supplied list or independent frame/owner/cursor values. `ProtectedAccessRuntimeFactory.production(exact EngineContext)` validates every handle's immutable `(TargetKey, CompiledTargetBinding)` provenance against a current plan in that exact Context before session registration/seal. Metadata/order/selector inference is forbidden. A handle provenance match is not permission; `ModelAccessRuleKey + PolicyIndex + Guard` remains the sole authority.
+`ProtectedAccessRuntimeFactory.production(exact Context)` internally obtains `RuntimeModelRuntimes.production(the same Context)`, calls `open(frameRequest)`, retains the exact returned `RuntimeModelExecution(frame+session)`, and exposes no protected port if MODEL open fails. No production overload accepts caller-injected MODEL runtime/session/frame/operation port/Guard, existing ModelData, or independent frame/owner/cursor authority. Composition close closes the same MODEL execution.
 
-Wrong-target substitution is fail closed:
+## 5. Ownership/dependency rule
 
-```text
-trusted handle A(provenance A, internal ModelData A) + plan A -> eligible for registration
-trusted handle B(provenance B, internal ModelData B) presented for plan A -> NOT_FOUND/PROVENANCE_MISMATCH
-public attempt to create/rebind handle(B) with provenance A -> no legal construction surface
-cross-frame handle reuse with claimed different frame -> impossible through RuntimeExecutionFrameSnapshot.from(trustedFrame)
-```
+Legal directions: compiler->context, model->context, starter->context+model. Forbidden: context->compiler/model/starter, model->starter, P3/P4/P6 core->starter. STARTER owns resolver/intent/capability/Guard; MODEL owns materialization/session/locator/coordination and actual READ/WRITE. Guard is the sole permission authority and precedes MODEL effect.
 
-## 5. Effect ownership / dependency boundary
-
-STARTER owns composition, selection, capability and Guard. MODEL owns actual `RuntimeModelSession`, locator, coordination cell and production READ/WRITE effect. `RuntimeModelOperationPort` is the neutral CONTEXT contract implemented by MODEL and wired by STARTER. Legal direction: compiler->context; model->context; starter->context+model; context->compiler/model/starter forbidden; model->starter forbidden; P3/P4/P6 core->context allowed and ->starter forbidden.
-
-No production Java/TDD execution is claimed. DESIGN-P2-R25 remains candidate-only until same-revision specialist Review, current risk scan and required machine Evidence complete.
+No production Java/TDD/risk Evidence is claimed. Same-revision specialist Review and machine closure remain required.
