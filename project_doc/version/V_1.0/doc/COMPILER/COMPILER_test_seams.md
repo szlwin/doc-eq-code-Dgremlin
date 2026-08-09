@@ -1,128 +1,65 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R15`  
-> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
+> Revision：`DESIGN-P2-R16`  
+> Status：`NEEDS_REVIEW / MACHINE_BLOCKED / AC007_PENDING_USER_DECISION`
 
-## 1. System ownership seam
+## 1. System version seam
 
-Observable without private-field inspection:
+Observe `SystemVersionIdentity` as immutable values:
+- declaredVersion present/absent；
+- sourceSemanticDigest deterministic；
+- schemaVersion == enclosing CompiledModelSet schemaVersion；
+- compilerVersion == enclosing CompiledModelSet compilerVersion；
+- no fabricated time/order/random value。
 
-- compile source order A/B and B/A -> same SystemKey set/version digest/ownership sets;
-- `EngineContext.system(key)` exposes immutable snapshot;
-- every owned key resolves through current compiled facts;
-- no orphan/missing owned fact;
-- mutation of returned sets impossible;
-- two Contexts remain isolated.
+## 2. Ownership truth-source seam
 
-Required deterministic fixture dimensions:
-- declared version present vs absent;
-- source content change changes source semantic digest;
-- ownership change changes semantic digest;
-- same semantic input/order variation does not.
+Tests must be able to compare one `CompiledSystem` snapshot against:
+- final typed Data/View/RuleView/Information registries；
+- final CompiledRuleView rule closure；
+- final ModelAccessPolicyIndex keys。
 
-## 2. RuleView relation seam
+Negative setup must support orphan/missing/foreign snapshot facts before publication. Snapshot itself must not be writable/rebuild authoritative sources.
 
-Observe through public resolver/context:
+## 3. RuleView compatibility/resolution seam
 
-- RuleView missing System -> stable ERROR;
-- same-System duplicate -> stable ERROR;
-- cross-System same name -> isolated success;
-- `view-ref` resolves to exact `ViewKey` and is returned by `CompiledRuleView.resolvedViewKey()`;
-- unknown/wrong-owner View -> stable ERROR;
-- rule refs resolve deterministically and preserve canonical order;
-- bare-name new lookup absent/rejected.
+Observe existing `RuleViewKey(SystemKey,String)`, `owner()`, `name()` plus additive aliases, and exact `CompiledRuleView.resolvedViewKey()/resolvedRuleKeys()`.
 
-## 3. Shared ModelPath seam
+## 4. P1→P2 conversion seam
 
-Feed semantically equivalent raw path facts through RULE, CHANGE, QUERY_CONTRACT and MODEL_ACCESS compilation entry seams.
+Provide controlled source facts for:
+- exact `SharedModelPath` -> exact `ModelPath`；
+- wildcard `SharedModelPath("*")` -> stable finite exact paths；
+- `AccessMode.READ/WRITE` -> exact AccessOperation；
+- proof that EXECUTE is never inferred；
+- proof that runtime PolicyIndex/Bridge/Guard no longer reads P1 types as authority。
 
-Oracle:
-- value-equal canonical `ModelPath`;
-- same canonical segments/case semantics;
-- same invalid-segment classification;
-- no consumer-specific parent/fuzzy fallback;
-- query test stops at compile/IR contract and does not implement P6 execution.
+## 5. Business Flow seams
 
-Real fixture should include `status` and `every(orderDetailList,status=1)` / change counterpart.
+`FLOW-CONFIG-COMPILE` counters/observations: source discovery, symbol registration, reference resolution, compatibility conversion, PolicyIndex construction, ownership derivation, digest, publication。
 
-## 4. Operation independence seam
+`FLOW-PROTECTED-ACCESS-EXECUTE` counters/observations: Bridge invocation, issued invocation, target resolution, capability mint, Gateway, Guard lookup/proof, operation/effect, denial provenance。
 
-For same System/target/path, publish only one operation rule at a time and assert the other two operations exact-miss/deny. Do not test merely declared-vs-undeclared for the same operation.
+## 6. Operation independence seam
 
-## 5. Policy publication seam
+For same System/target/path, independently seed READ-only, WRITE-only, EXECUTE-only exact policy. No `hasAnyPermission(path)` shortcut is acceptable.
 
-Observe:
+## 7. Runtime binding / one-shot seam
 
-```text
-compiled rules
- -> ModelAccessPolicyIndex.of
- -> same index enters SemanticDigestInput
- -> same immutable index retained by DigestBoundCompiledInput
- -> CompiledModelSetBuilder candidate uses CompiledModelSet.published
- -> EngineContext returns same authority
-```
+Controllable current frame/owner/cursor/membership and target resolver; ability to attempt target substitution and concurrent same-capability consume without `Thread.sleep`.
 
-Legacy eight-arg constructor -> empty policy and protected access fail-closed.
+## 8. Denial determinism seam
 
-## 6. P2 production seam / AC-007
+Repeat identical immutable-context failure and compare code/System/optional RuleView/op/ModelPath/policy SourceRef; ensure actual sensitive value/object dump is absent.
 
-Test public/protected API shape and production composition rather than future P3/P4/P6 business state machines.
+## 9. AC-007 decision-aware seam
 
-Blocking oracle:
-- external `dec-demo` production-style consumer obtains/uses only public `ProtectedExecutionBridge`;
-- no reflection/package-private helper/manual issued pair;
-- no public/protected issued-pair/capability mint method;
-- no public API accepts an already-Guarded allow plus caller-selected target operation;
-- compatibility adapter cannot write/mint/execute protected mutation;
-- policy authority accessible to runtime is exactly current EngineContext index;
-- allow and deny both pass the same Bridge→Gateway→Guard seam.
+The common no-bypass seam can be tested now, but `CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001` cannot by itself close original AC-007 until user chooses Option A. If user chooses Option B, TestDesign must additionally identify concrete production consumer classes/adapters and executable integration oracles.
 
-Downstream concrete Rule/change/action/query integration remains P3/P4/P6 acceptance work.
+## 10. TDD validity
 
-## 7. Runtime binding / target seam
+Formal bootstrap may use `-am`; target RED command must not use `-am` and uses `-Dsurefire.failIfNoSpecifiedTests=true`. Missing class/symbol/setup/compile failure before intended assertion is `INVALID_RED`, not valid failing TDD evidence.
 
-Controllable fixtures expose frame/owner/cursor/membership changes without `Thread.sleep`.
+## 11. Gate
 
-Oracle:
-- stale/foreign/wrong plan -> DENY before operation;
-- capability binds exact target+operation;
-- A capability cannot operate B target;
-- same capability concurrent terminal success <= 1;
-- identical direct bridge arguments are independent invocations and are not token replay.
-
-## 8. Runtime denial diagnostic seam
-
-For each denial class, repeat same invocation against same immutable Context and assert stable:
-
-- code;
-- SystemKey;
-- optional RuleView provenance;
-- AccessOperation;
-- canonical ModelPath;
-- policy SourceRef.
-
-Minimum denial classes:
-- `POLICY_NOT_FOUND`;
-- `RUNTIME_BINDING_STALE`;
-- `RUNTIME_PLAN_MISMATCH`;
-- `TARGET_SUBSTITUTION`;
-- `GUARD_UNAVAILABLE`.
-
-Assert denial text/value object does not include sensitive runtime value/object dump/credential/config payload.
-
-## 9. Atomic publication / Diagnostic seam
-
-Any duplicate System, ownership mismatch, missing RuleView System, unknown View/Rule, invalid path or static permission error -> candidate publication count 0 and old Context unchanged.
-
-Repeat compile with same invalid source -> same ordered Diagnostic codes/definition identities/SourceRefs.
-
-## 10. Formal TDD RED rule
-
-```bash
-./mvnw -pl <EXACT-MODULE> -am -Dmaven.test.skip=true install
-./mvnw -pl <EXACT-MODULE> -Dtest=<EXACT-TESTCLASS> -Dsurefire.failIfNoSpecifiedTests=true test
-```
-
-Second target command must not use `-am`. Missing test/class/symbol/setup/compile failure that prevents the intended assertion from running is `INVALID_RED`.
-
-No TDD skeleton is created while Design/TestDesign review gates are blocked.
+No skeleton/tests are executed by this Design artifact. Exact Testability/ApiContract/Architecture Review and AC-007 user decision remain blocking.
