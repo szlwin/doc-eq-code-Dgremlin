@@ -1,37 +1,39 @@
 # COMPILER 业务模型
 
-> Revision：`BM-R14`。Base：`BM-R13`。  
-> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809-R02` + ACTIVE `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` + PROPOSED `DEC-P2-AC007-STAGE-BOUNDARY-001`。  
-> Business Flow：`FLOW-R04@p2-system-ruleview-protected-access`。  
-> Status：`NEEDS_EXACT_REVIEW / MACHINE_BLOCKED / AC007_PENDING_USER_DECISION`。
+> Revision：`BM-R15`。Base：`BM-R14`。  
+> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809-R03` + ACTIVE `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` + ACTIVE `DEC-P2-AC007-STAGE-BOUNDARY-001:OPTION_B`。  
+> Business Flow：`FLOW-R05@p2-system-ruleview-protected-access`。  
+> Status：`NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。
 
-BM-R14 保留 BM-R13 的 System ownership、RuleView→View、shared ModelPath、operation independence、PolicyIndex、Guard、atomic publication 与 deterministic denial 语义，并补齐 version contract、ownership truth source、P1→P2 migration 与 AC-007 决策合法性。
+BM-R15 保留 BM-R14 已冻结的 System ownership/version、RuleView→View、shared ModelPath、operation independence、PolicyIndex、Guard、atomic publication、source compatibility 与 P1→P2 migration，并根据用户明确选择的 AC-007 **Option B** 增加 P2 representative production Rule/change/custom-action consumers。
 
 ## 1. P2 业务目标
 
-P2 在同一 immutable `CompiledModelSet` / `EngineContext` 中形成：
+P2 在同一 immutable `CompiledModelSet` / `EngineContext` 与唯一 protected-access authority seam 中形成：
 
 1. first-class System identity + version/source identity + derived ownership snapshot；
 2. `RuleViewKey=(SystemKey,name)` + resolved View + resolved Rule closure；
 3. rule/change/query-contract/model-access 共用 canonical `ModelPath`；
 4. READ/WRITE/EXECUTE 独立的 exact policy facts；
 5. compiler-published immutable `ModelAccessPolicyIndex`；
-6. production protected-access runtime flow `Bridge -> capability -> Gateway -> Guard -> operation`；
-7. System/RuleView/ownership/policy/digest 同一 atomic publication closure。
+6. production protected-access runtime flow `consumer -> Bridge -> capability -> Gateway -> Guard -> operation`；
+7. **P2 production main-source Rule/change/custom-action 三类 representative protected-access consumers**，真实执行 allow/deny/no-bypass acceptance；
+8. System/RuleView/ownership/policy/digest 同一 atomic publication closure。
 
-AC-007 的最终 acceptance scope 当前未获用户授权，不在 BM-R14 中把 Option A 或 B 冻结为 ACTIVE。
+Option B 扩大的是 P2 AC-007 验收入口，不把 P3/P4/P6 完整业务执行语义提前到 P2。
 
 ## 2. 统一语言
 
 | ID | 术语 | 定义 |
 |---|---|---|
 | TERM-SYSTEM-COMPILED-IDENTITY | System compiled identity | `SystemKey + SystemVersionIdentity + SourceRef + derived immutable ownership snapshot`。 |
-| TERM-SYSTEM-VERSION-IDENTITY | SystemVersionIdentity | optional declared version + mandatory source semantic digest + exact `schemaVersion` + exact `compilerVersion`。`optionsDigest/optionsVersion` 属 enclosing compiled-set compile identity，不在 System 层重复为业务版本。 |
+| TERM-SYSTEM-VERSION-IDENTITY | SystemVersionIdentity | optional declared version + mandatory source semantic digest + exact `schemaVersion` + exact `compilerVersion`。`optionsDigest/optionsVersion` 属 enclosing compiled-set compile identity，不伪装为业务版本。 |
 | TERM-SYSTEM-OWNERSHIP-SNAPSHOT | System ownership snapshot | 从 final authoritative compiled facts 派生的一次性 immutable read index；不是第二 authority。 |
 | TERM-RULEVIEW-COMPOSITE-IDENTITY | RuleView composite identity | `(SystemKey,name)`；保留 existing source-compatible constructor/accessors。 |
 | TERM-MODEL-PATH | ModelPath | P2 唯一 runtime/canonical exact path identity。P1 `SharedModelPath` 仅作为 source/compat input。 |
 | TERM-ACCESS-OPERATION | AccessOperation | P2 唯一 runtime authorization operation：READ/WRITE/EXECUTE；P1 `AccessMode` 仅为 source/compat input。 |
 | TERM-PROTECTED-ACCESS-FLOW | Protected access flow | `FLOW-PROTECTED-ACCESS-EXECUTE`；与 compile/publication flow 分离。 |
+| TERM-P2-REPRESENTATIVE-PROTECTED-CONSUMER | P2 representative protected consumer | production main-source Rule/change/custom-action entry adapter；只负责把真实入口 invocation 送入同一个 `ProtectedExecutionBridge`，自身不是权限 authority，也不实现后续阶段完整业务引擎。 |
 
 <a id="ENT-COMPILED-SYSTEM"></a>
 ## 3. CompiledSystem / version identity
@@ -45,7 +47,7 @@ AC-007 的最终 acceptance scope 当前未获用户授权，不在 BM-R14 中�
 - `schemaVersion` 等于 enclosing published `CompiledModelSet.schemaVersion`；
 - `compilerVersion` 等于 enclosing published `CompiledModelSet.compilerVersion`；
 - source-order-only 变化不得制造业务 version；semantic/source/schema/compiler compatibility 变化必须反映在 version/digest identity；
-- `optionsDigest/optionsVersion` 继续由 enclosing CompiledModelSet/digest closure 承担，不伪造成 System declared version。
+- `optionsDigest/optionsVersion` 继续由 enclosing CompiledModelSet/digest closure 承担。
 
 <a id="AGG-SYSTEM-COMPILED-CONFIG"></a>
 ## 4. Ownership authoritative sources
@@ -130,19 +132,64 @@ P1 `AccessMode` 没有 EXECUTE，因此绝不推断 EXECUTE；EXECUTE 必须来�
 <a id="POL-MODEL-ACCESS-AUTHORIZATION"></a>
 ## 8. PolicyIndex / direct bridge authority
 
-`DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` 为用户确认 ACTIVE：caller 可选择 exact compiler-published ruleKey/op；missing/invalid/mismatch fail closed。`AccessConsumerIrKey` 为 provenance/diagnostic，不是 authorization-key 维度。
+`DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` 为用户确认 ACTIVE：caller 可选择 exact compiler-published ruleKey/op；missing/invalid/mismatch fail closed。`AccessConsumerIrKey`/consumer provenance 不是 authorization-key 维度。
 
 所有 protected access（STATIC_ALLOW 亦然）必须经过 Gateway→Guard exact current-context PolicyIndex lookup；runtime-required branch 再执行 exact plan/proof。
 
 <a id="INV-COMPILER-020"></a>
-## 9. Runtime protected-access invariant 与 AC-007 待决
+## 9. Protected-access invariant
 
-独立于 AC-007 A/B，P2 共用 invariant 是：no public issued-pair/capability mint、no secondary permission authority、任何已存在的 P2 supported protected operation 都经 `FLOW-PROTECTED-ACCESS-EXECUTE`、DENY before effects、actual target/op one-shot capability binding。
+P2 唯一 protected-operation authority path：
 
-`DEC-P2-AC007-STAGE-BOUNDARY-001` 当前 `PROPOSED / PENDING_USER_DECISION`：Option A = P2 seam acceptance；Option B = P2 representative concrete consumers。用户选择前不 supersede 原 R01 AC-007，也不宣称任一方案 ACTIVE。
+```text
+production consumer
+ -> ProtectedExecutionBridge
+ -> internal issued invocation
+ -> exact target resolver
+ -> one-shot capability(target + operation)
+ -> ProtectedAccessGateway
+ -> ModelAccessGuard
+ -> bound protected operation OR deterministic DENY
+```
+
+Common invariants：no public issued-pair/capability mint、no secondary permission authority、no compatibility write bypass、DENY before effects、actual target/op one-shot capability binding。
+
+<a id="INV-COMPILER-020A"></a>
+## 10. AC-007 Option B：P2 representative production consumers
+
+`DEC-P2-AC007-STAGE-BOUNDARY-001` 已由用户选择 **Option B / ACTIVE**。P2 必须提供三类 production main-source representative consumers：
+
+1. RULE entry；
+2. CHANGE entry；
+3. CUSTOM_ACTION entry。
+
+三类 consumer 只允许拥有/依赖同一个 `ProtectedExecutionBridge` 与不可变 invocation/provenance value；不得直接持有或调用：
+
+- `ProtectedAccessGateway`；
+- `ModelAccessGuard`；
+- raw target/operation execution port；
+- `ModelAccessPolicyIndex` mutation/secondary permission map；
+- issued-pair/capability mint。
+
+`INV-COMPILER-020A`：三类 consumer 都是 production main-source、public production-composition reachable 的真实入口；test-only wrapper/reflection/package-private backdoor/manual issued pair 不算 AC-007 evidence。
+
+`INV-COMPILER-020B`：对于相同 current Context + exact ruleKey + operation + frame/owner/cursor + resolved target facts，RULE/CHANGE/CUSTOM_ACTION consumer kind **不得改变 authorization result**。Consumer category 只能用于 provenance/entry identity，不能进入 PolicyIndex key 或 Guard allow semantics。
+
+`INV-COMPILER-020C`：每类 consumer 的 authorized invocation 只能通过一次 Bridge→Gateway→Guard 到达 capability-bound operation；unauthorized invocation 必须 stable DENY 且 operation/effects=0。
+
+### 10.1 Stage boundary after Option B
+
+P2 representative consumers 是**最小 protected-access acceptance adapters**，不是完整业务引擎：
+
+- P3 仍负责 Information 求值、依赖 DAG、物化/失效/增量重算等完整语义；
+- P4 仍负责 Action/Produce 完整执行状态机；
+- P6 仍负责 QueryPlan 完整编译/执行；Option B 不新增 P2 query concrete consumer requirement；
+- P3/P4/P6 后续 real executors 必须复用 P2 authority seam，不能新增旁路。
+
+因此 Option B 保留原 AC-007 concrete-entry acceptance，同时不吞并后续阶段完整业务范围。
 
 <a id="INV-COMPILER-019"></a>
-## 10. Digest / atomic publication
+## 11. Digest / atomic publication
 
 ```text
 typed registries
@@ -155,18 +202,18 @@ typed registries
  -> digest -> DigestBoundCompiledInput -> CompiledModelSet.published -> EngineContext
 ```
 
-Digest 后不得重建 ownership/policy；任何 ERROR 保留 old Context。
+Digest 后不得重建 ownership/policy；任何 ERROR 保留 old Context。Representative runtime consumer instances/Bridge/capability state 不进入 semantic digest。
 
 <a id="INV-COMPILER-021"></a>
-## 11. Diagnostic / runtime denial
+## 12. Diagnostic / runtime denial
 
-Compile ERROR 与 runtime DENY deterministic/source-aware。重复相同 denial 保留 same code/System/optional RuleView/op/canonical ModelPath/policy SourceRef，禁止暴露 sensitive actual values。
+Compile ERROR 与 runtime DENY deterministic/source-aware。重复相同 denial 保留 same code/System/optional RuleView/op/canonical ModelPath/policy SourceRef，禁止暴露 sensitive actual values。不同 representative consumer 对同一 authorization facts 的 DENY code/authorization classification 必须一致；consumer provenance 可附加但不能改变结果。
 
 <a id="INV-COMPILER-022"></a>
-## 12. Compatibility / declaration migration
+## 13. Compatibility / declaration migration
 
 P2 保留 surviving read-only declaration/System compatibility 到 P7；不恢复 `dec-expand-declaration`，不允许 legacy adapter 写新 registry/policy。`SharedModelPath`/`AccessMode` compatibility 也只能单向转换到 P2 canonical facts，不形成第二 runtime authority。
 
-## 13. Gate
+## 14. Gate
 
-BM-R14 = `NEEDS_EXACT_REVIEW / MACHINE_BLOCKED / AC007_PENDING_USER_DECISION`。risk scan、Requirement/BM/BusinessFlow/Impact/CrossModule exact Review 均未闭环；不得 PASSED，不得进入 Implementation Plan/TDD/Development。
+BM-R15 = `NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。AC-007 user decision 已满足，但 Requirement/BM/BusinessFlow/Impact/CrossModule exact Review、specialist Review 与 risk scan 均未闭环；不得 PASSED，不得进入 Implementation Plan/TDD/Development。

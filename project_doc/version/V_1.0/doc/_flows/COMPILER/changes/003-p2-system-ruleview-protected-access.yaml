@@ -1,14 +1,15 @@
 schemaVersion: 1
 artifact: business_flow_changeset
 module: COMPILER
-revision: FLOW-R04@p2-system-ruleview-protected-access
-baseRevision: FLOW-R03@p2-system-ruleview-access
+revision: FLOW-R05@p2-system-ruleview-protected-access
+baseRevision: FLOW-R04@p2-system-ruleview-protected-access
 inputs:
   - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809-R02
-  - BM-R14
-  - DESIGN-P2-R16
-  - TESTDESIGN-P2-R17
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R03
+  - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B
+  - BM-R15
+  - DESIGN-P2-R17
+  - TESTDESIGN-P2-R18
 status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
 operations:
   - op: upsert
@@ -81,16 +82,22 @@ operations:
   - op: upsert
     flow:
       id: FLOW-PROTECTED-ACCESS-EXECUTE
-      name: Protected model access execution through the single runtime authority path
+      name: Representative production consumers execute protected model access through the single runtime authority path
       kind: RUNTIME_PROTECTED_ACCESS
       acceptanceCriteria:
         - AC-P2-SYSTEM-RULEVIEW-004:runtime
         - AC-P2-SYSTEM-RULEVIEW-006
-        - AC-P2-SYSTEM-RULEVIEW-007:PENDING_USER_DECISION
+        - AC-P2-SYSTEM-RULEVIEW-007:OPTION_B_ACTIVE
         - AC-P2-SYSTEM-RULEVIEW-009:runtime
+      entryCategories:
+        - RULE
+        - CHANGE
+        - CUSTOM_ACTION
       steps:
+        - id: CMSTEP-P2-ACCESS-00
+          action: one real main-source RuleProtectedAccessEntry, ChangeProtectedAccessEntry or CustomActionProtectedAccessEntry receives an immutable ProtectedAccessInvocation; consumer category is provenance only
         - id: CMSTEP-P2-ACCESS-01
-          action: caller invokes public ProtectedExecutionBridge with exact compiler-published ruleKey/operation and current frame/owner/cursor
+          action: representative entry forwards exact compiler-published ruleKey/operation and current frame/owner/cursor to its bound public ProtectedExecutionBridge
         - id: CMSTEP-P2-ACCESS-02
           action: starter creates internal issued invocation; no public issued-pair/capability mint
         - id: CMSTEP-P2-ACCESS-03
@@ -101,6 +108,10 @@ operations:
           action: Guard performs exactly one current-context ModelAccessPolicyIndex lookup and required runtime proof
         - id: CMSTEP-P2-ACCESS-06
           action: ALLOW executes only capability-bound target/operation; DENY returns stable provenance before side effects
+      consumerDependencyInvariant:
+        allowedProtectedAuthorityDependency: ProtectedExecutionBridge
+        forbiddenDependencies: [ProtectedAccessGateway, ModelAccessGuard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
+      parityInvariant: same Context plus exact ProtectedAccessInvocation plus same runtime facts produces the same authorization classification across RULE CHANGE CUSTOM_ACTION; consumer category cannot alter policy key or Guard semantics
       failureSemantics:
         - policy_not_found: DENY before operation/effects
         - operation_mismatch: DENY before operation/effects
@@ -111,26 +122,34 @@ operations:
       businessModelRefs:
         - POL-MODEL-ACCESS-AUTHORIZATION
         - INV-COMPILER-020
+        - INV-COMPILER-020A
+        - INV-COMPILER-020B
+        - INV-COMPILER-020C
         - INV-COMPILER-021
       dependencyImpactRefs:
         - IMP-P2-MODEL-ACCESS-AUTHORIZATION
         - IMP-P2-PROTECTED-SEAM
+        - IMP-P2-AC007-REPRESENTATIVE-CONSUMERS
         - IMP-P2-RUNTIME-DENIAL
       designRefs:
         - COMPILER_design.md#p2-direct-bridge
+        - COMPILER_design.md#p2-ac007-consumers
         - COMPILER_design.md#p2-runtime-guard
         - COMPILER_design.md#p2-operation-binding
         - COMPILER_design.md#p2-runtime-denial
       testCaseIds:
-        - CASE-P2-TD-ACCESS-NON-IMPLICATION-001
-        - CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001
-        - CASE-P2-TD-RUNTIME-BINDING-PROOF-001
+        - CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001
+        - CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001
+        - CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001
+        - CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001
+        - CASE-P2-TD-AC007-CONSUMER-PARITY-001
+        - CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001
         - CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001
       notes:
-        - AC-007 is not closed by this flow. Option A versus Option B remains PENDING_USER_DECISION in DEC-P2-AC007-STAGE-BOUNDARY-001.
-        - Concrete P3/P4/P6 consumer integration is neither asserted nor removed until the user decides AC-007 scope.
+        - AC-007 Option B is user-decided and ACTIVE; seam-only evidence is insufficient without the three representative production consumers.
+        - P3/P4 full business execution semantics and P6 QueryPlan remain downstream, but their future protected accesses must reuse this authority path.
 reviewGate:
-  requirementDecision: PENDING_USER_DECISION_AC007
+  requirementDecision: SATISFIED_OPTION_B_NEEDS_EXACT_REQUIREMENT_REVIEW
   businessFlowReview: REQUIRED
   impactReview: REQUIRED
   crossModuleReview: REQUIRED

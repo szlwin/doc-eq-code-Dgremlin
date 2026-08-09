@@ -3,15 +3,15 @@ artifact: business_model
 module:
   code: COMPILER
   name: dec-core-compiler
-revision: BM-R14
-baseRevision: BM-R13
+revision: BM-R15
+baseRevision: BM-R14
 inputs:
   - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809-R02
-  - DEC-P2-DIRECT-BRIDGE-AUTHORITY-001:ACTIVE
-  - DEC-P2-AC007-STAGE-BOUNDARY-001:PROPOSED_PENDING_USER_DECISION
-businessFlowRevision: FLOW-R04@p2-system-ruleview-protected-access
-status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED_AC007_PENDING_USER_DECISION
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R03
+  - DEC-P2-DIRECT-BRIDGE-AUTHORITY-001:ACTIVE_USER_DECIDED
+  - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B_USER_DECIDED
+businessFlowRevision: FLOW-R05@p2-system-ruleview-protected-access
+status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
 inherits:
   - BM-R07@7d7bf504ca9d:P1-stable-compiler-facts
 terms:
@@ -25,6 +25,8 @@ terms:
     definition: exact P2 canonical/runtime path; P1 SharedModelPath is source/compat input only
   - id: TERM-ACCESS-OPERATION
     definition: P2 runtime authorization operation READ WRITE EXECUTE; P1 AccessMode is source/compat input only
+  - id: TERM-P2-REPRESENTATIVE-PROTECTED-CONSUMER
+    definition: production main-source RULE CHANGE or CUSTOM_ACTION entry adapter that forwards an immutable invocation through the same ProtectedExecutionBridge and is not itself an authorization authority or full downstream business engine
 entities:
   - id: ENT-COMPILED-SYSTEM
     identity: systemKey
@@ -70,9 +72,15 @@ invariants:
   - id: INV-COMPILER-019
     statement: authoritative facts derived ownership PolicyIndex version identity and digest are one immutable publication closure
   - id: INV-COMPILER-020
-    statement: all P2 supported protected operations use FLOW-PROTECTED-ACCESS-EXECUTE; final AC007 scope remains pending user decision
+    statement: all P2 protected operations use production consumer to Bridge to internal issuance to resolver to one-shot capability to Gateway to Guard to bound operation or deterministic DENY
+  - id: INV-COMPILER-020A
+    statement: P2 delivers production main-source RULE CHANGE CUSTOM_ACTION representative consumers reachable through production API/composition; test-only wrappers or backdoors are not acceptance evidence
+  - id: INV-COMPILER-020B
+    statement: for equal current authorization facts consumer category never changes PolicyIndex key Guard decision or target/operation binding
+  - id: INV-COMPILER-020C
+    statement: each representative consumer authorized invocation traverses Bridge Gateway Guard before exactly one bound effect and unauthorized invocation has operation/effects zero
   - id: INV-COMPILER-021
-    statement: compile ERROR and runtime DENY are deterministic source-aware and non-sensitive
+    statement: compile ERROR and runtime DENY are deterministic source-aware and non-sensitive; same authorization facts have same denial classification across representative consumers
   - id: INV-COMPILER-022
     statement: declaration compatibility remains read-only until P7
   - id: INV-COMPILER-023
@@ -96,19 +104,28 @@ p1ToP2Migration:
   runtimeAuthority: [ModelPath, AccessOperation, ModelAccessPolicyIndex]
 ac007:
   decisionId: DEC-P2-AC007-STAGE-BOUNDARY-001
-  status: PENDING_USER_DECISION
+  status: ACTIVE_OPTION_B_USER_DECIDED
   originalRequirementSuperseded: false
-  options:
-    A: P2 seam/no-bypass acceptance; concrete integrations downstream P3/P4/P6
-    B: P2 representative concrete production consumers execute original AC007
+  requiredRepresentativeConsumers: [RULE, CHANGE, CUSTOM_ACTION]
+  productionMainSourceRequired: true
+  testOnlyWrapperAccepted: false
+  sameAuthorizationFactsConsumerParityRequired: true
+  requiredPath: representative consumer -> ProtectedExecutionBridge -> internal issuance -> resolver -> one-shot capability -> ProtectedAccessGateway -> ModelAccessGuard -> bound operation or DENY
+  fullDownstreamSemantics:
+    P3: remains downstream
+    P4: remains downstream
+    P6QueryPlan: remains downstream; no P2 concrete query consumer required by AC007 Option B
 policies:
   - id: POL-MODEL-ACCESS-AUTHORIZATION
     statement: exact compiler-published rule/operation required; direct caller authority follows the ACTIVE user decision
+  - id: POL-P2-AC007-CONSUMER-PARITY
+    statement: RULE CHANGE CUSTOM_ACTION category is provenance only and cannot grant deny upgrade downgrade or bypass authorization
   - id: POL-DEFERRED-BOUNDARY
-    statement: P2 does not silently assume AC007 option A or B before user authorization
+    statement: P2 representative consumers satisfy concrete protected-access entry acceptance without implementing P3/P4/P6 complete business execution semantics
 gate:
   openP1: 19
-  ac007UserDecision: REQUIRED
+  ac007UserDecision: SATISFIED_OPTION_B
+  requirementReview: REQUIRED
   riskDetection: NOT_SCANNED
   implementationPlan: BLOCKED
   tdd: BLOCKED

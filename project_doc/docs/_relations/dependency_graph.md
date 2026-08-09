@@ -2,8 +2,9 @@
 
 - Project：`doc-eq-code`
 - Version：`V_1.0`
-- Revision：`BM-R14 / FLOW-R04 / DESIGN-P2-R16`
-- Status：`NEEDS_REVIEW / MACHINE_BLOCKED / AC007_PENDING_USER_DECISION`
+- Revision：`BM-R15 / FLOW-R05 / DESIGN-P2-R17 / TESTDESIGN-P2-R18`
+- Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
+- AC-007 Decision：`OPTION_B / ACTIVE / user-decided`
 
 ## P2 关系图
 
@@ -13,12 +14,17 @@ flowchart LR
   C[DEC-CORE-COMPILER]
   X[DEC-CORE-CONTEXT]
   S[DEC-CORE-STARTER]
+  D[DEC-DEMO]
   L[LEGACY-DECLARATION-SYSTEM-COMPAT]
   FC[FLOW-CONFIG-COMPILE]
   FR[FLOW-PROTECTED-ACCESS-EXECUTE]
-  P3[P3 Rule/Information]
-  P4[P4 change/custom-action]
-  P6[P6 QueryPlan]
+  R[RuleProtectedAccessEntry]
+  CH[ChangeProtectedAccessEntry]
+  A[CustomActionProtectedAccessEntry]
+  B[ProtectedExecutionBridge]
+  P3[P3 full Rule/Information]
+  P4[P4 full Action/Produce]
+  P6[P6 full QueryPlan]
 
   F -->|IMPLEMENTED_BY| C
   F -->|AFFECTS| X
@@ -26,17 +32,26 @@ flowchart LR
   F -->|AFFECTS| L
   C --> FC
   X --> FC
-  S --> FR
   FC -->|publishes immutable Context| X
+
+  S --> R
+  S --> CH
+  S --> A
+  R --> B
+  CH --> B
+  A --> B
+  B --> FR
   X -->|PolicyIndex/System/RuleView facts| FR
-  P3 -. AC007 option A downstream / option B P2 representative consumer .-> FR
-  P4 -. AC007 option A downstream / option B P2 representative consumer .-> FR
-  P6 -. AC007 option A downstream query integration .-> FR
+  D -->|real AC007 public production reachability fixture| R
+  D --> CH
+  D --> A
+
+  P3 -. full semantics later; reuse P2 authority seam .-> B
+  P4 -. full semantics later; reuse P2 authority seam .-> B
+  P6 -. full QueryPlan later; reuse P2 path/auth semantics .-> B
 ```
 
-## Current P2 cross-module facts
-
-### CMI-P2-SYSTEM-RULEVIEW-001 — compile/publication
+## CMI-P2-SYSTEM-RULEVIEW-001 — compile/publication
 
 ```text
 source/frontends
@@ -53,10 +68,11 @@ source/frontends
 
 Ownership authorities：typed Data/View/RuleView/Information registries + CompiledRuleView rule closure + PolicyIndex keys。`CompiledSystem` 只是 derived read snapshot。
 
-### CMI-P2-PROTECTED-ACCESS-001 — runtime protected access
+## CMI-P2-PROTECTED-ACCESS-001 — runtime authority seam
 
 ```text
-public ProtectedExecutionBridge
+representative production entry
+ -> public ProtectedExecutionBridge
  -> starter internal issued invocation
  -> exact target resolution
  -> one-shot capability(target+operation)
@@ -65,21 +81,38 @@ public ProtectedExecutionBridge
  -> bound operation OR deterministic denial before effects
 ```
 
-P1 `SharedModelPath/AccessMode` 不进入此 runtime flow；runtime authority 只使用 P2 `ModelPath/AccessOperation/ModelAccessPolicyIndex`。
+P1 `SharedModelPath/AccessMode` 不进入 runtime authority；runtime 只使用 P2 `ModelPath/AccessOperation/ModelAccessPolicyIndex`。
 
-## AC-007 pending decision
+## CMI-P2-AC007-REPRESENTATIVE-CONSUMERS — Option B ACTIVE
 
-`DEC-P2-AC007-STAGE-BOUNDARY-001` 当前为 `PROPOSED / PENDING_USER_DECISION`：
+User chose Option B。P2 current candidate must contain three real main-source entry adapters：
 
-- A：P2 final acceptance = seam/no-bypass；P3/P4/P6 concrete integrations downstream；
-- B：P2 交付 representative Rule/change/custom-action production consumers 来执行原 literal AC-007。
+```text
+RULE          RuleProtectedAccessEntry --------\
+CHANGE        ChangeProtectedAccessEntry -------+--> same ProtectedExecutionBridge
+CUSTOM_ACTION CustomActionProtectedAccessEntry -/
+```
 
-因此图中的 P3/P4/P6 到 runtime flow 目前只是条件关系，不是 ACTIVE downstream acceptance，也不是当前 closure Evidence。
+Frozen constraints：
+- each entry's only protected-access authority dependency = `ProtectedExecutionBridge`；
+- no Gateway/Guard/resolver/raw operation/secondary PolicyIndex/issued-pair/capability dependency；
+- same Context + exact invocation + runtime facts -> same authorization classification across three entries；
+- allow/deny paths executed through normal public production construction；test-only wrapper/reflection/internal shortcut is invalid evidence；
+- unauthorized path effects=0；authorized effect occurs only after Guard。
+
+## Downstream stage boundary
+
+Option B keeps original AC-007 concrete-entry acceptance in P2 but does not move full downstream engines into P2：
+
+- P3 full Rule/Information evaluation semantics remain P3；
+- P4 full change/custom-action/Action/Produce execution state machine remains P4；
+- P6 full QueryPlan compile/execute remains P6；
+- all future protected accesses must reuse P2 Bridge/Gateway/Guard authority seam and cannot create bypass authority。
 
 ## Compatibility
 
-Existing public `SystemKey(String)/name()`、`RuleViewKey(SystemKey,String)/owner()/name()` 保留；additive aliases 不替换现有 API。Legacy declaration compatibility read-only 到 P7。
+Existing public `SystemKey(String)/name()`、`RuleViewKey(SystemKey,String)/owner()/name()`、EngineContext constructor、legacy CompiledModelSet constructor remain。Legacy declaration compatibility read-only 到 P7。
 
 ## Gate
 
-BusinessFlow/Architecture/API/Impact/CrossModule/Concurrency exact Reviews、AC-007 用户决策和 machine risk detection 均未闭环；Implementation Plan/TDD/Development BLOCKED。
+AC-007 user decision is satisfied。Requirement/BM/BusinessFlow/Architecture/API/Impact/CrossModule/Concurrency exact Reviews and machine risk detection remain open；Implementation Plan/TDD/Development BLOCKED。

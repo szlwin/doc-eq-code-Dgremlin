@@ -2,15 +2,16 @@ schemaVersion: 1
 artifact: dependency_impact
 project: doc-eq-code
 version: V_1.0
-revision: BM-R14
-baseRevision: BM-R13
-status: NEEDS_REVIEW_MACHINE_BLOCKED_AC007_PENDING_USER_DECISION
+revision: BM-R15
+baseRevision: BM-R14
+status: NEEDS_REVIEW_MACHINE_BLOCKED
 inputs:
   - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809-R02
-  - FLOW-R04@p2-system-ruleview-protected-access
-  - DESIGN-P2-R16
-  - TESTDESIGN-P2-R17
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R03
+  - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B
+  - FLOW-R05@p2-system-ruleview-protected-access
+  - DESIGN-P2-R17
+  - TESTDESIGN-P2-R18
 inherits:
   - P1 compiler/context/frontend/starter relations remain unchanged unless explicitly superseded below
 relations:
@@ -30,8 +31,14 @@ relations:
     from: FEATURE-DESC-3361AD2E54FC
     type: AFFECTS
     to: DEC-CORE-STARTER
-    reason: Starter owns FLOW-PROTECTED-ACCESS-EXECUTE composition and hides issuance/capability/operation authority behind the public Bridge.
+    reason: Starter owns the three P2 representative production consumer entries, FLOW-PROTECTED-ACCESS-EXECUTE composition, and hides issuance/capability/operation authority behind the public Bridge.
     traces: [TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-009]
+  - id: REL-P2-AC007-DEMO-REACHABILITY
+    from: FEATURE-DESC-3361AD2E54FC
+    type: VERIFIED_BY_FUTURE_EXECUTION
+    to: DEC-DEMO
+    reason: P2 AC007 Option B requires a cross-module real fixture proving public production reachability for Rule/change/custom-action representative entries without test-only shortcuts.
+    traces: [TR-P2-SYSTEM-RULEVIEW-007]
 impacts:
   - id: IMP-P2-SYSTEM-OWNERSHIP
     sourceAction: compileSystemOwnership
@@ -88,16 +95,31 @@ impacts:
   - id: IMP-P2-PROTECTED-SEAM
     sourceAction: executeProtectedAccess
     targets: [DEC-CORE-STARTER]
-    strategy: SINGLE_PRODUCTION_SEAM_FOUNDATION
-    invariant: existing P2 supported protected operations use Bridge->internal issuance->resolver->capability->Gateway->Guard->operation; no public mint/secondary authority
-    ac007Status: PENDING_USER_DECISION
-    note: Seam foundation is valid independent architecture, but whether it alone closes P2 AC007 depends on user Option A/B decision.
+    strategy: SINGLE_PRODUCTION_AUTHORITY_SEAM
+    invariant: all P2 representative protected consumers use entry->Bridge->internal issuance->resolver->capability->Gateway->Guard->operation; no public mint/secondary authority
+    ac007Status: ACTIVE_OPTION_B_USER_DECIDED
     cases: [CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001, CASE-P2-TD-GUARD-NO-BYPASS-001]
+  - id: IMP-P2-AC007-REPRESENTATIVE-CONSUMERS
+    sourceAction: executeOriginalAc007ThroughRepresentativeProductionEntries
+    targets: [DEC-CORE-STARTER, DEC-DEMO]
+    strategy: THREE_REAL_PRODUCTION_ENTRIES_ONE_AUTHORITY_FUNNEL
+    requiredMainSourceEntries: [RuleProtectedAccessEntry, ChangeProtectedAccessEntry, CustomActionProtectedAccessEntry]
+    authorityDependency: ProtectedExecutionBridge
+    forbiddenDependencies: [ProtectedAccessGateway, ModelAccessGuard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
+    invariant: consumer category is provenance only; same Context and exact invocation/runtime facts produce same authorization classification across all three entries
+    failure: unauthorized invocation produces stable DENY before operation/effects for every entry
+    cases:
+      - CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001
+      - CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001
+      - CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001
+      - CASE-P2-TD-AC007-CONSUMER-PARITY-001
+      - CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001
+      - CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001
   - id: IMP-P2-RUNTIME-DENIAL
     sourceAction: denyProtectedAccess
     targets: [DEC-CORE-STARTER, DEC-CORE-CONTEXT]
     strategy: DETERMINISTIC_FAIL_CLOSED
-    invariant: repeated equal denial retains stable code/System/optional RuleView/AccessOperation/P2 ModelPath/policy SourceRef and exposes no sensitive actual values
+    invariant: repeated equal denial retains stable code/System/optional RuleView/AccessOperation/P2 ModelPath/policy SourceRef; same authorization facts preserve denial classification across representative consumers; no sensitive values
     cases: [CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001]
   - id: IMP-P2-DECLARATION-BOUNDARY
     sourceAction: preserveReadOnlyDeclarationCompatibilityBoundary
@@ -112,18 +134,28 @@ crossModuleImplementations:
     status: CANDIDATE
   - id: CMI-P2-PROTECTED-ACCESS-001
     flow: FLOW-PROTECTED-ACCESS-EXECUTE
-    sequence: [public bridge, starter internal issuance, target resolver, one-shot capability, gateway, guard, operation-or-denial]
+    sequence: [representative production entry, public bridge, starter internal issuance, target resolver, one-shot capability, gateway, guard, operation-or-denial]
     status: CANDIDATE
+  - id: CMI-P2-AC007-REPRESENTATIVE-CONSUMERS
+    flow: FLOW-PROTECTED-ACCESS-EXECUTE
+    status: CANDIDATE_OPTION_B_ACTIVE
+    sequence:
+      RULE: [RuleProtectedAccessEntry, ProtectedExecutionBridge, Gateway, Guard, operation-or-denial]
+      CHANGE: [ChangeProtectedAccessEntry, ProtectedExecutionBridge, Gateway, Guard, operation-or-denial]
+      CUSTOM_ACTION: [CustomActionProtectedAccessEntry, ProtectedExecutionBridge, Gateway, Guard, operation-or-denial]
+    evidenceRequired: real main-source public production reachability and allow/deny/parity/no-bypass execution
   - id: CMI-P2-DOWNSTREAM-PROTECTED-CONSUMERS
-    status: PENDING_USER_DECISION
-    optionA: P3/P4/P6 concrete integration becomes downstream acceptance
-    optionB: representative Rule/change/custom-action consumers must be delivered in P2
-    note: no downstream obligation is treated as ACTIVE until user chooses A/B
+    status: ACTIVE_DOWNSTREAM_BOUNDARY
+    P3: full Rule/Information semantics remain downstream and must reuse P2 authority seam
+    P4: full change/custom-action/Action/Produce state machine remains downstream and must reuse P2 authority seam
+    P6: QueryPlan full compile/execute remains downstream and must reuse P2 path/authorization semantics
+    note: these downstream full semantics are not required to close P2 AC007 because Option B is satisfied at P2 by representative production consumers, but future stages may not introduce bypass authority
 reviewGate:
+  requirementDecision: SATISFIED_OPTION_B
+  requirementReview: REQUIRED
   businessFlowReview: REQUIRED
   impactReview: REQUIRED
   crossModuleReview: REQUIRED
-  ac007UserDecision: REQUIRED
   riskDetection: NOT_SCANNED
   implementationPlan: BLOCKED
   tdd: BLOCKED
