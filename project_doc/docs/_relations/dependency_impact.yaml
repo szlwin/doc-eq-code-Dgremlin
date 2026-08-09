@@ -2,160 +2,130 @@ schemaVersion: 1
 artifact: dependency_impact
 project: doc-eq-code
 version: V_1.0
-revision: BM-R15
-baseRevision: BM-R14
+revision: BM-R16
+baseRevision: BM-R15
 status: NEEDS_REVIEW_MACHINE_BLOCKED
 inputs:
   - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809-R03
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R04
   - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B
-  - FLOW-R05@p2-system-ruleview-protected-access
-  - DESIGN-P2-R17
-  - TESTDESIGN-P2-R18
-inherits:
-  - P1 compiler/context/frontend/starter relations remain unchanged unless explicitly superseded below
+  - DEC-P2-ACCESS-OPERATIONS-001:ACTIVE_READ_WRITE_ONLY
+  - FLOW-R06@p2-system-ruleview-protected-access
+  - DESIGN-P2-R18
+  - TESTDESIGN-P2-R19
 relations:
-  - id: REL-P2-SYSTEM-RULEVIEW-COMPILER
+  - id: REL-P2-COMPILER
     from: FEATURE-DESC-3361AD2E54FC
     type: IMPLEMENTED_BY
     to: DEC-CORE-COMPILER
-    reason: Compiler owns System/RuleView resolution, P1 compatibility conversion, exact access rule construction, ownership derivation and digest-bound publication.
-    traces: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009]
-  - id: REL-P2-SYSTEM-RULEVIEW-CONTEXT
+    reason: System RuleView RuleKey ModelPath READ-WRITE policy compilation ownership derivation and digest publication
+  - id: REL-P2-CONTEXT
     from: FEATURE-DESC-3361AD2E54FC
     type: AFFECTS
     to: DEC-CORE-CONTEXT
-    reason: Context exposes immutable source-compatible System/RuleView/P2 ModelPath/PolicyIndex facts; no second mutable authority.
-    traces: [TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-008]
-  - id: REL-P2-SYSTEM-RULEVIEW-STARTER
+    reason: immutable keys compiled snapshots exact ModelPath READ-WRITE AccessOperation PolicyIndex and Context reads
+  - id: REL-P2-STARTER
     from: FEATURE-DESC-3361AD2E54FC
     type: AFFECTS
     to: DEC-CORE-STARTER
-    reason: Starter owns the three P2 representative production consumer entries, FLOW-PROTECTED-ACCESS-EXECUTE composition, and hides issuance/capability/operation authority behind the public Bridge.
-    traces: [TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-009]
-  - id: REL-P2-AC007-DEMO-REACHABILITY
+    reason: production composition three AC007 entries Bridge capability Gateway Guard and atomic consume
+  - id: REL-P2-DEMO
     from: FEATURE-DESC-3361AD2E54FC
     type: VERIFIED_BY_FUTURE_EXECUTION
     to: DEC-DEMO
-    reason: P2 AC007 Option B requires a cross-module real fixture proving public production reachability for Rule/change/custom-action representative entries without test-only shortcuts.
-    traces: [TR-P2-SYSTEM-RULEVIEW-007]
+    reason: real production acquisition and source-to-read-write reachability fixture
 impacts:
   - id: IMP-P2-SYSTEM-OWNERSHIP
-    sourceAction: compileSystemOwnership
     targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
     strategy: DERIVE_IMMUTABLE_READ_INDEX
     authoritativeSources:
-      ownedDataKeys: final owner-qualified typed Data registry
-      ownedViewKeys: final owner-qualified typed View registry
-      ownedRuleViewKeys: final owner-qualified typed RuleView registry
-      ownedInformationKeys: final owner-qualified typed Information registry
-      ownedRuleKeys: final CompiledRuleView rule closure
-      ownedModelAccessRuleKeys: final ModelAccessPolicyIndex keys / compiled policy rules
-    invariant: CompiledSystem snapshot is not an authority and cannot rebuild any source authority.
-    failure: any two-way coherence mismatch rejects whole candidate and preserves old Context
-    cases: [CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001, CASE-P2-TD-SYSTEM-OWNERSHIP-REAL-FIXTURE-001]
-  - id: IMP-P2-SYSTEM-VERSION
-    sourceAction: bindSystemVersionIdentity
-    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
-    strategy: VALUE_BINDING
-    invariant: declaredVersion optional; sourceSemanticDigest mandatory; schemaVersion/compilerVersion equal enclosing CompiledModelSet values; options identity remains enclosing compile fact
-    cases: [CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001]
+      Data: final owner-qualified typed Data registry
+      View: final owner-qualified typed View registry
+      RuleView: final owner-qualified typed RuleView registry
+      Information: final owner-qualified typed Information registry
+      Rule: owning CompiledRuleView immutable RuleKey closure
+      ModelAccessRule: ModelAccessPolicyIndex keys / compiled policy rules
+    invariant: snapshot never becomes authority
+  - id: IMP-P2-RULEKEY-CLOSURE
+    targets: [DEC-CORE-CONTEXT, DEC-CORE-COMPILER]
+    strategy: OWNER_QUALIFIED_VALUE_IDENTITY
+    identity: [ownerRuleViewKey, localRuleName]
+    authoritativeStore: owning CompiledRuleView compiled rule closure
+    globalRuleRegistryAdded: false
+    cases: [CASE-P2-TD-RULEKEY-CONTRACT-001]
   - id: IMP-P2-SHARED-MODEL-PATH
-    sourceAction: compileCanonicalModelPath
     targets: [DEC-CORE-COMPILER]
     strategy: SINGLE_CANONICAL_COMPILER
-    invariant: RULE CHANGE QUERY_CONTRACT MODEL_ACCESS equal path inputs produce value-equal P2 ModelPath
-    cases: [CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001, CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001]
+    invariant: RULE CHANGE QUERY_CONTRACT MODEL_ACCESS equal inputs produce value-equal exact ModelPath; wildcard expanded before policy
   - id: IMP-P2-P1-P2-PATH-OPERATION-MIGRATION
-    sourceAction: convertLegacyModelAccessFacts
     targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT, DEC-CORE-STARTER]
     strategy: ONE_WAY_COMPATIBILITY_CONVERSION
     mapping:
-      SharedModelPathExact: P2 exact ModelPath
-      SharedModelPathWildcard: finite deterministic exact P2 ModelPaths before policy publication
+      SharedModelPathExact: exact P2 ModelPath
+      SharedModelPathWildcard: finite exact P2 ModelPaths before publication
       AccessModeREAD: AccessOperation.READ
       AccessModeWRITE: AccessOperation.WRITE
-      AccessModeToEXECUTE: FORBIDDEN
-    invariant: SharedModelPath and AccessMode never remain PolicyIndex/Bridge/Guard runtime authorities after conversion
-    cases: [CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001]
-  - id: IMP-P2-MODEL-ACCESS-AUTHORIZATION
-    sourceAction: compileAndAuthorizeModelAccess
+      AccessModeEXECUTE: NOT_APPLICABLE
+    runtimeAuthority: [ModelPath, AccessOperation, ModelAccessPolicyIndex]
+  - id: IMP-P2-READ-WRITE-AUTHORIZATION
     targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT, DEC-CORE-STARTER]
     strategy: EXACT_OPERATION_QUALIFIED_POLICY
-    invariant: READ WRITE EXECUTE do not imply each other; current compiler-published PolicyIndex is sole authorization authority
-    failure: policy miss/mismatch/proof failure DENY before operation/effects
-    cases: [CASE-P2-TD-ACCESS-NON-IMPLICATION-001, CASE-P2-TD-RUNTIME-BINDING-PROOF-001]
-  - id: IMP-P2-ATOMIC-PUBLICATION
-    sourceAction: publishP2Candidate
-    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
-    strategy: ATOMIC
-    invariant: registries RuleView closure P2 canonical facts PolicyIndex derived ownership version identity digest are one closure
-    failure: any ERROR -> no new candidate and old Context remains active
-    cases: [CASE-P2-TD-ATOMIC-PUBLICATION-001, CASE-P2-TD-POLICY-INDEX-PUBLICATION-001]
+    operations: [READ, WRITE]
+    executeSupported: false
+    invariant: READ never implies WRITE and WRITE never implies READ; PolicyIndex is sole runtime authority
+    cases: [CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001, CASE-P2-TD-NO-EXECUTE-CONTRACT-001]
   - id: IMP-P2-PROTECTED-SEAM
-    sourceAction: executeProtectedAccess
     targets: [DEC-CORE-STARTER]
     strategy: SINGLE_PRODUCTION_AUTHORITY_SEAM
-    invariant: all P2 representative protected consumers use entry->Bridge->internal issuance->resolver->capability->Gateway->Guard->operation; no public mint/secondary authority
-    ac007Status: ACTIVE_OPTION_B_USER_DECIDED
-    cases: [CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001, CASE-P2-TD-GUARD-NO-BYPASS-001]
+    invariant: composition entry or direct Bridge -> internal issuance -> target -> capability -> atomic consume -> Gateway -> Guard -> bound READ/WRITE operation
   - id: IMP-P2-AC007-REPRESENTATIVE-CONSUMERS
-    sourceAction: executeOriginalAc007ThroughRepresentativeProductionEntries
     targets: [DEC-CORE-STARTER, DEC-DEMO]
-    strategy: THREE_REAL_PRODUCTION_ENTRIES_ONE_AUTHORITY_FUNNEL
-    requiredMainSourceEntries: [RuleProtectedAccessEntry, ChangeProtectedAccessEntry, CustomActionProtectedAccessEntry]
-    authorityDependency: ProtectedExecutionBridge
-    forbiddenDependencies: [ProtectedAccessGateway, ModelAccessGuard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
-    invariant: consumer category is provenance only; same Context and exact invocation/runtime facts produce same authorization classification across all three entries
-    failure: unauthorized invocation produces stable DENY before operation/effects for every entry
-    cases:
-      - CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001
-      - CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001
-      - CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001
-      - CASE-P2-TD-AC007-CONSUMER-PARITY-001
-      - CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001
-      - CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001
+    strategy: PRODUCTION_COMPOSITION_THREE_ENTRY_ACCEPTANCE
+    factory: ProtectedAccessRuntimeFactory
+    composition: ProtectedAccessComposition
+    requiredEntries: [RuleProtectedAccessEntry, ChangeProtectedAccessEntry, CustomActionProtectedAccessEntry]
+    invariant: all entries from one composition share same Bridge and EngineContext authority snapshot; manual test construction is not production reachability evidence
+    forbiddenConsumerAuthorities: [ProtectedAccessGateway, ModelAccessGuard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
+    cases: [CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001, CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CONSUMER-PARITY-001, CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001]
+  - id: IMP-P2-CAPABILITY-CONCURRENCY
+    targets: [DEC-CORE-STARTER]
+    strategy: ATOMIC_ONE_SHOT
+    stateTransition: ISSUED -> CONSUMED
+    maxSuccessfulConsume: 1
+    loserDenial: CAPABILITY_ALREADY_CONSUMED
+    cases: [CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001, CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001]
+  - id: IMP-P2-ATOMIC-PUBLICATION
+    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
+    strategy: ATOMIC
+    invariant: registries RuleView RuleKey closure exact paths READ-WRITE policy ownership version and digest are one closure
   - id: IMP-P2-RUNTIME-DENIAL
-    sourceAction: denyProtectedAccess
     targets: [DEC-CORE-STARTER, DEC-CORE-CONTEXT]
     strategy: DETERMINISTIC_FAIL_CLOSED
-    invariant: repeated equal denial retains stable code/System/optional RuleView/AccessOperation/P2 ModelPath/policy SourceRef; same authorization facts preserve denial classification across representative consumers; no sensitive values
-    cases: [CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001]
-  - id: IMP-P2-DECLARATION-BOUNDARY
-    sourceAction: preserveReadOnlyDeclarationCompatibilityBoundary
-    targets: [LEGACY-DECLARATION-SYSTEM-COMPAT]
-    strategy: RETAIN_UNCHANGED
-    invariant: no write second registry or second runtime authority; deletion remains P7
-    cases: [CASE-P2-TD-DECLARATION-BOUNDARY-001]
+    invariant: stable non-sensitive denial provenance including capability-consumed race denial
+  - id: IMP-P2-BARE-NAME-COMPAT
+    targets: [DEC-CORE-CONTEXT, LEGACY-DECLARATION-SYSTEM-COMPAT]
+    strategy: NO_NEW_P2_ADAPTER
+    invariant: canonical P2 has no bare-name fallback; surviving historical read path is read-only and ambiguity rejects
 crossModuleImplementations:
   - id: CMI-P2-SYSTEM-RULEVIEW-001
     flow: FLOW-CONFIG-COMPILE
-    sequence: [frontend/source, compiler symbols, compiler references, P1 compatibility conversion, policy construction, ownership derivation, digest, context publication]
     status: CANDIDATE
   - id: CMI-P2-PROTECTED-ACCESS-001
     flow: FLOW-PROTECTED-ACCESS-EXECUTE
-    sequence: [representative production entry, public bridge, starter internal issuance, target resolver, one-shot capability, gateway, guard, operation-or-denial]
+    sequence: [starter production factory, composition, representative entry, same bridge, internal invocation, target resolver, one-shot capability, atomic consume, gateway, guard, operation-or-denial]
     status: CANDIDATE
-  - id: CMI-P2-AC007-REPRESENTATIVE-CONSUMERS
-    flow: FLOW-PROTECTED-ACCESS-EXECUTE
-    status: CANDIDATE_OPTION_B_ACTIVE
-    sequence:
-      RULE: [RuleProtectedAccessEntry, ProtectedExecutionBridge, Gateway, Guard, operation-or-denial]
-      CHANGE: [ChangeProtectedAccessEntry, ProtectedExecutionBridge, Gateway, Guard, operation-or-denial]
-      CUSTOM_ACTION: [CustomActionProtectedAccessEntry, ProtectedExecutionBridge, Gateway, Guard, operation-or-denial]
-    evidenceRequired: real main-source public production reachability and allow/deny/parity/no-bypass execution
-  - id: CMI-P2-DOWNSTREAM-PROTECTED-CONSUMERS
+  - id: CMI-P2-DOWNSTREAM
     status: ACTIVE_DOWNSTREAM_BOUNDARY
-    P3: full Rule/Information semantics remain downstream and must reuse P2 authority seam
-    P4: full change/custom-action/Action/Produce state machine remains downstream and must reuse P2 authority seam
-    P6: QueryPlan full compile/execute remains downstream and must reuse P2 path/authorization semantics
-    note: these downstream full semantics are not required to close P2 AC007 because Option B is satisfied at P2 by representative production consumers, but future stages may not introduce bypass authority
+    P3: full Rule/Information semantics reuse P2 seam
+    P4: full change/action/produce state machine reuses P2 seam
+    P6: full QueryPlan remains downstream and reuses P2 path/authorization contract
 reviewGate:
-  requirementDecision: SATISFIED_OPTION_B
   requirementReview: REQUIRED
+  businessModelReview: REQUIRED
   businessFlowReview: REQUIRED
   impactReview: REQUIRED
   crossModuleReview: REQUIRED
+  concurrencyReview: REQUIRED
   riskDetection: NOT_SCANNED
   implementationPlan: BLOCKED
   tdd: BLOCKED
