@@ -1,0 +1,140 @@
+schemaVersion: 1
+artifact: business_flow_changeset
+module: COMPILER
+revision: FLOW-R04@p2-system-ruleview-protected-access
+baseRevision: FLOW-R03@p2-system-ruleview-access
+inputs:
+  - REQAN-P2-R01@d08612768131
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R02
+  - BM-R14
+  - DESIGN-P2-R16
+  - TESTDESIGN-P2-R17
+status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
+operations:
+  - op: upsert
+    flow:
+      id: FLOW-CONFIG-COMPILE
+      name: Deterministic System/RuleView/ModelAccess compilation and atomic publication
+      kind: COMPILE_PUBLICATION
+      acceptanceCriteria:
+        - AC-P2-SYSTEM-RULEVIEW-001
+        - AC-P2-SYSTEM-RULEVIEW-002
+        - AC-P2-SYSTEM-RULEVIEW-003
+        - AC-P2-SYSTEM-RULEVIEW-004
+        - AC-P2-SYSTEM-RULEVIEW-005
+        - AC-P2-SYSTEM-RULEVIEW-008
+        - AC-P2-SYSTEM-RULEVIEW-009:compile
+        - AC-P2-SYSTEM-RULEVIEW-010
+      steps:
+        - id: CMSTEP-P2-COMPILE-01
+          action: discover and canonicalize System sources
+        - id: CMSTEP-P2-COMPILE-02
+          action: register all SystemKey symbols before reference resolution
+        - id: CMSTEP-P2-COMPILE-03
+          action: resolve Data/View/RuleView/Information owner-qualified facts and RuleView view/rule refs
+        - id: CMSTEP-P2-COMPILE-04
+          action: convert P1 SharedModelPath/AccessMode source facts into P2 exact ModelPath/AccessOperation facts; finite-expand wildcard before publication
+        - id: CMSTEP-P2-COMPILE-05
+          action: construct exact CompiledModelAccessRule set and immutable ModelAccessPolicyIndex
+        - id: CMSTEP-P2-COMPILE-06
+          action: derive immutable CompiledSystem ownership read snapshot from authoritative final facts
+        - id: CMSTEP-P2-COMPILE-07
+          action: bind SystemVersionIdentity to declaredVersion/sourceSemanticDigest/schemaVersion/compilerVersion
+        - id: CMSTEP-P2-COMPILE-08
+          action: freeze all current facts into one SemanticDigestInput and compute digest
+        - id: CMSTEP-P2-COMPILE-09
+          action: atomically publish CompiledModelSet/EngineContext or preserve old Context on any ERROR
+      failureSemantics:
+        - duplicate_or_unknown_owner: stable compile ERROR; publication=0
+        - unknown_view_or_rule: stable source-aware ERROR; publication=0
+        - invalid_or_wildcard_runtime_path: stable ERROR; publication=0
+        - ownership_coherence_mismatch: stable ERROR; publication=0
+        - policy_construction_error: stable ERROR; publication=0
+      businessModelRefs:
+        - ENT-COMPILED-SYSTEM
+        - ENT-COMPILED-RULEVIEW
+        - INV-COMPILER-016B
+        - INV-COMPILER-018
+        - INV-COMPILER-019
+        - INV-COMPILER-023
+      dependencyImpactRefs:
+        - IMP-P2-SYSTEM-OWNERSHIP
+        - IMP-P2-SHARED-MODEL-PATH
+        - IMP-P2-MODEL-ACCESS-AUTHORIZATION
+        - IMP-P2-ATOMIC-PUBLICATION
+        - IMP-P2-P1-P2-PATH-OPERATION-MIGRATION
+      designRefs:
+        - COMPILER_design.md#p2-system
+        - COMPILER_design.md#p2-ruleview
+        - COMPILER_design.md#p2-model-path
+        - COMPILER_design.md#p2-p1-migration
+        - COMPILER_design.md#p2-context
+      testCaseIds:
+        - CASE-P2-TD-SYSTEM-DETERMINISM-001
+        - CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001
+        - CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001
+        - CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001
+        - CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001
+        - CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001
+        - CASE-P2-TD-ATOMIC-PUBLICATION-001
+        - CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001
+  - op: upsert
+    flow:
+      id: FLOW-PROTECTED-ACCESS-EXECUTE
+      name: Protected model access execution through the single runtime authority path
+      kind: RUNTIME_PROTECTED_ACCESS
+      acceptanceCriteria:
+        - AC-P2-SYSTEM-RULEVIEW-004:runtime
+        - AC-P2-SYSTEM-RULEVIEW-006
+        - AC-P2-SYSTEM-RULEVIEW-007:PENDING_USER_DECISION
+        - AC-P2-SYSTEM-RULEVIEW-009:runtime
+      steps:
+        - id: CMSTEP-P2-ACCESS-01
+          action: caller invokes public ProtectedExecutionBridge with exact compiler-published ruleKey/operation and current frame/owner/cursor
+        - id: CMSTEP-P2-ACCESS-02
+          action: starter creates internal issued invocation; no public issued-pair/capability mint
+        - id: CMSTEP-P2-ACCESS-03
+          action: resolver binds exact actual target and operation into a one-shot capability
+        - id: CMSTEP-P2-ACCESS-04
+          action: ProtectedAccessGateway invokes ModelAccessGuard
+        - id: CMSTEP-P2-ACCESS-05
+          action: Guard performs exactly one current-context ModelAccessPolicyIndex lookup and required runtime proof
+        - id: CMSTEP-P2-ACCESS-06
+          action: ALLOW executes only capability-bound target/operation; DENY returns stable provenance before side effects
+      failureSemantics:
+        - policy_not_found: DENY before operation/effects
+        - operation_mismatch: DENY before operation/effects
+        - runtime_binding_stale: DENY before operation/effects
+        - runtime_plan_mismatch: DENY before operation/effects
+        - target_substitution: DENY before operation/effects
+        - guard_unavailable: DENY before operation/effects
+      businessModelRefs:
+        - POL-MODEL-ACCESS-AUTHORIZATION
+        - INV-COMPILER-020
+        - INV-COMPILER-021
+      dependencyImpactRefs:
+        - IMP-P2-MODEL-ACCESS-AUTHORIZATION
+        - IMP-P2-PROTECTED-SEAM
+        - IMP-P2-RUNTIME-DENIAL
+      designRefs:
+        - COMPILER_design.md#p2-direct-bridge
+        - COMPILER_design.md#p2-runtime-guard
+        - COMPILER_design.md#p2-operation-binding
+        - COMPILER_design.md#p2-runtime-denial
+      testCaseIds:
+        - CASE-P2-TD-ACCESS-NON-IMPLICATION-001
+        - CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001
+        - CASE-P2-TD-RUNTIME-BINDING-PROOF-001
+        - CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001
+      notes:
+        - AC-007 is not closed by this flow. Option A versus Option B remains PENDING_USER_DECISION in DEC-P2-AC007-STAGE-BOUNDARY-001.
+        - Concrete P3/P4/P6 consumer integration is neither asserted nor removed until the user decides AC-007 scope.
+reviewGate:
+  requirementDecision: PENDING_USER_DECISION_AC007
+  businessFlowReview: REQUIRED
+  impactReview: REQUIRED
+  crossModuleReview: REQUIRED
+  riskDetection: NOT_SCANNED
+  implementationPlan: BLOCKED
+  tdd: BLOCKED
+  development: BLOCKED
