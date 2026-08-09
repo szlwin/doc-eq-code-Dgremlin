@@ -1,95 +1,75 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R17`  
+> Revision：`DESIGN-P2-R18`  
 > Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 
-## 1. System version seam
+## 1. Canonical BM pair seam
 
-Observe `SystemVersionIdentity` as immutable values：declaredVersion present/absent、sourceSemanticDigest deterministic、schemaVersion == enclosing CompiledModelSet schemaVersion、compilerVersion == enclosing CompiledModelSet compilerVersion、no fabricated time/order/random value。
+Review/test tooling can compare `COMPILER_business_model.yaml` machine facts with `.md` normative mirror for same revision/inputs/operation set/RuleKey/AC007/concurrency invariants。Mismatch invalidates candidate。
 
-## 2. Ownership truth-source seam
+## 2. System ownership/version seam
 
-Tests compare one `CompiledSystem` snapshot against：
-- final typed Data/View/RuleView/Information registries；
-- final CompiledRuleView rule closure；
-- final ModelAccessPolicyIndex keys。
+Observe SystemVersionIdentity and compare CompiledSystem projections against typed Data/View/RuleView/Information registries、CompiledRuleView RuleKey closures and PolicyIndex keys。No snapshot mutation/rebuild authority。
 
-Negative setup supports orphan/missing/foreign snapshot facts before publication。Snapshot cannot be writable/rebuild authoritative sources。
+## 3. RuleKey seam
 
-## 3. RuleView compatibility/resolution seam
+Create two RuleViews with same local Rule name and prove distinct RuleKey identities by owner。Within one RuleView duplicate local RuleKey rejects。Every resolved RuleKey owner equals CompiledRuleView key。No global Rule registry required。
 
-Observe existing `RuleViewKey(SystemKey,String)`、`owner()`、`name()` plus additive aliases and exact `CompiledRuleView.resolvedViewKey()/resolvedRuleKeys()`。
+## 4. READ/WRITE-only operation seam
 
-## 4. P1→P2 conversion seam
+Observe `AccessOperation.values()` exactly `[READ, WRITE]` modulo enum declaration order contract；there is no current P2 EXECUTE source/raw/policy/runtime branch。Seed READ-only and WRITE-only policy independently and prove non-implication。
 
-Controlled source facts for exact SharedModelPath -> exact ModelPath、wildcard -> stable finite paths、AccessMode.READ/WRITE -> exact AccessOperation、EXECUTE never inferred、runtime PolicyIndex/Bridge/Guard no longer read P1 types as authority。
+## 5. ModelPath/P1 migration seam
 
-## 5. Business Flow seams
+Controlled exact and wildcard SharedModelPath inputs convert once into exact P2 ModelPaths；AccessMode READ/WRITE converts one-to-one。After conversion PolicyIndex/Bridge/Guard observations never read P1 path/mode authority。
 
-`FLOW-CONFIG-COMPILE` counters：source discovery、symbol registration、reference resolution、compatibility conversion、PolicyIndex construction、ownership derivation、digest、publication。
+## 6. Production composition seam — AC-007
 
-`FLOW-PROTECTED-ACCESS-EXECUTE` counters：representative entry、Bridge invocation、issued invocation、target resolution、capability mint、Gateway、Guard lookup/proof、operation/effect、denial provenance。
-
-## 6. AC-007 Option B representative consumer seams
-
-The test environment must be able to instantiate and execute the **real main-source** production types frozen by Design R17：
-
-- `RuleProtectedAccessEntry`；
-- `ChangeProtectedAccessEntry`；
-- `CustomActionProtectedAccessEntry`；
-- immutable `ProtectedAccessInvocation`。
-
-### 6.1 Per-consumer allow/deny observation
-
-For each of the three entries, instrumentation must observe：
+Normal starter production composition must expose/acquire:
 
 ```text
-entry calls
-bridge calls
-issued invocation count
-target resolution count
-capability mint count
-gateway calls
-guard calls
-operation calls
-effect count
-denial code/provenance
+ProtectedAccessRuntimeFactory
+ -> ProtectedAccessComposition
+      -> bridge
+      -> ruleEntry
+      -> changeEntry
+      -> customActionEntry
 ```
 
-Authorized case must reach exactly one capability-bound operation/effect per invocation；unauthorized case must have operation/effects=0 and stable DENY。
+Test seam must verify all three entries are bound to the same Bridge and EngineContext。Real AC-007 E2E must acquire via this composition, not `new Entry(testBridge)` or reflection/package-private internals。
 
-### 6.2 Consumer parity seam
+## 7. Authority dependency seam
 
-Run the same immutable Context + same exact `ProtectedAccessInvocation` through all three production entries。Compare authorization classification and stable denial code/facts。Consumer kind may appear in provenance but must not alter `ModelAccessRuleKey`、AccessOperation、Guard lookup or target binding。
+For each representative entry, inspect constructor/field/dependency graph：Bridge is the only protected-access authority dependency。Gateway/Guard/resolver/raw operation/mutable PolicyIndex/issued-pair/capability mint absent from business-entry reachability。
 
-### 6.3 Structural no-bypass seam
+## 8. Runtime target/proof seam
 
-Test/Review must be able to verify each representative entry's production constructor/dependency surface：
-- allowed protected authority dependency: `ProtectedExecutionBridge` only；
-- forbidden: Gateway、Guard、resolver、raw operation port、mutable/secondary PolicyIndex、issued-pair/capability mint。
+Controllable frame/owner/cursor/target/membership enables valid/stale/foreign/wrong target paths。A capability cannot substitute target or READ/WRITE operation。
 
-API-shape reflection/source inspection may be used only to assert structure；the executable AC-007 allow/deny path itself must call the public production entries normally, not invoke internals through reflection。
+## 9. Atomic capability concurrency seam
 
-### 6.4 Real fixture seam
+Expose a controlled starter-internal test seam capable of racing the **same issued capability** at the Gateway using `CountDownLatch`/barrier (no `Thread.sleep`)。
 
-`dec-demo`/cross-module fixture must compile real P2 source to a real Context and execute all three public representative entries without hand-built PolicyIndex/manual issued pair/capability/test-only consumer。
+Oracle：
 
-## 7. Operation independence seam
+- atomic ISSUED->CONSUMED success count <=1；
+- Guard/operation/effect for that capability <=1；
+- losing consume = stable `CAPABILITY_ALREADY_CONSUMED` DENY；
+- losing operation/effect=0；
+- later sequential reuse same denial。
 
-For same System/target/path, independently seed READ-only、WRITE-only、EXECUTE-only exact policy。No `hasAnyPermission(path)` shortcut。
+## 10. Denial determinism seam
 
-## 8. Runtime binding / one-shot seam
+Repeat equal immutable-context failure and compare code/System/optional RuleView/READ-or-WRITE/ModelPath/policy SourceRef；no sensitive actual value。
 
-Controllable current frame/owner/cursor/membership and target resolver；attempt target substitution and concurrent same-capability consume without `Thread.sleep`。
+## 11. Bare-name compatibility seam
 
-## 9. Denial determinism seam
+P2 new canonical public resolver must not expose bare-name lookup。If historical compatibility path exists, verify read-only/no Registry or Policy mutation/no protected WRITE and ambiguous same-name reject。
 
-Repeat identical immutable-context failure and compare code/System/optional RuleView/op/ModelPath/policy SourceRef；same authorization facts across three representative consumers must have same authorization denial classification；no sensitive actual value/object dump。
+## 12. TDD validity
 
-## 10. TDD validity
+Bootstrap command may use `-am`; target RED command must not use `-am` and must set `-Dsurefire.failIfNoSpecifiedTests=true`。Missing class/symbol/setup/compile before intended assertion = `INVALID_RED`。
 
-Formal bootstrap may use `-am`；target RED command must not use `-am` and uses `-Dsurefire.failIfNoSpecifiedTests=true`。Missing class/symbol/setup/compile failure before intended assertion is `INVALID_RED`。
+## 13. Gate
 
-## 11. Gate
-
-No skeleton/tests are executed by this Design artifact。AC-007 user decision is satisfied by Option B；exact Testability/ApiContract/Architecture/Impact/CrossModule/Concurrency Reviews and machine risk scan remain blocking。
+No skeleton/tests are executed by this Design artifact。Exact Testability/ApiContract/Architecture/Concurrency Review and machine risk scan remain blocking。
