@@ -1,11 +1,11 @@
 # FEATURE-DESC-3361AD2E54FC Test Design
 
-> Revision：`TESTDESIGN-P2-R16`  
-> Base：`TESTDESIGN-P2-R15`  
-> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809` + `BM-R13` + `DESIGN-P2-R15`  
-> Status：`NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`
+> Revision：`TESTDESIGN-P2-R17`  
+> Base：`TESTDESIGN-P2-R16`  
+> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809-R02` + `BM-R14` + `DESIGN-P2-R16` + `FLOW-R04@p2-system-ruleview-protected-access`  
+> Status：`NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED / AC007_BLOCKED_BY_USER_DECISION`
 
-R16 保留 R15 已重新 materialize 的 AC-001～AC-010 基础 Case，并新增 System ownership/RuleView→View、cross-consumer ModelPath、cross-operation non-implication、P2 production seam、runtime denial diagnostic determinism。本文只做 Test Design，不创建 TDD skeleton、不执行测试。
+R17 保留 R16 已完整恢复的 AC-001～AC-010 Case。新增/强化内容仅针对本轮 Review：SystemVersion compiler compatibility、ownership authoritative source、existing key source compatibility、P1→P2 path/operation migration；AC-007 不再把 seam-only 当作 final acceptance。
 
 ## 1. Formal RED contract
 
@@ -14,279 +14,231 @@ R16 保留 R15 已重新 materialize 的 AC-001～AC-010 基础 Case，并新增
 ./mvnw -pl <EXACT-MODULE> -Dtest=<EXACT-TESTCLASS> -Dsurefire.failIfNoSpecifiedTests=true test
 ```
 
-第二条禁止 `-am`。missing TestClass/symbol/setup/compile failure 使 intended assertion 未实际运行时为 `INVALID_RED`。
+第二条禁止 `-am`。Missing TestClass/symbol/setup/compile failure 导致 intended assertion 未运行时为 `INVALID_RED`。
 
 ## 2. Planned TestClass map
 
 ### dec-core-context
-- `dec.core.context.p2.SystemOwnershipSnapshotContractTest`
-- `dec.core.context.p2.RuleViewCompiledRelationContractTest`
-- `dec.core.context.model.access.ModelAccessPolicyIndexContractTest`
-- `dec.core.context.model.ModelAccessPolicyPublicationCompatibilityTest`
+- `SystemOwnershipSnapshotContractTest`
+- `RuleViewCompiledRelationContractTest`
+- `P2KeySourceCompatibilityTest`
+- `ModelAccessPolicyIndexContractTest`
+- `ModelAccessPolicyPublicationCompatibilityTest`
 
 ### dec-core-compiler
-- `dec.core.compiler.p2.SystemCompilationContractTest`
-- `dec.core.compiler.p2.RuleViewCompilationContractTest`
-- `dec.core.compiler.p2.ModelPathCrossConsumerContractTest`
-- `dec.core.compiler.access.ModelAccessRuleCompilationContractTest`
-- `dec.core.compiler.access.ModelAccessPolicyIndexPublicationTest`
-- `dec.core.compiler.p2.P2DiagnosticDeterminismTest`
+- `SystemCompilationContractTest`
+- `RuleViewCompilationContractTest`
+- `ModelPathCrossConsumerContractTest`
+- `P1ToP2ModelAccessMigrationContractTest`
+- `ModelAccessRuleCompilationContractTest`
+- `ModelAccessPolicyIndexPublicationTest`
+- `P2DiagnosticDeterminismTest`
 
 ### dec-core-starter
-- `dec.core.starter.access.ProtectedExecutionBridgeContractTest`
-- `dec.core.starter.access.ProtectedExecutionBridgeConcurrencyTest`
-- `dec.core.starter.access.ModelAccessPolicyAuthorityIntegrationTest`
-- `dec.core.starter.access.ProtectedAccessStaticAllowPathTest`
-- `dec.core.starter.access.RuntimeBindingProofIntegrationTest`
-- `dec.core.starter.access.ProtectedAccessOperationBindingTest`
-- `dec.core.starter.access.ProtectedAccessOperationIndependenceTest`
-- `dec.core.starter.access.ProtectedAccessProductionSeamTest`
-- `dec.core.starter.access.RuntimeDenialDiagnosticDeterminismTest`
+- `ProtectedExecutionBridgeContractTest`
+- `ProtectedExecutionBridgeConcurrencyTest`
+- `ModelAccessPolicyAuthorityIntegrationTest`
+- `ProtectedAccessStaticAllowPathTest`
+- `RuntimeBindingProofIntegrationTest`
+- `ProtectedAccessOperationBindingTest`
+- `ProtectedAccessOperationIndependenceTest`
+- `ProtectedAccessProductionSeamTest`
+- `RuntimeDenialDiagnosticDeterminismTest`
 
 ### dec-demo
-- `dec.demo.p2.P2SystemOwnershipRealFixtureTest`
-- `dec.demo.p2.P2RuleViewCompositeRealFixtureTest`
-- `dec.demo.p2.P2DynamicClassifierRealFixtureTest`
-- `dec.demo.p2.P2DirectBridgeReachabilityTest`
-- `dec.demo.p2.P2DynamicSourceToOperationTest`
+- `P2SystemOwnershipRealFixtureTest`
+- `P2RuleViewCompositeRealFixtureTest`
+- `P2DynamicClassifierRealFixtureTest`
+- `P2DirectBridgeReachabilityTest`
+- `P2DynamicSourceToOperationTest`
 
-## 3. AC-001 System deterministic compile + first-class ownership
+## 3. AC-001 System deterministic compile / ownership / version
 
 ### CASE-P2-TD-SYSTEM-DETERMINISM-001 — BLOCKING
-Module/Class：`dec-core-compiler / SystemCompilationContractTest`
-
-Same semantic System sources in at least two discovery orders.
-
-Oracle：same ordered SystemKey set、same ownership snapshots、same semantic digest、same ordered diagnostics；no filename/path/load-order identity。
+Same semantic inputs different discovery order -> same ordered SystemKey, ownership snapshots, digest, diagnostics。
 
 ### CASE-P2-TD-SYSTEM-DUPLICATE-001 — BLOCKING
-Same exact SystemKey in two sources -> `MIX-SYSTEM-DUPLICATE`; publication=0; old Context unchanged。
+Duplicate exact SystemKey -> stable ERROR, publication=0, old Context retained。
 
 ### CASE-P2-TD-SYSTEM-FORWARD-REF-001 — BLOCKING
-All System symbols register before owner-qualified references resolve; legal forward refs order-independent; unknown owner stable ERROR。
+Register all System symbols before owner-qualified resolution；legal forward refs order-independent。
 
 ### CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001 — BLOCKING
-Module/Class：`dec-core-context / SystemOwnershipSnapshotContractTest`
+Assert snapshot against its authoritative sources, **not against a hypothetical all-purpose typed registry**：
+- Data/View/RuleView/Information -> corresponding final typed registries；
+- Rule -> final CompiledRuleView rule closure；
+- ModelAccess -> final PolicyIndex keys/compiled policy rules。
 
-For one compiled System assert public snapshot contains exact owned Data/View/RuleView/Rule/Information/ModelAccessRule keys and every key resolves in same `CompiledModelSet`.
-
-Negative：
-- orphan owned fact；
-- ownership snapshot missing an existing System-owned fact；
-- snapshot contains foreign/missing key；
-- mutable set exposure。
-
-All invalid candidates must be rejected before publication.
+Negative：orphan/missing/foreign key、snapshot mutation、snapshot used to rebuild authority -> candidate invalid/no publication。
 
 ### CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001 — BLOCKING
-Declared version present -> exact value retained；declared version absent -> Optional.empty；source semantic content change -> sourceSemanticDigest changes；source order only -> digest unchanged；no timestamp/random fabricated version。
+Oracle：
+- declared version exact when present, empty when absent；
+- source semantic content change changes sourceSemanticDigest；source order only does not；
+- `schemaVersion == CompiledModelSet.schemaVersion`；
+- `compilerVersion == CompiledModelSet.compilerVersion`；
+- compilerVersion change participates in semantic identity/digest；
+- no timestamp/random fabricated version；options digest remains enclosing compile identity。
 
 ### CASE-P2-TD-SYSTEM-OWNERSHIP-REAL-FIXTURE-001 — BLOCKING
-Module/Class：`dec-demo / P2SystemOwnershipRealFixtureTest`
+Real `systems.xml` order System proves owned Data/View/RuleView/Information/ModelAccess relationships from production output。
 
-Compile real `mix/system/systems.xml`. For `order` System prove owned relationships include applicable Data/View/RuleView/Information/model-access keys from source facts, not only key+SourceRef shell.
-
-## 4. AC-002 RuleView ownership / duplicate / View relation
+## 4. AC-002 RuleView ownership / View resolution
 
 ### CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001 — BLOCKING
-Missing `system` -> `MIX-RULEVIEW-SYSTEM-REQUIRED`; no bare fallback。
+Missing System -> `MIX-RULEVIEW-SYSTEM-REQUIRED`。
 
 ### CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001 — BLOCKING
-Same `(SystemKey,name)` twice -> stable ERROR, no publication。
+Same `(System,name)` duplicate -> stable ERROR。
 
 ### CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001 — BLOCKING
-Two Systems define same local RuleView name -> both coexist and resolve only through own composite keys。
+Cross-System same local name coexists/is isolated。
 
 ### CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001 — BLOCKING
-Module/Class：`dec-core-compiler / RuleViewCompilationContractTest`
-
-Real/fixture RuleView has `view-ref`.
-
-Oracle：`CompiledRuleView.resolvedViewKey()` exact matches intended View; returned View resolves and ownership is compatible with RuleView System; ordered `resolvedRuleKeys` exact resolve.
-
-Negative：unknown View、wrong owner View、unknown Rule -> source-aware stable ERROR；publication=0。
+`resolvedViewKey` exact and owner-compatible；resolved Rule closure exact；unknown/wrong-owner View/Rule stable source-aware ERROR。
 
 ### CASE-P2-TD-RULEVIEW-VIEW-REAL-FIXTURE-001 — BLOCKING
-Module/Class：`dec-demo / P2RuleViewCompositeRealFixtureTest`
+Real `save-Order`/current equivalent proves `system=order`, `view-ref=OrderInfo`, rule refs from production compiler output。
 
-For real `save-Order` (or current equivalent) prove `system=order`, composite key, `view-ref=OrderInfo` exact resolution and rule refs from production compiler output.
-
-## 5. AC-003 composite lookup / no bare fallback
+## 5. AC-003 composite lookup / source compatibility
 
 ### CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001 — BLOCKING
-`RuleViewResolver.require(system,name)` resolves exact owner-qualified result; wrong System fails without global search。
+Exact owner-qualified lookup only；wrong System no global fallback。
 
 ### CASE-P2-TD-RULEVIEW-BARE-NAME-REJECT-001 — BLOCKING
-No new production `find(String)`/bare-name lookup surface or equivalent fallback。
+No new production bare-name lookup。
 
 ### CASE-P2-TD-LEGACY-NO-NEW-BARE-FALLBACK-001 — BLOCKING
-Legacy compatibility can read historical surface only; cannot register new RuleView, alter ownership, write PolicyIndex or execute protected mutation bypass。
+Legacy adapter read-only/no registry-policy write/no protected mutation bypass。
 
-## 6. AC-004 READ / WRITE / EXECUTE independence
+### CASE-P2-TD-KEY-SOURCE-COMPAT-001 — BLOCKING
+Compile an external test source using existing public surfaces:
+```java
+new SystemKey("order").name();
+new RuleViewKey(new SystemKey("order"), "save-Order").owner();
+new RuleViewKey(new SystemKey("order"), "save-Order").name();
+```
+Must compile/run unchanged. If additive `of/systemKey/localName/value` exist, aliases must equal existing values. Removal/rename is failure。
+
+## 6. AC-004 operation independence
 
 ### CASE-P2-TD-ACCESS-READ-MATRIX-001 — BLOCKING
-Declared READ exact rule -> READ path can proceed to Guard decision; undeclared READ -> DENY。
+Declared exact READ eligible；undeclared READ DENY。
 
 ### CASE-P2-TD-ACCESS-WRITE-MATRIX-001 — BLOCKING
-Explicit WRITE -> can proceed; undeclared shared WRITE -> DENY before mutation。
+Declared exact WRITE eligible；undeclared WRITE DENY before mutation。
 
 ### CASE-P2-TD-ACCESS-EXECUTE-MATRIX-001 — BLOCKING
-Explicit EXECUTE -> can proceed; undeclared EXECUTE -> DENY before effect。
+Declared exact EXECUTE eligible；undeclared EXECUTE DENY before effect。
 
 ### CASE-P2-TD-ACCESS-NON-IMPLICATION-001 — BLOCKING
-Module/Class：`dec-core-starter / ProtectedAccessOperationIndependenceTest`
-
-For same System+target+ModelPath run exact cross-operation matrix:
-
-```text
-READ-only policy:    READ ALLOW-eligible, WRITE DENY, EXECUTE DENY
-WRITE-only policy:   READ DENY, WRITE ALLOW-eligible, EXECUTE DENY
-EXECUTE-only policy: READ DENY, WRITE DENY, EXECUTE ALLOW-eligible
-```
-
-Assert Guard exact lookup uses operation-qualified key and no `hasAnyPermission(path)` shortcut exists。
+READ-only -> READ eligible, WRITE/EXECUTE DENY；WRITE-only -> WRITE eligible, READ/EXECUTE DENY；EXECUTE-only -> EXECUTE eligible, READ/WRITE DENY。No `hasAnyPermission(path)` shortcut。
 
 ### CASE-P2-TD-STATIC-DENY-001 — BLOCKING
-Static illegal/undeclared exact access -> compile ERROR or exact fail-closed result per classification; never default allow。
+Static illegal/undeclared exact access never defaults allow。
 
-## 7. AC-005 one canonical ModelPath across consumers
+## 7. AC-005 shared ModelPath / P1 migration
 
 ### CASE-P2-TD-MODEL-PATH-UNKNOWN-001 — BLOCKING
-Unknown segment/case mismatch/parent fallback/fuzzy search -> stable ERROR; no consumer-specific recovery。
+Unknown segment/case mismatch/parent/fuzzy fallback -> stable ERROR across consumers。
 
 ### CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001 — BLOCKING
-Real `read path="*"` expands at compile time to finite exact child ModelPaths; published index contains no wildcard runtime key。
+Source `SharedModelPath("*")`/read wildcard expands deterministically to finite exact P2 ModelPaths before policy publication；runtime wildcard count=0。
 
 ### CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001 — BLOCKING
-Module/Class：`dec-core-compiler / ModelPathCrossConsumerContractTest`
+Equivalent rule-data/change-data/QUERY_CONTRACT/model-access `status` -> value-equal P2 ModelPath and same invalid-path family。Query stops at P2 compile/IR boundary。
 
-Given equivalent path facts from:
-- rule-data `status = 1`；
-- change-data `status : 1`；
-- QUERY_CONTRACT path `status`；
-- model-access path `status`。
+### CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001 — BLOCKING
+Production migration contract:
+- exact P1 `SharedModelPath` -> exact P2 `ModelPath`；
+- wildcard P1 path -> finite exact P2 paths；
+- `AccessMode.READ -> AccessOperation.READ`；
+- `AccessMode.WRITE -> AccessOperation.WRITE`；
+- no P1 input may infer EXECUTE；
+- after conversion PolicyIndex/Bridge/Guard never query `SharedModelPath` or `AccessMode` as authority；
+- no dual-authority fallback chooses broader result。
 
-When all enter production shared `ModelPathCompiler`.
-
-Then：
-- value-equal canonical `ModelPath`；
-- exact same segments/case/root semantics；
-- same invalid path yields same path classification family/source-aware Diagnostic；
-- no consumer-specific parent/fuzzy fallback；
-- QUERY_CONTRACT test stops at P2 compile/IR boundary, does not implement QueryPlan execution。
-
-Also repeat for collection-related `every(orderDetailList,status=1)` path components where applicable。
-
-## 8. AC-006 dynamic access
+## 8. AC-006 dynamic access / runtime flow
 
 ### CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001 — BLOCKING
-Module/Class：`dec-demo / P2DynamicClassifierRealFixtureTest`
-
-Real fixture:
-- `status = 1` -> `DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW`；
-- `every(orderDetailList,status=1)` -> `RUNTIME_OBJECT_BOUND -> RUNTIME_GUARD_REQUIRED`；
-- unsupported dynamic selector -> compile ERROR。
+Real fixture `status=1 -> STATIC_BOUND/STATIC_ALLOW`; `every(orderDetailList,status=1) -> RUNTIME_OBJECT_BOUND/RUNTIME_GUARD_REQUIRED`; unsupported selector ERROR。
 
 ### CASE-P2-TD-RUNTIME-BINDING-PROOF-001 — BLOCKING
-Runtime element/frame/owner/cursor belongs to compiler plan -> may proceed; foreign/stale/wrong membership -> DENY before operation/effects。
+Valid membership can proceed；foreign/stale/wrong membership DENY before effects。
 
 ### CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001 — BLOCKING
-Exact rule exists but wrong/stale plan/proof -> stable DENY; no rule reselection。
+Exact rule but wrong/stale plan -> DENY, no rule reselection。
 
-## 9. AC-007 P2 production seam / no legal bypass
+### CASE-P2-SOURCE-TO-OPERATION-001-R17 — BLOCKING
+Real source -> compile flow -> Context -> public Bridge -> runtime protected flow -> Guard -> operation；no hand-built policy/manual issued pair。
 
-Effective acceptance follows `DEC-P2-AC007-STAGE-BOUNDARY-001`.
+## 9. AC-007 — BLOCKED_BY_USER_DECISION
 
-### CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001 — BLOCKING
-Module/Class：`dec-core-starter / ProtectedAccessProductionSeamTest`
+`DEC-P2-AC007-STAGE-BOUNDARY-001 = PROPOSED / PENDING_USER_DECISION`。因此本节不能成为 final AC closure。
 
-Inspect real compiled API/visibility and execute production seam.
+### CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001 — BLOCKING FOUNDATION
+Prove common foundation: no public/protected issued-pair/capability mint、no secondary authority、compatibility cannot write/mint、existing supported P2 protected access traverses Bridge→Gateway→Guard。
 
-Must prove：
-- public business runtime entry is `ProtectedExecutionBridge.execute(...)`；
-- no public/protected issued-pair mint；
-- no public/protected capability mint；
-- no public post-Guard operation API that accepts caller-selected target；
-- no EngineContext secondary permission map/authority；
-- compatibility adapter cannot write/mint/execute protected mutation；
-- allow and deny both traverse Bridge→Gateway→Guard；
-- reflection/package-private/test backdoor is not used as production evidence。
+### CASE-P2-TD-GUARD-NO-BYPASS-001 — BLOCKING FOUNDATION
+P2 existing supported protected operation/effect counter remains 0 unless same invocation passes Guard。
 
-### CASE-P2-TD-GUARD-NO-BYPASS-001 — BLOCKING
-Attempt all supported P2 production paths; protected operation/effect counter remains 0 unless same invocation passes Guard。
+### CASE-P2-TD-STATIC-ALLOW-GUARD-PATH-001 — BLOCKING FOUNDATION
+STATIC_ALLOW still exact Guard lookup once；runtime verifier=0。
 
-### CASE-P2-TD-STATIC-ALLOW-GUARD-PATH-001 — BLOCKING
-STATIC_ALLOW still does exact Guard lookup once; runtime verifier/evaluator count=0。
+### CASE-P2-TD-DIRECT-BRIDGE-REACHABILITY-001 — BLOCKING FOUNDATION
+Cross-module public production Bridge reachability；no reflection/package-private/manual issued pair。
 
-### CASE-P2-TD-DIRECT-BRIDGE-REACHABILITY-001 — BLOCKING
-Module/Class：`dec-demo / P2DirectBridgeReachabilityTest`
+### Pending branches
+- If user chooses **A**：上述 foundation + BusinessFlow/API/dependency no-bypass oracles form P2 AC-007 test set；P3/P4/P6 concrete integration becomes downstream acceptance。
+- If user chooses **B**：R17 must be revised again with exact representative production Rule/change/custom-action consumer TestClasses/fixtures/oracles before TestDesign can pass。
 
-Different Maven module/package uses only public production composition/Bridge; no package-private issueInvocation/manual issued pair/reflection；real Context policy reaches operation。
-
-### Downstream obligations — NOT P2 TDD
-P3 Rule/Information, P4 change/custom-action/produce and P6 QueryPlan concrete consumer integration must later prove they plug into the P2 seam. R16 must not pretend those executors already exist。
+Current status：`PENDING_USER_DECISION`，not COVERED/PASSED。
 
 ## 10. AC-008 atomic publication / Context isolation
 
 ### CASE-P2-TD-ATOMIC-PUBLICATION-001 — BLOCKING
-Ownership/RuleView/View/ref/path/policy ERROR -> candidate publication=0 and old Context unchanged；valid candidate publishes all snapshots/index/digest together。
+Any ownership/ref/path/conversion/policy ERROR -> publication=0, old Context unchanged；valid candidate publishes all same closure。
 
 ### CASE-P2-TD-CONTEXT-ISOLATION-001 — BLOCKING
-Two EngineContexts have separate immutable System ownership/RuleView/PolicyIndex snapshots；no shared mutable registry/current。
+No shared mutable snapshots/registry/current Context。
 
 ### CASE-P2-TD-POLICY-INDEX-PUBLICATION-001 — BLOCKING
-Module/Class：`dec-core-compiler / ModelAccessPolicyIndexPublicationTest`
-
-Index built before semantic digest；same immutable index retained by DigestBoundCompiledInput and final `CompiledModelSet.published`；P2 path does not use legacy constructor；authorization semantic change changes digest；equivalent ordering does not。
+Index before digest；same immutable index/snapshot through DigestBoundCompiledInput and published set。
 
 ### CASE-P2-TD-POLICY-PUBLICATION-COMPATIBILITY-001 — BLOCKING
-Legacy eight-arg CompiledModelSet constructor still exists -> empty policy; no reconstruction; new published factory retains supplied authority; equality/hash semantics distinguish policy-aware content as required。
+Legacy 8-arg constructor remains -> empty PolicyIndex/no reconstruction；new published path retains supplied authority。
 
-## 11. AC-009 compile + runtime diagnostic determinism
+## 11. AC-009 deterministic compile/runtime denial
 
 ### CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001 — BLOCKING
-Repeat duplicate System, ownership mismatch, missing RuleView System, unknown View/Rule, invalid path/static access failures -> same ordered codes/definition identities/SourceRefs/relatedRefs。
+Repeat duplicate System/ownership mismatch/RuleView missing/unknown View-Rule/path/conversion/static access -> same ordered code/identity/SourceRef。
 
 ### CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001 — BLOCKING
-Module/Class：`dec-core-starter / RuntimeDenialDiagnosticDeterminismTest`
+Repeat POLICY_NOT_FOUND/RUNTIME_BINDING_STALE/RUNTIME_PLAN_MISMATCH/TARGET_SUBSTITUTION/GUARD_UNAVAILABLE -> same code/System/optional RuleView/op/P2 ModelPath/policy SourceRef；effects=0；no sensitive values。
 
-For each class below, repeat the same denial against same immutable Context at least twice:
-- `POLICY_NOT_FOUND`；
-- `RUNTIME_BINDING_STALE`；
-- `RUNTIME_PLAN_MISMATCH`；
-- `TARGET_SUBSTITUTION`；
-- `GUARD_UNAVAILABLE`。
-
-Oracle：same denial code、SystemKey、optional RuleView provenance、AccessOperation、canonical ModelPath、policy SourceRef；operation/effects=0；no sensitive runtime actual value/object dump/credential/config payload。
-
-## 12. AC-010 declaration migration boundary
+## 12. AC-010 declaration boundary
 
 ### CASE-P2-TD-DECLARATION-BOUNDARY-001 — BLOCKING
-`dec-expand-declaration` remains retired；surviving compatibility only read；no write/second registry/second runtime authority；P7 deletion conditions remain traceable。
+`dec-expand-declaration` retired；surviving compatibility read-only/no second runtime authority；P7 deletion conditions traceable。
 
 ## 13. Runtime remediation retained
 
-### CASE-P2-POLICY-INDEX-CONSTRUCTION-001-R16 — BLOCKING
-`ModelAccessPolicyIndex.empty/of(Iterable)` duplicate/null/key/status/plan/wildcard validation, deterministic order, immutable exact find。
+### CASE-P2-POLICY-INDEX-CONSTRUCTION-001-R17 — BLOCKING
+Index duplicate/null/key/status/plan/wildcard validation, deterministic immutable exact find。
 
-### CASE-P2-DIRECT-BRIDGE-CONTRACT-001-R16 — BLOCKING
-Direct bridge exact argument shape; no token API; operation mismatch/policy miss fail closed；caller valid alternate rule/op selection is not treated as forged authority under persistent Decision。
+### CASE-P2-DIRECT-BRIDGE-CONTRACT-001-R17 — BLOCKING
+Direct bridge/no token/op mismatch/policy miss fail closed；valid alternate rule/op selection allowed by ACTIVE user decision。
 
-### CASE-P2-DIRECT-BRIDGE-CONCURRENCY-001-R16 — BLOCKING
-Different concurrent invocations do not cross-wire frame/owner/cursor/rule/op/target/capability. Identical arguments are independent invocations; no token replay assertion。
+### CASE-P2-DIRECT-BRIDGE-CONCURRENCY-001-R17 — BLOCKING
+Independent invocations do not cross-wire；identical args are independent；same capability <=1 terminal success。
 
-### CASE-P2-OPERATION-BINDING-001-R16 — BLOCKING
-Capability A cannot execute target B or substitute operation after resolution；same capability concurrent terminal success <= 1。
-
-### CASE-P2-SOURCE-TO-OPERATION-001-R16 — BLOCKING
-Module/Class：`dec-demo / P2DynamicSourceToOperationTest`
-
-Real source -> compiler -> ownership/RuleView/PolicyIndex -> EngineContext -> public direct Bridge -> resolver -> capability -> Gateway -> Guard -> protected operation. No hand-built policy index/manual issued pair shortcuts。
+### CASE-P2-OPERATION-BINDING-001-R17 — BLOCKING
+Capability A cannot target/op substitute B。
 
 ## 14. Review Gate
 
-- all current traceability case IDs must resolve to this R16 file；
-- current Design R15 must pass exact Review before TestDesign can pass；
-- risk scan/lifecycle still required；
+- Design R16 exact Review before TestDesign pass；
+- AC-007 explicit user decision before AC-007 case set can be frozen；
+- risk/lifecycle required；
 - no Case is execution Evidence yet；
-- no TDD/Development until open P0/P1 and machine gates permit。
+- Implementation Plan/TDD/Development remain BLOCKED。
