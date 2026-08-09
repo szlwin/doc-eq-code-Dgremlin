@@ -1,6 +1,6 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R22`
+> Revision：`DESIGN-P2-R23`
 > Inputs：`BM-R20 / FLOW-R10 / P2-IMPACT-R22`
 > Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 
@@ -16,9 +16,10 @@
 
 - factory must accept explicit EngineContext and explicit `RuntimeExecutionFrameSnapshot`;
 - invocation frame/owner mismatch is observable before resolver/capability/Guard;
-- controlled sealed RuntimeModelSession fixtures provide 0/1/N candidate sets;
+- compiler fixture converts P1 targetView + resolved TargetPropertyPath(kind,value) into neutral CompiledTargetBinding without raw selector leakage;
+- sealed RuntimeModelSession registrations carry that exact CompiledTargetBinding; controlled fixtures provide 0/1/N exact-match candidate sets;
 - resolver result freezes `RuntimeModelSessionId + RuntimeObjectId + RuntimeBindingProof`;
-- tests can prove there is one production resolver path and no first/name/frame-only fallback.
+- tests can prove there is one production resolver path and no raw-selector parse, raw-definition/property-tree scan, first/name/frame-only fallback.
 
 ## Runtime object ownership seams
 
@@ -36,7 +37,7 @@
 
 ## API self-containedness seam
 
-`ProtectedAccessCurrentApiContractTest` compiles/reflects every P2-added type and factory using only `DESIGN-P2-R22` + current source. Superseded design text is not a fixture.
+`ProtectedAccessCurrentApiContractTest` compiles/reflects every P2-added type and factory using only `DESIGN-P2-R23` + current source. Superseded design text is not a fixture.
 
 ## Production reachability
 

@@ -1,6 +1,6 @@
 # COMPILER P2 详细设计
 
-> Revision：`DESIGN-P2-R22`。Base：`DESIGN-P2-R21`。
+> Revision：`DESIGN-P2-R23`。Base：`DESIGN-P2-R22`。
 > Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R20` + `FLOW-R10@p2-system-ruleview-protected-access` + `P2-IMPACT-R22`。
 > Decisions：Direct Bridge ACTIVE；AC-007 Option B ACTIVE；READ/WRITE-only ACTIVE。
 > Status：`NEEDS_REVIEW / BLOCKED_BY_BM_REVIEW / MACHINE_BLOCKED`。
@@ -14,8 +14,8 @@ REQAN-P2-R01@d08612768131 + Overlay R04
  -> BM-R20
  -> FLOW-R10
  -> P2-IMPACT-R22
- -> DESIGN-P2-R22
- -> TESTDESIGN-P2-R23
+ -> DESIGN-P2-R23
+ -> TESTDESIGN-P2-R24
 ```
 
 `BM-R20` 是完整 current snapshot；`baseRevision` 仅表达 lineage，不代表省略的 BM-R18/R19 事实会被工具隐式继承。
@@ -63,14 +63,48 @@ COMPILER
 
 CONTEXT is representation holder, not publication coordinator. P2 introduces no global/default current Context.
 
-<a id="current-api-contract"></a>
-## 4. Current API completeness
+<a id="compiled-runtime-binding-plan"></a>
+## 4. Compiler-produced neutral RuntimeBindingPlan
 
-`COMPILER_api_contract.md@DESIGN-P2-R22` is the complete current P2 API contract. Every P2-added cross-module immutable value has an explicit Java-8-compatible `of(...)`/factory construction path, not just getters. Pre-P2 stable `SystemKey/RuleViewKey/ViewKey/EngineContext/CompiledModelSet` are explicitly treated as existing source-compatible APIs.
+R23 fixes the last independent semantic Review residual without changing BM-R20/FLOW-R10/P2-IMPACT-R22. P1 already resolves `targetView + selector` during compilation into a typed `TargetPropertyPath(kind,value)`. P2 therefore must publish that resolved meaning, not downgrade it back to raw Strings.
+
+```text
+P1 compiler facts
+  ViewKey targetView
+  SystemViewSelector lexical selector        (compiler-only input)
+  TargetPropertyPath(kind, exactValue)       (resolved compiler fact)
+        |
+        | one-way compiler adaptation
+        v
+dec-core-context neutral fact
+  CompiledTargetBinding(
+      ViewKey targetViewKey,
+      ResolvedTargetKind TARGET_MAIN|PROPERTY_PATH,
+      String exactResolvedValue)
+        |
+        v
+  RuntimeBindingPlan(
+      TargetKey sourceTargetKey,
+      CompiledTargetBinding compiledTargetBinding)
+```
+
+Rules:
+
+- `exactResolvedValue` is the canonical resolved `TargetPropertyPath` value, never the raw selector expression;
+- compiler performs selector resolution exactly once using existing P1 semantics;
+- runtime never re-parses selector text, never scans raw View definitions/property trees, and never normalizes selector values;
+- context does not depend on compiler-only `SystemViewSelector` or `TargetPropertyPath` classes;
+- session registration records the same neutral `CompiledTargetBinding`; resolver performs exact value matching only;
+- `TARGET_MAIN` and `PROPERTY_PATH` remain distinguishable at runtime without re-interpreting lexical configuration.
+
+<a id="current-api-contract"></a>
+## 5. Current API completeness
+
+`COMPILER_api_contract.md@DESIGN-P2-R23` is the complete current P2 API contract. Every P2-added cross-module immutable value has an explicit Java-8-compatible `of(...)`/factory construction path, not just getters. Pre-P2 stable `SystemKey/RuleViewKey/ViewKey/EngineContext/CompiledModelSet` are explicitly treated as existing source-compatible APIs.
 
 The current contract fully defines policy enums/plan, IDs, invocation, runtime target, mutation stamp, resolved READ/WRITE, operation port, results/denials, factory/composition and all new construction surfaces. No superseded R19/R20/R21 design document is required to implement P2.
 
-## 5. Explicit production composition
+## 6. Explicit production composition
 
 Production assembly is explicit:
 
@@ -97,7 +131,7 @@ ProtectedAccessComposition
 A factory implementation may not read a global/default Context. Runtime `ModelData` handles enter only through the assembly snapshot.
 
 <a id="runtime-target-resolution"></a>
-## 6. Unique RuntimeTargetResolver
+## 7. Unique RuntimeTargetResolver
 
 Direct caller supplies `ModelAccessRuleKey + typed frame/owner/cursor`, not a RuntimeObjectId.
 
@@ -113,12 +147,13 @@ else `RUNTIME_CONTEXT_MISMATCH`.
 Then the **only** resolver is:
 
 ```text
-RuntimeBindingPlan
+RuntimeBindingPlan(sourceTargetKey + compiler-produced CompiledTargetBinding)
 + exact composition-bound frame/owner/cursor
-+ sealed RuntimeModelSession
++ sealed RuntimeModelSession containing exact CompiledTargetBinding registration facts
         |
         v
 RuntimeTargetResolver
+  exact match only; no raw selector/property-tree re-resolution
   0 -> RUNTIME_TARGET_NOT_FOUND
   1 -> ResolvedRuntimeTarget(
          RuntimeModelSessionId,
@@ -132,7 +167,7 @@ RuntimeTargetResolver
 No “first object”, frame-only, owner-only, cursor-only, `ModelData.name` or alternate fallback is legal. Guard and operation consume the same immutable `ResolvedRuntimeTarget`.
 
 <a id="runtime-model-session"></a>
-## 7. Session scope without opaque-ID inference
+## 8. Session scope without opaque-ID inference
 
 Each production session has a separate opaque `RuntimeModelSessionId`. `RuntimeObjectId` remains opaque and never encodes scope.
 
@@ -149,9 +184,9 @@ same session/binding previously valid but closed/expired
 
 Therefore cross-session classification is deterministic without a global registry or semantic parsing of `RuntimeObjectId`.
 
-## 8. Actual ModelData ownership and cross-session concurrency
+## 9. Actual ModelData ownership and cross-session concurrency
 
-Session-local locks/versions are insufficient because current `ModelLoader` directly holds mutable `ModelData`. R22 freezes the concurrency owner at the actual runtime model identity:
+Session-local locks/versions are insufficient because current `ModelLoader` directly holds mutable `ModelData`. The preserved R22 fix freezes the concurrency owner at the actual runtime model identity:
 
 ```text
 actual ModelData/runtime handle
@@ -174,7 +209,7 @@ Rules:
 
 This prevents Session A and Session B from acquiring independent locks/versions over the same mutable ModelData.
 
-## 9. Atomic RuntimeMutationStamp
+## 10. Atomic RuntimeMutationStamp
 
 WRITE version proof is no longer a bare number:
 
@@ -205,7 +240,7 @@ stamp.modelPath == ModelAccessRuleKey.modelPath
 
 `ResolvedProtectedWriteAccess` contains only `invocationId + ResolvedWriteIntent`; it cannot splice object B with version from object A.
 
-## 10. Protected operation ordering
+## 11. Protected operation ordering
 
 ```text
 explicit composition
@@ -220,7 +255,7 @@ explicit composition
 
 Target/stamp/authority cannot be replaced after Guard.
 
-## 11. READ / WRITE failure semantics
+## 12. READ / WRITE failure semantics
 
 READ:
 
@@ -250,7 +285,7 @@ capabilityStateChanged = true
 
 No automatic retry/reselection occurs.
 
-## 12. Cross-module closure
+## 13. Cross-module closure
 
 `P2-IMPACT-R22` contains both required CMIs.
 
@@ -279,9 +314,9 @@ P3/P4/P6 core -> dec-core-starter : forbidden
 starter -> dec-core-model          : allowed production assembly
 ```
 
-## 13. P2 / P7 boundary
+## 14. P2 / P7 boundary
 
-The R22 runtime session/transaction/version concepts are deliberately narrow P2 internal seams:
+The preserved runtime session/transaction/version concepts are deliberately narrow P2 internal seams:
 
 - `RuntimeModelSession` = one composition/frame protected-operation locator scope;
 - transaction = one protected WRITE atomic mutation;
@@ -289,6 +324,6 @@ The R22 runtime session/transaction/version concepts are deliberately narrow P2 
 
 P2 **does not** define user/session lifecycle, cross-request transaction scope, general resource ownership/lifetime or P7 declaration/session convergence. Those remain P7.
 
-## 14. Gate
+## 15. Gate
 
-No production Java, risk Evidence or TDD execution is claimed. `DESIGN-P2-R22` still requires same-revision ApiContract/Architecture/Develop/Impact/CrossModule/Concurrency Review and current risk scan. Implementation Plan/TDD/Development remain BLOCKED.
+No production Java, risk Evidence or TDD execution is claimed. `DESIGN-P2-R23` still requires same-revision ApiContract/Architecture/Develop/Impact/CrossModule/Concurrency Review and current risk scan. Implementation Plan/TDD/Development remain BLOCKED.

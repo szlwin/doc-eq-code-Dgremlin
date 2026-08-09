@@ -1,10 +1,10 @@
 # COMPILER P2 API Contract
 
-> Revision：`DESIGN-P2-R22`。Base：`DESIGN-P2-R21`。
+> Revision：`DESIGN-P2-R23`。Base：`DESIGN-P2-R22`。
 > Inputs：Overlay R04 + `BM-R20` + `FLOW-R10`。
 > Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
-This document is the complete current-revision P2 contract. A production implementer does not need superseded R19/R20/R21 design text to discover a P2 constructor, factory, value type, resolver, operation port, result or composition dependency.
+This document is the complete current-revision P2 contract. DESIGN-P2-R23 changes only the RuntimeBindingPlan representation so runtime consumes compiler-resolved target semantics without lexical re-interpretation. A production implementer does not need superseded R19/R20/R21 design text to discover a P2 constructor, factory, value type, resolver, operation port, result or composition dependency.
 
 <a id="current-api-contract"></a>
 ## 1. Existing stable compatibility boundary
@@ -57,13 +57,26 @@ public enum RuntimeAccessRequirement {
     EXACT_RUNTIME_BINDING
 }
 
+public enum ResolvedTargetKind {
+    TARGET_MAIN,
+    PROPERTY_PATH
+}
+
+public final class CompiledTargetBinding {
+    public static CompiledTargetBinding targetMain(ViewKey targetViewKey,
+                                                    String exactResolvedValue);
+    public static CompiledTargetBinding propertyPath(ViewKey targetViewKey,
+                                                      String exactResolvedValue);
+    public ViewKey targetViewKey();
+    public ResolvedTargetKind kind();
+    public String exactResolvedValue();
+}
+
 public final class RuntimeBindingPlan {
-    public static RuntimeBindingPlan exact(TargetKey targetKey,
-                                           String targetView,
-                                           String selectorExpression);
-    public TargetKey targetKey();
-    public String targetView();
-    public String selectorExpression();
+    public static RuntimeBindingPlan exact(TargetKey sourceTargetKey,
+                                           CompiledTargetBinding compiledTargetBinding);
+    public TargetKey sourceTargetKey();
+    public CompiledTargetBinding compiledTargetBinding();
 }
 
 public final class CompiledModelAccessRule {
@@ -91,6 +104,26 @@ RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + plan
 ```
 
 Construction and `ModelAccessPolicyIndex.of(...)` reject every other tuple. Runtime never repairs or widens it.
+
+Compiler adaptation is one-way and lossless for the P1 facts relevant to runtime selection:
+
+```text
+P1 ModelAccessBinding.targetView : ViewKey
+P1 SystemViewSelector            : compiler-only lexical input
+P1 TargetPropertyPath            : Kind(TARGET_MAIN|PROPERTY_PATH) + exact resolved value
+        |
+        | compiler performs the one and only selector resolution
+        v
+CompiledTargetBinding(
+    targetViewKey,
+    ResolvedTargetKind,
+    exactResolvedValue)
+        |
+        v
+RuntimeBindingPlan(sourceTargetKey, compiledTargetBinding)
+```
+
+`exactResolvedValue` is the compiler-produced canonical resolved value copied from the resolved P1 target fact; it is **not** the raw XML/YAML selector expression. Runtime code must not parse/trim/normalize selector text, re-scan a View property tree, or consult raw definitions to reconstruct the target. `dec-core-context` owns only the neutral compiled value above and has no dependency on compiler-only `SystemViewSelector` / `TargetPropertyPath` classes.
 
 ## 3. Opaque IDs and mutation version
 
@@ -150,7 +183,7 @@ public final class ProtectedAccessInvocation {
                                                 ModelAccessRuleKey modelAccessRuleKey,
                                                 RuntimeExecutionFrameId frameId,
                                                 RuntimeResolutionOwnerId ownerResolutionId,
-                                                Optional<RuntimeCollectionCursorId> cursorId);
+                                              Optional<RuntimeCollectionCursorId> cursorId);
     public ProtectedInvocationId invocationId();
     public ModelAccessRuleKey modelAccessRuleKey();
     public RuntimeExecutionFrameId frameId();
@@ -178,15 +211,17 @@ public final class RuntimeBindingProof {
 
 public final class ResolvedRuntimeTarget {
     public static ResolvedRuntimeTarget of(RuntimeModelSessionId sessionId,
-                                           RuntimeObjectId runtimeObjectId,
-                                           TargetKey targetKey,
-                                           RuntimeExecutionFrameId frameId,
-                                           RuntimeResolutionOwnerId ownerResolutionId,
-                                           Optional<RuntimeCollectionCursorId> cursorId,
-                                           RuntimeBindingProof bindingProof);
+                                                   RuntimeObjectId runtimeObjectId,
+                                                   TargetKey targetKey,
+                                                   CompiledTargetBinding compiledTargetBinding,
+                                                   RuntimeExecutionFrameId frameId,
+                                                   RuntimeResolutionOwnerId ownerResolutionId,
+                                                 Optional<RuntimeCollectionCursorId> cursorId,
+                                                    RuntimeBindingProof bindingProof);
     public RuntimeModelSessionId sessionId();
     public RuntimeObjectId runtimeObjectId();
     public TargetKey targetKey();
+    public CompiledTargetBinding compiledTargetBinding();
     public RuntimeExecutionFrameId frameId();
     public RuntimeResolutionOwnerId ownerResolutionId();
     public Optional<RuntimeCollectionCursorId> cursorId();
@@ -195,8 +230,8 @@ public final class ResolvedRuntimeTarget {
 
 interface RuntimeTargetResolver {
     RuntimeTargetResolution resolve(RuntimeBindingPlan plan,
-                                    ProtectedAccessInvocation invocation,
-                                    RuntimeModelSession session);
+                                      ProtectedAccessInvocation invocation,
+                                      RuntimeModelSession session);
 }
 
 final class RuntimeTargetResolution {
@@ -206,28 +241,29 @@ final class RuntimeTargetResolution {
 }
 ```
 
-`RuntimeTargetResolver` is the only legal selection algorithm. It evaluates the compiled `RuntimeBindingPlan` against the composition-bound typed execution facts and the sealed session. It returns exactly one immutable target or a deterministic 0/N/context failure; implementations may not use “first object”, ModelData name fallback, frame-only fallback or any other alternate selector.
+`RuntimeTargetResolver` is the only legal selection algorithm. It exact-matches `plan.compiledTargetBinding()` against the compiler-produced `CompiledTargetBinding` recorded with sealed-session runtime registrations, together with the composition-bound typed execution facts. It returns exactly one immutable target or a deterministic 0/N/context failure. It MUST NOT read raw XML/YAML/definition text, invoke `SystemViewSelector` parsing, scan the View property tree, trim/normalize selector values, or use “first object”, ModelData-name, frame-only or other alternate selection.
 
-<a id="runtime-model-session"></a>
+#a id="runtime-model-session"></a>
 ## 7. RuntimeModelSession, scope and actual-model ownership
 
 `RuntimeModelSession` is `dec-core-model` production/internal assembly API, not a business caller API:
 
 ```java
-public interface RuntimeModelSession extends AutoCloseable {
+public interface RuntimeModelSession implements AutoCloseable {
     RuntimeModelSessionId sessionId();
 
     RuntimeObjectId register(RuntimeExecutionFrameId frameId,
-                             RuntimeResolutionOwnerId ownerResolutionId,
-                             Optional<RuntimeCollectionCursorId> cursorId,
-                             ModelData modelData); // assembly phase only
+                                RuntimeResolutionOwnerId ownerResolutionId,
+                                Optional<RuntimeCollectionCursorId> cursorId,
+                                CompiledTargetBinding compiledTargetBinding,
+                                ModelData modelData); // assembly phase only
 
     void seal();
 
     LocatedRuntimeObject locate(ResolvedRuntimeTarget target);
 
     RuntimeMutationVersion currentVersion(ResolvedRuntimeTarget target,
-                                          ModelPath path);
+                                            ModelPath path);
 }
 ```
 
@@ -236,24 +272,16 @@ Registration rules are mandatory:
 - one actual `ModelData`/runtime handle has exactly one model-internal `RuntimeModelCoordinationCell`;
 - the coordination cell owns one active-session registration lease plus per-`ModelPath` lock/version state;
 - duplicate registration of the same actual handle in one active session -> `RUNTIME_OBJECT_ALREADY_REGISTERED`;
-- registration of the same actual handle in another active session -> `RUNTIME_OBJECT_OWNERSHIP_CONFLICT`;
-- session close releases the active lease but does not create a second version domain; version state remains attached to the actual model coordination cell;
-- no static/global object registry or global current Context is used.
+- registration of the same actual handle in another active session -> `RUNTIME_OBJECT_OWNERSHIP_CONFLICT` ;
+- session close releases the active lease but does not create a second version domain; version state remains bound to the actual model coordination cell.
 
-Scope/error classification is explicit:
+Lookup classification:
 
-```text
-target.sessionId != currentSession.sessionId
-  -> RUNTIME_SESSION_SCOPE_MISMATCH
+- explicit target sessionId  != current sessionId -> `RUNTIME_SESSION_SCOPE_MISMATCH`;
+- same active session, IDs never registered -> `RUNTIME_OBJECT_NOT_FOUND`;
+- IDs previously registered in the current session but session/binding closed/revoked -> `RUNTIME_OBJECT_STALE`
 
-matching active session + object absent
-  -> RUNTIME_OBJECT_NOT_FOUND
-
-matching session/binding was valid but is closed/expired
-  -> RUNTIME_OBJECT_STALE
-```
-
-Opaque `RuntimeObjectId` alone never distinguishes scope.
+An opaque ID from another session that has no explicit current-scope proof is not parsed or looked up globally; it is just not a member of the current scope and therefore `NOT_FOUND`.
 
 ## 8. Atomic WRITE target/version binding
 
@@ -271,7 +299,7 @@ public final class RuntimeMutationStamp {
 
 public final class ResolvedProtectedReadAccess {
     public static ResolvedProtectedReadAccess of(ProtectedInvocationId invocationId,
-                                                 ModelAccessRuleKey modelAccessRuleKey,
+                                               ModelAccessRuleKey modelAccessRuleKey,
                                                  ResolvedRuntimeTarget resolvedRuntimeTarget);
     public ProtectedInvocationId invocationId();
     public ModelAccessRuleKey modelAccessRuleKey();
@@ -453,4 +481,4 @@ Those remain P7 scope.
 
 ## 13. Gate
 
-No production Java/TDD execution is claimed. `DESIGN-P2-R22` remains candidate-only until same-revision ApiContract/Architecture/Develop/Impact/CrossModule/Concurrency Reviews, current risk scan and required machine Evidence complete.
+No production Java/TDD execution is claimed. `DESIGN-P2-R23` remains candidate-only until same-revision ApiContract/Architecture/Develop/Impact/CrossModule/Concurrency Reviews, current risk scan and required machine Evidence complete.

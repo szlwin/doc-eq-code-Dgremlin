@@ -1,6 +1,6 @@
 # COMPILER P2 Architecture
 
-> Revision：`DESIGN-P2-R22`
+> Revision：`DESIGN-P2-R23`
 > Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 
 ## Compile / publication
@@ -29,7 +29,8 @@ application / P3-P4-P6 consumer
 dec-core-starter
   explicit EngineContext composition
   exact frame snapshot
-  RuntimeTargetResolver
+  compiler-produced neutral RuntimeBindingPlan
+  RuntimeTargetResolver (exact compiled-binding match only)
   one-shot capability
   Gateway / Guard
         |
@@ -40,7 +41,7 @@ dec-core-model
   real READ / rollback-safe WRITE
 ```
 
-`RuntimeTargetResolver` is the sole `RuntimeBindingPlan -> ResolvedRuntimeTarget` selection path. `RuntimeMutationStamp(sessionId, objectId, path, version)` binds WRITE concurrency proof to that same target.
+`RuntimeTargetResolver` is the sole `RuntimeBindingPlan -> ResolvedRuntimeTarget` selection path. `RuntimeBindingPlan` carries `CompiledTargetBinding(ViewKey, TARGET_MAIN|PROPERTY_PATH, exactResolvedValue)` produced once by compiler from P1 resolved facts; runtime is forbidden to parse raw selector text or scan View definitions/property trees. `RuntimeMutationStamp(sessionId, objectId, path, version)` binds WRITE concurrency proof to that same target.
 
 ## Dependency rules
 

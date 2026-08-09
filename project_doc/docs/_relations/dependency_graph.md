@@ -2,7 +2,7 @@
 
 - Project：`doc-eq-code`
 - Version：`V_1.0`
-- Current candidate：`BM-R20 / FLOW-R10 / P2-IMPACT-R22 / DESIGN-P2-R22 / TESTDESIGN-P2-R23`
+- Current candidate：`BM-R20 / FLOW-R10 / P2-IMPACT-R22 / DESIGN-P2-R23 / TESTDESIGN-P2-R24`
 - Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 - Decisions：AC-007 `OPTION_B / ACTIVE`；AccessOperation `READ_WRITE_ONLY / ACTIVE`
 
@@ -20,10 +20,10 @@ FLOW-R10
         +--> P2-IMPACT-R22
         |
         v
-DESIGN-P2-R22
+DESIGN-P2-R23
         |
         v
-TESTDESIGN-P2-R23
+TESTDESIGN-P2-R24
 ```
 
 No downstream artifact is an authoritative upstream input.
@@ -62,10 +62,13 @@ ProtectedAccessComposition
         |
         v
 RuntimeTargetResolver
-  RuntimeBindingPlan + frame/owner/cursor + sealed session
+  RuntimeBindingPlan(
+    sourceTargetKey + CompiledTargetBinding(
+      targetViewKey + TARGET_MAIN|PROPERTY_PATH + exactResolvedValue))
+  + frame/owner/cursor + sealed session
         |
         v
-ResolvedRuntimeTarget(sessionId, objectId, proof)
+ResolvedRuntimeTarget(sessionId, objectId, compiledTargetBinding, proof)
         |
         +-- READ --> Guard --> dec-core-model immutable snapshot
         |
@@ -76,7 +79,7 @@ ResolvedRuntimeTarget(sessionId, objectId, proof)
                     -> dec-core-model actual-ModelData coordination/transaction
 ```
 
-`CMI-P2-PROTECTED-ACCESS-003` is the structured cross-module implementation contract.
+`CMI-P2-PROTECTED-ACCESS-003` remains the structured cross-module implementation contract; DESIGN-P2-R23 clarifies that runtime selection consumes only compiler-produced neutral compiled target facts and never raw selector syntax.
 
 ## Actual runtime-object concurrency boundary
 
