@@ -1,132 +1,67 @@
 schemaVersion: 1
 artifact: dependency_impact
-project: doc-eq-code
-version: V_1.0
-revision: BM-R16
-baseRevision: BM-R15
-status: NEEDS_REVIEW_MACHINE_BLOCKED
+revision: BM-R17_DESIGN-P2-R19_TESTDESIGN-P2-R20
+status: PENDING_EXACT_REVIEW_MACHINE_BLOCKED
 inputs:
-  - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809-R04
-  - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B
-  - DEC-P2-ACCESS-OPERATIONS-001:ACTIVE_READ_WRITE_ONLY
-  - FLOW-R06@p2-system-ruleview-protected-access
-  - DESIGN-P2-R18
-  - TESTDESIGN-P2-R19
-relations:
-  - id: REL-P2-COMPILER
-    from: FEATURE-DESC-3361AD2E54FC
-    type: IMPLEMENTED_BY
-    to: DEC-CORE-COMPILER
-    reason: System RuleView RuleKey ModelPath READ-WRITE policy compilation ownership derivation and digest publication
-  - id: REL-P2-CONTEXT
-    from: FEATURE-DESC-3361AD2E54FC
-    type: AFFECTS
-    to: DEC-CORE-CONTEXT
-    reason: immutable keys compiled snapshots exact ModelPath READ-WRITE AccessOperation PolicyIndex and Context reads
-  - id: REL-P2-STARTER
-    from: FEATURE-DESC-3361AD2E54FC
-    type: AFFECTS
-    to: DEC-CORE-STARTER
-    reason: production composition three AC007 entries Bridge capability Gateway Guard and atomic consume
-  - id: REL-P2-DEMO
-    from: FEATURE-DESC-3361AD2E54FC
-    type: VERIFIED_BY_FUTURE_EXECUTION
-    to: DEC-DEMO
-    reason: real production acquisition and source-to-read-write reachability fixture
+  requirement: REQAN-P2-R01+DEC-OVERLAY-20260809-R04
+  businessModel: BM-R17
+  businessFlow: FLOW-R07@p2-system-ruleview-protected-access
+  design: DESIGN-P2-R19
+  testDesign: TESTDESIGN-P2-R20
 impacts:
-  - id: IMP-P2-SYSTEM-OWNERSHIP
-    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
-    strategy: DERIVE_IMMUTABLE_READ_INDEX
-    authoritativeSources:
-      Data: final owner-qualified typed Data registry
-      View: final owner-qualified typed View registry
-      RuleView: final owner-qualified typed RuleView registry
-      Information: final owner-qualified typed Information registry
-      Rule: owning CompiledRuleView immutable RuleKey closure
-      ModelAccessRule: ModelAccessPolicyIndex keys / compiled policy rules
-    invariant: snapshot never becomes authority
-  - id: IMP-P2-RULEKEY-CLOSURE
-    targets: [DEC-CORE-CONTEXT, DEC-CORE-COMPILER]
-    strategy: OWNER_QUALIFIED_VALUE_IDENTITY
-    identity: [ownerRuleViewKey, localRuleName]
-    authoritativeStore: owning CompiledRuleView compiled rule closure
-    globalRuleRegistryAdded: false
-    cases: [CASE-P2-TD-RULEKEY-CONTRACT-001]
-  - id: IMP-P2-SHARED-MODEL-PATH
-    targets: [DEC-CORE-COMPILER]
-    strategy: SINGLE_CANONICAL_COMPILER
-    invariant: RULE CHANGE QUERY_CONTRACT MODEL_ACCESS equal inputs produce value-equal exact ModelPath; wildcard expanded before policy
-  - id: IMP-P2-P1-P2-PATH-OPERATION-MIGRATION
-    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT, DEC-CORE-STARTER]
-    strategy: ONE_WAY_COMPATIBILITY_CONVERSION
-    mapping:
-      SharedModelPathExact: exact P2 ModelPath
-      SharedModelPathWildcard: finite exact P2 ModelPaths before publication
-      AccessModeREAD: AccessOperation.READ
-      AccessModeWRITE: AccessOperation.WRITE
-      AccessModeEXECUTE: NOT_APPLICABLE
-    runtimeAuthority: [ModelPath, AccessOperation, ModelAccessPolicyIndex]
-  - id: IMP-P2-READ-WRITE-AUTHORIZATION
-    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT, DEC-CORE-STARTER]
-    strategy: EXACT_OPERATION_QUALIFIED_POLICY
-    operations: [READ, WRITE]
-    executeSupported: false
-    invariant: READ never implies WRITE and WRITE never implies READ; PolicyIndex is sole runtime authority
-    cases: [CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001, CASE-P2-TD-NO-EXECUTE-CONTRACT-001]
-  - id: IMP-P2-PROTECTED-SEAM
-    targets: [DEC-CORE-STARTER]
-    strategy: SINGLE_PRODUCTION_AUTHORITY_SEAM
-    invariant: composition entry or direct Bridge -> internal issuance -> target -> capability -> atomic consume -> Gateway -> Guard -> bound READ/WRITE operation
-  - id: IMP-P2-AC007-REPRESENTATIVE-CONSUMERS
-    targets: [DEC-CORE-STARTER, DEC-DEMO]
-    strategy: PRODUCTION_COMPOSITION_THREE_ENTRY_ACCEPTANCE
-    factory: ProtectedAccessRuntimeFactory
-    composition: ProtectedAccessComposition
-    requiredEntries: [RuleProtectedAccessEntry, ChangeProtectedAccessEntry, CustomActionProtectedAccessEntry]
-    invariant: all entries from one composition share same Bridge and EngineContext authority snapshot; manual test construction is not production reachability evidence
-    forbiddenConsumerAuthorities: [ProtectedAccessGateway, ModelAccessGuard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
-    cases: [CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001, CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CONSUMER-PARITY-001, CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001]
+  - id: IMP-P2-REVISION-DAG
+    type: GOVERNANCE
+    statement: authoritative revisions form R04 -> BM-R17 -> FLOW-R07 -> DESIGN-R19 -> TESTDESIGN-R20 with no downstream-as-upstream cycle
+    affected: [business_model, business_flow, design, test_design, traceability]
+  - id: IMP-P2-TARGET-KEY
+    type: API_SEMANTIC
+    statement: P1/model-access sourceModel exact-resolves within owner System to TargetKey(SystemKey,canonicalSourceModelName); sourcePath independently maps to ModelPath
+    affectedModules: [dec-core-context, dec-core-compiler]
+    risks: [unknown_or_ambiguous_source_model, cross_system_target_resolution, dual_target_authority]
+  - id: IMP-P2-POLICY-CLASSIFICATION
+    type: POLICY_AUTHORITY
+    statement: only STATIC_ALLOW+NONE+no-plan and RUNTIME_GUARD_REQUIRED+EXACT_RUNTIME_BINDING+plan may enter PolicyIndex
+    affectedModules: [dec-core-context, dec-core-compiler, dec-core-starter]
+    risks: [invalid_mixed_status_plan, runtime_reclassification, fail_open]
+  - id: IMP-P2-REAL-READ-WRITE
+    type: RUNTIME_EFFECT
+    statement: READ returns capability-bound immutable value snapshot without mutation; WRITE executes one internally resolved capability-bound mutation and returns receipt only after Guard ALLOW
+    affectedModules: [dec-core-context, dec-core-starter]
+    risks: [caller_callback_injection, target_substitution, write_effect_before_guard, abstract_counter_only_tests]
+  - id: IMP-P2-NEUTRAL-PROTECTED-PORT
+    type: MODULE_BOUNDARY
+    statement: neutral ProtectedAccessPort/Invocation/Result live in dec-core-context; starter implements/enforces/assembles; future P3/P4/P6 core never depend on starter
+    affectedModules: [dec-core-context, dec-core-starter, future-P3, future-P4, future-P6, dec-demo]
+    allowedEdges:
+      - dec-core-starter -> dec-core-context
+      - P3/P4/P6 -> dec-core-context
+      - application/demo -> dec-core-starter
+    forbiddenEdges:
+      - P3/P4/P6 -> dec-core-starter
+  - id: IMP-P2-AC007-OPTION-B
+    type: CROSS_MODULE_RUNTIME
+    statement: production composition exposes one Bridge plus Rule/Change/CustomAction representative entries sharing same Context/Policy authority
+    affectedModules: [dec-core-starter, dec-demo]
   - id: IMP-P2-CAPABILITY-CONCURRENCY
-    targets: [DEC-CORE-STARTER]
-    strategy: ATOMIC_ONE_SHOT
-    stateTransition: ISSUED -> CONSUMED
-    maxSuccessfulConsume: 1
-    loserDenial: CAPABILITY_ALREADY_CONSUMED
-    cases: [CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001, CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001]
-  - id: IMP-P2-ATOMIC-PUBLICATION
-    targets: [DEC-CORE-COMPILER, DEC-CORE-CONTEXT]
-    strategy: ATOMIC
-    invariant: registries RuleView RuleKey closure exact paths READ-WRITE policy ownership version and digest are one closure
-  - id: IMP-P2-RUNTIME-DENIAL
-    targets: [DEC-CORE-STARTER, DEC-CORE-CONTEXT]
-    strategy: DETERMINISTIC_FAIL_CLOSED
-    invariant: stable non-sensitive denial provenance including capability-consumed race denial
-  - id: IMP-P2-BARE-NAME-COMPAT
-    targets: [DEC-CORE-CONTEXT, LEGACY-DECLARATION-SYSTEM-COMPAT]
-    strategy: NO_NEW_P2_ADAPTER
-    invariant: canonical P2 has no bare-name fallback; surviving historical read path is read-only and ambiguity rejects
-crossModuleImplementations:
-  - id: CMI-P2-SYSTEM-RULEVIEW-001
-    flow: FLOW-CONFIG-COMPILE
-    status: CANDIDATE
-  - id: CMI-P2-PROTECTED-ACCESS-001
-    flow: FLOW-PROTECTED-ACCESS-EXECUTE
-    sequence: [starter production factory, composition, representative entry, same bridge, internal invocation, target resolver, one-shot capability, atomic consume, gateway, guard, operation-or-denial]
-    status: CANDIDATE
-  - id: CMI-P2-DOWNSTREAM
-    status: ACTIVE_DOWNSTREAM_BOUNDARY
-    P3: full Rule/Information semantics reuse P2 seam
-    P4: full change/action/produce state machine reuses P2 seam
-    P6: full QueryPlan remains downstream and reuses P2 path/authorization contract
-reviewGate:
-  requirementReview: REQUIRED
-  businessModelReview: REQUIRED
-  businessFlowReview: REQUIRED
-  impactReview: REQUIRED
-  crossModuleReview: REQUIRED
-  concurrencyReview: REQUIRED
-  riskDetection: NOT_SCANNED
-  implementationPlan: BLOCKED
-  tdd: BLOCKED
-  development: BLOCKED
+    type: CONCURRENCY
+    statement: one-shot capability atomic consume permits at most one protected operation and one WRITE mutation per capability
+    affectedModules: [dec-core-starter]
+  - id: IMP-P2-PUBLICATION
+    type: ATOMIC_PUBLICATION
+    statement: TargetKey ModelPath READ/WRITE classification PolicyIndex ownership/version/digest publish as one immutable closure or old Context remains
+    affectedModules: [dec-core-context, dec-core-compiler, dec-core-starter]
+downstreamObligations:
+  P3:
+    - inject/use neutral ProtectedAccessPort; do not depend on starter internals
+    - real Rule executor must reuse P2 authorization seam
+  P4:
+    - inject/use neutral ProtectedAccessPort; do not depend on starter internals
+    - full change/custom-action engines must reuse P2 seam
+  P6:
+    - inject/use neutral ProtectedAccessPort; do not depend on starter internals
+    - QueryPlan path semantics must reuse canonical TargetKey/ModelPath facts
+reviewRequired: [BusinessFlowReview, ApiContractReview, ArchitectureReview, DevelopReview, ImpactAnalysisReview, CrossModuleIntegrationReview, ConcurrencyReview]
+riskDetection: NOT_SCANNED
+implementationPlan: BLOCKED
+tdd: BLOCKED
+development: BLOCKED

@@ -3,31 +3,31 @@ artifact: business_model
 module:
   code: COMPILER
   name: dec-core-compiler
-revision: BM-R16
-baseRevision: BM-R15
+revision: BM-R17
+baseRevision: BM-R16
 status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
 canonicalPair:
   machineAuthority: COMPILER_business_model.yaml
   normativeHumanMirror: COMPILER_business_model.md
-  rule: semantic mismatch invalidates the whole BM-R16 candidate
-inputs:
+  rule: semantic mismatch invalidates the whole BM-R17 candidate
+authoritativeInputs:
   - REQAN-P2-R01@d08612768131
   - REQAN-P2-R01+DEC-OVERLAY-20260809-R04
   - DEC-P2-DIRECT-BRIDGE-AUTHORITY-001:ACTIVE
   - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B
   - DEC-P2-ACCESS-OPERATIONS-001:ACTIVE_READ_WRITE_ONLY
-businessFlowRevision: FLOW-R06@p2-system-ruleview-protected-access
+revisionDirection:
+  chain: REQAN_R04 -> BM_R17 -> FLOW_R07 -> DESIGN_R19 -> TESTDESIGN_R20
+  downstreamArtifactsAreInputs: false
 terms:
-  - id: TERM-SYSTEM-COMPILED-IDENTITY
-    definition: SystemKey plus SourceRef plus SystemVersionIdentity plus derived immutable ownership snapshot
-  - id: TERM-SYSTEM-OWNERSHIP-SNAPSHOT
-    definition: derived read index over explicit authoritative compiled facts; never a registry or authorization authority
-  - id: TERM-RULE-KEY
-    definition: exact immutable identity (ownerRuleViewKey, localRuleName); authoritative store is the owning CompiledRuleView compiled rule closure
+  - id: TERM-TARGET-KEY
+    definition: exact immutable identity (owner SystemKey, canonical sourceModel name) resolved before ModelPath compilation
   - id: TERM-MODEL-PATH
-    definition: exact P2 canonical path; P1 SharedModelPath is source/compatibility input only
+    definition: exact canonical path independent from TargetKey; source wildcard is compile-time only
   - id: TERM-ACCESS-OPERATION
-    definition: exactly READ or WRITE; there is no current P2 EXECUTE operation
+    definition: exactly READ or WRITE; current P2 has no EXECUTE
+  - id: TERM-PROTECTED-ACCESS-PORT
+    definition: neutral dec-core-context consumer contract; starter Bridge implements it; it is not authorization authority
 entities:
   - id: ENT-COMPILED-SYSTEM
     identity: SystemKey
@@ -38,118 +38,90 @@ entities:
   - id: ENT-PROTECTED-ACCESS-COMPOSITION
     ownerModule: dec-core-starter
     requiredFacts: [engineContext, bridge, ruleEntry, changeEntry, customActionEntry]
-    invariant: all entries share the same bridge and same current immutable EngineContext authority snapshot
 valueObjects:
-  - id: VO-RULEVIEW-KEY
-    fields: [systemKey, localName]
-    compatibility:
-      existingConstructor: RuleViewKey(SystemKey owner, String name)
-      existingAccessors: [owner(), name()]
-      additiveAliases: [of(SystemKey,String), systemKey(), localName()]
   - id: VO-RULE-KEY
-    fields: [ownerRuleViewKey, localRuleName]
-    invariants:
-      - ownerRuleViewKey non-null
-      - localRuleName nonblank exact canonical source name; no fuzzy/case fallback
-      - equality/hash/order identity include ownerRuleViewKey and localRuleName
-      - every key in CompiledRuleView.resolvedRuleKeys has ownerRuleViewKey equal to that CompiledRuleView.key
-      - no duplicate global Rule registry is created only for ownership
+    identity: [ownerRuleViewKey, localRuleName]
+    authoritativeStore: owning CompiledRuleView immutable compiled rule closure
+  - id: VO-TARGET-KEY
+    identity: [ownerSystemKey, canonicalSourceModelName]
+    mapping:
+      source: P1/model-access sourceModel
+      resolution: exact owner-System target namespace
+      forbidden: [caseFold, fuzzy, parentFallback, pathDerivedTarget]
   - id: VO-MODEL-PATH
-    fields: [canonicalSegments]
-    wildcardRuntimeAllowed: false
+    identity: canonicalSegments
+    source: P1/model-access sourcePath through shared ModelPathCompiler
+    runtimeWildcardAllowed: false
   - id: VO-ACCESS-OPERATION
     enumValues: [READ, WRITE]
     executePresent: false
-  - id: VO-MODEL-ACCESS-RULE
-    fields: [systemKey, targetKey, modelPath, operation, sourceRef, status, runtimeRequirement, runtimePlan]
-authoritativeOwnershipSources:
-  ownedDataKeys: final owner-qualified typed Data registry
-  ownedViewKeys: final owner-qualified typed View registry
-  ownedRuleViewKeys: final owner-qualified typed RuleView registry
-  ownedInformationKeys: final owner-qualified typed Information registry
-  ownedRuleKeys: final CompiledRuleView compiled/nested RuleKey closure
-  ownedModelAccessRuleKeys: final ModelAccessPolicyIndex keys / compiled policy rules filtered by System
-systemVersionIdentity:
-  fields: [declaredVersion, sourceSemanticDigest, schemaVersion, compilerVersion]
-  invariants:
-    - declaredVersion empty when source declares none
-    - schemaVersion equals enclosing CompiledModelSet schemaVersion
-    - compilerVersion equals enclosing CompiledModelSet compilerVersion
-    - no time/random/load-order identity
-p1ToP2Migration:
-  sharedModelPath:
-    exact: SharedModelPath exact -> shared ModelPathCompiler -> exact ModelPath
-    wildcard: SharedModelPath '*' -> deterministic finite exact expansion before policy publication
-    runtimeWildcardAllowed: false
+modelAccessIdentity:
+  key: [SystemKey, TargetKey, ModelPath, AccessOperation]
+  authority: ModelAccessPolicyIndex
+  consumerKindInAuthorizationKey: false
+p1ToP2Mapping:
+  sourceModel: exact resolve -> TargetKey
+  sourcePath: SharedModelPath -> shared ModelPathCompiler -> exact ModelPath
   accessMode:
     READ: AccessOperation.READ
     WRITE: AccessOperation.WRITE
-    EXECUTE: NOT_SUPPORTED_BY_CURRENT_P2
-  runtimeAuthority: [ModelPath, AccessOperation, ModelAccessPolicyIndex]
-accessOperations:
-  values: [READ, WRITE]
-  independent: true
-  rules:
-    - READ never implies WRITE
-    - WRITE never implies READ
-    - undeclared operation DENY
-    - no EXECUTE source raw IR enum policy bridge guard or test contract
-modelAccessIdentity:
-  key: [SystemKey, TargetKey, ModelPath, AccessOperation]
-  consumerKindInAuthorizationKey: false
-  authority: ModelAccessPolicyIndex
+  postCondition: P1 source facts are not runtime authorization authority
+policyClassification:
+  policyStatusValues: [STATIC_ALLOW, RUNTIME_GUARD_REQUIRED]
+  runtimeRequirementValues: [NONE, EXACT_RUNTIME_BINDING]
+  truthTable:
+    - {status: STATIC_ALLOW, requirement: NONE, runtimePlan: ABSENT, valid: true}
+    - {status: STATIC_ALLOW, requirement: EXACT_RUNTIME_BINDING, runtimePlan: ANY, valid: false}
+    - {status: RUNTIME_GUARD_REQUIRED, requirement: EXACT_RUNTIME_BINDING, runtimePlan: PRESENT, valid: true}
+    - {status: RUNTIME_GUARD_REQUIRED, requirement: NONE, runtimePlan: ANY, valid: false}
+  invalidNullOrUnknown: COMPILE_OR_PUBLICATION_ERROR
+runtimeBindingPlan:
+  exactFacts: [resolvedTargetKey, canonicalModelPath, targetViewKey, selectorPlanIdentity, sourceRef]
+  mayReselectRuleTargetPathOrOperation: false
+protectedOperationSemantics:
+  READ:
+    mutationAllowed: false
+    successResult: immutable capability-bound runtime value snapshot
+  WRITE:
+    writeIntentSource: current frame/owner runtime execution state resolved internally
+    callerCallbackInjectionAllowed: false
+    maxSuccessfulMutationPerCapability: 1
+    successResult: immutable write receipt
+  denyBeforeOperation: true
+neutralRuntimeSeam:
+  neutralModule: dec-core-context
+  contracts: [ProtectedAccessPort, ProtectedAccessInvocation, ProtectedAccessResult, keysAndOpaqueRuntimeIds]
+  implementationModule: dec-core-starter
+  implementation: ProtectedExecutionBridge
+  starterOnly: [targetResolver, oneShotCapability, ProtectedAccessGateway, ModelAccessGuard, protectedOperationExecutionAdapter, productionAssembly]
+  downstreamModules: [P3, P4, P6]
+  downstreamDependency: neutral ProtectedAccessPort only
+  forbiddenDependency: core modules -> dec-core-starter
 ac007:
-  decisionId: DEC-P2-AC007-STAGE-BOUNDARY-001
-  status: ACTIVE_OPTION_B_USER_DECIDED
-  representativeConsumers:
-    - RuleProtectedAccessEntry
-    - ChangeProtectedAccessEntry
-    - CustomActionProtectedAccessEntry
-  productionAcquisition:
-    ownerModule: dec-core-starter
-    root: ProtectedAccessRuntimeFactory
-    output: ProtectedAccessComposition
-    compositionReads: [bridge, ruleEntry, changeEntry, customActionEntry]
-    invariant: all reads are bound to same EngineContext and same bridge
-  forbiddenConsumerAuthorities: [ProtectedAccessGateway, ModelAccessGuard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
-  downstreamFullSemantics:
-    P3: full Rule/Information engine
-    P4: full change/custom-action/Action/Produce state machine
-    P6: full QueryPlan compile/execute
+  decision: OPTION_B_USER_ACTIVE
+  productionAcquisition: ProtectedAccessRuntimeFactory -> ProtectedAccessComposition
+  representativeEntries: [RuleProtectedAccessEntry, ChangeProtectedAccessEntry, CustomActionProtectedAccessEntry]
+  sameBridgeAndContextRequired: true
 oneShotCapability:
-  visibility: starter-internal
-  binding: [invocationIdentity, actualTarget, AccessOperation]
   concurrency: ATOMIC_CONSUME
-  stateTransition: ISSUED -> CONSUMED
+  transition: ISSUED -> CONSUMED
   maxSuccessfulConsume: 1
-  loserDenial: CAPABILITY_ALREADY_CONSUMED
-bareNameCompatibility:
-  newP2Adapter: ABSENT
-  historicalReadBoundaryMayRemain: true
-  constraints: [readOnly, noNewRegistryWrite, noPolicyMutation, noProtectedWrite, ambiguousNameReject, noCanonicalFallback]
+  loser: CAPABILITY_ALREADY_CONSUMED
 invariants:
-  - id: INV-COMPILER-016B
-    statement: CompiledSystem ownership snapshot exactly coheres with authoritative sources and never becomes authority
-  - id: INV-COMPILER-017A
-    statement: CompiledRuleView view/rule references exact-resolve; RuleKey closure is owner-qualified and unique
-  - id: INV-COMPILER-018
-    statement: rule change query-contract model-access equal path inputs produce value-equal exact ModelPath
-  - id: INV-COMPILER-018A
-    statement: READ and WRITE are independent; no EXECUTE exists in current P2
-  - id: INV-COMPILER-019
-    statement: registries RuleView closure policy ownership version and digest publish atomically
-  - id: INV-COMPILER-020
-    statement: all representative P2 protected consumers are acquired from production composition and traverse one Bridge Gateway Guard authority seam
-  - id: INV-COMPILER-020A
-    statement: one-shot capability uses atomic ISSUED-to-CONSUMED transition; at most one concurrent consume can execute effect
-  - id: INV-COMPILER-021
-    statement: compile ERROR and runtime DENY are deterministic source-aware and non-sensitive
-  - id: INV-COMPILER-023
-    statement: P1 SharedModelPath and AccessMode are one-way source inputs and never runtime authority after conversion
+  - id: INV-COMPILER-024
+    statement: BM has no authoritative dependency on downstream Flow Design or TestDesign revisions
+  - id: INV-COMPILER-025
+    statement: sourceModel and sourcePath map independently and uniquely to TargetKey and ModelPath
+  - id: INV-COMPILER-026
+    statement: only legal policy classification truth-table rows can enter PolicyIndex
+  - id: INV-COMPILER-027
+    statement: protected READ returns a real value snapshot without mutation and protected WRITE applies at most one capability-bound mutation only after Guard ALLOW
+  - id: INV-COMPILER-028
+    statement: future core executors depend on neutral ProtectedAccessPort and never on dec-core-starter
 gate:
   openP1: 19
   requirementReview: REQUIRED
-  businessFlowReview: REQUIRED
+  businessModelReview: REQUIRED
   riskDetection: NOT_SCANNED
   implementationPlan: BLOCKED
   tdd: BLOCKED

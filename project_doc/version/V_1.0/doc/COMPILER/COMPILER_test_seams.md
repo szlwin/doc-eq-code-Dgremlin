@@ -1,75 +1,95 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R18`  
-> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
+> Design Revision：`DESIGN-P2-R19`。  
+> Test Design Revision：`TESTDESIGN-P2-R20`。  
+> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
-## 1. Canonical BM pair seam
+## 1. Revision DAG seam
 
-Review/test tooling can compare `COMPILER_business_model.yaml` machine facts with `.md` normative mirror for same revision/inputs/operation set/RuleKey/AC007/concurrency invariants。Mismatch invalidates candidate。
-
-## 2. System ownership/version seam
-
-Observe SystemVersionIdentity and compare CompiledSystem projections against typed Data/View/RuleView/Information registries、CompiledRuleView RuleKey closures and PolicyIndex keys。No snapshot mutation/rebuild authority。
-
-## 3. RuleKey seam
-
-Create two RuleViews with same local Rule name and prove distinct RuleKey identities by owner。Within one RuleView duplicate local RuleKey rejects。Every resolved RuleKey owner equals CompiledRuleView key。No global Rule registry required。
-
-## 4. READ/WRITE-only operation seam
-
-Observe `AccessOperation.values()` exactly `[READ, WRITE]` modulo enum declaration order contract；there is no current P2 EXECUTE source/raw/policy/runtime branch。Seed READ-only and WRITE-only policy independently and prove non-implication。
-
-## 5. ModelPath/P1 migration seam
-
-Controlled exact and wildcard SharedModelPath inputs convert once into exact P2 ModelPaths；AccessMode READ/WRITE converts one-to-one。After conversion PolicyIndex/Bridge/Guard observations never read P1 path/mode authority。
-
-## 6. Production composition seam — AC-007
-
-Normal starter production composition must expose/acquire:
+A document-contract test must assert the authoritative chain is acyclic:
 
 ```text
-ProtectedAccessRuntimeFactory
- -> ProtectedAccessComposition
-      -> bridge
-      -> ruleEntry
-      -> changeEntry
-      -> customActionEntry
+R04 -> BM-R17 -> FLOW-R07 -> DESIGN-P2-R19 -> TESTDESIGN-P2-R20
 ```
 
-Test seam must verify all three entries are bound to the same Bridge and EngineContext。Real AC-007 E2E must acquire via this composition, not `new Entry(testBridge)` or reflection/package-private internals。
+`FLOW-R07.authoritativeInputs` must not contain Design/TestDesign. `BM-R17` must not declare Flow/Design/TestDesign as authoritative input. Downstream trace refs are allowed but non-authoritative.
 
-## 7. Authority dependency seam
+## 2. TargetKey seam
 
-For each representative entry, inspect constructor/field/dependency graph：Bridge is the only protected-access authority dependency。Gateway/Guard/resolver/raw operation/mutable PolicyIndex/issued-pair/capability mint absent from business-entry reachability。
+Compiler fake/fixture supplies exact owner System target namespace. Verify:
 
-## 8. Runtime target/proof seam
+- same `(System,sourceModel)` -> value-equal TargetKey;
+- same local model under different Systems -> distinct TargetKeys;
+- unknown/ambiguous/cross-System sourceModel -> stable ERROR;
+- changing sourcePath does not change TargetKey;
+- changing sourceModel does not silently reuse prior TargetKey;
+- runtime PolicyIndex key uses converted TargetKey, never raw sourceModel string.
 
-Controllable frame/owner/cursor/target/membership enables valid/stale/foreign/wrong target paths。A capability cannot substitute target or READ/WRITE operation。
+## 3. Policy classification seam
 
-## 9. Atomic capability concurrency seam
+Table-driven construction/publication test for all `PolicyStatus x RuntimeAccessRequirement x runtimePlanPresent` combinations. Only:
 
-Expose a controlled starter-internal test seam capable of racing the **same issued capability** at the Gateway using `CountDownLatch`/barrier (no `Thread.sleep`)。
+```text
+STATIC_ALLOW + NONE + absent plan
+RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + present plan
+```
 
-Oracle：
+are valid. Compiler and `ModelAccessPolicyIndex.of` must reject every other row before runtime.
 
-- atomic ISSUED->CONSUMED success count <=1；
-- Guard/operation/effect for that capability <=1；
-- losing consume = stable `CAPABILITY_ALREADY_CONSUMED` DENY；
-- losing operation/effect=0；
-- later sequential reuse same denial。
+## 4. Real READ seam
 
-## 10. Denial determinism seam
+Use a controlled production operation adapter with one concrete runtime object/path/value. Obtain invocation through real production composition/Bridge. For allowed READ assert:
 
-Repeat equal immutable-context failure and compare code/System/optional RuleView/READ-or-WRITE/ModelPath/policy SourceRef；no sensitive actual value。
+- exact target/path passed to operation adapter;
+- adapter read called exactly once;
+- returned `ProtectedReadValue` contains exact object/path/value snapshot;
+- write adapter/mutation count = 0;
+- `ProtectedAccessResult` is ALLOW+READ with readValue only.
 
-## 11. Bare-name compatibility seam
+For denied READ assert operation adapter is never called and result contains denial only.
 
-P2 new canonical public resolver must not expose bare-name lookup。If historical compatibility path exists, verify read-only/no Registry or Policy mutation/no protected WRITE and ambiguous same-name reject。
+## 5. Real WRITE seam
 
-## 12. TDD validity
+Use a controlled runtime execution state that resolves one concrete `RuntimeWriteIntentId` and one target/path mutation. Caller does not provide a callback/operation port.
 
-Bootstrap command may use `-am`; target RED command must not use `-am` and must set `-Dsurefire.failIfNoSpecifiedTests=true`。Missing class/symbol/setup/compile before intended assertion = `INVALID_RED`。
+Allowed WRITE:
+- exact capability-bound target/path/writeIntent reaches operation adapter once;
+- mutation occurs exactly once;
+- result is ALLOW+WRITE with one `ProtectedWriteReceipt` and no readValue.
 
-## 13. Gate
+Denied/consumed/stale WRITE:
+- operation adapter call=0;
+- mutation=0;
+- receipt absent.
 
-No skeleton/tests are executed by this Design artifact。Exact Testability/ApiContract/Architecture/Concurrency Review and machine risk scan remain blocking。
+## 6. Neutral dependency direction seam
+
+Static/build dependency test asserts:
+
+```text
+P3/P4/P6 core -> dec-core-context ProtectedAccessPort : allowed
+P3/P4/P6 core -> dec-core-starter                  : forbidden
+```
+
+Starter may depend on context and implement `ProtectedAccessPort`. Demo/application may depend on starter composition.
+
+## 7. AC-007 Option B seam
+
+Production E2E must obtain Rule/Change/CustomAction entries via `ProtectedAccessRuntimeFactory -> ProtectedAccessComposition`, verify same Bridge/Context, then run allow/deny through each. Manual `new Entry(testBridge)` is not production reachability Evidence.
+
+## 8. Capability concurrency seam
+
+Use latch/barrier, not sleep. Two threads race the same real capability. Atomic consume winner <=1; actual protected operation <=1; WRITE mutation <=1; loser stable `CAPABILITY_ALREADY_CONSUMED` and no result/effect.
+
+## 9. Runtime proof seam
+
+For runtime-required rules, exact RuntimeBindingPlan is passed to proof verifier. Proof may validate membership/staleness only; cannot switch rule/TargetKey/ModelPath/READ-WRITE operation.
+
+## 10. Formal RED
+
+```bash
+./mvnw -pl <EXACT-MODULE> -am -Dmaven.test.skip=true install
+./mvnw -pl <EXACT-MODULE> -Dtest=<EXACT-TESTCLASS> -Dsurefire.failIfNoSpecifiedTests=true test
+```
+
+Second command MUST NOT use `-am`; missing class/symbol/setup/compile failure before intended assertion = `INVALID_RED`.

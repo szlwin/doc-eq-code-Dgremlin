@@ -1,235 +1,148 @@
 # COMPILER 业务模型
 
-> Revision：`BM-R16`。Base：`BM-R15`。  
-> Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809-R04` + ACTIVE `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` + ACTIVE `DEC-P2-AC007-STAGE-BOUNDARY-001:OPTION_B` + ACTIVE `DEC-P2-ACCESS-OPERATIONS-001:READ_WRITE_ONLY`。  
-> Business Flow：`FLOW-R06@p2-system-ruleview-protected-access`。  
+> Revision：`BM-R17`。Base：`BM-R16`。  
+> Authoritative Inputs：`REQAN-P2-R01@d08612768131` + `REQAN-P2-R01+DEC-OVERLAY-20260809-R04` + ACTIVE `DEC-P2-DIRECT-BRIDGE-AUTHORITY-001` + ACTIVE `DEC-P2-AC007-STAGE-BOUNDARY-001:OPTION_B` + ACTIVE `DEC-P2-ACCESS-OPERATIONS-001:READ_WRITE_ONLY`。  
 > Status：`NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。
 
-## 0. Canonical artifact authority
+## 0. Canonical artifact authority / revision direction
 
-`COMPILER_business_model.md` 与 `COMPILER_business_model.yaml` 构成同一 **BM-R16 canonical pair**：
+`COMPILER_business_model.yaml` 是 BM machine-readable canonical authority；本 `.md` 是同 revision 的 normative human-readable mirror。两者 revision、inputs、identity、invariant、truth-table 语义不一致时，整个 BM-R17 candidate 无效。
 
-- `.yaml`：machine-readable canonical facts / IDs / invariants / relations；
-- `.md`：同一事实的 normative human-readable contract 与解释；
-- 两者 revision、inputs、term/invariant semantics 必须一致；semantic mismatch 使整个 BM-R16 candidate 无效并阻断 Review；
-- 不允许 Reviewer/DevelopAgent 在二者冲突时自行选择更宽语义。
+BM 的 authoritative inputs **不包含 Business Flow / Design / Test Design**。下游 revision 只能按如下方向形成：
+
+```text
+REQAN-P2-R01 + Overlay R04 + active Decisions
+  -> BM-R17
+  -> FLOW-R07
+  -> DESIGN-P2-R19
+  -> TESTDESIGN-P2-R20
+```
+
+Flow/Design/TestDesign 可以回指 BM 作为 trace，但不能反向成为 BM input。
 
 ## 1. P2 业务目标
 
-P2 形成：
+P2 形成：first-class System；System-scoped RuleView/Rule；统一 exact ModelPath；**READ/WRITE 且仅 READ/WRITE**；compiler-published immutable `ModelAccessPolicyIndex`；AC-007 Option B 三类 production representative consumer；capability-bound real READ/WRITE operation；System/RuleView/policy/ownership/version/digest atomic publication。
 
-1. first-class System identity/version/source + derived immutable ownership snapshot；
-2. `RuleViewKey=(SystemKey,name)` + exact resolved View + exact compiled Rule closure；
-3. rule/change/query-contract/model-access 共用 canonical exact `ModelPath`；
-4. **READ / WRITE 两种且仅两种**独立授权 operation；
-5. compiler-published immutable `ModelAccessPolicyIndex` 作为唯一 runtime authorization authority；
-6. P2 production representative Rule/change/custom-action consumers 通过同一 production composition 与 Bridge/Gateway/Guard seam；
-7. System/RuleView/policy/ownership/version/digest 同一 atomic publication closure。
+## 2. System / RuleView / Rule
 
-## 2. System / version / ownership
+`CompiledSystem` required facts：SystemKey、SourceRef、SystemVersionIdentity、owned Data/View/RuleView/Rule/Information/ModelAccessRule keys。Ownership 只是由 authoritative stores 派生的 immutable projection，不是另一份 registry/permission authority。
 
-`CompiledSystem` required facts：
+`SystemVersionIdentity = optional declaredVersion + sourceSemanticDigest + schemaVersion + compilerVersion`；schema/compiler 与 enclosing `CompiledModelSet` 相等。
 
-```text
-SystemKey
-SourceRef
-SystemVersionIdentity
-ownedDataKeys
-ownedViewKeys
-ownedRuleViewKeys
-ownedRuleKeys
-ownedInformationKeys
-ownedModelAccessRuleKeys
-```
+`RuleViewKey=(SystemKey,localName)`；`CompiledRuleView = key + resolvedViewKey + ordered immutable resolvedRuleKeys + SourceRef`。
 
-`SystemVersionIdentity`：optional declaredVersion + mandatory sourceSemanticDigest + exact schemaVersion + exact compilerVersion。schema/compiler 必须等于 enclosing `CompiledModelSet`；options identity 仍由 compiled-set/digest closure 承担。
+`RuleKey=(ownerRuleViewKey,localRuleName)`；authoritative store 是 owning `CompiledRuleView` 的 immutable compiled rule closure；不新建 duplicate global Rule registry。
 
-Ownership snapshot 只是 derived immutable read index，不是 authority。truth source：
+## 3. TargetKey — P1 sourceModel 到 P2 target 的唯一映射
 
-| snapshot | authoritative source |
-|---|---|
-| Data | final owner-qualified typed Data registry |
-| View | final owner-qualified typed View registry |
-| RuleView | final owner-qualified typed RuleView registry |
-| Information | final owner-qualified typed Information registry |
-| Rule | final `CompiledRuleView` compiled rule closure |
-| ModelAccessRule | final `ModelAccessPolicyIndex.keys()` / compiled policy rules filtered by System |
-
-Snapshot 与 authority 必须双向 exact-coherent，参与 semantic digest，runtime 不重建，也不能反向覆盖 authority。
-
-## 3. RuleView / Rule canonical identity
-
-`RuleViewKey=(SystemKey, localName)`；existing constructor/accessors 保持 source-compatible。
-
-`CompiledRuleView`：
+P2 冻结 target identity：
 
 ```text
-RuleViewKey
-resolvedViewKey
-ordered immutable resolvedRuleKeys
-SourceRef
+TargetKey = (SystemKey ownerSystemKey, canonicalSourceModelName)
 ```
 
-### RuleKey
+业务规则：
 
-P2 冻结 Rule 的 canonical identity：
+- P1/model-access `sourceModel` 必须先在 owner System 的 canonical compiled target namespace 中 exact resolve；
+- unknown、ambiguous、cross-System resolution 均为 stable compile ERROR；
+- resolve 成功后只生成一个 value-equal `TargetKey`；禁止大小写/fuzzy/parent fallback；
+- `sourcePath` **不参与 TargetKey identity**，它只进入共享 `ModelPathCompiler`；
+- 因此 source binding 必须按两个正交维度转换：`sourceModel -> TargetKey`，`sourcePath -> ModelPath`；
+- TargetKey/ModelPath 转换完成后，P1 source strings 不再作为 runtime authority。
 
-```text
-RuleKey = (ownerRuleViewKey, localRuleName)
-```
+Dynamic binding 中，`targetView + selector + resolved TargetKey + ModelPath` 编译为唯一 `RuntimeBindingPlan`；runtime plan 不能重新选择另一个 TargetKey/ModelPath/rule/op。
 
-业务不变量：
+## 4. ModelPath / READ-WRITE migration
 
-- `ownerRuleViewKey` non-null；`localRuleName` nonblank、使用 source 中 exact canonical local name，不做大小写/fuzzy fallback；
-- value equality/hash/order identity 同时包含 owner RuleView + local name；
-- 每个 `CompiledRuleView.resolvedRuleKeys` 内 RuleKey unique；
-- `key.ownerRuleViewKey == compiledRuleView.key`；
-- authoritative store 是该 `CompiledRuleView` 的 immutable compiled/nested rule closure；**P2 不为了 ownership 新建 duplicate global Rule registry**；
-- System `ownedRuleKeys` 由所有 owner-compatible `CompiledRuleView` closure 派生。
+`SharedModelPath exact -> shared ModelPathCompiler -> exact ModelPath`；合法 source `*` 在 target schema 已解析后 finite/sorted expansion，wildcard 不进入 compiled rule/PolicyIndex/Bridge/Guard。
 
-Unknown/duplicate/wrong-owner Rule 或 View 在 publication 前产生 stable source-aware ERROR。
+RULE / CHANGE / QUERY_CONTRACT / MODEL_ACCESS 对 equal System/TargetKey/raw path 产出 value-equal ModelPath。
 
-## 4. ModelPath / P1 migration
+`AccessOperation = READ | WRITE`，没有 EXECUTE。`AccessMode.READ/WRITE` 仅单向映射到 P2 READ/WRITE；转换后 PolicyIndex/Bridge/Guard 不读取 P1 AccessMode 作为 authority。
 
-P2 canonical/runtime path identity 只有 exact `ModelPath`。P1 `SharedModelPath` 仅 source/compatibility input。
+READ 与 WRITE 相互不蕴含；未声明默认 DENY。
 
-```text
-SharedModelPath exact
- -> shared ModelPathCompiler
- -> exact ModelPath
-
-SharedModelPath("*") where source allows
- -> exact target schema
- -> deterministic finite sorted expansion
- -> each child through same ModelPathCompiler
- -> exact ModelPath facts
-```
-
-Post-condition：wildcard 不进入 `CompiledModelAccessRule` / PolicyIndex / Bridge / Guard。
-
-RULE / CHANGE / QUERY_CONTRACT / MODEL_ACCESS 对 equal System/target/raw path 产出 value-equal ModelPath；consumer kind 只能影响 provenance/diagnostic。
-
-## 5. AccessOperation — READ/WRITE only
-
-用户 Decision `DEC-P2-ACCESS-OPERATIONS-001` 冻结：
-
-```text
-AccessOperation = READ | WRITE
-```
-
-没有 EXECUTE。Current P2 不定义 EXECUTE source syntax、raw fact、enum value、policy rule、runtime operation 或 test acceptance。
-
-P1 conversion：
-
-```text
-AccessMode.READ  -> AccessOperation.READ
-AccessMode.WRITE -> AccessOperation.WRITE
-```
-
-转换后 runtime PolicyIndex/Bridge/Guard 不再读取 P1 `AccessMode` 作为 authority。
-
-READ 与 WRITE 相互独立：READ-only 不允许 WRITE；WRITE-only 不允许 READ；未声明默认 DENY。
-
-## 6. ModelAccess rule / authority
+## 5. ModelAccess identity / policy classification truth table
 
 ```text
 ModelAccessRuleKey = SystemKey + TargetKey + ModelPath + AccessOperation(READ|WRITE)
 ```
 
-`CompiledModelAccessRule` immutable facts 至少包括 exact key、SourceRef、policy status、runtime requirement/plan（如果需要动态 proof）。
+唯一 runtime authorization authority 是 immutable `ModelAccessPolicyIndex`。
 
-唯一授权 authority：compiler-published immutable `ModelAccessPolicyIndex`。`CompiledSystem.ownedModelAccessRuleKeys` 只是它的 projection，不能成为第二 permission map。
+P2 只允许以下 policy classification：
 
-Direct Bridge user Decision 继续 ACTIVE：caller 可选择 current PolicyIndex 中 exact rule key/op；consumer provenance 不进入 authorization key。Policy miss/op mismatch/proof failure/target mismatch 都 fail closed。
+| PolicyStatus | RuntimeAccessRequirement | RuntimeBindingPlan | valid |
+|---|---|---|---|
+| `STATIC_ALLOW` | `NONE` | absent | YES |
+| `STATIC_ALLOW` | `EXACT_RUNTIME_BINDING` | present/absent | NO |
+| `RUNTIME_GUARD_REQUIRED` | `EXACT_RUNTIME_BINDING` | present | YES |
+| `RUNTIME_GUARD_REQUIRED` | `NONE` | present/absent | NO |
 
-## 7. AC-007 Option B production consumers
+null/unknown status、requirement、plan mismatch 均为 compile/publication ERROR；PolicyIndex construction 必须在 collapse/publish 前验证，runtime 不容错猜测或重分类。
 
-用户已确认 Option B。P2 必须有真实 main-source representative consumers：
+`RuntimeBindingPlan` 的 exact facts 至少绑定：resolved TargetKey、canonical ModelPath、targetView、selector plan identity、SourceRef；它只能证明当前 runtime object/member 与已选 rule 的绑定，不能扩大授权。
 
-```text
-RULE          RuleProtectedAccessEntry
-CHANGE        ChangeProtectedAccessEntry
-CUSTOM_ACTION CustomActionProtectedAccessEntry
-```
+## 6. Real protected READ / WRITE semantics
 
-三者不能只在 Test 中手工拼装，必须由 `dec-core-starter` normal production composition 获取：
-
-```text
-starter production composition root
- -> ProtectedAccessRuntimeFactory (starter-owned lifecycle)
- -> bind current immutable EngineContext
- -> ProtectedAccessComposition
-      ├─ bridge()
-      ├─ ruleEntry()
-      ├─ changeEntry()
-      └─ customActionEntry()
-          all bound to the SAME Bridge + SAME EngineContext authority snapshot
-```
-
-Business caller 可以使用 composition 暴露的 Bridge/entries，但不能获得 Gateway、Guard、target resolver、raw operation port、PolicyIndex mutation、issued-pair/capability mint。
-
-三类 entry 的 consumer category 只作 provenance。相同 Context + exact invocation + runtime target facts 必须得到相同 authorization classification。
-
-P3/P4/P6 完整 engine 仍 downstream；未来 executor 必须复用该 authority seam。
-
-## 8. Runtime invocation / one-shot capability
+P2 的 protected operation 不是 `effectCount` 抽象，也不是 caller 提供 callback。
 
 ```text
-entry or direct Bridge
- -> internal issued invocation
- -> exact target resolver
- -> starter-internal one-shot capability(target + READ/WRITE + invocation identity)
+entry/direct caller
+ -> neutral ProtectedAccessPort
+ -> starter Bridge
+ -> target/operation resolution
+ -> one-shot capability(actual TargetKey/object + ModelPath + READ|WRITE + invocation)
+ -> atomic consume
  -> Gateway
- -> Guard exact current PolicyIndex lookup/proof
- -> bound operation OR deterministic DENY
+ -> Guard
+ -> internal ProtectedOperationExecutionPort
 ```
 
-Capability 不是 public API authority；caller 不能创建或 retarget。
+READ：Guard ALLOW 后读取 capability-bound actual target/path 的当前 runtime value，返回 immutable read value snapshot；**READ 不产生 mutation**。
 
-### Atomic one-shot concurrency
+WRITE：Guard ALLOW 后执行 capability-bound、由 current frame/owner runtime execution state 解析出的 exact write intent；成功只产生一次 mutation，并返回 immutable write receipt。Business caller 不能向 Bridge 注入 raw write callback/operation port，也不能在 Guard 后替换 target/path/write intent。
 
-Capability 采用并发可达、**atomic consume** 语义，而不是依赖 thread confinement：
+所有 DENY（policy miss、proof stale、target mismatch、operation mismatch、Guard unavailable、capability consumed）发生在 operation port/effect 前；READ result absent、WRITE receipt absent、mutation=0。
+
+## 7. Neutral downstream seam / module direction
+
+为避免 P3/P4/P6 core module 反向依赖 `dec-core-starter`：
+
+- `dec-core-context` 拥有 neutral immutable keys/IDs、`ProtectedAccessInvocation`、`ProtectedAccessResult`、`ProtectedAccessPort`；
+- `dec-core-starter` 的 `ProtectedExecutionBridge` 实现 `ProtectedAccessPort`，并独占 target resolver、capability、Gateway、Guard、operation execution adapter、production assembly；
+- P2 Option B 的 Rule/Change/CustomAction representative Entry 仍由 starter `ProtectedAccessComposition` 获取；
+- future P3/P4/P6 完整 engine 只依赖 neutral `ProtectedAccessPort` contract，由 application/starter composition 注入实现；**禁止 core -> starter dependency**。
+
+Neutral port 不是第二 authority：它只把 invocation 送入 starter implementation，permission truth 仍唯一来自当前 EngineContext 的 PolicyIndex。
+
+## 8. AC-007 Option B production composition
+
+`ProtectedAccessRuntimeFactory.bind(current EngineContext) -> ProtectedAccessComposition`；composition 暴露 same Bridge + Rule/Change/CustomAction entries，三者共享同一 Bridge/Context authority snapshot。Manual `new Entry(testBridge)` 可做 unit test，但不是 AC-007 production reachability Evidence。
+
+Business caller 不获得 Gateway、Guard、resolver、raw operation port、mutable PolicyIndex、issued-pair/capability mint。
+
+## 9. One-shot concurrency
+
+Capability 并发可达，采用 atomic `ISSUED -> CONSUMED`。同一个 capability 竞争消费时成功数 <=1，实际 protected operation/effect <=1；loser stable `CAPABILITY_ALREADY_CONSUMED`，operation=0/effect=0。禁止非原子 check-then-set。
+
+## 10. Digest / publication / diagnostics
 
 ```text
-ISSUED --atomic compare-and-set--> CONSUMED
-```
-
-同一个 capability 即使被两个线程同时送达 Gateway，也最多一个 consume 成功；loser 稳定 `CAPABILITY_ALREADY_CONSUMED` DENY，operation/effect=0。成功方 operation/effect 最多一次。顺序 reuse 同样 DENY。
-
-## 9. Bare-name compatibility boundary
-
-P2 **不新增** bare-name RuleView adapter/API。Canonical production lookup 只有 `(SystemKey,name)`。
-
-如果历史代码仍存在 pre-P2 bare-name read compatibility，它只能是既有 read-only boundary：
-
-- 不向新 Registry 注册；
-- 不修改 PolicyIndex；
-- 不进行 protected WRITE；
-- 同名跨 System ambiguous 时 deterministic reject；
-- 不能被新 P2 production code 当作 fallback。
-
-## 10. Digest / atomic publication
-
-```text
-typed registries
- -> CompiledRuleViews + RuleKey closure
- -> P1 compatibility conversion
- -> exact ModelPaths + READ/WRITE operations
- -> exact CompiledModelAccessRules
- -> PolicyIndex
- -> derived System ownership + SystemVersionIdentity
- -> SemanticDigestInput(same facts)
+typed registries + RuleView rule closure
+ -> sourceModel->TargetKey + SharedModelPath->ModelPath + READ/WRITE conversion
+ -> exact policy classification truth-table validation
+ -> CompiledModelAccessRules + PolicyIndex
+ -> System ownership/version
+ -> SemanticDigestInput
  -> digest
  -> CompiledModelSet.published
  -> EngineContext
 ```
 
-任何 ERROR：candidate publication=0，旧 Context 不变。
+任何 ERROR：candidate publication=0，old Context unchanged。Compile ERROR/runtime DENY deterministic、source-aware、non-sensitive。
 
-## 11. Diagnostic / denial
+## 11. Gate
 
-Compile ERROR 与 runtime DENY deterministic/source-aware。Runtime denial 至少稳定携带 code/System/optional RuleView/READ-or-WRITE/canonical ModelPath/policy SourceRef；禁止敏感 actual value/object dump。
-
-## 12. Gate
-
-BM-R16 = `NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。Requirement R04、FLOW-R06、Impact/CrossModule、risk detection 与 independent exact Reviews 未闭环；不得进入 Implementation Plan/TDD/Development。
+BM-R17 = `NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。FLOW-R07、Design R19、TestDesign R20 为下游 candidates；risk/lifecycle/exact independent Reviews 尚未闭环。Implementation Plan/TDD/Development remain BLOCKED。

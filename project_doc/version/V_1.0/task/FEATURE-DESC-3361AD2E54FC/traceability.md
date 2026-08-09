@@ -1,85 +1,31 @@
-# FEATURE-DESC-3361AD2E54FC 需求—模型—Flow—设计—测试追踪矩阵
+# FEATURE-DESC-3361AD2E54FC Traceability
 
-> Current candidate：`REQAN-P2-R01 + DEC-OVERLAY-R04 / BM-R16 / FLOW-R06 / DESIGN-P2-R18 / TESTDESIGN-P2-R19`。  
-> 所有条目保持 `PENDING`；无 current exact Review / verification Evidence。
+> Current candidate chain：`REQAN-P2-R01@d08612768131` + Overlay `R04` -> `BM-R17` -> `FLOW-R07` -> `DESIGN-P2-R19` -> `TESTDESIGN-P2-R20`。  
+> Status：`PENDING / MACHINE_BLOCKED`。  
+> Rule：refs below are candidate trace only; no row is COVERED/PASSED until same-revision Review + execution Evidence exists.
 
-```json traceability
-[
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-001","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-001"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-001","requirement_decision_overlay_20260809_r04.md"],
-    "business_model_refs":["COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM","COMPILER_business_model.yaml#INV-COMPILER-016B"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-system"],
-    "test_case_ids":["CASE-P2-TD-SYSTEM-DETERMINISM-001","CASE-P2-TD-SYSTEM-DUPLICATE-001","CASE-P2-TD-SYSTEM-FORWARD-REF-001","CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001","CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001","CASE-P2-TD-BM-CANONICAL-PAIR-001"],"verification_evidence_ids":[]
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-002","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-002"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-002"],"business_model_refs":["COMPILER_business_model.yaml#ENT-COMPILED-RULEVIEW","COMPILER_business_model.yaml#VO-RULE-KEY"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-ruleview","COMPILER_design.md#p2-rule-key"],
-    "test_case_ids":["CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001","CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001","CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001","CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001","CASE-P2-TD-RULEKEY-CONTRACT-001"],"verification_evidence_ids":[]
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-003","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-003"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-003"],"business_model_refs":["COMPILER_business_model.yaml#VO-RULEVIEW-KEY"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-ruleview-resolver","COMPILER_api_contract.md#7-ruleviewresolver"],
-    "test_case_ids":["CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001","CASE-P2-TD-KEY-SOURCE-COMPAT-001","CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001"],"verification_evidence_ids":[]
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-004","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-004"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-004","requirement_decision_overlay_20260809_r04.md#1-accessoperation-scope--read--write-only","decision_log.md#DEC-P2-ACCESS-OPERATIONS-001"],
-    "business_model_refs":["COMPILER_business_model.yaml#VO-ACCESS-OPERATION","COMPILER_business_model.yaml#INV-COMPILER-018A"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06","FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R06"],
-    "design_refs":["COMPILER_design.md#p2-model-access","COMPILER_design.md#p2-p1-migration"],
-    "test_case_ids":["CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001","CASE-P2-TD-NO-EXECUTE-CONTRACT-001","CASE-P2-TD-STATIC-DENY-001","CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001"],"verification_evidence_ids":[],
-    "notes":"Current user-authorized candidate has READ/WRITE only; historical R01 EXECUTE portion is N/A via DEC-P2-ACCESS-OPERATIONS-001."
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-005","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-005"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-005"],"business_model_refs":["COMPILER_business_model.yaml#INV-COMPILER-018","COMPILER_business_model.yaml#INV-COMPILER-023"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-model-path","COMPILER_design.md#p2-p1-migration"],
-    "test_case_ids":["CASE-P2-TD-MODEL-PATH-UNKNOWN-001","CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001","CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001","CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001"],"verification_evidence_ids":[]
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-006","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-006"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-006"],"business_model_refs":["COMPILER_business_model.yaml#VO-MODEL-ACCESS-RULE"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06","FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-runtime-guard"],
-    "test_case_ids":["CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001","CASE-P2-TD-RUNTIME-BINDING-PROOF-001","CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001","CASE-P2-SOURCE-TO-READ-WRITE-OPERATION-001-R19"],"verification_evidence_ids":[]
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-007","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-007"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-007","requirement_decision_overlay_20260809_r04.md#3-ac-007--option-b-active","decision_log.md#DEC-P2-AC007-STAGE-BOUNDARY-001"],
-    "business_model_refs":["COMPILER_business_model.yaml#ENT-PROTECTED-ACCESS-COMPOSITION","COMPILER_business_model.yaml#INV-COMPILER-020"],
-    "business_flow_refs":["FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R06"],
-    "design_refs":["COMPILER_design.md#p2-production-composition","COMPILER_design.md#p2-ac007-consumers","COMPILER_design.md#p2-concurrency"],
-    "test_case_ids":["CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001","CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001","CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001","CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001","CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001","CASE-P2-TD-AC007-CONSUMER-PARITY-001","CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001","CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001","CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001"],
-    "verification_evidence_ids":[],"notes":"Option B is user-ACTIVE; production composition acquisition is required, seam-only/manual wrapper evidence is insufficient."
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-008","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-008"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-008"],"business_model_refs":["COMPILER_business_model.yaml#INV-COMPILER-019"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-context","COMPILER_architecture.md#2-compilepublication-topology"],
-    "test_case_ids":["CASE-P2-TD-ATOMIC-PUBLICATION-001","CASE-P2-TD-CONTEXT-ISOLATION-001","CASE-P2-TD-POLICY-INDEX-PUBLICATION-001"],"verification_evidence_ids":[]
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-009","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-009"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-009"],"business_model_refs":["COMPILER_business_model.yaml#INV-COMPILER-021"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06","FLOW-PROTECTED-ACCESS-EXECUTE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-runtime-denial"],
-    "test_case_ids":["CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001","CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001"],"verification_evidence_ids":[]
-  },
-  {
-    "id":"TR-P2-SYSTEM-RULEVIEW-010","status":"PENDING","acceptance_criteria":["AC-P2-SYSTEM-RULEVIEW-010"],
-    "requirement_refs":["requirement.md#AC-P2-SYSTEM-RULEVIEW-010"],"business_model_refs":["COMPILER_business_model.yaml#bareNameCompatibility"],
-    "business_flow_refs":["FLOW-CONFIG-COMPILE@FLOW-R06"],"design_refs":["COMPILER_design.md#p2-compatibility"],
-    "test_case_ids":["CASE-P2-TD-DECLARATION-BOUNDARY-001","CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001"],"verification_evidence_ids":[]
-  }
-]
-```
+| Trace | Requirement / AC | BM / Flow | Design refs | Current TestDesign case IDs | Status |
+|---|---|---|---|---|---|
+| TR-P2-001 | AC-001 System deterministic/first-class | BM-R17 System; FLOW-CONFIG-COMPILE | `#p2-system`, `#p2-context` | CASE-P2-TD-SYSTEM-DETERMINISM-001; SYSTEM-DUPLICATE; SYSTEM-FORWARD-REF; SYSTEM-OWNERSHIP-SNAPSHOT; SYSTEM-VERSION-IDENTITY; BM-CANONICAL-PAIR | PENDING |
+| TR-P2-002 | AC-002 RuleView System scope / duplicates | BM-R17 RuleView/Rule; FLOW-CONFIG-COMPILE | `#p2-system` | RULEVIEW-SYSTEM-REQUIRED; RULEVIEW-SAME-SYSTEM-DUPLICATE; RULEVIEW-CROSS-SYSTEM-ISOLATION; RULEVIEW-VIEW-RESOLUTION; RULEKEY-CONTRACT | PENDING |
+| TR-P2-003 | AC-003 composite lookup / compatibility | BM-R17 RuleView; FLOW-CONFIG-COMPILE | API RuleView/compatibility sections | RULEVIEW-COMPOSITE-LOOKUP; KEY-SOURCE-COMPAT; BARE-NAME-COMPATIBILITY-BOUNDARY | PENDING |
+| TR-P2-004 | AC-004 READ/WRITE independent authorization | BM-R17 ModelAccess; both flows | `#p2-model-access`, `#p2-operation-binding` | ACCESS-READ-WRITE-MATRIX; NO-EXECUTE-CONTRACT; STATIC-DENY; REAL-READ-OPERATION; REAL-WRITE-OPERATION | PENDING |
+| TR-P2-005 | AC-005 one canonical path/target semantics | BM-R17 TargetKey/ModelPath; FLOW-CONFIG-COMPILE | `#p2-target-key`, `#p2-model-path` | TARGETKEY-SOURCE-MAPPING; TARGET-PATH-ORTHOGONALITY; MODEL-PATH-UNKNOWN; WILDCARD-FINITE-EXPANSION; MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE; P1-PATH-OPERATION-MIGRATION | PENDING |
+| TR-P2-006 | AC-006 dynamic access narrows static authority | BM-R17 policy classification/runtime plan; both flows | `#p2-policy-classification`, `#p2-runtime-denial` | POLICY-CLASSIFICATION-TRUTH-TABLE; RUNTIME-PLAN-EXACT-BINDING; DYNAMIC-CLASSIFIER-REAL; RUNTIME-BINDING-PROOF; RUNTIME-PLAN-MISMATCH; SOURCE-TO-READ-WRITE-OPERATION-R20 | PENDING / CANDIDATE_COVERED_NOT_VERIFIED |
+| TR-P2-007 | AC-007 Option B real Rule/change/custom-action entries no bypass | BM-R17 neutral seam + Option B; FLOW-PROTECTED-ACCESS-EXECUTE | `#p2-neutral-runtime-port`, `#p2-production-composition`, `#p2-operation-binding` | PRODUCTION-SEAM-NO-LEGAL-BYPASS; AC007-PRODUCTION-COMPOSITION; AC007-RULE-CONSUMER-INTEGRATION; AC007-CHANGE-CONSUMER-INTEGRATION; AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION; AC007-CONSUMER-PARITY; AC007-REPRESENTATIVE-CONSUMER-STRUCTURE; AC007-REAL-PRODUCTION-REACHABILITY; DOWNSTREAM-DEPENDENCY-DIRECTION | PENDING |
+| TR-P2-008 | AC-008 atomic publication / context isolation | BM-R17 publication; FLOW-CONFIG-COMPILE | `#p2-context` | ATOMIC-PUBLICATION; CONTEXT-ISOLATION; POLICY-INDEX-PUBLICATION | PENDING |
+| TR-P2-009 | AC-009 deterministic compile/runtime diagnostics | BM-R17 diagnostics; both flows | `#p2-runtime-denial` | DIAGNOSTIC-DETERMINISM; RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM; REAL-READ-OPERATION deny branch; REAL-WRITE-OPERATION deny branch | PENDING |
+| TR-P2-010 | AC-010 declaration/migration boundary | BM-R17 migration; FLOW-CONFIG-COMPILE | compatibility/publication sections | DECLARATION-BOUNDARY; P1-PATH-OPERATION-MIGRATION | PENDING |
+| TR-P2-REV-DAG | common-develop exact revision dependency integrity | BM-R17 revision direction; FLOW-R07 metadata | `#p2-revision-dag` | CASE-P2-TD-REVISION-DAG-001 | PENDING |
 
-## Gate
+## Current additional implementation-readiness traces
 
-- Overlay R04：NEEDS_REQUIREMENT_REVIEW / MACHINE_BLOCKED。
-- BM-R16：NEEDS_EXACT_REVIEW。
-- FLOW-R06：NEEDS BusinessFlow/Impact/CrossModule Review。
-- DESIGN-P2-R18：NEEDS specialist Reviews/risk scan。
-- TESTDESIGN-P2-R19：BLOCKED_BY_DESIGN + MACHINE_BLOCKED。
-- 所有 verification_evidence_ids 为空；不得标记 COVERED/PASSED。
+- Target identity：`sourceModel -> TargetKey(SystemKey,canonicalSourceModelName)` and independently `sourcePath -> ModelPath`.
+- Policy truth table：only STATIC_ALLOW/NONE/no-plan and RUNTIME_GUARD_REQUIRED/EXACT_RUNTIME_BINDING/plan are legal.
+- Operation closure：READ returns `ProtectedReadValue`; WRITE returns `ProtectedWriteReceipt`; every DENY occurs before operation port/effect.
+- Dependency direction：future P3/P4/P6 core depend on neutral `dec-core-context ProtectedAccessPort`, never `dec-core-starter`.
+- One-shot：same capability uses atomic consume; at most one protected operation/mutation.
+
+## Evidence
+
+Current verification Evidence IDs：none. `risk_detection.json` remains NOT_SCANNED and machine task revisions remain historical; therefore all rows stay PENDING.

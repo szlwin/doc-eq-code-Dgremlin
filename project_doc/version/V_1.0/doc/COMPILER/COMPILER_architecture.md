@@ -1,105 +1,128 @@
 # COMPILER P2 Architecture
 
-> Revision：`DESIGN-P2-R18`  
-> Inputs：`BM-R16 / FLOW-R06@p2-system-ruleview-protected-access / REQAN-P2-R01+DEC-OVERLAY-20260809-R04`  
-> Decisions：Direct Bridge ACTIVE；AC-007 Option B ACTIVE；AccessOperation READ/WRITE-only ACTIVE  
-> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
+> Revision：`DESIGN-P2-R19`。Base：`DESIGN-P2-R18`。  
+> Inputs：Overlay R04 + BM-R17 + FLOW-R07。  
+> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
-## 1. 模块权威边界
-
-- `dec-core-context`：neutral immutable System/RuleView/RuleKey/TargetKey/ModelPath/READ-WRITE AccessOperation/ModelAccessPolicyIndex/CompiledModelSet/EngineContext contracts。
-- `dec-core-compiler`：source conversion、System/RuleView/Rule resolution、shared ModelPath compilation、READ/WRITE rule construction、PolicyIndex construction、ownership derivation、digest-bound candidate freeze。
-- `dec-core-starter`：production composition、three representative AC-007 entries、Bridge、internal invocation/target resolution/capability、Gateway/Guard、operation adapters。
-- `dec-demo`：real cross-module fixture/reachability only；不定义 permission authority。
-- XML/YAML frontends：source/raw facts + SourceRef；P1 AccessMode only READ/WRITE and converts one-way。
-
-## 2. Compile/publication topology
+## 1. Authoritative artifact direction
 
 ```text
-Source/P1 compatibility
- -> typed registries
- -> CompiledRuleView + RuleKey owner-qualified closure
- -> SharedModelPath/AccessMode conversion
- -> exact ModelPath + AccessOperation(READ|WRITE)
- -> exact CompiledModelAccessRule
- -> immutable ModelAccessPolicyIndex
- -> derived CompiledSystem ownership
- -> SystemVersionIdentity(sourceDigest+schema+compiler)
- -> SemanticDigestInput
- -> CompiledModelSet.published
- -> EngineContext
+Requirement/Decisions -> BM-R17 -> FLOW-R07 -> DESIGN-P2-R19 -> TESTDESIGN-P2-R20
 ```
 
-No EXECUTE source/raw/runtime branch exists in current P2。No wildcard runtime authority。
+No downstream artifact is an authoritative input of an upstream artifact. Downstream links inside Flow are trace-only.
 
-## 3. RuleKey/ownership topology
+## 2. Module ownership
+
+### `dec-core-context`
+Neutral, immutable, non-assembly contracts only:
+
+- SystemKey / RuleViewKey / RuleKey
+- TargetKey / ModelPath / AccessOperation
+- PolicyStatus / RuntimeAccessRequirement / RuntimeBindingPlan
+- ModelAccessRuleKey / CompiledModelAccessRule / ModelAccessPolicyIndex
+- ProtectedAccessInvocation / ProtectedAccessResult / ProtectedAccessPort
+- opaque runtime IDs / non-authority value/result contracts
+
+It MUST NOT depend on `dec-core-starter` and MUST NOT construct Gateway/Guard/capability/production composition.
+
+### `dec-core-compiler`
+Owns source parsing/semantic conversion:
 
 ```text
-Typed Data/View/RuleView/Information registries ----\
-CompiledRuleView(owner RuleViewKey) -----------------+-> System ownership projection
-  -> immutable RuleKey(ownerRuleViewKey, localName) -/
-ModelAccessPolicyIndex.keys() -----------------------/
+sourceModel -> exact owner-System TargetKey
+sourcePath  -> shared exact ModelPath
+AccessMode  -> READ/WRITE AccessOperation
+source selector/classification -> legal PolicyStatus + RuntimeAccessRequirement + RuntimeBindingPlan
 ```
 
-No duplicate global Rule registry or second policy map is introduced。
+Compiler rejects unknown/ambiguous/cross-System target mappings and illegal policy truth-table combinations before publication.
 
-## 4. Production composition topology — AC-007 Option B
+### `dec-core-starter`
+Owns runtime authority assembly and enforcement:
+
+- `ProtectedExecutionBridge implements ProtectedAccessPort`
+- production `ProtectedAccessRuntimeFactory/ProtectedAccessComposition`
+- exact target/runtime-state resolver
+- starter-internal `ResolvedProtectedAccess` / one-shot capability
+- atomic capability consume
+- Gateway / Guard
+- protected operation execution adapter
+
+No caller receives capability/Gateway/Guard/resolver/operation port/mutable PolicyIndex authority.
+
+### Future P3/P4/P6 core modules
+Depend only on neutral `dec-core-context ProtectedAccessPort` contract. They MUST NOT declare a dependency on `dec-core-starter`. Application/starter composition injects a starter implementation at the outer assembly boundary.
+
+## 3. Target/path authority split
 
 ```text
-normal starter application/runtime composition root
- -> starter-internal authority collaborators
- -> ProtectedAccessRuntimeFactory
- -> bind(current immutable EngineContext)
- -> ProtectedAccessComposition
-      ├─ SAME ProtectedExecutionBridge
-      ├─ RuleProtectedAccessEntry ---------┐
-      ├─ ChangeProtectedAccessEntry -------+-> SAME Bridge
-      └─ CustomActionProtectedAccessEntry -┘
+sourceModel ----------------> TargetKey(SystemKey,canonicalSourceModelName)
+sourcePath --ModelPathCompiler--> ModelPath
 ```
 
-Business caller obtains entries from composition。Gateway/Guard/resolver/raw operation/PolicyIndex mutation/capability mint remain hidden inside starter authority boundary。
+Target lookup and path compilation are independent and must converge into one exact `ModelAccessRuleKey`. Path cannot select/change target and target cannot broaden path.
 
-Direct Bridge remains public because of user Decision, but AC-007 representative consumer production Evidence must use composition acquisition rather than test-only hand construction。
-
-## 5. Runtime authority path
+For runtime-bound access:
 
 ```text
-entry or direct Bridge
- -> internal ProtectedInvocationId
- -> exact target resolution
- -> internal one-shot capability(invocation+target+READ|WRITE)
- -> atomic ISSUED->CONSUMED
+RuleView resolved View + selector + resolved TargetKey + ModelPath
+ -> immutable RuntimeBindingPlan
+```
+
+The plan is proof metadata for the already selected rule; runtime does not use it to choose another rule/target/path/op.
+
+## 4. Policy classification boundary
+
+Exactly two valid representations enter PolicyIndex:
+
+```text
+STATIC_ALLOW             + NONE                  + no RuntimeBindingPlan
+RUNTIME_GUARD_REQUIRED   + EXACT_RUNTIME_BINDING + RuntimeBindingPlan
+```
+
+Every other combination is compiler/publication error. PolicyIndex revalidates; Guard never repairs invalid compiler output.
+
+## 5. Runtime flow / real operation boundary
+
+```text
+Rule/Change/CustomAction Entry or direct neutral port caller
+ -> ProtectedAccessPort
+ -> starter Bridge
+ -> internal invocation + actual target/runtime operation resolution
+ -> one-shot capability
+ -> atomic consume
  -> Gateway
- -> Guard exact current PolicyIndex lookup
- -> optional runtime proof
- -> bound READ/WRITE operation OR deterministic DENY
+ -> Guard exact PolicyIndex lookup/proof
+ -> ProtectedOperationExecutionPort
+      READ  -> immutable ProtectedReadValue, no mutation
+      WRITE -> exactly one resolved mutation + ProtectedWriteReceipt
 ```
 
-STATIC_ALLOW also enters Guard。Runtime proof cannot reselect rule or operation。
+The protected operation adapter is invoked only after ALLOW and cannot be caller-supplied. WRITE intent comes from current frame/owner execution state and is bound into starter-internal resolved access before Guard/operation dispatch.
 
-## 6. Capability concurrency boundary
+All DENY paths terminate before operation port invocation and expose no read result/write receipt.
 
-Capability is concurrency-reachable and therefore uses atomic consume, not implicit thread confinement。
+## 6. AC-007 production composition
+
+`ProtectedAccessRuntimeFactory.bind(EngineContext)` creates one immutable composition with one Bridge and Rule/Change/CustomAction entries bound to it. Manual entry construction is unit-test-only and cannot prove production reachability.
+
+The three P2 representative entries prove Option B categories; future full P3/P4/P6 engines reuse neutral port without moving Gateway/Guard into core modules.
+
+## 7. Concurrency
+
+Capability is intentionally concurrent-reachable. Atomic state transition:
 
 ```text
-Thread A ----\
-              -> atomic consume same capability -> exactly one winner
-Thread B ----/                                -> loser CAPABILITY_ALREADY_CONSUMED
+ISSUED --CAS/equivalent Java-8 atomic primitive--> CONSUMED
 ```
 
-Winner effect <=1；loser effect=0。Different capabilities may execute concurrently without cross-wiring。
+At most one winner can invoke Guard/operation for the capability; loser fail-closes. Different capabilities may execute concurrently without cross-wiring target/frame/owner/path/op.
 
-## 7. Compatibility boundaries
+## 8. Publication / Context isolation
 
-- Existing SystemKey/RuleViewKey/EngineContext/legacy CompiledModelSet APIs remain additive-compatible。
-- P2 canonical RuleView lookup has no bare-name adapter/fallback。
-- Historical bare-name read compatibility, if physically present, remains read-only outside canonical P2 path and ambiguous-name rejects。
-- `dec-expand-declaration` remains retired；surviving declaration compatibility read-only until P7。
+PolicyIndex, RuleView closure, TargetKey/ModelPath facts, ownership/version and semantic digest are frozen as one immutable publication closure. Failed candidate keeps old Context. No global mutable current registry/context/composition.
 
-## 8. Failure boundaries
+## 9. Architecture review blockers
 
-Compile ERROR -> no candidate publication / old Context retained。Runtime policy/proof/target/Guard/capability-consume failure -> DENY before effects。No fallback from P2 canonical facts to broader P1 source facts。
-
-## 9. Gate
-
-Architecture/API/Develop/Impact/CrossModule/Concurrency exact Reviews and risk detection remain blocking。Implementation Plan/TDD/Development remain BLOCKED。
+R19 remains blocked until exact Architecture/API/Develop/Impact/CrossModule/Concurrency Review and current-revision risk detection. P0 build success is not semantic closure Evidence.
