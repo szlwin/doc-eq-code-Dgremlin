@@ -1,155 +1,110 @@
 schemaVersion: 1
 artifact: business_flow_changeset
 module: COMPILER
-revision: FLOW-R05@p2-system-ruleview-protected-access
-baseRevision: FLOW-R04@p2-system-ruleview-protected-access
+revision: FLOW-R06@p2-system-ruleview-protected-access
+baseRevision: FLOW-R05@p2-system-ruleview-protected-access
 inputs:
   - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809-R03
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R04
   - DEC-P2-AC007-STAGE-BOUNDARY-001:ACTIVE_OPTION_B
-  - BM-R15
-  - DESIGN-P2-R17
-  - TESTDESIGN-P2-R18
+  - DEC-P2-ACCESS-OPERATIONS-001:ACTIVE_READ_WRITE_ONLY
+  - BM-R16
+  - DESIGN-P2-R18
+  - TESTDESIGN-P2-R19
 status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
 operations:
   - op: upsert
     flow:
       id: FLOW-CONFIG-COMPILE
-      name: Deterministic System/RuleView/ModelAccess compilation and atomic publication
+      name: Deterministic System RuleView ModelAccess compilation and atomic publication
       kind: COMPILE_PUBLICATION
       acceptanceCriteria:
         - AC-P2-SYSTEM-RULEVIEW-001
         - AC-P2-SYSTEM-RULEVIEW-002
         - AC-P2-SYSTEM-RULEVIEW-003
-        - AC-P2-SYSTEM-RULEVIEW-004
+        - AC-P2-SYSTEM-RULEVIEW-004:READ_WRITE_ONLY
         - AC-P2-SYSTEM-RULEVIEW-005
         - AC-P2-SYSTEM-RULEVIEW-008
         - AC-P2-SYSTEM-RULEVIEW-009:compile
         - AC-P2-SYSTEM-RULEVIEW-010
       steps:
         - id: CMSTEP-P2-COMPILE-01
-          action: discover and canonicalize System sources
+          action: discover and canonicalize System sources and register all SystemKey symbols
         - id: CMSTEP-P2-COMPILE-02
-          action: register all SystemKey symbols before reference resolution
+          action: resolve owner-qualified Data View RuleView Information facts and RuleView resolved View plus RuleKey closure
         - id: CMSTEP-P2-COMPILE-03
-          action: resolve Data/View/RuleView/Information owner-qualified facts and RuleView view/rule refs
+          action: convert P1 SharedModelPath and AccessMode READ WRITE source facts into P2 exact ModelPath and AccessOperation READ WRITE facts
         - id: CMSTEP-P2-COMPILE-04
-          action: convert P1 SharedModelPath/AccessMode source facts into P2 exact ModelPath/AccessOperation facts; finite-expand wildcard before publication
+          action: finite-expand legal source wildcard before policy publication; wildcard never becomes runtime authority
         - id: CMSTEP-P2-COMPILE-05
-          action: construct exact CompiledModelAccessRule set and immutable ModelAccessPolicyIndex
+          action: build exact CompiledModelAccessRule set and immutable ModelAccessPolicyIndex; no EXECUTE rule exists
         - id: CMSTEP-P2-COMPILE-06
-          action: derive immutable CompiledSystem ownership read snapshot from authoritative final facts
+          action: derive immutable CompiledSystem ownership snapshot from typed registries CompiledRuleView RuleKey closure and PolicyIndex keys
         - id: CMSTEP-P2-COMPILE-07
-          action: bind SystemVersionIdentity to declaredVersion/sourceSemanticDigest/schemaVersion/compilerVersion
+          action: bind SystemVersionIdentity declaredVersion sourceSemanticDigest schemaVersion compilerVersion
         - id: CMSTEP-P2-COMPILE-08
-          action: freeze all current facts into one SemanticDigestInput and compute digest
+          action: freeze same facts into SemanticDigestInput and compute digest
         - id: CMSTEP-P2-COMPILE-09
-          action: atomically publish CompiledModelSet/EngineContext or preserve old Context on any ERROR
+          action: atomically publish CompiledModelSet EngineContext or preserve old Context on any ERROR
       failureSemantics:
         - duplicate_or_unknown_owner: stable compile ERROR; publication=0
         - unknown_view_or_rule: stable source-aware ERROR; publication=0
-        - invalid_or_wildcard_runtime_path: stable ERROR; publication=0
+        - rule_key_owner_or_duplicate_error: stable source-aware ERROR; publication=0
+        - invalid_path_or_runtime_wildcard: stable ERROR; publication=0
+        - invalid_operation: anything other than READ or WRITE is outside current P2 contract and cannot become policy fact
         - ownership_coherence_mismatch: stable ERROR; publication=0
-        - policy_construction_error: stable ERROR; publication=0
-      businessModelRefs:
-        - ENT-COMPILED-SYSTEM
-        - ENT-COMPILED-RULEVIEW
-        - INV-COMPILER-016B
-        - INV-COMPILER-018
-        - INV-COMPILER-019
-        - INV-COMPILER-023
-      dependencyImpactRefs:
-        - IMP-P2-SYSTEM-OWNERSHIP
-        - IMP-P2-SHARED-MODEL-PATH
-        - IMP-P2-MODEL-ACCESS-AUTHORIZATION
-        - IMP-P2-ATOMIC-PUBLICATION
-        - IMP-P2-P1-P2-PATH-OPERATION-MIGRATION
-      designRefs:
-        - COMPILER_design.md#p2-system
-        - COMPILER_design.md#p2-ruleview
-        - COMPILER_design.md#p2-model-path
-        - COMPILER_design.md#p2-p1-migration
-        - COMPILER_design.md#p2-context
-      testCaseIds:
-        - CASE-P2-TD-SYSTEM-DETERMINISM-001
-        - CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001
-        - CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001
-        - CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001
-        - CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001
-        - CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001
-        - CASE-P2-TD-ATOMIC-PUBLICATION-001
-        - CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001
+      businessModelRefs: [ENT-COMPILED-SYSTEM, ENT-COMPILED-RULEVIEW, VO-RULE-KEY, VO-MODEL-PATH, VO-ACCESS-OPERATION, INV-COMPILER-019, INV-COMPILER-023]
+      dependencyImpactRefs: [IMP-P2-SYSTEM-OWNERSHIP, IMP-P2-SHARED-MODEL-PATH, IMP-P2-READ-WRITE-AUTHORIZATION, IMP-P2-ATOMIC-PUBLICATION, IMP-P2-P1-P2-PATH-OPERATION-MIGRATION]
+      designRefs: [COMPILER_design.md#p2-system, COMPILER_design.md#p2-ruleview, COMPILER_design.md#p2-rule-key, COMPILER_design.md#p2-model-path, COMPILER_design.md#p2-p1-migration, COMPILER_design.md#p2-context]
+      testCaseIds: [CASE-P2-TD-SYSTEM-DETERMINISM-001, CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001, CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001, CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001, CASE-P2-TD-RULEKEY-CONTRACT-001, CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001, CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001, CASE-P2-TD-ATOMIC-PUBLICATION-001]
   - op: upsert
     flow:
       id: FLOW-PROTECTED-ACCESS-EXECUTE
-      name: Representative production consumers execute protected model access through the single runtime authority path
+      name: Production representative protected access through one runtime authority seam
       kind: RUNTIME_PROTECTED_ACCESS
       acceptanceCriteria:
-        - AC-P2-SYSTEM-RULEVIEW-004:runtime
+        - AC-P2-SYSTEM-RULEVIEW-004:READ_WRITE_RUNTIME
         - AC-P2-SYSTEM-RULEVIEW-006
         - AC-P2-SYSTEM-RULEVIEW-007:OPTION_B_ACTIVE
         - AC-P2-SYSTEM-RULEVIEW-009:runtime
-      entryCategories:
-        - RULE
-        - CHANGE
-        - CUSTOM_ACTION
       steps:
         - id: CMSTEP-P2-ACCESS-00
-          action: one real main-source RuleProtectedAccessEntry, ChangeProtectedAccessEntry or CustomActionProtectedAccessEntry receives an immutable ProtectedAccessInvocation; consumer category is provenance only
+          action: starter production composition root owns ProtectedAccessRuntimeFactory and binds one current immutable EngineContext
         - id: CMSTEP-P2-ACCESS-01
-          action: representative entry forwards exact compiler-published ruleKey/operation and current frame/owner/cursor to its bound public ProtectedExecutionBridge
+          action: factory produces ProtectedAccessComposition exposing one bridge plus Rule Change CustomAction entries all bound to the same bridge and context
         - id: CMSTEP-P2-ACCESS-02
-          action: starter creates internal issued invocation; no public issued-pair/capability mint
+          action: representative entry or direct caller invokes ProtectedExecutionBridge with exact ruleKey READ-or-WRITE and current frame owner cursor
         - id: CMSTEP-P2-ACCESS-03
-          action: resolver binds exact actual target and operation into a one-shot capability
+          action: starter creates internal unique invocation identity and resolves exact actual target
         - id: CMSTEP-P2-ACCESS-04
-          action: ProtectedAccessGateway invokes ModelAccessGuard
+          action: starter mints internal one-shot capability bound to invocation actual target and READ-or-WRITE operation
         - id: CMSTEP-P2-ACCESS-05
-          action: Guard performs exactly one current-context ModelAccessPolicyIndex lookup and required runtime proof
+          action: Gateway atomically consumes capability ISSUED-to-CONSUMED; only the winning consume can continue
         - id: CMSTEP-P2-ACCESS-06
-          action: ALLOW executes only capability-bound target/operation; DENY returns stable provenance before side effects
-      consumerDependencyInvariant:
-        allowedProtectedAuthorityDependency: ProtectedExecutionBridge
-        forbiddenDependencies: [ProtectedAccessGateway, ModelAccessGuard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
-      parityInvariant: same Context plus exact ProtectedAccessInvocation plus same runtime facts produces the same authorization classification across RULE CHANGE CUSTOM_ACTION; consumer category cannot alter policy key or Guard semantics
+          action: Guard performs exact current-context PolicyIndex lookup and required runtime proof
+        - id: CMSTEP-P2-ACCESS-07
+          action: ALLOW executes only capability-bound target operation; DENY including CAPABILITY_ALREADY_CONSUMED occurs before effects
       failureSemantics:
         - policy_not_found: DENY before operation/effects
         - operation_mismatch: DENY before operation/effects
         - runtime_binding_stale: DENY before operation/effects
-        - runtime_plan_mismatch: DENY before operation/effects
         - target_substitution: DENY before operation/effects
         - guard_unavailable: DENY before operation/effects
-      businessModelRefs:
-        - POL-MODEL-ACCESS-AUTHORIZATION
-        - INV-COMPILER-020
-        - INV-COMPILER-020A
-        - INV-COMPILER-020B
-        - INV-COMPILER-020C
-        - INV-COMPILER-021
-      dependencyImpactRefs:
-        - IMP-P2-MODEL-ACCESS-AUTHORIZATION
-        - IMP-P2-PROTECTED-SEAM
-        - IMP-P2-AC007-REPRESENTATIVE-CONSUMERS
-        - IMP-P2-RUNTIME-DENIAL
-      designRefs:
-        - COMPILER_design.md#p2-direct-bridge
-        - COMPILER_design.md#p2-ac007-consumers
-        - COMPILER_design.md#p2-runtime-guard
-        - COMPILER_design.md#p2-operation-binding
-        - COMPILER_design.md#p2-runtime-denial
-      testCaseIds:
-        - CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001
-        - CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001
-        - CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001
-        - CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001
-        - CASE-P2-TD-AC007-CONSUMER-PARITY-001
-        - CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001
-        - CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001
-      notes:
-        - AC-007 Option B is user-decided and ACTIVE; seam-only evidence is insufficient without the three representative production consumers.
-        - P3/P4 full business execution semantics and P6 QueryPlan remain downstream, but their future protected accesses must reuse this authority path.
+        - capability_already_consumed: deterministic DENY; operation=0; effects=0
+      representativeConsumers:
+        acquisition: ProtectedAccessRuntimeFactory -> ProtectedAccessComposition
+        requiredEntries: [RuleProtectedAccessEntry, ChangeProtectedAccessEntry, CustomActionProtectedAccessEntry]
+        sameBridgeRequired: true
+        manualTestConstructionNotClosureEvidence: true
+        forbiddenConsumerAuthorities: [Gateway, Guard, targetResolver, rawOperationPort, mutableOrSecondaryPolicyIndex, issuedPairMint, capabilityMint]
+      businessModelRefs: [POL-MODEL-ACCESS-AUTHORIZATION, ENT-PROTECTED-ACCESS-COMPOSITION, INV-COMPILER-020, INV-COMPILER-020A, INV-COMPILER-021]
+      dependencyImpactRefs: [IMP-P2-READ-WRITE-AUTHORIZATION, IMP-P2-PROTECTED-SEAM, IMP-P2-AC007-REPRESENTATIVE-CONSUMERS, IMP-P2-CAPABILITY-CONCURRENCY, IMP-P2-RUNTIME-DENIAL]
+      designRefs: [COMPILER_design.md#p2-direct-bridge, COMPILER_design.md#p2-production-composition, COMPILER_design.md#p2-ac007-consumers, COMPILER_design.md#p2-operation-binding, COMPILER_design.md#p2-concurrency, COMPILER_design.md#p2-runtime-denial]
+      testCaseIds: [CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001, CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001, CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001, CASE-P2-TD-AC007-CONSUMER-PARITY-001, CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001, CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001, CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001, CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001]
 reviewGate:
-  requirementDecision: SATISFIED_OPTION_B_NEEDS_EXACT_REQUIREMENT_REVIEW
+  requirementDecision: SATISFIED_OPTION_B_AND_READ_WRITE_ONLY
+  requirementReview: REQUIRED
+  businessModelReview: REQUIRED
   businessFlowReview: REQUIRED
   impactReview: REQUIRED
   crossModuleReview: REQUIRED
