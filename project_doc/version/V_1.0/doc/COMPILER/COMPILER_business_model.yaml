@@ -3,158 +3,112 @@ artifact: business_model
 module:
   code: COMPILER
   name: dec-core-compiler
-revision: BM-R13
-baseRevision: BM-R12
+revision: BM-R14
+baseRevision: BM-R13
 inputs:
   - REQAN-P2-R01@d08612768131
-  - REQAN-P2-R01+DEC-OVERLAY-20260809
-  - DEC-P2-DIRECT-BRIDGE-AUTHORITY-001
-  - DEC-P2-AC007-STAGE-BOUNDARY-001
-status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED
+  - REQAN-P2-R01+DEC-OVERLAY-20260809-R02
+  - DEC-P2-DIRECT-BRIDGE-AUTHORITY-001:ACTIVE
+  - DEC-P2-AC007-STAGE-BOUNDARY-001:PROPOSED_PENDING_USER_DECISION
+businessFlowRevision: FLOW-R04@p2-system-ruleview-protected-access
+status: NEEDS_EXACT_REVIEW_MACHINE_BLOCKED_AC007_PENDING_USER_DECISION
 inherits:
   - BM-R07@7d7bf504ca9d:P1-stable-compiler-facts
 terms:
   - id: TERM-SYSTEM-COMPILED-IDENTITY
-    name: System compiled identity
-    definition: explicit SystemKey plus version/source identity and immutable ownership snapshot
+    definition: explicit SystemKey plus version/source identity and derived immutable ownership snapshot
   - id: TERM-SYSTEM-VERSION-IDENTITY
-    name: SystemVersionIdentity
-    definition: optional declared version plus mandatory source semantic digest and schema/compiler compatibility identity; no fabricated version
+    definition: optional declared version plus source semantic digest plus exact schemaVersion and compilerVersion; options identity remains enclosing compiled-set fact
   - id: TERM-SYSTEM-OWNERSHIP-SNAPSHOT
-    name: System ownership snapshot
-    definition: immutable deterministic sets of Data/View/RuleView/Rule/Information/ModelAccessRule keys owned by one System in one compiled revision
-  - id: TERM-RULEVIEW-COMPOSITE-IDENTITY
-    name: RuleView composite identity
-    definition: RuleViewKey(SystemKey,name)
+    definition: derived immutable read index over authoritative typed registries, CompiledRuleView rule closure and ModelAccessPolicyIndex; never a second authority
   - id: TERM-MODEL-PATH
-    name: ModelPath
-    definition: exact canonical path shared by rule/change/query-contract/model-access consumers
+    definition: exact P2 canonical/runtime path; P1 SharedModelPath is source/compat input only
+  - id: TERM-ACCESS-OPERATION
+    definition: P2 runtime authorization operation READ WRITE EXECUTE; P1 AccessMode is source/compat input only
 entities:
   - id: ENT-COMPILED-SYSTEM
-    name: CompiledSystem
     identity: systemKey
-    requiredAttributes:
-      - systemKey
-      - sourceRef
-      - versionIdentity
-      - ownedDataKeys
-      - ownedViewKeys
-      - ownedRuleViewKeys
-      - ownedRuleKeys
-      - ownedInformationKeys
-      - ownedModelAccessRuleKeys
+    requiredAttributes: [systemKey, sourceRef, versionIdentity, ownedDataKeys, ownedViewKeys, ownedRuleViewKeys, ownedRuleKeys, ownedInformationKeys, ownedModelAccessRuleKeys]
   - id: ENT-COMPILED-RULEVIEW
-    name: CompiledRuleView
     identity: RuleViewKey
-    requiredAttributes:
-      - key
-      - resolvedViewKey
-      - resolvedRuleKeys
-      - sourceRef
+    requiredAttributes: [key, resolvedViewKey, resolvedRuleKeys, sourceRef]
 valueObjects:
   - id: VO-RULEVIEW-KEY
-    name: RuleViewKey
     fields: [systemKey, localName]
+    compatibility:
+      existingConstructor: RuleViewKey(SystemKey owner, String name)
+      existingAccessors: [owner(), name()]
+      additiveAliases: [of(SystemKey,String), systemKey(), localName()]
   - id: VO-MODEL-PATH
-    name: ModelPath
     fields: [canonicalSegments]
   - id: VO-MODEL-ACCESS-RULE
-    name: CompiledModelAccessRule
     fields: [systemKey, targetKey, modelPath, operation, sourceRef, status, runtimeRequirement, runtimePlan]
-aggregates:
-  - id: AGG-SYSTEM-COMPILED-CONFIG
-    name: System compiled config
-    root: ENT-COMPILED-SYSTEM
-    members:
-      - ENT-COMPILED-RULEVIEW
-      - VO-MODEL-PATH
-      - VO-MODEL-ACCESS-RULE
-    invariants:
-      - INV-COMPILER-016
-      - INV-COMPILER-016A
-      - INV-COMPILER-016B
-      - INV-COMPILER-016C
-      - INV-COMPILER-016D
+authoritativeOwnershipSources:
+  ownedDataKeys: final owner-qualified typed Data registry
+  ownedViewKeys: final owner-qualified typed View registry
+  ownedRuleViewKeys: final owner-qualified typed RuleView registry
+  ownedInformationKeys: final owner-qualified typed Information registry
+  ownedRuleKeys: final CompiledRuleView compiled/nested rule closure; do not create duplicate global Rule registry for snapshot
+  ownedModelAccessRuleKeys: final ModelAccessPolicyIndex keys / compiled policy rules filtered by System
 invariants:
-  - id: INV-COMPILER-016
-    statement: exact SystemKey is unique and deterministic across source discovery order
   - id: INV-COMPILER-016A
-    statement: every owner-qualified compiled fact belongs to exactly one System ownership snapshot; no orphan RuleView/View/ModelAccess fact
+    statement: every owner-qualified compiled fact belongs to exactly one System
   - id: INV-COMPILER-016B
-    statement: ownership snapshot is complete and exactly consistent with final typed registries/definitions
+    statement: ownership snapshot exactly coheres with the declared authoritative sources
   - id: INV-COMPILER-016C
-    statement: System version identity and ownership key sets participate in semantic digest
+    statement: SystemVersionIdentity and ownership snapshot participate in semantic digest
   - id: INV-COMPILER-016D
-    statement: ownership snapshots are immutable and isolated across EngineContext instances
-  - id: INV-COMPILER-017
-    statement: RuleView requires System; same-System duplicate is ERROR; cross-System same name is isolated
+    statement: ownership snapshot is immutable and EngineContext-local
+  - id: INV-COMPILER-016E
+    statement: ownership snapshot never reconstructs or overwrites typed registries RuleView rule closure or PolicyIndex and is not recomputed at runtime
   - id: INV-COMPILER-017A
-    statement: CompiledRuleView resolvedViewKey exact-resolves and is ownership-compatible with RuleView System
-  - id: INV-COMPILER-017B
-    statement: every CompiledRuleView resolvedRuleKey exact-resolves; unknown View/Rule is stable ERROR
-  - id: INV-COMPILER-017C
-    statement: RuleView key/resolvedView/ordered rules/source identity participate in semantic digest
+    statement: CompiledRuleView resolvedViewKey exact-resolves and is owner-compatible
   - id: INV-COMPILER-018
-    statement: rule/change/query-contract/model-access consumers produce value-equal canonical ModelPath for equal System/target/path input
+    statement: rule change query-contract model-access produce value-equal P2 ModelPath for equal System target path
   - id: INV-COMPILER-018A
     statement: READ WRITE EXECUTE are independent and one permission never implies another
   - id: INV-COMPILER-019
-    statement: System ownership RuleView ModelPath PolicyIndex and digest are one immutable atomic publication closure
+    statement: authoritative facts derived ownership PolicyIndex version identity and digest are one immutable publication closure
   - id: INV-COMPILER-020
-    statement: Bridge to Gateway to Guard is the only supported P2 production protected-operation seam; no public mint or compatibility write bypass
+    statement: all P2 supported protected operations use FLOW-PROTECTED-ACCESS-EXECUTE; final AC007 scope remains pending user decision
   - id: INV-COMPILER-021
-    statement: compile ERROR and runtime DENY are deterministic/source-aware and do not expose sensitive runtime values
+    statement: compile ERROR and runtime DENY are deterministic source-aware and non-sensitive
   - id: INV-COMPILER-022
-    statement: declaration compatibility stays read-only until P7 and never becomes a second runtime authority
-services:
-  - id: SVC-SYSTEM-COMPILATION
-    responsibilities:
-      - register all SystemKey symbols before reference resolution
-      - collect and validate immutable ownership snapshot
-      - build version identity without fabricating declared version
-      - include ownership/version in digest-bound closure
-  - id: SVC-RULEVIEW-RESOLUTION
-    responsibilities:
-      - resolve RuleViewKey by system-ref plus rule-ref
-      - exact-resolve ViewKey and ordered RuleKeys
-      - reject bare-name new-path fallback
-  - id: SVC-MODEL-PATH-COMPILATION
-    responsibilities:
-      - canonicalize exact path for rule change query-contract model-access
-      - finite-expand read wildcard before policy publication
-      - reject consumer-specific fallback semantics
-  - id: SVC-MODEL-ACCESS-AUTHORIZATION
-    responsibilities:
-      - build one immutable ModelAccessPolicyIndex
-      - route STATIC_ALLOW and RUNTIME_GUARD_REQUIRED through Guard
-      - bind actual target and operation to one-shot capability
-      - emit deterministic denial facts
+    statement: declaration compatibility remains read-only until P7
+  - id: INV-COMPILER-023
+    statement: P1 SharedModelPath and AccessMode are one-way source compatibility inputs converted before P2 policy publication and never remain runtime authority
+systemVersionIdentity:
+  fields: [declaredVersion, sourceSemanticDigest, schemaVersion, compilerVersion]
+  invariants:
+    - declaredVersion is empty when source declares none
+    - schemaVersion equals enclosing CompiledModelSet schemaVersion
+    - compilerVersion equals enclosing CompiledModelSet compilerVersion
+    - optionsDigest/optionsVersion remains enclosing compile identity and is not fabricated as System declared version
+p1ToP2Migration:
+  sharedModelPath:
+    exact: SharedModelPath exact -> shared ModelPathCompiler -> exact ModelPath
+    wildcard: SharedModelPath '*' -> deterministic compile-time finite expansion -> exact ModelPath facts
+    runtimeWildcardAllowed: false
+  accessMode:
+    READ: AccessOperation.READ
+    WRITE: AccessOperation.WRITE
+    EXECUTE: explicit P2 source fact only; never inferred from P1
+  runtimeAuthority: [ModelPath, AccessOperation, ModelAccessPolicyIndex]
+ac007:
+  decisionId: DEC-P2-AC007-STAGE-BOUNDARY-001
+  status: PENDING_USER_DECISION
+  originalRequirementSuperseded: false
+  options:
+    A: P2 seam/no-bypass acceptance; concrete integrations downstream P3/P4/P6
+    B: P2 representative concrete production consumers execute original AC007
 policies:
-  - id: POL-RULEVIEW-COMPOSITE-IDENTITY
-    statement: RuleView identity is RuleViewKey(SystemKey,name)
   - id: POL-MODEL-ACCESS-AUTHORIZATION
-    statement: exact compiler-published rule and operation required; missing/invalid is DENY; direct caller rule/op selection follows DEC-P2-DIRECT-BRIDGE-AUTHORITY-001
-  - id: POL-PROTECTED-SEAM
-    statement: P2 verifies sole production seam; P3/P4/P6 concrete executor integrations are downstream obligations under DEC-P2-AC007-STAGE-BOUNDARY-001
+    statement: exact compiler-published rule/operation required; direct caller authority follows the ACTIVE user decision
   - id: POL-DEFERRED-BOUNDARY
-    statement: P2 does not implement P3/P4/P5/P6/P7 complete execution semantics
-runtimeDenialContract:
-  stableFields:
-    - denialCode
-    - systemKey
-    - optionalRuleViewKey
-    - operation
-    - canonicalModelPath
-    - policySourceRef
-  minimumClasses:
-    - POLICY_NOT_FOUND
-    - RUNTIME_BINDING_STALE
-    - RUNTIME_PLAN_MISMATCH
-    - TARGET_SUBSTITUTION
-    - GUARD_UNAVAILABLE
-  sensitiveRuntimeValuesIncluded: false
+    statement: P2 does not silently assume AC007 option A or B before user authorization
 gate:
   openP1: 19
+  ac007UserDecision: REQUIRED
   riskDetection: NOT_SCANNED
   implementationPlan: BLOCKED
   tdd: BLOCKED
