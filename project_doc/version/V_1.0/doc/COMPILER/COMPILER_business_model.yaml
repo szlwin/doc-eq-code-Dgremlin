@@ -3,105 +3,113 @@ artifact: business_model
 module:
   code: COMPILER
   name: dec-core-compiler
-revision: BM-R18
-baseRevision: BM-R17
+revision: BM-R19
+baseRevision: BM-R18
 terms:
 - id: TERM-SOURCE-VIEW-IDENTITY
   name: Shared source View identity
-  definition: P1-compatible canonical shared ViewKey resolved from model-access sourceModel;
-    it is not qualified by the authorization owner System.
+  definition: P1-compatible canonical shared ViewKey resolved from model-access sourceModel; authorization
+    owner System remains a separate policy axis.
   sourceRefs:
   - REQAN-P2-R01@d08612768131
   - FND-P2-REV-020
 - id: TERM-TARGET-KEY
   name: TargetKey
-  definition: Immutable wrapper around the canonical shared source ViewKey used as
-    the source-model identity axis for P2 model-access.
+  definition: Immutable wrapper around the canonical shared source ViewKey; it never embeds authorization
+    owner System.
   sourceRefs:
   - REQAN-P2-R01@d08612768131
-  - BM-R18
-- id: TERM-MODEL-PATH
-  name: ModelPath
-  definition: Exact canonical source path compiled independently from TargetKey; wildcard
-    is compile-time only.
+  - BM-R19
+- id: TERM-ACCESS-AUTHORITY
+  name: Model-access authority identity
+  definition: ModelAccessRuleKey is the required authority key for Direct Bridge access and combines authorization
+    owner System, TargetKey, ModelPath and READ/WRITE operation.
   sourceRefs:
-  - DEC-P2-ACCESS-OPERATIONS-001
-- id: TERM-ACCESS-OPERATION
-  name: AccessOperation
-  definition: Exactly READ or WRITE; P2 defines no EXECUTE operation.
-  sourceRefs:
-  - DEC-P2-ACCESS-OPERATIONS-001:ACTIVE_READ_WRITE_ONLY
+  - FND-P2-REV-004
+  - FND-P2-REV-017
+  - FND-P2-REV-019
 - id: TERM-WRITE-INTENT
   name: Resolved write intent
-  definition: Exactly zero-or-one immutable write intent resolved before Guard from
-    rule, target, path, frame, owner and cursor facts; it is never reselected after
-    Guard.
+  definition: Exactly zero-or-one immutable WRITE intent resolved from ModelAccessRuleKey plus typed frame/owner/optional
+    cursor; RuleKey may be provenance only and is never the authority key.
   sourceRefs:
+  - FND-P2-REV-004
   - FND-P2-REV-017
+  - FND-P2-REV-019
+- id: TERM-RUNTIME-MODEL-SESSION
+  name: Runtime model session
+  definition: Composition/frame scoped runtime object locator and mutation-version domain; it is sealed
+    before protected execution and is never a static/global mutable registry.
+  sourceRefs:
+  - FND-P2-REV-014
+  - FND-P2-REV-017
+- id: TERM-RUNTIME-MUTATION-VERSION
+  name: RuntimeMutationVersion
+  definition: Monotonic session-scoped version for one RuntimeObjectId plus ModelPath used to detect stale
+    concurrent WRITE intents.
+  sourceRefs:
   - FND-P2-REV-019
 - id: TERM-RUNTIME-FACT-VALUE
   name: RuntimeFactValue
-  definition: 'Closed immutable runtime value domain: NULL, BOOLEAN, INTEGER, DECIMAL,
-    STRING, LIST and OBJECT with structural equality and deterministic serialization.'
+  definition: Closed deep-immutable NULL/BOOLEAN/INTEGER/DECIMAL/STRING/LIST/OBJECT snapshot domain with
+    deterministic equality and serialization.
   sourceRefs:
   - FND-P2-REV-011
 scenarios:
 - id: SCN-P2-COMPILE-ACCESS
   given:
   - REQAN-P2-R01 and Overlay R04 are authoritative inputs
-  - sourceModel names an existing shared ViewKey
-  - sourcePath is compilable
+  - sourceModel resolves through existing shared ViewKey
   - AccessOperation is READ or WRITE
-  when: Compiler materializes an exact model-access policy entry
+  when: Compiler materializes one exact model-access rule
   then:
-  - authorization owner System remains a separate policy-key axis
-  - sourceModel resolves through the existing shared ViewKey namespace
+  - authorization owner System stays separate from TargetKey
   - sourcePath independently compiles to ModelPath
-  - only a legal policy-classification row may enter ModelAccessPolicyIndex
+  - only legal policy-classification rows enter ModelAccessPolicyIndex
   traceIds:
   - TR-P2-004
   - TR-P2-005
   - TR-P2-006
-- id: SCN-P2-PROTECTED-READ
-  given:
-  - A production ProtectedAccessComposition is acquired
-  - a capability is bound to an exact runtime object and ModelPath
-  - Guard ALLOW is obtained
-  when: READ is executed through ProtectedAccessPort
-  then:
-  - dec-core-model production adapter reads the actual runtime object/path
-  - an immutable RuntimeFactValue snapshot is returned
-  - no mutation occurs
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-  - TR-P2-007
 - id: SCN-P2-PROTECTED-WRITE
   given:
-  - A production ProtectedAccessComposition is acquired
-  - exactly one write intent is resolved and frozen before Guard
-  - Guard ALLOW is obtained
-  when: WRITE is executed through ProtectedAccessPort
+  - Direct Bridge invocation carries exact ModelAccessRuleKey
+  - typed frame/owner/optional cursor are present
+  - exactly one write intent is selected and frozen before Guard
+  when: Guard ALLOW dispatches WRITE
   then:
-  - the frozen intent is consumed exactly once
-  - dec-core-model production adapter applies exactly the frozen mutation
-  - an immutable write receipt is returned
+  - ResolvedProtectedWriteAccess contains one authority path through writeIntent.modelAccessRuleKey
+  - production model session locates the RuntimeObjectId
+  - transactional mutation succeeds once and returns a receipt or rolls back with no externally visible
+    change
   traceIds:
   - TR-P2-004
   - TR-P2-006
   - TR-P2-007
-- id: SCN-P2-WRITE-INTENT-AMBIGUITY
+  - TR-P2-009
+- id: SCN-P2-RUNTIME-OBJECT-LOCATION
   given:
-  - WRITE is requested
-  - zero or multiple candidate intents match the rule/target/path/frame/owner/cursor
-    tuple
-  when: starter resolves the write intent before Guard
+  - ProtectedAccessComposition owns one sealed RuntimeModelSession
+  - RuntimeObjectId was registered for the same composition/frame before seal
+  when: Production adapter resolves the runtime object
   then:
-  - zero candidates produce deterministic WRITE_INTENT_NOT_FOUND denial
-  - multiple candidates produce deterministic WRITE_INTENT_AMBIGUOUS denial
-  - Guard and operation adapter are not invoked
+  - same-session id resolves exactly one ModelData/runtime object
+  - missing or cross-session/stale id fails closed
+  - no global mutable object registry is consulted
   traceIds:
   - TR-P2-006
+  - TR-P2-007
+  - TR-P2-009
+- id: SCN-P2-CONCURRENT-WRITE
+  given:
+  - two different capabilities freeze WRITE intents against the same RuntimeObjectId and ModelPath
+  - both freeze the same RuntimeMutationVersion before the race
+  when: they attempt WRITE concurrently
+  then:
+  - per-object/path serialization plus version compare permits at most one commit
+  - winner increments RuntimeMutationVersion exactly once
+  - loser returns WRITE_INTENT_STALE with no mutation or receipt
+  traceIds:
+  - TR-P2-007
   - TR-P2-009
 entities:
 - id: ENT-COMPILED-SYSTEM
@@ -118,8 +126,7 @@ entities:
     type: Set<ModelAccessRuleKey>
     required: true
   behaviors:
-  - Expose immutable ownership projections only; never become a second permission
-    authority.
+  - Expose immutable ownership projection only; ModelAccessPolicyIndex remains permission authority.
   traceIds:
   - TR-P2-001
 - id: ENT-COMPILED-RULEVIEW
@@ -136,16 +143,19 @@ entities:
     type: List<RuleKey>
     required: true
   behaviors:
-  - Own the canonical immutable RuleKey closure.
+  - Own immutable RuleKey closure; RuleKey is provenance, not Direct Bridge model-access authority.
   traceIds:
   - TR-P2-002
   - TR-P2-003
-- id: ENT-PROTECTED-ACCESS-COMPOSITION
+- id: ENT-PROTECTED-COMPOSITION
   name: ProtectedAccessComposition
-  identity: composition instance bound to one EngineContext snapshot
+  identity: one composition instance bound to EngineContext plus RuntimeModelSession
   attributes:
   - name: bridge
     type: ProtectedExecutionBridge
+    required: true
+  - name: runtimeModelSession
+    type: RuntimeModelSession
     required: true
   - name: ruleEntry
     type: RuleProtectedAccessEntry
@@ -157,26 +167,10 @@ entities:
     type: CustomActionProtectedAccessEntry
     required: true
   behaviors:
-  - Expose the same Bridge/EngineContext authority snapshot to all AC-007 Option B
-    representative entries.
+  - All entries share the exact same Bridge, EngineContext and runtime-model session authority snapshot.
   traceIds:
   - TR-P2-007
 valueObjects:
-- id: VO-RULE-KEY
-  name: RuleKey
-  identity: (ownerRuleViewKey, localRuleName)
-  attributes:
-  - name: ownerRuleViewKey
-    type: RuleViewKey
-    required: true
-  - name: localRuleName
-    type: String
-    required: true
-  behaviors:
-  - Exact case-sensitive value equality/hash.
-  traceIds:
-  - TR-P2-002
-  - TR-P2-003
 - id: VO-TARGET-KEY
   name: TargetKey
   identity: sourceViewKey
@@ -185,23 +179,116 @@ valueObjects:
     type: ViewKey
     required: true
   behaviors:
-  - Resolve sourceModel through the existing shared ViewKey/SymbolTable namespace.
-  - Do not fold authorization owner System into source-model identity.
-  - Do not derive target identity from sourcePath.
+  - Resolve through existing shared ViewKey namespace.
+  - Never embed authorization owner System or derive from sourcePath.
   traceIds:
   - TR-P2-005
-- id: VO-MODEL-PATH
-  name: ModelPath
-  identity: canonicalSegments
+- id: VO-MODEL-ACCESS-RULE-KEY
+  name: ModelAccessRuleKey
+  identity: authorizationOwnerSystemKey + TargetKey + ModelPath + AccessOperation
   attributes:
-  - name: canonicalSegments
-    type: List<String>
+  - name: authorizationOwnerSystemKey
+    type: SystemKey
+    required: true
+  - name: targetKey
+    type: TargetKey
+    required: true
+  - name: modelPath
+    type: ModelPath
+    required: true
+  - name: operation
+    type: READ|WRITE
     required: true
   behaviors:
-  - Compile independently from TargetKey.
-  - Reject runtime wildcard.
+  - This is the required Direct Bridge and write-intent authority key.
   traceIds:
+  - TR-P2-004
   - TR-P2-005
+- id: VO-TYPED-RUNTIME-CONTEXT
+  name: Typed runtime execution identity
+  identity: exact immutable values
+  attributes:
+  - name: frameId
+    type: RuntimeExecutionFrameId
+    required: true
+  - name: ownerResolutionId
+    type: RuntimeResolutionOwnerId
+    required: true
+  - name: cursorId
+    type: Optional<RuntimeCollectionCursorId>
+    required: true
+  behaviors:
+  - No raw String/null/empty/N-A sentinel representation is permitted.
+  traceIds:
+  - TR-P2-006
+  - TR-P2-009
+- id: VO-RESOLVED-WRITE-INTENT
+  name: ResolvedWriteIntent
+  identity: RuntimeWriteIntentId
+  attributes:
+  - name: id
+    type: RuntimeWriteIntentId
+    required: true
+  - name: modelAccessRuleKey
+    type: ModelAccessRuleKey
+    required: true
+  - name: ruleKeyProvenance
+    type: Optional<RuleKey>
+    required: true
+  - name: frameId
+    type: RuntimeExecutionFrameId
+    required: true
+  - name: ownerResolutionId
+    type: RuntimeResolutionOwnerId
+    required: true
+  - name: cursorId
+    type: Optional<RuntimeCollectionCursorId>
+    required: true
+  - name: expectedMutationVersion
+    type: RuntimeMutationVersion
+    required: true
+  behaviors:
+  - Exactly one candidate freezes before Guard.
+  - TargetKey/ModelPath/operation are obtained only through modelAccessRuleKey; no duplicate path field
+    exists.
+  - RuleKey, when present, is diagnostic provenance only.
+  traceIds:
+  - TR-P2-004
+  - TR-P2-006
+  - TR-P2-009
+- id: VO-RESOLVED-PROTECTED-WRITE
+  name: ResolvedProtectedWriteAccess
+  identity: ProtectedInvocationId
+  attributes:
+  - name: invocationId
+    type: ProtectedInvocationId
+    required: true
+  - name: runtimeObjectId
+    type: RuntimeObjectId
+    required: true
+  - name: writeIntent
+    type: ResolvedWriteIntent
+    required: true
+  behaviors:
+  - The sole WRITE ModelPath is writeIntent.modelAccessRuleKey.modelPath.
+  - No second ModelPath argument or target authority is accepted by the operation port.
+  traceIds:
+  - TR-P2-004
+  - TR-P2-006
+  - TR-P2-007
+- id: VO-RUNTIME-MUTATION-VERSION
+  name: RuntimeMutationVersion
+  identity: non-negative monotonic long within one session/object/path
+  attributes:
+  - name: value
+    type: long
+    required: true
+  behaviors:
+  - Freeze into each write intent and compare under the per-object/path serialization boundary before
+    mutation.
+  traceIds:
+  - TR-P2-007
+  - TR-P2-009
 - id: VO-RUNTIME-FACT-VALUE
   name: RuntimeFactValue
   identity: kind + canonical immutable payload
@@ -213,62 +300,14 @@ valueObjects:
     type: canonical immutable payload
     required: false
   behaviors:
-  - Snapshot recursively; never expose live mutable runtime references.
-  - Normalize INTEGER as BigInteger and DECIMAL as canonical BigDecimal.
-  - LIST preserves order; OBJECT has unique string keys and deterministic serialization
-    order.
-  - Structural equality is defined over canonicalized values.
+  - Deep snapshot; no live mutable reference.
+  - INTEGER=BigInteger, DECIMAL=normalized BigDecimal, LIST ordered immutable, OBJECT deterministic.
   traceIds:
   - TR-P2-004
   - TR-P2-009
-- id: VO-RUNTIME-OPAQUE-ID
-  name: Opaque runtime IDs
-  identity: exact nonblank string value
-  attributes:
-  - name: value
-    type: String
-    required: true
-  behaviors:
-  - RuntimeObjectId, ProtectedInvocationId and RuntimeWriteIntentId are immutable
-    case-sensitive value wrappers.
-  - No parsing, case folding or authority inference from the opaque value.
-  traceIds:
-  - TR-P2-006
-  - TR-P2-009
-- id: VO-RESOLVED-WRITE-INTENT
-  name: ResolvedWriteIntent
-  identity: RuntimeWriteIntentId
-  attributes:
-  - name: id
-    type: RuntimeWriteIntentId
-    required: true
-  - name: ruleKey
-    type: RuleKey
-    required: true
-  - name: targetKey
-    type: TargetKey
-    required: true
-  - name: modelPath
-    type: ModelPath
-    required: true
-  - name: frameId
-    type: String
-    required: true
-  - name: ownerResolutionId
-    type: String
-    required: true
-  - name: cursorId
-    type: String
-    required: true
-  behaviors:
-  - Freeze before Guard when exactly one candidate exists.
-  - Never re-resolve from mutable frame/cursor state after Guard.
-  traceIds:
-  - TR-P2-006
-  - TR-P2-007
 aggregates:
 - id: AGG-P2-POLICY-PUBLICATION
-  name: P2 compiled policy publication
+  name: P2 policy publication
   root: CompiledModelSet
   members:
   - CompiledSystem
@@ -276,36 +315,34 @@ aggregates:
   - TargetKey
   - ModelPath
   - PolicyStatus
-  - RuntimeAccessRequirement
   - RuntimeBindingPlan
-  - SemanticDigestInput
   invariantIds:
   - INV-COMPILER-025
   - INV-COMPILER-026
-  - INV-COMPILER-029
-  transactionBoundary: one atomic compiler publication; any validation error retains
-    the previous EngineContext
+  transactionBoundary: one atomic compiler publication
   consistency: ATOMIC
   traceIds:
   - TR-P2-005
   - TR-P2-006
   - TR-P2-008
 - id: AGG-P2-PROTECTED-OPERATION
-  name: Protected operation execution
+  name: Protected runtime operation
   root: ProtectedAccessComposition
   members:
   - ProtectedExecutionBridge
-  - ResolvedProtectedAccess
+  - ResolvedProtectedReadAccess
+  - ResolvedProtectedWriteAccess
   - one-shot capability
   - ModelAccessGuard
-  - ProtectedOperationExecutionAdapter
+  - RuntimeModelSession
   - RuntimeModelOperationPort
   invariantIds:
-  - INV-COMPILER-027
   - INV-COMPILER-030
-  - INV-COMPILER-031
-  transactionBoundary: one capability-bound READ or WRITE attempt
-  consistency: Fail-closed; operation effect only after Guard ALLOW
+  - INV-COMPILER-032
+  - INV-COMPILER-033
+  - INV-COMPILER-034
+  transactionBoundary: one capability-bound READ/WRITE attempt; WRITE includes one runtime-model transaction
+  consistency: fail closed and transactional for WRITE
   traceIds:
   - TR-P2-004
   - TR-P2-006
@@ -313,68 +350,67 @@ aggregates:
   - TR-P2-009
 invariants:
 - id: INV-COMPILER-024
-  statement: Authoritative revision direction is Requirement/Decision -> BM -> Flow
-    -> Design -> TestDesign; no downstream artifact is an upstream input.
+  statement: Authoritative revision direction is Requirement/Decision -> BM -> Flow -> Design -> TestDesign.
   trigger: Any candidate revision is materialized.
-  failure: Candidate is invalid and cannot pass Review.
+  failure: Candidate cannot pass Review.
   traceIds:
   - TR-P2-REV-DAG
 - id: INV-COMPILER-025
-  statement: Authorization owner System, shared source View identity (TargetKey),
-    source ModelPath, and local targetView/selector are distinct axes; sourceModel
-    preserves P1 shared ViewKey identity.
+  statement: Authorization owner System, shared TargetKey(ViewKey), source ModelPath and local targetView/selector
+    are distinct axes.
   trigger: A model-access binding is compiled.
   failure: Stable compile error; publication=0.
   traceIds:
   - TR-P2-005
 - id: INV-COMPILER-026
-  statement: Only STATIC_ALLOW+NONE+no-plan and RUNTIME_GUARD_REQUIRED+EXACT_RUNTIME_BINDING+plan
-    enter PolicyIndex.
-  trigger: Policy rule construction or PolicyIndex publication.
-  failure: Stable compile/publication error; old Context remains.
+  statement: Only STATIC_ALLOW+NONE+no-plan and RUNTIME_GUARD_REQUIRED+EXACT_RUNTIME_BINDING+plan enter
+    PolicyIndex.
+  trigger: Policy construction/publication.
+  failure: Stable error; old Context remains.
   traceIds:
   - TR-P2-006
-- id: INV-COMPILER-027
-  statement: Protected READ returns a deep immutable RuntimeFactValue snapshot without
-    mutation; protected WRITE applies at most one frozen intent only after Guard ALLOW.
-  trigger: Protected operation execution.
-  failure: DENY before operation/effect; no value/receipt leakage.
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-- id: INV-COMPILER-028
-  statement: Future P3/P4/P6 core depends only on dec-core-context neutral ProtectedAccessPort,
-    never dec-core-starter internals.
-  trigger: Module dependency or assembly design changes.
-  failure: Cross-module Review fails.
-  traceIds:
-  - TR-P2-007
-- id: INV-COMPILER-029
-  statement: ModelAccessRuleKey keeps authorizationOwnerSystemKey separate from TargetKey(shared
-    source ViewKey), ModelPath and AccessOperation.
-  trigger: Policy identity is constructed or looked up.
-  failure: Stable compile/runtime DENY; no fallback.
-  traceIds:
-  - TR-P2-004
-  - TR-P2-005
 - id: INV-COMPILER-030
-  statement: WRITE intent selection over ruleKey+target+path+frame+owner+cursor yields
-    exactly zero or one immutable intent before Guard; zero and multiple are deterministic
-    DENY.
-  trigger: WRITE protected access resolution.
-  failure: WRITE_INTENT_NOT_FOUND or WRITE_INTENT_AMBIGUOUS; Guard/operation not invoked.
+  statement: WRITE intent selection uses ModelAccessRuleKey plus typed frame/owner/optional cursor; RuleKey
+    is never required authority.
+  trigger: WRITE access resolution.
+  failure: Deterministic DENY before capability/Guard/effect.
+  traceIds:
+  - TR-P2-004
+  - TR-P2-006
+- id: INV-COMPILER-032
+  statement: A protected WRITE has exactly one ModelPath authority through ResolvedWriteIntent.modelAccessRuleKey;
+    operation port accepts no second path.
+  trigger: WRITE is dispatched.
+  failure: Fail closed before mutation.
+  traceIds:
+  - TR-P2-004
+  - TR-P2-009
+- id: INV-COMPILER-033
+  statement: RuntimeObjectId resolves only inside the sealed RuntimeModelSession bound to the current
+    composition/frame; no static/global mutable registry exists.
+  trigger: Production adapter locates a runtime object.
+  failure: RUNTIME_OBJECT_NOT_FOUND or RUNTIME_OBJECT_STALE; no operation.
   traceIds:
   - TR-P2-006
+  - TR-P2-007
   - TR-P2-009
-- id: INV-COMPILER-031
-  statement: Production protected operation effects are performed through dec-core-model
-    runtime model access wired by starter; a test-only callback/fake cannot be the
-    production authority.
-  trigger: Protected READ/WRITE ALLOW path is assembled.
-  failure: Production reachability Review/Test Evidence fails.
+- id: INV-COMPILER-034
+  statement: After Guard ALLOW, WRITE either commits one complete mutation and receipt or rolls back so
+    externally observable model state is unchanged; capability remains CONSUMED on failure.
+  trigger: Production WRITE operation begins.
+  failure: RUNTIME_WRITE_FAILED; receipt absent; no automatic retry/reselection.
+  traceIds:
+  - TR-P2-004
+  - TR-P2-007
+  - TR-P2-009
+- id: INV-COMPILER-035
+  statement: Two capabilities frozen against the same object/path/version race under one session serialization/version
+    boundary; at most one commits and the stale loser performs zero mutation.
+  trigger: Concurrent WRITE to same RuntimeObjectId + ModelPath.
+  failure: WRITE_INTENT_STALE for the version-mismatch loser.
   traceIds:
   - TR-P2-007
-  - TR-P2-008
+  - TR-P2-009
 stateMachines:
 - id: SM-P2-CAPABILITY
   name: One-shot protected access capability
@@ -390,55 +426,103 @@ stateMachines:
     command: atomicConsume
     to: CONSUMED
     preconditions:
-    - capability identity and resolved access facts are immutable
+    - resolved access facts are immutable
     sideEffects:
     - permit at most one Guard/operation attempt
     failure: CAPABILITY_ALREADY_CONSUMED
   traceIds:
   - TR-P2-007
-services:
-- id: SVC-P2-SOURCE-MODEL-RESOLUTION
-  name: Shared source model resolution
-  reason: Preserve P1 sourceModel identity semantics while separating authorization
-    owner System.
-  inputs:
-  - sourceModel
-  - SymbolTable shared ViewKey namespace
-  outputs:
-  - TargetKey(ViewKey) or stable compile error
+- id: SM-P2-WRITE-TRANSACTION
+  name: Protected write transaction
+  initialState: PREPARED
+  states:
+  - PREPARED
+  - COMMITTED
+  - ROLLED_BACK
+  - STALE_REJECTED
+  terminalStates:
+  - COMMITTED
+  - ROLLED_BACK
+  - STALE_REJECTED
+  transitions:
+  - id: TRANS-P2-WRITE-COMMIT
+    from: PREPARED
+    command: commitExactMutation
+    to: COMMITTED
+    preconditions:
+    - Guard ALLOW
+    - current mutation version equals frozen expected version
+    sideEffects:
+    - one mutation
+    - increment mutation version
+    - create receipt
+    failure: RUNTIME_WRITE_FAILED
+  - id: TRANS-P2-WRITE-ROLLBACK
+    from: PREPARED
+    command: operationFailure
+    to: ROLLED_BACK
+    preconditions:
+    - transaction started
+    sideEffects:
+    - restore/retain externally observable pre-write state
+    - receipt absent
+    failure: RUNTIME_WRITE_FAILED
+  - id: TRANS-P2-WRITE-STALE
+    from: PREPARED
+    command: versionMismatch
+    to: STALE_REJECTED
+    preconditions:
+    - current version differs from expected version
+    sideEffects:
+    - no mutation
+    - receipt absent
+    failure: WRITE_INTENT_STALE
   traceIds:
-  - TR-P2-005
+  - TR-P2-007
+  - TR-P2-009
+services:
 - id: SVC-P2-WRITE-INTENT-RESOLUTION
   name: Write intent resolution
-  reason: Make WRITE implementation deterministic and Guard-stable.
+  reason: Bind Direct Bridge authority and mutable execution state uniquely before Guard.
   inputs:
-  - ruleKey
-  - TargetKey
-  - ModelPath
-  - frameId
-  - ownerResolutionId
-  - cursorId
+  - ModelAccessRuleKey
+  - RuntimeExecutionFrameId
+  - RuntimeResolutionOwnerId
+  - Optional<RuntimeCollectionCursorId>
   outputs:
-  - exactly one immutable ResolvedWriteIntent or deterministic denial
+  - exactly one ResolvedWriteIntent or deterministic denial
+  traceIds:
+  - TR-P2-004
+  - TR-P2-006
+- id: SVC-P2-RUNTIME-OBJECT-LOCATION
+  name: Runtime object location
+  reason: Resolve RuntimeObjectId without a global mutable registry.
+  inputs:
+  - sealed RuntimeModelSession
+  - RuntimeObjectId
+  - RuntimeExecutionFrameId
+  outputs:
+  - exact session-scoped ModelData/runtime handle or deterministic missing/stale denial
   traceIds:
   - TR-P2-006
-  - TR-P2-009
-- id: SVC-P2-RUNTIME-MODEL-OPERATION
-  name: Production runtime model operation
-  reason: Connect protected authorization to real runtime model state rather than
-    a test callback.
+  - TR-P2-007
+- id: SVC-P2-TRANSACTIONAL-WRITE
+  name: Transactional protected write
+  reason: Bind actual model mutation to Guard-approved immutable authority and existing model transaction
+    semantics.
   inputs:
-  - ResolvedProtectedAccess
-  - RuntimeModelOperationPort
+  - ResolvedProtectedWriteAccess
+  - RuntimeModelSession
   outputs:
-  - ProtectedReadValue or ProtectedWriteReceipt
+  - ProtectedWriteReceipt or deterministic stale/operation failure
   traceIds:
   - TR-P2-004
   - TR-P2-007
+  - TR-P2-009
 policies:
 - id: POL-P2-CLASSIFICATION
   name: Policy classification truth table
-  reason: Prevent runtime repair/reclassification and fail-open behavior.
+  reason: Prevent runtime repair/reclassification.
   inputs:
   - PolicyStatus
   - RuntimeAccessRequirement
@@ -447,18 +531,22 @@ policies:
   - legal compiled rule or publication error
   traceIds:
   - TR-P2-006
-businessErrors:
-- id: ERR-P2-SOURCE-MODEL-NOT-FOUND
-  condition: sourceModel does not resolve through the existing shared ViewKey/SymbolTable
-    namespace
-  meaning: The P1 shared source model does not exist.
-  retryable: false
-  stateChanged: false
+- id: POL-P2-CONCURRENT-WRITE
+  name: Same object/path concurrent WRITE
+  reason: Prevent lost/partial updates from independently valid capabilities.
+  inputs:
+  - RuntimeObjectId
+  - ModelPath
+  - frozen expected RuntimeMutationVersion
+  outputs:
+  - exactly one commit for a same-version race; stale losers do not mutate
   traceIds:
-  - TR-P2-005
+  - TR-P2-007
+  - TR-P2-009
+businessErrors:
 - id: ERR-P2-WRITE-INTENT-NOT-FOUND
   condition: WRITE intent candidate count is zero
-  meaning: No current operation can be bound to the authorized WRITE.
+  meaning: No current mutation is uniquely bound to the authorized model-access rule.
   retryable: false
   stateChanged: false
   traceIds:
@@ -466,24 +554,49 @@ businessErrors:
   - TR-P2-009
 - id: ERR-P2-WRITE-INTENT-AMBIGUOUS
   condition: WRITE intent candidate count is greater than one
-  meaning: The current execution state does not identify one implementation-unique
-    mutation.
+  meaning: Execution state does not identify one mutation.
   retryable: false
   stateChanged: false
   traceIds:
   - TR-P2-006
   - TR-P2-009
-- id: ERR-P2-POLICY-CLASSIFICATION-INVALID
-  condition: PolicyStatus/runtime requirement/plan tuple is not one of the two legal
-    rows
-  meaning: Malformed permission facts cannot be published.
+- id: ERR-P2-RUNTIME-OBJECT-NOT-FOUND
+  condition: RuntimeObjectId is absent from the current sealed RuntimeModelSession
+  meaning: The protected operation has no current runtime object in this composition/frame.
   retryable: false
   stateChanged: false
   traceIds:
   - TR-P2-006
+  - TR-P2-009
+- id: ERR-P2-RUNTIME-OBJECT-STALE
+  condition: RuntimeObjectId belongs to a closed/different/stale runtime model session
+  meaning: The object binding is no longer valid for this composition/frame.
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-006
+  - TR-P2-009
+- id: ERR-P2-WRITE-INTENT-STALE
+  condition: current object/path RuntimeMutationVersion differs from the frozen expected version
+  meaning: Another committed mutation invalidated this frozen intent.
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-007
+  - TR-P2-009
+- id: ERR-P2-RUNTIME-WRITE-FAILED
+  condition: actual model mutation or underlying transaction/commit fails after Guard ALLOW
+  meaning: The protected WRITE did not commit; externally observable state must equal pre-write state
+    and receipt is absent.
+  retryable: false
+  stateChanged: false
+  traceIds:
+  - TR-P2-004
+  - TR-P2-007
+  - TR-P2-009
 - id: ERR-P2-CAPABILITY-CONSUMED
-  condition: A one-shot capability is consumed more than once
-  meaning: Replay/concurrent loser must not reach Guard effect execution.
+  condition: one-shot capability is consumed more than once
+  meaning: Replay/concurrent loser cannot reach Guard/effect.
   retryable: false
   stateChanged: false
   traceIds:
@@ -491,67 +604,67 @@ businessErrors:
 traceability:
 - traceId: TR-P2-001
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-002
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-003
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-004
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-005
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-006
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-007
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-008
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-009
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-010
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22
 - traceId: TR-P2-REV-DAG
   modelRefs:
-  - BM-R18
-  - FLOW-R08
-  - DESIGN-P2-R20
-  - TESTDESIGN-P2-R21
+  - BM-R19
+  - FLOW-R09
+  - DESIGN-P2-R21
+  - TESTDESIGN-P2-R22

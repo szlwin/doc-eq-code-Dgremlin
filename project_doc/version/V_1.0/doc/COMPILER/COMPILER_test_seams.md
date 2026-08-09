@@ -1,26 +1,26 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R20`。Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> Revision：`DESIGN-P2-R21`。Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
 
 ## Stable seams
 
-- shared source View resolution: sourceModel -> existing ViewKey/SymbolTable -> TargetKey(ViewKey);
-- policy identity: owner System separate from TargetKey/ModelPath/op;
-- policy truth table validation at compiler and PolicyIndex construction;
-- `WriteIntentResolver` 0/1/N result before Guard;
-- immutable `ResolvedProtectedAccess` and one-shot capability;
-- `RuntimeFactValue` closed domain and deterministic serialization;
-- opaque runtime ID exact value semantics;
-- production `RuntimeModelOperationPort` implemented by dec-core-model and wired only through starter production assembly.
+- Direct Bridge authority: exact `ModelAccessRuleKey`, not required `RuleKey`.
+- Typed invocation context: frame/owner/optional cursor wrappers end-to-end.
+- WRITE path: exactly one path through `ResolvedWriteIntent.modelAccessRuleKey`; operation port has no second path.
+- Write intent: deterministic 0/1/N; optional RuleKey provenance only.
+- Runtime object lookup: one sealed composition/frame `RuntimeModelSession`; no global registry.
+- Transactional write: isolated/rollback-safe failure, receipt only after commit.
+- Concurrent same-version WRITE: at most one commit; stale loser zero mutation.
+- RuntimeFactValue: closed deep-immutable deterministic domain.
 
 ## Production-vs-test rule
 
-A controlled/fake RuntimeModelOperationPort may test Bridge/Guard sequencing, but cannot satisfy production reachability. The production integration test must acquire the normal starter composition and observe an actual `dec-core-model` object/path READ or WRITE mutation/receipt.
+A fake model adapter can prove sequencing only. Production reachability must acquire normal starter composition and use the dec-core-model production RuntimeModelSession/operation implementation over real ModelData state.
+
+## Failure injection
+
+Tests must inject failures at mutation and commit boundaries and assert externally observable ModelData/origin state equals pre-write state, receipt absent and capability consumed.
 
 ## Concurrency
 
-Use latch/barrier to race the same capability. Exactly one operation may reach the production model adapter; no sleep-based oracle.
-
-## Denial oracle
-
-For policy/proof/intent/guard/capability failures: production operation invocation=0, mutation=0, readValue/writeReceipt absent, stable non-sensitive denial present.
+Use latch/barrier. Freeze two capabilities against the same object/path/version before release; assert exactly one committed mutation/receipt, exactly one `WRITE_INTENT_STALE`, version increments once and no partial update. No sleep-based oracle.

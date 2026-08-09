@@ -1,43 +1,152 @@
 # FEATURE-DESC-3361AD2E54FC Test Design
 
-> Revision：`TESTDESIGN-P2-R21`
-> Base：`TESTDESIGN-P2-R20`
-> Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R18` + `FLOW-R08@p2-system-ruleview-protected-access` + `DESIGN-P2-R20`
-> Decisions：AC-007 Option B ACTIVE；AccessOperation READ/WRITE-only ACTIVE
+> Revision：`TESTDESIGN-P2-R22`  
+> Base：`TESTDESIGN-P2-R21`  
+> Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + `BM-R19` + `FLOW-R09@p2-system-ruleview-protected-access` + `DESIGN-P2-R21`  
+> Decisions：AC-007 Option B ACTIVE；AccessOperation READ/WRITE-only ACTIVE  
 > Status：`NEEDS_REVIEW / BLOCKED_BY_DESIGN_REVIEW / MACHINE_BLOCKED`
 
-R21 retains the R20 matrix and corrects source identity, WRITE-intent uniqueness, real production model reachability, API value contracts and exact future RED commands. It defines Test Design only; no tests were created/executed and no TDD Evidence is claimed.
+R22 preserves the broad R21 coverage and adds executable oracles for the remaining runtime authority/locator/atomicity/concurrency gaps. Every blocking Case ID in this document is mapped to one exact planned TestClass, Maven module, source path and target RED command. No TDD execution is claimed.
 
-## 1. Exact Formal RED contract
+## 1. Formal RED rules
 
-Bootstrap may use `-am`; target RED must not.
+- Bootstrap MAY use `-am` and `-Dmaven.test.skip=true install`.
+- Target RED MUST NOT use `-am`.
+- Target command MUST use `-Dsurefire.failIfNoSpecifiedTests=true`.
+- Missing class/symbol/setup or compilation failure before the intended assertion is `INVALID_RED`.
 
-| Contract Test | Maven module | Planned test source path | Exact bootstrap | Exact target RED |
-|---|---|---|---|---|
-| `P2RevisionDependencyDagContractTest` | `dec-core-compiler` | `dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java` | `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install` | `./mvnw -pl dec-core-compiler -Dtest=P2RevisionDependencyDagContractTest -Dsurefire.failIfNoSpecifiedTests=true test` |
-| `TargetKeySourceMappingContractTest` | `dec-core-compiler` | `dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeySourceMappingContractTest.java` | `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install` | `./mvnw -pl dec-core-compiler -Dtest=TargetKeySourceMappingContractTest -Dsurefire.failIfNoSpecifiedTests=true test` |
-| `RuntimeFactValueContractTest` | `dec-core-context` | `dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java` | `./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install` | `./mvnw -pl dec-core-context -Dtest=RuntimeFactValueContractTest -Dsurefire.failIfNoSpecifiedTests=true test` |
-| `OpaqueRuntimeIdContractTest` | `dec-core-context` | `dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java` | `./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install` | `./mvnw -pl dec-core-context -Dtest=OpaqueRuntimeIdContractTest -Dsurefire.failIfNoSpecifiedTests=true test` |
-| `ProtectedWriteIntentResolutionTest` | `dec-core-starter` | `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java` | `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install` | `./mvnw -pl dec-core-starter -Dtest=ProtectedWriteIntentResolutionTest -Dsurefire.failIfNoSpecifiedTests=true test` |
-| `ProtectedRuntimeModelAdapterIntegrationTest` | `dec-core-starter` | `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java` | `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install` | `./mvnw -pl dec-core-starter -Dtest=ProtectedRuntimeModelAdapterIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test` |
-| `ProtectedAccessDependencyDirectionTest` | `dec-core-starter` | `dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java` | `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install` | `./mvnw -pl dec-core-starter -Dtest=ProtectedAccessDependencyDirectionTest -Dsurefire.failIfNoSpecifiedTests=true test` |
+## 2. Exact TestClass registry
 
-If target TestClass/symbol/setup is missing or compile fails before intended assertion, result is `INVALID_RED`, not a valid failing behavioral test.
+### `DAG` — `P2RevisionDependencyDagContractTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=P2RevisionDependencyDagContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
 
-## 2. Revision DAG
+### `SYSTEM` — `SystemCompilationContractTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
 
-### CASE-P2-TD-REVISION-DAG-001 — BLOCKING
-Assert exactly `Overlay R04 -> BM-R18 -> FLOW-R08 -> DESIGN-P2-R20 -> TESTDESIGN-P2-R21`; no downstream authoritative input; dependency graph/impact/traceability must carry current revisions.
+### `RULEVIEW` — `RuleViewCompilationContractTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
 
-## 3. System / RuleView / compatibility
+### `TARGET` — `TargetKeyModelPathContractTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=TargetKeyModelPathContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
 
-Retain:
+### `POLICY` — `ModelAccessPolicyContractTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=ModelAccessPolicyContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `API` — `ProtectedAccessCurrentApiContractTest`
+- Module: `dec-core-context`
+- Planned source: `dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessCurrentApiContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-context -Dtest=ProtectedAccessCurrentApiContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `VALUE` — `RuntimeFactValueContractTest`
+- Module: `dec-core-context`
+- Planned source: `dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-context -Dtest=RuntimeFactValueContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `ID` — `OpaqueRuntimeIdContractTest`
+- Module: `dec-core-context`
+- Planned source: `dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-context -Dtest=OpaqueRuntimeIdContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `INTENT` — `ProtectedWriteIntentResolutionTest`
+- Module: `dec-core-starter`
+- Planned source: `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java`
+- Bootstrap: `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-starter -Dtest=ProtectedWriteIntentResolutionTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `ADAPTER` — `ProtectedRuntimeModelAdapterIntegrationTest`
+- Module: `dec-core-starter`
+- Planned source: `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java`
+- Bootstrap: `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-starter -Dtest=ProtectedRuntimeModelAdapterIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `LOCATOR` — `RuntimeObjectLocatorIntegrationTest`
+- Module: `dec-core-model`
+- Planned source: `dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java`
+- Bootstrap: `./mvnw -pl dec-core-model -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-model -Dtest=RuntimeObjectLocatorIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `TXN` — `ProtectedWriteTransactionIntegrationTest`
+- Module: `dec-core-model`
+- Planned source: `dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java`
+- Bootstrap: `./mvnw -pl dec-core-model -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-model -Dtest=ProtectedWriteTransactionIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `COMPOSE` — `ProtectedAccessProductionCompositionTest`
+- Module: `dec-core-starter`
+- Planned source: `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java`
+- Bootstrap: `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-starter -Dtest=ProtectedAccessProductionCompositionTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `CONC` — `ProtectedAccessConcurrencyTest`
+- Module: `dec-core-starter`
+- Planned source: `dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java`
+- Bootstrap: `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-starter -Dtest=ProtectedAccessConcurrencyTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `DEP` — `ProtectedAccessDependencyDirectionTest`
+- Module: `dec-core-starter`
+- Planned source: `dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java`
+- Bootstrap: `./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-starter -Dtest=ProtectedAccessDependencyDirectionTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `PUB` — `AtomicPublicationContractTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=AtomicPublicationContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `DIAG` — `P2DiagnosticDeterminismTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=P2DiagnosticDeterminismTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `FIXTURE` — `P2RealFixtureIntegrationTest`
+- Module: `dec-demo`
+- Planned source: `dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java`
+- Bootstrap: `./mvnw -pl dec-demo -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+### `COMPAT` — `P2DeclarationCompatibilityContractTest`
+- Module: `dec-core-compiler`
+- Planned source: `dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java`
+- Bootstrap: `./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install`
+- Exact target RED: `./mvnw -pl dec-core-compiler -Dtest=P2DeclarationCompatibilityContractTest -Dsurefire.failIfNoSpecifiedTests=true test`
+
+## 3. Complete blocking Case map
+
+Every blocking case maps to the registry entry named after `=>`; that registry entry freezes module, source path, bootstrap, and exact target RED command.
+
+### `DAG` => `P2RevisionDependencyDagContractTest` (1 case)
+- `CASE-P2-TD-REVISION-DAG-001`
+
+### `SYSTEM` => `SystemCompilationContractTest` (6 cases)
 - `CASE-P2-TD-SYSTEM-DETERMINISM-001`
 - `CASE-P2-TD-SYSTEM-DUPLICATE-001`
 - `CASE-P2-TD-SYSTEM-FORWARD-REF-001`
 - `CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001`
 - `CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001`
 - `CASE-P2-TD-BM-CANONICAL-PAIR-001`
+
+### `RULEVIEW` => `RuleViewCompilationContractTest` (8 cases)
 - `CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001`
 - `CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001`
 - `CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001`
@@ -47,76 +156,55 @@ Retain:
 - `CASE-P2-TD-KEY-SOURCE-COMPAT-001`
 - `CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001`
 
-## 4. P1-compatible TargetKey / ModelPath
+### `TARGET` => `TargetKeyModelPathContractTest` (6 cases)
+- `CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001`
+- `CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001`
+- `CASE-P2-TD-MODEL-PATH-UNKNOWN-001`
+- `CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001`
+- `CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001`
+- `CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001`
 
-### CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001 — BLOCKING
-Using the real P1-style shape where authorization owner System may refer to a shared source View different from its local targetView:
-
-- `sourceModel="OrderInfo"` resolves through existing shared `ViewKey("OrderInfo")` regardless of authorization owner System;
-- SystemA and SystemB authorizing the same shared source View produce value-equal `TargetKey(ViewKey("OrderInfo"))`;
-- their `ModelAccessRuleKey` differs by `authorizationOwnerSystemKey`;
-- local `targetView/selector/resolvedTarget` is validated separately inside owner System;
-- changing sourcePath does not change TargetKey;
-- missing shared source View => stable source-aware compile ERROR and publication=0;
-- no System-qualified source namespace is assumed without a Requirement/Decision.
-
-### CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001 — BLOCKING
-Verify TargetKey and ModelPath independent axes.
-
-Retain `CASE-P2-TD-MODEL-PATH-UNKNOWN-001`, `CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001`, `CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001`, `CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001`.
-
-## 5. READ/WRITE + policy classification
-
-Retain:
+### `POLICY` => `ModelAccessPolicyContractTest` (7 cases)
 - `CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001`
 - `CASE-P2-TD-NO-EXECUTE-CONTRACT-001`
 - `CASE-P2-TD-STATIC-DENY-001`
 - `CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001`
 - `CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001`
-- `CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001`
 - `CASE-P2-TD-RUNTIME-BINDING-PROOF-001`
 - `CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001`
-- `CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001`
 
-## 6. WRITE intent exact selection — new blockers
+### `API` => `ProtectedAccessCurrentApiContractTest` (1 case)
+- `CASE-P2-TD-CURRENT-API-SELF-CONTAINED-001`
 
-### CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001 — BLOCKING
-Zero candidates for exact `(ruleKey,target,path,frame,owner,cursor)` => `WRITE_INTENT_NOT_FOUND`; capability/Guard/operation=0; mutation/receipt/value absent.
+### `VALUE` => `RuntimeFactValueContractTest` (2 cases)
+- `CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001`
+- `CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001`
 
-### CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001 — BLOCKING
-Two or more candidates => `WRITE_INTENT_AMBIGUOUS`; deterministic candidate ordering may be diagnostic only; no arbitrary first/last choice; Guard/operation=0.
+### `ID` => `OpaqueRuntimeIdContractTest` (1 case)
+- `CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001`
 
-### CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001 — BLOCKING
-Exactly one candidate is frozen before Guard. Mutating/replacing frame/cursor state after freeze cannot change the selected intent. If staleness invalidates proof, DENY before operation; never re-resolve another intent.
+### `INTENT` => `ProtectedWriteIntentResolutionTest` (6 cases)
+- `CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001`
+- `CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001`
+- `CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001`
+- `CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001`
+- `CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001`
+- `CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001`
 
-## 7. Real production READ/WRITE — strengthened blockers
+### `ADAPTER` => `ProtectedRuntimeModelAdapterIntegrationTest` (4 cases)
+- `CASE-P2-TD-REAL-READ-OPERATION-001`
+- `CASE-P2-TD-REAL-WRITE-OPERATION-001`
+- `CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001`
+- `CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001`
 
-### CASE-P2-TD-REAL-READ-OPERATION-001 — BLOCKING
-Acquire normal `ProtectedAccessRuntimeFactory -> ProtectedAccessComposition`; use production dec-core-model RuntimeModelOperationPort. ALLOW READ returns exact deep immutable snapshot from actual runtime object/path, write count=0. DENY invokes model port zero times.
+### `LOCATOR` => `RuntimeObjectLocatorIntegrationTest` (2 cases)
+- `CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001`
+- `CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001`
 
-### CASE-P2-TD-REAL-WRITE-OPERATION-001 — BLOCKING
-Acquire normal production composition; exactly one frozen intent; Guard precedes model adapter; adapter mutates actual dec-core-model object/path exactly once and returns receipt bound to invocation/object/path/intent. DENY/stale/consumed => mutation=0, receipt absent.
+### `TXN` => `ProtectedWriteTransactionIntegrationTest` (1 case)
+- `CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001`
 
-### CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001 — BLOCKING
-Prove normal starter assembly wires the dec-core-model production implementation. A fake adapter or effect counter does not satisfy this case.
-
-### CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001 — BLOCKING
-Public consumer APIs expose no raw RuntimeModelOperationPort/operation callback and cannot replace operation after Guard.
-
-## 8. Runtime value and ID contracts — new blockers
-
-### CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001 — BLOCKING
-Exercise NULL/BOOLEAN/INTEGER/DECIMAL/STRING/LIST/OBJECT; reject arbitrary object; normalize integer/decimal; deterministic structural equality/serialization.
-
-### CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001 — BLOCKING
-Mutating original nested input after snapshot cannot change read value; returned LIST/OBJECT cannot be mutated; no live runtime reference leaks.
-
-### CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001 — BLOCKING
-RuntimeObjectId/ProtectedInvocationId/RuntimeWriteIntentId reject null/blank; preserve exact case-sensitive value; equality/hash are exact; IDs do not encode permission/target inference.
-
-## 9. AC-007 / dependency direction / publication / concurrency
-
-Retain:
+### `COMPOSE` => `ProtectedAccessProductionCompositionTest` (8 cases)
 - `CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001`
 - `CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001`
 - `CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001`
@@ -125,18 +213,66 @@ Retain:
 - `CASE-P2-TD-AC007-CONSUMER-PARITY-001`
 - `CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001`
 - `CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001`
+
+### `CONC` => `ProtectedAccessConcurrencyTest` (2 cases)
+- `CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001`
+- `CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001`
+
+### `DEP` => `ProtectedAccessDependencyDirectionTest` (1 case)
 - `CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001`
+
+### `PUB` => `AtomicPublicationContractTest` (3 cases)
 - `CASE-P2-TD-ATOMIC-PUBLICATION-001`
 - `CASE-P2-TD-CONTEXT-ISOLATION-001`
 - `CASE-P2-TD-POLICY-INDEX-PUBLICATION-001`
+
+### `DIAG` => `P2DiagnosticDeterminismTest` (2 cases)
 - `CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001`
 - `CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001`
-- `CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001`
-- `CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001`
+
+### `FIXTURE` => `P2RealFixtureIntegrationTest` (2 cases)
+- `CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001`
+- `CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001`
+
+### `COMPAT` => `P2DeclarationCompatibilityContractTest` (1 case)
 - `CASE-P2-TD-DECLARATION-BOUNDARY-001`
 
-Dependency oracle additionally allows planned `dec-core-starter -> dec-core-model` production assembly and continues forbidding P3/P4/P6 core -> starter.
+## 4. New/changed behavioral oracles
 
-## 10. Review / Evidence gate
+### CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001 — BLOCKING
+Direct Bridge invocation and `ResolvedWriteIntent` must carry the same exact `ModelAccessRuleKey`. `RuleKey` may be absent for Change/CustomAction and, when present, is provenance only. No authorization decision may depend on `RuleKey`.
 
-`risk_detection.json` remains NOT_SCANNED and current verification Evidence IDs remain none. R21 therefore cannot enter TDD yet. Requirement/BM/Flow/Impact/XMod/API/Architecture/Develop/Concurrency/TestDesign independent Reviews and current-revision risk scan are still required.
+### CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001 — BLOCKING
+Compile/reflection oracle proves `ResolvedWriteIntent` has no separate `targetKey/modelPath` fields and `RuntimeModelOperationPort.write` accepts only `ResolvedProtectedWriteAccess`. Runtime mutation path is exactly `writeIntent.modelAccessRuleKey.modelPath`; no second path argument exists.
+
+### CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001 — BLOCKING
+Invocation -> resolved access -> write intent preserves `RuntimeExecutionFrameId`, `RuntimeResolutionOwnerId`, `Optional<RuntimeCollectionCursorId>`. No raw String/null/empty/`N/A` cursor representation is accepted.
+
+### CASE-P2-TD-CURRENT-API-SELF-CONTAINED-001 — BLOCKING
+Using only current `DESIGN-P2-R21` API contract and current source, compile/reflect all frozen P2 public signatures. Test may not read superseded R19/R20 to discover required methods/types.
+
+### CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001 — BLOCKING
+Create two production model sessions/compositions. Register object in session A before seal. After seal: A resolves it exactly; registration/replacement is rejected; session B cannot resolve A id; no static/global object map is observed. Closing A makes its id stale.
+
+### CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001 — BLOCKING
+Missing id -> `RUNTIME_OBJECT_NOT_FOUND`; closed/cross-session/stale id -> `RUNTIME_OBJECT_STALE`; Guard/protected operation/mutation=0 and result has no value/receipt.
+
+### CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001 — BLOCKING
+Acquire normal production model session and freeze pre-write ModelData/origin snapshot. Inject mutation failure and commit failure separately after Guard ALLOW. In both branches: externally observable state equals pre-write snapshot, receipt absent, capability remains CONSUMED, denial/error is `RUNTIME_WRITE_FAILED`, and no automatic retry occurs. Successful branch commits one mutation then publishes state and receipt.
+
+### CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001 — BLOCKING
+Freeze two different capabilities against the same RuntimeObjectId + ModelPath + RuntimeMutationVersion, then release with latch/barrier. Oracle: exactly one committed mutation/receipt, mutation version increments exactly once, exactly one stale loser with `WRITE_INTENT_STALE`, loser mutation=0, no partial/lost update. Winner identity need not be predetermined.
+
+## 5. Preserved key oracles
+
+- P1 sourceModel remains shared `ViewKey -> TargetKey`; authorization owner System is separate.
+- READ/WRITE-only and two-row policy classification remain exhaustive.
+- WRITE 0/1/N selection and Guard-before-effect remain.
+- RuntimeFactValue remains closed/deep immutable/deterministic.
+- AC-007 production Rule/Change/CustomAction entries share one Bridge/Context/session.
+- Same capability atomic consume still permits at most one operation.
+- P3/P4/P6 core -> starter remains forbidden; planned starter -> model production assembly is allowed.
+
+## 6. Review / Evidence gate
+
+`risk_detection.json` remains NOT_SCANNED and current execution Evidence IDs remain none. Exact RED commands above are planned TDD commands, not executed Evidence. `TESTDESIGN-P2-R22` remains blocked by same-revision Design/TestDesign Reviews and current-revision risk scan; Implementation Plan/TDD/Development remain BLOCKED.
