@@ -1,124 +1,101 @@
 # COMPILER P2 Architecture
 
-> Revision：`DESIGN-P2-R15`  
-> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
+> Revision：`DESIGN-P2-R16`  
+> Inputs：`BM-R14 / FLOW-R04@p2-system-ruleview-protected-access / REQAN-P2-R01+DEC-OVERLAY-20260809-R02`  
+> Status：`NEEDS_REVIEW / MACHINE_BLOCKED / AC007_PENDING_USER_DECISION`
 
-## 1. Module boundaries
+## 1. 模块权威边界
 
-- `dec-core-context`
-  - neutral immutable `SystemKey`, `SystemVersionIdentity`, `CompiledSystem`, `RuleViewKey`, `CompiledRuleView`, `ModelPath`, `CompiledModelAccessRule`, `ModelAccessPolicyIndex`, `CompiledModelSet`, `EngineContext` read contracts;
-  - no dependency on compiler/starter/business executors.
-- `dec-core-compiler`
-  - System/ownership collection, RuleView composite resolution, shared ModelPath compilation, access classification, PolicyIndex construction, semantic digest, candidate construction/publication;
-  - no dependency on starter.
-- `dec-context-config-parse-xml` / YAML frontend
-  - preserve explicit System/RuleView/view-ref/rule-ref/model-access/raw-path/SourceRef facts only;
-  - no authority or ownership inference outside declared configuration.
-- `dec-core-starter`
-  - production Bridge, resolver, capability, Gateway, Guard, runtime proof adapter composition;
-  - no second System/RuleView/permission registry.
-- `dec-demo`
-  - real fixture/E2E verification only; never production dependency.
-- P3/P4/P6
-  - future consumers of the P2 seam; concrete execution remains downstream.
+- `dec-core-context`：neutral immutable values/read contracts：SystemKey、RuleViewKey、CompiledSystem、CompiledRuleView、ModelPath、AccessOperation、ModelAccessPolicyIndex、CompiledModelSet/EngineContext reads。
+- `dec-core-compiler`：source/compat conversion、System/RuleView resolution、shared ModelPath compilation、exact access rule construction、PolicyIndex construction、ownership derivation、digest-bound candidate freeze。
+- `dec-core-starter`：production Bridge、internal issuance/target resolution/capability mint、Gateway/Guard、operation adapter composition。
+- XML/YAML frontends：preserve source facts/SourceRef；不自行决定 runtime authority。
+- P3/P4/P6：是否必须在 P2 交付 concrete consumer 取决于 AC-007 pending user decision；不得反向创建第二 authority。
 
-## 2. Publication closure
+## 2. 发布闭包
 
 <a id="2-发布闭包"></a>
 
 ```text
-canonical sources
- -> System symbols
- -> owner-qualified Data/View/RuleView/Rule/Information/access facts
- -> immutable CompiledSystem ownership snapshots
- -> CompiledRuleView(key + resolvedView + ordered rules)
- -> canonical ModelPaths shared across consumers
- -> exact access rules
+Source / P1 compatibility facts
+ -> final typed registries
+ -> CompiledRuleView + rule closure
+ -> SharedModelPath/AccessMode one-way conversion
+ -> exact P2 ModelPath/AccessOperation
+ -> exact CompiledModelAccessRule
  -> ModelAccessPolicyIndex
- -> SemanticDigestInput
+ -> derived CompiledSystem ownership snapshot
+ -> SystemVersionIdentity(sourceDigest+schemaVersion+compilerVersion)
+ -> SemanticDigestInput(same immutable facts)
  -> DigestBoundCompiledInput
  -> CompiledModelSet.published
  -> EngineContext
 ```
 
-All nodes above are one candidate revision. No ownership/policy rebuild after digest. Any ERROR leaves old Context unchanged.
+Ownership snapshot is a read index, not an authority. No digest-time or runtime reconstruction from it.
 
-System `declaredVersion` is optional. Source semantic digest + schema compatibility identity are mandatory. No artificial version value is created when source does not declare one.
-
-## 3. Ownership architecture
-
-System ownership is not a side table independent from CompiledModelSet. It is a deterministic immutable view over the same final compiled facts.
-
-Rules:
-- every System-owned fact appears in exactly one owner snapshot;
-- every snapshot key resolves to a current compiled fact;
-- RuleView owner and `resolvedViewKey` ownership must be compatible;
-- snapshot/version changes are semantic changes and enter digest;
-- Contexts do not share mutable ownership sets.
-
-## 4. Shared ModelPath architecture
-
-One compiler service canonicalizes paths for `RULE`, `CHANGE`, `QUERY_CONTRACT`, `MODEL_ACCESS`. Consumer kind is provenance only.
-
-P6 Query execution is not introduced in P2; only the stable compile/IR contract is frozen. This avoids two path interpreters later.
-
-`read path="*"` exists only before finite compile-time expansion. Published rules contain exact paths.
-
-## 5. Protected-access architecture
-
-<a id="3-动态权限边界"></a>
+## 3. Ownership source topology
 
 ```text
-business/future consumer
- -> ProtectedExecutionBridge.execute(ruleKey, op, frame, owner, cursor)
- -> starter-internal issuance
- -> starter-internal target resolution
- -> one-shot capability(actual target + op + context + plan/proof)
- -> Gateway
- -> Guard
- -> exact current PolicyIndex lookup once
- -> STATIC_ALLOW or runtime proof
- -> bound protected operation
+Typed Data/View/RuleView/Information registries ----\
+CompiledRuleView nested/resolved rule closure -------+--> CompiledSystem ownership snapshot
+ModelAccessPolicyIndex keys -------------------------/
 ```
 
-Direct rule/op selection follows persistent Decision; no token layer exists.
+No duplicate Rule registry is introduced only for ownership. No duplicate model-access map is introduced only for ownership.
 
-### No-legal-bypass architecture
+## 4. P1→P2 migration topology
 
-P2 no-bypass is defined structurally:
-- no public issued-pair/capability mint;
-- no public post-Guard operation API;
-- no business-accessible secondary policy registry;
-- operation adapter is wired by composition but not exposed to business consumer through Context/Bridge getters;
-- legacy adapters are read-only;
-- current Context is the only policy authority.
+```text
+P1 SharedModelPath exact ----> shared ModelPath compiler ----> P2 ModelPath
+P1 SharedModelPath "*" ------> finite expansion -------------> exact P2 ModelPaths
+P1 AccessMode.READ ----------> AccessOperation.READ
+P1 AccessMode.WRITE ---------> AccessOperation.WRITE
+EXECUTE ---------------------> explicit P2 source only
+```
 
-Concrete P3/P4/P6 integrations are downstream acceptance obligations, not hidden P2 implementation work.
+After conversion, PolicyIndex/Bridge/Guard never consult P1 path/operation types as authority.
 
-## 6. Runtime denial observability
+## 5. Runtime protected-access flow
 
-Guard/Gateway return stable denial classification with System, optional RuleView provenance, exact operation/path and policy SourceRef. Runtime data values are excluded. Repeating the same denial against the same immutable Context must produce stable classification/provenance.
+`FLOW-PROTECTED-ACCESS-EXECUTE`：
 
-## 7. Operation independence
+```text
+ProtectedExecutionBridge
+ -> starter-internal issued invocation
+ -> exact target resolver
+ -> internal one-shot capability(target+operation)
+ -> ProtectedAccessGateway
+ -> ModelAccessGuard
+ -> exact current-context PolicyIndex lookup
+ -> optional runtime proof
+ -> bound operation OR deterministic DENY
+```
 
-Policy lookup treats operation as part of exact authority. READ permission cannot authorize WRITE/EXECUTE and vice versa. There is no path-level `hasAnyPermission` shortcut.
+STATIC_ALLOW 也进入 Guard；runtime branch 只追加 proof。Same capability concurrent terminal success <=1。
 
-## 8. Concurrency
+## 6. AC-007 architecture status
 
-- compilation candidates are session-local;
-- publication is atomic;
-- EngineContext and ownership snapshots are immutable;
-- bridge calls are independent invocations;
-- same one-shot capability concurrent terminal success <= 1;
-- target/operation cannot change after capability mint;
-- no token/claim/replay state exists in P2.
+Common architecture foundation is frozen: no public issued-pair/capability mint, no secondary permission authority, no compatibility write bypass, no public raw operation adapter handed to business caller。
 
-## 9. Migration architecture
+但 final P2 acceptance scope 尚未冻结：
+- Option A：seam/no-bypass 即 P2 final acceptance；
+- Option B：P2 还要交付 representative production consumers。
 
-<a id="4-迁移架构"></a>
+`DEC-P2-AC007-STAGE-BOUNDARY-001 = PROPOSED / PENDING_USER_DECISION`；Architecture 不把 Option A 当成 ACTIVE。
 
-P2 keeps only surviving read-only declaration/System compatibility. `dec-expand-declaration` remains retired. P7 owns final deletion/resource/runtime convergence.
+## 7. Source compatibility
 
-## 10. Architecture gate
+Existing Java public surfaces remain additive-compatible：
+- `SystemKey(String)` / `name()`；
+- `RuleViewKey(SystemKey,String)` / `owner()` / `name()`；
+- `EngineContext(CompiledModelSet)`；
+- legacy eight-argument `CompiledModelSet` constructor。
 
-Architecture content is candidate-only. Exact Architecture/Impact/CrossModule/Concurrency reviews and machine risk detection remain required before phase progression.
+## 8. Failure boundaries
+
+Compile ERROR -> no candidate publication / old Context retained。Runtime policy/proof/target/Guard failure -> DENY before operation/effects。No fallback from P2 canonical facts to broader P1 compatibility authority。
+
+## 9. Gate
+
+Architecture exact Review, Impact/CrossModule/Concurrency Review, risk detection and AC-007 user decision remain blocking. Implementation Plan/TDD/Development remain BLOCKED.
