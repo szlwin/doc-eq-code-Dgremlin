@@ -1,26 +1,47 @@
 # COMPILER P2 Test Seams
 
-> Revision：`DESIGN-P2-R21`。Status：`NEEDS_REVIEW / MACHINE_BLOCKED`。
+> Revision：`DESIGN-P2-R22`
+> Inputs：`BM-R20 / FLOW-R10 / P2-IMPACT-R22`
+> Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 
-## Stable seams
+## Compile/publication seams
 
-- Direct Bridge authority: exact `ModelAccessRuleKey`, not required `RuleKey`.
-- Typed invocation context: frame/owner/optional cursor wrappers end-to-end.
-- WRITE path: exactly one path through `ResolvedWriteIntent.modelAccessRuleKey`; operation port has no second path.
-- Write intent: deterministic 0/1/N; optional RuleKey provenance only.
-- Runtime object lookup: one sealed composition/frame `RuntimeModelSession`; no global registry.
-- Transactional write: isolated/rollback-safe failure, receipt only after commit.
-- Concurrent same-version WRITE: at most one commit; stale loser zero mutation.
-- RuntimeFactValue: closed deep-immutable deterministic domain.
+- construct a valid/invalid immutable Context candidate separately from publication;
+- assert CONTEXT only constructs/holds representation;
+- assert COMPILER coordinates the atomic swap;
+- inject candidate-construction/publication failures and assert old Context remains;
+- no global/default Context lookup seam is permitted.
 
-## Production-vs-test rule
+## Runtime-target seams
 
-A fake model adapter can prove sequencing only. Production reachability must acquire normal starter composition and use the dec-core-model production RuntimeModelSession/operation implementation over real ModelData state.
+- factory must accept explicit EngineContext and explicit `RuntimeExecutionFrameSnapshot`;
+- invocation frame/owner mismatch is observable before resolver/capability/Guard;
+- controlled sealed RuntimeModelSession fixtures provide 0/1/N candidate sets;
+- resolver result freezes `RuntimeModelSessionId + RuntimeObjectId + RuntimeBindingProof`;
+- tests can prove there is one production resolver path and no first/name/frame-only fallback.
 
-## Failure injection
+## Runtime object ownership seams
 
-Tests must inject failures at mutation and commit boundaries and assert externally observable ModelData/origin state equals pre-write state, receipt absent and capability consumed.
+- identity-preserving fixtures register the exact same ModelData instance twice in one session or in two active sessions;
+- same-session duplicate -> `RUNTIME_OBJECT_ALREADY_REGISTERED`;
+- cross-session active alias -> `RUNTIME_OBJECT_OWNERSHIP_CONFLICT`;
+- close/reopen may transfer active lease but cannot reset per-path mutation version.
 
-## Concurrency
+## WRITE stamp / rollback seams
 
-Use latch/barrier. Freeze two capabilities against the same object/path/version before release; assert exactly one committed mutation/receipt, exactly one `WRITE_INTENT_STALE`, version increments once and no partial update. No sleep-based oracle.
+- construct `RuntimeMutationStamp(sessionId, objectId, path, version)` only from one frozen target;
+- mismatch session/object/path must fail construction or deny before Guard/effect;
+- latch/barrier same-version race proves exactly one commit;
+- mutation failure and commit failure both restore observable ModelData/origin state while capability stays CONSUMED.
+
+## API self-containedness seam
+
+`ProtectedAccessCurrentApiContractTest` compiles/reflects every P2-added type and factory using only `DESIGN-P2-R22` + current source. Superseded design text is not a fixture.
+
+## Production reachability
+
+A fake adapter/resolver may support unit tests but cannot satisfy production reachability. Production Evidence must acquire normal `ProtectedAccessRuntimeFactory.production(engineContext).create(frameSnapshot)` and observe real dec-core-model state.
+
+## P2/P7 boundary
+
+Tests must reject use of P2 RuntimeModelSession as a generic user/business session, cross-request transaction manager or P7 resource lifecycle abstraction.

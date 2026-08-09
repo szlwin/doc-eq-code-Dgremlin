@@ -5,332 +5,264 @@ scope:
   version: V_1.0
   module: COMPILER
   targetIds:
-  - FEATURE-DESC-3361AD2E54FC
-  - FLOW-CONFIG-COMPILE
-  - FLOW-PROTECTED-ACCESS-EXECUTE
-revision: P2-IMPACT-R21
-baseRevision: P2-IMPACT-R20
+    - FEATURE-DESC-3361AD2E54FC
+    - FLOW-CONFIG-COMPILE
+    - FLOW-PROTECTED-ACCESS-EXECUTE
+revision: P2-IMPACT-R22
+baseRevision: P2-IMPACT-R21
 nodes:
-- id: FEATURE_P2
-  type: FEATURE
-  name: P2 System RuleView model-access
-  module: COMPILER
-  status: PROPOSED
-  refs:
-  - FEATURE-DESC-3361AD2E54FC
-  traceIds:
-  - TR-P2-001
-- id: FLOW_ACCESS
-  type: PROCESS
-  name: Protected runtime access
-  module: STARTER
-  status: PROPOSED
-  refs:
-  - FLOW-PROTECTED-ACCESS-EXECUTE
-  - FLOW-R09
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-  - TR-P2-007
-- id: MOD_CONTEXT
-  type: MODULE
-  name: dec-core-context
-  module: CONTEXT
-  status: ACTIVE
-  refs:
-  - dec-core-context
-  traceIds:
-  - TR-P2-004
-- id: MOD_STARTER
-  type: MODULE
-  name: dec-core-starter
-  module: STARTER
-  status: ACTIVE
-  refs:
-  - dec-core-starter
-  traceIds:
-  - TR-P2-007
-- id: MOD_MODEL
-  type: MODULE
-  name: dec-core-model
-  module: MODEL
-  status: ACTIVE
-  refs:
-  - dec-core-model
-  - dec-core-model/src/main/java/dec/core/model/container/ModelLoader.java
-  - dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java
-  traceIds:
-  - TR-P2-004
-  - TR-P2-007
-- id: API_PROTECTED_ACCESS
-  type: API
-  name: Current self-contained protected-access API set
-  module: CONTEXT
-  status: PROPOSED
-  refs:
-  - DESIGN-P2-R21#current-api-contract
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-  - TR-P2-007
-- id: RUNTIME_SESSION
-  type: DATA_OBJECT
-  name: RuntimeModelSession / RuntimeObjectLocator
-  module: MODEL
-  status: PROPOSED
-  refs:
-  - DESIGN-P2-R21#runtime-object-locator
-  traceIds:
-  - TR-P2-006
-  - TR-P2-007
-- id: TEST_P2_R22
-  type: TEST_CASE
-  name: P2 TestDesign R22 exact blocking-case map
-  module: COMPILER
-  status: PROPOSED
-  refs:
-  - TESTDESIGN-P2-R22
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-  - TR-P2-007
-  - TR-P2-009
+  - id: REQ_P2
+    type: REQUIREMENT
+    name: P2 System RuleView requirement
+    module: COMPILER
+    status: PROPOSED
+    refs:
+      - REQAN-P2-R01@d08612768131
+    traceIds: [TR-P2-001, TR-P2-004]
+  - id: FEATURE_P2
+    type: FEATURE
+    name: P2 System RuleView model-access
+    module: COMPILER
+    status: PROPOSED
+    refs: [FEATURE-DESC-3361AD2E54FC]
+    traceIds: [TR-P2-001]
+  - id: FLOW_CONFIG
+    type: PROCESS
+    name: P2 compile/publication flow
+    module: COMPILER
+    status: PROPOSED
+    refs: [FLOW-CONFIG-COMPILE, FLOW-R10]
+    traceIds: [TR-P2-001, TR-P2-005, TR-P2-008]
+  - id: FLOW_ACCESS
+    type: PROCESS
+    name: P2 protected runtime access flow
+    module: STARTER
+    status: PROPOSED
+    refs: [FLOW-PROTECTED-ACCESS-EXECUTE, FLOW-R10]
+    traceIds: [TR-P2-004, TR-P2-006, TR-P2-007]
+  - id: MOD_COMPILER
+    type: MODULE
+    name: dec-core-compiler
+    module: COMPILER
+    status: ACTIVE
+    refs: [dec-core-compiler]
+    traceIds: [TR-P2-001, TR-P2-005, TR-P2-008]
+  - id: MOD_CONTEXT
+    type: MODULE
+    name: dec-core-context
+    module: CONTEXT
+    status: ACTIVE
+    refs: [dec-core-context]
+    traceIds: [TR-P2-004, TR-P2-006, TR-P2-008]
+  - id: MOD_STARTER
+    type: MODULE
+    name: dec-core-starter
+    module: STARTER
+    status: ACTIVE
+    refs: [dec-core-starter]
+    traceIds: [TR-P2-007]
+  - id: MOD_MODEL
+    type: MODULE
+    name: dec-core-model
+    module: MODEL
+    status: ACTIVE
+    refs:
+      - dec-core-model
+      - dec-core-model/src/main/java/dec/core/model/container/ModelLoader.java
+      - dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java
+    traceIds: [TR-P2-004, TR-P2-007]
+  - id: API_PROTECTED_ACCESS
+    type: API
+    name: Current complete protected-access API set
+    module: CONTEXT
+    status: PROPOSED
+    refs: [DESIGN-P2-R22#current-api-contract]
+    traceIds: [TR-P2-004, TR-P2-006, TR-P2-007]
+  - id: RUNTIME_TARGET_RESOLVER
+    type: API
+    name: RuntimeTargetResolver
+    module: STARTER
+    status: PROPOSED
+    refs: [DESIGN-P2-R22#runtime-target-resolution]
+    traceIds: [TR-P2-006, TR-P2-009]
+  - id: RUNTIME_SESSION
+    type: DATA_OBJECT
+    name: RuntimeModelSession and actual-model coordination cell
+    module: MODEL
+    status: PROPOSED
+    refs: [DESIGN-P2-R22#runtime-model-session]
+    traceIds: [TR-P2-006, TR-P2-007, TR-P2-009]
+  - id: TEST_P2_R23
+    type: TEST_CASE
+    name: P2 TestDesign R23 exact current-revision case map
+    module: COMPILER
+    status: PROPOSED
+    refs: [TESTDESIGN-P2-R23]
+    traceIds: [TR-P2-004, TR-P2-006, TR-P2-007, TR-P2-009]
 relationships:
-- id: REL-P2-ACCESS-CONTEXT
-  from: FLOW_ACCESS
-  to: MOD_CONTEXT
-  type: DEPENDS_ON
-  direction: DIRECTED
-  rationale: Neutral immutable access/key/value/result contracts live in context.
-  conditions: []
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-- id: REL-P2-ACCESS-STARTER
-  from: FLOW_ACCESS
-  to: MOD_STARTER
-  type: DEPENDS_ON
-  direction: DIRECTED
-  rationale: Starter owns Bridge, intent resolver, capability, Gateway, Guard and production assembly.
-  conditions: []
-  traceIds:
-  - TR-P2-007
-- id: REL-P2-STARTER-MODEL
-  from: MOD_STARTER
-  to: MOD_MODEL
-  type: DEPENDS_ON
-  direction: DIRECTED
-  rationale: Starter production assembly obtains a composition-scoped model session/adapter; model already
-    depends on context, so this adds no core->starter edge.
-  conditions:
-  - production composition only
-  traceIds:
-  - TR-P2-004
-  - TR-P2-007
-- id: REL-P2-MODEL-SESSION
-  from: MOD_MODEL
-  to: RUNTIME_SESSION
-  type: IMPLEMENTED_BY
-  direction: DIRECTED
-  rationale: RuntimeObjectId location, path-version serialization and model transaction integration are
-    model responsibilities.
-  conditions:
-  - no static/global registry
-  traceIds:
-  - TR-P2-006
-  - TR-P2-007
-  - TR-P2-009
-- id: REL-P2-TEST-API
-  from: TEST_P2_R22
-  to: API_PROTECTED_ACCESS
-  type: VERIFIED_BY
-  direction: DIRECTED
-  rationale: R22 maps every blocking case to an exact test class/module/path/command.
-  conditions: []
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-  - TR-P2-007
-  - TR-P2-009
+  - {id: REL-P2-REQ-FEATURE, from: REQ_P2, to: FEATURE_P2, type: REFINES, direction: DIRECTED, rationale: P2 feature realizes the authoritative P2 Requirement/Overlay decisions., conditions: [], traceIds: [TR-P2-001]}
+  - {id: REL-P2-FEATURE-CONFIG, from: FEATURE_P2, to: FLOW_CONFIG, type: REFINES, direction: DIRECTED, rationale: Compile/publication is one of the two authoritative P2 flows., conditions: [], traceIds: [TR-P2-001, TR-P2-008]}
+  - {id: REL-P2-FEATURE-ACCESS, from: FEATURE_P2, to: FLOW_ACCESS, type: REFINES, direction: DIRECTED, rationale: Protected runtime access is the second authoritative P2 flow., conditions: [], traceIds: [TR-P2-004, TR-P2-007]}
+  - {id: REL-P2-CONFIG-COMPILER, from: FLOW_CONFIG, to: MOD_COMPILER, type: DEPENDS_ON, direction: DIRECTED, rationale: Compiler owns validation orchestration and atomic publication coordination., conditions: [], traceIds: [TR-P2-001, TR-P2-005, TR-P2-008]}
+  - {id: REL-P2-CONFIG-CONTEXT, from: FLOW_CONFIG, to: MOD_CONTEXT, type: DEPENDS_ON, direction: DIRECTED, rationale: Context constructs and carries immutable EngineContext/PolicyIndex representation only., conditions: [], traceIds: [TR-P2-006, TR-P2-008]}
+  - {id: REL-P2-ACCESS-CONTEXT, from: FLOW_ACCESS, to: MOD_CONTEXT, type: DEPENDS_ON, direction: DIRECTED, rationale: Neutral immutable access/key/value/result contracts live in context., conditions: [], traceIds: [TR-P2-004, TR-P2-006]}
+  - {id: REL-P2-ACCESS-STARTER, from: FLOW_ACCESS, to: MOD_STARTER, type: DEPENDS_ON, direction: DIRECTED, rationale: Starter owns explicit composition RuntimeTargetResolver intent capability Gateway and Guard., conditions: [], traceIds: [TR-P2-006, TR-P2-007]}
+  - {id: REL-P2-STARTER-MODEL, from: MOD_STARTER, to: MOD_MODEL, type: DEPENDS_ON, direction: DIRECTED, rationale: Starter production composition binds sealed model session and operation adapter; no model-to-starter edge., conditions: [production composition only], traceIds: [TR-P2-004, TR-P2-007]}
+  - {id: REL-P2-STARTER-RESOLVER, from: MOD_STARTER, to: RUNTIME_TARGET_RESOLVER, type: IMPLEMENTED_BY, direction: DIRECTED, rationale: Starter owns unique plan-to-runtime-target selection., conditions: [], traceIds: [TR-P2-006, TR-P2-009]}
+  - {id: REL-P2-MODEL-SESSION, from: MOD_MODEL, to: RUNTIME_SESSION, type: IMPLEMENTED_BY, direction: DIRECTED, rationale: Model owns explicit session locator actual ModelData coordination lease and per-path lock/version., conditions: [], traceIds: [TR-P2-006, TR-P2-007, TR-P2-009]}
+  - {id: REL-P2-TEST-API, from: TEST_P2_R23, to: API_PROTECTED_ACCESS, type: VERIFIED_BY, direction: DIRECTED, rationale: R23 self-contained cases verify current R22 API and behavior contracts., conditions: [], traceIds: [TR-P2-004, TR-P2-006, TR-P2-007, TR-P2-009]}
 impactPolicies:
-- id: IMP-P2-WRITE-AUTHORITY
-  sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
-  sourceAction: resolve and execute WRITE
-  targetRefs:
-  - MOD_CONTEXT
-  - MOD_STARTER
-  - MOD_MODEL
-  policy: REJECT_OPERATION
-  conditions:
-  - authority is not exact ModelAccessRuleKey
-  - a second ModelPath disagrees or is supplied
-  consistency: ATOMIC
-  transactionBoundary: one protected WRITE attempt
-  idempotency: same immutable authority tuple produces the same intent or denial
-  failureHandling: fail closed before mutation
-  compensation: none; effect not started
-  historyHandling: historical PASSED revisions unchanged
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-  - TR-P2-009
-  testCaseIds:
-  - CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001
-  - CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001
-- id: IMP-P2-RUNTIME-OBJECT-SCOPE
-  sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
-  sourceAction: locate RuntimeObjectId
-  targetRefs:
-  - MOD_MODEL
-  - RUNTIME_SESSION
-  policy: REJECT_OPERATION
-  conditions:
-  - id missing
-  - session closed/stale
-  - id belongs to another composition/session
-  consistency: ATOMIC
-  transactionBoundary: one scoped runtime lookup
-  idempotency: sealed session lookup is deterministic
-  failureHandling: RUNTIME_OBJECT_NOT_FOUND/STALE before mutation
-  compensation: none
-  historyHandling: no global registry migration
-  traceIds:
-  - TR-P2-006
-  - TR-P2-009
-  testCaseIds:
-  - CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001
-  - CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001
-- id: IMP-P2-WRITE-TRANSACTION
-  sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
-  sourceAction: perform Guard-approved runtime mutation
-  targetRefs:
-  - MOD_MODEL
-  policy: REJECT_OPERATION
-  conditions:
-  - mutation/transaction/commit failure
-  - frozen mutation version stale
-  consistency: ATOMIC
-  transactionBoundary: one RuntimeObjectId+ModelPath write transaction
-  idempotency: one-shot capability is not retried; same-version race commits at most once
-  failureHandling: rollback/restore observable state; receipt absent; capability remains consumed
-  compensation: model transaction rollback or isolated working-copy restore before publication
-  historyHandling: no change to historical lifecycle
-  traceIds:
-  - TR-P2-004
-  - TR-P2-007
-  - TR-P2-009
-  testCaseIds:
-  - CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001
-  - CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001
+  - id: IMP-P2-COMPILE-PUBLICATION
+    sourceRef: FLOW-CONFIG-COMPILE
+    sourceAction: construct candidate and coordinate atomic publication
+    targetRefs: [MOD_COMPILER, MOD_CONTEXT]
+    policy: REJECT_OPERATION
+    conditions: [Context attempts publication itself, candidate incomplete/invalid, atomic swap fails]
+    consistency: ATOMIC
+    transactionBoundary: one immutable EngineContext candidate publication
+    idempotency: same validated inputs yield same candidate identity/digest
+    failureHandling: discard candidate and retain previous Context
+    compensation: none; old Context already intact
+    historyHandling: historical PASSED lifecycle unchanged
+    traceIds: [TR-P2-005, TR-P2-006, TR-P2-008]
+    testCaseIds: [CASE-P2-TD-ATOMIC-PUBLICATION-001, CASE-P2-TD-POLICY-INDEX-PUBLICATION-001]
+  - id: IMP-P2-RUNTIME-TARGET-SELECTION
+    sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
+    sourceAction: resolve invocation to exact runtime target
+    targetRefs: [MOD_CONTEXT, MOD_STARTER, MOD_MODEL, RUNTIME_TARGET_RESOLVER, RUNTIME_SESSION]
+    policy: REJECT_OPERATION
+    conditions: [invocation context differs from composition, target candidate count != 1, session scope proof mismatch]
+    consistency: ATOMIC
+    transactionBoundary: one protected invocation target-resolution attempt
+    idempotency: sealed session + immutable plan/context produces same target or denial
+    failureHandling: deny before capability/Guard/effect
+    compensation: none; effect not started
+    historyHandling: historical PASSED lifecycle unchanged
+    traceIds: [TR-P2-006, TR-P2-009]
+    testCaseIds: [CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001, CASE-P2-TD-RUNTIME-TARGET-SELECTION-001, CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001]
+  - id: IMP-P2-RUNTIME-OBJECT-OWNERSHIP
+    sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
+    sourceAction: register/use actual ModelData/runtime handle
+    targetRefs: [MOD_MODEL, RUNTIME_SESSION]
+    policy: REJECT_OPERATION
+    conditions: [same handle registered twice in active session, same handle registered by another active session]
+    consistency: ATOMIC
+    transactionBoundary: one actual ModelData coordination-cell active-session lease
+    idempotency: registration of same actual handle is identity-aware and deterministic
+    failureHandling: reject duplicate/ownership conflict before protected execution
+    compensation: close prior owner session to release active lease; version history remains with coordination cell
+    historyHandling: historical PASSED lifecycle unchanged
+    traceIds: [TR-P2-007, TR-P2-009]
+    testCaseIds: [CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001, CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001]
+  - id: IMP-P2-WRITE-TRANSACTION
+    sourceRef: FLOW-PROTECTED-ACCESS-EXECUTE
+    sourceAction: perform Guard-approved actual-model mutation
+    targetRefs: [MOD_STARTER, MOD_MODEL, RUNTIME_SESSION]
+    policy: REJECT_OPERATION
+    conditions: [mutation stamp does not match resolved target/key, actual-model/path version stale, mutation/transaction/commit failure]
+    consistency: ATOMIC
+    transactionBoundary: one actual ModelData + ModelPath write transaction under coordination cell
+    idempotency: one-shot capability is never retried; same-version race commits at most once
+    failureHandling: stale => zero mutation; operation failure => rollback/restore; receipt absent; capability remains consumed
+    compensation: model transaction rollback or isolated working-copy restore
+    historyHandling: historical PASSED lifecycle unchanged
+    traceIds: [TR-P2-004, TR-P2-007, TR-P2-009]
+    testCaseIds: [CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001, CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001, CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001]
 crossModuleImplementations:
-- id: CMI-P2-PROTECTED-ACCESS-002
-  name: Production protected access with scoped model session and transactional WRITE
-  trigger: FLOW-PROTECTED-ACCESS-EXECUTE begins
-  participants:
-  - id: CMPART-P2-ACCESS-CONTEXT
-    module: dec-core-context
-    responsibility: Own self-contained neutral ModelAccessRuleKey, invocation, resolved access, result/value/typed
-      ID contracts.
-  - id: CMPART-P2-ACCESS-STARTER
-    module: dec-core-starter
-    responsibility: Resolve typed invocation/write intent, enforce one-shot Gateway/Guard and assemble
-      production model session.
-  - id: CMPART-P2-ACCESS-MODEL
-    module: dec-core-model
-    responsibility: Own composition-scoped RuntimeModelSession/RuntimeObjectLocator, path versions and
-      transactionally perform actual ModelData operations.
-  steps:
-  - id: CMSTEP-P2-ACCESS-101
-    order: 1
-    from: dec-core-starter
-    to: dec-core-model
-    interactionType: SYNC_API
-    action: Resolve RuntimeObjectId inside current sealed RuntimeModelSession and obtain current object/path
-      mutation version.
-    preconditions:
-    - composition owns exactly one active model session
-    postconditions:
-    - exact runtime object handle and version or deterministic missing/stale failure
-    idempotency: sealed lookup deterministic
-    failureHandling: deny before Guard/effect
-    compensation: none
-    traceIds:
-    - TR-P2-006
-    - TR-P2-009
-  - id: CMSTEP-P2-ACCESS-102
-    order: 2
-    from: dec-core-starter
-    to: dec-core-context
-    interactionType: QUERY
-    action: Guard exact ModelAccessRuleKey/runtime proof carried by one-shot resolved access.
-    preconditions:
-    - write intent, when WRITE, is frozen with typed context and expected version
-    postconditions:
-    - ALLOW or DENY; no model effect yet
-    idempotency: one-shot capability prevents repeated attempt
-    failureHandling: DENY fail closed
-    compensation: none
-    traceIds:
-    - TR-P2-006
-    - TR-P2-007
-  - id: CMSTEP-P2-ACCESS-103
-    order: 3
-    from: dec-core-starter
-    to: dec-core-model
-    interactionType: SYNC_API
-    action: Call read(ResolvedProtectedReadAccess) or write(ResolvedProtectedWriteAccess); WRITE has no
-      separate path argument.
-    preconditions:
-    - Guard ALLOW
-    postconditions:
-    - READ snapshot or exactly one committed WRITE receipt
-    idempotency: one consumed capability and mutation-version check
-    failureHandling: stale => no mutation; operation failure => rollback/restore and no receipt
-    compensation: transaction rollback or isolated working-copy restore
-    traceIds:
-    - TR-P2-004
-    - TR-P2-007
-    - TR-P2-009
-  successCriteria:
-  - ModelAccessRuleKey is the only permission/write authority key.
-  - No duplicated WRITE ModelPath exists.
-  - Runtime object lookup is composition/session scoped.
-  - WRITE failure leaves externally observable state unchanged.
-  - Same-version concurrent capabilities commit at most once.
-  failurePaths:
-  - id: CMFAIL-P2-ACCESS-101
-    atStep: CMSTEP-P2-ACCESS-101
-    condition: missing/stale/cross-session RuntimeObjectId
-    result: deterministic denial before Guard/effect
-    compensationSteps: []
-    manualRecovery: create a fresh composition/session and resolve a current runtime object
-    traceIds:
-    - TR-P2-006
-  - id: CMFAIL-P2-ACCESS-103
-    atStep: CMSTEP-P2-ACCESS-103
-    condition: version mismatch or runtime write/commit failure
-    result: zero committed mutation for stale loser, or transaction rollback/restore on operation failure;
-      receipt absent
-    compensationSteps:
-    - rollback-or-restore-model-state
-    manualRecovery: retry only as a new invocation/capability after current state is re-resolved
-    traceIds:
-    - TR-P2-007
-    - TR-P2-009
-  traceIds:
-  - TR-P2-004
-  - TR-P2-006
-  - TR-P2-007
-  - TR-P2-009
-  testCaseIds:
-  - CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001
-  - CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001
-  - CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001
-  - CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001
-  - CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001
-  businessFlowRef: FLOW-PROTECTED-ACCESS-EXECUTE
-  businessStepRefs:
-  - STEP-P2-ACCESS-01
-  - STEP-P2-ACCESS-02
-  - STEP-P2-ACCESS-03
-  - STEP-P2-ACCESS-06
+  - id: CMI-P2-COMPILE-003
+    name: Compiler-coordinated atomic P2 publication
+    trigger: FLOW-CONFIG-COMPILE reaches validated candidate construction
+    participants:
+      - {id: CMPART-P2-COMPILE-COMPILER, module: dec-core-compiler, responsibility: Own symbol/path/policy validation and coordinate one atomic publication.}
+      - {id: CMPART-P2-COMPILE-CONTEXT, module: dec-core-context, responsibility: Construct and hold immutable EngineContext/PolicyIndex candidate representation; never independently publish.}
+    steps:
+      - id: CMSTEP-P2-COMPILE-101
+        order: 1
+        from: dec-core-compiler
+        to: dec-core-context
+        interactionType: SYNC_API
+        action: Request immutable EngineContext/PolicyIndex candidate construction from fully validated compiled facts.
+        preconditions: [all compiler validations passed]
+        postconditions: [one immutable candidate or construction error]
+        idempotency: pure construction for identical validated facts
+        failureHandling: discard failed candidate
+        compensation: none
+        traceIds: [TR-P2-005, TR-P2-006, TR-P2-008]
+      - id: CMSTEP-P2-COMPILE-102
+        order: 2
+        from: dec-core-compiler
+        to: dec-core-context
+        interactionType: COMMAND
+        action: Coordinate atomic publication of the exact candidate; Context exposes representation/publication primitive but does not initiate the swap.
+        preconditions: [candidate immutable and complete]
+        postconditions: [new Context visible atomically or old Context retained]
+        idempotency: candidate publication identity/version prevents partial duplicate publication
+        failureHandling: retain old Context on failure
+        compensation: none
+        traceIds: [TR-P2-008]
+    successCriteria: [Compiler remains publication coordinator., Context remains immutable representation holder., No partial/global default Context state appears.]
+    failurePaths:
+      - {id: CMFAIL-P2-COMPILE-101, atStep: CMSTEP-P2-COMPILE-101, condition: candidate construction fails, result: candidate discarded; old Context retained, compensationSteps: [], manualRecovery: fix compiler input and rebuild a new candidate, traceIds: [TR-P2-006, TR-P2-008]}
+      - {id: CMFAIL-P2-COMPILE-102, atStep: CMSTEP-P2-COMPILE-102, condition: atomic publication fails, result: old Context remains fully visible; partial publication=0, compensationSteps: [], manualRecovery: retry only with a fresh validated candidate/publication attempt, traceIds: [TR-P2-008]}
+    traceIds: [TR-P2-001, TR-P2-005, TR-P2-006, TR-P2-008]
+    testCaseIds: [CASE-P2-TD-ATOMIC-PUBLICATION-001, CASE-P2-TD-CONTEXT-ISOLATION-001, CASE-P2-TD-POLICY-INDEX-PUBLICATION-001]
+    businessFlowRef: FLOW-CONFIG-COMPILE
+    businessStepRefs: [STEP-P2-COMPILE-04, STEP-P2-COMPILE-05, STEP-P2-COMPILE-06]
+  - id: CMI-P2-PROTECTED-ACCESS-003
+    name: Production protected access with exact runtime-target/stamp binding
+    trigger: FLOW-PROTECTED-ACCESS-EXECUTE begins
+    participants:
+      - {id: CMPART-P2-ACCESS-CONTEXT, module: dec-core-context, responsibility: Own complete neutral current P2 contracts and immutable EngineContext policy facts.}
+      - {id: CMPART-P2-ACCESS-STARTER, module: dec-core-starter, responsibility: Bind explicit EngineContext/frame snapshot resolve exact runtime target/intent and enforce capability/Gateway/Guard.}
+      - {id: CMPART-P2-ACCESS-MODEL, module: dec-core-model, responsibility: Own sealed model session actual ModelData coordination cell locator and transactional model operation.}
+    steps:
+      - id: CMSTEP-P2-ACCESS-101
+        order: 1
+        from: dec-core-starter
+        to: dec-core-model
+        interactionType: QUERY
+        action: Resolve RuntimeBindingPlan + exact composition frame/owner/cursor against sealed RuntimeModelSession and freeze one ResolvedRuntimeTarget.
+        preconditions: [factory has explicit EngineContext, invocation context equals composition, session sealed]
+        postconditions: [one immutable target or deterministic context/0/N denial]
+        idempotency: sealed selection deterministic for immutable inputs
+        failureHandling: deny before capability/Guard/effect
+        compensation: none
+        traceIds: [TR-P2-006, TR-P2-009]
+      - id: CMSTEP-P2-ACCESS-102
+        order: 2
+        from: dec-core-starter
+        to: dec-core-context
+        interactionType: QUERY
+        action: Guard exact ModelAccessRuleKey plus same frozen ResolvedRuntimeTarget and RuntimeMutationStamp when WRITE.
+        preconditions: [capability consumed once, target/intent immutable]
+        postconditions: [ALLOW or DENY; model effect=0 before ALLOW]
+        idempotency: one-shot capability prevents repeated Guard/operation attempt
+        failureHandling: DENY fail closed
+        compensation: none
+        traceIds: [TR-P2-006, TR-P2-007]
+      - id: CMSTEP-P2-ACCESS-103
+        order: 3
+        from: dec-core-starter
+        to: dec-core-model
+        interactionType: SYNC_API
+        action: Call read(ResolvedProtectedReadAccess) or write(ResolvedProtectedWriteAccess); WRITE has no separate object/path/version arguments.
+        preconditions: [Guard ALLOW]
+        postconditions: [READ immutable snapshot or one committed WRITE receipt]
+        idempotency: actual-model coordination/version plus one-shot capability
+        failureHandling: stale => zero mutation; failure => rollback/restore; receipt absent
+        compensation: transaction rollback/restore
+        traceIds: [TR-P2-004, TR-P2-007, TR-P2-009]
+    successCriteria: [Runtime target selection is unique and composition-bound., WRITE mutation stamp is atomically bound to same target/path., Actual ModelData ownership/coordination prevents cross-session alias bypass., No duplicated WRITE object/path/version authority exists.]
+    failurePaths:
+      - {id: CMFAIL-P2-ACCESS-101, atStep: CMSTEP-P2-ACCESS-101, condition: context mismatch target 0/N ownership/session-scope failure, result: deterministic denial before Guard/effect, compensationSteps: [], manualRecovery: create fresh composition/frame/session binding and resolve again, traceIds: [TR-P2-006, TR-P2-009]}
+      - id: CMFAIL-P2-ACCESS-103
+        atStep: CMSTEP-P2-ACCESS-103
+        condition: stamp mismatch stale version or runtime write/commit failure
+        result: zero committed mutation for stale/mismatch; rollback/restore for operation failure; receipt absent
+        compensationSteps: [rollback-or-restore-model-state]
+        manualRecovery: retry only as a brand-new invocation/capability after re-resolution
+        traceIds: [TR-P2-007, TR-P2-009]
+    traceIds: [TR-P2-004, TR-P2-006, TR-P2-007, TR-P2-009]
+    testCaseIds: [CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001, CASE-P2-TD-RUNTIME-TARGET-SELECTION-001, CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001, CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001, CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001, CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001]
+    businessFlowRef: FLOW-PROTECTED-ACCESS-EXECUTE
+    businessStepRefs: [STEP-P2-ACCESS-01, STEP-P2-ACCESS-02, STEP-P2-ACCESS-03, STEP-P2-ACCESS-05, STEP-P2-ACCESS-06]

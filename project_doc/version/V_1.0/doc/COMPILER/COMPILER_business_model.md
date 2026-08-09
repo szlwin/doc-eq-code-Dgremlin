@@ -1,100 +1,57 @@
-# COMPILER 业务模型
+# COMPILER P2 Business Model
 
-> Revision：`BM-R19`。Base：`BM-R18`。
-> Authoritative Inputs：`REQAN-P2-R01@d08612768131` + Overlay R04 + ACTIVE Direct Bridge + ACTIVE AC-007 Option B + ACTIVE READ/WRITE-only。
+> Revision：`BM-R20`。Base：`BM-R19`。
 > Status：`NEEDS_EXACT_REVIEW / MACHINE_BLOCKED`。
+> Canonical：`COMPILER_business_model.yaml@BM-R20`。
 
-R19 只修复本轮独立 Review 剩余的 runtime authority / atomicity / concurrency 闭环；R18 已确认正确的 P1-compatible TargetKey、structured schema、READ/WRITE-only、PolicyIndex authority、Option B 均保持不变。历史 PASSED lifecycle 不被覆盖。
+## Current full snapshot rule
 
-## 1. Candidate revision direction
+BM-R20 is the complete current P2 business-model snapshot. `baseRevision: BM-R19` records lineage only and does not imply inheritance. It restores every still-valid BM-R18 compile/System/RuleView/READ/policy/publication/error fact and merges the BM-R19 runtime authority/transaction/concurrency refinements.
 
-```text
-REQAN-P2-R01 + Overlay R04
- -> BM-R19
- -> FLOW-R09
- -> DESIGN-P2-R21
- -> TESTDESIGN-P2-R22
-```
+## Preserved business semantics
 
-## 2. Source identity remains frozen
+- shared `sourceModel -> ViewKey -> TargetKey`; owner System is a separate authority axis;
+- `ModelPath` is exact and orthogonal to TargetKey;
+- `AccessOperation` is exactly READ/WRITE;
+- `ModelAccessRuleKey` is the sole policy/Direct-Bridge/WRITE authority key;
+- PolicyIndex accepts only the frozen two-row classification;
+- READ returns a deep immutable RuntimeFactValue and never mutates;
+- WRITE intent 0/1/N remains fail closed and frozen before Guard;
+- source-model-not-found and invalid policy classification are current business errors;
+- P3/P4/P6 core depends on neutral context contracts, never starter internals.
 
-```text
-authorization owner System
-+ TargetKey(shared ViewKey)
-+ exact ModelPath
-+ READ/WRITE
-= ModelAccessRuleKey
-```
+## New current runtime facts
 
-TargetKey 不包含 authorization owner System；local targetView/selector 仍是独立 binding fact。
+A legal dynamic invocation first proves composition frame/owner equality, then one `RuntimeTargetResolver` resolves `RuntimeBindingPlan + frame/owner/cursor + sealed RuntimeModelSession` to one immutable `ResolvedRuntimeTarget`.
 
-## 3. WRITE authority is ModelAccessRuleKey
+WRITE freezes one `RuntimeMutationStamp(sessionId, objectId, path, version)` into the intent. The stamp must refer to the exact same target and exact `ModelAccessRuleKey.modelPath`.
 
-Direct Bridge 与 WRITE intent 统一使用 `ModelAccessRuleKey`。`RuleKey` 仅允许作为 `Optional<RuleKey>` provenance；Rule / Change / CustomAction 都不依赖 RuleKey 才能成立。
+One actual ModelData/runtime handle has one model-internal coordination cell and at most one active session registration lease. This prevents duplicate/cross-session aliasing from creating independent lock/version domains.
 
-WRITE resolution input：
+## Publication responsibility
 
 ```text
-ModelAccessRuleKey
-+ RuntimeExecutionFrameId
-+ RuntimeResolutionOwnerId
-+ Optional<RuntimeCollectionCursorId>
+CONTEXT  -> construct immutable candidate representation
+COMPILER -> coordinate atomic publication
 ```
 
-0 candidate=`WRITE_INTENT_NOT_FOUND`；1 candidate=Guard 前 immutable freeze；N>1=`WRITE_INTENT_AMBIGUOUS`。
+Any failure retains the prior Context.
 
-## 4. One WRITE has one ModelPath authority
+## Error state semantics
 
-`ResolvedWriteIntent.modelAccessRuleKey().modelPath()` 是唯一 WRITE path。`ResolvedProtectedWriteAccess` 只携带 invocationId、runtimeObjectId 和 writeIntent；production operation port 不再接受第二个 ModelPath 参数。
-
-## 5. Scoped runtime object location
-
-`RuntimeObjectId` 只在当前 `ProtectedAccessComposition` 所绑定的 sealed `RuntimeModelSession` 中解析。Session 在 composition/frame 建立时注册现有 ModelData/runtime handle，开始 protected execution 前 seal；seal 后 locator table 不再新增/替换映射。
-
-- missing：`RUNTIME_OBJECT_NOT_FOUND`；
-- closed/cross-session/stale：`RUNTIME_OBJECT_STALE`；
-- 不允许 static/global mutable registry；
-- 不允许从 RuntimeObjectId 推断权限；
-- composition/context/session 之间不得跨域解析。
-
-## 6. Typed execution identity
-
-Invocation → resolved access → write intent 全链保持：
+For `WRITE_INTENT_STALE` and `RUNTIME_WRITE_FAILED`:
 
 ```text
-RuntimeExecutionFrameId
-RuntimeResolutionOwnerId
-Optional<RuntimeCollectionCursorId>
+modelStateChanged      = false
+capabilityStateChanged = true
 ```
 
-禁止 raw String、null、空串或 `N/A` sentinel 表示 optional cursor。
+The schema has one `stateChanged` field, so these errors set `stateChanged: true` because the capability state has already transitioned `ISSUED -> CONSUMED`; the `meaning` explicitly records that the observable model state did not change.
 
-## 7. Transactional WRITE failure
+## Scope boundary
 
-Guard ALLOW 后 WRITE 进入 dec-core-model 的一个 transaction boundary：
+P2 RuntimeModelSession/transaction/version are internal protected-operation seams and do not define P7 user-session lifecycle, cross-request transaction semantics or general resource ownership.
 
-```text
-SUCCESS
- -> exactly one committed mutation
- -> increment RuntimeMutationVersion
- -> receipt
+## Gate
 
-FAILURE
- -> rollback / isolated-working-copy restore
- -> externally observable ModelData/origin state unchanged
- -> receipt absent
- -> capability remains CONSUMED
- -> RUNTIME_WRITE_FAILED
-```
-
-现有 `ModelContainer` 的 commit/rollback/close 能力可作为实现基础，但实现不得在 commit 成功前把 working mutation 不可逆地暴露到 origin object；若复用现有 pre-commit copy 行为，必须通过 working-copy/deferred-publication 或显式 restore 满足本 invariant。
-
-## 8. Different-capability same-path concurrency
-
-每个 RuntimeModelSession 对 `(RuntimeObjectId, ModelPath)` 维护 monotonic `RuntimeMutationVersion` 和 serialization boundary。WRITE intent freeze 当前 expected version。
-
-两个 capability 在同一 version 下并发写同一 object/path：至多一个 commit；winner 将 version +1；loser 在锁内发现 version mismatch，返回 `WRITE_INTENT_STALE`，mutation=0、receipt absent。Capability 已消费，不自动 retry。之后重新 resolve 的新 invocation 可基于新 version 再执行。
-
-## 9. Gate
-
-`FND-P2-REV-020` 的 P1 source identity semantic fix 已被本轮独立 Review 确认正确，但 formal closure 仍等待 lifecycle/risk Evidence。其余相关 finding 继续 OPEN，等待 same-revision independent Review/Evidence。Implementation Plan/TDD/Development 仍 BLOCKED。
+All current candidate findings remain formally OPEN until same-revision Review/risk/machine Evidence. Implementation Plan/TDD/Development remain BLOCKED.

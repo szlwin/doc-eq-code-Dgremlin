@@ -1,60 +1,112 @@
-# 需求关联、影响策略与跨模块实现映射
+# P2 Dependency Graph
 
 - Project：`doc-eq-code`
 - Version：`V_1.0`
-- Revision：`BM-R19 / FLOW-R09 / DESIGN-P2-R21 / TESTDESIGN-P2-R22 / P2-IMPACT-R21`
+- Current candidate：`BM-R20 / FLOW-R10 / P2-IMPACT-R22 / DESIGN-P2-R22 / TESTDESIGN-P2-R23`
 - Status：`NEEDS_REVIEW / MACHINE_BLOCKED`
 - Decisions：AC-007 `OPTION_B / ACTIVE`；AccessOperation `READ_WRITE_ONLY / ACTIVE`
 
-## Revision direction
+## Authoritative revision direction
 
 ```text
-REQAN-P2-R01 + Overlay R04
- -> BM-R19
- -> FLOW-R09
- -> DESIGN-P2-R21
- -> TESTDESIGN-P2-R22
+REQAN-P2-R01@d08612768131 + Overlay R04
+        |
+        v
+BM-R20 (complete current business-model snapshot)
+        |
+        v
+FLOW-R10
+        |
+        +--> P2-IMPACT-R22
+        |
+        v
+DESIGN-P2-R22
+        |
+        v
+TESTDESIGN-P2-R23
 ```
 
-## Authority / runtime graph
+No downstream artifact is an authoritative upstream input.
 
-```mermaid
-flowchart LR
-  I[ProtectedAccessInvocation\nModelAccessRuleKey + typed context]
-  B[starter Bridge / intent resolver]
-  S[sealed RuntimeModelSession]
-  C[one-shot capability]
-  G[Gateway / Guard]
-  M[dec-core-model transactional adapter]
-  D[ModelData / origin]
-
-  I --> B
-  B --> S
-  B --> C
-  C --> G
-  G --> M
-  S --> M
-  M --> D
-```
-
-## Key boundaries
+## Compile / publication relationship
 
 ```text
-ModelAccessRuleKey = authorization owner System + TargetKey(shared ViewKey) + ModelPath + READ/WRITE
-ResolvedWriteIntent = ModelAccessRuleKey + typed frame/owner/optional cursor + expected mutation version
-ResolvedProtectedWriteAccess = invocationId + RuntimeObjectId + ResolvedWriteIntent
+FLOW-CONFIG-COMPILE
+  |
+  +-> dec-core-compiler
+  |    symbol/reference/path/policy validation
+  |        |
+  |        v
+  +-> dec-core-context
+  |    immutable EngineContext + PolicyIndex candidate representation
+  |        |
+  |        v
+  +-> dec-core-compiler
+       atomic publication coordinator
+       -> whole new Context or unchanged old Context
 ```
 
-No second WRITE ModelPath exists.
+`CMI-P2-COMPILE-003` is the structured cross-module implementation contract for this flow. CONTEXT is not publication owner and no global/default current Context is introduced.
 
-## Runtime object lifecycle
+## Runtime protected-access relationship
 
-`RuntimeObjectId` resolves only in the composition/frame-scoped sealed RuntimeModelSession. Missing/stale/cross-session IDs fail closed. No global mutable registry.
+```text
+explicit EngineContext + RuntimeExecutionFrameSnapshot
+        |
+        v
+dec-core-starter / ProtectedAccessRuntimeFactory
+        |
+        v
+ProtectedAccessComposition
+  exact frame/owner/session
+        |
+        v
+RuntimeTargetResolver
+  RuntimeBindingPlan + frame/owner/cursor + sealed session
+        |
+        v
+ResolvedRuntimeTarget(sessionId, objectId, proof)
+        |
+        +-- READ --> Guard --> dec-core-model immutable snapshot
+        |
+        `-- WRITE -> RuntimeMutationStamp(sessionId,objectId,path,version)
+                    -> intent 0/1/N
+                    -> capability
+                    -> Guard
+                    -> dec-core-model actual-ModelData coordination/transaction
+```
 
-## Failure / concurrency
+`CMI-P2-PROTECTED-ACCESS-003` is the structured cross-module implementation contract.
 
-Guard-approved WRITE is transactional: success commits once then returns receipt; failure rollback/restores observable state and receipt is absent. Same-version capabilities racing the same object/path yield at most one commit; stale loser(s) mutate zero times.
+## Actual runtime-object concurrency boundary
+
+```text
+actual ModelData/runtime handle
+        |
+        1:1
+        v
+RuntimeModelCoordinationCell
+  activeSessionLease
+  per-ModelPath lock + RuntimeMutationVersion
+```
+
+One actual ModelData cannot have two active session registrations. This prevents cross-session aliases from creating independent version/lock domains.
+
+## Dependency direction
+
+```text
+compiler -> context              allowed
+starter -> context               allowed
+starter -> model                 allowed production assembly
+model -> context                 allowed/existing
+P3/P4/P6 core -> context         allowed
+P3/P4/P6 core -> starter         forbidden
+```
+
+## P2 / P7 boundary
+
+P2 RuntimeModelSession and WRITE transaction are internal protected-operation seams only. User/session lifecycle, cross-request transaction/resource lifetime and P7 convergence remain outside P2.
 
 ## Gate
 
-20 formal P1 findings remain OPEN pending same-revision Review/Evidence. `FND-P2-REV-020` semantic fix is independently verified but not formally closed. Risk scan, Implementation Plan, TDD and Development remain BLOCKED.
+All 20 formal P1 findings remain OPEN. Current risk scan and same-revision specialist Review/TDD Evidence remain absent; Implementation Plan/TDD/Development remain BLOCKED.
