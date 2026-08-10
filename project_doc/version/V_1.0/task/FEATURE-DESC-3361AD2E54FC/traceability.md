@@ -54,7 +54,10 @@
       "CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001",
       "CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -110,7 +113,10 @@
       "CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001",
       "CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -163,7 +169,10 @@
       "CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001",
       "CASE-P2-TD-MODEL-PATH-UNKNOWN-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-02-RULEVIEW-REFERENCE",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -220,7 +229,12 @@
       "CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001",
       "CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+      "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION",
+      "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -274,7 +288,11 @@
       "CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001",
       "CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+      "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -327,7 +345,12 @@
       "CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001",
       "CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-05-MODEL-TRUSTED-LOAD",
+      "TASK-P2-DEV-06-MODEL-SESSION-EFFECT",
+      "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -391,7 +414,13 @@
       "CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001",
       "CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-05-MODEL-TRUSTED-LOAD",
+      "TASK-P2-DEV-06-MODEL-SESSION-EFFECT",
+      "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -444,7 +473,13 @@
       "CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001",
       "CASE-P2-TD-SYSTEM-DETERMINISM-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+      "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION",
+      "TASK-P2-DEV-05-MODEL-TRUSTED-LOAD",
+      "TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -496,7 +531,13 @@
       "CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001",
       "CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+      "TASK-P2-DEV-06-MODEL-SESSION-EFFECT",
+      "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY",
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],
@@ -546,7 +587,9 @@
       "CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001",
       "CASE-P2-TD-REVISION-DAG-001"
     ],
-    "plan_task_ids": [],
+    "plan_task_ids": [
+      "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    ],
     "contract_refs": [],
     "implementation_refs": [],
     "verification_evidence_ids": [],

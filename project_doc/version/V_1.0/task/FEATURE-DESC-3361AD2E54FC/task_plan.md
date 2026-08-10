@@ -457,6 +457,96 @@
       "EVD-000151",
       "EVD-000152"
     ]
+  },
+  {
+    "id": "TASK-P2-IMPLEMENTATION-PLAN-001",
+    "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-IMPLEMENTATION-PLAN",
+    "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-005",
+    "iteration_no": 5,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Create the first RC9 executable implementation plan from current BM-R20, DESIGN-P2-R30 and TESTDESIGN-P2-R31 without starting TDD or Development.",
+    "title": "形成 P2 System、RuleView 与 model-access 可执行 Implementation Plan",
+    "objective": "把当前设计与 95-case/23-class TestDesign 转换为 dependency-ordered vertical development tasks，并完成同 Revision Plan Review 门禁。",
+    "phase": "implementation_plan",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P2-TESTDESIGN-001"
+    ],
+    "owner_agent": "ImplementationPlanAgent",
+    "reviewer_agents": [
+      "PlanReviewAgent",
+      "ArchitectureReviewAgent",
+      "TestDesignAgent",
+      "DevelopAgent"
+    ],
+    "input_revisions": {
+      "design": "DESIGN-P2-R30",
+      "test_design": "TESTDESIGN-P2-R31"
+    },
+    "allowed_files": [
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_task_reviews.jsonl",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_state.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_attempts.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/stage_outcomes.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/review_issues.md",
+      "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**",
+      "version/V_1.0/work_record.md"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002",
+      "TR-P2-SYSTEM-RULEVIEW-003",
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-005",
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-008",
+      "TR-P2-SYSTEM-RULEVIEW-009",
+      "TR-P2-SYSTEM-RULEVIEW-010"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE",
+      "FLOW-PROTECTED-ACCESS-EXECUTE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-01",
+      "STEP-P2-COMPILE-02",
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04",
+      "STEP-P2-ACCESS-01",
+      "STEP-P2-ACCESS-02",
+      "STEP-P2-ACCESS-03",
+      "STEP-P2-ACCESS-04",
+      "STEP-P2-ACCESS-05",
+      "STEP-P2-ACCESS-06"
+    ],
+    "validation_commands": [
+      "python3 /home/oai/skills/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --require-revision",
+      "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+      "git diff --check"
+    ],
+    "expected_results": [
+      "development_tasks.yaml contains dependency-ordered vertical tasks covering all ten stable P2 trace IDs and the 23 exact R31 TestClasses.",
+      "The exact TP revision passes PlanReviewAgent, ArchitectureReviewAgent, TestDesignAgent and DevelopAgent serial task-plan reviews.",
+      "Implementation Plan is machine-valid and executable without starting TDD or Development."
+    ],
+    "stop_conditions": [
+      "任一当前输入 Revision 被重开或变为 STALE。",
+      "任一 Plan Review 产生 P0/P1 finding 且当前 TP revision 尚未修复。",
+      "计划要求改变已冻结业务/设计语义或提前进入 TDD/Development。"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "TP-FEATURE-DESC-3361AD2E54FC-R02@ff0f7abd971c",
+    "validation_evidence_ids": [
+      "EVD-000156"
+    ]
   }
 ]
 ```
