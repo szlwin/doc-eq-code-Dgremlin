@@ -3,10 +3,10 @@
 > 该文件由 `development_tasks.yaml` 确定性生成，仅用于阅读；YAML 是唯一事实源。
 
 - Plan: `TP-FEATURE-DESC-3361AD2E54FC`
-- Revision: `TP-FEATURE-DESC-3361AD2E54FC-R02@ff0f7abd971c`
+- Revision: `TP-FEATURE-DESC-3361AD2E54FC-R03@98268a58db59`
 - Status: `PASSED`
 - Execution: `SEQUENTIAL`
-- Review round: `2`
+- Review round: `3`
 
 ## Input Revisions
 
@@ -31,6 +31,7 @@
 
 - Module: `dec-core-compiler`
 - Component: `system/ruleview symbol compilation`
+- P2 source-scope mapping - SRC-P2-T01-PRIMARY, SRC-P2-T02-COMPILER, SRC-P2-T05-PRIMARY, SRC-P2-T10-COMPILER
 - 先以 SystemCompilationContractTest 与 RuleViewCompilationContractTest 建立有效 RED，覆盖多源顺序、重复 System、前向引用、缺失 System 与跨 System 同名隔离。
 - 进入 development 后先为 dec-core-compiler/system/ruleview symbol compilation 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -43,6 +44,10 @@
 
 - `AC-P2-SYSTEM-RULEVIEW-001` — 多文件与前向引用能够得到确定一致的 System 身份集合，重复或冲突 System 必须失败且不得发布。
 - `AC-P2-SYSTEM-RULEVIEW-002` — 不同 System 下同名 RuleView 能够同时存在并精确解析，同 System 同名或缺失 System 必须拒绝。
+- `SRC-P2-T01-PRIMARY` — P2-T01 的 System Raw/Compiled 一等身份、来源与所属配置关系由本任务实现，并由 SystemCompilationContractTest 直接验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T02-COMPILER` — P2-T02 的 system-file-info 多文件加载、重复检测、前向引用与输入顺序无关由本任务的 compiler pipeline 实现；真实 systems.xml fixture 在 DEV-09 组合验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T05-PRIMARY` — P2-T05 的 RuleView system 归属、RuleViewKey 复合身份与新配置禁止裸名称回退由本任务实现；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T10-COMPILER` — P2-T10 的跨 System 同名 RuleView 注册/解析隔离由本任务在 compiler contract 层验证；真实 fixture 隔离在 DEV-09 再验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -63,6 +68,7 @@
 
 - Module: `dec-core-context`
 - Component: `compiled aggregate and runtime neutral contracts`
+- P2 source-scope mapping - SRC-P2-T03-CONTRACT, SRC-P2-T04-CONTRACT
 - 以 ProtectedAccessContextApiContractTest、P2CompilerContextConstructibilityContractTest、RuntimeFactValueContractTest、OpaqueRuntimeIdContractTest 建立 RED。
 - 进入 development 后先为 dec-core-context/compiled aggregate and runtime neutral contracts 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -75,6 +81,8 @@
 
 - `AC-P2-SYSTEM-RULEVIEW-008` — CompiledViewMaterializationIndex 必须随 CompiledModelSet 原子发布并参与值语义，EngineContext 精确暴露捕获聚合。
 - `AC-P2-SYSTEM-RULEVIEW-004` — 受保护访问的 key、ID、value/result 类型必须保持精确、不可变且大小写敏感。
+- `SRC-P2-T03-CONTRACT` — P2-T03 的 ModelAccessRule/RuleKey 中立不可变契约、主体/目标/路径/READ-WRITE 身份和值语义由本任务提供；policy 编译在 DEV-03 完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T04-CONTRACT` — P2-T04 的 ModelPath 强类型中立表示、大小写敏感和值语义由本任务提供；路径编译与越界校验在 DEV-03 完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -96,6 +104,7 @@
 
 - Module: `dec-core-compiler`
 - Component: `reference resolution`
+- P2 source-scope mapping - SRC-P2-T06-PRIMARY, SRC-P2-T09-PRIMARY
 - 以 RuleViewCompilationContractTest 和 TargetKeyModelPathContractTest 中完整引用、缺失 owner 与 unknown target 场景建立 RED。
 - 进入 development 后先为 dec-core-compiler/reference resolution 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -107,6 +116,8 @@
 **Acceptance Criteria:**
 
 - `AC-P2-SYSTEM-RULEVIEW-003` — system-ref + rule-ref 能够精确解析；未知或归属不一致引用必须失败并包含来源定位。
+- `SRC-P2-T06-PRIMARY` — P2-T06 的 RuleParser/引用解析必须读取 system 并校验 system/view/rule 归属与来源诊断，由本任务实现。
+- `SRC-P2-T09-PRIMARY` — P2-T09 的 system-ref + rule-ref 完整引用编译与 CompiledRuleView 精确目标解析由本任务实现，禁止裸名称查找；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -126,6 +137,7 @@
 
 - Module: `dec-core-compiler`
 - Component: `modelaccess compilation and publication`
+- P2 source-scope mapping - SRC-P2-T03-POLICY, SRC-P2-T04-COMPILER, SRC-P2-T07-PRIMARY, SRC-P2-T11-STATIC
 - 以 TargetKeyModelPathContractTest、ModelAccessPolicyContractTest、AtomicPublicationContractTest、P2DiagnosticDeterminismTest 建立目标 RED。
 - 进入 development 后先为 dec-core-compiler/modelaccess compilation and publication 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -140,6 +152,10 @@
 - `AC-P2-SYSTEM-RULEVIEW-005` — 模型路径必须规范化且非法或越界路径必须失败，动态路径只能形成运行时 Guard 约束。
 - `AC-P2-SYSTEM-RULEVIEW-008` — 候选存在错误或缺失绑定/物化描述时必须保持旧 Context，不得出现部分发布。
 - `AC-P2-SYSTEM-RULEVIEW-009` — 等价静态失败必须生成稳定且不泄露敏感值的诊断。
+- `SRC-P2-T03-POLICY` — P2-T03 的默认最小权限、READ/WRITE 独立判定、未声明共享 WRITE 默认拒绝由本任务编译为静态 policy/binding；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T04-COMPILER` — P2-T04 的 ModelPathCompiler 规范化、属性/集合导航校验以及 rule/change/query 共用路径契约由本任务完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T07-PRIMARY` — P2-T07 的可静态判定 model-access 越权必须在编译阶段 fail-closed，由本任务实现。
+- `SRC-P2-T11-STATIC` — P2-T11 越权矩阵中的未声明 READ/WRITE、只读路径写入、父路径/集合/未知路径等静态可判定部分由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -159,6 +175,7 @@
 
 - Module: `dec-core-model`
 - Component: `runtime model execution root`
+- P2 source-scope mapping - SRC-P2-T11-RUNTIME-LOAD
 - 以 ProtectedAccessModelApiContractTest 与 RuntimeModelMaterializationIntegrationTest 建立 direct-load RED，覆盖 L01-L07 失败矩阵、same-ModelData identity 和 production Container 边界。
 - 进入 development 后先为 dec-core-model/runtime model execution root 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -171,6 +188,7 @@
 
 - `AC-P2-SYSTEM-RULEVIEW-006` — 合法动态目标必须由捕获 Context 精确物化；错误 plan/descriptor/origin/container 必须在 Scope 前失败。
 - `AC-P2-SYSTEM-RULEVIEW-007` — 生产加载必须冻结同一个真实 ModelData 到 Handle/Scope，不得发生 A-load/B-handle 替换。
+- `SRC-P2-T11-RUNTIME-LOAD` — P2-T11 越权矩阵中动态目标物化、错误 descriptor/origin/container 与 pre-scope failure 的运行时拒绝部分由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -191,6 +209,7 @@
 
 - Module: `dec-core-model`
 - Component: `runtime session locator effect provider`
+- P2 source-scope mapping - SRC-P2-T08-EFFECT-BOUNDARY, SRC-P2-T11-RUNTIME-OBJECT
 - 以 RuntimeObjectLocatorIntegrationTest、ProtectedWriteTransactionIntegrationTest 和 ProtectedAccessModelApiContractTest 的 session/effect algebra 建立 RED。
 - 进入 development 后先为 dec-core-model/runtime session locator effect provider 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -203,6 +222,8 @@
 
 - `AC-P2-SYSTEM-RULEVIEW-006` — 运行时对象只能从同一 sealed session 的已注册 Handle 精确定位，missing/stale/ownership 冲突必须拒绝。
 - `AC-P2-SYSTEM-RULEVIEW-009` — MODEL operation 失败必须返回稳定拒绝且无成功 receipt，诊断不得泄露 ModelData/origin 身份。
+- `SRC-P2-T08-EFFECT-BOUNDARY` — P2-T08 禁止 Guard 后绕过统一模型效果边界的要求，由本任务通过 sealed Session、trusted Handle 与私有 operation port 约束 effect；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T11-RUNTIME-OBJECT` — P2-T11 越权矩阵中 missing/stale/ownership 冲突与失败无成功 receipt 的对象级运行时拒绝由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -222,6 +243,7 @@
 
 - Module: `dec-core-starter`
 - Component: `protected access resolver and guard`
+- P2 source-scope mapping - SRC-P2-T08-GUARD-PRIMARY, SRC-P2-T11-RUNTIME-GUARD
 - 以 ProtectedAccessStarterApiContractTest、ProtectedWriteIntentResolutionTest、ProtectedRuntimeModelAdapterIntegrationTest 建立 RED。
 - 进入 development 后先为 dec-core-starter/protected access resolver and guard 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -235,6 +257,8 @@
 - `AC-P2-SYSTEM-RULEVIEW-004` — READ/WRITE Guard 必须只依据 exact ModelAccessRuleKey，权限类型不得互相隐含。
 - `AC-P2-SYSTEM-RULEVIEW-005` — WRITE intent 必须冻结一个 exact target/path/version；0 或 N 个 intent 必须拒绝。
 - `AC-P2-SYSTEM-RULEVIEW-006` — Guard DENY 或 stale proof 必须在真实模型副作用前返回。
+- `SRC-P2-T08-GUARD-PRIMARY` — P2-T08 的 ModelAccessGuard 主实现由本任务完成：exact target/path/operation 必须 Guard-before-effect，DENY/stale proof 在真实副作用前返回。
+- `SRC-P2-T11-RUNTIME-GUARD` — P2-T11 越权矩阵中动态 grammar/path、READ/WRITE 不互相隐含以及 one-shot capability 运行时拒绝由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -255,6 +279,7 @@
 
 - Module: `dec-core-starter`
 - Component: `production composition and concurrency coordination`
+- P2 source-scope mapping - SRC-P2-T08-CONSUMER-CLOSURE, SRC-P2-T11-CONCURRENCY
 - 以 ProtectedAccessProductionCompositionTest、ProtectedAccessConcurrencyTest、ProtectedAccessDependencyDirectionTest 建立 RED。
 - 进入 development 后先为 dec-core-starter/production composition and concurrency coordination 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -267,6 +292,8 @@
 
 - `AC-P2-SYSTEM-RULEVIEW-007` — Rule、Change、CustomAction 必须使用同一 guarded composition，DENY 为 effect0，ALLOW 作用于同一 bound Handle。
 - `AC-P2-SYSTEM-RULEVIEW-008` — 并发 capability/ownership 冲突必须保持 Context/Session 隔离且最多一次合法写入。
+- `SRC-P2-T08-CONSUMER-CLOSURE` — P2-T08 对 Rule、change、custom action 禁止绕过统一 Guard/写入效果链的消费者闭环由本任务完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T11-CONCURRENCY` — P2-T11 越权矩阵中的并发 capability/ownership 冲突、Context/Session 隔离与最多一次合法效果由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
@@ -286,6 +313,7 @@
 
 - Module: `dec-demo`
 - Component: `P2 real fixture integration and compatibility`
+- P2 source-scope mapping - SRC-P2-T02-FIXTURE, SRC-P2-T10-E2E, SRC-P2-T11-E2E, SRC-P2-T12-PRIMARY
 - 以 P2RealFixtureIntegrationTest、P2DeclarationCompatibilityContractTest、P2RevisionDependencyDagContractTest 建立最终 RED/回归基线。
 - 进入 development 后先为 dec-demo/P2 real fixture integration and compatibility 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
@@ -300,6 +328,10 @@
 - `AC-P2-SYSTEM-RULEVIEW-006` — 真实动态路径必须分类为运行时 Guard 并在同一 trusted runtime object 上执行。
 - `AC-P2-SYSTEM-RULEVIEW-007` — 真实生产路径能够经 real Container 和 STARTER guarded composition 完成 READ/WRITE 且无 bypass。
 - `AC-P2-SYSTEM-RULEVIEW-010` — declaration 旧入口必须保持兼容边界且 P2 不提前执行 P7 删除。
+- `SRC-P2-T02-FIXTURE` — P2-T02 的真实 mix/system/systems.xml fixture 必须走统一加载/编译路径并保持顺序无关，由本任务端到端复验。
+- `SRC-P2-T10-E2E` — P2-T10 的 order.validate/payment.validate 等跨 System 同名 RuleView 在真实 fixture 下注册、查找、执行不覆盖，由本任务端到端复验；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T11-E2E` — P2-T11 合法/非法访问矩阵由本任务通过真实 compile -> Context -> MODEL -> STARTER 路径执行组合闭环，且不得出现 bypass；该归宿必须由本任务列出的 validation/TestClass 精确验证。
+- `SRC-P2-T12-PRIMARY` — P2-T12 的 declaration System 只保留迁移边界、记录可映射/不可映射能力且 P2 不删除旧入口，由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。
 
 **Validation:**
 
