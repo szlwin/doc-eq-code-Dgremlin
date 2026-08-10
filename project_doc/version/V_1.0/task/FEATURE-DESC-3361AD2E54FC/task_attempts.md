@@ -373,6 +373,40 @@
     ],
     "summary": "RC9 machine re-registration completed for the already-semantic-pass DESIGN-P2-R30 with P2-IMPACT-R29; no Design semantic content was rewritten.",
     "next_action": "Publish DESIGN-P2-R30 into lifecycle iteration I004 and register same-revision independent Reviews."
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-TESTDESIGN-001-I005-A001",
+    "task_id": "TASK-P2-TESTDESIGN-001",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
+    "iteration_no": 5,
+    "attempt_no": 1,
+    "agent": "TestDesignAgent",
+    "phase": "test_design",
+    "status": "PASSED",
+    "input_revision": "DESIGN-P2-R30",
+    "output_revision": "TESTDESIGN-P2-R31",
+    "started_at": "2026-08-10T12:15:37+00:00",
+    "completed_at": "2026-08-10T12:17:07+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [],
+    "command_evidence_ids": [
+      "EVD-000142",
+      "EVD-000143",
+      "EVD-000144",
+      "EVD-000145"
+    ],
+    "evidence_ids": [
+      "EVD-000146",
+      "EVD-000147",
+      "EVD-000148",
+      "EVD-000149",
+      "EVD-000150",
+      "EVD-000151",
+      "EVD-000152"
+    ],
+    "summary": "RC9 machine re-registration completed for the already-semantic-pass TESTDESIGN-P2-R31 (95 cases / 23 TestClasses); no Test Design semantic content was rewritten.",
+    "next_action": "Publish TESTDESIGN-P2-R31 into lifecycle iteration I005 and register same-revision independent Reviews."
   }
 ]
 ```

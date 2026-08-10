@@ -374,7 +374,7 @@
     "title": "设计 P2 System、RuleView 与 model-access 可执行测试矩阵",
     "objective": "RC9 machine-state migration: re-register the already-completed TESTDESIGN-P2-R31 95-case/23-class test design without changing its test semantics.",
     "phase": "test_design",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P2-DESIGN-001"
     ],
@@ -428,8 +428,8 @@
       "STEP-CONFIG-COMPILE-07"
     ],
     "validation_commands": [
-      "python3 -c \"from pathlib import Path; import re; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); assert 'TESTDESIGN-P2-R31' in s; assert len(set(re.findall(r'CASE-P2-TD-[A-Z0-9-]+-001',s)))==95; assert len(set(re.findall(r'`[A-Z0-9_]+ \\| [^|]+ \\| ([A-Za-z0-9]+Test) \\|',s)))==23\"",
-      "python3 -c \"import json,re; from pathlib import Path; t=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); a=json.loads(re.search(r'```json traceability\\n(.*?)\\n```',s,re.S).group(1)); assert len(a)==10 and all(x.get('status')=='COVERED' and x.get('test_case_ids') and all(c in t for c in x['test_case_ids']) for x in a)\"",
+      "python3 -c \"from pathlib import Path; import re; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); assert 'TESTDESIGN-P2-R31' in s; assert len(set(re.findall(r'CASE-P2-TD-[A-Z0-9-]+-001',s)))==95; pat=chr(96)+r'[A-Z0-9_]+ \\\\| [^|]+ \\\\| ([A-Za-z0-9]+Test) \\\\|'; assert len(set(re.findall(pat,s)))==23\"",
+      "python3 -c \"import json; from pathlib import Path; t=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); marker=chr(96)*3+'json traceability'+chr(10); i=s.index(marker)+len(marker); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); assert len(a)==10 and all(x.get('status')=='COVERED' and x.get('test_case_ids') and all(c in t for c in x['test_case_ids']) for x in a)\"",
       "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g TestDesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
       "git diff --check"
     ],
@@ -445,10 +445,18 @@
       "任一 required Reviewer 非 PASSED 或形成开放 P0/P1"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "TESTDESIGN-P2-R31",
+    "validation_evidence_ids": [
+      "EVD-000146",
+      "EVD-000147",
+      "EVD-000148",
+      "EVD-000149",
+      "EVD-000150",
+      "EVD-000151",
+      "EVD-000152"
+    ]
   }
 ]
 ```

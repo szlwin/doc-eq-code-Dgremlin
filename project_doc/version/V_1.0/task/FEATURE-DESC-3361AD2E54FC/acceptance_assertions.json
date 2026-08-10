@@ -552,6 +552,114 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-08-10T12:15:03+00:00",
       "reason": "PASSED: CrossModuleIntegrationReviewAgent independently confirms existing DESIGN-P2-R30 remains consistent with BM-R20/FLOW-R11/P2-IMPACT-R29 and current P2 requirements/tests; RC9 binding introduces no semantic rework."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R31-RC9-REQ-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "RC9 same-revision independent review of already-completed TESTDESIGN-P2-R31 by RequirementReviewAgent.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R31",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000146",
+        "EVD-000148"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-10T12:17:36+00:00",
+      "reason": "PASSED: RequirementReviewAgent independently confirms existing TESTDESIGN-P2-R31 has complete current P2 coverage, executable evidence seams, and valid RED/test-evidence contracts; RC9 binding introduces no semantic rework."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R31-RC9-DES-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "RC9 same-revision independent review of already-completed TESTDESIGN-P2-R31 by DesignReviewAgent.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R31",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000146",
+        "EVD-000147",
+        "EVD-000148",
+        "EVD-000152",
+        "EVD-000150"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-08-10T12:17:40+00:00",
+      "reason": "PASSED: DesignReviewAgent independently confirms existing TESTDESIGN-P2-R31 has complete current P2 coverage, executable evidence seams, and valid RED/test-evidence contracts; RC9 binding introduces no semantic rework."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R31-RC9-TDD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "RC9 same-revision independent review of already-completed TESTDESIGN-P2-R31 by TDDReviewAgent.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R31",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000146",
+        "EVD-000142",
+        "EVD-000143",
+        "EVD-000144",
+        "EVD-000145",
+        "EVD-000149"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-10T12:17:44+00:00",
+      "reason": "PASSED: TDDReviewAgent independently confirms existing TESTDESIGN-P2-R31 has complete current P2 coverage, executable evidence seams, and valid RED/test-evidence contracts; RC9 binding introduces no semantic rework."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R31-RC9-EVID-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "RC9 same-revision independent review of already-completed TESTDESIGN-P2-R31 by TestEvidenceReviewAgent.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R31",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000146",
+        "EVD-000142",
+        "EVD-000143",
+        "EVD-000144",
+        "EVD-000145",
+        "EVD-000149",
+        "EVD-000148"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-10T12:17:48+00:00",
+      "reason": "PASSED: TestEvidenceReviewAgent independently confirms existing TESTDESIGN-P2-R31 has complete current P2 coverage, executable evidence seams, and valid RED/test-evidence contracts; RC9 binding introduces no semantic rework."
     }
   ]
 }

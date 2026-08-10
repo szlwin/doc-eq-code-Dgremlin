@@ -306,6 +306,37 @@
     "open_risks": [],
     "started_at": "2026-08-10T12:14:08+00:00",
     "completed_at": "2026-08-10T12:15:19+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-TEST_DESIGN-I005",
+    "phase": "test_design",
+    "round": "TEST_DESIGN-I005",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
+    "iteration_no": 5,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TestDesignAgent",
+    "input_revisions": {
+      "design": "DESIGN-P2-R30"
+    },
+    "output_revision": "TESTDESIGN-P2-R31",
+    "evidence_ids": [
+      "EVD-000146",
+      "EVD-000147",
+      "EVD-000148",
+      "EVD-000149",
+      "EVD-000150",
+      "EVD-000151",
+      "EVD-000152",
+      "EVD-000142",
+      "EVD-000143",
+      "EVD-000144",
+      "EVD-000145"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-10T12:17:10+00:00",
+    "completed_at": "2026-08-10T12:18:05+00:00"
   }
 ]
 ```
