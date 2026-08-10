@@ -1,0 +1,28 @@
+name: PR36 checkout export
+
+on:
+  push:
+    branches:
+      - feature/p2-design-testdesign-20260808
+
+permissions:
+  contents: read
+
+jobs:
+  export-checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Archive complete working tree and git database
+        run: tar --exclude='./pr36-full-checkout.tar.gz' -czf pr36-full-checkout.tar.gz .
+      - name: Upload checkout archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr36-full-checkout
+          path: pr36-full-checkout.tar.gz
+          if-no-files-found: error
+          retention-days: 1
