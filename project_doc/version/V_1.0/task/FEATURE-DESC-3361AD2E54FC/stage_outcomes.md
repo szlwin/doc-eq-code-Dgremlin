@@ -273,6 +273,39 @@
     "open_risks": [],
     "started_at": "2026-08-10T12:10:22+00:00",
     "completed_at": "2026-08-10T12:12:03+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-DESIGN-I004",
+    "phase": "design",
+    "round": "DESIGN-I004",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-004",
+    "iteration_no": 4,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "DesignAgent",
+    "input_revisions": {
+      "business_model": "BM-R20"
+    },
+    "output_revision": "DESIGN-P2-R30",
+    "evidence_ids": [
+      "EVD-000133",
+      "EVD-000134",
+      "EVD-000135",
+      "EVD-000136",
+      "EVD-000137",
+      "EVD-000138",
+      "EVD-000139",
+      "EVD-000140",
+      "EVD-000141",
+      "EVD-000129",
+      "EVD-000130",
+      "EVD-000131",
+      "EVD-000132"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-10T12:14:08+00:00",
+    "completed_at": "2026-08-10T12:15:19+00:00"
   }
 ]
 ```

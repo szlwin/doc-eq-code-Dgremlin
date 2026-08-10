@@ -337,6 +337,42 @@
     ],
     "summary": "RC9 machine re-registration completed for the already-semantic-pass BM-R20; no Business Model semantic content was rewritten.",
     "next_action": "Publish BM-R20 into lifecycle iteration I004 and register same-revision independent Reviews."
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-DESIGN-001-I004-A001",
+    "task_id": "TASK-P2-DESIGN-001",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-004",
+    "iteration_no": 4,
+    "attempt_no": 1,
+    "agent": "DesignAgent",
+    "phase": "design",
+    "status": "PASSED",
+    "input_revision": "BM-R20",
+    "output_revision": "DESIGN-P2-R30",
+    "started_at": "2026-08-10T12:13:18+00:00",
+    "completed_at": "2026-08-10T12:14:06+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [],
+    "command_evidence_ids": [
+      "EVD-000129",
+      "EVD-000130",
+      "EVD-000131",
+      "EVD-000132"
+    ],
+    "evidence_ids": [
+      "EVD-000133",
+      "EVD-000134",
+      "EVD-000135",
+      "EVD-000136",
+      "EVD-000137",
+      "EVD-000138",
+      "EVD-000139",
+      "EVD-000140",
+      "EVD-000141"
+    ],
+    "summary": "RC9 machine re-registration completed for the already-semantic-pass DESIGN-P2-R30 with P2-IMPACT-R29; no Design semantic content was rewritten.",
+    "next_action": "Publish DESIGN-P2-R30 into lifecycle iteration I004 and register same-revision independent Reviews."
   }
 ]
 ```

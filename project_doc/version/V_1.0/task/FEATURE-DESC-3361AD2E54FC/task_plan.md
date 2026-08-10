@@ -270,7 +270,7 @@
     "title": "设计 P2 System、RuleView 与 model-access 编译/运行边界",
     "objective": "RC9 machine-state migration: re-register the already-completed DESIGN-P2-R30 artifact and P2-IMPACT-R29 relation without changing design semantics.",
     "phase": "design",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P2-BMODEL-001"
     ],
@@ -348,10 +348,20 @@
       "出现必须改变 BM-R07 已冻结业务语义的 P0/P1 决策"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "DESIGN-P2-R30",
+    "validation_evidence_ids": [
+      "EVD-000133",
+      "EVD-000134",
+      "EVD-000135",
+      "EVD-000136",
+      "EVD-000137",
+      "EVD-000138",
+      "EVD-000139",
+      "EVD-000140",
+      "EVD-000141"
+    ]
   },
   {
     "id": "TASK-P2-TESTDESIGN-001",
@@ -376,7 +386,7 @@
       "TestEvidenceReviewAgent"
     ],
     "input_revisions": {
-      "design": ""
+      "design": "DESIGN-P2-R30"
     },
     "allowed_files": [
       "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md",
