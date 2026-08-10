@@ -662,12 +662,12 @@
       "reason": "PASSED: TestEvidenceReviewAgent independently confirms existing TESTDESIGN-P2-R31 has complete current P2 coverage, executable evidence seams, and valid RED/test-evidence contracts; RC9 binding introduces no semantic rework."
     },
     {
-      "assertion_id": "ASRT-P2-TP-R03-SCOPE-001",
+      "assertion_id": "ASRT-P2-TP-R04-SCOPE-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
-      "statement": "development_tasks.yaml preserves an explicit machine-parseable P2-T01..P2-T12 -> nine Development Task mapping; every source item has at least one exact implementation/test/compatibility destination.",
+      "statement": "R04 preserves the authoritative P2-T01..P2-T12 to nine-slice mapping with no source task omitted.",
       "type": "MANUAL_REVIEW",
       "phase": "implementation_plan",
-      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@98268a58db59",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -678,31 +678,55 @@
         "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/0"
       ],
       "evidence_ids": [
-        "EVD-000166",
-        "EVD-000171",
-        "EVD-000172",
-        "EVD-000175",
-        "EVD-000176",
-        "EVD-000167",
-        "EVD-000168",
-        "EVD-000169",
-        "EVD-000170",
-        "EVD-000173",
-        "EVD-000178",
-        "EVD-000179",
-        "EVD-000174"
+        "EVD-000185",
+        "EVD-000180",
+        "EVD-000182",
+        "EVD-000183",
+        "EVD-000184",
+        "EVD-000191",
+        "EVD-000192",
+        "EVD-000181",
+        "EVD-000186",
+        "EVD-000187",
+        "EVD-000188"
       ],
       "verified_by_agent": "PlanReviewAgent",
-      "verified_at": "2026-08-10T14:24:51+00:00",
-      "reason": "PASSED: authoritative P2-T01..P2-T12 scope is explicitly and machine-readably mapped to all nine execution slices, with split ownership preserved and no source task omitted."
+      "verified_at": "2026-08-10T15:36:36+00:00",
+      "reason": "PASSED: exact R04 preserves 12/12 source provenance and nine-slice scope while correcting both P1 ordering/file-boundary defects; FLOW-R11 and frozen semantic authorities remain consistent."
     },
     {
-      "assertion_id": "ASRT-P2-TP-R03-COVERAGE-001",
-      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
-      "statement": "development_tasks.yaml contains dependency-ordered vertical tasks covering all ten stable P2 trace IDs and the 23 exact R31 TestClasses.",
+      "assertion_id": "ASRT-P2-TP-R04-ARCH-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "R04 atomically closes both bounded-slice P1 contract-transition defects while preserving DESIGN-P2-R30 dependency direction.",
       "type": "MANUAL_REVIEW",
       "phase": "implementation_plan",
-      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@98268a58db59",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000187",
+        "EVD-000188",
+        "EVD-000191",
+        "EVD-000185"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-10T15:35:31+00:00",
+      "reason": "PASSED: exact R04 closes both bounded-slice P1 transition defects atomically while preserving DESIGN-P2-R30 architecture and the existing nine-slice dependency DAG."
+    },
+    {
+      "assertion_id": "ASRT-P2-TP-R04-COVERAGE-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "R04 preserves all ten stable P2 traces and all 23 exact TESTDESIGN-P2-R31 TestClasses while changing only slice ownership boundaries.",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -713,52 +737,25 @@
         "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/1"
       ],
       "evidence_ids": [
-        "EVD-000175",
-        "EVD-000166",
-        "EVD-000171",
-        "EVD-000172",
-        "EVD-000167",
-        "EVD-000168",
-        "EVD-000169",
-        "EVD-000170"
+        "EVD-000185",
+        "EVD-000180",
+        "EVD-000181",
+        "EVD-000182",
+        "EVD-000183",
+        "EVD-000184",
+        "EVD-000189"
       ],
       "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-08-10T14:24:55+00:00",
-      "reason": "PASSED: R03 preserves all 10 stable P2 traces and all 23 exact TESTDESIGN-P2-R31 TestClasses while adding explicit source-task provenance coverage."
+      "verified_at": "2026-08-10T15:36:40+00:00",
+      "reason": "PASSED: exact R04 preserves the full R31 validation baseline (10/10 traces, 23/23 TestClasses) while fixing execution ordering only."
     },
     {
-      "assertion_id": "ASRT-P2-TP-R03-REVIEWS-001",
-      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
-      "statement": "The exact TP revision passes PlanReviewAgent, ArchitectureReviewAgent, TestDesignAgent and DevelopAgent serial task-plan reviews.",
-      "type": "MANUAL_REVIEW",
-      "phase": "implementation_plan",
-      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@98268a58db59",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "ArchitectureReviewAgent",
-        "review_phase": "implementation_plan"
-      },
-      "source_refs": [
-        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/2"
-      ],
-      "evidence_ids": [
-        "EVD-000173",
-        "EVD-000174",
-        "EVD-000166",
-        "EVD-000175"
-      ],
-      "verified_by_agent": "ArchitectureReviewAgent",
-      "verified_at": "2026-08-10T14:23:43+00:00",
-      "reason": "PASSED: R03 changes planning provenance only; the existing nine-slice dependency DAG remains architecturally consistent with DESIGN-P2-R30, and the exact R03 has completed all four internal task-plan Reviews."
-    },
-    {
-      "assertion_id": "ASRT-P2-TP-R03-EXEC-001",
+      "assertion_id": "ASRT-P2-TP-R04-EXEC-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-006",
-      "statement": "Implementation Plan is machine-valid and executable without starting TDD or Development.",
+      "statement": "R04 is sequentially executable without requiring a subsequent task to restore Maven classpath or production aggregate construction.",
       "type": "MANUAL_REVIEW",
       "phase": "implementation_plan",
-      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@98268a58db59",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -766,21 +763,22 @@
         "review_phase": "implementation_plan"
       },
       "source_refs": [
-        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/3"
+        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/4"
       ],
       "evidence_ids": [
-        "EVD-000166",
-        "EVD-000178",
-        "EVD-000173",
-        "EVD-000177",
-        "EVD-000167",
-        "EVD-000168",
-        "EVD-000169",
-        "EVD-000170"
+        "EVD-000185",
+        "EVD-000191",
+        "EVD-000180",
+        "EVD-000182",
+        "EVD-000183",
+        "EVD-000184",
+        "EVD-000187",
+        "EVD-000188",
+        "EVD-000190"
       ],
       "verified_by_agent": "DevelopAgent",
-      "verified_at": "2026-08-10T14:24:30+00:00",
-      "reason": "PASSED: R03 remains executable as nine dependency-ordered development slices, validates cleanly, and does not start TDD or Development."
+      "verified_at": "2026-08-10T15:35:56+00:00",
+      "reason": "PASSED: exact R04 is implementable as nine sequential bounded slices; the two R03 P1 transition defects no longer force a later task to repair classpath or aggregate construction."
     }
   ]
 }

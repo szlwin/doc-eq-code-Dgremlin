@@ -369,8 +369,8 @@
     "round": "IMPLEMENTATION_PLAN-I006",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-006",
     "iteration_no": 6,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
     "status": "PASSED",
     "produced_by_agent": "ImplementationPlanAgent",
     "input_revisions": {
@@ -396,6 +396,39 @@
     "open_risks": [],
     "started_at": "2026-08-10T14:22:30+00:00",
     "completed_at": "2026-08-10T14:26:20+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION_PLAN-I007",
+    "phase": "implementation_plan",
+    "round": "IMPLEMENTATION_PLAN-I007",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
+    "iteration_no": 7,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "ImplementationPlanAgent",
+    "input_revisions": {
+      "design": "DESIGN-P2-R30",
+      "test_design": "TESTDESIGN-P2-R31"
+    },
+    "output_revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+    "evidence_ids": [
+      "EVD-000185",
+      "EVD-000186",
+      "EVD-000187",
+      "EVD-000188",
+      "EVD-000189",
+      "EVD-000190",
+      "EVD-000191",
+      "EVD-000180",
+      "EVD-000181",
+      "EVD-000182",
+      "EVD-000183",
+      "EVD-000184"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-10T15:32:17+00:00",
+    "completed_at": "2026-08-10T15:37:20+00:00"
   }
 ]
 ```

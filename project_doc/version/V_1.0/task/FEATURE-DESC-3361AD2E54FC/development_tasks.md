@@ -3,10 +3,10 @@
 > 该文件由 `development_tasks.yaml` 确定性生成，仅用于阅读；YAML 是唯一事实源。
 
 - Plan: `TP-FEATURE-DESC-3361AD2E54FC`
-- Revision: `TP-FEATURE-DESC-3361AD2E54FC-R03@98268a58db59`
+- Revision: `TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25`
 - Status: `PASSED`
 - Execution: `SEQUENTIAL`
-- Review round: `3`
+- Review round: `4`
 
 ## Input Revisions
 
@@ -73,6 +73,7 @@
 - 进入 development 后先为 dec-core-context/compiled aggregate and runtime neutral contracts 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
 - 实现 API Contract 定义的 materialization plan/index，并把它作为 CompiledModelSet 强制成员参与 equality/hash/digest；EngineContext 只代理捕获聚合。
+- 在同一个 DEV-04 revision 中同步适配 production CompiledModelSetBuilder 构造点，使 mandatory CompiledViewMaterializationIndex constructor 切换后 dec-core-compiler main source 仍可编译；这里只完成 aggregate construction adaptation，不提前实现 DEV-03 的 model-access/materialization descriptor 业务生成，也不得保留绕过 mandatory index 的 legacy production constructor。
 - 实现 RuntimeFactValue、opaque runtime IDs、ModelAccessRuleKey/TargetKey/ModelPath 等中立不可变类型的精确值语义，并运行 CONTEXT/COMPILER 构造性测试。
 - 具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。
 - 具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。
@@ -245,6 +246,7 @@
 - Component: `protected access resolver and guard`
 - P2 source-scope mapping - SRC-P2-T08-GUARD-PRIMARY, SRC-P2-T11-RUNTIME-GUARD
 - 以 ProtectedAccessStarterApiContractTest、ProtectedWriteIntentResolutionTest、ProtectedRuntimeModelAdapterIntegrationTest 建立 RED。
+- DEV-07 的首个 architecture-skeleton revision 必须同时在 dec-core-starter/pom.xml 建立显式 doc.eq.code:dec-core-model dependency（starter -> context + model），并在任何 STARTER production source import/use RuntimeModelAccessScope、RuntimeModelSession、RuntimeModelEffectProvider 等 MODEL API 前完成该 wiring；不得推迟到 DEV-08。
 - 进入 development 后先为 dec-core-starter/protected access resolver and guard 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
 - 实现 RuntimeTargetResolver、write-intent 0/1/N 解析、mutation stamp freeze、one-shot capability 和 exact ModelAccessRuleKey Guard 判定。
@@ -284,7 +286,7 @@
 - 进入 development 后先为 dec-core-starter/production composition and concurrency coordination 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。
 - 实现 ProtectedAccessRuntimeFactory/Composition、Rule/Change/CustomAction entry parity、same-scope session/effect binding 和 close/stale 语义。
-- 建立 capability one-shot 与同 Handle/path/version 协调域；用结构测试禁止 consumer 直连 MODEL root/effect/ModelData。
+- 建立 capability one-shot 与同 Handle/path/version 协调域；用结构测试验证 DEV-07 已建立的 starter -> model 依赖只服务 STARTER composition，并禁止 business consumer 直连 MODEL root/effect/ModelData；本任务不得承担首次 dec-core-model dependency wiring。
 - 具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。
 - 具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。
 

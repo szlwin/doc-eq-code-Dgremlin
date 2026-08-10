@@ -462,10 +462,10 @@
     "id": "TASK-P2-IMPLEMENTATION-PLAN-001",
     "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-IMPLEMENTATION-PLAN",
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
-    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-006",
-    "iteration_no": 6,
-    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-005",
-    "revision_reason": "Reopen Implementation Plan to close provenance gap: explicitly map authoritative P2-T01..P2-T12 scope into the nine executable development slices without changing frozen BM-R20/DESIGN-P2-R30/TESTDESIGN-P2-R31 semantics.",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
+    "iteration_no": 7,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-006",
+    "revision_reason": "Independent exact-R03 execution review found two new P1 bounded-slice defects: DEV-07 requires dec-core-model before starter POM wiring, and DEV-04 makes CompiledViewMaterializationIndex mandatory before adapting the production CompiledModelSetBuilder construction seam. Reopen only implementation_plan; preserve BM-R20/DESIGN-P2-R30/TESTDESIGN-P2-R31 and block TDD/Development.",
     "title": "形成 P2 System、RuleView 与 model-access 可执行 Implementation Plan",
     "objective": "把当前设计与 95-case/23-class TestDesign 转换为 dependency-ordered vertical development tasks，并完成同 Revision Plan Review 门禁。",
     "phase": "implementation_plan",
@@ -528,6 +528,7 @@
     "validation_commands": [
       "python3 /home/oai/skills/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --require-revision",
       "python3 -c \"import yaml,re,collections; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); c=collections.defaultdict(list); [c[re.match(r'SRC-(P2-T\\\\d{2})(?:-|$)',a['id']).group(1)].append(t['task_id']) for t in p['tasks'] for a in t['acceptance_criteria'] if re.match(r'SRC-(P2-T\\\\d{2})(?:-|$)',a['id'])]; e={f'P2-T{i:02d}' for i in range(1,13)}; assert set(c)==e and all(c[x] for x in e); print('P2 source-scope mapping 12/12 PASSED')\"",
+      "python3 -c \"import yaml; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); b={t['task_id']:t for t in p['tasks']}; d4=b['TASK-P2-DEV-04-CONTEXT-MATERIALIZATION']; d7=b['TASK-P2-DEV-07-STARTER-GUARDED-ACCESS']; d8=b['TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY']; assert 'dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java' in d4['implementation']['affected_files']; assert any('CompiledModelSetBuilder' in x and 'mandatory' in x for x in d4['implementation']['steps']); assert 'dec-core-starter/pom.xml' in d7['implementation']['affected_files']; assert any('dec-core-model dependency' in x and '不得推迟到 DEV-08' in x for x in d7['implementation']['steps']); assert any('不得承担首次 dec-core-model dependency wiring' in x for x in d8['implementation']['steps']); print('R04 bounded-slice P1 closure 2/2 PASSED')\"",
       "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
       "git diff --check"
     ],
@@ -535,6 +536,7 @@
       "development_tasks.yaml preserves an explicit machine-parseable P2-T01..P2-T12 -> nine Development Task mapping; every source item has at least one exact implementation/test/compatibility destination.",
       "development_tasks.yaml contains dependency-ordered vertical tasks covering all ten stable P2 trace IDs and the 23 exact R31 TestClasses.",
       "The exact TP revision passes PlanReviewAgent, ArchitectureReviewAgent, TestDesignAgent and DevelopAgent serial task-plan reviews.",
+      "R04 closes both bounded-slice execution P1s: DEV-04 atomically owns the production CompiledModelSetBuilder adaptation when CompiledViewMaterializationIndex becomes mandatory, and DEV-07 owns first starter -> model Maven wiring before STARTER imports MODEL API; DEV-08 only verifies dependency direction/bypass.",
       "Implementation Plan is machine-valid and executable without starting TDD or Development."
     ],
     "stop_conditions": [
@@ -545,17 +547,15 @@
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@98268a58db59",
+    "output_revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
     "validation_evidence_ids": [
-      "EVD-000166",
-      "EVD-000171",
-      "EVD-000172",
-      "EVD-000173",
-      "EVD-000174",
-      "EVD-000175",
-      "EVD-000176",
-      "EVD-000177",
-      "EVD-000178"
+      "EVD-000185",
+      "EVD-000186",
+      "EVD-000187",
+      "EVD-000188",
+      "EVD-000189",
+      "EVD-000190",
+      "EVD-000191"
     ]
   }
 ]
