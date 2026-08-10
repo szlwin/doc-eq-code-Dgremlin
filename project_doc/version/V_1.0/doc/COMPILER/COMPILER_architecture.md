@@ -1,60 +1,73 @@
 # COMPILER P2 Architecture
 
-> Revision `DESIGN-P2-R29`; inputs `BM-R20 / FLOW-R11`; parallel `P2-IMPACT-R28`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
+> Revision `DESIGN-P2-R30`; base `DESIGN-P2-R29`; Impact `P2-IMPACT-R29`.
+> BM-R20 and FLOW-R11 are unchanged.
 
-## Context aggregate
+## Architecture decision
 
-COMPILER publishes `RuntimeBindingPlan + ModelAccessPolicyIndex + CompiledViewMaterializationIndex` in one immutable `CompiledModelSet`. `EngineContext` only delegates to that aggregate. Materialization index equality/hash/digest/publication are atomic; MODEL never rebuilds materialization from raw/normalized configuration or default/global Context.
-
-## Trusted production invocation
+P2 drops the opaque production-invocation credential. `RuntimeModelLoadRequest` is restored as a simple MODEL loading DTO. The trust boundary is the existing MODEL production lifecycle; the trusted cross-module runtime-object boundary begins only after MODEL has validated/loaded the request and minted `RuntimeModelHandle/RuntimeModelAccessScope`.
 
 ```text
-one active MODEL production invocation
-  -> package-private invocation assembler atomically captures
-       exact RuntimeBindingPlan
-       + real origin object
-       + explicit rule/connection
-       + owning root identity
-  -> opaque RuntimeModelProductionInvocation (no public factory/rebind)
-  -> RuntimeModelExecutionRoot.load(token)
+compiler -> immutable Context/materialization
+                    |
+                    v
+MODEL production lifecycle
+  -> RuntimeModelLoadRequest(plan, real origin, rule, connection)
+  -> RuntimeModelExecutionRoot.load(request)
+  -> exact captured Context validation
   -> typed ModelDataFactory
   -> existing 3-arg ModelLoader
-  -> root-owned production Container created internally by ContainerFactory
-  -> same ModelData trusted handle
+  -> MODEL ContainerFactory-created Container
+  -> SAME ModelData -> Handle -> Scope
+                    |
+                    v
+STARTER begin/register/seal + bind scope EffectProvider
+  -> exact resolver -> capability -> Guard
+  -> private same-session RuntimeModelOperationPort
+  -> SAME handle/ModelData effect
 ```
 
-The former public `RuntimeModelLoadRequest.of(plan, originObject, ...)` is superseded. Plan A + arbitrary Object B is not a public production expression. A token is one-shot and root-bound. Cross-root token use and reuse fail with stable codes before ModelData creation.
+## Trust boundaries
 
-## Production Container trust
+1. `RuntimeModelLoadRequest` is data, not authority. It does not grant READ/WRITE, scope, handle or operation capability.
+2. MODEL production code is the trusted producer/consumer boundary for the request. P2 intentionally does not protect against malicious/incorrect plan+origin composition by already-trusted MODEL production implementation code.
+3. Application/business/Rule/Change/CustomAction/STARTER must not use root loading as a production entry or substitute trusted ModelData/Container/Scope/effect provider.
+4. Production Container is created by MODEL through existing `ContainerFactory` from `ProductionContainerKind`; fake/custom Container is not production evidence.
+5. Trusted cross-module identity is the MODEL-minted Handle/Scope, not the request.
 
-`RuntimeModelExecutionRoots.production(context, ProductionContainerKind)` selects the existing production Container internally. No public production overload accepts `Container`. Unit tests may use MODEL-internal test seams, but AC-007 production Evidence must traverse `ContainerFactory` and a supported production kind; fake/test Container is invalid production Evidence.
-
-## STARTER-to-MODEL effect seam
+## Same-target invariant
 
 ```text
-MODEL scope
-  -> STARTER validates frame
-  -> begin/register/seal exact MODEL session
-  -> scope.effectProvider().bind(the same sealed session)
-  -> private RuntimeModelOperationPort retained inside composition
-  -> resolve exact registered handle/object
-  -> freeze intent/capability
-  -> Guard
-  -> ALLOW only -> private bound MODEL operation port
+ModelData A
+ -> Handle A
+ -> Session S registers A as RuntimeObjectId A
+ -> Resolver returns A
+ -> Guard evaluates A + exact ModelAccessRuleKey
+ -> bound MODEL port revalidates S/A
+ -> effect A
 ```
 
-The provider is bound to the same root/scope/session/handle set. The port validates session/object membership again before touching ModelData. `ProtectedAccessComposition` and Rule/Change/CustomAction entries expose no port/provider. Production dependency checks forbid business consumers from importing MODEL runtime effect types; they consume STARTER entries only.
+Any A->B substitution after resolution fails before protected effect and produces no success value/receipt.
 
 ## FLOW-R11 mapping
 
-Trusted production invocation/root load realizes the existing FLOW precondition “MODEL-owned trusted RuntimeModelFrame available.” FLOW STEP-01 validates that frame; STEP-02 creates/registers/seals the session and binds the MODEL effect provider; STEP-03 resolves the exact target; STEP-04 freezes access/capability; STEP-05 Guards; STEP-06 invokes the privately bound MODEL operation port on the same registered object.
+Request loading is precondition establishment, not a new business flow. FLOW-R11 stays:
 
-## Compatibility / scope
-
-Existing successful originData write-back remains the production destination. Per user directive, post-copy POJO/Map restoration after a later legacy commit failure is not changed or required. No new business authority, operation kind, session concept, or P7 lifecycle is introduced.
+1. trusted MODEL frame available;
+2. STARTER session register/seal + effect binding;
+3. exact target resolve;
+4. READ/WRITE intent + capability;
+5. Guard;
+6. same MODEL object effect.
 
 ## Dependency direction
 
-`compiler -> context`, `model -> context`, `starter -> context+model` are allowed. `context -> model/starter`, `model -> starter`, and business/consumer-core -> MODEL runtime effect contracts are forbidden.
+`compiler -> context`, `model -> context`, `starter -> context + model`, business consumers -> `starter + context`. Business consumers must not import `RuntimeModelExecutionRoot`, `ModelData`, `RuntimeModelEffectProvider`, or `RuntimeModelOperationPort`.
 
-No production Java/TDD/risk Evidence is claimed.
+## Deferred design
+
+`RuntimeModelProductionInvocation` and all root-bound/replay credential semantics are `NOT_ADOPTED_IN_P2 / DEFERRED`. They may be reconsidered only in a future revision; they are not compatibility/current API obligations.
+
+## Scope exclusion
+
+No change is made to legacy POJO/Map post-copy rollback after a later commit failure. Successful existing originData write-back and Guard-before-effect remain required.

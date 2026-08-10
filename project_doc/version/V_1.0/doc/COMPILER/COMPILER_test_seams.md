@@ -1,33 +1,36 @@
 # COMPILER P2 Test Seams
 
-> Revision `DESIGN-P2-R29`; inputs `BM-R20 / FLOW-R11`; Impact `P2-IMPACT-R28`; status `NEEDS_REVIEW / MACHINE_BLOCKED`.
+> Revision `DESIGN-P2-R30`; TestDesign target `TESTDESIGN-P2-R31`.
 
-## Plan/origin same-invocation seam
+## Owner-module seams
 
-MODEL-package fixture drives the package-private production invocation assembler from one active production invocation A. Assert token A has no public/protected constructor/factory/rebind; root A loads A successfully; root B loading token A yields `INVOCATION_ROOT_MISMATCH`; root A reusing A yields `INVOCATION_ALREADY_CONSUMED`. Public API inspection must show no `of(plan, originObject)` trusted request. A Plan A/Object B substitution cannot be expressed through public production API.
+- COMPILER: exact binding/materialization publication and deterministic diagnostics.
+- CONTEXT: `CompiledModelSet` aggregate, typed materialization, neutral value/result contracts.
+- MODEL: direct `RuntimeModelLoadRequest` validation/loading, same-ModelData identity, production Container factory boundary, Scope/Session/EffectProvider/OperationPort.
+- STARTER: composition/session/effect binding, resolver/capability/Guard sequencing and representative consumers.
 
-## Production Container seam
+## Mandatory direct-load seams
 
-Public root creation accepts `ProductionContainerKind`, not `Container`. Instrument existing `ContainerFactory` to prove production COMMIT/SYNCHRONIZED selection creates the real supported container and trusted load calls that exact root-owned container. A fake/test Container may be used only by MODEL unit harness; AC-007 real-production tests fail if a fake/injected Container is used.
+1. `RuntimeModelLoadRequest.of(plan, origin, rule, connection)` is constructible as data but provides no READ/WRITE authority.
+2. Production fixture proves MODEL lifecycle constructs the request and sends it to root; business/application/STARTER production code does not use root load directly.
+3. Invalid plan in captured Context fails `PLAN_NOT_IN_CAPTURED_CONTEXT` before ModelData creation/Container/scope.
+4. Exact descriptor is selected only through captured `CompiledViewMaterializationIndex`.
+5. Created ModelData A is the exact reference passed to ModelLoader, root-owned Container, Handle, Session and Guard-allowed effect.
+6. Production root accepts `ProductionContainerKind`, never a caller fake/custom Container.
+7. Token classes/failures from R29 are absent from current API/TestDesign authority and are marked deferred only in changelog/design history.
 
-## MODEL effect provider seam
+## Protected-effect seams preserved
 
-After STARTER validates scope and seals the exact session, composition must call `scope.effectProvider().bind(theSameSession)` once and privately retain the returned operation port. Guard DENY yields operation-port call count zero. Guard ALLOW READ/WRITE invokes that bound port once with a resolved target whose session/object belong to the same registered handle. Cross-session port binding or substituted object fails before model mutation with the stable code/denial.
+- provider binds only the exact sealed session from the same scope;
+- operation port is private to STARTER composition;
+- Guard DENY -> port/effect count zero;
+- A->B target substitution fails before effect;
+- Rule/Change/CustomAction have no MODEL-effect bypass.
 
-## Consumer no-bypass seam
+## TDD validity
 
-Compile-time dependency scan proves Rule/Change/CustomAction production consumers import STARTER entries and CONTEXT values only; they do not import `RuntimeModelAccessScope`, `RuntimeModelEffectProvider`, or `RuntimeModelOperationPort`. `ProtectedAccessComposition` exposes no provider/port getter, and no production factory overload accepts an injected port or Guard.
+Each blocking Case maps to one exact owner-module TestClass. Bootstrap may use `-am`; target RED must not. Compile/setup/missing-class failure before intended assertion is `INVALID_RED`.
 
-## Context/materialization and API seams
+## Exclusion
 
-Retain R28 checks: `CompiledViewMaterializationIndex` is a `CompiledModelSet` aggregate member in equality/hash/digest/publication; MODEL reads only captured exact View descriptor; all public construction factories compile in their legal owner modules; superseded R26 fresh-snapshot/open API remains absent.
-
-## Transaction/write-back scope
-
-Successful Guard-allowed WRITE must reach the same production ModelData and existing successful originData write-back. MODEL mutation failure before successful production completion returns no success receipt. Per user directive, do not require restoration of a POJO/Map already copied before a later legacy commit failure.
-
-## TestDesign quality gate
-
-R30 must contain explicit Fixture/Action/Expected/Forbidden/Ref for every blocking Case. Template phrases such as “named behavior/case remains...” are forbidden. Each Expected must state the observable success/failure outcome specific to its Case. Target RED never uses `-am`; pre-assert compile/setup/missing class is `INVALID_RED`.
-
-Risk scan, same-revision specialist Review and machine Evidence remain required before TDD.
+Do not turn legacy post-copy POJO/Map rollback after later commit failure into a blocking P2 oracle. Successful originData write-back remains required.

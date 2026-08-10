@@ -1,8 +1,8 @@
 # FEATURE-DESC-3361AD2E54FC Review 问题台账
 
-> Review baseline: `8f8e3b9e5525d065f0ce4288062f872c56b67f3f`.
-> Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30`.
-> Historical PASSED lifecycle is unchanged. No `FND-P2-REV-021` is created.
+> Review baseline: `177601e601b130a7653e258bd3e8b0a772e6023a`.
+> Current candidate: `BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31`.
+> Historical PASSED lifecycle unchanged. No `FND-P2-REV-021`.
 
 ```json review-issues
 [
@@ -13,8 +13,8 @@
     "phase": "business_model",
     "title": "Guard coverage narrower than requirement",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Prior semantic remediation is preserved; formal closure still requires same-revision specialist Review, risk scan and machine Evidence.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -24,8 +24,8 @@
     "phase": "business_model",
     "title": "Business Model misses RuleView System-required error",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Prior semantic remediation is preserved; formal closure still requires same-revision specialist Review, risk scan and machine Evidence.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -35,8 +35,8 @@
     "phase": "business_model",
     "title": "P2 declaration boundary points at retired P1 module",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Prior semantic remediation is preserved; formal closure still requires same-revision specialist Review, risk scan and machine Evidence.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -46,8 +46,8 @@
     "phase": "design",
     "title": "P2 API contract not implementation-ready",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R29 adds a concrete same-scope MODEL effect provider/operation binding, opaque root-bound production invocation token, trusted Container selection and stable binding failures; same-revision independent API/Design Review remains required.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "R30 freezes direct request/root validation, MODEL production trust boundary, MODEL-owned Container and preserved same-session effect binding; independent same-revision Review still required.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -57,8 +57,8 @@
     "phase": "design",
     "title": "Risk detection and specialist Review are not machine-closed",
     "decision": "BLOCKED_PENDING_REVIEW",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Current risk scan and same-revision specialist Review/Evidence are still outstanding.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -68,8 +68,8 @@
     "phase": "test_design",
     "title": "Formal future Maven command unreliable in reactor",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R30 retains exact bootstrap and target RED commands; target RED contains no -am and pre-assert setup failure is INVALID_RED.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -79,8 +79,8 @@
     "phase": "test_design",
     "title": "Fail-closed / requirement test matrix incomplete",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R30 restores scenario-specific observable oracles for all prior cases and adds effect-provider, same-invocation provenance, trusted Container and same-handle effect blockers.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "R31 has 95 scenario-specific blocking oracles including direct-load invalid-plan, same-ModelData identity, Container trust and same-target effect.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -90,8 +90,8 @@
     "phase": "design",
     "title": "Frozen P2 Java API violates Java8/existing compatibility",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Prior compatibility remediation remains; new R29 signatures use Java-8-compatible interfaces/classes/enums/Optional without language-level upgrades.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -101,8 +101,8 @@
     "phase": "design",
     "title": "Selected dynamic requirement not delivered to evaluator",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Typed materialization remains aggregate-published and R29 routes trusted production invocation plus effect through the captured Context/session without runtime config reinterpretation.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -112,8 +112,8 @@
     "phase": "design",
     "title": "Real read path=* conflicts with exact runtime semantics",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Prior exact ModelPath remediation is preserved; R29 effect port consumes only resolved exact access for the same registered object.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -123,8 +123,8 @@
     "phase": "design",
     "title": "RuntimeFactValue not truly framework-closed",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Prior closed/deep-immutable RuntimeFactValue contract remains unchanged and R30 keeps dedicated domain/immutability cases.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -134,8 +134,8 @@
     "phase": "test_design",
     "title": "Test Design did not guarantee valid TDD RED",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R30 has 93 explicit blocking Cases mapped to 23 exact owner-module TestClasses with target -am forbidden and INVALID_RED before assertion.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "R31 maps 95 blocking Cases to 23 exact TestClasses; target RED has no -am and pre-assert setup failure is INVALID_RED.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -145,8 +145,8 @@
     "phase": "governance",
     "title": "Current revisions/decisions/lifecycle not consistently materialized",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Current projection is BM-R20 -> FLOW-R11 -> DESIGN-P2-R29 -> TESTDESIGN-P2-R30 with Impact R28 parallel; BM/FLOW and historical lifecycle remain unchanged.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Current projection is BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R31 with P2-IMPACT-R29 parallel; BM/FLOW/lifecycle unchanged.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -156,8 +156,8 @@
     "phase": "design",
     "title": "Legal dynamic access unreachable",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R29 closes the missing STEP-06 seam: STARTER binds a MODEL-owned effect provider to the same sealed session and privately invokes the resulting operation port only after Guard ALLOW.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "R30 provides real request -> typed ModelData -> real ModelLoader/Container -> Scope -> Guard -> private MODEL effect reachability.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -167,8 +167,8 @@
     "phase": "design",
     "title": "Policy construction/module boundary and authority consistency incomplete",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Aggregate materialization ownership remains in CONTEXT; R29 adds no new permission authority and limits MODEL effect consumption to STARTER composition.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -178,8 +178,8 @@
     "phase": "test_design",
     "title": "Test Design does not prove AC-006 source-to-runtime reachability",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R30 real fixture/reachability cases require compiler aggregate -> root-bound MODEL invocation -> real Container -> scope/session/effect binding -> Guard -> MODEL operation.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "R31 real fixture requires compiler aggregate -> MODEL direct request/root -> real ModelData/Container -> Scope/Session/effect bind -> Guard -> operation.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -189,8 +189,8 @@
     "phase": "design",
     "title": "RuntimeAccessBinding cannot prove runtime object binding",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R29 removes public plan+origin trusted request construction; a MODEL-minted one-shot root-bound invocation token captures plan+real origin atomically and freezes the same loaded ModelData in the handle.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Per explicit design decision, MODEL production lifecycle is trusted to form plan+origin request; closure is same validated plan/materialization plus same ModelData identity through Handle/Session/effect, not opaque credential.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -200,8 +200,8 @@
     "phase": "design",
     "title": "DynamicBindingClassification production rule not frozen",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "Prior classification truth-table contract remains current and R30 retains explicit classification and exact binding cases.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -211,8 +211,8 @@
     "phase": "design",
     "title": "Runtime proof not atomically bound to actual operation target",
     "decision": "FIX_PROPOSED",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "R29 binds production invocation -> same ModelData handle -> same scope/session -> same resolved runtimeObjectId -> same private MODEL operation port; operation port revalidates session/object before effect. User-excluded post-copy rollback remains out of scope.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "R30 preserves ModelData A -> Handle A -> session object A -> resolved A -> Guard A -> effect A; A->B substitution fails. Opaque token is not required. User-excluded post-copy rollback remains out of scope.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   },
   {
@@ -222,8 +222,8 @@
     "phase": "business_model",
     "title": "TargetKey source-model identity conflicts with frozen P1 model-access semantics and real systems.xml fixture",
     "decision": "SEMANTIC_FIX_VERIFIED_FORMAL_CLOSURE_PENDING",
-    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30",
-    "resolution_evidence": "P1 shared ViewKey source-identity repair remains independently verified; R29 does not reopen BM-R20 core semantics.",
+    "resolution_revision": "BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31",
+    "resolution_evidence": "Prior semantic remediation remains; formal closure still requires same-revision specialist Review, current risk scan and machine Evidence.",
     "defer_reason": "same-revision specialist Review, risk scan and machine Evidence outstanding"
   }
 ]
@@ -231,11 +231,11 @@
 
 ## Gate
 
-- Requirement + Overlay R04: semantic PASS / MACHINE_BLOCKED.
-- BM-R20: semantic PASS / MACHINE_BLOCKED; artifact unchanged.
-- FLOW-R11: semantic PASS / MACHINE_BLOCKED; structured Flow artifact unchanged.
-- P2-IMPACT-R28 / DESIGN-P2-R29 / TESTDESIGN-P2-R30: current remediation candidates; same-revision specialist Review required.
-- OPEN P1: exactly 20; `FND-P2-REV-021` absent.
-- User-confirmed scope exclusion: no requirement/test blocker for restoration of a POJO/Map already copied before a later legacy commit failure.
-- `risk_detection.json`: NOT_SCANNED; current execution Evidence: none.
+- Requirement + Overlay R04 / BM-R20 / FLOW-R11: semantic PASS / MACHINE_BLOCKED; artifacts unchanged.
+- P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31: current remediation candidates; same-revision specialist Review required.
+- OPEN P1 exactly 20; FND-P2-REV-021 absent.
+- Opaque production invocation credential: NOT_ADOPTED_IN_P2 / DEFERRED.
+- RuntimeModelLoadRequest is non-authoritative MODEL loading data; Guard remains sole READ/WRITE authority.
+- User exclusion: no blocker for restoring a POJO/Map already copied before a later legacy commit failure.
+- `risk_detection.json`: NOT_SCANNED; current execution Evidence none.
 - Implementation Plan / TDD / Development: BLOCKED.
