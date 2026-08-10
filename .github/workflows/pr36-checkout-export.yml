@@ -18,11 +18,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Archive complete working tree and git database
-        run: tar --exclude='./pr36-full-checkout.tar.gz' -czf pr36-full-checkout.tar.gz .
+        run: tar -C . -czf "$RUNNER_TEMP/pr36-full-checkout.tar.gz" .
       - name: Upload checkout archive
         uses: actions/upload-artifact@v4
         with:
           name: pr36-full-checkout
-          path: pr36-full-checkout.tar.gz
+          path: ${{ runner.temp }}/pr36-full-checkout.tar.gz
           if-no-files-found: error
           retention-days: 1
