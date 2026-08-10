@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "targetId": "FEATURE-DESC-3361AD2E54FC",
+  "targetType": "FEATURE",
+  "originalInput": "P2：System 与 RuleView 归属。目标：System 成为一等编译实体；RuleView 使用 (system, name) 注册和调用；model-access 编译为静态与运行时权限屏障。",
+  "inputType": "DESCRIPTION",
+  "classification": "NEW_REQUIREMENT",
+  "workflowProfile": "STANDARD_FEATURE_FLOW",
+  "entryPhase": "requirement_confirmation",
+  "requiredPhases": [
+    "requirement_confirmation",
+    "requirement_analysis",
+    "business_model",
+    "design",
+    "test_design",
+    "implementation_plan",
+    "tdd",
+    "development",
+    "code_review",
+    "testing",
+    "completion_verification"
+  ],
+  "skippedPhases": [],
+  "relatedRequirement": "",
+  "relatedFeature": "",
+  "impactAssessment": {
+    "businessLogic": "CHANGED",
+    "dataModel": "CHANGED",
+    "apiContract": "CHANGED",
+    "permission": "CHANGED",
+    "workflow": "CHANGED",
+    "persistence": "UNKNOWN",
+    "externalSideEffect": "UNKNOWN",
+    "migration": "CHANGED",
+    "dependency": "CHANGED"
+  },
+  "reason": "P1 已完成 PASSED/MERGED/ARCHIVED 闭环；总体计划正式定义 P2 为下一阶段，当前请求仅执行 P2 Request Intake 与 Target 初始化，不进入 requirement_confirmation 实质产出。",
+  "evidenceRefs": [
+    "project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md#P2",
+    "project_doc/version/V_1.0/project_process.md"
+  ],
+  "decisionAgent": "ProjectManagerAgent",
+  "createdAt": "2026-08-07T15:15:46+00:00",
+  "classificationRevision": 1,
+  "supersedesIntakeRef": "",
+  "reclassifiedFrom": "",
+  "reclassificationReason": "",
+  "reclassifiedAt": "",
+  "historyRefs": []
+}

@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "event": "P2_EXACT_RISK_SPECIALIST_SEMANTIC_REVIEWS",
+  "review_contract": "common-develop 2.44 RC9",
+  "reviewed_git_revision": "54545677040fdb2fe3539423fd6ef5a0a56d6a9a",
+  "governance_head_at_execution": "bb828c9cf82dbb9f4301843ce39b901d51f40d5d",
+  "candidate_chain": "REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R31; parallel P2-IMPACT-R29",
+  "artifact_blobs": {
+    "DESIGN-P2-R30": "8e6a3991eaa215b7e4291b03cbb63980b0580960",
+    "TESTDESIGN-P2-R31": "dba5378a37e8773dc9c4ff955b359f83299f0b0f",
+    "P2-IMPACT-R29": "83680e6a1ed53d50e0c195abd55846774f49cc0b",
+    "architecture": "ea68bf442ee491b235444c1b4c79d2bc3618fae7",
+    "api_contract": "f4e079edd24589f24f1a0a11677f796186b9e4f9",
+    "test_seams": "8453fbbc5691002247fa264b33e21d4d018e9471"
+  },
+  "risk_scan": {
+    "input_digest": "55a43391a518fc2e320c1ef4e16986f5a7fbd999cae9ad8d80e0d0788ff0e5c7",
+    "detection_count": 28,
+    "active_risk_types": [
+      "architecture_change",
+      "concurrency",
+      "data_migration",
+      "impact_analysis",
+      "security"
+    ],
+    "canonical_repository_status": "NOT_SCANNED",
+    "local_scan_validator": "PASSED",
+    "canonical_evidence_registered": false
+  },
+  "source_code_facts": [
+    {
+      "ref": "dec-core-model/.../ModelLoader.java",
+      "blob": "4f381dc950864f4e94bd565fbcad279e2998c1db",
+      "fact": "3-arg load(name, ModelData, conName) exists; 2-arg overload resolves ConfigContextUtil.getDefaultCon()."
+    },
+    {
+      "ref": "dec-core-model/.../ContainerFactory.java",
+      "blob": "10dee0ebaf0aa7180eea25a7909b5f7edb57bfc8",
+      "fact": "existing factory maps COMMIT to ModelContainer and SYN to SynContainer."
+    },
+    {
+      "ref": "dec-core-model/.../ModelContainer.java",
+      "blob": "a9bc3db9cfd7b7f571755e5ef09f1adc236cecfe",
+      "fact": "execute uses ModelLoader.get() ModelData and successful rule execution writes values back to originData before legacy commit lifecycle."
+    },
+    {
+      "ref": "dec-core-starter/pom.xml",
+      "blob": "3ff06257a01b5d5532cf5073c56bc44f4ab7494f",
+      "fact": "current starter POM does not yet declare dec-core-model; R29 Impact already declares STARTER -> MODEL, so Implementation Plan must add the dependency."
+    }
+  ],
+  "reviews": [
+    {
+      "reviewer": "ArchitectureReviewAgent",
+      "profile_id": "design:ArchitectureReviewAgent",
+      "triggered_risk_type": "architecture_change",
+      "semantic_conclusion": "SEMANTIC_PASS",
+      "formal_conclusion": "FORMAL_MACHINE_EVIDENCE_BLOCKED",
+      "criteria": [
+        {"criterion_id":"RC-ARCH-001","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-ARCH-002","status":"SEMANTIC_PASS","assessment":"Dependency direction is compiler->context, model->context, starter->context+model, consumer->starter+context; structured Impact graph is acyclic. Current starter POM lacks model dependency, explicitly deferred to Implementation Plan."},
+        {"criterion_id":"RC-ARCH-003","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-ARCH-004","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-ARCH-005","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-ARCH-006","status":"SEMANTIC_PASS","assessment":"R31 provides exact owner-module seams and 95 blocking Cases; execution is intentionally not claimed before TDD."},
+        {"criterion_id":"RC-DES-002","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-DES-005","status":"SEMANTIC_PASS","assessment":"One protected invocation/capability and one actual ModelData coordination domain are frozen. User-confirmed later legacy post-copy commit restoration is out of P2 scope; pre-effect fail-closed remains."},
+        {"criterion_id":"RC-DES-007","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-DES-008","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-BFLOW-003","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."},
+        {"criterion_id":"RC-BFLOW-004","status":"SEMANTIC_PASS","assessment":"No architecture contradiction found in R30/R29/R31 exact artifacts."}
+      ],
+      "new_finding_ids": [],
+      "summary": "Module boundaries, dependency direction, failure isolation, evolution scope, test seams and Flow/BM mapping are coherent. No new architecture P1. STARTER->MODEL Maven dependency is an Implementation Plan item, not a Design blocker.",
+      "notes": []
+    },
+    {
+      "reviewer": "ConcurrencyReviewAgent",
+      "profile_id": "design:ConcurrencyReviewAgent",
+      "triggered_risk_type": "concurrency",
+      "semantic_conclusion": "SEMANTIC_PASS",
+      "formal_conclusion": "FORMAL_MACHINE_EVIDENCE_BLOCKED",
+      "criteria": [
+        {"criterion_id":"RC-CONC-001","status":"SEMANTIC_PASS","assessment":"Shared mutable domain is explicitly the same ModelData/Handle/session/object/path/version; cross-session ownership conflict is fail-closed."},
+        {"criterion_id":"RC-CONC-002","status":"SEMANTIC_PASS","assessment":"RuntimeMutationStamp/currentVersion plus one-shot capability freeze object/path/version before Guard; stale substitution is denied."},
+        {"criterion_id":"RC-CONC-003","status":"SEMANTIC_PASS","assessment":"Duplicate registration and concurrent capability consumption have stable single-winner/denial behavior."},
+        {"criterion_id":"RC-CONC-004","status":"SEMANTIC_PASS","assessment":"Consumed capability cannot be reset; a retry requires a fresh valid intent/capability, preventing duplicate protected effect."},
+        {"criterion_id":"RC-CONC-005","status":"SEMANTIC_PASS","assessment":"Closed/stale scope/session, ownership conflict and MODEL write failure have stable failure surfaces. No new blocking lock/deadlock mechanism is introduced by P2."},
+        {"criterion_id":"RC-CONC-006","status":"SEMANTIC_PASS_TESTDESIGN_ONLY","assessment":"R31 defines exact concurrent consume, same-handle stale-loser and cross-session ownership cases; runtime execution evidence remains future TDD."}
+      ],
+      "new_finding_ids": [],
+      "summary": "R30/R31 freeze one coordination domain, mutation versioning, one-shot capability and ownership conflict semantics. No new concurrency P1; execution evidence remains blocked until TDD.",
+      "notes": []
+    },
+    {
+      "reviewer": "DataMigrationReviewAgent",
+      "profile_id": "design:DataMigrationReviewAgent",
+      "triggered_risk_type": "data_migration",
+      "semantic_conclusion": "SEMANTIC_NOT_APPLICABLE",
+      "formal_conclusion": "FORMAL_WAIVER_OR_CANONICAL_REVIEW_EVENT_BLOCKED",
+      "criteria": [
+        {"criterion_id":"RC-MIG-001","status":"NOT_APPLICABLE","assessment":"The scanned revision changes no DB/schema/data/backfill contract. The only detector match is CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001, which means lossless P1 path/operation semantic mapping, not data migration."},
+        {"criterion_id":"RC-MIG-002","status":"NOT_APPLICABLE","assessment":"The scanned revision changes no DB/schema/data/backfill contract. The only detector match is CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001, which means lossless P1 path/operation semantic mapping, not data migration."},
+        {"criterion_id":"RC-MIG-003","status":"NOT_APPLICABLE","assessment":"The scanned revision changes no DB/schema/data/backfill contract. The only detector match is CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001, which means lossless P1 path/operation semantic mapping, not data migration."},
+        {"criterion_id":"RC-MIG-004","status":"NOT_APPLICABLE","assessment":"The scanned revision changes no DB/schema/data/backfill contract. The only detector match is CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001, which means lossless P1 path/operation semantic mapping, not data migration."},
+        {"criterion_id":"RC-MIG-005","status":"NOT_APPLICABLE","assessment":"The scanned revision changes no DB/schema/data/backfill contract. The only detector match is CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001, which means lossless P1 path/operation semantic mapping, not data migration."},
+        {"criterion_id":"RC-MIG-006","status":"NOT_APPLICABLE","assessment":"The scanned revision changes no DB/schema/data/backfill contract. The only detector match is CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001, which means lossless P1 path/operation semantic mapping, not data migration."}
+      ],
+      "new_finding_ids": [],
+      "summary": "Data-migration trigger is a lexical false positive, not a DB/data migration. Semantic review is NOT_APPLICABLE. Formal detector closure still requires a canonical review/waiver once repository Evidence is registered.",
+      "notes": ["Do not add schema/backfill/rollback work to P2 solely because the case name contains MIGRATION."]
+    },
+    {
+      "reviewer": "ImpactAnalysisReviewAgent",
+      "profile_id": "design:ImpactAnalysisReviewAgent",
+      "triggered_risk_type": "impact_analysis",
+      "semantic_conclusion": "SEMANTIC_PASS",
+      "formal_conclusion": "FORMAL_MACHINE_EVIDENCE_BLOCKED",
+      "criteria": [
+        {"criterion_id":"RC-IMP-001","status":"SEMANTIC_PASS","assessment":"R29 includes compiler/context/model/starter, load request/effect objects, compile/protected processes and TestDesign."},
+        {"criterion_id":"RC-IMP-002","status":"SEMANTIC_PASS","assessment":"Relationship directions and conditions match the frozen architecture and FLOW-R11 mapping."},
+        {"criterion_id":"RC-IMP-003","status":"NOT_APPLICABLE","assessment":"No delete/cancel/unlink ownership policy is introduced by this P2 design revision; operational failures use explicit REJECT_OPERATION/fail-closed policies."},
+        {"criterion_id":"RC-IMP-004","status":"NOT_APPLICABLE","assessment":"No historical business data migration or in-flight ownership transfer is introduced; existing runtime ModelData lifecycle is reused."},
+        {"criterion_id":"RC-IMP-005","status":"SEMANTIC_PASS","assessment":"Impacted modules/APIs/tests/docs are identified. STARTER->MODEL is explicitly recorded even though the current starter POM still needs the future implementation dependency change."},
+        {"criterion_id":"RC-IMP-006","status":"SEMANTIC_PASS","assessment":"Impact policies and CMI steps map to exact R31 Case IDs."}
+      ],
+      "new_finding_ids": [],
+      "summary": "P2-IMPACT-R29 is structurally valid, acyclic and complete for the current design. No new Impact P1. Maven dependency implementation remains a future plan item.",
+      "notes": []
+    },
+    {
+      "reviewer": "SecurityReviewAgent",
+      "profile_id": "code_review:SecurityReviewAgent",
+      "triggered_risk_type": "security",
+      "semantic_conclusion": "SEMANTIC_PASS",
+      "formal_conclusion": "FORMAL_MACHINE_EVIDENCE_BLOCKED",
+      "criteria": [
+        {"criterion_id":"RC-SEC-001","status":"NOT_APPLICABLE","assessment":"P2 is an in-process model authorization seam, not a user authentication/login boundary. System/owner/runtime provenance is authorization context; no new authentication mechanism is introduced."},
+        {"criterion_id":"RC-SEC-002","status":"SEMANTIC_PASS","assessment":"Every protected READ/WRITE requires the exact ModelAccessRuleKey and Guard before effect; policy/proof/target mismatch fails closed."},
+        {"criterion_id":"RC-SEC-003","status":"NOT_APPLICABLE","assessment":"No secret/key/bearer credential is introduced. RuntimeModelLoadRequest is explicitly non-authoritative and the opaque token credential is deferred."},
+        {"criterion_id":"RC-SEC-004","status":"SEMANTIC_PASS","assessment":"Captured Context membership, typed materialization and exact plan/provenance checks reject invalid input; runtime raw config/default Context repair is forbidden."},
+        {"criterion_id":"RC-SEC-005","status":"SEMANTIC_PASS","assessment":"Scope/session staleness, ownership conflict and one-shot capability prevent protected-effect replay/widening; direct load request possession grants no authority."},
+        {"criterion_id":"RC-SEC-006","status":"SEMANTIC_PASS_SCOPE_LIMITED","assessment":"Stable denial/failure enums avoid ad-hoc exception/string authority. P2 does not introduce a new security-audit subsystem; no sensitive credential material is exposed by the contract."},
+        {"criterion_id":"RC-SEC-007","status":"SEMANTIC_PASS_TESTDESIGN_ONLY","assessment":"R31 contains negative policy miss, plan/provenance mismatch, Guard deny, target substitution, caller injection/bypass and stale/session cases; execution evidence remains future TDD."}
+      ],
+      "new_finding_ids": [],
+      "summary": "Authorization/fail-closed boundaries are semantically complete for P2; no credential or caller-injection bypass is introduced. No new Security P1; negative execution evidence remains future TDD.",
+      "notes": []
+    }
+  ],
+  "overall": {
+    "new_semantic_p0": 0,
+    "new_semantic_p1": 0,
+    "specialist_semantic_status": "PASS_WITH_DATAMIGRATION_NOT_APPLICABLE",
+    "canonical_machine_closure": false,
+    "blocking_reason": "Repository canonical risk_detection/evidence review events are not safely registerable in the current connector-only runtime; existing OPEN P1 findings also prevent formal PASSED conclusion.",
+    "implementation_plan_allowed": false,
+    "tdd_allowed": false,
+    "development_allowed": false
+  },
+  "executed_at": "2026-08-10T05:25:00+00:00"
+}

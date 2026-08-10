@@ -161,12 +161,12 @@
     "id": "TASK-P2-BMODEL-001",
     "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-BUSINESS-MODEL",
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
-    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003",
-    "iteration_no": 3,
-    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002",
-    "revision_reason": "用户确认 BM-R06 核心语义基本正确，但要求按 BM-R05 完整可读结构重建 Markdown、显式建立 DEC_COMPILER→COMPILER 同一逻辑模块 lineage、验证 stable ID 全量继承，并形成新 Business Model Revision 后重新执行六项独立 Review。",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003",
+    "revision_reason": "RC9 machine-state migration: bind already-completed semantic authority chain BM-R20 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R31 into new lifecycle iterations without rewriting historical PASSED revisions or redoing semantic content.",
     "title": "建立 P2 System、RuleView 与 model-access 业务模型",
-    "objective": "在已通过的 COMPILER BM-R06 基线上形成 BM-R07，保持 P2 System/RuleView/model-access 核心语义不变，显式建立 DEC_COMPILER→COMPILER 同一逻辑模块 lineage，恢复完整 17 节人类可读业务模型，并证明 BM-R05 stable IDs 全量继承。",
+    "objective": "RC9 machine-state migration: re-register the already-completed BM-R20 semantic snapshot as the current business_model artifact without changing BM-R20 content.",
     "phase": "business_model",
     "status": "PASSED",
     "depends_on": [
@@ -228,17 +228,16 @@
     ],
     "validation_commands": [
       "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g BusinessModelAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
-      "python3 -c \"import json,yaml,jsonschema; jsonschema.validate(yaml.safe_load(open('project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml',encoding='utf-8')),json.load(open('/home/oai/skills/common-develop/assets/structured-docs/business-model.schema.json',encoding='utf-8')))\"",
-      "python3 -c \"import json,yaml,jsonschema; jsonschema.validate(yaml.safe_load(open('project_doc/version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml',encoding='utf-8')),json.load(open('/home/oai/skills/common-develop/assets/structured-docs/changeset.schema.json',encoding='utf-8')))\"",
-      "python3 -c \"import json,yaml,jsonschema; jsonschema.validate(yaml.safe_load(open('project_doc/docs/_relations/dependency_impact.yaml',encoding='utf-8')),json.load(open('/home/oai/skills/common-develop/assets/structured-docs/dependency-impact.schema.json',encoding='utf-8')))\"",
+      "python3 -c \"import yaml,json,jsonschema; d=yaml.safe_load(open('project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml',encoding='utf-8')); assert d.get('revision')=='BM-R20'; jsonschema.validate(d,json.load(open('/home/oai/skills/common-develop/assets/structured-docs/business-model.schema.json',encoding='utf-8')))\"",
+      "python3 -c \"import json; d=json.load(open('project_doc/version/V_1.0/doc/_flows/COMPILER/changes/003-p2-system-ruleview-protected-access.yaml',encoding='utf-8')); assert d['changeSet']['resultRevision'].startswith('FLOW-R11')\"",
+      "python3 -c \"import json,yaml,jsonschema; d=yaml.safe_load(open('project_doc/docs/_relations/dependency_impact.yaml',encoding='utf-8')); assert d.get('revision')=='P2-IMPACT-R29'; jsonschema.validate(d,json.load(open('/home/oai/skills/common-develop/assets/structured-docs/dependency-impact.schema.json',encoding='utf-8')))\"",
       "python3 /home/oai/skills/common-develop/scripts/render_relationships.py -g BusinessModelAgent --input project_doc/docs/_relations/dependency_impact.yaml --check",
       "git diff --check"
     ],
     "expected_results": [
-      "BM-R05 stable IDs 全量继承，R07 不删除任何既有 stable ID",
-      "DEC_COMPILER→COMPILER lineage 有结构化 relationship 和完整人类可读说明",
-      "COMPILER_business_model.md 恢复为可独立阅读的完整 17 节视图且与 YAML 当前事实等价",
-      "BM-R07 六项独立 Review 全部 PASSED，无开放 P0/P1"
+      "BM-R20 remains the complete current P2 business-model snapshot; no semantic rewrite is introduced by migration.",
+      "REQAN-P2-R01 + Overlay R04 -> BM-R20 and FLOW-R11/P2-IMPACT-R29 cross-document authority remains internally consistent.",
+      "Historical BM-R07 PASSED iteration remains archived; current iteration binds BM-R20 with current-revision Evidence and independent Reviews."
     ],
     "stop_conditions": [
       "BM-R05 stable IDs 不得丢失、重命名或静默覆盖",
@@ -249,32 +248,29 @@
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "BM-R07@7d7bf504ca9d",
+    "output_revision": "BM-R20",
     "validation_evidence_ids": [
-      "EVD-000049",
-      "EVD-000050",
-      "EVD-000051",
-      "EVD-000052",
-      "EVD-000053",
-      "EVD-000054",
-      "EVD-000055",
-      "EVD-000056",
-      "EVD-000057",
-      "EVD-000058"
+      "EVD-000122",
+      "EVD-000123",
+      "EVD-000124",
+      "EVD-000125",
+      "EVD-000126",
+      "EVD-000127",
+      "EVD-000128"
     ]
   },
   {
     "id": "TASK-P2-DESIGN-001",
     "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-DESIGN",
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
-    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-003",
-    "iteration_no": 3,
-    "supersedes_iteration_id": "",
-    "revision_reason": "BM-R07 已通过并显式冻结 DEC_COMPILER→COMPILER 单一谱系；当前 Design I003 首次将 P2 System、RuleView composite identity、ModelPath 与 model-access 静态/运行时权限边界落到可实现且可测试的模块、接口、状态与失败契约。",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-004",
+    "iteration_no": 4,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-003",
+    "revision_reason": "RC9 machine-state migration: bind already-completed semantic authority chain BM-R20 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R31 into new lifecycle iterations without rewriting historical PASSED revisions or redoing semantic content.",
     "title": "设计 P2 System、RuleView 与 model-access 编译/运行边界",
-    "objective": "在 P1 编译器既有 SystemKey、RuleViewKey 与不可变 Context 基线上，形成 P2 增量详细设计，明确 CompiledSystem、复合 RuleView lookup、ModelPath、ModelAccessRule、静态授权、运行时 Guard、原子发布和 P7 兼容边界，不建立第二套 Compiler/Registry/Context。",
+    "objective": "RC9 machine-state migration: re-register the already-completed DESIGN-P2-R30 artifact and P2-IMPACT-R29 relation without changing design semantics.",
     "phase": "design",
-    "status": "PASSED",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P2-BMODEL-001"
     ],
@@ -289,7 +285,7 @@
       "CrossModuleIntegrationReviewAgent"
     ],
     "input_revisions": {
-      "business_model": "BM-R07@7d7bf504ca9d"
+      "business_model": ""
     },
     "allowed_files": [
       "version/V_1.0/doc/COMPILER/COMPILER_design.md",
@@ -335,19 +331,15 @@
       "STEP-CONFIG-COMPILE-07"
     ],
     "validation_commands": [
-      "python3 -c \"from pathlib import Path; p=Path('project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md'); s=p.read_text(); assert 'DESIGN-P2-R01@8875f042898c' in s; assert all(x in s for x in ['#p2-system','#p2-ruleview','#p2-model-path','#p2-model-access','#p2-runtime-guard','#p2-traceability'])\"",
-      "python3 -c \"import json; from pathlib import Path; s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); i=s.index('[',s.index('traceability')); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); p=[x for x in a if str(x.get('id','')).startswith('TR-P2-SYSTEM-RULEVIEW-')]; assert len(p)==10 and all(x.get('design_refs') for x in p)\"",
-      "python3 /mnt/data/common-develop/scripts/long_task.py validate -g DesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+      "python3 -c \"from pathlib import Path; s=Path('project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md').read_text(); assert 'DESIGN-P2-R30' in s and 'BM-R20' in s and 'FLOW-R11' in s and 'P2-IMPACT-R29' in s\"",
+      "python3 -c \"from pathlib import Path; s=Path('project_doc/version/V_1.0/doc/COMPILER/COMPILER_api_contract.md').read_text(); assert len(s)>100\"",
+      "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g DesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
       "git diff --check"
     ],
     "expected_results": [
-      "ArchitectureReviewAgent 独立确认 P2 复用单一 compiler/context 发布闭包、依赖方向与 Guard 边界，不产生第二 Registry 或反向依赖。",
-      "BusinessModelReviewAgent 独立确认详细设计完整承接 BM-R07 的 CompiledSystem、RuleView composite identity、ModelPath、ModelAccessRule 与 fail-closed 不变量。",
-      "DevelopAgent 独立确认设计具有明确模块落点、接口职责、算法顺序、失败语义与兼容边界，可在后续计划阶段拆分实现而无需重新决定核心语义。",
-      "RequirementReviewAgent 独立确认 Design 覆盖 P2 十条 trace/验收且未扩展到 P3～P8 运行语义。",
-      "TestDesignAgent 独立确认 System determinism、RuleView 隔离、ModelPath、权限矩阵、静态拒绝、runtime Guard、原子发布与兼容边界均暴露稳定测试 seam。",
-      "ImpactAnalysisReviewAgent 独立确认 compiler/context/frontend/starter/declaration 的影响、依赖顺序、兼容窗口和失败传播完整。",
-      "CrossModuleIntegrationReviewAgent 独立确认 P2 跨模块编译—发布—调用链无双写、无裸名称新回退、无第二 runtime authority。"
+      "DESIGN-P2-R30 remains current and consumes BM-R20/FLOW-R11/P2-IMPACT-R29.",
+      "Current trusted ModelData/Container/Guard/effect boundaries remain unchanged by migration.",
+      "Historical DESIGN-P2-R01 PASSED iteration remains archived; current iteration binds DESIGN-P2-R30 with current-revision Evidence and independent Reviews."
     ],
     "stop_conditions": [
       "设计要求裸 RuleView 名称全局 fallback 或隐式 System 推断",
@@ -356,38 +348,23 @@
       "出现必须改变 BM-R07 已冻结业务语义的 P0/P1 决策"
     ],
     "risk_triggers": [],
-    "attempts": 1,
+    "attempts": 0,
     "max_attempts": 3,
-    "output_revision": "DESIGN-P2-R01@8875f042898c",
-    "validation_evidence_ids": [
-      "EVD-000070",
-      "EVD-000071",
-      "EVD-000072",
-      "EVD-000073",
-      "EVD-000074",
-      "EVD-000075",
-      "EVD-000076",
-      "EVD-000077",
-      "EVD-000078",
-      "EVD-000079",
-      "EVD-000080",
-      "EVD-000081",
-      "EVD-000082",
-      "EVD-000083"
-    ]
+    "output_revision": "",
+    "validation_evidence_ids": []
   },
   {
     "id": "TASK-P2-TESTDESIGN-001",
     "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-TEST-DESIGN",
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
-    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
-    "iteration_no": 4,
-    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-003",
-    "revision_reason": "本地 Git checkpoint 的 diff --check 发现 test_case.md 文件末尾一个额外空行；保持 I003/R01 历史 Evidence 不变，新建 Test Design iteration 仅规范化 EOF 格式并重新绑定最终字节，无业务语义变化。",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
+    "iteration_no": 5,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
+    "revision_reason": "RC9 machine-state migration: bind already-completed semantic authority chain BM-R20 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R31 into new lifecycle iterations without rewriting historical PASSED revisions or redoing semantic content.",
     "title": "设计 P2 System、RuleView 与 model-access 可执行测试矩阵",
-    "objective": "把 P2 十条 trace、十项 AC 与 P2-T01～T12 收敛为可执行 Case，明确 fixture、稳定 seam、observable oracle、禁止副作用及未来 TDD 有效 RED，确保静态/运行时权限和兼容边界可独立验证。",
+    "objective": "RC9 machine-state migration: re-register the already-completed TESTDESIGN-P2-R31 95-case/23-class test design without changing its test semantics.",
     "phase": "test_design",
-    "status": "PASSED",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P2-DESIGN-001"
     ],
@@ -399,7 +376,7 @@
       "TestEvidenceReviewAgent"
     ],
     "input_revisions": {
-      "design": "DESIGN-P2-R01@8875f042898c"
+      "design": ""
     },
     "allowed_files": [
       "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md",
@@ -441,16 +418,15 @@
       "STEP-CONFIG-COMPILE-07"
     ],
     "validation_commands": [
-      "python3 -c \"from pathlib import Path; import re; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); assert 'TESTDESIGN-P2-R02@d0514b9ac591' in s; assert 'TEST_DESIGN-I004' in s; ids=set(re.findall(r'CASE-P2-TD-[A-Z0-9-]+-001',s)); assert len(ids)==24, len(ids)\"",
-      "python3 -c \"import json; from pathlib import Path; t=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); i=s.index('[',s.index('traceability')); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); p=[x for x in a if str(x.get('id','')).startswith('TR-P2-SYSTEM-RULEVIEW-')]; assert len(p)==10 and all(x.get('test_case_ids') for x in p) and all(all(cid in t for cid in x['test_case_ids']) for x in p)\"",
-      "python3 /mnt/data/common-develop/scripts/long_task.py validate -g TestDesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+      "python3 -c \"from pathlib import Path; import re; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); assert 'TESTDESIGN-P2-R31' in s; assert len(set(re.findall(r'CASE-P2-TD-[A-Z0-9-]+-001',s)))==95; assert len(set(re.findall(r'`[A-Z0-9_]+ \\| [^|]+ \\| ([A-Za-z0-9]+Test) \\|',s)))==23\"",
+      "python3 -c \"import json,re; from pathlib import Path; t=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); a=json.loads(re.search(r'```json traceability\\n(.*?)\\n```',s,re.S).group(1)); assert len(a)==10 and all(x.get('status')=='COVERED' and x.get('test_case_ids') and all(c in t for c in x['test_case_ids']) for x in a)\"",
+      "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g TestDesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
       "git diff --check"
     ],
     "expected_results": [
-      "RequirementReviewAgent 独立确认 Test Design 对 P2 十项 AC、十条 trace 与 T01～T12 全覆盖，且没有改变冻结需求范围。",
-      "DesignReviewAgent 独立确认所有 Case 使用 DESIGN-P2-R01 暴露的复合 Key、ModelPath、权限、Guard、发布与兼容 seam，oracle 与 Design 一致。",
-      "TDDReviewAgent 独立确认每个 Case 有可执行未来测试入口和有效 RED 合同，明确排除模块/类不存在、编译错误、依赖失败等伪 RED。",
-      "TestEvidenceReviewAgent 独立确认正常/负向/权限/并发/原子发布/兼容边界的证据采集方式可重复，并能证明 DENY 无副作用与失败不发布。"
+      "TESTDESIGN-P2-R31 remains current with 95 blocking cases mapped to 23 exact TestClasses.",
+      "All ten stable trace IDs are COVERED and map to current R31 cases.",
+      "Historical TESTDESIGN-P2-R02 PASSED iteration remains archived; current iteration binds TESTDESIGN-P2-R31 with current-revision Evidence and independent Reviews."
     ],
     "stop_conditions": [
       "Design Revision 变化或被重开",
@@ -459,18 +435,10 @@
       "任一 required Reviewer 非 PASSED 或形成开放 P0/P1"
     ],
     "risk_triggers": [],
-    "attempts": 1,
+    "attempts": 0,
     "max_attempts": 3,
-    "output_revision": "TESTDESIGN-P2-R02@d0514b9ac591",
-    "validation_evidence_ids": [
-      "EVD-000109",
-      "EVD-000110",
-      "EVD-000111",
-      "EVD-000112",
-      "EVD-000113",
-      "EVD-000114",
-      "EVD-000115"
-    ]
+    "output_revision": "",
+    "validation_evidence_ids": []
   }
 ]
 ```

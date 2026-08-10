@@ -108,8 +108,8 @@
     "round": "BUSINESS_MODEL-I003",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003",
     "iteration_no": 3,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-004",
     "status": "PASSED",
     "produced_by_agent": "BusinessModelAgent",
     "input_revisions": {
@@ -144,8 +144,8 @@
     "round": "DESIGN-I003",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-003",
     "iteration_no": 3,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-004",
     "status": "PASSED",
     "produced_by_agent": "DesignAgent",
     "input_revisions": {
@@ -215,8 +215,8 @@
     "round": "TEST_DESIGN-I004",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
     "iteration_no": 4,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
     "status": "PASSED",
     "produced_by_agent": "TestDesignAgent",
     "input_revisions": {
@@ -240,6 +240,39 @@
     "open_risks": [],
     "started_at": "2026-08-08T06:02:37+00:00",
     "completed_at": "2026-08-08T06:06:32+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-BUSINESS_MODEL-I004",
+    "phase": "business_model",
+    "round": "BUSINESS_MODEL-I004",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-004",
+    "iteration_no": 4,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "BusinessModelAgent",
+    "input_revisions": {
+      "requirement_analysis": "REQAN-P2-R01@d08612768131"
+    },
+    "output_revision": "BM-R20",
+    "evidence_ids": [
+      "EVD-000122",
+      "EVD-000123",
+      "EVD-000124",
+      "EVD-000125",
+      "EVD-000126",
+      "EVD-000127",
+      "EVD-000128",
+      "EVD-000116",
+      "EVD-000117",
+      "EVD-000118",
+      "EVD-000119",
+      "EVD-000120",
+      "EVD-000121"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-10T12:10:22+00:00",
+    "completed_at": "2026-08-10T12:12:03+00:00"
   }
 ]
 ```

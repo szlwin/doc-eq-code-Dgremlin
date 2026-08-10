@@ -301,6 +301,42 @@
     ],
     "summary": "I004/R02 completed as byte-format-only normalization. Final test_case bytes preserve all I003 semantics: 24 cases, 10/10 TR, 10/10 AC, T01-T12, operation matrices, fail-closed Guard, zero-side-effect deny, atomic publication, context isolation, P7 boundary and valid RED contract. All validations executed locally.",
     "next_action": "Publish R02 for independent Requirement/Design/TDD/TestEvidence review."
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-BMODEL-001-I004-A001",
+    "task_id": "TASK-P2-BMODEL-001",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-004",
+    "iteration_no": 4,
+    "attempt_no": 1,
+    "agent": "BusinessModelAgent",
+    "phase": "business_model",
+    "status": "PASSED",
+    "input_revision": "REQAN-P2-R01@d08612768131",
+    "output_revision": "BM-R20",
+    "started_at": "2026-08-10T12:07:31+00:00",
+    "completed_at": "2026-08-10T12:10:20+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [],
+    "command_evidence_ids": [
+      "EVD-000116",
+      "EVD-000117",
+      "EVD-000118",
+      "EVD-000119",
+      "EVD-000120",
+      "EVD-000121"
+    ],
+    "evidence_ids": [
+      "EVD-000122",
+      "EVD-000123",
+      "EVD-000124",
+      "EVD-000125",
+      "EVD-000126",
+      "EVD-000127",
+      "EVD-000128"
+    ],
+    "summary": "RC9 machine re-registration completed for the already-semantic-pass BM-R20; no Business Model semantic content was rewritten.",
+    "next_action": "Publish BM-R20 into lifecycle iteration I004 and register same-revision independent Reviews."
   }
 ]
 ```

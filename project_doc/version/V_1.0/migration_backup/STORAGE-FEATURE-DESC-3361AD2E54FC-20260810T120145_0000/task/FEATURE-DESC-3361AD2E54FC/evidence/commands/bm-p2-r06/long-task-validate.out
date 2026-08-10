@@ -1,0 +1,13 @@
+{
+  "status": "PASSED",
+  "taskDir": "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "schemaVersion": 2,
+  "currentPhase": "business_model",
+  "taskStatus": "RUNNING",
+  "currentAgent": "BusinessModelAgent",
+  "openIssueCount": 0,
+  "warnings": [
+    "active task has no handoff file"
+  ],
+  "errors": []
+}

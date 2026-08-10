@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "event": "THIRD_INDEPENDENT_REVIEW_INVALIDATION_AND_REMEDIATION",
+  "reviewed_pr": 36,
+  "reviewed_head": "0b13a2b7bc6e1d8097fb79876ac7b85610993da6",
+  "reviewed_tree": "d7082a4f38caaee8126f5c011ecbc816503d8452",
+  "review_contract": "common-develop 2.44 RC9",
+  "execution_context": {
+    "local_skill_binary_available_in_current_container": false,
+    "github_exact_revision_read_write_available": true,
+    "fabricated_local_validator_result": false,
+    "note": "Repository facts and Review conclusions were applied through the GitHub connector; no local RC9 detector/reviewer PASS was invented."
+  },
+  "effective_findings": {
+    "p0": 0,
+    "p1": 8,
+    "open_ids": [
+      "FND-P2-REV-001",
+      "FND-P2-REV-002",
+      "FND-P2-REV-003",
+      "FND-P2-REV-004",
+      "FND-P2-REV-005",
+      "FND-P2-REV-006",
+      "FND-P2-REV-007",
+      "FND-P2-REV-008"
+    ]
+  },
+  "reviewed_candidate_status": [
+    {
+      "artifact": "business_model",
+      "revision": "BM-R08",
+      "previous_effective_status": "NEEDS_REVIEW",
+      "review_conclusion": "NEEDS_CHANGES",
+      "blocking_findings": ["FND-P2-REV-003"],
+      "assessment": "R08 delta was directionally correct but canonical dependency_impact remained BM-R07 and still targeted retired DEC-EXPAND-DECLARATION."
+    },
+    {
+      "artifact": "design",
+      "revision": "DESIGN-P2-R03",
+      "previous_effective_status": "NEEDS_REVIEW",
+      "review_conclusion": "NEEDS_CHANGES",
+      "blocking_findings": ["FND-P2-REV-004", "FND-P2-REV-005"],
+      "assessment": "Java 8/EngineContext compatibility was corrected, but typed RuntimeFactValue access and enforceable non-returning evaluator timeout were not frozen; risk scan/reviews were not current/closed."
+    },
+    {
+      "artifact": "test_design",
+      "revision": "TESTDESIGN-P2-R04",
+      "previous_effective_status": "BLOCKED_BY_DESIGN_REVIEW / NEEDS_REVIEW",
+      "review_conclusion": "NEEDS_CHANGES / BLOCKED_BY_DESIGN",
+      "blocking_findings": ["FND-P2-REV-006"],
+      "assessment": "Wrapper syntax was corrected but -am combined with target-only -Dtest remained vulnerable to Surefire failIfNoSpecifiedTests reactor failure."
+    }
+  ],
+  "new_remediation_revisions": [
+    {
+      "artifact": "business_model_impact",
+      "revision": "BM-R08",
+      "status": "NEEDS_REVIEW",
+      "refs": [
+        "project_doc/docs/_relations/dependency_impact.yaml",
+        "project_doc/docs/_relations/dependency_graph.md"
+      ],
+      "addresses": ["FND-P2-REV-001", "FND-P2-REV-003"],
+      "notes": "Canonical relationship/policy now redirects P2 to LEGACY-DECLARATION-SYSTEM-COMPAT while DEC-EXPAND-DECLARATION remains SUPERSEDED historical fact; CMI now sends every protected READ/WRITE/EXECUTE through Guard."
+    },
+    {
+      "artifact": "design",
+      "revision": "DESIGN-P2-R04",
+      "status": "NEEDS_REVIEW",
+      "ref": "project_doc/version/V_1.0/doc/COMPILER/changes/p2-design-runtimefacts-timeout-remediation-r04.md",
+      "addresses": ["FND-P2-REV-004", "FND-P2-REV-008"],
+      "notes": "Adds typed RuntimeFactValue visitor/lookup contracts and Guard-owned bounded Future timeout/cancel/interruption/rejection/degraded-state semantics while preserving Java 8 and existing EngineContext compatibility."
+    },
+    {
+      "artifact": "test_design",
+      "revision": "TESTDESIGN-P2-R05",
+      "status": "BLOCKED_BY_DESIGN_REVIEW / NEEDS_REVIEW",
+      "ref": "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r05_executable_timeout_remediation.md",
+      "inputs": ["BM-R08", "DESIGN-P2-R04"],
+      "addresses": ["FND-P2-REV-006", "FND-P2-REV-007", "FND-P2-REV-008"],
+      "notes": "Uses dependency-build then target-module-only Surefire commands with failIfNoSpecifiedTests=true; adds typed fact and enforceable timeout/cancellation cases."
+    }
+  ],
+  "risk_detection": {
+    "current_input_revision": "DESIGN-P2-R04",
+    "business_model_revision": "BM-R08",
+    "status": "SCANNED_OPEN",
+    "scan_mode": "INDEPENDENT_CONNECTOR_RESCAN",
+    "specialist_review_closure": false,
+    "waivers": [],
+    "note": "Stale BM-R07 binding is corrected, but FND-P2-REV-005 remains OPEN until required exact-revision specialist Reviews and any valid DataMigration waiver are recorded."
+  },
+  "effective_artifact_gate": {
+    "business_model": "NEEDS_REVIEW",
+    "design": "NEEDS_REVIEW",
+    "test_design": "BLOCKED_BY_DESIGN_REVIEW / NEEDS_REVIEW",
+    "implementation_plan": "BLOCKED",
+    "tdd": "BLOCKED",
+    "development": "BLOCKED"
+  },
+  "required_next_reviews": {
+    "business_model_exact_revision": "BM-R08",
+    "business_model_reviewers": [
+      "BusinessModelReviewAgent",
+      "RequirementReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
+    ],
+    "design_exact_revision": "DESIGN-P2-R04",
+    "design_reviewers": [
+      "ArchitectureReviewAgent",
+      "BusinessModelReviewAgent",
+      "DevelopAgent",
+      "RequirementReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent",
+      "ConcurrencyReviewAgent",
+      "ApiContractReviewAgent"
+    ],
+    "design_conditional": {
+      "DataMigrationReviewAgent": "required unless a contract-valid waiver proves the current migration detection is P7 wording only"
+    },
+    "test_design_exact_revision": "TESTDESIGN-P2-R05",
+    "test_design_prerequisite": "DESIGN-P2-R04 valid exact-revision conclusion",
+    "test_design_reviewers": [
+      "RequirementReviewAgent",
+      "DesignReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
+    ]
+  },
+  "history_policy": {
+    "task_state_history_preserved": true,
+    "historical_reviews_preserved": true,
+    "previous_state_correction_events_preserved": true,
+    "manual_rewrite_of_historical_passed": false,
+    "fabricated_review_results": false
+  },
+  "production_code_changed_by_remediation": false,
+  "implementation_started": false
+}

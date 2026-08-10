@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "event": "FOURTH_INDEPENDENT_REVIEW_SEMANTIC_PASS_GOVERNANCE_BINDING",
+  "reviewed_pr": 36,
+  "reviewed_head": "54545677040fdb2fe3539423fd6ef5a0a56d6a9a",
+  "reviewed_tree": "8944655ef720d6736f69cbbde864444ccb973e19",
+  "review_contract": "common-develop 2.44 RC9",
+  "execution_context": {
+    "protected_skill_directory_modified": false,
+    "protected_skill_directory_exposes_full_machine_scripts": false,
+    "audit_copy_available": true,
+    "github_exact_revision_read_write_available": true,
+    "fabricated_validator_or_review_result": false
+  },
+  "reviewed_candidate_status": [
+    {"artifact":"requirement_plus_overlay","revision":"REQAN-P2-R01@d08612768131 + Overlay R04","review_conclusion":"SEMANTIC_PASS","formal_status":"MACHINE_BLOCKED"},
+    {"artifact":"business_model","revision":"BM-R20","review_conclusion":"SEMANTIC_PASS","formal_status":"MACHINE_BLOCKED"},
+    {"artifact":"business_flow","revision":"FLOW-R11","review_conclusion":"SEMANTIC_PASS","formal_status":"MACHINE_BLOCKED"},
+    {"artifact":"impact","revision":"P2-IMPACT-R29","review_conclusion":"SEMANTIC_PASS","formal_status":"MACHINE_BLOCKED"},
+    {"artifact":"design","revision":"DESIGN-P2-R30","review_conclusion":"SEMANTIC_PASS","formal_status":"GOVERNANCE_BLOCKED / MACHINE_BLOCKED"},
+    {"artifact":"test_design","revision":"TESTDESIGN-P2-R31","review_conclusion":"SEMANTIC_PASS","formal_status":"FORMAL_GATE_BLOCKED / MACHINE_BLOCKED"}
+  ],
+  "governance_materialization": {
+    "decision_ids": ["DEC-P2-MODEL-LOADING-BOUNDARY-001","DEC-P2-POST-COPY-ROLLBACK-EXCLUSION-001"],
+    "finding": "FND-P2-REV-013",
+    "finding_status": "OPEN_FORMAL_CLOSURE_PENDING",
+    "historical_lifecycle_rewritten": false
+  },
+  "risk_detection": {
+    "canonical_status": "NOT_SCANNED",
+    "local_exact_revision_scan_status": "SCANNED",
+    "local_validator_status": "PASSED",
+    "local_input_digest": "55a43391a518fc2e320c1ef4e16986f5a7fbd999cae9ad8d80e0d0788ff0e5c7",
+    "local_detection_count": 28,
+    "local_active_risk_types": ["architecture_change","concurrency","data_migration","impact_analysis","security"],
+    "repository_evidence_status": "NOT_REGISTERED",
+    "specialist_review_closure": false,
+    "waivers": []
+  },
+  "effective_artifact_gate": {
+    "requirement": "SEMANTIC_PASS / MACHINE_BLOCKED",
+    "business_model": "SEMANTIC_PASS / MACHINE_BLOCKED",
+    "business_flow": "SEMANTIC_PASS / MACHINE_BLOCKED",
+    "impact": "SEMANTIC_PASS / MACHINE_BLOCKED",
+    "design": "SEMANTIC_PASS / GOVERNANCE_BLOCKED / MACHINE_BLOCKED",
+    "test_design": "SEMANTIC_PASS / FORMAL_GATE_BLOCKED / MACHINE_BLOCKED",
+    "implementation_plan": "BLOCKED",
+    "tdd": "BLOCKED",
+    "development": "BLOCKED"
+  },
+  "history_policy": {"task_state_history_preserved":true,"historical_reviews_preserved":true,"manual_rewrite_of_historical_passed":false,"fabricated_review_results":false},
+  "production_code_changed_by_governance_adjustment": false,
+  "implementation_started": false
+}

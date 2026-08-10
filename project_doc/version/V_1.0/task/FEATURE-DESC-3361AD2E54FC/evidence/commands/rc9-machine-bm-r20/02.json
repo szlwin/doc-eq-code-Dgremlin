@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"import yaml,json,jsonschema; d=yaml.safe_load(open('project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml',encoding='utf-8')); assert d.get('revision')=='BM-R20'; jsonschema.validate(d,json.load(open('/home/oai/skills/common-develop/assets/structured-docs/business-model.schema.json',encoding='utf-8')))\"",
+  "executed_at": "2026-08-10T12:07:35+00:00",
+  "revision": "BM-R20",
+  "exit_code": 0,
+  "output_ref": "evidence/commands/rc9-machine-bm-r20/02.out",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

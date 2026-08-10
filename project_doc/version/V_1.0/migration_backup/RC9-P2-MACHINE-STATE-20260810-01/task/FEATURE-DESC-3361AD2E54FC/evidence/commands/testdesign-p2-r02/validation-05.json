@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "local P2 Test Design I004 semantic and byte-equivalence audit",
+  "exit_code": 0,
+  "executed_at": "2026-08-08T06:01:09.174816+00:00",
+  "revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+  "output": "TEST_DESIGN_I004_SEMANTIC_AUDIT=PASSED\nbyte_delta_only_revision_iteration=true\ndesign_input_bound=true\nformal_case_count=true\ntrace_coverage=true\nac_coverage=true\ntask_coverage=true\noperations_independent=true\nguard_fail_closed=true\ndeny_no_side_effect=true\nno_bare_fallback=true\natomic_publication=true\ncontext_isolation=true\np7_boundary=true\nvalid_red_contract=true\nno_test_execution_claim=true\n",
+  "output_digest": "41f9b1c4ca477d11a920db50e9b34f6ac415929480aa62006d3e9ecd9606c1de"
+}
