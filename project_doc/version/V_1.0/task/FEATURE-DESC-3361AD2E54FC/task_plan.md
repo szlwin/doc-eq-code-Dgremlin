@@ -285,7 +285,7 @@
       "CrossModuleIntegrationReviewAgent"
     ],
     "input_revisions": {
-      "business_model": ""
+      "business_model": "BM-R20"
     },
     "allowed_files": [
       "version/V_1.0/doc/COMPILER/COMPILER_design.md",

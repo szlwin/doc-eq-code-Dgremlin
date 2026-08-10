@@ -6,8 +6,8 @@
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
   "task_status": "PARTIAL",
-  "current_phase": "business_model",
-  "current_round": "BUSINESS_MODEL-I004",
+  "current_phase": "design",
+  "current_round": "DESIGN-I004",
   "current_agent": "ProjectManagerAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
@@ -649,10 +649,10 @@
   },
   "review_rounds": {},
   "open_issue_ids": [],
-  "last_gate": "design",
+  "last_gate": "business_model",
   "failed_attempts": {},
-  "next_action": "运行 advance-phase 推进 business_model 的下一阶段",
-  "next_agent": "ProjectManagerAgent",
+  "next_action": "开始 design 阶段",
+  "next_agent": "DesignAgent",
   "resume_from": "执行 long_task.py task-context 获取当前任务、最新 attempt、开放问题和恢复引用；需要细节时再按引用读取",
   "max_auto_review_rounds": 3,
   "stale_events": [
@@ -729,7 +729,7 @@
       "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-10T12:12:03+00:00"
+  "checkpoint_at": "2026-08-10T12:12:42+00:00"
 }
 ```
 

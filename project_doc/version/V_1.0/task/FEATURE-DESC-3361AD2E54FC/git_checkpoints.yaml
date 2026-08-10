@@ -296,3 +296,21 @@ checkpoints:
     created_by_agent: "ProjectManagerAgent"
     created_at: "2026-08-08T06:08:13Z"
     supersedes_checkpoint_id: ""
+  -
+    checkpoint_id: "CP-V_1.0-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-004"
+    phase: "business_model"
+    iteration_id: "ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-004"
+    iteration_no: 4
+    stage_revision: "BM-R20"
+    stage_outcome_ref: "SO-FEATURE-DESC-3361AD2E54FC-BUSINESS_MODEL-I004"
+    branch: "feature/p2-design-testdesign-20260808"
+    base_commit: "c67ce3ac71ce2fdebf4c2b89c2332de968660d05"
+    changed_paths:
+      - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/git_checkpoints.yaml"
+      - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"
+      - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_state.md"
+    content_digest: "sha256:07dd542343b94a9a1f2f5ed362944e4a16ad1866ea5bc21d5e8b55feb1b52c49"
+    commit_title: "docs(model): complete FEATURE-DESC-3361AD2E54FC business model"
+    created_by_agent: "ProjectManagerAgent"
+    created_at: "2026-08-10T12:12:43Z"
+    supersedes_checkpoint_id: "CP-V_1.0-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003"
