@@ -1,0 +1,79 @@
+
+=== current_gate ===
+def current_gate(task_dir: Path, *, phase_override: str = "") -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    state = read_json_block(task_dir / "task_state.md", "task-state")
+    tasks = read_json_block(task_dir / "task_plan.md", "task-plan")
+    attempts = read_json_block(task_dir / "task_attempts.md", "task-attempts")
+    outcomes = read_json_block(task_dir / "stage_outcomes.md", "stage-outcomes")
+    if not isinstance(state, dict) or not isinstance(tasks, list) or not isinstance(attempts, list) or not isinstance(outcomes, list):
+        raise GitCheckpointError("long-task runtime documents have invalid root types")
+    phase = phase_override or str(state.get("current_phase") or "")
+    artifact = ((state.get("artifact_revisions") or {}).get(phase) or {})
+    outcome = next((item for item in outcomes if isinstance(item, dict) and item.get("phase") == phase and item.get("is_current") is True), None)
+    if not isinstance(outcome, dict):
+        raise GitCheckpointError(f"current phase {phase} has no current StageOutcome")
+    if artifact.get("status") != "PASSED" or outcome.get("status") != "PASSED":
+        raise GitCheckpointError(f"current phase {phase} must have PASSED artifact and StageOutcome")
+    if outcome.get("output_revision") != artifact.get("revision"):
+        raise GitCheckpointError("current StageOutcome revision differs from phase artifact revision")
+    if outcome.get("iteration_id") != artifact.get("iteration_id"):
+        raise GitCheckpointError("current StageOutcome iteration differs from phase artifact iteration")
+    if state.get("execution_mode") != "SEQUENTIAL":
+        raise GitCheckpointError("Git checkpoints only support execution_mode=SEQUENTIAL")
+    if state.get("active_task_ids") or state.get("current_attempt_id"):
+        raise GitCheckpointError("Git checkpoint requires no running task attempt")
+    phase_tasks = [
+        task for task in tasks if isinstance(task, dict) and task.get("phase") == phase and task.get("iteration_id") == artifact.get("iteration_id")
+    ]
+    incomplete = [task.get("id") for task in phase_tasks if task.get("status") not in {"PASSED", "NOT_APPLICABLE"}]
+    if incomplete:
+        raise GitCheckpointError(f"current phase tasks are incomplete: {incomplete}")
+    return state, tasks, attempts, outcome
+
+
+=== checkpoint_id_for ===
+def checkpoint_id_for(state: dict[str, Any], outcome: dict[str, Any]) -> str:
+    phase = str(outcome.get("phase") or state.get("current_phase"))
+    return f"CP-{state['version']}-{state['target_id']}-{phase.upper().replace('_', '-')}-{int(outcome['iteration_no']):03d}"
+
+
+=== allowed_patterns ===
+def allowed_patterns(repo: Path, task_dir: Path, state: dict[str, Any], tasks: list[dict[str, Any]], attempts: list[dict[str, Any]], phase: str) -> list[str]:
+    version_dir = version_root(task_dir)
+    target = str(state.get("target_id"))
+    patterns = [
+        relative(repo, task_dir) + "/**",
+        relative(repo, version_dir / "doc" / target) + "/**",
+        relative(repo, version_dir / "work.md"),
+        relative(repo, version_dir / "work_record.md"),
+        relative(repo, version_dir / "requirement_list.md"),
+    ]
+    current_iteration = ((state.get("artifact_revisions") or {}).get(phase) or {}).get("iteration_id")
+    phase_task_ids: set[str] = set()
+    for task in tasks:
+        if not isinstance(task, dict) or task.get("phase") != phase or task.get("iteration_id") != current_iteration:
+            continue
+        phase_task_ids.add(str(task.get("id")))
+        for value in task.get("allowed_files") or []:
+            normalized = normalize_pattern(repo, str(value))
+            if normalized:
+                patterns.append(normalized)
+    for attempt in attempts:
+        if not isinstance(attempt, dict) or attempt.get("task_id") not in phase_task_ids or attempt.get("iteration_id") != current_iteration:
+            continue
+        for value in attempt.get("modified_files") or []:
+            normalized = normalize_pattern(repo, str(value))
+            if normalized:
+                patterns.append(normalized)
+    return sorted(dict.fromkeys(patterns))
+
+
+=== default_title ===
+def default_title(target: str, phase: str) -> str:
+    commit_type, scope, summary = PHASE_COMMIT_STYLE.get(phase, ("chore", "checkpoint", phase.replace("_", " ")))
+    prefix = f"{commit_type}({scope}): complete "
+    suffix = f" {summary}"
+    available = max(1, 72 - len(prefix) - len(suffix))
+    compact_target = target if len(target) <= available else target[: max(1, available - 1)] + "…"
+    return f"{prefix}{compact_target}{suffix}"[:72]
+
