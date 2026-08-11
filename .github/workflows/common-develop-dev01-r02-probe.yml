@@ -1,0 +1,35 @@
+name: common-develop DEV-01 R02 probe
+on:
+  push:
+    branches: [common-develop/dev01-r02-probe-20260812]
+    paths: [.github/workflows/common-develop-dev01-r02-probe.yml]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Inspect RC9 lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          SKILLREV='7086b2d32b6beae2e6e522efc517d7823ba55376'
+          TDIR='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'
+          git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          test "$(git -C /tmp/common-develop rev-parse HEAD)" = "$SKILLREV"
+          echo '=== LONG_TASK HELP ==='
+          python3 /tmp/common-develop/scripts/long_task.py -h || true
+          echo '=== SUBCOMMAND HELP CANDIDATES ==='
+          for cmd in reopen-task reopen-phase reopen-development-step start-attempt finish-attempt publish-artifact finalize-phase advance-development-step; do
+            echo "--- $cmd ---"
+            python3 /tmp/common-develop/scripts/long_task.py "$cmd" -h || true
+          done
+          echo '=== REOPEN SOURCES ==='
+          grep -RniE 'reopen|final_review_revision|implementation_revision|advance-development-step|finalize-phase' /tmp/common-develop/scripts/long_task.py /tmp/common-develop/scripts/*.py | head -n 240 || true
+          echo '=== CURRENT NEXT ==='
+          python3 /tmp/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" || true
+          echo '=== CURRENT VALIDATE ==='
+          python3 /tmp/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR" || true
