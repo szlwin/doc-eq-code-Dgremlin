@@ -16,25 +16,33 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          rm -rf /tmp/common-develop
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
           echo "SKILL=$(git -C /tmp/common-develop rev-parse HEAD)"
           TDIR=project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
-          python3 /tmp/common-develop/scripts/wk.py help -g ProjectManagerAgent --flag=-ar --json || true
-          python3 /tmp/common-develop/scripts/wk.py help -g ProjectManagerAgent --flag=-auto --json || true
-          python3 /tmp/common-develop/scripts/long_task.py --help || true
-          python3 /tmp/common-develop/scripts/long_task.py advance-development-step --help || true
-          python3 /tmp/common-develop/scripts/long_task.py reopen-development-step --help || true
-          python3 /tmp/common-develop/scripts/review_contract.py list -g ProjectManagerAgent --phase development --json || true
+          echo '--- AR COMMAND ---'
+          python3 /tmp/common-develop/scripts/runtime_contract.py command -g ProjectManagerAgent --flag=-ar --json || true
+          echo '--- AR REFERENCE ---'
+          cat /tmp/common-develop/references/architecture-review-development.md
+          echo '--- SCRIPTS ---'
+          find /tmp/common-develop/scripts -maxdepth 1 -type f -printf '%f\n' | sort | grep -E 'develop|task|review|risk|evidence|acceptance' || true
+          echo '--- TASK CONTEXT HELP ---'
+          python3 /tmp/common-develop/scripts/long_task.py task-context --help || true
+          echo '--- START ATTEMPT HELP ---'
+          python3 /tmp/common-develop/scripts/long_task.py start-attempt --help || true
+          echo '--- FINISH ATTEMPT HELP ---'
+          python3 /tmp/common-develop/scripts/long_task.py finish-attempt --help || true
+          echo '--- PUBLISH HELP ---'
+          python3 /tmp/common-develop/scripts/long_task.py publish-artifact --help || true
+          echo '--- FINALIZE HELP ---'
+          python3 /tmp/common-develop/scripts/long_task.py finalize-phase --help || true
+          echo '--- REVIEW SHOW HELP ---'
+          python3 /tmp/common-develop/scripts/review_contract.py show --help || true
+          echo '--- DEV ARCH REVIEW ---'
+          python3 /tmp/common-develop/scripts/review_contract.py show -g ArchitectureReviewAgent --phase development --json || true
+          echo '--- DEV SPEC REVIEW ---'
+          python3 /tmp/common-develop/scripts/review_contract.py show -g SpecComplianceReviewAgent --phase development --json || true
+          echo '--- NEXT AFTER ADVANCE ---'
           python3 /tmp/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"
           python3 /tmp/common-develop/scripts/long_task.py advance-phase -g ProjectManagerAgent --task-dir "$TDIR"
-          echo '--- NEXT ---'
-          python3 /tmp/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" --json || true
-          echo '--- STATE ---'
-          cat "$TDIR/task_state.md"
-          echo '--- PLAN DEV01 ---'
-          python3 - <<'PY'
-          import yaml
-          p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml'))
-          import json
-          print(json.dumps(p['tasks'][0],ensure_ascii=False,indent=2))
-          PY
+          python3 /tmp/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" || true
