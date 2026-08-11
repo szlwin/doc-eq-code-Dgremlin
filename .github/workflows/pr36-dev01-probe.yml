@@ -1,0 +1,116 @@
+name: PR36 DEV01 probe
+on:
+  push:
+    branches: [tmp/pr36-dev01-probe-20260811]
+    paths: [.common-develop-dev01-probe-trigger]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: temurin, java-version: '17', cache: maven}
+      - name: Probe behavioral RED on exact PR head
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=2a79456c4fa93f07a34e225c3fe99ae97ae8860a
+          git reset --hard "$BASE"
+          scripts/remediation/bootstrap_legacy_dependencies.sh >/tmp/bootstrap.out 2>&1
+          cat > dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java <<'JAVA'
+          package dec.core.compiler.system;
+          import static org.junit.jupiter.api.Assertions.*;
+          import dec.core.compiler.canonical.DocumentFormat;
+          import dec.core.compiler.raw.*;
+          import dec.core.compiler.symbol.*;
+          import dec.core.context.model.*;
+          import java.util.*;
+          import org.junit.jupiter.api.*;
+          class SystemCompilationContractTest {
+            @Test @DisplayName("CASE-P2-TD-SYSTEM-DUPLICATE-001")
+            void duplicateSystemDiagnosticIsSourceOrderIndependent() {
+              SymbolBuildResult ab=build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0"),def(RawDefinitionKind.SYSTEM,1,"b.xml",null,"order","1.0")));
+              SymbolBuildResult ba=build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"b.xml",null,"order","1.0"),def(RawDefinitionKind.SYSTEM,1,"a.xml",null,"order","1.0")));
+              assertEquals(SymbolBuildStatus.FAILED,ab.status()); assertEquals(SymbolBuildStatus.FAILED,ba.status());
+              assertTrue(ab.symbolTable().isEmpty()); assertTrue(ba.symbolTable().isEmpty());
+              assertEquals(ab.diagnostics(),ba.diagnostics(),"duplicate diagnostic must not depend on scan order");
+            }
+            @Test @DisplayName("CASE-P2-TD-SYSTEM-DETERMINISM-001")
+            void systemIdentitySetIsSourceOrderIndependent() {
+              SymbolTable a=table(build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0"),def(RawDefinitionKind.SYSTEM,1,"b.xml",null,"payment","1.0"))));
+              SymbolTable b=table(build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"b.xml",null,"payment","1.0"),def(RawDefinitionKind.SYSTEM,1,"a.xml",null,"order","1.0"))));
+              assertEquals(canon(a),canon(b));
+            }
+            @Test @DisplayName("CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001")
+            void systemSourceIsFrozen() {
+              Map<String,String> attrs=new HashMap<>(); attrs.put("version","v1"); RawDefinition d=def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0",attrs); attrs.put("version","mutated");
+              assertEquals("v1",table(build(List.of(d))).require(new SystemKey("order")).attributes().get("version"));
+            }
+            @Test @DisplayName("CASE-P2-TD-SYSTEM-FORWARD-REF-001")
+            void ruleViewMayPrecedeSystemButMissingOwnerFails() {
+              assertEquals(SymbolBuildStatus.BUILT,build(Arrays.asList(def(RawDefinitionKind.RULE_VIEW,0,"r.xml","order","submit","1.0"),def(RawDefinitionKind.SYSTEM,1,"s.xml",null,"order","1.0"))).status());
+              assertEquals(SymbolBuildStatus.FAILED,build(List.of(def(RawDefinitionKind.RULE_VIEW,0,"r.xml","missing","submit","1.0"))).status());
+            }
+            @Test @DisplayName("CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001")
+            void sourceSchemaVersionParticipatesInPublishedSnapshotValue() {
+              SymbolTable v1=table(build(List.of(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0"))));
+              SymbolTable v2=table(build(List.of(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","2.0"))));
+              assertEquals(v1.keys(),v2.keys()); assertNotEquals(v1,v2);
+            }
+            @Test @DisplayName("CASE-P2-TD-BM-CANONICAL-PAIR-001")
+            void canonicalSystemIdentityUsesSharedKeyNamespace() { assertEquals(new SystemKey("order"),new SystemKey(" order ")); assertEquals("system:order",new SystemKey("order").canonical()); }
+            static SymbolBuildResult build(List<RawDefinition> d){return new SymbolTableBuilder().build(new RawDefinitionSet(d));}
+            static SymbolTable table(SymbolBuildResult r){assertEquals(SymbolBuildStatus.BUILT,r.status());return r.symbolTable().orElseThrow();}
+            static List<String> canon(SymbolTable t){List<String> x=new ArrayList<>(); for(DefinitionKey k:t.keys())x.add(k.canonical()); Collections.sort(x); return x;}
+            static RawDefinition def(RawDefinitionKind k,long o,String sid,String owner,String name,String ver){return def(k,o,sid,owner,name,ver,Collections.emptyMap());}
+            static RawDefinition def(RawDefinitionKind k,long o,String sid,String owner,String name,String ver,Map<String,String>a){SourceRef s=new SourceRef(sid,1,1,"/d"); return new RawDefinition(k,o,s,Optional.ofNullable(owner),Optional.ofNullable(name),a,Collections.emptyList(),new RawNodeBody(k.name().toLowerCase(),Collections.emptyMap(),Optional.empty(),Collections.emptyList(),s),DocumentFormat.XML,ver);}
+          }
+          JAVA
+          cat > dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java <<'JAVA'
+          package dec.core.compiler.ruleview;
+          import static org.junit.jupiter.api.Assertions.*;
+          import dec.core.compiler.canonical.DocumentFormat;
+          import dec.core.compiler.raw.*;
+          import dec.core.compiler.symbol.*;
+          import dec.core.context.model.*;
+          import java.util.*;
+          import org.junit.jupiter.api.*;
+          class RuleViewCompilationContractTest {
+            @Test @DisplayName("CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001")
+            void duplicateRuleViewDiagnosticIsSourceOrderIndependent(){
+              SymbolBuildResult ab=build(Arrays.asList(sys(0),rv(1,"a.xml","order","shared"),rv(2,"b.xml","order","shared")));
+              SymbolBuildResult ba=build(Arrays.asList(sys(0),rv(1,"b.xml","order","shared"),rv(2,"a.xml","order","shared")));
+              assertEquals(SymbolBuildStatus.FAILED,ab.status());assertEquals(SymbolBuildStatus.FAILED,ba.status());assertEquals(ab.diagnostics(),ba.diagnostics(),"duplicate diagnostic must not depend on scan order");
+            }
+            @Test @DisplayName("CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001")
+            void sameLocalNameIsIsolatedBySystem(){SymbolTable t=table(build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"o.xml",null,"order"),def(RawDefinitionKind.SYSTEM,1,"p.xml",null,"payment"),rv(2,"r1.xml","order","shared"),rv(3,"r2.xml","payment","shared")))); assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"shared")).isPresent());assertTrue(t.find(new RuleViewKey(new SystemKey("payment"),"shared")).isPresent());}
+            @Test @DisplayName("CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001")
+            void missingSystemIsRejected(){SymbolBuildResult r=build(List.of(rv(0,"r.xml","missing","submit")));assertEquals(SymbolBuildStatus.FAILED,r.status());assertTrue(r.symbolTable().isEmpty());assertEquals("symbol.owner.system.missing",r.diagnostics().get(0).messageKey());}
+            @Test @DisplayName("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001")
+            void lookupRequiresCompositeKey(){assertTrue(Arrays.stream(RuleViewKey.class.getConstructors()).noneMatch(c->Arrays.equals(c.getParameterTypes(),new Class<?>[]{String.class})));}
+            @Test @DisplayName("CASE-P2-TD-RULEKEY-CONTRACT-001")
+            void compositeKeyIsCaseSensitive(){assertNotEquals(new RuleViewKey(new SystemKey("order"),"Submit"),new RuleViewKey(new SystemKey("order"),"submit"));}
+            @Test @DisplayName("CASE-P2-TD-KEY-SOURCE-COMPAT-001")
+            void explicitOwnerMapsToSharedRuleViewKey(){SymbolTable t=table(build(Arrays.asList(sys(0),rv(1,"r.xml"," order "," submit "))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());}
+            @Test @DisplayName("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001")
+            void noP2BareNameAuthority(){SymbolTable t=table(build(Arrays.asList(sys(0),rv(1,"r.xml","order","submit"))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());assertFalse(t.find(new RuleViewKey(new SystemKey("other"),"submit")).isPresent());}
+            @Test @DisplayName("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001")
+            void ownerResolutionIsExactAndNoRecentSystemFallback(){SymbolTable t=table(build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"o.xml",null,"order"),def(RawDefinitionKind.SYSTEM,1,"p.xml",null,"payment"),rv(2,"r.xml","order","submit"))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());assertFalse(t.find(new RuleViewKey(new SystemKey("payment"),"submit")).isPresent());}
+            static RawDefinition sys(long o){return def(RawDefinitionKind.SYSTEM,o,"system.xml",null,"order");}
+            static RawDefinition rv(long o,String sid,String owner,String name){return def(RawDefinitionKind.RULE_VIEW,o,sid,owner,name);}
+            static RawDefinition def(RawDefinitionKind k,long o,String sid,String owner,String name){SourceRef s=new SourceRef(sid,1,1,"/d");return new RawDefinition(k,o,s,Optional.ofNullable(owner),Optional.ofNullable(name),Collections.emptyMap(),Collections.emptyList(),new RawNodeBody(k.name().toLowerCase(),Collections.emptyMap(),Optional.empty(),Collections.emptyList(),s),DocumentFormat.XML,"1.0");}
+            static SymbolBuildResult build(List<RawDefinition>d){return new SymbolTableBuilder().build(new RawDefinitionSet(d));}
+            static SymbolTable table(SymbolBuildResult r){assertEquals(SymbolBuildStatus.BUILT,r.status());return r.symbolTable().orElseThrow();}
+          }
+          JAVA
+          set +e
+          ./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest,RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test | tee /tmp/dev01-probe.out
+          rc=${PIPESTATUS[0]}
+          set -e
+          echo "PROBE_RC=$rc"
+          grep -E 'Tests run:|Failures:|duplicate diagnostic' /tmp/dev01-probe.out || true
+          test "$rc" -ne 0
+          grep -F 'duplicate diagnostic must not depend on scan order' /tmp/dev01-probe.out
