@@ -1,0 +1,18 @@
+name: PR36 R32 independent reviews
+on:
+  push:
+    branches:
+      - feature/p2-design-testdesign-20260808
+permissions:
+  contents: write
+jobs:
+  review:
+    if: contains(github.event.head_commit.message, '[r32-review-run]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Review and finalize R32
+        shell: bash
+        run: bash .common-develop-r32-review.sh
