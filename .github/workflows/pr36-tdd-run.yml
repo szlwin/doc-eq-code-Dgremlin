@@ -25,6 +25,11 @@ jobs:
           end=s.index("long_task.transactional_text_write", start)
           s=s[:start]+s[end:]
           s=s.replace('--input-revision "$PLANREV + $TDREV"','--input-revision "$PLANREV"',1)
+          old='./mvnw -pl "$module" -am -Dmaven.test.skip=true install >"$OUT/boot-${module}.log" 2>&1'
+          new='if ! ./mvnw -pl "$module" -am -Dmaven.test.skip=true install >"$OUT/boot-${module}.log" 2>&1; then echo "INVALID_RED BOOT failure for $module"; cat "$OUT/boot-${module}.log"; exit 30; fi'
+          if old not in s:
+              raise SystemExit('BOOT command anchor missing')
+          s=s.replace(old,new,1)
           p.write_text(s)
           PY
           set -a
