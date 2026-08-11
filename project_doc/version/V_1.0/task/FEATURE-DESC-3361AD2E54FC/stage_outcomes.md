@@ -487,6 +487,58 @@
     "open_risks": [],
     "started_at": "2026-08-11T04:28:28+00:00",
     "completed_at": "2026-08-11T04:29:16+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-TDD-I008",
+    "phase": "tdd",
+    "round": "TDD-I008",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-008",
+    "iteration_no": 8,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "PASSED",
+    "produced_by_agent": "TddAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "test_design": "TESTDESIGN-P2-R32"
+    },
+    "output_revision": "TDD-P2-R01@3f282bb4e1f6",
+    "evidence_ids": [
+      "EVD-000210",
+      "EVD-000211",
+      "EVD-000212",
+      "EVD-000213",
+      "EVD-000214",
+      "EVD-000238",
+      "EVD-000215",
+      "EVD-000216",
+      "EVD-000217",
+      "EVD-000218",
+      "EVD-000219",
+      "EVD-000220",
+      "EVD-000221",
+      "EVD-000222",
+      "EVD-000223",
+      "EVD-000224",
+      "EVD-000225",
+      "EVD-000226",
+      "EVD-000227",
+      "EVD-000228",
+      "EVD-000229",
+      "EVD-000230",
+      "EVD-000231",
+      "EVD-000232",
+      "EVD-000233",
+      "EVD-000234",
+      "EVD-000235",
+      "EVD-000236",
+      "EVD-000237",
+      "EVD-000239",
+      "EVD-000240"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-11T05:31:34+00:00",
+    "completed_at": "2026-08-11T05:32:30+00:00"
   }
 ]
 ```

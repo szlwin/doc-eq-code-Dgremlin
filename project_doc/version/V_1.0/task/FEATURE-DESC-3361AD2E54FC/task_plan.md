@@ -564,6 +564,133 @@
       "EVD-000208",
       "EVD-000209"
     ]
+  },
+  {
+    "id": "TASK-P2-TDD-RED-001",
+    "logical_task_id": "LOGICAL-P2-TDD-RED-BASELINE",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-008",
+    "iteration_no": 8,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize the missing standard-mode TDD task for TDD-I008 after PASSED R05/R32; create executable test-only pre-development baseline without production implementation.",
+    "title": "P2 R32/R05 开发前 TDD RED 基线",
+    "objective": "Materialize all 23 exact TestClasses and 101 TESTDESIGN-P2-R32 blocking Cases as executable test code, preserve inherited P1 characterization, and freeze attributable target RED evidence before any Development attempt.",
+    "phase": "tdd",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P2-IMPLEMENTATION-PLAN-001"
+    ],
+    "owner_agent": "TddAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "test_design": "TESTDESIGN-P2-R32"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java",
+      "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java",
+      "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java",
+      "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java",
+      "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java",
+      "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java",
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/commands/tdd-p2-r01/validate_tdd_red.py"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002",
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-008",
+      "TR-P2-SYSTEM-RULEVIEW-003",
+      "TR-P2-SYSTEM-RULEVIEW-005",
+      "TR-P2-SYSTEM-RULEVIEW-009",
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-010"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE",
+      "FLOW-PROTECTED-ACCESS-EXECUTE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-01",
+      "STEP-P2-COMPILE-02",
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04",
+      "STEP-P2-ACCESS-01",
+      "STEP-P2-ACCESS-02",
+      "STEP-P2-ACCESS-03",
+      "STEP-P2-ACCESS-06",
+      "STEP-P2-ACCESS-04",
+      "STEP-P2-ACCESS-05"
+    ],
+    "validation_commands": [
+      "python3 project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/commands/tdd-p2-r01/validate_tdd_red.py",
+      "git diff --check"
+    ],
+    "expected_results": [
+      "All 23 exact R32 TestClasses and all 101 blocking Cases are executable and revision-bound; every non-zero target run is a compile-clean P2 RED attributable to missing target behavior, inherited already-correct P1 contracts may remain characterization GREEN, no production source is modified, and the complete pre-development baseline is independently PASSED by TDDReviewAgent."
+    ],
+    "stop_conditions": [
+      "Any Java/Maven compile, dependency-resolution, fixture, environment or setup error is INVALID_RED and blocks TDD completion.",
+      "Any production source/config change during this TddAgent attempt blocks completion and must be removed.",
+      "Any stale R05/R32 input revision or Case/TestClass mapping mismatch requires reopening the proper upstream phase."
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "TDD-P2-R01@3f282bb4e1f6",
+    "validation_evidence_ids": [
+      "EVD-000210",
+      "EVD-000211",
+      "EVD-000212",
+      "EVD-000213",
+      "EVD-000214",
+      "EVD-000238",
+      "EVD-000215",
+      "EVD-000216",
+      "EVD-000217",
+      "EVD-000218",
+      "EVD-000219",
+      "EVD-000220",
+      "EVD-000221",
+      "EVD-000222",
+      "EVD-000223",
+      "EVD-000224",
+      "EVD-000225",
+      "EVD-000226",
+      "EVD-000227",
+      "EVD-000228",
+      "EVD-000229",
+      "EVD-000230",
+      "EVD-000231",
+      "EVD-000232",
+      "EVD-000233",
+      "EVD-000234",
+      "EVD-000235",
+      "EVD-000236",
+      "EVD-000237",
+      "EVD-000239",
+      "EVD-000240"
+    ]
   }
 ]
 ```

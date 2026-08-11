@@ -1,0 +1,511 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] doc-eq-code-parent                                                 [pom]
+[INFO] dec-core-context                                                   [jar]
+[INFO] DEC Core Compiler                                                  [jar]
+[INFO] dec-core-frontends                                                 [jar]
+[INFO] dec-core-datasource                                                [jar]
+[INFO] dec-context-config-parse-xml                                       [jar]
+[INFO] dec-context-config-parse-yaml                                      [jar]
+[INFO] dec-datasource-orm-sql                                             [jar]
+[INFO] dec-datasource-orm-mysql                                           [jar]
+[INFO] dec-core-model                                                     [jar]
+[INFO] dec-core-starter                                                   [jar]
+[INFO] dec-demo                                                           [jar]
+[INFO]
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0                                   [1/12]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ doc-eq-code-parent ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ doc-eq-code-parent ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/target/jacoco.exec
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ doc-eq-code-parent ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ doc-eq-code-parent ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ doc-eq-code-parent ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ doc-eq-code-parent ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/pom.xml to /home/runner/.m2/repository/doc/eq/code/doc-eq-code-parent/1.0/doc-eq-code-parent-1.0.pom
+[INFO]
+[INFO] --------------------< doc.eq.code:dec-core-context >--------------------
+[INFO] Building dec-core-context 1.0                                     [2/12]
+[INFO]   from dec-core-context/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-context ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-context ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-context ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-context ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-context ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-context ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-context ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-context ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-core-context ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-core-context/1.0/dec-core-context-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/dec-core-context-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-core-context/1.0/dec-core-context-1.0.jar
+[INFO]
+[INFO] -------------------< doc.eq.code:dec-core-compiler >--------------------
+[INFO] Building DEC Core Compiler 1.0                                    [3/12]
+[INFO]   from dec-core-compiler/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-compiler ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-compiler ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-compiler/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-compiler ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-compiler/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-compiler ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-compiler ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-compiler ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-compiler ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-compiler ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-compiler ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-compiler ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-compiler ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-core-compiler ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-compiler/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-core-compiler/1.0/dec-core-compiler-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-compiler/target/dec-core-compiler-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-core-compiler/1.0/dec-core-compiler-1.0.jar
+[INFO]
+[INFO] -------------------< doc.eq.code:dec-core-frontends >-------------------
+[INFO] Building dec-core-frontends 1.0                                   [4/12]
+[INFO]   from dec-core-frontends/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-frontends ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-frontends ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-frontends/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-frontends ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-frontends/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-frontends ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-frontends ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-frontends ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-frontends ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-frontends ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-frontends ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-frontends ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-frontends ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-core-frontends ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-frontends/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-core-frontends/1.0/dec-core-frontends-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-frontends/target/dec-core-frontends-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-core-frontends/1.0/dec-core-frontends-1.0.jar
+[INFO]
+[INFO] ------------------< doc.eq.code:dec-core-datasource >-------------------
+[INFO] Building dec-core-datasource 1.0                                  [5/12]
+[INFO]   from dec-core-datasource/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-datasource ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-datasource ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-datasource ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-datasource ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-datasource ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-datasource ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-datasource ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-datasource ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-datasource ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-datasource ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-datasource ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-core-datasource ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-core-datasource/1.0/dec-core-datasource-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/target/dec-core-datasource-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-core-datasource/1.0/dec-core-datasource-1.0.jar
+[INFO]
+[INFO] --------------< doc.eq.code:dec-context-config-parse-xml >--------------
+[INFO] Building dec-context-config-parse-xml 1.0                         [6/12]
+[INFO]   from dec-context-config-parse-xml/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-context-config-parse-xml ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-context-config-parse-xml ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-context-config-parse-xml ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-context-config-parse-xml ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 31 source files with javac [debug release 8] to target/classes
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-context-config-parse-xml ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-context-config-parse-xml ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-context-config-parse-xml ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-context-config-parse-xml ---
+[INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/context-config-parse-xml.jar
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-context-config-parse-xml ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-context-config-parse-xml ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-context-config-parse-xml ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-context-config-parse-xml ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-context-config-parse-xml/1.0/dec-context-config-parse-xml-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/context-config-parse-xml.jar to /home/runner/.m2/repository/doc/eq/code/dec-context-config-parse-xml/1.0/dec-context-config-parse-xml-1.0.jar
+[INFO]
+[INFO] -------------< doc.eq.code:dec-context-config-parse-yaml >--------------
+[INFO] Building dec-context-config-parse-yaml 1.0                        [7/12]
+[INFO]   from dec-context-config-parse-yaml/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-context-config-parse-yaml ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-context-config-parse-yaml ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-context-config-parse-yaml ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-context-config-parse-yaml ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 12 source files with javac [debug release 8] to target/classes
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-context-config-parse-yaml ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-context-config-parse-yaml ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-context-config-parse-yaml ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-context-config-parse-yaml ---
+[INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/dec-context-config-parse-yaml-1.0.jar
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-context-config-parse-yaml ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-context-config-parse-yaml ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-context-config-parse-yaml ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-context-config-parse-yaml ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-context-config-parse-yaml/1.0/dec-context-config-parse-yaml-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/dec-context-config-parse-yaml-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-context-config-parse-yaml/1.0/dec-context-config-parse-yaml-1.0.jar
+[INFO]
+[INFO] -----------------< doc.eq.code:dec-datasource-orm-sql >-----------------
+[INFO] Building dec-datasource-orm-sql 1.0                               [8/12]
+[INFO]   from dec-datasource-orm-sql/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-datasource-orm-sql ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-datasource-orm-sql ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-datasource-orm-sql ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-datasource-orm-sql ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-datasource-orm-sql ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-datasource-orm-sql ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-datasource-orm-sql ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-datasource-orm-sql ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-datasource-orm-sql ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-datasource-orm-sql ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-datasource-orm-sql ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-datasource-orm-sql ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-datasource-orm-sql/1.0/dec-datasource-orm-sql-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/dec-datasource-orm-sql-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-datasource-orm-sql/1.0/dec-datasource-orm-sql-1.0.jar
+[INFO]
+[INFO] ----------------< doc.eq.code:dec-datasource-orm-mysql >----------------
+[INFO] Building dec-datasource-orm-mysql 1.0                             [9/12]
+[INFO]   from dec-datasource-orm-mysql/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-datasource-orm-mysql ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-datasource-orm-mysql ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-datasource-orm-mysql ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-datasource-orm-mysql ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 27 source files with javac [debug release 8] to target/classes
+[INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/main/java/dec/external/datasource/sql/mysql/convert/container/MySQLExprVisitor.java: Some input files use unchecked or unsafe operations.
+[INFO] /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/src/main/java/dec/external/datasource/sql/mysql/convert/container/MySQLExprVisitor.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-datasource-orm-mysql ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-datasource-orm-mysql ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-datasource-orm-mysql ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-datasource-orm-mysql ---
+[INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/dec-datasource-orm-mysql-1.0.jar
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-datasource-orm-mysql ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-datasource-orm-mysql ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-datasource-orm-mysql ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-datasource-orm-mysql ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-datasource-orm-mysql/1.0/dec-datasource-orm-mysql-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/dec-datasource-orm-mysql-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-datasource-orm-mysql/1.0/dec-datasource-orm-mysql-1.0.jar
+[INFO]
+[INFO] ---------------------< doc.eq.code:dec-core-model >---------------------
+[INFO] Building dec-core-model 1.0                                      [10/12]
+[INFO]   from dec-core-model/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-model ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-model ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-model ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-model ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-model ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-model ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-model ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-model ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-model ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-model ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-model ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-core-model ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-core-model/1.0/dec-core-model-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/target/dec-core-model-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-core-model/1.0/dec-core-model-1.0.jar
+[INFO]
+[INFO] --------------------< doc.eq.code:dec-core-starter >--------------------
+[INFO] Building dec-core-starter 1.0                                    [11/12]
+[INFO]   from dec-core-starter/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-starter ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-starter ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-starter ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-starter ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-starter ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-starter ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-starter ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-starter ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-starter ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-starter ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-starter ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-core-starter ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-core-starter/1.0/dec-core-starter-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/dec-core-starter-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-core-starter/1.0/dec-core-starter-1.0.jar
+[INFO]
+[INFO] ------------------------< doc.eq.code:dec-demo >------------------------
+[INFO] Building dec-demo 1.0                                            [12/12]
+[INFO]   from dec-demo/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-demo ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-demo ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-demo ---
+[INFO] Copying 50 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-demo ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug release 8] to target/classes
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-demo ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-demo ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-demo ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-demo ---
+[INFO] Building jar: /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/dec-demo-1.0.jar
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-demo ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-demo ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-demo ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-demo ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-demo/1.0/dec-demo-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/dec-demo-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-demo/1.0/dec-demo-1.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for doc-eq-code-parent 1.0:
+[INFO]
+[INFO] doc-eq-code-parent ................................. SUCCESS [  0.679 s]
+[INFO] dec-core-context ................................... SUCCESS [  0.521 s]
+[INFO] DEC Core Compiler .................................. SUCCESS [  0.058 s]
+[INFO] dec-core-frontends ................................. SUCCESS [  0.032 s]
+[INFO] dec-core-datasource ................................ SUCCESS [  0.030 s]
+[INFO] dec-context-config-parse-xml ....................... SUCCESS [  1.546 s]
+[INFO] dec-context-config-parse-yaml ...................... SUCCESS [  0.339 s]
+[INFO] dec-datasource-orm-sql ............................. SUCCESS [  0.029 s]
+[INFO] dec-datasource-orm-mysql ........................... SUCCESS [  0.383 s]
+[INFO] dec-core-model ..................................... SUCCESS [  0.046 s]
+[INFO] dec-core-starter ................................... SUCCESS [  0.021 s]
+[INFO] dec-demo ........................................... SUCCESS [  0.587 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.413 s
+[INFO] Finished at: 2026-08-11T05:29:43Z
+[INFO] ------------------------------------------------------------------------

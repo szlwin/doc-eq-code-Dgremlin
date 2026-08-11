@@ -6,8 +6,8 @@
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
   "task_status": "PARTIAL",
-  "current_phase": "implementation_plan",
-  "current_round": "IMPLEMENTATION_PLAN-I008",
+  "current_phase": "tdd",
+  "current_round": "TDD-I008",
   "current_agent": "ProjectManagerAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
@@ -83,8 +83,8 @@
       "iteration_no": 8
     },
     "tdd": {
-      "revision": "",
-      "status": "STALE",
+      "revision": "TDD-P2-R01@3f282bb4e1f6",
+      "status": "PASSED",
       "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-008",
       "iteration_no": 8
     },
@@ -884,13 +884,22 @@
       ]
     },
     "tdd": {
-      "artifact_revision": "",
+      "artifact_revision": "TDD-P2-R01@3f282bb4e1f6",
       "required_reviewers": [
         "TDDReviewAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {},
-      "status": "PENDING",
+      "independent_conclusions": {
+        "TDDReviewAgent": {
+          "profile_id": "tdd:TDDReviewAgent",
+          "revision": "TDD-P2-R01@3f282bb4e1f6",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000074",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T05:31:38+00:00"
+        }
+      },
+      "status": "PASSED",
       "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-008",
       "review_history": []
     },
@@ -933,9 +942,9 @@
   },
   "review_rounds": {},
   "open_issue_ids": [],
-  "last_gate": "test_design",
+  "last_gate": "implementation_plan",
   "failed_attempts": {},
-  "next_action": "运行 advance-phase 推进 implementation_plan 的下一阶段",
+  "next_action": "运行 advance-phase 推进 tdd 的下一阶段",
   "next_agent": "ProjectManagerAgent",
   "resume_from": "执行 long_task.py task-context 获取当前任务、最新 attempt、开放问题和恢复引用；需要细节时再按引用读取",
   "max_auto_review_rounds": 3,
@@ -1059,7 +1068,7 @@
       "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-11T04:29:16+00:00"
+  "checkpoint_at": "2026-08-11T05:32:30+00:00"
 }
 ```
 
