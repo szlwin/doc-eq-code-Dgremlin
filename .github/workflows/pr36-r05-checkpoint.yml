@@ -1,0 +1,39 @@
+name: PR36 R05 implementation-plan checkpoint
+on:
+  push:
+    branches:
+      - tmp/pr36-r05-checkpoint-run-20260811
+permissions:
+  contents: write
+jobs:
+  checkpoint:
+    if: contains(github.event.head_commit.message, '[r05-checkpoint-run]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create exact R05 checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=15acf1c6427112e17461cf76ef1a15cc64063d30
+          TDIR=project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
+          git config user.name common-develop-bot
+          git config user.email common-develop-bot@users.noreply.github.com
+          rm -rf /tmp/common-develop
+          git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          test "$(git -C /tmp/common-develop rev-parse HEAD)" = "7086b2d32b6beae2e6e522efc517d7823ba55376"
+          sudo mkdir -p /home/oai/skills
+          sudo rm -f /home/oai/skills/common-develop
+          sudo ln -s /tmp/common-develop /home/oai/skills/common-develop
+          git reset --hard "$BASE"
+          test "$(git rev-parse HEAD)" = "$BASE"
+          python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR" --json
+          python3 /home/oai/skills/common-develop/scripts/git_checkpoint.py commit -g ProjectManagerAgent --task-dir "$TDIR" --title "plan(p2): checkpoint nested ModelPath R05 implementation plan" --change "Bind Implementation Plan R05 to TESTDESIGN-P2-R32." --change "Preserve nine slices; map six nested ModelPath cases to DEV-03."
+          python3 /home/oai/skills/common-develop/scripts/git_checkpoint.py validate -g ProjectManagerAgent --task-dir "$TDIR" --json
+          python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR" --json
+          git diff --check
+          git status --porcelain
+          git push --force origin HEAD:tmp/pr36-r05-checkpoint-semantic-20260811
+          echo "CHECKPOINT_COMMIT=$(git rev-parse HEAD)"
