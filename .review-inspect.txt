@@ -1,0 +1,99 @@
+=== acceptance add ===
+usage: acceptance.py add [-h]
+                         [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]
+                         --task-dir TASK_DIR --assertion-id ASSERTION_ID
+                         --acceptance-id ACCEPTANCE_ID --statement STATEMENT
+                         --type
+                         {COMMAND_EXIT,FILE_DIGEST,FILE_PATTERN,JSON_PATH,MANUAL_REVIEW,METRIC_THRESHOLD,SET_EQUALS,SQL_VALUE,TEST_CASE}
+                         --phase PHASE --revision REVISION
+                         [--blocking | --no-blocking] --parameters PARAMETERS
+                         [--source-ref SOURCE_REF]
+
+options:
+  -h, --help            show this help message and exit
+  -g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}, --agent {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}
+                        current common-develop Agent; defaults to
+                        ProjectManagerAgent
+  --task-dir TASK_DIR
+  --assertion-id ASSERTION_ID
+  --acceptance-id ACCEPTANCE_ID
+  --statement STATEMENT
+  --type {COMMAND_EXIT,FILE_DIGEST,FILE_PATTERN,JSON_PATH,MANUAL_REVIEW,METRIC_THRESHOLD,SET_EQUALS,SQL_VALUE,TEST_CASE}
+  --phase PHASE
+  --revision REVISION
+  --blocking, --no-blocking
+  --parameters PARAMETERS
+                        JSON object
+  --source-ref SOURCE_REF
+                        stable source such as TASK-ID#expected_results/0
+=== acceptance manual ===
+usage: acceptance.py manual [-h]
+                            [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]
+                            --task-dir TASK_DIR --assertion-id ASSERTION_ID
+                            [--evidence-id EVIDENCE_ID] [--reason REASON]
+
+options:
+  -h, --help            show this help message and exit
+  -g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}, --agent {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}
+                        current common-develop Agent; defaults to
+                        ProjectManagerAgent
+  --task-dir TASK_DIR
+  --assertion-id ASSERTION_ID
+  --evidence-id EVIDENCE_ID
+  --reason REASON
+=== manual review prepare ===
+usage: manual_review.py prepare [-h]
+                                [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]
+                                --task-dir TASK_DIR --assertion-id
+                                ASSERTION_ID [--output OUTPUT]
+
+options:
+  -h, --help            show this help message and exit
+  -g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}, --agent {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}
+                        current common-develop Agent; defaults to
+                        ProjectManagerAgent
+  --task-dir TASK_DIR
+  --assertion-id ASSERTION_ID
+  --output OUTPUT
+=== manual review draft ===
+usage: manual_review.py draft [-h]
+                              [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]
+                              --task-dir TASK_DIR --assertion-id ASSERTION_ID
+                              [--answer ANSWER] [--detail DETAIL]
+                              [--evidence-id EVIDENCE_ID] [--summary SUMMARY]
+                              [--note NOTE] [--output OUTPUT]
+
+options:
+  -h, --help            show this help message and exit
+  -g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}, --agent {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}
+                        current common-develop Agent; defaults to
+                        ProjectManagerAgent
+  --task-dir TASK_DIR
+  --assertion-id ASSERTION_ID
+  --answer ANSWER
+  --detail DETAIL
+  --evidence-id EVIDENCE_ID
+  --summary SUMMARY
+  --note NOTE
+  --output OUTPUT
+=== manual review submit ===
+usage: manual_review.py submit [-h]
+                               [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]
+                               --task-dir TASK_DIR --review-file REVIEW_FILE
+
+options:
+  -h, --help            show this help message and exit
+  -g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}, --agent {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}
+                        current common-develop Agent; defaults to
+                        ProjectManagerAgent
+  --task-dir TASK_DIR
+  --review-file REVIEW_FILE
+=== review-like scripts ===
+acceptance.py
+manual_review.py
+review_contract.py
+review_store.py
+test_manual_review.py
+test_review_contract.py
+test_review_contract_cli.py
+test_review_store.py
