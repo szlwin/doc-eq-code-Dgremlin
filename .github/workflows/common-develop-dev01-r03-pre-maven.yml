@@ -1,0 +1,22 @@
+name: common-develop DEV-01 R03 full-ar pre-Maven
+
+on:
+  push:
+    branches: [common-develop/dev01-r03-ar-final-20260812]
+    paths:
+      - .github/workflows/common-develop-dev01-r03-pre-maven.yml
+      - .common-develop-dev01-r03-pre-maven.sh
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-r03-ar-final-20260812
+          fetch-depth: 0
+      - name: Prepare full-ar R03 candidate
+        run: bash .common-develop-dev01-r03-pre-maven.sh
