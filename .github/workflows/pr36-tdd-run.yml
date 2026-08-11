@@ -45,6 +45,16 @@ jobs:
               raise SystemExit('TDDReview evidence anchor missing')
           s=s.replace(old_review,new_review,1)
           s=s.replace('.log','.out')
+          boot_tail='  if ! ./mvnw -pl "$module" -am -Dmaven.test.skip=true install >"$OUT/boot-${module}.out" 2>&1; then echo "INVALID_RED BOOT failure for $module"; cat "$OUT/boot-${module}.out"; exit 30; fi\n done'
+          boot_norm='  if ! ./mvnw -pl "$module" -am -Dmaven.test.skip=true install >"$OUT/boot-${module}.out" 2>&1; then echo "INVALID_RED BOOT failure for $module"; cat "$OUT/boot-${module}.out"; exit 30; fi\n  sed -i "s/[[:blank:]]\\+$//" "$OUT/boot-${module}.out"\n done'
+          if boot_tail not in s:
+              raise SystemExit('normalized BOOT insertion anchor missing')
+          s=s.replace(boot_tail,boot_norm,1)
+          test_anchor='  set -e\n  if grep -Eq'
+          test_norm='  set -e\n  sed -i "s/[[:blank:]]\\+$//" "$log"\n  if grep -Eq'
+          if test_anchor not in s:
+              raise SystemExit('test output normalization anchor missing')
+          s=s.replace(test_anchor,test_norm,1)
           p.write_text(s)
           PY
           set -a
