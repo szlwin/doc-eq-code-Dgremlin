@@ -1,0 +1,76 @@
+name: PR36 DEV01 probe3
+on:
+  push:
+    branches: [tmp/pr36-dev01-probe-20260811]
+    paths: [.common-develop-dev01-probe3-trigger]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: temurin, java-version: '17', cache: maven}
+      - name: Confirm compile-clean DEV01 RED
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=2a79456c4fa93f07a34e225c3fe99ae97ae8860a
+          git reset --hard "$BASE"
+          scripts/remediation/bootstrap_legacy_dependencies.sh >/tmp/bootstrap.out 2>&1
+          ./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install >/tmp/boot.out 2>&1
+          cat > dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java <<'JAVA'
+          package dec.core.compiler.system;
+          import static org.junit.jupiter.api.Assertions.*;
+          import dec.core.compiler.canonical.DocumentFormat;
+          import dec.core.compiler.raw.*;
+          import dec.core.compiler.symbol.*;
+          import dec.core.context.model.*;
+          import java.util.*;
+          import org.junit.jupiter.api.Test;
+          class SystemCompilationContractTest {
+            @Test void duplicateSystemDiagnosticIsSourceOrderIndependent() {
+              SymbolBuildResult ab=build(Arrays.asList(def(0,"a.xml"),def(1,"b.xml")));
+              SymbolBuildResult ba=build(Arrays.asList(def(0,"b.xml"),def(1,"a.xml")));
+              assertEquals(SymbolBuildStatus.FAILED,ab.status());
+              assertEquals(SymbolBuildStatus.FAILED,ba.status());
+              assertEquals(ab.diagnostics(),ba.diagnostics(),"P2 RED [CASE-P2-TD-SYSTEM-DUPLICATE-001]: duplicate diagnostic must not depend on scan order");
+            }
+            private static SymbolBuildResult build(List<RawDefinition>d){return new SymbolTableBuilder().build(new RawDefinitionSet(d));}
+            private static RawDefinition def(long o,String sid){SourceRef s=new SourceRef(sid,1,1,"/system");return new RawDefinition(RawDefinitionKind.SYSTEM,o,s,Optional.<String>empty(),Optional.of("order"),Collections.<String,String>emptyMap(),Collections.<RawReference>emptyList(),new RawNodeBody("system",Collections.<String,String>emptyMap(),Optional.<String>empty(),Collections.<RawNodeBody>emptyList(),s),DocumentFormat.XML,"1.0");}
+          }
+          JAVA
+          cat > dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java <<'JAVA'
+          package dec.core.compiler.ruleview;
+          import static org.junit.jupiter.api.Assertions.*;
+          import dec.core.compiler.canonical.DocumentFormat;
+          import dec.core.compiler.raw.*;
+          import dec.core.compiler.symbol.*;
+          import dec.core.context.model.*;
+          import java.util.*;
+          import org.junit.jupiter.api.Test;
+          class RuleViewCompilationContractTest {
+            @Test void duplicateRuleViewDiagnosticIsSourceOrderIndependent() {
+              SymbolBuildResult ab=build(Arrays.asList(system(0),rule(1,"a.xml"),rule(2,"b.xml")));
+              SymbolBuildResult ba=build(Arrays.asList(system(0),rule(1,"b.xml"),rule(2,"a.xml")));
+              assertEquals(SymbolBuildStatus.FAILED,ab.status());
+              assertEquals(SymbolBuildStatus.FAILED,ba.status());
+              assertEquals(ab.diagnostics(),ba.diagnostics(),"P2 RED [CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001]: duplicate diagnostic must not depend on scan order");
+            }
+            private static SymbolBuildResult build(List<RawDefinition>d){return new SymbolTableBuilder().build(new RawDefinitionSet(d));}
+            private static RawDefinition system(long o){return def(RawDefinitionKind.SYSTEM,o,"system.xml",null,"order");}
+            private static RawDefinition rule(long o,String sid){return def(RawDefinitionKind.RULE_VIEW,o,sid,"order","shared");}
+            private static RawDefinition def(RawDefinitionKind k,long o,String sid,String owner,String name){SourceRef s=new SourceRef(sid,1,1,"/definition");return new RawDefinition(k,o,s,owner==null?Optional.<String>empty():Optional.of(owner),Optional.of(name),Collections.<String,String>emptyMap(),Collections.<RawReference>emptyList(),new RawNodeBody(k.name().toLowerCase(),Collections.<String,String>emptyMap(),Optional.<String>empty(),Collections.<RawNodeBody>emptyList(),s),DocumentFormat.XML,"1.0");}
+          }
+          JAVA
+          set +e
+          ./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest,RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test > /tmp/probe.out 2>&1
+          rc=$?
+          set -e
+          cat /tmp/probe.out
+          if grep -Eq 'COMPILATION ERROR|testCompile.*FAILURE|There are test compilation errors' /tmp/probe.out; then exit 31; fi
+          test "$rc" -ne 0
+          grep -F 'P2 RED [CASE-P2-TD-SYSTEM-DUPLICATE-001]' /tmp/probe.out
+          grep -F 'P2 RED [CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001]' /tmp/probe.out
