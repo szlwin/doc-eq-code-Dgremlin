@@ -1,0 +1,134 @@
+COMMON_DEVELOP_HEAD=
+7086b2d32b6beae2e6e522efc517d7823ba55376
+--- long_task --help ---
+usage: long_task.py [-h]
+                    {init,validate,reopen-phase,sync-work-mode,sync-risk-reviewers,list-risk-triggers,advance-development-step,advance-phase,resume,start-attempt,finish-attempt,publish-artifact,finalize-phase,attempts,read-attempt,latest-attempt,task-context,append-work-event,migrate-work-record,migrate-work-record-v4,validate-work-record,work-events,render-work-record}
+                    ...
+
+Initialize, validate, invalidate, and resume common-develop long tasks. Tasks
+use the single current long-task schema declared by assets/runtime-
+contract.json.
+
+positional arguments:
+  {init,validate,reopen-phase,sync-work-mode,sync-risk-reviewers,list-risk-triggers,advance-development-step,advance-phase,resume,start-attempt,finish-attempt,publish-artifact,finalize-phase,attempts,read-attempt,latest-attempt,task-context,append-work-event,migrate-work-record,migrate-work-record-v4,validate-work-record,work-events,render-work-record}
+    init                initialize a long-task schema v2 task
+    validate            validate a task
+    reopen-phase        create a new phase iteration and invalidate downstream
+                        work
+    sync-work-mode      bind task state to version work.md mode and digest
+    sync-risk-reviewers
+                        synchronize risk detection into code-review tasks and
+                        Reviewer registrations
+    list-risk-triggers  list supported risk trigger keys, optionally filtered
+                        by phase
+    advance-development-step
+                        after wk -ar skeleton Review passes, reopen
+                        development for concrete implementation
+    advance-phase       advance only after the current phase gate passes
+    resume              write compact resume context
+    start-attempt       start one structured task attempt
+    finish-attempt      finish one structured task attempt
+    publish-artifact    freeze one PASSED attempt revision and open current-
+                        phase Review
+    finalize-phase      pass the current artifact and StageOutcome after
+                        Review and phase gates succeed
+    attempts            read filtered attempt history as compact JSON
+    read-attempt        read one attempt as JSON
+    latest-attempt      read latest matching attempt as JSON
+    task-context        read minimum execution context for one task
+    append-work-event   append one version-level summary event
+    migrate-work-record
+                        preview or apply non-destructive migration to
+                        canonical work_record.md
+    migrate-work-record-v4
+                        ==SUPPRESS==
+    validate-work-record
+                        validate canonical human-readable work_record.md
+                        events
+    work-events         read filtered version-level work events
+    render-work-record  render canonical work_record.md
+
+options:
+  -h, --help            show this help message and exit
+--- task_plan --help ---
+usage: task_plan.py [-h]
+                    {init,validate,seal,submit-review,revise,finalize,status}
+                    ...
+
+Create, review, revise, and freeze large-requirement development task plans.
+
+positional arguments:
+  {init,validate,seal,submit-review,revise,finalize,status}
+    init                initialize wk -tp task-plan files
+    validate            validate task plan and Review history
+    seal                freeze the first task-plan revision and begin serial
+                        Review
+    submit-review       submit the next serial task-plan Review
+    revise              create a new task-plan revision after Review findings
+    finalize            mark the current task-plan revision PASSED after all
+                        Reviews
+    status              show current task-plan and Review state
+
+options:
+  -h, --help            show this help message and exit
+--- review_contract test_design required ---
+usage: review_contract.py required [-h]
+                                   [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]
+                                   --phase PHASE --reviewer REVIEWER [--json]
+review_contract.py required: error: the following arguments are required: --reviewer
+--- review_contract implementation_plan required ---
+usage: review_contract.py required [-h]
+                                   [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]
+                                   --phase PHASE --reviewer REVIEWER [--json]
+review_contract.py required: error: the following arguments are required: --reviewer
+--- candidate test-design scripts ---
+acceptance.py
+evidence.py
+git_checkpoint.py
+long_task.py
+manual_review.py
+review_contract.py
+review_store.py
+task_layout.py
+task_plan.py
+task_verify.py
+test_agent_context.py
+test_ai_context.py
+test_artifact_footprint.py
+test_baseline_guard.py
+test_business_flow.py
+test_check_skill.py
+test_context_resolver.py
+test_context_routing_golden.py
+test_context_routing_query.py
+test_doc_layout.py
+test_document_facts.py
+test_environment.py
+test_evidence.py
+test_git_checkpoint.py
+test_long_task.py
+test_machine_verification.py
+test_manual_review.py
+test_merge_docs.py
+test_process_gates.py
+test_quality_gate.py
+test_reference_reader.py
+test_render_relationships.py
+test_request_intake.py
+test_requirement_doc.py
+test_review_contract.py
+test_review_contract_cli.py
+test_review_store.py
+test_runtime_contract_query.py
+test_semantic_audit.py
+test_simple_yaml.py
+test_storage_migrate.py
+test_task_layout.py
+test_task_plan.py
+test_task_verify.py
+test_test_environment.py
+test_unittest_worker.py
+test_wk.py
+test_work_mode.py
+test_work_record.py
+unittest_worker.py
