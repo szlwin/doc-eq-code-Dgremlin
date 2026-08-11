@@ -65,8 +65,8 @@ jobs:
           ]
           replacement='\n'.join(lines)+'\n'
           block=block[:i]+replacement+block[j+len(end_marker):]
-          needle='    local rc=$?\n    set -e\n    python3 - \"$RESULT_DIR/$name.json\"'
-          replacement='    local rc=$?\n    set -e\n    sed -i \'s/[[:blank:]]\\+$//\' \"$RESULT_DIR/$name.out\"\n    python3 - \"$RESULT_DIR/$name.json\"'
+          needle="    local rc=$?\n    set -e\n    python3 - \"$RESULT_DIR/$name.json\" \"$RESULT_DIR/$name.out\" \"$command\" \"$rc\" \"$DEVREV\" <<'PY'"
+          replacement="    local rc=$?\n    set -e\n    sed -i 's/[[:blank:]]\\+$//' \"$RESULT_DIR/$name.out\"\n    python3 - \"$RESULT_DIR/$name.json\" \"$RESULT_DIR/$name.out\" \"$command\" \"$rc\" \"$DEVREV\" <<'PY'"
           if needle not in block:
               raise SystemExit('run_and_record normalization anchor missing')
           block=block.replace(needle,replacement,1)
