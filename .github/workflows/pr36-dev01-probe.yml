@@ -20,6 +20,7 @@ jobs:
           BASE=2a79456c4fa93f07a34e225c3fe99ae97ae8860a
           git reset --hard "$BASE"
           scripts/remediation/bootstrap_legacy_dependencies.sh >/tmp/bootstrap.out 2>&1
+          ./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install >/tmp/boot.out 2>&1
           cat > dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java <<'JAVA'
           package dec.core.compiler.system;
           import static org.junit.jupiter.api.Assertions.*;
@@ -45,21 +46,11 @@ jobs:
               assertEquals(canon(a),canon(b));
             }
             @Test @DisplayName("CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001")
-            void systemSourceIsFrozen() {
-              Map<String,String> attrs=new HashMap<>(); attrs.put("version","v1"); RawDefinition d=def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0",attrs); attrs.put("version","mutated");
-              assertEquals("v1",table(build(List.of(d))).require(new SystemKey("order")).attributes().get("version"));
-            }
+            void systemSourceIsFrozen() { Map<String,String> attrs=new HashMap<>(); attrs.put("version","v1"); RawDefinition d=def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0",attrs); attrs.put("version","mutated"); assertEquals("v1",table(build(List.of(d))).require(new SystemKey("order")).attributes().get("version")); }
             @Test @DisplayName("CASE-P2-TD-SYSTEM-FORWARD-REF-001")
-            void ruleViewMayPrecedeSystemButMissingOwnerFails() {
-              assertEquals(SymbolBuildStatus.BUILT,build(Arrays.asList(def(RawDefinitionKind.RULE_VIEW,0,"r.xml","order","submit","1.0"),def(RawDefinitionKind.SYSTEM,1,"s.xml",null,"order","1.0"))).status());
-              assertEquals(SymbolBuildStatus.FAILED,build(List.of(def(RawDefinitionKind.RULE_VIEW,0,"r.xml","missing","submit","1.0"))).status());
-            }
+            void ruleViewMayPrecedeSystemButMissingOwnerFails() { assertEquals(SymbolBuildStatus.BUILT,build(Arrays.asList(def(RawDefinitionKind.RULE_VIEW,0,"r.xml","order","submit","1.0"),def(RawDefinitionKind.SYSTEM,1,"s.xml",null,"order","1.0"))).status()); assertEquals(SymbolBuildStatus.FAILED,build(List.of(def(RawDefinitionKind.RULE_VIEW,0,"r.xml","missing","submit","1.0"))).status()); }
             @Test @DisplayName("CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001")
-            void sourceSchemaVersionParticipatesInPublishedSnapshotValue() {
-              SymbolTable v1=table(build(List.of(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0"))));
-              SymbolTable v2=table(build(List.of(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","2.0"))));
-              assertEquals(v1.keys(),v2.keys()); assertNotEquals(v1,v2);
-            }
+            void sourceSchemaVersionParticipatesInPublishedSnapshotValue() { SymbolTable v1=table(build(List.of(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","1.0")))); SymbolTable v2=table(build(List.of(def(RawDefinitionKind.SYSTEM,0,"a.xml",null,"order","2.0")))); assertEquals(v1.keys(),v2.keys()); assertNotEquals(v1,v2); }
             @Test @DisplayName("CASE-P2-TD-BM-CANONICAL-PAIR-001")
             void canonicalSystemIdentityUsesSharedKeyNamespace() { assertEquals(new SystemKey("order"),new SystemKey(" order ")); assertEquals("system:order",new SystemKey("order").canonical()); }
             static SymbolBuildResult build(List<RawDefinition> d){return new SymbolTableBuilder().build(new RawDefinitionSet(d));}
@@ -80,25 +71,16 @@ jobs:
           import org.junit.jupiter.api.*;
           class RuleViewCompilationContractTest {
             @Test @DisplayName("CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001")
-            void duplicateRuleViewDiagnosticIsSourceOrderIndependent(){
-              SymbolBuildResult ab=build(Arrays.asList(sys(0),rv(1,"a.xml","order","shared"),rv(2,"b.xml","order","shared")));
-              SymbolBuildResult ba=build(Arrays.asList(sys(0),rv(1,"b.xml","order","shared"),rv(2,"a.xml","order","shared")));
-              assertEquals(SymbolBuildStatus.FAILED,ab.status());assertEquals(SymbolBuildStatus.FAILED,ba.status());assertEquals(ab.diagnostics(),ba.diagnostics(),"duplicate diagnostic must not depend on scan order");
-            }
+            void duplicateRuleViewDiagnosticIsSourceOrderIndependent(){ SymbolBuildResult ab=build(Arrays.asList(sys(0),rv(1,"a.xml","order","shared"),rv(2,"b.xml","order","shared"))); SymbolBuildResult ba=build(Arrays.asList(sys(0),rv(1,"b.xml","order","shared"),rv(2,"a.xml","order","shared"))); assertEquals(SymbolBuildStatus.FAILED,ab.status());assertEquals(SymbolBuildStatus.FAILED,ba.status());assertEquals(ab.diagnostics(),ba.diagnostics(),"duplicate diagnostic must not depend on scan order"); }
             @Test @DisplayName("CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001")
             void sameLocalNameIsIsolatedBySystem(){SymbolTable t=table(build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"o.xml",null,"order"),def(RawDefinitionKind.SYSTEM,1,"p.xml",null,"payment"),rv(2,"r1.xml","order","shared"),rv(3,"r2.xml","payment","shared")))); assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"shared")).isPresent());assertTrue(t.find(new RuleViewKey(new SystemKey("payment"),"shared")).isPresent());}
             @Test @DisplayName("CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001")
             void missingSystemIsRejected(){SymbolBuildResult r=build(List.of(rv(0,"r.xml","missing","submit")));assertEquals(SymbolBuildStatus.FAILED,r.status());assertTrue(r.symbolTable().isEmpty());assertEquals("symbol.owner.system.missing",r.diagnostics().get(0).messageKey());}
-            @Test @DisplayName("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001")
-            void lookupRequiresCompositeKey(){assertTrue(Arrays.stream(RuleViewKey.class.getConstructors()).noneMatch(c->Arrays.equals(c.getParameterTypes(),new Class<?>[]{String.class})));}
-            @Test @DisplayName("CASE-P2-TD-RULEKEY-CONTRACT-001")
-            void compositeKeyIsCaseSensitive(){assertNotEquals(new RuleViewKey(new SystemKey("order"),"Submit"),new RuleViewKey(new SystemKey("order"),"submit"));}
-            @Test @DisplayName("CASE-P2-TD-KEY-SOURCE-COMPAT-001")
-            void explicitOwnerMapsToSharedRuleViewKey(){SymbolTable t=table(build(Arrays.asList(sys(0),rv(1,"r.xml"," order "," submit "))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());}
-            @Test @DisplayName("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001")
-            void noP2BareNameAuthority(){SymbolTable t=table(build(Arrays.asList(sys(0),rv(1,"r.xml","order","submit"))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());assertFalse(t.find(new RuleViewKey(new SystemKey("other"),"submit")).isPresent());}
-            @Test @DisplayName("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001")
-            void ownerResolutionIsExactAndNoRecentSystemFallback(){SymbolTable t=table(build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"o.xml",null,"order"),def(RawDefinitionKind.SYSTEM,1,"p.xml",null,"payment"),rv(2,"r.xml","order","submit"))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());assertFalse(t.find(new RuleViewKey(new SystemKey("payment"),"submit")).isPresent());}
+            @Test @DisplayName("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001") void lookupRequiresCompositeKey(){assertTrue(Arrays.stream(RuleViewKey.class.getConstructors()).noneMatch(c->Arrays.equals(c.getParameterTypes(),new Class<?>[]{String.class})));}
+            @Test @DisplayName("CASE-P2-TD-RULEKEY-CONTRACT-001") void compositeKeyIsCaseSensitive(){assertNotEquals(new RuleViewKey(new SystemKey("order"),"Submit"),new RuleViewKey(new SystemKey("order"),"submit"));}
+            @Test @DisplayName("CASE-P2-TD-KEY-SOURCE-COMPAT-001") void explicitOwnerMapsToSharedRuleViewKey(){SymbolTable t=table(build(Arrays.asList(sys(0),rv(1,"r.xml"," order "," submit "))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());}
+            @Test @DisplayName("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001") void noP2BareNameAuthority(){SymbolTable t=table(build(Arrays.asList(sys(0),rv(1,"r.xml","order","submit"))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());assertFalse(t.find(new RuleViewKey(new SystemKey("other"),"submit")).isPresent());}
+            @Test @DisplayName("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001") void ownerResolutionIsExactAndNoRecentSystemFallback(){SymbolTable t=table(build(Arrays.asList(def(RawDefinitionKind.SYSTEM,0,"o.xml",null,"order"),def(RawDefinitionKind.SYSTEM,1,"p.xml",null,"payment"),rv(2,"r.xml","order","submit"))));assertTrue(t.find(new RuleViewKey(new SystemKey("order"),"submit")).isPresent());assertFalse(t.find(new RuleViewKey(new SystemKey("payment"),"submit")).isPresent());}
             static RawDefinition sys(long o){return def(RawDefinitionKind.SYSTEM,o,"system.xml",null,"order");}
             static RawDefinition rv(long o,String sid,String owner,String name){return def(RawDefinitionKind.RULE_VIEW,o,sid,owner,name);}
             static RawDefinition def(RawDefinitionKind k,long o,String sid,String owner,String name){SourceRef s=new SourceRef(sid,1,1,"/d");return new RawDefinition(k,o,s,Optional.ofNullable(owner),Optional.ofNullable(name),Collections.emptyMap(),Collections.emptyList(),new RawNodeBody(k.name().toLowerCase(),Collections.emptyMap(),Optional.empty(),Collections.emptyList(),s),DocumentFormat.XML,"1.0");}
