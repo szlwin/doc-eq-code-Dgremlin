@@ -9,7 +9,53 @@ s=p.read_text(encoding='utf-8')
 start=s.index("python3 - <<'PY'\nfrom pathlib import Path\nimport yaml\n", s.index('start-attempt'))
 needle="PY\npython3 /home/oai/skills/common-develop/scripts/task_plan.py revise"
 end=s.index(needle,start)+3
-pre='''python3 /home/oai/skills/common-develop/scripts/task_plan.py submit-review -g PlanReviewAgent --task-dir "$TDIR" --result NEEDS_CHANGES --summary "NEEDS_CHANGES: exact R04 remains structurally valid, but its frozen input_revisions.test_design points to TESTDESIGN-P2-R31; TESTDESIGN-P2-R32 is now the PASSED authority after nested ModelPath clarification, so R04 must enter REWORK and be rebound as a new revision before TDD."'''
+pre=r'''python3 - <<'PY'
+from pathlib import Path
+import sys
+sys.path.insert(0,'/home/oai/skills/common-develop/scripts')
+import task_plan
+TD=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC')
+plan=task_plan.load_plan(TD)
+reviews=task_plan.load_reviews(TD)
+expected='TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25'
+if plan.get('revision') != expected:
+    raise SystemExit(f'expected exact R04 before post-finalization finding, got {plan.get("revision")}')
+if plan.get('status') != 'PASSED':
+    raise SystemExit(f'expected finalized R04 PASSED before post-finalization finding, got {plan.get("status")}')
+assignments=dict(task_plan.required_review_assignments(plan))
+task_ids=assignments.get('PlanReviewAgent')
+if not task_ids:
+    raise SystemExit('PlanReviewAgent assignment missing')
+review_id=task_plan.next_review_id(reviews)
+record={
+  'schema_version': task_plan.SCHEMA_VERSION,
+  'review_id': review_id,
+  'plan_revision': plan['revision'],
+  'review_round': plan['review_round'],
+  'reviewer_agent': 'PlanReviewAgent',
+  'task_ids': task_ids,
+  'result': 'NEEDS_CHANGES',
+  'findings': [{
+    'finding_id': f'TPF-{int(review_id[4:]):06d}-01',
+    'severity': 'P1',
+    'task_id': 'TASK-P2-DEV-03-MODEL-ACCESS-POLICY',
+    'field': 'input_revisions.test_design',
+    'description': 'R04 is still frozen to TESTDESIGN-P2-R31, while TESTDESIGN-P2-R32 is now the PASSED authority and adds six explicit nested ModelPath/target-main/exact-authorization oracles that must be plan-traceable before TDD.',
+    'required_change': 'Create a new TP revision bound to TESTDESIGN-P2-R32; preserve the nine-task DAG and explicitly map all six R32 nested ModelPath cases to DEV-03 existing TARGET/POLICY validation seams.'
+  }],
+  'summary': 'NEEDS_CHANGES: exact R04 remains structurally valid but is stale against PASSED TESTDESIGN-P2-R32; create a minimal R05 rebind before TDD.',
+  'created_at': task_plan.now(),
+}
+errs=task_plan.validate_review_record(record,index=len(reviews))
+if errs:
+    raise SystemExit('invalid post-finalization review record: '+'; '.join(errs))
+task_plan.append_review(TD,record)
+reviews.append(record)
+plan['status']='REWORK'
+plan['updated_at']=task_plan.now()
+task_plan.save_plan(TD,plan,reviews)
+print({'reviewId':review_id,'result':'NEEDS_CHANGES','planStatus':'REWORK','revision':plan['revision']})
+PY'''
 new=r'''python3 - <<'PY'
 from pathlib import Path
 p=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')
