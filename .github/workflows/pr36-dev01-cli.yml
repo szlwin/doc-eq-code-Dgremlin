@@ -14,15 +14,8 @@ jobs:
           set -euo pipefail
           rm -rf /tmp/common-develop
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
-          python3 - <<'PY' > .common-develop-dev01-gate-inspect.txt
-          import sys,inspect
-          sys.path.insert(0,'/tmp/common-develop/scripts')
-          import git_checkpoint
-          for name in ['current_gate','checkpoint_id_for','allowed_patterns','default_title']:
-              fn=getattr(git_checkpoint,name,None)
-              print('\n=== %s ===' % name)
-              print(inspect.getsource(fn) if fn else 'MISSING')
-          PY
-          git add .common-develop-dev01-gate-inspect.txt
-          git -c user.name=inspect -c user.email=inspect@example.invalid commit -m 'chore: persist DEV01 checkpoint gate inspection'
+          grep -R -n -B25 -A60 "outside allowed_files" /tmp/common-develop/scripts > .common-develop-dev01-allowed-inspect.txt || true
+          grep -R -n -B15 -A50 -E "allowed_files|fnmatch|glob" /tmp/common-develop/scripts/long_task.py >> .common-develop-dev01-allowed-inspect.txt || true
+          git add .common-develop-dev01-allowed-inspect.txt
+          git -c user.name=inspect -c user.email=inspect@example.invalid commit -m 'chore: persist allowed_files matcher inspection'
           git push origin HEAD:tmp/pr36-dev01-cli-20260811
