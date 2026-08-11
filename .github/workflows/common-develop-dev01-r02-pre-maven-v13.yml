@@ -1,0 +1,22 @@
+name: common-develop DEV-01 R02 pre-Maven candidate v13
+
+on:
+  push:
+    branches: [common-develop/dev01-r02-run-20260812]
+    paths:
+      - .github/workflows/common-develop-dev01-r02-pre-maven-v13.yml
+      - .common-develop-dev01-r02-pre-maven-v13.sh
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-r02-run-20260812
+          fetch-depth: 0
+      - name: Prepare R02 candidate
+        run: bash .common-develop-dev01-r02-pre-maven-v13.sh
