@@ -50,7 +50,12 @@ jobs:
           s=s.replace("len([t for t in source['tasks'] if t['id'] not in existing])","len([t for t in source['tasks'] if (t.get('task_id') or t.get('id')) not in existing])",1)
           s=s.replace("'allowed_files':impl.get('affected_files') or []","'allowed_files':src.get('affected_files') or impl.get('affected_files') or []",1)
           old_scope="'allowed_files':src.get('affected_files') or impl.get('affected_files') or []"
-          expanded="'allowed_files':sorted({str(p) for pattern in (src.get('affected_files') or impl.get('affected_files') or []) for p in ([Path(pattern)] if not any(ch in pattern for ch in '*?[') else Path('.').glob(pattern)) if (not any(ch in pattern for ch in '*?[') or p.is_file())})"
+          exact_dev01=[
+            'dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java',
+            'dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java',
+            'dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java'
+          ]
+          expanded="'allowed_files':sorted(set((src.get('affected_files') or impl.get('affected_files') or []) + ("+repr(exact_dev01)+" if tid == 'TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION' else [])))"
           if old_scope not in s: raise SystemExit('allowed scope materializer anchor missing')
           s=s.replace(old_scope,expanded,1)
           s=s.replace('--input-revision "$SKELREV"','--input-revision "$TDDREV"',1)
