@@ -1,0 +1,23 @@
+name: PR36 DEV01 cli
+on:
+  push:
+    branches: [tmp/pr36-dev01-cli-20260811]
+    paths: [.common-develop-dev01-cli-trigger]
+permissions: {contents: read}
+jobs:
+  cli:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          echo '--- manual draft ---'
+          python3 /tmp/common-develop/scripts/manual_review.py draft --help
+          echo '--- acceptance add ---'
+          python3 /tmp/common-develop/scripts/acceptance.py add --help
+          echo '--- advance dev step ---'
+          python3 /tmp/common-develop/scripts/long_task.py advance-development-step --help
+          echo '--- reopen dev step ---'
+          python3 /tmp/common-develop/scripts/long_task.py reopen-development-step --help
