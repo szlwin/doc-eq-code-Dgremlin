@@ -15,4 +15,4 @@ jobs:
           fetch-depth: 0
       - name: Build, review and finalize R05
         shell: bash
-        run: bash .common-develop-r05-plan.sh
+        run: bash .common-develop-r05-wrapper.sh
