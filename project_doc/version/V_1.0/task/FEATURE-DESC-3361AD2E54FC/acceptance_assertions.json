@@ -552,6 +552,108 @@
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-08-10T12:15:03+00:00",
       "reason": "PASSED: CrossModuleIntegrationReviewAgent independently confirms existing DESIGN-P2-R30 remains consistent with BM-R20/FLOW-R11/P2-IMPACT-R29 and current P2 requirements/tests; RC9 binding introduces no semantic rework."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R32-REQ-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "Independent requirement review of TESTDESIGN-P2-R32 nested ModelPath clarification; confirms no new P1/BM/Design requirement is introduced.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000193",
+        "EVD-000194"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-11T03:21:55+00:00",
+      "reason": "PASSED: R32 clarifies existing nested ModelPath behavior without expanding requirements."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R32-DES-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "Independent design-consistency review of TESTDESIGN-P2-R32 against unchanged DESIGN-P2-R30 exact ModelPath semantics.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DesignReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000193",
+        "EVD-000195"
+      ],
+      "verified_by_agent": "DesignReviewAgent",
+      "verified_at": "2026-08-11T03:22:00+00:00",
+      "reason": "PASSED: R32 is consistent with DESIGN-P2-R30."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R32-TDD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "Independent TDD readiness review of six R32 nested ModelPath/exact-authorization oracles using existing TARGET/POLICY TestClasses.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000193",
+        "EVD-000196",
+        "EVD-000197",
+        "EVD-000198",
+        "EVD-000199"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-11T03:22:05+00:00",
+      "reason": "PASSED: all six R32 oracles are executable in the existing TestDesign registry."
+    },
+    {
+      "assertion_id": "ASRT-P2-TD-R32-EVID-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-009",
+      "statement": "Independent evidence review of TESTDESIGN-P2-R32 101-case, 23-TestClass, 10-trace deterministic validation.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R32",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-TESTDESIGN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000193",
+        "EVD-000196",
+        "EVD-000197",
+        "EVD-000198",
+        "EVD-000199"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-11T03:22:12+00:00",
+      "reason": "PASSED: R32 evidence is complete and deterministic."
     }
   ]
 }

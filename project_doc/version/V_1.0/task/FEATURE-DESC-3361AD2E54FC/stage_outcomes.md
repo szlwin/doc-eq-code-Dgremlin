@@ -438,7 +438,7 @@
     "iteration_no": 6,
     "is_current": true,
     "superseded_by": "",
-    "status": "RUNNING",
+    "status": "PASSED",
     "produced_by_agent": "TestDesignAgent",
     "input_revisions": {
       "design": "DESIGN-P2-R30"
@@ -455,7 +455,7 @@
     ],
     "open_risks": [],
     "started_at": "2026-08-11T03:11:18+00:00",
-    "completed_at": ""
+    "completed_at": "2026-08-11T03:22:24+00:00"
   }
 ]
 ```

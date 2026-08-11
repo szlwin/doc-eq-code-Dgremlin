@@ -8,7 +8,7 @@
   "task_status": "PARTIAL",
   "current_phase": "test_design",
   "current_round": "TEST_DESIGN-I006",
-  "current_agent": "TestDesignAgent",
+  "current_agent": "ProjectManagerAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
   "active_task_ids": [],
@@ -72,7 +72,7 @@
     },
     "test_design": {
       "revision": "TESTDESIGN-P2-R32",
-      "status": "IN_PROGRESS",
+      "status": "PASSED",
       "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006",
       "iteration_no": 6
     },
@@ -556,8 +556,41 @@
         "TestEvidenceReviewAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {},
-      "status": "IN_REVIEW",
+      "independent_conclusions": {
+        "RequirementReviewAgent": {
+          "profile_id": "test_design:RequirementReviewAgent",
+          "revision": "TESTDESIGN-P2-R32",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000066",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T03:21:55+00:00"
+        },
+        "DesignReviewAgent": {
+          "profile_id": "test_design:DesignReviewAgent",
+          "revision": "TESTDESIGN-P2-R32",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000067",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T03:22:00+00:00"
+        },
+        "TDDReviewAgent": {
+          "profile_id": "test_design:TDDReviewAgent",
+          "revision": "TESTDESIGN-P2-R32",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000068",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T03:22:05+00:00"
+        },
+        "TestEvidenceReviewAgent": {
+          "profile_id": "test_design:TestEvidenceReviewAgent",
+          "revision": "TESTDESIGN-P2-R32",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000069",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T03:22:11+00:00"
+        }
+      },
+      "status": "PASSED",
       "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006",
       "review_history": [
         {
@@ -869,8 +902,8 @@
   "open_issue_ids": [],
   "last_gate": "test_design",
   "failed_attempts": {},
-  "next_action": "由 DesignReviewAgent 审查 test_design@TESTDESIGN-P2-R32",
-  "next_agent": "DesignReviewAgent",
+  "next_action": "运行 advance-phase 推进 test_design 的下一阶段",
+  "next_agent": "ProjectManagerAgent",
   "resume_from": "执行 long_task.py task-context 获取当前任务、最新 attempt、开放问题和恢复引用；需要细节时再按引用读取",
   "max_auto_review_rounds": 3,
   "stale_events": [
@@ -993,7 +1026,7 @@
       "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-11T03:11:18+00:00"
+  "checkpoint_at": "2026-08-11T03:22:24+00:00"
 }
 ```
 
