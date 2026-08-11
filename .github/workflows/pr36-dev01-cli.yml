@@ -14,20 +14,15 @@ jobs:
           set -euo pipefail
           rm -rf /tmp/common-develop
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
-          python3 - <<'PY' > .common-develop-dev01-partial-inspect.txt
+          python3 - <<'PY' > .common-develop-dev01-gate-inspect.txt
           import sys,inspect
           sys.path.insert(0,'/tmp/common-develop/scripts')
-          import git_checkpoint,long_task
-          for mod,names in [(git_checkpoint,['command_commit','commit_checkpoint','command_validate']),(long_task,['command_finish_attempt','command_publish_artifact','command_finalize_phase','command_advance_development_step'])]:
-              for name in names:
-                  fn=getattr(mod,name,None)
-                  if fn:
-                      print('\n=== %s.%s ===' % (mod.__name__,name))
-                      print(inspect.getsource(fn))
-          print('\n=== checkpoint relevant lines ===')
-          for line in inspect.getsource(git_checkpoint).splitlines():
-              if any(x in line for x in ['add_parser','--task-id','--phase','artifact_revisions','PASSED','current_phase','checkpoint_id']): print(line)
+          import git_checkpoint
+          for name in ['current_gate','checkpoint_id_for','allowed_patterns','default_title']:
+              fn=getattr(git_checkpoint,name,None)
+              print('\n=== %s ===' % name)
+              print(inspect.getsource(fn) if fn else 'MISSING')
           PY
-          git add .common-develop-dev01-partial-inspect.txt
-          git -c user.name=inspect -c user.email=inspect@example.invalid commit -m 'chore: persist DEV01 partial lifecycle inspection'
+          git add .common-develop-dev01-gate-inspect.txt
+          git -c user.name=inspect -c user.email=inspect@example.invalid commit -m 'chore: persist DEV01 checkpoint gate inspection'
           git push origin HEAD:tmp/pr36-dev01-cli-20260811
