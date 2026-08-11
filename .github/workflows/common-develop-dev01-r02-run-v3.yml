@@ -1,0 +1,47 @@
+name: common-develop DEV-01 R02 truthful closure v3
+
+on:
+  push:
+    branches: [common-develop/dev01-r02-run-20260812]
+    paths: [.github/workflows/common-develop-dev01-r02-run-v3.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  dev01-r02:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-r02-run-20260812
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Reuse v1 runner with robust Python string encoding
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,textwrap
+          src=Path('.github/workflows/common-develop-dev01-r02-run.yml').read_text()
+          marker='        run: |\n'
+          if marker not in src:
+              raise SystemExit('v1 run block missing')
+          block=textwrap.dedent(src.split(marker,1)[1])
+          def encode_assignment(text, var, prefix):
+              pattern=rf'{var}="""({re.escape(prefix)}.*?)"""'
+              m=re.search(pattern,text,re.S)
+              if not m:
+                  raise SystemExit(f'{var} triple-quoted assignment missing')
+              return text[:m.start()] + var + '=' + repr(m.group(1)) + text[m.end():]
+          block=encode_assignment(block,'new','review_path=TD/')
+          block=encode_assignment(block,'guard','git diff --exit-code')
+          Path('/tmp/dev01-r02-v3.sh').write_text('#!/usr/bin/env bash\n'+block)
+          PY
+          chmod +x /tmp/dev01-r02-v3.sh
+          /tmp/dev01-r02-v3.sh
