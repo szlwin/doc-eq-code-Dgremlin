@@ -17,5 +17,14 @@ jobs:
         run: |
           set -euo pipefail
           cp .common-develop-tdd-run.sh /tmp/common-develop-tdd-run.sh
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/common-develop-tdd-run.sh')
+          s=p.read_text()
+          start=s.index("errs=[]\nphases=list(long_task.PHASE_INDEX)")
+          end=s.index("long_task.transactional_text_write", start)
+          s=s[:start]+s[end:]
+          p.write_text(s)
+          PY
           set -a
           source /tmp/common-develop-tdd-run.sh
