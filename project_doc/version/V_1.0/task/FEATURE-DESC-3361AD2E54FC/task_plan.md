@@ -1341,6 +1341,77 @@
     "max_attempts": 3,
     "output_revision": "",
     "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-01-R02-ORACLE-CLOSURE-CORRECTION",
+    "logical_task_id": "LOGICAL-P2-DEV01-R02-ORACLE-CLOSURE-CORRECTION",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Independent DEV-01 R01 Review found one P1: 14 green methods were incorrectly treated as exact closure of all TESTDESIGN-P2-R32 oracles. Correct test ownership and closure truthfulness only; production behavior is frozen.",
+    "title": "DEV-01 R02 TestDesign oracle closure correction",
+    "objective": "Preserve the passed -ar skeleton and R01 production implementation while correcting surrogate R32 case labels, recording exact/partial/characterization/deferred ownership, and producing truthful same-revision Review evidence.",
+    "phase": "development",
+    "status": "PASSED",
+    "depends_on": [
+      "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "SpecComplianceReviewAgent",
+      "EngineeringStandardsReviewAgent",
+      "ArchitectureReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-01",
+      "STEP-P2-COMPILE-02",
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install",
+      "./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest,RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test",
+      "./mvnw -pl dec-core-compiler -Dtest=SymbolOwnerIdentityReworkTest -Dsurefire.failIfNoSpecifiedTests=true test",
+      "git diff --check"
+    ],
+    "expected_results": [
+      "14 executable methods remain GREEN, while only exact DEV-01-owned R32 oracles are declared closed; partial/characterization cases are explicitly deferred to their owning later slices.",
+      "SymbolTableBuilder and every src/main production file remain byte-identical to DEV-P2-DEV01-R01.",
+      "SpecComplianceReviewAgent, EngineeringStandardsReviewAgent, and ArchitectureReviewAgent independently PASSED the exact same DEV-P2-DEV01-R02 revision."
+    ],
+    "stop_conditions": [
+      "Any production source diff, new System inference/bare-name authority/second Registry, failed compiler regression, or attempt to start DEV-04/DEV-02 blocks R02."
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "DEV-P2-DEV01-R02@c36e32f12ff4",
+    "validation_evidence_ids": [
+      "EVD-000258",
+      "EVD-000259",
+      "EVD-000260",
+      "EVD-000261",
+      "EVD-000262",
+      "EVD-000263",
+      "EVD-000264",
+      "EVD-000265",
+      "EVD-000266"
+    ]
   }
 ]
 ```

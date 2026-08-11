@@ -50,32 +50,32 @@ class RuleViewCompilationContractTest {
         assertTrue(table.find(new RuleViewKey(new SystemKey("payment"), "shared")).isPresent());
     }
 
-    @Test @DisplayName("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001")
+    @Test @DisplayName("DEV01-CHAR-EXPLICIT-SYSTEM-OWNER-NO-RECENCY-FALLBACK-001")
     void explicitOwnerNeverFallsBackToMostRecentSystem() {
         SymbolTable table = table(build(Arrays.asList(system(0, "order.xml", "order"), system(1, "payment.xml", "payment"), rule(2, "rule.xml", "order", "submit"))));
         assertTrue(table.find(new RuleViewKey(new SystemKey("order"), "submit")).isPresent());
         assertFalse(table.find(new RuleViewKey(new SystemKey("payment"), "submit")).isPresent());
     }
 
-    @Test @DisplayName("CASE-P2-TD-RULEKEY-CONTRACT-001")
+    @Test @DisplayName("DEV01-CHAR-RULEVIEWKEY-CASE-SENSITIVE-001")
     void compositeRuleViewIdentityRemainsCaseSensitive() {
         assertNotEquals(new RuleViewKey(new SystemKey("order"), "Submit"), new RuleViewKey(new SystemKey("order"), "submit"));
     }
 
-    @Test @DisplayName("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001")
+    @Test @DisplayName("DEV01-CHAR-RULEVIEWKEY-NO-BARE-CONSTRUCTOR-001")
     void noBareStringRuleViewKeyConstructorExists() {
         for (Constructor<?> constructor : RuleViewKey.class.getConstructors()) {
             assertFalse(Arrays.equals(new Class<?>[] {String.class}, constructor.getParameterTypes()));
         }
     }
 
-    @Test @DisplayName("CASE-P2-TD-KEY-SOURCE-COMPAT-001")
+    @Test @DisplayName("DEV01-CHAR-LEXICAL-OWNER-NORMALIZATION-001")
     void explicitLexicalOwnerAndNameMapToSharedCompositeKey() {
         SymbolTable table = table(build(Arrays.asList(system(0, "system.xml", "order"), rule(1, "rule.xml", " order ", " submit "))));
         assertTrue(table.find(new RuleViewKey(new SystemKey("order"), "submit")).isPresent());
     }
 
-    @Test @DisplayName("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001")
+    @Test @DisplayName("DEV01-CHAR-CROSS-SYSTEM-NEGATIVE-LOOKUP-001")
     void localNameNeverAuthorizesCrossSystemLookup() {
         SymbolTable table = table(build(Arrays.asList(system(0, "system.xml", "order"), rule(1, "rule.xml", "order", "submit"))));
         assertTrue(table.find(new RuleViewKey(new SystemKey("order"), "submit")).isPresent());

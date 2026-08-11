@@ -1,8 +1,32 @@
 {
+  "schema_version": 2,
   "developmentTaskStatus": "PARTIAL",
   "dev01": "PASSED",
-  "dev01Revision": "DEV-P2-DEV01-R01@1f85b2e6b265",
-  "remainingPassed": [],
+  "dev01Revision": "DEV-P2-DEV01-R02@c36e32f12ff4",
+  "supersedesDev01Revision": "DEV-P2-DEV01-R01@1f85b2e6b265",
+  "remediationTask": "TASK-P2-DEV-01-R02-ORACLE-CLOSURE-CORRECTION",
+  "architectureSkeletonReused": "DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f",
+  "architectureSkeletonReviewRefs": [
+    "REV-000075",
+    "REV-000076"
+  ],
+  "productionFunctionalDiffFromR01": false,
+  "executedTestMethods": 14,
+  "greenTestMethods": 14,
+  "exactOraclesClosedByDev01": 7,
+  "partialOracles": 2,
+  "characterizationOnly": 5,
+  "allR32OraclesClosed": false,
+  "oracleOwnershipRef": "evidence/commands/dev01-r02-oracle-ownership.json",
+  "sameRevisionImplementationReviewRefs": [
+    "REV-000077",
+    "REV-000078",
+    "REV-000079"
+  ],
+  "remainingPassedDevelopmentTasks": [],
   "nextTask": "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION",
-  "formalDevelopmentCheckpoint": "DEFERRED_UNTIL_STAGE_OUTCOME_PASSED"
+  "nextTaskStarted": false,
+  "dev02Started": false,
+  "formalDevelopmentCheckpoint": "DEFERRED_UNTIL_STAGE_OUTCOME_PASSED",
+  "phaseLevelFinalReview": "DEFERRED_UNTIL_ALL_DEVELOPMENT_SLICES_COMPLETE"
 }

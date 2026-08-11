@@ -971,7 +971,7 @@
   "open_issue_ids": [],
   "last_gate": "tdd",
   "failed_attempts": {},
-  "next_action": "复核 TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION 输出并推进下一任务",
+  "next_action": "复核 TASK-P2-DEV-01-R02-ORACLE-CLOSURE-CORRECTION 输出并推进下一任务",
   "next_agent": "ProjectManagerAgent",
   "resume_from": "执行 long_task.py task-context 获取当前任务、最新 attempt、开放问题和恢复引用；需要细节时再按引用读取",
   "max_auto_review_rounds": 3,
@@ -1108,7 +1108,7 @@
       "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-11T15:53:35+00:00"
+  "checkpoint_at": "2026-08-11T17:32:51+00:00"
 }
 ```
 
