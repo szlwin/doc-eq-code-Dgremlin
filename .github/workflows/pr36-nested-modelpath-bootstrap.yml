@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build-r32:
-    if: contains(github.event.head_commit.message, '[nested-modelpath-r32-stage]')
+    if: contains(github.event.head_commit.message, '[nested-modelpath-r32-stage-v2]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -109,7 +109,7 @@ jobs:
           git diff --check
           E1=$(python3 /tmp/common-develop/scripts/evidence.py snapshot-register -g TestDesignAgent --task-dir "$TDIR" --type test_ref --source-ref "$TESTFILE" --revision TESTDESIGN-P2-R32 --phase test_design --scope "101 blocking oracles / 23 exact TestClasses" | python3 -c 'import json,sys; print(json.load(sys.stdin)["evidence_id"])')
           E2=$(python3 /tmp/common-develop/scripts/evidence.py snapshot-register -g TestDesignAgent --task-dir "$TDIR" --type document_ref --source-ref "$TRACEFILE" --revision TESTDESIGN-P2-R32 --phase test_design --scope "TR-004/TR-005 nested ModelPath bindings" | python3 -c 'import json,sys; print(json.load(sys.stdin)["evidence_id"])')
-          E3=$(python3 /tmp/common-develop/scripts/evidence.py snapshot-register -g TestDesignAgent --task-dir "$TDIR" --type design_ref --source-ref project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md --revision DESIGN-P2-R30 --phase test_design --scope "existing nested ModelPath design authority" | python3 -c 'import json,sys; print(json.load(sys.stdin)["evidence_id"])')
+          E3=$(python3 /tmp/common-develop/scripts/evidence.py snapshot-register -g TestDesignAgent --task-dir "$TDIR" --type design_ref --source-ref project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md --revision TESTDESIGN-P2-R32 --phase test_design --scope "input authority DESIGN-P2-R30; nested ModelPath design unchanged" | python3 -c 'import json,sys; print(json.load(sys.stdin)["evidence_id"])')
           E4=$(python3 /tmp/common-develop/scripts/evidence.py snapshot-register -g TestDesignAgent --task-dir "$TDIR" --type command_ref --source-ref "$TDIR/evidence/command-results/TESTDESIGN-P2-R32/nested-modelpath-oracle-validate.json" --revision TESTDESIGN-P2-R32 --phase test_design --scope "deterministic R32 oracle validator" | python3 -c 'import json,sys; print(json.load(sys.stdin)["evidence_id"])')
           ATTEMPT=$(python3 - <<'PY'
           import json,re
