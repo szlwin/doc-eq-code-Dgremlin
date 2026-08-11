@@ -77,8 +77,8 @@
       "iteration_no": 6
     },
     "implementation_plan": {
-      "revision": "",
-      "status": "STALE",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "status": "PASSED",
       "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008",
       "iteration_no": 8
     },
@@ -716,7 +716,7 @@
       ]
     },
     "implementation_plan": {
-      "artifact_revision": "",
+      "artifact_revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
       "required_reviewers": [
         "ArchitectureReviewAgent",
         "DevelopAgent",
@@ -724,8 +724,41 @@
         "TestDesignAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {},
-      "status": "PENDING",
+      "independent_conclusions": {
+        "ArchitectureReviewAgent": {
+          "profile_id": "implementation_plan:ArchitectureReviewAgent",
+          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000070",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T04:28:30+00:00"
+        },
+        "DevelopAgent": {
+          "profile_id": "implementation_plan:DevelopAgent",
+          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000071",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T04:28:37+00:00"
+        },
+        "PlanReviewAgent": {
+          "profile_id": "implementation_plan:PlanReviewAgent",
+          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000072",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T04:28:45+00:00"
+        },
+        "TestDesignAgent": {
+          "profile_id": "implementation_plan:TestDesignAgent",
+          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+          "conclusion": "PASSED",
+          "review_result_ref": "REV-000073",
+          "finding_ids": [],
+          "reviewed_at": "2026-08-11T04:28:54+00:00"
+        }
+      },
+      "status": "PASSED",
       "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008",
       "review_history": [
         {
@@ -902,8 +935,8 @@
   "open_issue_ids": [],
   "last_gate": "test_design",
   "failed_attempts": {},
-  "next_action": "开始 implementation_plan 阶段",
-  "next_agent": "ImplementationPlanAgent",
+  "next_action": "运行 advance-phase 推进 implementation_plan 的下一阶段",
+  "next_agent": "ProjectManagerAgent",
   "resume_from": "执行 long_task.py task-context 获取当前任务、最新 attempt、开放问题和恢复引用；需要细节时再按引用读取",
   "max_auto_review_rounds": 3,
   "stale_events": [
@@ -1026,7 +1059,7 @@
       "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-11T04:27:53+00:00"
+  "checkpoint_at": "2026-08-11T04:29:16+00:00"
 }
 ```
 

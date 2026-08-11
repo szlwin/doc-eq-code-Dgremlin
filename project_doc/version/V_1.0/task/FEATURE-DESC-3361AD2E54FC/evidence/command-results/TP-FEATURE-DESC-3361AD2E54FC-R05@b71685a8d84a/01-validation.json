@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 /home/oai/skills/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --require-revision",
+  "executed_at": "2026-08-11T04:28:06+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+  "exit_code": 0,
+  "output": "{\n  \"status\": \"PASSED\",\n  \"planRevision\": \"TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a\",\n  \"planStatus\": \"PASSED\",\n  \"taskCount\": 9,\n  \"reviewCount\": 20,\n  \"errors\": []\n}\n",
+  "output_digest": "c784075085946baed46ccc3a918808549dccf71fe825c3808cb81ae734b876e7"
+}
