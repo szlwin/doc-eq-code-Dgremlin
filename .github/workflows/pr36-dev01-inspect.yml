@@ -1,0 +1,40 @@
+name: PR36 DEV01 inspect
+on:
+  push:
+    branches: [tmp/pr36-dev01-inspect-20260811]
+    paths: [.common-develop-dev01-inspect-trigger]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Inspect exact RC9 development lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          echo "SKILL=$(git -C /tmp/common-develop rev-parse HEAD)"
+          TDIR=project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
+          python3 /tmp/common-develop/scripts/wk.py help -g ProjectManagerAgent --flag=-ar --json || true
+          python3 /tmp/common-develop/scripts/wk.py help -g ProjectManagerAgent --flag=-auto --json || true
+          python3 /tmp/common-develop/scripts/long_task.py --help || true
+          python3 /tmp/common-develop/scripts/long_task.py advance-development-step --help || true
+          python3 /tmp/common-develop/scripts/long_task.py reopen-development-step --help || true
+          python3 /tmp/common-develop/scripts/review_contract.py list -g ProjectManagerAgent --phase development --json || true
+          python3 /tmp/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"
+          python3 /tmp/common-develop/scripts/long_task.py advance-phase -g ProjectManagerAgent --task-dir "$TDIR"
+          echo '--- NEXT ---'
+          python3 /tmp/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" --json || true
+          echo '--- STATE ---'
+          cat "$TDIR/task_state.md"
+          echo '--- PLAN DEV01 ---'
+          python3 - <<'PY'
+          import yaml
+          p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml'))
+          import json
+          print(json.dumps(p['tasks'][0],ensure_ascii=False,indent=2))
+          PY
