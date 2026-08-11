@@ -39,6 +39,11 @@ jobs:
           if marker not in s:
               raise SystemExit('BOOT loop marker missing')
           s=s.replace(marker,'scripts/remediation/bootstrap_legacy_dependencies.sh\n'+marker,1)
+          old_review="for eid in [x['test_bundle'],x['test_design'],x['plan'],x['design'],x['diff'],x['summary'],*x['validation_commands']]: args += ['--evidence-id',eid]"
+          new_review="for eid in [x['test_bundle'],x['test_design'],x['plan'],x['design'],x['diff'],x['summary'],*x['red_commands'],*x['validation_commands']]: args += ['--evidence-id',eid]"
+          if old_review not in s:
+              raise SystemExit('TDDReview evidence anchor missing')
+          s=s.replace(old_review,new_review,1)
           p.write_text(s)
           PY
           set -a
