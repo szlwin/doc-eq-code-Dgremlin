@@ -21,7 +21,14 @@ add_assertion TDDReviewAgent ASRT-P2-TD-R32-TDD-001 AC-P2-SYSTEM-RULEVIEW-007 "I
 add_assertion TestEvidenceReviewAgent ASRT-P2-TD-R32-EVID-001 AC-P2-SYSTEM-RULEVIEW-009 "Independent evidence review of TESTDESIGN-P2-R32 101-case, 23-TestClass, 10-trace deterministic validation."
 review() {
   local reviewer="$1" id="$2" out="$3" summary="$4" detail="$5"; shift 5
-  local args=(python3 /home/oai/skills/common-develop/scripts/manual_review.py draft -g TestDesignAgent --task-dir "$TDIR" --assertion-id "$id" --answer YES --summary "$summary" --detail "$detail" --output "$out")
+  local args=(python3 /home/oai/skills/common-develop/scripts/manual_review.py draft -g TestDesignAgent --task-dir "$TDIR" --assertion-id "$id" --summary "$summary" --detail "$detail" --output "$out")
+  case "$reviewer" in
+    RequirementReviewAgent) args+=(--answer MRQ-ACCEPTANCE=YES --answer MRQ-DESIGN=YES) ;;
+    DesignReviewAgent) args+=(--answer MRQ-SCOPE=YES --answer MRQ-VERIFY=YES) ;;
+    TDDReviewAgent) args+=(--answer MRQ-VERIFY=YES --answer MRQ-OTHER=YES) ;;
+    TestEvidenceReviewAgent) args+=(--answer MRQ-CURRENT=YES --answer MRQ-COVERAGE=YES --answer MRQ-LIMIT=YES --answer MRQ-OTHER=YES) ;;
+    *) echo "unknown reviewer $reviewer" >&2; exit 2 ;;
+  esac
   for ev in "$@"; do args+=(--evidence-id "$ev"); done
   "${args[@]}"
   python3 /home/oai/skills/common-develop/scripts/manual_review.py submit -g "$reviewer" --task-dir "$TDIR" --review-file "$out"
