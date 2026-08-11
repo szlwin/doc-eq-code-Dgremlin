@@ -10,13 +10,13 @@ permissions:
 
 jobs:
   inspect-common-develop:
-    if: contains(github.event.head_commit.message, '[nested-modelpath-inspect3]')
+    if: contains(github.event.head_commit.message, '[nested-modelpath-inspect4]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Inspect exact RC9 subcommand contracts
+      - name: Inspect RC9 Evidence and Review subcommands
         shell: bash
         run: |
           set -euo pipefail
@@ -24,28 +24,21 @@ jobs:
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
           {
             for cmd in \
-              'long_task.py reopen-phase' \
-              'long_task.py start-attempt' \
-              'long_task.py finish-attempt' \
-              'long_task.py publish-artifact' \
-              'long_task.py finalize-phase' \
-              'long_task.py validate' \
-              'task_plan.py revise' \
-              'task_plan.py validate' \
-              'task_plan.py submit-review' \
-              'task_plan.py finalize' \
-              'task_plan.py status' \
-              'evidence.py' \
-              'manual_review.py' \
+              'evidence.py snapshot-register' \
+              'evidence.py register' \
+              'evidence.py validate' \
+              'manual_review.py prepare' \
+              'manual_review.py draft' \
+              'manual_review.py submit' \
               'review_store.py' \
               'acceptance.py' \
-              'git_checkpoint.py'; do
+              'git_checkpoint.py create'; do
               echo "=== $cmd --help ==="
               python3 /tmp/common-develop/scripts/$cmd --help || true
             done
-          } > .common-develop-inspect3.txt 2>&1
+          } > .common-develop-inspect4.txt 2>&1
           git config user.name 'common-develop-bot'
           git config user.email 'common-develop-bot@users.noreply.github.com'
-          git add .common-develop-inspect3.txt
-          git commit -m 'chore: capture RC9 subcommand contracts [nested-modelpath-inspect3-output]'
+          git add .common-develop-inspect4.txt
+          git commit -m 'chore: capture RC9 review contracts [nested-modelpath-inspect4-output]'
           git push origin HEAD:feature/p2-design-testdesign-20260808
