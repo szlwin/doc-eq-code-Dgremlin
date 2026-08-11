@@ -44,6 +44,7 @@ jobs:
           if old_review not in s:
               raise SystemExit('TDDReview evidence anchor missing')
           s=s.replace(old_review,new_review,1)
+          s=s.replace('.log','.out')
           p.write_text(s)
           PY
           set -a
