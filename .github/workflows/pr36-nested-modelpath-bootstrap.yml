@@ -10,28 +10,34 @@ permissions:
 
 jobs:
   inspect-common-develop:
-    if: contains(github.event.head_commit.message, '[nested-modelpath-bootstrap]')
+    if: contains(github.event.head_commit.message, '[nested-modelpath-inspect2]')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout PR36 branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Clone common-develop RC9 and inspect command surface
+      - name: Inspect exact RC9 command contracts
         shell: bash
         run: |
           set -euo pipefail
           rm -rf /tmp/common-develop
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
-          echo '--- HEAD ---'
-          git -C /tmp/common-develop rev-parse HEAD
-          echo '--- release ---'
-          python3 /tmp/common-develop/scripts/runtime_contract.py get --path release --json 2>/dev/null || true
-          echo '--- wk help ---'
-          python3 /tmp/common-develop/scripts/wk.py help -g ProjectManagerAgent --json
-          echo '--- long_task help ---'
-          python3 /tmp/common-develop/scripts/long_task.py --help
-          echo '--- task_plan help ---'
-          python3 /tmp/common-develop/scripts/task_plan.py --help
-          echo '--- test design related scripts ---'
-          find /tmp/common-develop/scripts -maxdepth 1 -type f -printf '%f\n' | sort | grep -Ei 'test|long|task|review|evidence|accept|checkpoint'
+          {
+            echo 'COMMON_DEVELOP_HEAD='
+            git -C /tmp/common-develop rev-parse HEAD
+            echo '--- long_task --help ---'
+            python3 /tmp/common-develop/scripts/long_task.py --help
+            echo '--- task_plan --help ---'
+            python3 /tmp/common-develop/scripts/task_plan.py --help
+            echo '--- review_contract test_design required ---'
+            python3 /tmp/common-develop/scripts/review_contract.py required -g ProjectManagerAgent --phase test_design --json || true
+            echo '--- review_contract implementation_plan required ---'
+            python3 /tmp/common-develop/scripts/review_contract.py required -g ProjectManagerAgent --phase implementation_plan --json || true
+            echo '--- candidate test-design scripts ---'
+            find /tmp/common-develop/scripts -maxdepth 1 -type f -printf '%f\n' | sort | grep -Ei 'test|long|task|review|evidence|accept|checkpoint|trace'
+          } > .common-develop-inspect.txt 2>&1
+          git config user.name 'common-develop-bot'
+          git config user.email 'common-develop-bot@users.noreply.github.com'
+          git add .common-develop-inspect.txt
+          git commit -m 'chore: capture RC9 command contracts [nested-modelpath-inspect-output]'
+          git push origin HEAD:feature/p2-design-testdesign-20260808
