@@ -1,0 +1,40 @@
+name: common-develop DEV-01 R02 pre-Maven candidate v12
+
+on:
+  push:
+    branches: [common-develop/dev01-r02-run-20260812]
+    paths: [.github/workflows/common-develop-dev01-r02-pre-maven-v12.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-r02-run-20260812
+          fetch-depth: 0
+      - name: Prepare RC9 R02 pre-Maven candidate
+        shell: bash
+        env:
+          POSTPATCH_B64: CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAppbXBvcnQgcmUKcD1QYXRoKCcvdG1wL2RldjAxLXIwMi1ydW4uc2gnKQpzPXAucmVhZF90ZXh0KCkKCnM9cy5yZXBsYWNlKCIndmFsaWRhdGlvbl9jb21tYW5kcyc6WycuL212bncgLXBsIGRlYy1jb3JlLWNvbXBpbGVyIC1hbSAtRG1hdmVuLnRlc3Quc2tpcD10cnVlIGluc3RhbGwnLCdnaXQgZGlmZiAtLWNoZWNrJ10iLCAiJ3ZhbGlkYXRpb25fY29tbWFuZHMnOltdIiwgMSkKCnBhdHRlcm49cicnJ1NLT1VUPSJcJFRESVIvZXZpZGVuY2UvY29tbWFuZC1yZXN1bHRzL1wkU0tFTFJFViI7IG1rZGlyIC1wICJcJFNLT1VUIlxuLio/KD89Z2l0IGRpZmYgLS0gIlwkQlVJTERFUiIgIlwkU1lTX1RFU1QiICJcJFJWX1RFU1QiID4gIlwkVERJUi9ldmlkZW5jZS9jb21tYW5kcy9kZXYwMS1za2VsZXRvbi5wYXRjaCIpJycnCnMsbj1yZS5zdWJuKHBhdHRlcm4sICcnLCBzLCBjb3VudD0xLCBmbGFncz1yZS5TKQppZiBuICE9IDE6CiAgICByYWlzZSBTeXN0ZW1FeGl0KCdza2VsZXRvbiB2YWxpZGF0aW9uIGJsb2NrIG5vdCByZW1vdmVkJykKCnBhdHRlcm49cicnJ2NtZD1cW1xdXG5mb3IgbmFtZSBpbiBcWydib290JywnZGlmZi1jaGVjaydcXTpcbi4qP2NtZFwuYXBwZW5kXChlXFsnZXZpZGVuY2VfaWQnXF1cKScnJwpzLG49cmUuc3VibihwYXR0ZXJuLCAnY21kPVtdJywgcywgY291bnQ9MSwgZmxhZ3M9cmUuUykKaWYgbiAhPSAxOgogICAgcmFpc2UgU3lzdGVtRXhpdCgnc2tlbGV0b24gY29tbWFuZCBldmlkZW5jZSBsb29wIG5vdCByZW1vdmVkJykKCmZvciBsaW5lIGluIFsKICAgICdweXRob24zIC9ob21lL29haS9za2lsbHMvY29tbW9uLWRldmVsb3Avc2NyaXB0cy9hY2NlcHRhbmNlLnB5IHZhbGlkYXRlIC1nIFByb2plY3RNYW5hZ2VyQWdlbnQgLS10YXNrLWRpciAiJFRESVIiXG4nLAogICAgJ3B5dGhvbjMgL2hvbWUvb2FpL3NraWxscy9jb21tb24tZGV2ZWxvcC9zY3JpcHRzL2V2aWRlbmNlLnB5IHZhbGlkYXRlIC1nIFByb2plY3RNYW5hZ2VyQWdlbnQgLS10YXNrLWRpciAiJFRESVIiXG4nLAogICAgJ3B5dGhvbjMgL2hvbWUvb2FpL3NraWxscy9jb21tb24tZGV2ZWxvcC9zY3JpcHRzL2xvbmdfdGFzay5weSB2YWxpZGF0ZSAtZyBQcm9qZWN0TWFuYWdlckFnZW50IC0tdGFzay1kaXIgIiRURElSIlxuJywKXToKICAgIHM9cy5yZXBsYWNlKGxpbmUsICcnKQoKYW5jaG9yPSJhcnQ9c3RhdGVbJ2FydGlmYWN0X3JldmlzaW9ucyddWydkZXZlbG9wbWVudCddOyBzb3VyY2U9eWFtbC5zYWZlX2xvYWQoKFRELydkZXZlbG9wbWVudF90YXNrcy55YW1sJykucmVhZF90ZXh0KCkpXG5leGlzdGluZz17dC5nZXQoJ2lkJykgZm9yIHQgaW4gdGFza3MgaWYgaXNpbnN0YW5jZSh0LGRpY3QpfSIKcmVwbGFjZW1lbnQ9ImFydD1zdGF0ZVsnYXJ0aWZhY3RfcmV2aXNpb25zJ11bJ2RldmVsb3BtZW50J107IHNvdXJjZT15YW1sLnNhZmVfbG9hZCgoVEQvJ2RldmVsb3BtZW50X3Rhc2tzLnlhbWwnKS5yZWFkX3RleHQoKSlcbnRhc2tzPVt0IGZvciB0IGluIHRhc2tzIGlmIG5vdCAoaXNpbnN0YW5jZSh0LGRpY3QpIGFuZCBzdHIodC5nZXQoJ2lkJykgb3IgJycpLnN0YXJ0c3dpdGgoJ1RBU0stUDItREVWLTAxLVNZU1RFTS1SVUxFVklFVy1TS0VMRVRPTicpKV1cbmV4aXN0aW5nPXt0LmdldCgnaWQnKSBmb3IgdCBpbiB0YXNrcyBpZiBpc2luc3RhbmNlKHQsZGljdCl9IgppZiBhbmNob3Igbm90IGluIHM6CiAgICByYWlzZSBTeXN0ZW1FeGl0KCdjb25jcmV0ZSBtYXRlcmlhbGl6YXRpb24gYW5jaG9yIG1pc3NpbmcnKQpzPXMucmVwbGFjZShhbmNob3IscmVwbGFjZW1lbnQsMSkKCmN1dD0nREVWT1VUPSIkVERJUi9ldmlkZW5jZS9jb21tYW5kLXJlc3VsdHMvJERFVlJFViI7IG1rZGlyIC1wICIkREVWT1VUIicKcG9zPXMuZmluZChjdXQpCmlmIHBvcyA8IDA6CiAgICByYWlzZSBTeXN0ZW1FeGl0KCdjb25jcmV0ZSB2YWxpZGF0aW9uIGN1dCBwb2ludCBtaXNzaW5nJykKcHJlPXNbOnBvc10KcHJlICs9IHInJycKZ2l0IGFkZCAtQQpnaXQgY29tbWl0IC1tICJ0ZXN0KHAyKTogcHJlcGFyZSBERVYtMDEgUjAyIHRydXRoZnVsIG9yYWNsZSBjbG9zdXJlIiBcCiAgLW0gIktlZXAgdGhlIHJldmlld2VkIHByb2R1Y3Rpb24gYWxnb3JpdGhtIHVuY2hhbmdlZDsgcmVsYWJlbCBzdXJyb2dhdGUgUjMyIGFzc2VydGlvbnMgYXMgY2hhcmFjdGVyaXphdGlvbiwgcmVjb3JkIG9yYWNsZSBvd25lcnNoaXAsIGNvbXBsZXRlIHRoZSBSMDIgLWFyIHNrZWxldG9uIGdhdGUsIGFuZCBzdG9wIHdpdGggdGhlIGNvbmNyZXRlIERFVi0wMSBhdHRlbXB0IG9wZW4gZm9yIE1hdmVuIHZlcmlmaWNhdGlvbiBieSB2ZXJpZnktYW5kLW9wZW4tcHIueW1sLiIgXAogIC1tICJXSy1UYXNrOiBUQVNLLVAyLURFVi0wMS1TWVNURU0tUlVMRVZJRVctQ09NUElMQVRJT04iIFwKICAtbSAiV0stUmV2aXNpb246ICRERVZSRVYiCmdpdCBwdXNoIC0tZm9yY2Ugb3JpZ2luIEhFQUQ6Y29tbW9uLWRldmVsb3AvZGV2MDEtcjAyLXByZS1tYXZlbi0yMDI2MDgxMgplY2hvICJQUkVfTUFWRU5fREVWUkVWPSRERVZSRVYiCmVjaG8gIlBSRV9NQVZFTl9DT01NSVQ9JChnaXQgcmV2LXBhcnNlIEhFQUQpIgonJycKcC53cml0ZV90ZXh0KHByZSkK
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,textwrap,os
+          workflow=Path('.github/workflows/common-develop-dev01-r02-run.yml').read_text()
+          marker='        run: |\n'
+          if marker not in workflow: raise SystemExit('source run block missing')
+          block=textwrap.dedent(workflow.split(marker,1)[1])
+          source_line='source /tmp/dev01-r02-run.sh'
+          if source_line not in block: raise SystemExit('source runner missing')
+          patch=base64.b64decode(os.environ['POSTPATCH_B64']).decode()
+          inject="python3 - <<'PYPOST'\n"+patch+"\nPYPOST\n"
+          block=block.replace(source_line,inject+'\n'+source_line,1)
+          Path('/tmp/dev01-r02-v12.sh').write_text('#!/usr/bin/env bash\n'+block)
+          PY
+          chmod +x /tmp/dev01-r02-v12.sh
+          /tmp/dev01-r02-v12.sh
