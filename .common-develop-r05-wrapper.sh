@@ -82,6 +82,13 @@ allowed="""t['allowed_files']=list(dict.fromkeys((t.get('allowed_files') or [])+
 if objective not in patched:
     raise SystemExit('implementation_plan objective anchor missing')
 patched=patched.replace(objective,objective+'\n'+allowed,1)
+flow_cmd='''EFLOW=$(python3 /home/oai/skills/common-develop/scripts/evidence.py snapshot-register -g ImplementationPlanAgent --task-dir "$TDIR" --type flow_ref --source-ref project_doc/version/V_1.0/doc/_flows/COMPILER/changes/003-p2-system-ruleview-protected-access.yaml --revision "$REV" --phase implementation_plan --scope "FLOW-R11 unchanged and applicable to exact R05" | python3 -c 'import json,sys; print(json.load(sys.stdin)["evidence_id"])')'''
+if 'CMD_IDS=()' not in patched:
+    raise SystemExit('CMD_IDS anchor missing')
+patched=patched.replace('CMD_IDS=()',flow_cmd+'\nCMD_IDS=()',1)
+patched=patched.replace('--evidence-ref "$EDES" --summary','--evidence-ref "$EDES" --evidence-ref "$EFLOW" --summary',1)
+patched=patched.replace('--evidence-id "$EDES")','--evidence-id "$EDES" --evidence-id "$EFLOW")',1)
+patched=patched.replace('ALL=("$EPLAN" "$ETEST" "$EDES" "${CMD_IDS[@]}")','ALL=("$EPLAN" "$ETEST" "$EDES" "$EFLOW" "${CMD_IDS[@]}")',1)
 Path('/tmp/r05-plan.sh').write_text(patched,encoding='utf-8')
 PY
 exec bash /tmp/r05-plan.sh
