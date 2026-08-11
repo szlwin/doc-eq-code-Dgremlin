@@ -1,69 +1,93 @@
 package dec.core.compiler.ruleview;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dec.core.compiler.canonical.DocumentFormat;
+import dec.core.compiler.raw.RawDefinition;
+import dec.core.compiler.raw.RawDefinitionKind;
+import dec.core.compiler.raw.RawDefinitionSet;
+import dec.core.compiler.raw.RawNodeBody;
+import dec.core.compiler.symbol.SymbolBuildResult;
+import dec.core.compiler.symbol.SymbolBuildStatus;
+import dec.core.compiler.symbol.SymbolTable;
+import dec.core.compiler.symbol.SymbolTableBuilder;
+import dec.core.context.model.RuleViewKey;
+import dec.core.context.model.SourceRef;
+import dec.core.context.model.SystemKey;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
 class RuleViewCompilationContractTest {
-    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.RuleViewKey"};
-
-    @Test
-    @DisplayName("CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001")
-    void case_case_p2_td_ruleview_system_required_001() {
-        observe("CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001");
+    @Test @DisplayName("CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001")
+    void missingSystemOwnerFailsWithoutPartialPublication() {
+        SymbolBuildResult result = build(Collections.singletonList(rule(0, "rule.xml", "missing", "submit")));
+        assertEquals(SymbolBuildStatus.FAILED, result.status());
+        assertFalse(result.symbolTable().isPresent());
+        assertEquals("symbol.owner.system.missing", result.diagnostics().get(0).messageKey());
     }
 
-    @Test
-    @DisplayName("CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001")
-    void case_case_p2_td_ruleview_same_system_duplicate_001() {
-        observe("CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001");
+    @Test @DisplayName("CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001")
+    void duplicateRuleViewDiagnosticIsSourceOrderIndependent() {
+        SymbolBuildResult first = build(Arrays.asList(system(0, "system.xml", "order"), rule(1, "a.xml", "order", "shared"), rule(2, "b.xml", "order", "shared")));
+        SymbolBuildResult second = build(Arrays.asList(system(0, "system.xml", "order"), rule(1, "b.xml", "order", "shared"), rule(2, "a.xml", "order", "shared")));
+        assertEquals(SymbolBuildStatus.FAILED, first.status());
+        assertEquals(SymbolBuildStatus.FAILED, second.status());
+        assertEquals(first.diagnostics(), second.diagnostics(), "P2 RED [CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001]: duplicate diagnostic must not depend on scan order");
     }
 
-    @Test
-    @DisplayName("CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001")
-    void case_case_p2_td_ruleview_cross_system_isolation_001() {
-        observe("CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001");
+    @Test @DisplayName("CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001")
+    void sameLocalNameIsIsolatedByOwningSystem() {
+        SymbolTable table = table(build(Arrays.asList(system(0, "order.xml", "order"), system(1, "payment.xml", "payment"), rule(2, "order-rule.xml", "order", "shared"), rule(3, "payment-rule.xml", "payment", "shared"))));
+        assertTrue(table.find(new RuleViewKey(new SystemKey("order"), "shared")).isPresent());
+        assertTrue(table.find(new RuleViewKey(new SystemKey("payment"), "shared")).isPresent());
     }
 
-    @Test
-    @DisplayName("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001")
-    void case_case_p2_td_ruleview_view_resolution_001() {
-        observe("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001");
+    @Test @DisplayName("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001")
+    void explicitOwnerNeverFallsBackToMostRecentSystem() {
+        SymbolTable table = table(build(Arrays.asList(system(0, "order.xml", "order"), system(1, "payment.xml", "payment"), rule(2, "rule.xml", "order", "submit"))));
+        assertTrue(table.find(new RuleViewKey(new SystemKey("order"), "submit")).isPresent());
+        assertFalse(table.find(new RuleViewKey(new SystemKey("payment"), "submit")).isPresent());
     }
 
-    @Test
-    @DisplayName("CASE-P2-TD-RULEKEY-CONTRACT-001")
-    void case_case_p2_td_rulekey_contract_001() {
-        observe("CASE-P2-TD-RULEKEY-CONTRACT-001");
+    @Test @DisplayName("CASE-P2-TD-RULEKEY-CONTRACT-001")
+    void compositeRuleViewIdentityRemainsCaseSensitive() {
+        assertNotEquals(new RuleViewKey(new SystemKey("order"), "Submit"), new RuleViewKey(new SystemKey("order"), "submit"));
     }
 
-    @Test
-    @DisplayName("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001")
-    void case_case_p2_td_ruleview_composite_lookup_001() {
-        observe("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001");
-    }
-
-    @Test
-    @DisplayName("CASE-P2-TD-KEY-SOURCE-COMPAT-001")
-    void case_case_p2_td_key_source_compat_001() {
-        observe("CASE-P2-TD-KEY-SOURCE-COMPAT-001");
-    }
-
-    @Test
-    @DisplayName("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001")
-    void case_case_p2_td_bare_name_compatibility_boundary_001() {
-        observe("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001");
-    }
-
-    private static void observe(String caseId) {
-        for (String typeName : REQUIRED_CONTRACTS) {
-            try {
-                Class.forName(typeName);
-            } catch (ClassNotFoundException missing) {
-                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
-            }
+    @Test @DisplayName("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001")
+    void noBareStringRuleViewKeyConstructorExists() {
+        for (Constructor<?> constructor : RuleViewKey.class.getConstructors()) {
+            assertFalse(Arrays.equals(new Class<?>[] {String.class}, constructor.getParameterTypes()));
         }
     }
+
+    @Test @DisplayName("CASE-P2-TD-KEY-SOURCE-COMPAT-001")
+    void explicitLexicalOwnerAndNameMapToSharedCompositeKey() {
+        SymbolTable table = table(build(Arrays.asList(system(0, "system.xml", "order"), rule(1, "rule.xml", " order ", " submit "))));
+        assertTrue(table.find(new RuleViewKey(new SystemKey("order"), "submit")).isPresent());
+    }
+
+    @Test @DisplayName("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001")
+    void localNameNeverAuthorizesCrossSystemLookup() {
+        SymbolTable table = table(build(Arrays.asList(system(0, "system.xml", "order"), rule(1, "rule.xml", "order", "submit"))));
+        assertTrue(table.find(new RuleViewKey(new SystemKey("order"), "submit")).isPresent());
+        assertFalse(table.find(new RuleViewKey(new SystemKey("other"), "submit")).isPresent());
+    }
+
+    private static RawDefinition system(long ordinal, String source, String name) { return definition(RawDefinitionKind.SYSTEM, ordinal, source, null, name); }
+    private static RawDefinition rule(long ordinal, String source, String owner, String name) { return definition(RawDefinitionKind.RULE_VIEW, ordinal, source, owner, name); }
+    private static RawDefinition definition(RawDefinitionKind kind, long ordinal, String source, String owner, String name) {
+        SourceRef ref = new SourceRef(source, 1, 1, "/definition");
+        return new RawDefinition(kind, ordinal, ref, owner == null ? Optional.<String>empty() : Optional.of(owner), Optional.of(name), Collections.<String,String>emptyMap(), Collections.emptyList(), new RawNodeBody(kind.name().toLowerCase(), Collections.<String,String>emptyMap(), Optional.<String>empty(), Collections.<RawNodeBody>emptyList(), ref), DocumentFormat.XML, "1.0");
+    }
+    private static SymbolBuildResult build(List<RawDefinition> definitions) { return new SymbolTableBuilder().build(new RawDefinitionSet(definitions)); }
+    private static SymbolTable table(SymbolBuildResult result) { assertEquals(SymbolBuildStatus.BUILT, result.status()); assertTrue(result.symbolTable().isPresent()); return result.symbolTable().get(); }
 }

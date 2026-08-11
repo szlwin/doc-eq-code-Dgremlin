@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install",
+  "exit_code": 0,
+  "executed_at": "2026-08-11T15:51:49.583407+00:00",
+  "revision": "DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f",
+  "output_ref": "evidence/command-results/DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f/boot.out",
+  "output_digest": "bc38f9f3a317cf0adedaa6b5fb9ea36fc9bb43b48cd4be3b37fcbdc04cb5f382"
+}
