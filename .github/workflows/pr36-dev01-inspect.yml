@@ -12,37 +12,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Inspect exact RC9 development lifecycle
+      - name: Inspect exact RC9 development internals
         shell: bash
         run: |
           set -euo pipefail
           rm -rf /tmp/common-develop
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
-          echo "SKILL=$(git -C /tmp/common-develop rev-parse HEAD)"
-          TDIR=project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
-          echo '--- AR COMMAND ---'
-          python3 /tmp/common-develop/scripts/runtime_contract.py command -g ProjectManagerAgent --flag=-ar --json || true
-          echo '--- AR REFERENCE ---'
-          cat /tmp/common-develop/references/architecture-review-development.md
-          echo '--- SCRIPTS ---'
-          find /tmp/common-develop/scripts -maxdepth 1 -type f -printf '%f\n' | sort | grep -E 'develop|task|review|risk|evidence|acceptance' || true
-          echo '--- TASK CONTEXT HELP ---'
-          python3 /tmp/common-develop/scripts/long_task.py task-context --help || true
-          echo '--- START ATTEMPT HELP ---'
-          python3 /tmp/common-develop/scripts/long_task.py start-attempt --help || true
-          echo '--- FINISH ATTEMPT HELP ---'
-          python3 /tmp/common-develop/scripts/long_task.py finish-attempt --help || true
-          echo '--- PUBLISH HELP ---'
-          python3 /tmp/common-develop/scripts/long_task.py publish-artifact --help || true
-          echo '--- FINALIZE HELP ---'
-          python3 /tmp/common-develop/scripts/long_task.py finalize-phase --help || true
-          echo '--- REVIEW SHOW HELP ---'
-          python3 /tmp/common-develop/scripts/review_contract.py show --help || true
-          echo '--- DEV ARCH REVIEW ---'
-          python3 /tmp/common-develop/scripts/review_contract.py show -g ArchitectureReviewAgent --phase development --json || true
-          echo '--- DEV SPEC REVIEW ---'
-          python3 /tmp/common-develop/scripts/review_contract.py show -g SpecComplianceReviewAgent --phase development --json || true
-          echo '--- NEXT AFTER ADVANCE ---'
-          python3 /tmp/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"
-          python3 /tmp/common-develop/scripts/long_task.py advance-phase -g ProjectManagerAgent --task-dir "$TDIR"
-          python3 /tmp/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" || true
+          python3 - <<'PY'
+          import sys,inspect
+          sys.path.insert(0,'/tmp/common-develop/scripts')
+          import long_task
+          for name in ['cmd_advance_development_step','cmd_finalize_phase','cmd_publish_artifact']:
+              fn=getattr(long_task,name,None)
+              print('\n===',name,'===')
+              print(inspect.getsource(fn) if fn else 'MISSING')
+          PY
+          echo '--- ARCH REVIEW CONTRACT ---'
+          python3 /tmp/common-develop/scripts/review_contract.py show -g ProjectManagerAgent --phase development --reviewer ArchitectureReviewAgent --json
+          echo '--- SPEC REVIEW CONTRACT ---'
+          python3 /tmp/common-develop/scripts/review_contract.py show -g ProjectManagerAgent --phase development --reviewer SpecComplianceReviewAgent --json
+          echo '--- TDD REVIEW CONTRACT ---'
+          python3 /tmp/common-develop/scripts/review_contract.py show -g ProjectManagerAgent --phase development --reviewer TDDReviewAgent --json
