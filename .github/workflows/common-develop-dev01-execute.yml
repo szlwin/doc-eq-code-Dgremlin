@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   dev01:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,28 +42,18 @@ jobs:
           s=p.read_text()
           base=os.environ['BASE']; semantic=os.environ['SEMANTIC_BRANCH']
           s=re.sub(r'^BASE=[0-9a-f]{40}$', 'BASE='+base, s, count=1, flags=re.M)
-          # Current PR36 is already development/DEVELOPMENT-I008; do not run the old TDD->Development transition again.
           old='python3 /home/oai/skills/common-develop/scripts/long_task.py advance-phase -g ProjectManagerAgent --task-dir "$TDIR"\n'
-          if old not in s:
-              raise SystemExit('old advance-phase anchor missing')
+          if old not in s: raise SystemExit('old advance-phase anchor missing')
           s=s.replace(old,'',1)
-          # Keep evidence strictly bound to each candidate revision; the pre-fix RED is supporting history, not same-revision review evidence.
-          s=s.replace("for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],x['red'],*x['commands']]: args += ['--evidence-ref',eid]",
-                      "for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands']]: args += ['--evidence-ref',eid]",1)
-          s=s.replace("for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['red'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]",
-                      "for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]",1)
-          # Use RC9's actual review question set instead of probing CLI text.
+          s=s.replace("for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],x['red'],*x['commands']]: args += ['--evidence-ref',eid]","for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands']]: args += ['--evidence-ref',eid]",1)
+          s=s.replace("for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['red'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]","for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]",1)
           oldimp="import json,subprocess,re\nTD='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'"
           newimp="import json,subprocess,sys\nfrom pathlib import Path\nsys.path.insert(0,'/home/oai/skills/common-develop/scripts')\nimport manual_review\nTD='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'"
-          if oldimp in s:
-              s=s.replace(oldimp,newimp,1)
+          if oldimp in s: s=s.replace(oldimp,newimp,1)
           pattern=r"    probe=subprocess\.run\(base,capture_output=True,text=True\)\n    qids=.*?\n    if not qids:.*?\n        raise SystemExit\(.*?\)\n    args=list\(base\)"
-          repl="    ctx=manual_review.build_context(Path(TD), assertion)\n    qids=[item['question_id'] for item in ctx.questions]\n    args=list(base)"
-          s,_=re.subn(pattern,repl,s,count=1,flags=re.S)
-          # A passed skeleton artifact must be finalized before ProjectManagerAgent opens the implementation iteration.
+          s,_=re.subn(pattern,"    ctx=manual_review.build_context(Path(TD), assertion)\n    qids=[item['question_id'] for item in ctx.questions]\n    args=list(base)",s,count=1,flags=re.S)
           anchor='python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"\npython3 /home/oai/skills/common-develop/scripts/long_task.py advance-development-step -g ProjectManagerAgent --task-dir "$TDIR"'
-          if anchor in s:
-              s=s.replace(anchor,'python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"\npython3 /home/oai/skills/common-develop/scripts/long_task.py finalize-phase -g ProjectManagerAgent --task-dir "$TDIR"\npython3 /home/oai/skills/common-develop/scripts/long_task.py advance-development-step -g ProjectManagerAgent --task-dir "$TDIR"',1)
+          if anchor in s: s=s.replace(anchor,'python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"\npython3 /home/oai/skills/common-develop/scripts/long_task.py finalize-phase -g ProjectManagerAgent --task-dir "$TDIR"\npython3 /home/oai/skills/common-develop/scripts/long_task.py advance-development-step -g ProjectManagerAgent --task-dir "$TDIR"',1)
           s=s.replace("state.get('architecture_review',{}).get('step')!='CONCRETE_IMPLEMENTATION'","state.get('architecture_review',{}).get('step')!='IMPLEMENTATION'",1)
           s=s.replace("tid=src['id']","tid=src.get('task_id') or src.get('id')",1)
           s=s.replace("len([t for t in source['tasks'] if t['id'] not in existing])","len([t for t in source['tasks'] if (t.get('task_id') or t.get('id')) not in existing])",1)
@@ -74,19 +64,13 @@ jobs:
               expanded="'allowed_files':sorted(set((src.get('affected_files') or impl.get('affected_files') or []) + ("+repr(exact)+" if tid == 'TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION' else [])))"
               s=s.replace(old_scope,expanded,1)
           s=s.replace('--input-revision "$SKELREV"','--input-revision "$TDDREV"',1)
-          # Normalize generated patch evidence so repository diff hygiene is itself deterministic.
           for name in ('dev01-skeleton.patch','dev01-implementation.patch'):
-              anchor='git diff -- "$BUILDER" "$SYS_TEST" "$RV_TEST" > "$TDIR/evidence/commands/'+name+'"'
-              if anchor in s and (anchor+'\nsed -i') not in s:
-                  s=s.replace(anchor,anchor+'\nsed -i \'s/[[:blank:]]\\+$//\' "$TDIR/evidence/commands/'+name+'"',1)
-          # Stop after the DEV-01 attempt is PASSED; do not publish/finalize all Development because DEV-04..DEV-09 remain.
-          publish_marker='python3 /home/oai/skills/common-develop/scripts/long_task.py publish-artifact -g DevelopAgent --task-dir "$TDIR" --attempt-id "$DEV_ATTEMPT"'
-          pos=s.find(publish_marker)
-          if pos < 0:
-              raise SystemExit('concrete publish marker missing')
-          tail=Path('/tmp/dev01-tail.sh').read_text()
-          tail=tail.replace('git push --force origin HEAD:tmp/pr36-dev01-semantic-20260811','git push --force origin HEAD:'+semantic)
-          s=s[:pos]+tail
-          p.write_text(s)
+              a='git diff -- "$BUILDER" "$SYS_TEST" "$RV_TEST" > "$TDIR/evidence/commands/'+name+'"'
+              if a in s and (a+'\nsed -i') not in s: s=s.replace(a,a+'\nsed -i \'s/[[:blank:]]\\+$//\' "$TDIR/evidence/commands/'+name+'"',1)
+          marker='python3 /home/oai/skills/common-develop/scripts/long_task.py publish-artifact -g DevelopAgent --task-dir "$TDIR" --attempt-id "$DEV_ATTEMPT"'
+          pos=s.find(marker)
+          if pos < 0: raise SystemExit('concrete publish marker missing')
+          tail=Path('/tmp/dev01-tail.sh').read_text().replace('git push --force origin HEAD:tmp/pr36-dev01-semantic-20260811','git push --force origin HEAD:'+semantic)
+          p.write_text(s[:pos]+tail)
           PY
           source /tmp/dev01-run.sh
