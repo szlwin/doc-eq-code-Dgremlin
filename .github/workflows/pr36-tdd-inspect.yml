@@ -12,31 +12,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Inspect planned test classes and stable seams
+      - name: Inspect exact R05 test ownership
         shell: bash
         run: |
           set -euo pipefail
           BASE=e16ef021941147052c44b0b06d608fa06441c72b
           git reset --hard "$BASE"
-          echo '=== PLANNED TESTCLASS INVENTORY ==='
-          classes=(SystemCompilationContractTest RuleViewCompilationContractTest ProtectedAccessContextApiContractTest P2CompilerContextConstructibilityContractTest RuntimeFactValueContractTest OpaqueRuntimeIdContractTest TargetKeyModelPathContractTest ModelAccessPolicyContractTest AtomicPublicationContractTest P2DiagnosticDeterminismTest ProtectedAccessModelApiContractTest RuntimeModelMaterializationIntegrationTest RuntimeObjectLocatorIntegrationTest ProtectedWriteTransactionIntegrationTest ProtectedAccessStarterApiContractTest ProtectedWriteIntentResolutionTest ProtectedRuntimeModelAdapterIntegrationTest ProtectedAccessProductionCompositionTest ProtectedAccessConcurrencyTest ProtectedAccessDependencyDirectionTest P2RealFixtureIntegrationTest P2DeclarationCompatibilityContractTest P2RevisionDependencyDagContractTest)
-          found=0; missing=0
-          for c in "${classes[@]}"; do
-            p=$(find dec-* -type f -name "$c.java" -print -quit 2>/dev/null || true)
-            if [ -n "$p" ]; then echo "FOUND $c $p"; found=$((found+1)); else echo "MISSING $c"; missing=$((missing+1)); fi
-          done
-          echo "TOTAL found=$found missing=$missing"
-          echo '=== KEY TYPES ==='
-          for n in SystemKey RuleViewKey TargetKey ModelPath ModelAccessRuleKey RuntimeFactValue Context CompiledModelSet CompiledModelSetBuilder; do
-            find dec-* -type f -name "$n.java" -print | sort || true
-          done
-          echo '=== EXISTING COMPILER TESTS ==='
-          find dec-core-compiler/src/test -type f -name '*.java' 2>/dev/null | sort | head -120 || true
-          echo '=== EXISTING CONTEXT TESTS ==='
-          find dec-core-context/src/test -type f -name '*.java' 2>/dev/null | sort | head -120 || true
-          echo '=== MODEL PATH API SNIPPETS ==='
-          grep -R "class ModelPath\|record ModelPath\|interface ModelPath\|ModelPath(" -n dec-core-context/src/main dec-core-compiler/src/main 2>/dev/null | head -120 || true
-          echo '=== TARGET KEY API SNIPPETS ==='
-          grep -R "class TargetKey\|record TargetKey\|interface TargetKey\|TargetKey(" -n dec-core-context/src/main dec-core-compiler/src/main 2>/dev/null | head -100 || true
-          echo '=== RULEVIEW/SYSTEM API SNIPPETS ==='
-          grep -R "class SystemKey\|record SystemKey\|class RuleViewKey\|record RuleViewKey" -n dec-core-context/src/main dec-core-compiler/src/main 2>/dev/null | head -100 || true
+          python3 - <<'PY'
+          import yaml
+          from pathlib import Path
+          p=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')
+          d=yaml.safe_load(p.read_text())
+          for t in d['tasks']:
+              print('===',t['task_id'],t['implementation']['owner_module'],'===')
+              for f in t['implementation'].get('affected_files',[]):
+                  if '/src/test/' in f or f.endswith('Test.java'):
+                      print('TESTFILE',f)
+              for c in t.get('validation_commands',[]): print('CMD',c)
+              for s in t['implementation'].get('steps',[]):
+                  if 'Test' in s or 'CASE-P2-TD-' in s: print('STEP',s)
+          PY
