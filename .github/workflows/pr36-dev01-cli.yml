@@ -12,12 +12,22 @@ jobs:
       - shell: bash
         run: |
           set -euo pipefail
+          rm -rf /tmp/common-develop
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
-          echo '--- manual draft ---'
-          python3 /tmp/common-develop/scripts/manual_review.py draft --help
-          echo '--- acceptance add ---'
-          python3 /tmp/common-develop/scripts/acceptance.py add --help
-          echo '--- advance dev step ---'
-          python3 /tmp/common-develop/scripts/long_task.py advance-development-step --help
-          echo '--- reopen dev step ---'
-          python3 /tmp/common-develop/scripts/long_task.py reopen-development-step --help
+          python3 - <<'PY'
+          import sys,inspect
+          sys.path.insert(0,'/tmp/common-develop/scripts')
+          import manual_review
+          for name in dir(manual_review):
+              if any(k in name.lower() for k in ['answer','detail','draft','parse']):
+                  obj=getattr(manual_review,name)
+                  if callable(obj):
+                      try:
+                          src=inspect.getsource(obj)
+                      except Exception:
+                          continue
+                      if '--answer' in src or '--detail' in src or 'answer' in name.lower() or 'detail' in name.lower():
+                          print('\n===',name,'===\n'+src)
+          PY
+          echo '--- parser anchors ---'
+          grep -n -E "add_argument\(.*--(answer|detail)|detail_ref|UNKNOWN|parse_.*answer|answer_exceptions" /tmp/common-develop/scripts/manual_review.py || true
