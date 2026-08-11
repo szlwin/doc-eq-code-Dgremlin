@@ -74,6 +74,14 @@ p.write_text(s,encoding='utf-8')
 PY'''
 patched=s[:start]+pre+'\n'+new+'\n'+s[end:]
 patched=patched.replace('task_plan.py finalize -g ImplementationPlanAgent','task_plan.py finalize -g ProjectManagerAgent',1)
+objective="t['objective']='Rebind the unchanged nine-slice Implementation Plan to TESTDESIGN-P2-R32 and explicitly bind the six nested ModelPath/exact-authorization oracles to DEV-03 without changing architecture or task DAG.'"
+allowed="""t['allowed_files']=list(dict.fromkeys((t.get('allowed_files') or [])+[
+'project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml',
+'project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.md',
+'project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md']))"""
+if objective not in patched:
+    raise SystemExit('implementation_plan objective anchor missing')
+patched=patched.replace(objective,objective+'\n'+allowed,1)
 Path('/tmp/r05-plan.sh').write_text(patched,encoding='utf-8')
 PY
 exec bash /tmp/r05-plan.sh
