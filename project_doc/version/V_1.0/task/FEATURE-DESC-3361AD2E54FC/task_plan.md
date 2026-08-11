@@ -482,7 +482,7 @@
     ],
     "input_revisions": {
       "design": "DESIGN-P2-R30",
-      "test_design": ""
+      "test_design": "TESTDESIGN-P2-R32"
     },
     "allowed_files": [
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml",
