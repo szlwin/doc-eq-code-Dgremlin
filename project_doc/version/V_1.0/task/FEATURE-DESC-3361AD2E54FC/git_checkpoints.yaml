@@ -512,3 +512,19 @@ checkpoints:
     created_by_agent: "ProjectManagerAgent"
     created_at: "2026-08-11T04:27:59Z"
     supersedes_checkpoint_id: "CP-V_1.0-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005"
+  -
+    checkpoint_id: "CP-V_1.0-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008"
+    phase: "implementation_plan"
+    iteration_id: "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008"
+    iteration_no: 8
+    stage_revision: "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a"
+    stage_outcome_ref: "SO-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION_PLAN-I008"
+    branch: "tmp/pr36-r05-checkpoint-run-20260811"
+    base_commit: "15acf1c6427112e17461cf76ef1a15cc64063d30"
+    changed_paths:
+      - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/git_checkpoints.yaml"
+    content_digest: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    commit_title: "plan(p2): checkpoint nested ModelPath R05 implementation plan"
+    created_by_agent: "ProjectManagerAgent"
+    created_at: "2026-08-11T04:34:17Z"
+    supersedes_checkpoint_id: "CP-V_1.0-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007"
