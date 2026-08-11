@@ -48,6 +48,7 @@ jobs:
           s=s.replace("state.get('architecture_review',{}).get('step')!='CONCRETE_IMPLEMENTATION'","state.get('architecture_review',{}).get('step')!='IMPLEMENTATION'",1)
           s=s.replace("tid=src['id']","tid=src.get('task_id') or src.get('id')",1)
           s=s.replace("len([t for t in source['tasks'] if t['id'] not in existing])","len([t for t in source['tasks'] if (t.get('task_id') or t.get('id')) not in existing])",1)
+          s=s.replace('--input-revision "$SKELREV"','--input-revision "$TDDREV"',1)
           publish_marker="python3 /home/oai/skills/common-develop/scripts/long_task.py publish-artifact -g DevelopAgent --task-dir \"$TDIR\" --attempt-id \"$DEV_ATTEMPT\""
           pos=s.find(publish_marker)
           if pos<0: raise SystemExit('concrete publish marker missing')
