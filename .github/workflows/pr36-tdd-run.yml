@@ -24,6 +24,7 @@ jobs:
           start=s.index("errs=[]\nphases=list(long_task.PHASE_INDEX)")
           end=s.index("long_task.transactional_text_write", start)
           s=s[:start]+s[end:]
+          s=s.replace('--input-revision "$PLANREV + $TDREV"','--input-revision "$PLANREV"',1)
           p.write_text(s)
           PY
           set -a
