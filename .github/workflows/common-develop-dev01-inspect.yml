@@ -34,7 +34,7 @@ jobs:
           TASK_DIR=project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
           python3 /tmp/common-develop/scripts/ai_context.py resolve \
             -g DevelopAgent \
-            --task-type DEVELOPMENT \
+            --task-type development \
             --phase development \
             --prompt '$common-develop -ar -auto 请进行DEV-01的开发，开发完成后，提交到PR36上。' \
             --doc-root project_doc --version V_1.0 --target FEATURE-DESC-3361AD2E54FC \
@@ -55,7 +55,7 @@ jobs:
           end=text.index('task_id: "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"')
           print(text[start:end])
           PY
-          sed -n '1,260p' dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java
+          sed -n '1,420p' dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java
           sed -n '1,240p' dec-core-compiler/src/main/java/dec/core/compiler/raw/RawDefinitionSet.java
           sed -n '1,220p' dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolBuildResult.java
           sed -n '1,260p' dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java
