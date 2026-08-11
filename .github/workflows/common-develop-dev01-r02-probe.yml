@@ -12,18 +12,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Inspect RC9 per-development-task review support
+      - name: Inspect RC9 task-scoped recovery commands
         shell: bash
         run: |
           set -euo pipefail
           SKILLREV='7086b2d32b6beae2e6e522efc517d7823ba55376'
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
           test "$(git -C /tmp/common-develop rev-parse HEAD)" = "$SKILLREV"
-          echo '=== SCRIPT NAMES ==='
-          find /tmp/common-develop/scripts -maxdepth 1 -type f -printf '%f\n' | sort | grep -Ei 'develop|review|gate|task'
-          echo '=== DEVELOPMENT TASK REVIEW REFERENCES ==='
-          grep -RniE 'development_task_reviews|development task review|DevelopmentTask|task review' /tmp/common-develop/scripts /tmp/common-develop/assets | head -n 300 || true
-          echo '=== PROCESS GATE ARCHITECTURE REFERENCES ==='
-          grep -RniE 'IMPLEMENTATION_READY_FOR_REVIEW|IMPLEMENTATION_REVIEW_PASSED|code_review.*development|development.*code_review' /tmp/common-develop/scripts | head -n 300 || true
-          echo '=== REPO LEDGER TAIL ==='
-          tail -n 30 project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_task_reviews.jsonl || true
+          echo '=== LONG TASK HELP ==='
+          python3 /tmp/common-develop/scripts/long_task.py --help
+          echo '=== PARSER COMMANDS ==='
+          grep -nE "add_parser\(|set_defaults\(func=command_" /tmp/common-develop/scripts/long_task.py | tail -n 160
+          echo '=== REOPEN/REWORK TASK REFERENCES ==='
+          grep -RniE "reopen.*task|rework.*task|retry.*task|reset.*task|invalidate.*task|supersede.*task" /tmp/common-develop/scripts | head -n 300 || true
