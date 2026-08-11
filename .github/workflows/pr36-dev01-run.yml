@@ -10,77 +10,46 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v5
-        with: {distribution: temurin, java-version: '17', cache: maven}
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
       - name: Execute DEV-01 exact lifecycle
         shell: bash
         run: |
           set -euo pipefail
           cp .common-develop-dev01-run.sh /tmp/common-develop-dev01-run.sh
+          cp .common-develop-dev01-tail.sh /tmp/common-develop-dev01-tail.sh
           python3 - <<'PY'
           from pathlib import Path
           import re
           p=Path('/tmp/common-develop-dev01-run.sh')
           s=p.read_text()
-          # Cross-revision pre-fix RED remains review/history evidence, not same-revision attempt evidence.
-          s=s.replace("for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],x['red'],*x['commands']]: args += ['--evidence-ref',eid]","for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands']]: args += ['--evidence-ref',eid]",1)
-          s=s.replace("for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['red'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]","for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]",1)
-          # Answer the complete exact review question set, rather than discovering one UNKNOWN at a time.
+          old="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],x['red'],*x['commands']]: args += ['--evidence-ref',eid]"
+          new="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands']]: args += ['--evidence-ref',eid]"
+          if old not in s: raise SystemExit('skeleton cross-revision evidence anchor missing')
+          s=s.replace(old,new,1)
+          old="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['red'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]"
+          new="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]"
+          if old not in s: raise SystemExit('concrete cross-revision evidence anchor missing')
+          s=s.replace(old,new,1)
           s=s.replace("import json,subprocess,re\nTD='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'", "import json,subprocess,sys\nfrom pathlib import Path\nsys.path.insert(0,'/home/oai/skills/common-develop/scripts')\nimport manual_review\nTD='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'",1)
           pattern=r"    probe=subprocess\.run\(base,capture_output=True,text=True\)\n    qids=.*?\n    if not qids:.*?\n        raise SystemExit\(.*?\)\n    args=list\(base\)"
           repl="    ctx=manual_review.build_context(Path(TD), assertion)\n    qids=[item['question_id'] for item in ctx.questions]\n    args=list(base)"
           s,n=re.subn(pattern,repl,s,count=1,flags=re.S)
           if n!=1: raise SystemExit('skeleton review question block missing')
-          # Skeleton Review must be finalized before PM opens the concrete implementation iteration.
           anchor="python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir \"$TDIR\"\npython3 /home/oai/skills/common-develop/scripts/long_task.py advance-development-step -g ProjectManagerAgent --task-dir \"$TDIR\""
           replacement="python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir \"$TDIR\"\npython3 /home/oai/skills/common-develop/scripts/long_task.py finalize-phase -g ProjectManagerAgent --task-dir \"$TDIR\"\npython3 /home/oai/skills/common-develop/scripts/long_task.py advance-development-step -g ProjectManagerAgent --task-dir \"$TDIR\""
           if anchor not in s: raise SystemExit('skeleton finalize/advance anchor missing')
           s=s.replace(anchor,replacement,1)
-          # RC9 machine field is IMPLEMENTATION after advance-development-step.
           s=s.replace("state.get('architecture_review',{}).get('step')!='CONCRETE_IMPLEMENTATION'","state.get('architecture_review',{}).get('step')!='IMPLEMENTATION'",1)
-          # DEV-01 only: after the exact attempt passes, do not publish/finalize the whole Development phase.
           publish_marker="python3 /home/oai/skills/common-develop/scripts/long_task.py publish-artifact -g DevelopAgent --task-dir \"$TDIR\" --attempt-id \"$DEV_ATTEMPT\""
           pos=s.find(publish_marker)
           if pos<0: raise SystemExit('concrete publish marker missing')
-          tail=r'''# DEV-01 task closure only. Development remains PARTIAL/IN_PROGRESS; DEV-04 is not started.
-python3 /home/oai/skills/common-develop/scripts/acceptance.py validate -g ProjectManagerAgent --task-dir "$TDIR"
-python3 /home/oai/skills/common-develop/scripts/evidence.py validate -g ProjectManagerAgent --task-dir "$TDIR"
-python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"
-python3 /home/oai/skills/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" --json > /tmp/dev01-next.json || true
-cat /tmp/dev01-next.json
-python3 - <<'PY2'
-from pathlib import Path
-import sys,json,os
-sys.path.insert(0,'/home/oai/skills/common-develop/scripts')
-import long_task
-TD=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC')
-_,state=long_task.read_block(TD/'task_state.md','task-state'); _,tasks=long_task.read_block(TD/'task_plan.md','task-plan')
-current=[t for t in tasks if isinstance(t,dict) and t.get('phase')=='development' and t.get('iteration_id')==state['artifact_revisions']['development']['iteration_id']]
-by={t['id']:t for t in current}
-assert state['current_phase']=='development'
-assert state.get('architecture_review',{}).get('step')=='IMPLEMENTATION'
-assert state['task_status']=='PARTIAL'
-assert by['TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION']['status']=='PASSED'
-assert by['TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION']['output_revision']==os.environ['DEVREV']
-remaining=[t['id'] for t in current if t['id']!='TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION' and t.get('status')=='PASSED']
-assert not remaining, remaining
-assert by['TASK-P2-DEV-04-CONTEXT-MATERIALIZATION']['status'] in ('READY','PENDING')
-summary={'developmentTaskStatus':'PARTIAL','dev01':'PASSED','dev01Revision':os.environ['DEVREV'],'remainingPassed':remaining,'nextTask':'TASK-P2-DEV-04-CONTEXT-MATERIALIZATION','formalDevelopmentCheckpoint':'DEFERRED_UNTIL_STAGE_OUTCOME_PASSED'}
-(TD/'evidence/commands/dev01-task-closure.json').write_text(json.dumps(summary,indent=2)+'\n')
-print(json.dumps(summary,indent=2))
-PY2
-# git_checkpoint.py is intentionally not invoked here: RC9 current_gate requires all tasks in the current Development iteration PASSED.
-# Create a linear task publication commit; the formal Development stage checkpoint remains deferred until all 9 slices finish.
-git diff --check
-git status --porcelain
-git add -A
-git diff --cached --check
-git commit -m "feat(p2): complete DEV-01 System RuleView compilation" -m "DEV-01 only: preserve the reviewed -ar skeleton, make duplicate conflict diagnostics SourceRef-order deterministic, and turn all 14 System/RuleView cases GREEN. Development remains PARTIAL; DEV-04 is not started." -m "WK-Task: TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION" -m "WK-Revision: $DEVREV"
-git push --force origin HEAD:tmp/pr36-dev01-semantic-20260811
-echo "FINAL_DEV01_REV=$DEVREV"
-echo "FINAL_DEV01_COMMIT=$(git rev-parse HEAD)"
-'''
+          tail=Path('/tmp/common-develop-dev01-tail.sh').read_text()
           s=s[:pos]+tail
           p.write_text(s)
           PY
