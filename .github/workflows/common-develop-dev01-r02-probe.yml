@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Inspect RC9 lifecycle
+      - name: Inspect RC9 reopen and final-review semantics
         shell: bash
         run: |
           set -euo pipefail
@@ -20,16 +20,44 @@ jobs:
           TDIR='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
           test "$(git -C /tmp/common-develop rev-parse HEAD)" = "$SKILLREV"
-          echo '=== LONG_TASK HELP ==='
-          python3 /tmp/common-develop/scripts/long_task.py -h || true
-          echo '=== SUBCOMMAND HELP CANDIDATES ==='
-          for cmd in reopen-task reopen-phase reopen-development-step start-attempt finish-attempt publish-artifact finalize-phase advance-development-step; do
-            echo "--- $cmd ---"
-            python3 /tmp/common-develop/scripts/long_task.py "$cmd" -h || true
-          done
-          echo '=== REOPEN SOURCES ==='
-          grep -RniE 'reopen|final_review_revision|implementation_revision|advance-development-step|finalize-phase' /tmp/common-develop/scripts/long_task.py /tmp/common-develop/scripts/*.py | head -n 240 || true
-          echo '=== CURRENT NEXT ==='
+          echo '=== REOPEN IMPLEMENTATION SOURCE ==='
+          sed -n '2290,2495p' /tmp/common-develop/scripts/long_task.py
+          echo '=== FINALIZE SOURCE ==='
+          sed -n '3040,3180p' /tmp/common-develop/scripts/long_task.py
+          echo '=== START ATTEMPT CURRENT PASSED TASK (EPHEMERAL) ==='
+          cp -a "$TDIR" /tmp/task-before-direct
+          set +e
+          python3 /tmp/common-develop/scripts/long_task.py start-attempt -g DevelopAgent --task-dir "$TDIR" --task-id TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION --input-revision 'TDD-P2-R01@3f282bb4e1f6' --summary 'ephemeral R02 direct-attempt probe' > /tmp/direct.out 2>&1
+          DIRECT_RC=$?
+          set -e
+          echo "DIRECT_RC=$DIRECT_RC"
+          cat /tmp/direct.out
+          rm -rf "$TDIR"
+          cp -a /tmp/task-before-direct "$TDIR"
+          echo '=== REOPEN DEVELOPMENT (EPHEMERAL) ==='
+          python3 /tmp/common-develop/scripts/long_task.py reopen-phase -g ProjectManagerAgent --task-dir "$TDIR" --from-phase development --source-revision 'DEV-P2-DEV01-R01@1f85b2e6b265' --reason 'ephemeral probe: independent Review found exact-oracle closure P1' > /tmp/reopen.out
+          cat /tmp/reopen.out
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          p=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_state.md').read_text()
+          m=re.search(r'```json task-state\n(.*?)\n```',p,re.S); s=json.loads(m.group(1))
+          print(json.dumps({
+            'current_phase':s.get('current_phase'),
+            'current_round':s.get('current_round'),
+            'task_status':s.get('task_status'),
+            'architecture_review':s.get('architecture_review'),
+            'development_artifact':(s.get('artifact_revisions') or {}).get('development'),
+            'code_review_artifact':(s.get('artifact_revisions') or {}).get('code_review'),
+            'next_agent':s.get('next_agent'),
+            'next_action':s.get('next_action')
+          },indent=2))
+          tp=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md').read_text()
+          mm=re.search(r'```json task-plan\n(.*?)\n```',tp,re.S); tasks=json.loads(mm.group(1))
+          for t in tasks:
+            if t.get('id') in ('TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION','TASK-P2-DEV-04-CONTEXT-MATERIALIZATION') and t.get('phase')=='development':
+              print(json.dumps({k:t.get(k) for k in ('id','iteration_id','iteration_no','status','attempts','output_revision','input_revisions')},indent=2))
+          PY
+          echo '=== POST-REOPEN VALIDATE/NEXT ==='
+          python3 /tmp/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR"
           python3 /tmp/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" || true
-          echo '=== CURRENT VALIDATE ==='
-          python3 /tmp/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR" || true
