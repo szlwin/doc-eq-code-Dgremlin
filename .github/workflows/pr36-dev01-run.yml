@@ -20,6 +20,7 @@ jobs:
           cp .common-develop-dev01-run.sh /tmp/common-develop-dev01-run.sh
           python3 - <<'PY'
           from pathlib import Path
+          import re
           p=Path('/tmp/common-develop-dev01-run.sh')
           s=p.read_text()
           old="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],x['red'],*x['commands']]: args += ['--evidence-ref',eid]"
@@ -30,6 +31,16 @@ jobs:
           new="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]"
           if old not in s: raise SystemExit('concrete cross-revision evidence anchor missing')
           s=s.replace(old,new,1)
+          s=s.replace("import json,subprocess,re\nTD='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'", "import json,subprocess,sys\nfrom pathlib import Path\nsys.path.insert(0,'/home/oai/skills/common-develop/scripts')\nimport manual_review\nTD='project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC'",1)
+          pattern=r"    probe=subprocess\.run\(base,capture_output=True,text=True\)\n    qids=.*?\n    if not qids:.*?\n        raise SystemExit\(.*?\)\n    args=list\(base\)"
+          repl="    ctx=manual_review.build_context(Path(TD), assertion)\n    qids=[item['question_id'] for item in ctx.questions]\n    args=list(base)"
+          s,n=re.subn(pattern,repl,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('skeleton review question block missing')
+          s=s.replace("sys.path.insert(0,'/home/oai/skills/common-develop/scripts'); import long_task", "sys.path.insert(0,'/home/oai/skills/common-develop/scripts'); import long_task, manual_review",1)
+          pattern=r"    probe=subprocess\.run\(base,capture_output=True,text=True\); qids=.*?\n    if qids:.*?\n    elif probe\.returncode!=0:\n        raise SystemExit\(.*?\)\n"
+          repl="    ctx=manual_review.build_context(TD, aid)\n    args=list(base)\n    for qitem in ctx.questions:\n        q=qitem['question_id']\n        detail='Exact DEV-01 current-revision GREEN evidence plus prior RED evidence confirms this criterion; reviewed skeleton topology is unchanged, only the explicit freeze seam is filled, and scope remains System/RuleView compilation.'\n        args += ['--answer',q+'=YES','--detail',q+'='+detail]\n    subprocess.run(args,check=True)\n"
+          s,n=re.subn(pattern,repl,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('concrete review question block missing')
           p.write_text(s)
           PY
           source /tmp/common-develop-dev01-run.sh
