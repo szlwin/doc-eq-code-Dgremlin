@@ -1,0 +1,89 @@
+name: common-develop DEV-01 R02 truthful closure v6
+
+on:
+  push:
+    branches: [common-develop/dev01-r02-run-20260812]
+    paths: [.github/workflows/common-develop-dev01-r02-run-v6.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  dev01-r02:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-r02-run-20260812
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Preserve historical task refs and execute R02
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import ast,textwrap
+          src=Path('.github/workflows/common-develop-dev01-r02-run.yml').read_text()
+          marker='        run: |\n'
+          if marker not in src:
+              raise SystemExit('v1 run block missing')
+          block=textwrap.dedent(src.split(marker,1)[1])
+
+          def region_bounds(text,var,next_marker):
+              start=var+'="""'
+              i=text.find(start)
+              if i < 0: raise SystemExit(f'{var} opening assignment missing')
+              j=text.find('\n'+next_marker,i)
+              if j < 0: raise SystemExit(f'{var} boundary missing')
+              return start,i,j
+
+          def decode_region(text,var,next_marker):
+              start,i,j=region_bounds(text,var,next_marker)
+              raw=text[i+len(start):j].rstrip()
+              while raw.endswith('"'): raw=raw[:-1]
+              decoded=ast.literal_eval('"""'+raw+'"""')
+              return text[:i]+var+'='+repr(decoded)+text[j:]
+
+          # reopen 后不删除历史 task；从 HEAD 恢复旧 Development task 记录到原 iteration，保留 attempt 引用完整性。
+          isolate="""# Park reopened concrete tasks back on their HEAD historical iteration while R02 skeleton is reviewed.\npython3 - <<'PYISO'\nfrom pathlib import Path\nimport subprocess,sys\nsys.path.insert(0,'/home/oai/skills/common-develop/scripts')\nimport long_task\nTD=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC')\nplan_doc,tasks=long_task.read_block(TD/'task_plan.md','task-plan')\n_,state=long_task.read_block(TD/'task_state.md','task-state')\ncurrent=state['artifact_revisions']['development']['iteration_id']\nbase_file=Path('/tmp/dev01-r01-task-plan.md')\nbase_file.write_text(subprocess.check_output(['git','show','HEAD:'+str(TD/'task_plan.md')],text=True))\n_,base_tasks=long_task.read_block(base_file,'task-plan')\nbase_dev={t['id']:t for t in base_tasks if isinstance(t,dict) and t.get('phase')=='development'}\nrestored=[]\nfor task in tasks:\n    if isinstance(task,dict) and task.get('phase')=='development' and task.get('iteration_id')==current and task.get('id') in base_dev:\n        old=base_dev[task['id']]\n        task.clear(); task.update(old); restored.append(task['id'])\nremaining=[t.get('id') for t in tasks if isinstance(t,dict) and t.get('phase')=='development' and t.get('iteration_id')==current]\nif remaining: raise SystemExit('unexpected current development tasks after historical parking: '+str(remaining))\nlong_task.transactional_text_write({TD/'task_plan.md':long_task.render_block(TD/'task_plan.md','task-plan',plan_doc,tasks)})\nprint({'skeletonIteration':current,'restoredHistoricalTasks':restored})\nPYISO\n\n"""
+          start,i,j=region_bounds(block,'isolate','if anchor not in s:')
+          block=block[:i]+'isolate='+repr(isolate)+block[j:]
+          block=decode_region(block,'ownership','if marker not in s:')
+          block=decode_region(block,'new','if old not in tail:')
+          block=decode_region(block,'guard',"tail=tail.replace('git diff --check")
+
+          # concrete iteration 复用同一 task-id，原位重绑定到新 iteration，而不是追加重复 task-id。
+          anchor_line='s=s.replace("tid=src[\'id\']","tid=src.get(\'task_id\') or src.get(\'id\')",1)\n'
+          if anchor_line not in block:
+              raise SystemExit('materialization patch anchor missing')
+          oldmat="    tid=src.get('task_id') or src.get('id')\n    if tid in existing: continue\n    impl=src.get('implementation') or {}"
+          exact=[
+            'dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java',
+            'dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java',
+            'dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java'
+          ]
+          newmat="""    tid=src.get('task_id') or src.get('id')
+    impl=src.get('implementation') or {}
+    if tid in existing:
+        task=next(t for t in tasks if isinstance(t,dict) and t.get('id')==tid)
+        task.update({
+          'iteration_id':art['iteration_id'],'iteration_no':art['iteration_no'],'supersedes_iteration_id':'ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009',
+          'revision_reason':'Rebind exact R05 Development slice after DEV-01 R02 -ar skeleton review.','title':src.get('title',tid),'objective':src.get('goal') or src.get('objective') or src.get('title',tid),
+          'phase':'development','status':'READY','depends_on':src.get('depends_on') or [],'owner_agent':'DevelopAgent','reviewer_agents':['TDDReviewAgent'],
+          'input_revisions':long_task.phase_input_revisions(state,'development',minimal=False),
+          'allowed_files':sorted(set((impl.get('affected_files') or []) + (EXACT_FILES if tid == 'TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION' else []))),
+          'acceptance_trace_ids':src.get('trace_ids') or [],'flow_refs':src.get('flow_refs') or [],'flow_step_refs':src.get('flow_step_refs') or [],
+          'validation_commands':src.get('validation_commands') or [],'expected_results':src.get('expected_results') or [src.get('title',tid)+' satisfies its frozen R05 acceptance boundary.'],
+          'stop_conditions':src.get('stop_conditions') or [],'risk_triggers':src.get('risk_triggers') or [],'attempts':0,'max_attempts':3,'output_revision':'','validation_evidence_ids':[]})
+        continue""".replace('EXACT_FILES',repr(exact))
+          injection=anchor_line+"s=s.replace("+repr(oldmat)+","+repr(newmat)+",1)\n"
+          block=block.replace(anchor_line,injection,1)
+          Path('/tmp/dev01-r02-v6.sh').write_text('#!/usr/bin/env bash\n'+block)
+          PY
+          chmod +x /tmp/dev01-r02-v6.sh
+          /tmp/dev01-r02-v6.sh
