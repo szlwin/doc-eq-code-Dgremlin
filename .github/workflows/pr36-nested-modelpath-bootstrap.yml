@@ -1,0 +1,37 @@
+name: PR36 nested ModelPath closure bootstrap
+
+on:
+  push:
+    branches:
+      - feature/p2-design-testdesign-20260808
+
+permissions:
+  contents: write
+
+jobs:
+  inspect-common-develop:
+    if: contains(github.event.head_commit.message, '[nested-modelpath-bootstrap]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR36 branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Clone common-develop RC9 and inspect command surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/common-develop
+          git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          echo '--- HEAD ---'
+          git -C /tmp/common-develop rev-parse HEAD
+          echo '--- release ---'
+          python3 /tmp/common-develop/scripts/runtime_contract.py get --path release --json 2>/dev/null || true
+          echo '--- wk help ---'
+          python3 /tmp/common-develop/scripts/wk.py help -g ProjectManagerAgent --json
+          echo '--- long_task help ---'
+          python3 /tmp/common-develop/scripts/long_task.py --help
+          echo '--- task_plan help ---'
+          python3 /tmp/common-develop/scripts/task_plan.py --help
+          echo '--- test design related scripts ---'
+          find /tmp/common-develop/scripts -maxdepth 1 -type f -printf '%f\n' | sort | grep -Ei 'test|long|task|review|evidence|accept|checkpoint'
