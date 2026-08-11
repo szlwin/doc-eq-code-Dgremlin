@@ -1,0 +1,51 @@
+name: PR36 TDD inspect
+on:
+  push:
+    branches: [tmp/pr36-tdd-inspect-20260811]
+    paths: [.common-develop-tdd-inspect-trigger]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Inspect exact next TDD lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=e16ef021941147052c44b0b06d608fa06441c72b
+          TDIR=project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
+          rm -rf /tmp/common-develop
+          git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          test "$(git -C /tmp/common-develop rev-parse HEAD)" = "7086b2d32b6beae2e6e522efc517d7823ba55376"
+          sudo mkdir -p /home/oai/skills
+          sudo rm -f /home/oai/skills/common-develop
+          sudo ln -s /tmp/common-develop /home/oai/skills/common-develop
+          git reset --hard "$BASE"
+          echo '=== WK STATUS BEFORE ==='
+          python3 /home/oai/skills/common-develop/scripts/wk.py status -g ProjectManagerAgent --task-dir "$TDIR" --json || true
+          echo '=== WK NEXT BEFORE ==='
+          python3 /home/oai/skills/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" --json || true
+          echo '=== ADVANCE TO TDD ==='
+          python3 /home/oai/skills/common-develop/scripts/long_task.py advance-phase -g ProjectManagerAgent --task-dir "$TDIR"
+          echo '=== WK STATUS AFTER ==='
+          python3 /home/oai/skills/common-develop/scripts/wk.py status -g ProjectManagerAgent --task-dir "$TDIR" --json || true
+          echo '=== WK NEXT AFTER ==='
+          python3 /home/oai/skills/common-develop/scripts/wk.py next -g ProjectManagerAgent --task-dir "$TDIR" --json || true
+          echo '=== TDD TASK IDS ==='
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          p=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md')
+          s=p.read_text()
+          m=re.search(r'```json task-plan\n(.*?)\n```',s,re.S)
+          tasks=json.loads(m.group(1))
+          for t in tasks:
+              if t.get('phase')=='tdd' and t.get('status') in {'PENDING','IN_PROGRESS','PARTIAL','REWORK'}:
+                  print(json.dumps(t,ensure_ascii=False,indent=2))
+          PY
+          echo '=== CURRENT TASK STATE ==='
+          sed -n '1,220p' "$TDIR/task_state.md"
