@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build-r32:
-    if: contains(github.event.head_commit.message, '[nested-modelpath-r32-stage-v2]')
+    if: contains(github.event.head_commit.message, '[nested-modelpath-r32-stage-v3]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -67,19 +67,15 @@ jobs:
           appendix='''\n\n## R32 nested ModelPath clarification\n\nR32 is a TestDesign-only increment over R31. It does not reopen P1, BM-R20, FLOW-R11 or DESIGN-P2-R30. It freezes the already-designed distinction that `target-main` is an exact root selector, not a prefix consumed from a dotted property path; nested object/collection paths are canonical segment sequences; non-composite intermediate segments fail closed; runtime authorization remains exact-only with no parent/prefix fallback. The six R32 oracles reuse existing `TARGET` / `POLICY` TestClasses, so the registry remains 23 exact TestClasses.\n'''
           if '## R32 nested ModelPath clarification' not in s: s += appendix
           test.write_text(s,encoding='utf-8')
-
           tr=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md')
           t=tr.read_text(encoding='utf-8').replace('TESTDESIGN-P2-R31','TESTDESIGN-P2-R32')
           m=re.search(r'```json traceability\n(.*?)\n```',t,re.S)
-          data=json.loads(m.group(1))
-          by={x['id']:x for x in data}
+          data=json.loads(m.group(1)); by={x['id']:x for x in data}
           nested=['CASE-P2-TD-NESTED-OBJECT-PATH-001','CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001','CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001','CASE-P2-TD-NESTED-COLLECTION-PATH-001','CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001','CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001']
           for cid in nested:
               if cid not in by['TR-P2-SYSTEM-RULEVIEW-005']['test_case_ids']: by['TR-P2-SYSTEM-RULEVIEW-005']['test_case_ids'].append(cid)
-          cid='CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001'
-          if cid not in by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids']: by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids'].append(cid)
-          block=json.dumps(data,ensure_ascii=False,indent=2)
-          t=t[:m.start(1)]+block+t[m.end(1):]
+          if nested[-1] not in by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids']: by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids'].append(nested[-1])
+          block=json.dumps(data,ensure_ascii=False,indent=2); t=t[:m.start(1)]+block+t[m.end(1):]
           tr.write_text(t,encoding='utf-8')
           PY
           mkdir -p "$TDIR/evidence/command-results/TESTDESIGN-P2-R32"
@@ -91,18 +87,8 @@ jobs:
           classes=re.findall(r'^`[^|`]+ \| [^|`]+ \| ([A-Za-z0-9_]+Test) \|',s,re.M)
           required=['CASE-P2-TD-NESTED-OBJECT-PATH-001','CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001','CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001','CASE-P2-TD-NESTED-COLLECTION-PATH-001','CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001','CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001']
           tr=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(encoding='utf-8')
-          tm=re.search(r'```json traceability\n(.*?)\n```',tr,re.S); traces=json.loads(tm.group(1))
-          by={x['id']:x for x in traces}
-          checks={
-            'revision': 'TESTDESIGN-P2-R32' in s,
-            'case_count_101': len(cases)==101,
-            'unique_cases_101': len(set(cases))==101,
-            'testclass_count_23': len(set(classes))==23,
-            'six_oracles_present': all(x in cases for x in required),
-            'trace005_all_six': all(x in by['TR-P2-SYSTEM-RULEVIEW-005']['test_case_ids'] for x in required),
-            'trace004_exact_auth': required[-1] in by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids'],
-            'stable_trace_count_10': len(traces)==10,
-          }
+          tm=re.search(r'```json traceability\n(.*?)\n```',tr,re.S); traces=json.loads(tm.group(1)); by={x['id']:x for x in traces}
+          checks={'revision':'TESTDESIGN-P2-R32' in s,'case_count_101':len(cases)==101,'unique_cases_101':len(set(cases))==101,'testclass_count_23':len(set(classes))==23,'six_oracles_present':all(x in cases for x in required),'trace005_all_six':all(x in by['TR-P2-SYSTEM-RULEVIEW-005']['test_case_ids'] for x in required),'trace004_exact_auth':required[-1] in by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids'],'stable_trace_count_10':len(traces)==10}
           print(json.dumps({'schema_version':1,'command':'deterministic nested ModelPath TestDesign validator','revision':'TESTDESIGN-P2-R32','checks':checks,'status':'PASSED' if all(checks.values()) else 'FAILED'},ensure_ascii=False,indent=2))
           if not all(checks.values()): raise SystemExit(1)
           PY
@@ -116,7 +102,7 @@ jobs:
           s=open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_state.md',encoding='utf-8').read(); m=re.search(r'```json task-state\n(.*?)\n```',s,re.S); print(json.loads(m.group(1))['current_attempt_id'])
           PY
           )
-          python3 /tmp/common-develop/scripts/long_task.py finish-attempt -g TestDesignAgent --task-dir "$TDIR" --attempt-id "$ATTEMPT" --status PASSED --output-revision TESTDESIGN-P2-R32 --modified-file "$TESTFILE" --modified-file "$TRACEFILE" --command-ref "$TDIR/evidence/command-results/TESTDESIGN-P2-R32/nested-modelpath-oracle-validate.json" --evidence-ref "$E1" --evidence-ref "$E2" --evidence-ref "$E3" --evidence-ref "$E4" --summary "R32 adds six explicit nested ModelPath/exact-authorization oracles; 101 Cases, 23 TestClasses, 10 stable traces; P1/BM/Design unchanged." --next-action "Independent TestDesign reviews" --next-agent ProjectManagerAgent
+          python3 /tmp/common-develop/scripts/long_task.py finish-attempt -g TestDesignAgent --task-dir "$TDIR" --attempt-id "$ATTEMPT" --status PASSED --output-revision TESTDESIGN-P2-R32 --modified-file "$TESTFILE" --modified-file "$TRACEFILE" --command-ref "$E4" --evidence-ref "$E1" --evidence-ref "$E2" --evidence-ref "$E3" --evidence-ref "$E4" --summary "R32 adds six explicit nested ModelPath/exact-authorization oracles; 101 Cases, 23 TestClasses, 10 stable traces; P1/BM/Design unchanged." --next-action "Independent TestDesign reviews" --next-agent ProjectManagerAgent
           python3 /tmp/common-develop/scripts/long_task.py publish-artifact -g ProjectManagerAgent --task-dir "$TDIR" --attempt-id "$ATTEMPT" --evidence-id "$E1" --evidence-id "$E2" --evidence-id "$E3" --evidence-id "$E4"
           python3 /tmp/common-develop/scripts/evidence.py validate -g ProjectManagerAgent --task-dir "$TDIR"
           python3 /tmp/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir "$TDIR" --json > /tmp/r32-long-task-validate.json
