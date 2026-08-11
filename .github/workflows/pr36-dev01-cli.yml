@@ -3,7 +3,7 @@ on:
   push:
     branches: [tmp/pr36-dev01-cli-20260811]
     paths: [.common-develop-dev01-cli-trigger]
-permissions: {contents: read}
+permissions: {contents: write}
 jobs:
   cli:
     runs-on: ubuntu-24.04
@@ -14,11 +14,20 @@ jobs:
           set -euo pipefail
           rm -rf /tmp/common-develop
           git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
-          echo '--- checkpoint source ---'
-          grep -n -B45 -A130 -E 'def commit_checkpoint|artifact.*PASSED|task_status|phase_tasks|current_phase|checkpoint_id' /tmp/common-develop/scripts/git_checkpoint.py | head -520 || true
-          echo '--- finish attempt source ---'
-          grep -n -B35 -A170 -E '^def command_finish_attempt|task\[.status.\]|next_agent|next_action' /tmp/common-develop/scripts/long_task.py | head -520 || true
-          echo '--- reopen architecture rollback ---'
-          grep -n -B45 -A160 -E 'def command_reopen_phase|architecture_review.*step|IMPLEMENTATION_READY_FOR_REVIEW|SKELETON' /tmp/common-develop/scripts/long_task.py | head -700 || true
-          echo '--- task review / checkpoint tests ---'
-          grep -R -n -B25 -A80 -E 'checkpoint.*IN_PROGRESS|partial.*checkpoint|task.*checkpoint|development.*PASSED.*task|finish-attempt.*next|next ready|sequential' /tmp/common-develop/scripts/test_*.py | head -700 || true
+          python3 - <<'PY' > .common-develop-dev01-partial-inspect.txt
+          import sys,inspect
+          sys.path.insert(0,'/tmp/common-develop/scripts')
+          import git_checkpoint,long_task
+          for mod,names in [(git_checkpoint,['command_commit','commit_checkpoint','command_validate']),(long_task,['command_finish_attempt','command_publish_artifact','command_finalize_phase','command_advance_development_step'])]:
+              for name in names:
+                  fn=getattr(mod,name,None)
+                  if fn:
+                      print('\n=== %s.%s ===' % (mod.__name__,name))
+                      print(inspect.getsource(fn))
+          print('\n=== checkpoint relevant lines ===')
+          for line in inspect.getsource(git_checkpoint).splitlines():
+              if any(x in line for x in ['add_parser','--task-id','--phase','artifact_revisions','PASSED','current_phase','checkpoint_id']): print(line)
+          PY
+          git add .common-develop-dev01-partial-inspect.txt
+          git -c user.name=inspect -c user.email=inspect@example.invalid commit -m 'chore: persist DEV01 partial lifecycle inspection'
+          git push origin HEAD:tmp/pr36-dev01-cli-20260811
