@@ -1,0 +1,21 @@
+name: PR36 DEV01 RC9 run
+on:
+  push:
+    branches: [tmp/pr36-dev01-run-20260811]
+    paths: [.common-develop-dev01-run-trigger]
+permissions:
+  contents: write
+jobs:
+  dev01:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-java@v5
+        with: {distribution: temurin, java-version: '17', cache: maven}
+      - name: Execute DEV-01 exact lifecycle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp .common-develop-dev01-run.sh /tmp/common-develop-dev01-run.sh
+          source /tmp/common-develop-dev01-run.sh
