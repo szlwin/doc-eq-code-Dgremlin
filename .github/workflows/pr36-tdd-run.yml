@@ -12,6 +12,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
       - name: Execute exact TDD-I008 lifecycle
         shell: bash
         run: |
@@ -30,6 +35,10 @@ jobs:
           if old not in s:
               raise SystemExit('BOOT command anchor missing')
           s=s.replace(old,new,1)
+          marker='for module in $(cut -f2 /tmp/tdd-registry.tsv | sort -u); do'
+          if marker not in s:
+              raise SystemExit('BOOT loop marker missing')
+          s=s.replace(marker,'scripts/remediation/bootstrap_legacy_dependencies.sh\n'+marker,1)
           p.write_text(s)
           PY
           set -a
