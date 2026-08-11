@@ -9,6 +9,7 @@ s=p.read_text(encoding='utf-8')
 start=s.index("python3 - <<'PY'\nfrom pathlib import Path\nimport yaml\n", s.index('start-attempt'))
 needle="PY\npython3 /home/oai/skills/common-develop/scripts/task_plan.py revise"
 end=s.index(needle,start)+3
+pre='''python3 /home/oai/skills/common-develop/scripts/task_plan.py submit-review -g PlanReviewAgent --task-dir "$TDIR" --result NEEDS_CHANGES --summary "NEEDS_CHANGES: exact R04 remains structurally valid, but its frozen input_revisions.test_design points to TESTDESIGN-P2-R31; TESTDESIGN-P2-R32 is now the PASSED authority after nested ModelPath clarification, so R04 must enter REWORK and be rebound as a new revision before TDD."'''
 new=r'''python3 - <<'PY'
 from pathlib import Path
 p=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')
@@ -25,6 +26,6 @@ if 'TESTDESIGN-P2-R32 nested ModelPath oracle mapping' not in s:
     s=s.replace(anchor,anchor+'\n'+mapping,1)
 p.write_text(s,encoding='utf-8')
 PY'''
-Path('/tmp/r05-plan.sh').write_text(s[:start]+new+'\n'+s[end:],encoding='utf-8')
+Path('/tmp/r05-plan.sh').write_text(s[:start]+pre+'\n'+new+'\n'+s[end:],encoding='utf-8')
 PY
 exec bash /tmp/r05-plan.sh
