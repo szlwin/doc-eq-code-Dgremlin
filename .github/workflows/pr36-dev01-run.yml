@@ -18,4 +18,18 @@ jobs:
         run: |
           set -euo pipefail
           cp .common-develop-dev01-run.sh /tmp/common-develop-dev01-run.sh
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/common-develop-dev01-run.sh')
+          s=p.read_text()
+          old="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],x['red'],*x['commands']]: args += ['--evidence-ref',eid]"
+          new="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands']]: args += ['--evidence-ref',eid]"
+          if old not in s: raise SystemExit('skeleton cross-revision evidence anchor missing')
+          s=s.replace(old,new,1)
+          old="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['red'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]"
+          new="for eid in [x['tests'],x['plan'],x['design'],x['diff'],x['summary'],*x['commands'].values()]: args += ['--evidence-ref',eid]"
+          if old not in s: raise SystemExit('concrete cross-revision evidence anchor missing')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
           source /tmp/common-develop-dev01-run.sh
