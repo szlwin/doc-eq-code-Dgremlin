@@ -687,6 +687,80 @@
     ],
     "summary": "TDD-I008 materialized 23 exact R32 TestClasses / 101 Cases with compile-clean target RED and inherited characterization; no production implementation.",
     "next_action": ""
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON-I008-A001",
+    "task_id": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008",
+    "iteration_no": 8,
+    "attempt_no": 1,
+    "agent": "DevelopAgent",
+    "phase": "development",
+    "status": "PASSED",
+    "input_revision": "TDD-P2-R01@3f282bb4e1f6",
+    "output_revision": "DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f",
+    "started_at": "2026-08-11T15:53:06+00:00",
+    "completed_at": "2026-08-11T15:53:49+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
+    ],
+    "command_evidence_ids": [
+      "EVD-000246",
+      "EVD-000247"
+    ],
+    "evidence_ids": [
+      "EVD-000242",
+      "EVD-000243",
+      "EVD-000244",
+      "EVD-000245",
+      "EVD-000248",
+      "EVD-000246",
+      "EVD-000247"
+    ],
+    "summary": "DEV-01 architecture skeleton freezes existing two-pass identity topology and explicit duplicate-source normalization seam; concrete source freezing remains unimplemented.",
+    "next_action": ""
+  },
+  {
+    "attempt_id": "ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION-I009-A001",
+    "task_id": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "attempt_no": 1,
+    "agent": "DevelopAgent",
+    "phase": "development",
+    "status": "PASSED",
+    "input_revision": "TDD-P2-R01@3f282bb4e1f6",
+    "output_revision": "DEV-P2-DEV01-R01@1f85b2e6b265",
+    "started_at": "2026-08-11T15:56:33+00:00",
+    "completed_at": "2026-08-11T15:57:04+00:00",
+    "failure_type": "",
+    "failure_reason": "",
+    "modified_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
+    ],
+    "command_evidence_ids": [
+      "EVD-000253",
+      "EVD-000254"
+    ],
+    "evidence_ids": [
+      "EVD-000249",
+      "EVD-000250",
+      "EVD-000251",
+      "EVD-000252",
+      "EVD-000257",
+      "EVD-000253",
+      "EVD-000254",
+      "EVD-000255",
+      "EVD-000256"
+    ],
+    "summary": "DEV-01 concrete implementation fills only reviewed duplicate conflict SourceRef freezing; 14 exact System/RuleView cases and existing symbol-owner regression are GREEN.",
+    "next_action": ""
   }
 ]
 ```

@@ -457,15 +457,57 @@ public final class SymbolTableBuilder {
             DefinitionKey key,
             RawDefinition first,
             RawDefinition duplicate) {
+        DuplicateConflictSources sources = duplicateConflictSources(
+                first.sourceRef(),
+                duplicate.sourceRef());
         return new Diagnostic(
                 DiagnosticCode.MIX_SYMBOL_DUPLICATE,
                 DiagnosticSeverity.ERROR,
                 "symbol.duplicate",
                 key,
-                duplicate.sourceRef(),
-                Collections.singletonList(first.sourceRef()),
+                sources.primary(),
+                Collections.singletonList(sources.related()),
                 "请删除同一 TypedKey 的重复定义",
                 PASS);
+    }
+
+    /**
+     * 将重复定义的两个来源按稳定 SourceRef 顺序路由到冻结边界。
+     * 该分支只固定架构语义，不在 Skeleton 阶段决定最终 primary/related 值构造。
+     */
+    private static DuplicateConflictSources duplicateConflictSources(
+            SourceRef first,
+            SourceRef duplicate) {
+        SourceRef lower;
+        SourceRef higher;
+        if (first.compareTo(duplicate) <= 0) {
+            lower = first;
+            higher = duplicate;
+        } else {
+            lower = duplicate;
+            higher = first;
+        }
+        return freezeDuplicateConflictSources(lower, higher);
+    }
+
+    /** DEV-01 -ar concrete implementation boundary. */
+    private static DuplicateConflictSources freezeDuplicateConflictSources(
+            SourceRef lower,
+            SourceRef higher) {
+        return new DuplicateConflictSources(higher, lower);
+    }
+
+    private static final class DuplicateConflictSources {
+        private final SourceRef primary;
+        private final SourceRef related;
+
+        private DuplicateConflictSources(SourceRef primary, SourceRef related) {
+            this.primary = Objects.requireNonNull(primary, "primary");
+            this.related = Objects.requireNonNull(related, "related");
+        }
+
+        private SourceRef primary() { return primary; }
+        private SourceRef related() { return related; }
     }
 
     /**

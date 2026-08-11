@@ -539,6 +539,34 @@
     "open_risks": [],
     "started_at": "2026-08-11T05:31:34+00:00",
     "completed_at": "2026-08-11T05:32:30+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-I008",
+    "phase": "development",
+    "round": "DEVELOPMENT-I008",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008",
+    "iteration_no": 8,
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "status": "PASSED",
+    "produced_by_agent": "DevelopAgent",
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "output_revision": "DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f",
+    "evidence_ids": [
+      "EVD-000242",
+      "EVD-000243",
+      "EVD-000244",
+      "EVD-000245",
+      "EVD-000248",
+      "EVD-000246",
+      "EVD-000247"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-11T15:54:04+00:00",
+    "completed_at": "2026-08-11T15:55:17+00:00"
   }
 ]
 ```

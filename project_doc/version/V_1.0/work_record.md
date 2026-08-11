@@ -3316,6 +3316,118 @@
 | 测试与验证 | 登记 Evidence 31 项；命令 Evidence 2 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON-I008-A001","event_id":"EVENT-ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON-I008-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000242","EVD-000243","EVD-000244","EVD-000245","EVD-000248","EVD-000246","EVD-000247"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"TDD-P2-R01@3f282bb4e1f6","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008","iteration_no":8,"modified_files_summary":["dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java","dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java","dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"],"next_action":"复核 TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON 输出并推进下一任务","next_agent":"ProjectManagerAgent","output_revision":"DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f","phase":"development","record_id":"WR-20260811-155349-TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON-PASSED","render_digest":"93dd24c8cc5f474d63e28562b0d301ab27f5e0725c5a12b2992baf54d99fb8ea","schema_version":4,"scope":"DEV-01 System/RuleView compilation architecture skeleton","source":"long_task.py finish-attempt","state_change":"TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON: RUNNING → PASSED","status":"PASSED","summary":"DEV-01 architecture skeleton freezes existing two-pass identity topology and explicit duplicate-source normalization seam; concrete source freezing remains unimplemented.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON","task_type":"development","timestamp":"2026-08-11T15:53:49+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260811-155349-TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-11T15:53:49+00:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | DEV-01 System/RuleView compilation architecture skeleton |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | DEV-01 architecture skeleton freezes existing two-pass identity topology and explicit duplicate-source normalization seam; concrete source freezing remains unimplemented. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON: RUNNING → PASSED |
+| Task | TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON |
+| Attempt | ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON-I008-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008 / 8 |
+| 输入 Revision | TDD-P2-R01@3f282bb4e1f6 |
+| 输出 Revision | DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f |
+| StageOutcome | 无 |
+| Evidence | EVD-000242、EVD-000243、EVD-000244、EVD-000245、EVD-000248、EVD-000246、EVD-000247 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 复核 TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON 输出并推进下一任务 |
+
+### 变更摘要
+
+- DEV-01 architecture skeleton freezes existing two-pass identity topology and explicit duplicate-source normalization seam; concrete source freezing remains unimplemented.
+
+### 文件变更摘要
+
+- `dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java`
+- `dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java`
+- `dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000249","EVD-000250","EVD-000251","EVD-000252","EVD-000257","EVD-000253","EVD-000254","EVD-000255","EVD-000256"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"TDD-P2-R01@3f282bb4e1f6","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009","iteration_no":9,"modified_files_summary":["dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java","dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java","dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"],"next_action":"复核 TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION 输出并推进下一任务","next_agent":"ProjectManagerAgent","output_revision":"DEV-P2-DEV01-R01@1f85b2e6b265","phase":"development","record_id":"WR-20260811-155704-TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION-PASSED","render_digest":"3b93a48775bcb64cf17ade785d5e85441ecff05619a19ac40f7d92168c76153d","schema_version":4,"scope":"System 与 RuleView 复合身份编译闭环","source":"long_task.py finish-attempt","state_change":"TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION: RUNNING → PASSED","status":"PASSED","summary":"DEV-01 concrete implementation fills only reviewed duplicate conflict SourceRef freezing; 14 exact System/RuleView cases and existing symbol-owner regression are GREEN.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION","task_type":"development","timestamp":"2026-08-11T15:57:04+00:00","validation_summary":"登记 Evidence 9 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260811-155704-TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-11T15:57:04+00:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | System 与 RuleView 复合身份编译闭环 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | DEV-01 concrete implementation fills only reviewed duplicate conflict SourceRef freezing; 14 exact System/RuleView cases and existing symbol-owner regression are GREEN. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION: RUNNING → PASSED |
+| Task | TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION |
+| Attempt | ATTEMPT-TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION-I009-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009 / 9 |
+| 输入 Revision | TDD-P2-R01@3f282bb4e1f6 |
+| 输出 Revision | DEV-P2-DEV01-R01@1f85b2e6b265 |
+| StageOutcome | 无 |
+| Evidence | EVD-000249、EVD-000250、EVD-000251、EVD-000252、EVD-000257、EVD-000253、EVD-000254、EVD-000255、EVD-000256 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 复核 TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION 输出并推进下一任务 |
+
+### 变更摘要
+
+- DEV-01 concrete implementation fills only reviewed duplicate conflict SourceRef freezing; 14 exact System/RuleView cases and existing symbol-owner regression are GREEN.
+
+### 文件变更摘要
+
+- `dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java`
+- `dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java`
+- `dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 9 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

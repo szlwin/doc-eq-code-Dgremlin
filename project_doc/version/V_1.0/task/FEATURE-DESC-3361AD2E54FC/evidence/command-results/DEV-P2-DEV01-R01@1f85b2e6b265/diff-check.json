@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "git diff --check",
+  "exit_code": 0,
+  "executed_at": "2026-08-11T15:56:46.392203+00:00",
+  "revision": "DEV-P2-DEV01-R01@1f85b2e6b265",
+  "output_ref": "evidence/command-results/DEV-P2-DEV01-R01@1f85b2e6b265/diff-check.out",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

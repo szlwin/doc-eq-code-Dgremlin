@@ -1,0 +1,11 @@
+{
+  "revision": "DEV-P2-DEV01-R01@1f85b2e6b265",
+  "skeleton_revision": "DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f",
+  "task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+  "pre_fix_red_revision": "DEV-P2-DEV01-RED@9d94e9f7822d",
+  "pre_fix_red_evidence_id": "EVD-000241",
+  "behavioral_cases": 14,
+  "green": true,
+  "production_change": "canonicalize duplicate conflict SourceRef ordering only",
+  "forbidden_changes": false
+}

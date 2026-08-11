@@ -691,6 +691,656 @@
       "EVD-000239",
       "EVD-000240"
     ]
+  },
+  {
+    "id": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON",
+    "logical_task_id": "LOGICAL-P2-DEV01-SKELETON",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008",
+    "revision_reason": "wk -ar skeleton Review passed; begin concrete implementation",
+    "title": "DEV-01 System/RuleView compilation architecture skeleton",
+    "objective": "Freeze the existing two-pass System/RuleView compilation topology and a deterministic duplicate-conflict SourceRef normalization boundary without implementing its concrete source-selection algorithm.",
+    "phase": "development",
+    "status": "REWORK",
+    "depends_on": [
+      "TASK-P2-TDD-RED-001"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "ArchitectureReviewAgent",
+      "SpecComplianceReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-01",
+      "STEP-P2-COMPILE-02",
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install",
+      "git diff --check"
+    ],
+    "expected_results": [
+      "The DEV-01 skeleton preserves existing explicit SystemKey / RuleViewKey identity and two-pass owner resolution; duplicate diagnostics route through a stable SourceRef-normalization branch whose concrete freeze method is explicitly unimplemented; all 14 DEV-01 R32 cases are represented as real Java-8 behavioral tests; ArchitectureReviewAgent and SpecComplianceReviewAgent independently pass the same skeleton revision."
+    ],
+    "stop_conditions": [
+      "Any System inference, bare RuleView lookup, second global mutable Registry, dependency-direction change, or concrete duplicate-source algorithm before skeleton review blocks the task.",
+      "Any compile failure or stale R05/R32/TDD input blocks the task."
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "System 与 RuleView 复合身份编译闭环",
+    "objective": "让 System 显式身份和 RuleView (system,name) 复合身份在编译注册、解析和确定性诊断中形成同一可发布事实。",
+    "phase": "development",
+    "status": "PASSED",
+    "depends_on": [],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/pass/**",
+      "dec-core-compiler/src/main/java/dec/core/compiler/raw/**",
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/**",
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
+      "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
+      "dec-core-context/src/main/java/dec/core/context/model/SystemKey.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-01",
+      "STEP-P2-COMPILE-02",
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install",
+      "./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest,RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "SystemCompilationContractTest 与 RuleViewCompilationContractTest 通过，且不存在裸名称回退。",
+      "相同规范化输入的 System/RuleView 身份与诊断保持确定一致。"
+    ],
+    "stop_conditions": [
+      "任何实现要求改变 BM-R20 的 System 或 RuleView 身份语义时停止。",
+      "RED 在目标断言前因编译/缺类失败时停止并先修复测试 seam。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 1,
+    "max_attempts": 3,
+    "output_revision": "DEV-P2-DEV01-R01@1f85b2e6b265",
+    "validation_evidence_ids": [
+      "EVD-000249",
+      "EVD-000250",
+      "EVD-000251",
+      "EVD-000252",
+      "EVD-000257",
+      "EVD-000253",
+      "EVD-000254",
+      "EVD-000255",
+      "EVD-000256"
+    ]
+  },
+  {
+    "id": "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-04-CONTEXT-MATERIALIZATION",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "Context 物化聚合与中立运行契约",
+    "objective": "先在 CONTEXT 建立 TargetKey/ModelPath/ModelAccessRuleKey、物化聚合与中立运行契约，使 compiler、MODEL、STARTER 只消费捕获的不可变 Context。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java",
+      "dec-core-context/src/main/java/dec/core/context/EngineContext.java",
+      "dec-core-context/src/main/java/dec/core/context/data/ModelDataFactory.java",
+      "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
+      "dec-core-context/src/main/java/dec/core/context/runtime/**",
+      "dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java",
+      "dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-008"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install",
+      "./mvnw -pl dec-core-context -Dtest=ProtectedAccessContextApiContractTest,RuntimeFactValueContractTest,OpaqueRuntimeIdContractTest -Dsurefire.failIfNoSpecifiedTests=true test",
+      "./mvnw -pl dec-core-compiler -Dtest=P2CompilerContextConstructibilityContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "CONTEXT API 可由 compiler 合法构造且无反射/包私有旁路。",
+      "materialization/index 和 runtime values 深度不可变，跨 EngineContext 不污染。",
+      "CompiledModelSet mandatory index contract 与 production CompiledModelSetBuilder 构造点在 DEV-04 同一 slice 原子切换，compiler reactor 不依赖后续 DEV-03 修复临时编译破坏。"
+    ],
+    "stop_conditions": [
+      "发现必须暴露 ModelData 或 operation capability 给 CONTEXT 公共 API 时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-02-RULEVIEW-REFERENCE",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-02-RULEVIEW-REFERENCE",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "RuleView 完整引用与目标解析",
+    "objective": "让新调用路径只通过完整 System + RuleView 身份解析，并把未知 System、未知 RuleView 和目标类型错误稳定地阻断在编译期。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/**",
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/ReferenceResolver.java",
+      "dec-core-compiler/src/main/java/dec/core/compiler/symbol/ReferenceTargetParser.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-003"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-01"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-compiler -Dtest=RuleViewCompilationContractTest,TargetKeyModelPathContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "所有新 RuleView 引用使用完整复合身份，unknown/mismatch 不产生 null-success 或全局 fallback。"
+    ],
+    "stop_conditions": [
+      "发现需要改变 P1 SourceRef 或 TypedKey 公共语义时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "model-access 路径、权限与原子发布",
+    "objective": "把 TargetKey、ModelPath、READ/WRITE ModelAccessRuleKey、静态分类与完整候选发布绑定为一个 fail-closed 编译切片。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-02-RULEVIEW-REFERENCE",
+      "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/main/java/dec/core/compiler/api/ContextPublisher.java",
+      "dec-core-compiler/src/main/java/dec/core/compiler/modelaccess/**",
+      "dec-core-compiler/src/main/java/dec/core/compiler/pass/**",
+      "dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-005",
+      "TR-P2-SYSTEM-RULEVIEW-008",
+      "TR-P2-SYSTEM-RULEVIEW-009"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-02",
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-compiler -Dtest=TargetKeyModelPathContractTest,ModelAccessPolicyContractTest,AtomicPublicationContractTest,P2DiagnosticDeterminismTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "静态越权、非法路径和候选不完整全部在发布前失败。",
+      "完整候选原子发布，旧 Context 在失败路径保持不变。"
+    ],
+    "stop_conditions": [
+      "需要引入 EXECUTE 作为 P2 当前 AccessOperation 时停止；Overlay R04 当前只允许 READ/WRITE。",
+      "需要依赖全局 default/current Context 时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-05-MODEL-TRUSTED-LOAD",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-05-MODEL-TRUSTED-LOAD",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "MODEL trusted load 与 Scope 生产边界",
+    "objective": "让 MODEL 通过 captured EngineContext、真实 origin 和 MODEL 自建 Container 完成精确物化，并只在成功后 mint 同一 ModelData 的 Handle/Scope。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-model/src/main/java/dec/core/model/container/ContainerFactory.java",
+      "dec-core-model/src/main/java/dec/core/model/container/ModelLoader.java",
+      "dec-core-model/src/main/java/dec/core/model/runtime/**",
+      "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java",
+      "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-008"
+    ],
+    "flow_refs": [
+      "FLOW-PROTECTED-ACCESS-EXECUTE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-ACCESS-01"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-model -am -Dmaven.test.skip=true install",
+      "./mvnw -pl dec-core-model -Dtest=ProtectedAccessModelApiContractTest,RuntimeModelMaterializationIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "L01-L07 失败码与零副作用矩阵精确通过。",
+      "成功路径中 factory、loader、Container、Handle 与后续 scope 持有同一 ModelData 身份。"
+    ],
+    "stop_conditions": [
+      "需要引入 R29 已 DEFERRED 的 opaque production invocation token 时停止。",
+      "需要把 P7 事务/资源生命周期提前纳入 P2 时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-06-MODEL-SESSION-EFFECT",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-06-MODEL-SESSION-EFFECT",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "MODEL Session、Locator 与 EffectProvider 完整性",
+    "objective": "让 Scope 只能创建同源 Session，精确注册 trusted Handle、seal 后绑定 EffectProvider，并由私有 operation port 在 effect 前复核 session/object/handle。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-05-MODEL-TRUSTED-LOAD"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-model/src/main/java/dec/core/model/runtime/**",
+      "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java",
+      "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java",
+      "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-009"
+    ],
+    "flow_refs": [
+      "FLOW-PROTECTED-ACCESS-EXECUTE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-ACCESS-02",
+      "STEP-P2-ACCESS-03",
+      "STEP-P2-ACCESS-06"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-model -Dtest=ProtectedAccessModelApiContractTest,RuntimeObjectLocatorIntegrationTest,ProtectedWriteTransactionIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "Provider 只绑定同 Scope 的 exact sealed Session。",
+      "runtime target 0/N、stale、ownership conflict 和 write failure 全部 fail closed。"
+    ],
+    "stop_conditions": [
+      "出现需要跨 Session 共享可变 ownership domain 的设计要求时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "STARTER 目标解析、Intent、Capability 与 Guard",
+    "objective": "在 STARTER 中把 exact runtime target、READ/WRITE intent、one-shot capability 与 ModelAccessRuleKey Guard 串成 Guard-before-effect 的同一证明链。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+      "TASK-P2-DEV-06-MODEL-SESSION-EFFECT"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-starter/pom.xml",
+      "dec-core-starter/src/main/java/dec/core/starter/access/**",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-005",
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-009"
+    ],
+    "flow_refs": [
+      "FLOW-PROTECTED-ACCESS-EXECUTE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-ACCESS-03",
+      "STEP-P2-ACCESS-04",
+      "STEP-P2-ACCESS-05",
+      "STEP-P2-ACCESS-06"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install",
+      "./mvnw -pl dec-core-starter -Dtest=ProtectedAccessStarterApiContractTest,ProtectedWriteIntentResolutionTest,ProtectedRuntimeModelAdapterIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "resolve A -> Guard A -> effect A invariant 通过，A->B substitution 在 effect 前失败。",
+      "WRITE intent 0/N/stale 和 capability 重放均稳定拒绝。",
+      "DEV-07 自身完成 STARTER -> MODEL Maven wiring 并通过 dec-core-starter reactor install；不得依赖 DEV-08 才补齐 MODEL compile classpath。"
+    ],
+    "stop_conditions": [
+      "任何实现需要 consumer 自己持有 MODEL operation port 或直接写 ModelData 时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "生产 Composition、消费者边界与并发闭环",
+    "objective": "让 Rule/Change/CustomAction 只经 STARTER protected entries 使用同一 Scope/Session/Guard/effect 组合，并在并发 capability/ownership 冲突下最多产生一次合法效果。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-starter/pom.xml",
+      "dec-core-starter/src/main/java/dec/core/starter/access/**",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java",
+      "dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-008",
+      "TR-P2-SYSTEM-RULEVIEW-009"
+    ],
+    "flow_refs": [
+      "FLOW-PROTECTED-ACCESS-EXECUTE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-ACCESS-01",
+      "STEP-P2-ACCESS-02",
+      "STEP-P2-ACCESS-03",
+      "STEP-P2-ACCESS-04",
+      "STEP-P2-ACCESS-05",
+      "STEP-P2-ACCESS-06"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-core-starter -Dtest=ProtectedAccessProductionCompositionTest,ProtectedAccessConcurrencyTest,ProtectedAccessDependencyDirectionTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    ],
+    "expected_results": [
+      "三类 consumer 结果/效果语义一致且不存在 MODEL bypass。",
+      "同 capability 并发最多一个 Guard/effect，冲突 ownership 失败关闭。"
+    ],
+    "stop_conditions": [
+      "发现必须提前实现 P4 Action/Produce 状态机或 P7 Session 事务生命周期时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
+  },
+  {
+    "id": "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY",
+    "logical_task_id": "LOGICAL-TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY",
+    "feature_id": "FEATURE-DESC-3361AD2E54FC",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+    "iteration_no": 9,
+    "supersedes_iteration_id": "",
+    "revision_reason": "Materialize exact R05 Development slice in concrete implementation iteration.",
+    "title": "真实 fixture 端到端与 declaration 兼容边界",
+    "objective": "用真实 systems.xml 与 originData 跑通 compile -> Context -> MODEL load -> STARTER Guard -> READ/WRITE，并证明 declaration 只保留 P2 兼容边界。",
+    "phase": "development",
+    "status": "READY",
+    "depends_on": [
+      "TASK-P2-DEV-03-MODEL-ACCESS-POLICY",
+      "TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY"
+    ],
+    "owner_agent": "DevelopAgent",
+    "reviewer_agents": [
+      "TDDReviewAgent"
+    ],
+    "input_revisions": {
+      "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "tdd": "TDD-P2-R01@3f282bb4e1f6"
+    },
+    "allowed_files": [
+      "dec-core-compiler/src/test/**",
+      "dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java",
+      "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java",
+      "dec-core-context/src/test/**",
+      "dec-core-model/src/test/**",
+      "dec-core-starter/src/test/**",
+      "dec-demo/src/main/resources/mix/**",
+      "dec-demo/src/main/resources/mix/system/systems.xml",
+      "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
+    ],
+    "acceptance_trace_ids": [
+      "TR-P2-SYSTEM-RULEVIEW-001",
+      "TR-P2-SYSTEM-RULEVIEW-002",
+      "TR-P2-SYSTEM-RULEVIEW-003",
+      "TR-P2-SYSTEM-RULEVIEW-004",
+      "TR-P2-SYSTEM-RULEVIEW-005",
+      "TR-P2-SYSTEM-RULEVIEW-006",
+      "TR-P2-SYSTEM-RULEVIEW-007",
+      "TR-P2-SYSTEM-RULEVIEW-008",
+      "TR-P2-SYSTEM-RULEVIEW-009",
+      "TR-P2-SYSTEM-RULEVIEW-010"
+    ],
+    "flow_refs": [
+      "FLOW-CONFIG-COMPILE",
+      "FLOW-PROTECTED-ACCESS-EXECUTE"
+    ],
+    "flow_step_refs": [
+      "STEP-P2-COMPILE-01",
+      "STEP-P2-COMPILE-02",
+      "STEP-P2-COMPILE-03",
+      "STEP-P2-COMPILE-04",
+      "STEP-P2-ACCESS-01",
+      "STEP-P2-ACCESS-02",
+      "STEP-P2-ACCESS-03",
+      "STEP-P2-ACCESS-04",
+      "STEP-P2-ACCESS-05",
+      "STEP-P2-ACCESS-06"
+    ],
+    "validation_commands": [
+      "./mvnw -pl dec-demo -am -Dmaven.test.skip=true install",
+      "./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test",
+      "./mvnw -pl dec-core-compiler -Dtest=P2DeclarationCompatibilityContractTest,P2RevisionDependencyDagContractTest -Dsurefire.failIfNoSpecifiedTests=true test",
+      "./mvnw -pl dec-core-compiler,dec-core-context,dec-core-model,dec-core-starter,dec-demo test"
+    ],
+    "expected_results": [
+      "真实 fixture 完成 compile-to-effect 闭环且未使用 fake ModelData/Container/port。",
+      "R31 的 23 个 TestClass 全部可执行通过，declaration 与阶段边界保持。"
+    ],
+    "stop_conditions": [
+      "真实 fixture 暴露需要改变已冻结 BM-R20/DESIGN-R30 语义的问题时停止并重开上游。",
+      "需要删除 declaration runtime 或引入 P3-P7 完整执行语义时停止。",
+      "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    ],
+    "risk_triggers": [],
+    "attempts": 0,
+    "max_attempts": 3,
+    "output_revision": "",
+    "validation_evidence_ids": []
   }
 ]
 ```
