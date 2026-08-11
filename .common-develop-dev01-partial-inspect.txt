@@ -1,0 +1,704 @@
+
+=== git_checkpoint.command_commit ===
+def command_commit(args: argparse.Namespace) -> int:
+    agent = agent_context.selected_agent(args)
+    result = commit_checkpoint(Path(args.task_dir), agent=agent, title=args.title or "", changes=args.change or [], phase=args.phase or "")
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+=== git_checkpoint.commit_checkpoint ===
+def commit_checkpoint(task_dir: Path, *, agent: str, title: str = "", changes: list[str] | None = None, phase: str = "") -> dict[str, Any]:
+    if agent != "ProjectManagerAgent":
+        raise GitCheckpointError("only ProjectManagerAgent may create Git checkpoints")
+    task_dir = task_dir.resolve()
+    # Reuse the complete long-task gate validation without creating a module import cycle at import time.
+    import long_task  # local import by design
+    errors, _, state_for_auth, _ = long_task.validate_task(task_dir)
+    if errors:
+        raise GitCheckpointError("task is invalid before Git checkpoint: " + "; ".join(errors))
+    agent_context.authorize_static(agent, "git_checkpoint", "commit")
+    mode, _ = work_mode.load_mode(version_root(task_dir).parent.parent, str(state_for_auth.get("version")))
+    if not mode.git_checkpoint:
+        raise GitCheckpointError("wk -gc/--git-checkpoint is not enabled in work.md")
+    state, tasks, attempts, outcome = current_gate(task_dir, phase_override=phase)
+    repo = repository_root(task_dir)
+    branch = branch_name(repo)
+    operation = in_progress_operation(repo)
+    if operation:
+        raise GitCheckpointError(f"Git {operation} is in progress")
+    if run_git(repo, "diff", "--cached", "--quiet", check=False).returncode != 0:
+        raise GitCheckpointError("Git index must be clean before automatic checkpoint commit")
+    head = run_git(repo, "rev-parse", "HEAD").stdout.strip()
+    checkpoint_id = checkpoint_id_for(state, outcome)
+    document = load_document(task_dir)
+    checkpoints = document.get("checkpoints")
+    if not isinstance(checkpoints, list):
+        raise GitCheckpointError("git_checkpoints.yaml checkpoints must be an array")
+    existing = next((item for item in checkpoints if isinstance(item, dict) and item.get("checkpoint_id") == checkpoint_id), None)
+    if existing:
+        shas = resolve_checkpoint_shas(repo, checkpoint_id)
+        if len(shas) == 1:
+            return {"status": "ALREADY_COMMITTED", "checkpointId": checkpoint_id, "commitSha": shas[0], "branch": branch}
+        raise GitCheckpointError(f"checkpoint record already exists but does not resolve uniquely: {checkpoint_id}")
+    before_paths = status_paths(repo)
+    checkpoint_rel = relative(repo, checkpoint_path(task_dir))
+    patterns = allowed_patterns(repo, task_dir, state, tasks, attempts, str(outcome.get("phase")))
+    for path in before_paths:
+        if denied_path(path):
+            raise GitCheckpointError(f"denied path cannot be committed: {path}")
+        if not path_allowed(path, patterns):
+            raise GitCheckpointError(f"changed path is outside current sequential task scope: {path}")
+    same_phase = [item for item in checkpoints if isinstance(item, dict) and item.get("phase") == outcome.get("phase")]
+    supersedes = str(same_phase[-1].get("checkpoint_id")) if same_phase else ""
+    summaries = [
+        str(item.get("summary")) for item in attempts
+        if isinstance(item, dict)
+        and item.get("phase") == outcome.get("phase")
+        and item.get("iteration_id") == outcome.get("iteration_id")
+        and item.get("status") == "PASSED"
+        and str(item.get("summary") or "").strip()
+    ]
+    selected_changes = list(changes or summaries[-3:])[:3]
+    commit_title = title.strip() or default_title(str(state["target_id"]), str(outcome["phase"]))
+    record = {
+        "checkpoint_id": checkpoint_id,
+        "phase": outcome["phase"],
+        "iteration_id": outcome["iteration_id"],
+        "iteration_no": outcome["iteration_no"],
+        "stage_revision": outcome["output_revision"],
+        "stage_outcome_ref": outcome["id"],
+        "branch": branch,
+        "base_commit": head,
+        "changed_paths": sorted(dict.fromkeys([*before_paths, checkpoint_rel])),
+        "content_digest": content_digest(repo, before_paths, checkpoint_rel),
+        "commit_title": commit_title,
+        "created_by_agent": agent,
+        "created_at": now(),
+        "supersedes_checkpoint_id": supersedes,
+    }
+    backup = checkpoint_path(task_dir).read_bytes()
+    checkpoints.append(record)
+    simple_yaml.dump(document, checkpoint_path(task_dir))
+    all_paths = status_paths(repo)
+    for path in all_paths:
+        if denied_path(path):
+            checkpoint_path(task_dir).write_bytes(backup)
+            raise GitCheckpointError(f"denied path cannot be committed: {path}")
+        if path != checkpoint_rel and not path_allowed(path, patterns):
+            checkpoint_path(task_dir).write_bytes(backup)
+            raise GitCheckpointError(f"changed path is outside current sequential task scope: {path}")
+    message = build_message(commit_title, selected_changes, checkpoint_id, str(outcome["output_revision"]))
+    try:
+        if not all_paths:
+            raise GitCheckpointError("no files available for checkpoint commit")
+        run_git(repo, "add", "--", *all_paths)
+        check_result = run_git(repo, "diff", "--cached", "--check", check=False)
+        if check_result.returncode != 0:
+            raise GitCheckpointError(f"git diff --cached --check failed: {(check_result.stderr or check_result.stdout).strip()}")
+        commit_result = subprocess.run(
+            ["git", "-C", str(repo), "commit", "-F", "-"], input=message, text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
+        if commit_result.returncode != 0:
+            raise GitCheckpointError(f"git commit failed: {(commit_result.stderr or commit_result.stdout).strip()}")
+    except Exception:
+        run_git(repo, "reset", "--quiet", "HEAD", "--", *all_paths, check=False)
+        checkpoint_path(task_dir).write_bytes(backup)
+        raise
+    sha = run_git(repo, "rev-parse", "HEAD").stdout.strip()
+    shas = resolve_checkpoint_shas(repo, checkpoint_id)
+    if shas != [sha]:
+        raise GitCheckpointError(f"created commit does not resolve uniquely by checkpoint trailer: {checkpoint_id}")
+    return {"status": "COMMITTED", "checkpointId": checkpoint_id, "commitSha": sha, "branch": branch, "changedPaths": all_paths}
+
+
+=== git_checkpoint.command_validate ===
+def command_validate(args: argparse.Namespace) -> int:
+    agent = agent_context.selected_agent(args)
+    agent_context.authorize_static(agent, "git_checkpoint", "validate")
+    errors, _, resolved = validate_document(Path(args.task_dir), require_resolved=bool(args.require_resolved))
+    payload = {"status": "FAILED" if errors else "PASSED", "errors": errors, "checkpoints": resolved}
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
+        print(payload["status"])
+    return 1 if errors else 0
+
+
+=== long_task.command_finish_attempt ===
+def command_finish_attempt(args: argparse.Namespace) -> int:
+    task_dir = Path(args.task_dir)
+    errors, _, _, issues = validate_task(task_dir)
+    if errors:
+        raise ValueError('task is invalid before finish-attempt: ' + '; '.join(errors))
+    blocking_issues = blocking_issue_ids_for_revision(issues, args.output_revision or '')
+    if blocking_issues and args.status == 'PASSED':
+        raise ValueError(
+            f'PASSED attempt is blocked by P0/P1 issues against '
+            f'{args.output_revision}: {blocking_issues}'
+        )
+    (state_document, state), (plan_document, tasks), (attempts_document, attempts) = load_task_runtime_documents(task_dir)
+    agent = authorize_task_command(args, 'finish-attempt', state, task_dir)
+    attempt = find_attempt(attempts, args.attempt_id)
+    if attempt.get('status') != 'RUNNING':
+        raise ValueError(f'attempt {args.attempt_id} is not RUNNING')
+    if attempt.get('agent') != agent:
+        raise agent_context.AgentAuthorizationError(
+            f'Agent {agent} cannot finish attempt owned by {attempt.get("agent")}'
+        )
+    status = args.status
+    if status not in ATTEMPT_STATUSES - {'RUNNING'}:
+        raise ValueError(f'invalid finish status: {status}')
+    evidence_ids = list(dict.fromkeys(args.evidence_ref or []))
+    modified_files = list(dict.fromkeys(args.modified_file or []))
+    command_evidence_ids = list(dict.fromkeys(args.command_ref or []))
+    if status == 'PASSED' and not args.output_revision:
+        raise ValueError('PASSED attempt requires --output-revision')
+    if status == 'PASSED' and not evidence_ids:
+        raise ValueError('PASSED attempt requires at least one --evidence-ref')
+    if status in {'FAILED', 'BLOCKED'} and not (args.failure_type or args.failure_reason):
+        raise ValueError(f'{status} attempt requires --failure-type or --failure-reason')
+    if status in {'FAILED', 'BLOCKED', 'CANCELLED'} and args.output_revision:
+        raise ValueError(f'{status} attempt must not have --output-revision')
+    task = find_plan_task(tasks, str(attempt.get('task_id')))
+    previous_task_status = str(task.get('status') or '')
+    if attempt.get('iteration_id') != task.get('iteration_id'):
+        raise ValueError('cannot finish an attempt from a superseded iteration')
+    validate_attempt_completion_evidence(
+        task_dir, task, status, args.output_revision or '', modified_files, command_evidence_ids, evidence_ids
+    )
+    timestamp = now()
+    attempt.update({
+        'status': status,
+        'output_revision': args.output_revision or '',
+        'completed_at': timestamp,
+        'failure_type': args.failure_type or '',
+        'failure_reason': args.failure_reason or '',
+        'modified_files': modified_files,
+        'command_evidence_ids': command_evidence_ids,
+        'evidence_ids': evidence_ids,
+        'summary': args.summary or attempt.get('summary') or '',
+        'next_action': args.next_action or '',
+    })
+    if status == 'PASSED':
+        task['status'] = 'PASSED'
+        task['output_revision'] = args.output_revision
+        task['validation_evidence_ids'] = evidence_ids
+    elif status == 'CANCELLED':
+        task['status'] = 'CANCELLED'
+        task['output_revision'] = ''
+        task['validation_evidence_ids'] = []
+    elif status == 'BLOCKED':
+        task['status'] = 'BLOCKED'
+        task['output_revision'] = ''
+        task['validation_evidence_ids'] = evidence_ids
+    elif status in {'FAILED', 'PARTIAL'}:
+        task['status'] = 'REWORK' if int(task.get('attempts', 0)) < int(task.get('max_attempts', 0)) else 'BLOCKED'
+        task['output_revision'] = args.output_revision if status == 'PARTIAL' else ''
+        task['validation_evidence_ids'] = evidence_ids
+    failed = state.setdefault('failed_attempts', {})
+    if status in {'FAILED', 'BLOCKED'}:
+        failed[task['id']] = int(failed.get(task['id'], 0)) + 1
+    active = state.setdefault('active_task_ids', [])
+    state['active_task_ids'] = [value for value in active if value != task['id']]
+    if state.get('current_attempt_id') == args.attempt_id:
+        state['current_attempt_id'] = ''
+    state['current_agent'] = agent
+    state['task_status'] = 'BLOCKED' if task['status'] == 'BLOCKED' else ('REWORK' if task['status'] == 'REWORK' else 'RUNNING')
+    if not state['active_task_ids'] and task['status'] == 'PASSED':
+        state['task_status'] = 'PARTIAL'
+    state['next_action'] = args.next_action or (
+        f'复核 {task["id"]} 输出并推进下一任务' if status == 'PASSED' else f'处理 {task["id"]} 的 {status} 结果'
+    )
+    state['next_agent'] = args.next_agent or state.get('project_manager_agent') or PROJECT_MANAGER_AGENT
+    state['checkpoint_at'] = timestamp
+
+    work_path = ensure_work_record(version_root_from_task_dir(task_dir), str(state.get('version')))
+    work_mode_state = state.get('work_mode') if isinstance(state.get('work_mode'), dict) else {}
+    enabled_modes = [
+        key for key in ('model_code', 'page_design', 'minimal', 'auto', 'architecture_review', 'git_checkpoint')
+        if work_mode_state.get(key) is True
+    ]
+    event = {
+        'event_id': f'EVENT-{args.attempt_id}-{status}',
+        'timestamp': timestamp,
+        'event_type': attempt_event_type(status),
+        'status': status,
+        'agent': agent,
+        'source': 'long_task.py finish-attempt',
+        'version': str(state.get('version') or ''),
+        'target_id': task_dir.name,
+        'scope': task.get('title') or task.get('objective') or task_dir.name,
+        'phase': task.get('phase') or '',
+        'task_type': task.get('phase') or 'task-attempt',
+        'execution_mode': ' / '.join(enabled_modes) if enabled_modes else 'standard / sequential',
+        'task_id': task['id'],
+        'attempt_id': args.attempt_id,
+        'iteration_id': attempt.get('iteration_id') or '',
+        'iteration_no': attempt.get('iteration_no') or 0,
+        'input_revision': attempt.get('input_revision') or '',
+        'output_revision': attempt.get('output_revision') or '',
+        'stage_outcome_refs': [],
+        'evidence_ids': evidence_ids,
+        'review_result_refs': [],
+        'issue_ids': list(state.get('open_issue_ids') or []),
+        'git_checkpoint_refs': [],
+        'summary': attempt.get('summary') or f'{task["id"]} iteration {attempt.get("iteration_no")} attempt {attempt.get("attempt_no")} {status}',
+        'state_change': f'{task["id"]}: {previous_task_status} → {task.get("status")}',
+        'sql_change_summary': '无 / 未登记',
+        'validation_summary': f'登记 Evidence {len(evidence_ids)} 项；命令 Evidence {len(command_evidence_ids)} 项',
+        'blockers': [value for value in (attempt.get('failure_type'), attempt.get('failure_reason')) if value],
+        'modified_files_summary': modified_files,
+        'next_action': state['next_action'],
+        'next_agent': state['next_agent'],
+    }
+    work_text, _ = append_work_event(work_path, event, version=str(state.get('version') or ''))
+    payloads = {
+        task_dir / 'task_state.md': render_block(task_dir / 'task_state.md', 'task-state', state_document, state),
+        task_dir / 'task_plan.md': render_block(task_dir / 'task_plan.md', 'task-plan', plan_document, tasks),
+        task_dir / 'task_attempts.md': render_block(task_dir / 'task_attempts.md', 'task-attempts', attempts_document, attempts),
+        work_path: work_text,
+    }
+    transactional_text_write(payloads)
+    emit_json({
+        'attemptId': args.attempt_id,
+        'taskId': task['id'],
+        'attemptNo': attempt.get('attempt_no'),
+        'status': status,
+        'taskStatus': task['status'],
+        'workEventId': event['event_id'],
+    })
+    return 0
+
+
+=== long_task.command_publish_artifact ===
+def command_publish_artifact(args: argparse.Namespace) -> int:
+    """Freeze one PASSED attempt revision and open Review for the current phase."""
+    task_dir = Path(args.task_dir)
+    errors, _, state, issues = validate_task(task_dir)
+    if errors:
+        raise ValueError('task is invalid before publish-artifact: ' + '; '.join(errors))
+    agent = authorize_task_command(args, 'publish-artifact', state, task_dir)
+    phase = str(state.get('current_phase') or '')
+    if phase == 'development' and bool((state.get('work_mode') or {}).get('architecture_review')):
+        step = architecture_review_state(state).get('step')
+        if step not in {'SKELETON', 'IMPLEMENTATION'}:
+            raise ValueError(f'wk -ar development artifact cannot be published from step {step}')
+        if step == 'IMPLEMENTATION' and not architecture_review_state(state).get('skeleton_review_result_refs'):
+            raise ValueError('wk -ar concrete implementation requires passed skeleton Review refs')
+    owner_agent = PHASE_DEFINITIONS[phase].get('ownerAgent')
+    if agent != owner_agent:
+        raise agent_context.AgentAuthorizationError(
+            f'Agent {agent} cannot publish {phase} artifact; ownerAgent={owner_agent}'
+        )
+    (state_document, state), (_, tasks), (_, attempts) = load_task_runtime_documents(task_dir)
+    if state.get('current_attempt_id') or state.get('active_task_ids'):
+        raise ValueError('cannot publish artifact while a task attempt is active')
+    artifact = (state.get('artifact_revisions') or {}).get(phase)
+    if not isinstance(artifact, dict):
+        raise ValueError(f'task-state lacks artifact revision for {phase}')
+    iteration_id = str(artifact.get('iteration_id') or '')
+    phase_tasks = current_phase_tasks(tasks, phase, iteration_id)
+    if not phase_tasks:
+        raise ValueError(f'publish-artifact requires at least one current-iteration task for {phase}')
+    incomplete = [
+        str(task.get('id')) for task in phase_tasks
+        if task.get('status') not in {'PASSED', 'NOT_APPLICABLE'}
+    ]
+    if incomplete:
+        raise ValueError(f'cannot publish artifact because current phase tasks are incomplete: {incomplete}')
+    attempt = find_attempt(attempts, args.attempt_id)
+    if attempt.get('status') != 'PASSED':
+        raise ValueError(f'publish-artifact requires a PASSED attempt: {args.attempt_id}')
+    if attempt.get('phase') != phase or attempt.get('iteration_id') != iteration_id:
+        raise ValueError('publish-artifact attempt is not from the current phase iteration')
+    revision = str(attempt.get('output_revision') or '')
+    if not revision:
+        raise ValueError('publish-artifact attempt has no output_revision')
+    blocking_issues = blocking_issue_ids_for_revision(issues, revision)
+    if blocking_issues:
+        raise ValueError(
+            f'cannot publish artifact with P0/P1 issues against {revision}: {blocking_issues}'
+        )
+    attempt_task = find_plan_task(tasks, str(attempt.get('task_id') or ''))
+    if attempt_task.get('status') != 'PASSED' or attempt_task.get('output_revision') != revision:
+        raise ValueError('publish-artifact attempt does not match its current PASSED task')
+    evidence_ids = list(dict.fromkeys([
+        *(attempt.get('evidence_ids') or []),
+        *(attempt.get('command_evidence_ids') or []),
+        *(args.evidence_id or []),
+    ]))
+    if not evidence_ids:
+        raise ValueError('publish-artifact requires current revision evidence')
+    for evidence_id in evidence_ids:
+        evidence.require_evidence(
+            task_dir,
+            str(evidence_id),
+            expected_revision=revision,
+            expected_phase=phase,
+        )
+
+    outcomes_path = task_dir / 'stage_outcomes.md'
+    outcomes_document, outcomes = read_block(outcomes_path, 'stage-outcomes')
+    if not isinstance(outcomes, list):
+        raise ValueError('stage-outcomes must be a JSON array')
+    current_outcome = next((
+        item for item in outcomes
+        if isinstance(item, dict) and item.get('phase') == phase and item.get('is_current') is True
+    ), None)
+    if isinstance(current_outcome, dict):
+        if (
+            artifact.get('revision') == revision
+            and current_outcome.get('iteration_id') == iteration_id
+            and current_outcome.get('output_revision') == revision
+            and current_outcome.get('status') == 'RUNNING'
+        ):
+            emit_json({
+                'status': 'ALREADY_PUBLISHED',
+                'phase': phase,
+                'revision': revision,
+                'stageOutcomeId': current_outcome.get('id'),
+            })
+            return 0
+        raise ValueError(f'{phase} already has a current StageOutcome; run reopen-phase for a new revision')
+    if artifact.get('revision') not in {'', revision}:
+        raise ValueError(f'{phase} artifact already binds a different revision; run reopen-phase')
+
+    timestamp = now()
+    artifact['revision'] = revision
+    artifact['status'] = 'IN_PROGRESS'
+    review = (state.get('collaboration_reviews') or {}).get(phase)
+    reviewers: list[str] = []
+    if isinstance(review, dict):
+        if review.get('current_iteration_id') != iteration_id:
+            raise ValueError(f'{phase} collaboration Review iteration is stale')
+        if review.get('artifact_revision') not in {'', revision}:
+            raise ValueError(f'{phase} collaboration Review binds a different revision; run reopen-phase')
+        if review.get('independent_conclusions'):
+            raise ValueError(f'{phase} collaboration Review already has conclusions; run reopen-phase for a new revision')
+        review['artifact_revision'] = revision
+        review['status'] = 'IN_REVIEW'
+        reviewers = active_phase_reviewers(task_dir, review)
+    outcome = {
+        'id': f'SO-{state.get("target_id")}-{phase.upper()}-I{int(artifact.get("iteration_no")):03d}',
+        'phase': phase,
+        'round': str(state.get('current_round') or f'{phase.upper()}-I{int(artifact.get("iteration_no")):03d}'),
+        'iteration_id': iteration_id,
+        'iteration_no': int(artifact.get('iteration_no')),
+        'is_current': True,
+        'superseded_by': '',
+        'status': 'RUNNING',
+        'produced_by_agent': agent,
+        'input_revisions': {
+            predecessor: state['artifact_revisions'][predecessor]['revision']
+            for predecessor in phase_predecessors(
+                phase, bool(actual_work_mode_state(task_dir).get('minimal'))
+            )
+        },
+        'output_revision': revision,
+        'evidence_ids': evidence_ids,
+        'open_risks': list(dict.fromkeys(args.open_risk or [])),
+        'started_at': timestamp,
+        'completed_at': '',
+    }
+    outcomes.append(outcome)
+    state['task_status'] = 'PARTIAL'
+    state['current_agent'] = agent
+    state['next_agent'] = reviewers[0] if reviewers else (state.get('project_manager_agent') or PROJECT_MANAGER_AGENT)
+    state['next_action'] = (
+        f'由 {state["next_agent"]} 审查 {phase}@{revision}'
+        if reviewers else f'由 ProjectManagerAgent 核验并结束 {phase}@{revision}'
+    )
+    state['checkpoint_at'] = timestamp
+    transactional_text_write({
+        task_dir / 'task_state.md': render_block(
+            task_dir / 'task_state.md', 'task-state', state_document, state
+        ),
+        outcomes_path: render_block(outcomes_path, 'stage-outcomes', outcomes_document, outcomes),
+    })
+    emit_json({
+        'status': 'PUBLISHED',
+        'phase': phase,
+        'revision': revision,
+        'stageOutcomeId': outcome['id'],
+        'reviewerAgents': reviewers,
+        'nextAgent': state['next_agent'],
+    })
+    return 0
+
+
+=== long_task.command_finalize_phase ===
+def command_finalize_phase(args: argparse.Namespace) -> int:
+    """Pass the current artifact and StageOutcome after all phase gates succeed."""
+    task_dir = Path(args.task_dir)
+    agent = agent_context.selected_agent(args)
+    agent_context.authorize_static(agent, 'long_task', 'finalize-phase')
+    errors, _, state, issues = validate_task(task_dir)
+    if errors:
+        raise ValueError('task is invalid before finalize-phase: ' + '; '.join(errors))
+    phase = str(state.get('current_phase') or '')
+    state_path = task_dir / 'task_state.md'
+    state_document, state = read_block(state_path, 'task-state')
+    plan_document, tasks = read_block(task_dir / 'task_plan.md', 'task-plan')
+    outcomes_path = task_dir / 'stage_outcomes.md'
+    outcomes_document, outcomes = read_block(outcomes_path, 'stage-outcomes')
+    if not isinstance(tasks, list) or not isinstance(outcomes, list):
+        raise ValueError('task plan or stage outcomes are invalid')
+    if state.get('current_attempt_id') or state.get('active_task_ids'):
+        raise ValueError('cannot finalize phase while a task attempt is active')
+    artifact = (state.get('artifact_revisions') or {}).get(phase)
+    if not isinstance(artifact, dict) or artifact.get('status') != 'IN_PROGRESS' or not artifact.get('revision'):
+        raise ValueError(f'finalize-phase requires a published IN_PROGRESS artifact for {phase}')
+    revision = str(artifact['revision'])
+    critical = blocking_issue_ids_for_phase_revision(issues, phase, revision)
+    if critical:
+        raise ValueError(
+            f'cannot finalize {phase} with P0/P1 issues against the current '
+            f'or upstream revision: {critical}'
+        )
+    iteration_id = str(artifact.get('iteration_id') or '')
+    incomplete = [
+        str(task.get('id')) for task in current_phase_tasks(tasks, phase, iteration_id)
+        if task.get('status') not in {'PASSED', 'NOT_APPLICABLE'}
+    ]
+    if incomplete:
+        raise ValueError(f'cannot finalize phase because current phase tasks are incomplete: {incomplete}')
+    review = (state.get('collaboration_reviews') or {}).get(phase)
+    if isinstance(review, dict):
+        if review.get('artifact_revision') != revision or review.get('status') != 'PASSED':
+            raise ValueError(f'cannot finalize {phase} before collaboration Review passes for {revision}')
+    ar_state = architecture_review_state(state)
+    ar_transition, ar_transition_refs = resolve_architecture_finalize_transition(
+        phase, state, review if isinstance(review, dict) else None,
+        minimal=bool((state.get('work_mode') or {}).get('minimal')),
+    )
+    ar_review_refs = ar_transition_refs if ar_transition == 'SKELETON_REVIEW_PASSED' else []
+    ar_final_review_refs = ar_transition_refs if ar_transition == 'IMPLEMENTATION_REVIEW_PASSED' else []
+    _, traces = read_block(task_dir / 'traceability.md', 'traceability')
+    invalid_traces = [
+        str(item.get('id') or f'index-{index}')
+        for index, item in enumerate(traces if isinstance(traces, list) else [])
+        if isinstance(item, dict) and item.get('status') in {'GAP', 'STALE'}
+    ]
+    if invalid_traces:
+        raise ValueError(f'cannot finalize {phase} with GAP/STALE traces: {invalid_traces}')
+    outcome = next((
+        item for item in outcomes
+        if isinstance(item, dict) and item.get('phase') == phase and item.get('is_current') is True
+    ), None)
+    if (
+        not isinstance(outcome, dict)
+        or outcome.get('status') != 'RUNNING'
+        or outcome.get('iteration_id') != iteration_id
+        or outcome.get('output_revision') != revision
+    ):
+        raise ValueError(f'finalize-phase requires the current RUNNING StageOutcome for {phase}@{revision}')
+    for evidence_id in outcome.get('evidence_ids') or []:
+        evidence.require_evidence(
+            task_dir,
+            str(evidence_id),
+            expected_revision=revision,
+            expected_phase=phase,
+        )
+    if not outcome.get('evidence_ids'):
+        raise ValueError('finalize-phase requires StageOutcome evidence IDs')
+
+    timestamp = now()
+    artifact['status'] = 'PASSED'
+    outcome['status'] = 'PASSED'
+    outcome['completed_at'] = timestamp
+    state['current_agent'] = agent
+    state['checkpoint_at'] = timestamp
+    is_final = phase == PHASES[-1]
+    state['task_status'] = 'COMPLETED' if is_final else 'PARTIAL'
+    state['next_agent'] = state.get('project_manager_agent') or PROJECT_MANAGER_AGENT
+    state['next_action'] = '' if is_final else f'运行 advance-phase 推进 {phase} 的下一阶段'
+    if ar_transition == 'SKELETON_REVIEW_PASSED':
+        ar_state.update({
+            'enabled': True,
+            'step': ar_transition,
+            'skeleton_iteration_id': iteration_id,
+            'skeleton_revision': revision,
+            'skeleton_review_result_refs': ar_review_refs,
+            'implementation_iteration_id': '',
+            'implementation_revision': '',
+            'final_review_revision': '',
+            'final_review_result_refs': [],
+            'updated_at': timestamp,
+        })
+        state['next_action'] = '运行 advance-development-step 开启 wk -ar 具体实现 iteration'
+    elif ar_transition == 'IMPLEMENTATION_READY_FOR_REVIEW':
+        ar_state.update({
+            'enabled': True,
+            'step': ar_transition,
+            'implementation_iteration_id': iteration_id,
+            'implementation_revision': revision,
+            'final_review_revision': '',
+            'final_review_result_refs': [],
+            'updated_at': timestamp,
+        })
+        state['next_action'] = '运行 advance-phase 进入最终 code_review（第二轮 Review）'
+    elif ar_transition == 'IMPLEMENTATION_REVIEW_PASSED':
+        ar_state.update({
+            'enabled': True,
+            'step': ar_transition,
+            'final_review_revision': revision,
+            'final_review_result_refs': ar_final_review_refs,
+            'updated_at': timestamp,
+        })
+        state['next_action'] = '运行 advance-phase 进入 testing' if not is_final else ''
+
+    original_state = state_path.read_text(encoding='utf-8')
+    original_outcomes = outcomes_path.read_text(encoding='utf-8')
+    transactional_text_write({
+        state_path: render_block(state_path, 'task-state', state_document, state),
+        outcomes_path: render_block(outcomes_path, 'stage-outcomes', outcomes_document, outcomes),
+    })
+    post_errors, _, _, _ = validate_task(task_dir)
+    if post_errors:
+        transactional_text_write({
+            state_path: original_state,
+            outcomes_path: original_outcomes,
+        })
+        raise ValueError('finalize-phase gate validation failed: ' + '; '.join(post_errors))
+    emit_json({
+        'status': 'PASSED',
+        'phase': phase,
+        'revision': revision,
+        'stageOutcomeId': outcome.get('id'),
+        'taskStatus': state['task_status'],
+    })
+    return 0
+
+
+=== long_task.command_advance_development_step ===
+def command_advance_development_step(args: argparse.Namespace) -> int:
+    """Open the concrete implementation iteration after wk -ar skeleton Review passes."""
+    task_dir = Path(args.task_dir)
+    agent = agent_context.selected_agent(args)
+    agent_context.authorize_static(agent, 'long_task', 'advance-development-step')
+    errors, _, state, _ = validate_task(task_dir)
+    if errors:
+        raise ValueError('task is invalid before advance-development-step: ' + '; '.join(errors))
+    if state.get('current_phase') != 'development':
+        raise ValueError('advance-development-step is only valid in the development phase')
+    if not bool((state.get('work_mode') or {}).get('architecture_review')):
+        raise ValueError('advance-development-step requires wk -ar')
+    ar_state = architecture_review_state(state)
+    if ar_state.get('step') != 'SKELETON_REVIEW_PASSED':
+        raise ValueError('wk -ar concrete implementation requires a passed skeleton Review')
+    development = (state.get('artifact_revisions') or {}).get('development')
+    if not isinstance(development, dict) or development.get('status') != 'PASSED':
+        raise ValueError('wk -ar skeleton development artifact must be PASSED before step transition')
+    skeleton_iteration_id = str(ar_state.get('skeleton_iteration_id') or '')
+    skeleton_revision = str(ar_state.get('skeleton_revision') or '')
+    skeleton_refs = list(ar_state.get('skeleton_review_result_refs') or [])
+    if not skeleton_iteration_id or not skeleton_revision or not skeleton_refs:
+        raise ValueError('wk -ar skeleton Review state is incomplete')
+
+    tracked = [
+        task_dir / 'task_state.md', task_dir / 'task_plan.md',
+        task_dir / 'task_attempts.md', task_dir / 'stage_outcomes.md',
+        acceptance.assertions_path(task_dir),
+    ]
+    backups = {path: path.read_bytes() for path in tracked if path.exists()}
+    try:
+        command_reopen_phase(argparse.Namespace(
+            task_dir=str(task_dir), from_phase='development',
+            reason='wk -ar skeleton Review passed; begin concrete implementation',
+            source_revision=skeleton_revision, round='', agent=agent,
+            _suppress_output=True,
+        ))
+        state_path = task_dir / 'task_state.md'
+        state_document, reopened = read_block(state_path, 'task-state')
+        development = (reopened.get('artifact_revisions') or {}).get('development')
+        implementation_iteration_id = str(development.get('iteration_id') or '') if isinstance(development, dict) else ''
+        timestamp = now()
+        reopened['architecture_review'] = {
+            'enabled': True,
+            'step': 'IMPLEMENTATION',
+            'skeleton_iteration_id': skeleton_iteration_id,
+            'skeleton_revision': skeleton_revision,
+            'skeleton_review_result_refs': skeleton_refs,
+            'implementation_iteration_id': implementation_iteration_id,
+            'implementation_revision': '',
+            'final_review_revision': '',
+            'final_review_result_refs': [],
+            'updated_at': timestamp,
+        }
+        sync_mode_review_requirements(
+            reopened, minimal=bool((reopened.get('work_mode') or {}).get('minimal'))
+        )
+        reopened['current_agent'] = agent
+        reopened['next_agent'] = 'DevelopAgent'
+        reopened['next_action'] = (
+            '在已通过的架构代码骨架上实现具体方法；不得改变已审查的方法契约、调用主线和主要分支，'
+            '需要改变时先回到 SKELETON iteration'
+        )
+        reopened['checkpoint_at'] = timestamp
+        transactional_text_write({
+            state_path: render_block(state_path, 'task-state', state_document, reopened)
+        })
+        post_errors, _, _, _ = validate_task(task_dir)
+        if post_errors:
+            raise ValueError('wk -ar implementation iteration validation failed: ' + '; '.join(post_errors))
+    except Exception:
+        transactional_binary_write = {path: content for path, content in backups.items()}
+        for path, content in transactional_binary_write.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
+        raise
+    emit_json({
+        'status': 'IMPLEMENTATION_READY',
+        'skeletonIterationId': skeleton_iteration_id,
+        'skeletonRevision': skeleton_revision,
+        'implementationIterationId': implementation_iteration_id,
+        'nextAgent': 'DevelopAgent',
+    })
+    return 0
+
+
+=== checkpoint relevant lines ===
+        "checkpoint_id", "phase", "iteration_id", "iteration_no", "stage_revision", "stage_outcome_ref",
+        "created_by_agent", "created_at", "supersedes_checkpoint_id",
+        checkpoint_id = item.get("checkpoint_id")
+        if not isinstance(checkpoint_id, str) or not re.fullmatch(r"CP-[A-Za-z0-9_.-]+", checkpoint_id):
+            errors.append(f"{prefix} invalid checkpoint_id")
+        if checkpoint_id in ids:
+            errors.append(f"duplicate checkpoint_id: {checkpoint_id}")
+        ids.add(checkpoint_id)
+            shas = resolve_checkpoint_shas(repo, checkpoint_id)
+def resolve_checkpoint_shas(repo: Path, checkpoint_id: str) -> list[str]:
+        if re.search(rf"(?m)^WK-Checkpoint:\s*{re.escape(checkpoint_id)}\s*$", body):
+    current_iteration = ((state.get("artifact_revisions") or {}).get(phase) or {}).get("iteration_id")
+def build_message(title: str, changes: list[str], checkpoint_id: str, revision: str) -> str:
+    lines.extend(["", f"WK-Checkpoint: {checkpoint_id}", f"WK-Revision: {revision}"])
+    phase = phase_override or str(state.get("current_phase") or "")
+    artifact = ((state.get("artifact_revisions") or {}).get(phase) or {})
+    if artifact.get("status") != "PASSED" or outcome.get("status") != "PASSED":
+        raise GitCheckpointError(f"current phase {phase} must have PASSED artifact and StageOutcome")
+    incomplete = [task.get("id") for task in phase_tasks if task.get("status") not in {"PASSED", "NOT_APPLICABLE"}]
+def checkpoint_id_for(state: dict[str, Any], outcome: dict[str, Any]) -> str:
+    phase = str(outcome.get("phase") or state.get("current_phase"))
+    checkpoint_id = checkpoint_id_for(state, outcome)
+    existing = next((item for item in checkpoints if isinstance(item, dict) and item.get("checkpoint_id") == checkpoint_id), None)
+        shas = resolve_checkpoint_shas(repo, checkpoint_id)
+            return {"status": "ALREADY_COMMITTED", "checkpointId": checkpoint_id, "commitSha": shas[0], "branch": branch}
+        raise GitCheckpointError(f"checkpoint record already exists but does not resolve uniquely: {checkpoint_id}")
+    supersedes = str(same_phase[-1].get("checkpoint_id")) if same_phase else ""
+        and item.get("status") == "PASSED"
+        "checkpoint_id": checkpoint_id,
+        "supersedes_checkpoint_id": supersedes,
+    message = build_message(commit_title, selected_changes, checkpoint_id, str(outcome["output_revision"]))
+    shas = resolve_checkpoint_shas(repo, checkpoint_id)
+        raise GitCheckpointError(f"created commit does not resolve uniquely by checkpoint trailer: {checkpoint_id}")
+    return {"status": "COMMITTED", "checkpointId": checkpoint_id, "commitSha": sha, "branch": branch, "changedPaths": all_paths}
+    payload = {"status": "FAILED" if errors else "PASSED", "errors": errors, "checkpoints": resolved}
+    payload = {"status": "FAILED" if errors else "PASSED", "errors": errors, "checkpoints": resolved}
+    commit = commands.add_parser("commit", help="create one sequential phase checkpoint commit")
+    commit.add_argument("--phase", default="", help="backfill a PASSED phase checkpoint after the workflow advanced")
+    validate = commands.add_parser("validate", help="validate checkpoint declarations")
+    status = commands.add_parser("status", help="resolve checkpoint declarations to Git commit SHAs")
