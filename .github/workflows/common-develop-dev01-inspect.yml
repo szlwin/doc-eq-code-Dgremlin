@@ -1,0 +1,68 @@
+name: common-develop DEV-01 inspect
+
+on:
+  push:
+    branches:
+      - common-develop/dev01-20260811-2337
+    paths:
+      - .github/workflows/common-develop-dev01-inspect.yml
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-20260811-2337
+          fetch-depth: 0
+      - name: Load exact common-develop RC9
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git clone -q https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          git -C /tmp/common-develop checkout -q 7086b2d32b6beae2e6e522efc517d7823ba55376
+          echo '1f380e745df43685205efe74e3bc202a5319923ec4b40fea58b3b47d2e01aa06  /tmp/common-develop/scripts/long_task.py' | sha256sum -c -
+          echo 'e3877c570f910af66a0240baa5337a94afae2aca2695e9cd12ce9a4a86e9a4fd  /tmp/common-develop/scripts/git_checkpoint.py' | sha256sum -c -
+          echo '120d32a545509c5cb51c076789d5896b15ff15c3a034b944a5d2f8d982d04adb  /tmp/common-develop/assets/runtime-contract.json' | sha256sum -c -
+      - name: Resolve exact DEV-01 context
+        shell: bash
+        run: |
+          set -euxo pipefail
+          TASK_DIR=project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
+          python3 /tmp/common-develop/scripts/ai_context.py resolve \
+            -g DevelopAgent \
+            --task-type DEVELOPMENT \
+            --phase development \
+            --prompt '$common-develop -ar -auto 请进行DEV-01的开发，开发完成后，提交到PR36上。' \
+            --doc-root project_doc --version V_1.0 --target FEATURE-DESC-3361AD2E54FC \
+            --token-budget 12000 --json | tee /tmp/dev01-context.json
+          python3 /tmp/common-develop/scripts/long_task.py task-context \
+            -g DevelopAgent --task-dir "$TASK_DIR" --json | tee /tmp/dev01-task-context.json
+          python3 /tmp/common-develop/scripts/long_task.py validate \
+            -g ProjectManagerAgent --task-dir "$TASK_DIR" --json | tee /tmp/dev01-prevalidate.json
+      - name: Show DEV-01 facts and current compiler implementation
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')
+          text=p.read_text()
+          start=text.index('task_id: "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION"')
+          end=text.index('task_id: "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"')
+          print(text[start:end])
+          PY
+          sed -n '1,260p' dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java
+          sed -n '1,240p' dec-core-compiler/src/main/java/dec/core/compiler/raw/RawDefinitionSet.java
+          sed -n '1,220p' dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolBuildResult.java
+          sed -n '1,260p' dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java
+          sed -n '1,320p' dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java
+      - name: Run existing DEV-01 validation baseline
+        shell: bash
+        run: |
+          set -euxo pipefail
+          ./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install
+          ./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest,RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test
