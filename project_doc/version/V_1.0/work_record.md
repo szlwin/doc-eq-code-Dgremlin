@@ -3128,6 +3128,61 @@
 | 测试与验证 | 登记 Evidence 7 项；命令 Evidence 5 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P2-TESTDESIGN-001-I006-A001","event_id":"EVENT-ATTEMPT-TASK-P2-TESTDESIGN-001-I006-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000193","EVD-000194","EVD-000195","EVD-000196","EVD-000197","EVD-000198","EVD-000199"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"DESIGN-P2-R30","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006","iteration_no":6,"modified_files_summary":["project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"],"next_action":"Independent TestDesign reviews","next_agent":"ProjectManagerAgent","output_revision":"TESTDESIGN-P2-R32","phase":"test_design","record_id":"WR-20260811-031113-TASK-P2-TESTDESIGN-001-PASSED","render_digest":"6f40d1d41b17de4620a4f6f7d7ac0d6472b7fc5dd45bea95c0b61eeea806ecb4","schema_version":4,"scope":"设计 P2 System、RuleView 与 model-access 可执行测试矩阵","source":"long_task.py finish-attempt","state_change":"TASK-P2-TESTDESIGN-001: RUNNING → PASSED","status":"PASSED","summary":"R32 adds six explicit nested ModelPath/exact-authorization oracles; 101 Cases, 23 TestClasses, 10 stable traces; P1/BM/Design unchanged.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-TESTDESIGN-001","task_type":"test_design","timestamp":"2026-08-11T03:11:13+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 4 项","version":"V_1.0"} -->
+## WR-20260811-031113-TASK-P2-TESTDESIGN-001-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-11T03:11:13+00:00 |
+| 执行 Agent | TestDesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 设计 P2 System、RuleView 与 model-access 可执行测试矩阵 |
+| 阶段 | test_design |
+| 任务类型 | test_design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | R32 adds six explicit nested ModelPath/exact-authorization oracles; 101 Cases, 23 TestClasses, 10 stable traces; P1/BM/Design unchanged. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-TESTDESIGN-001: RUNNING → PASSED |
+| Task | TASK-P2-TESTDESIGN-001 |
+| Attempt | ATTEMPT-TASK-P2-TESTDESIGN-001-I006-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006 / 6 |
+| 输入 Revision | DESIGN-P2-R30 |
+| 输出 Revision | TESTDESIGN-P2-R32 |
+| StageOutcome | 无 |
+| Evidence | EVD-000193、EVD-000194、EVD-000195、EVD-000196、EVD-000197、EVD-000198、EVD-000199 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Independent TestDesign reviews |
+
+### 变更摘要
+
+- R32 adds six explicit nested ModelPath/exact-authorization oracles; 101 Cases, 23 TestClasses, 10 stable traces; P1/BM/Design unchanged.
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md`
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 4 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
