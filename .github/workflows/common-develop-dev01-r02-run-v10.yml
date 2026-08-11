@@ -65,6 +65,11 @@ jobs:
           ]
           replacement='\n'.join(lines)+'\n'
           block=block[:i]+replacement+block[j+len(end_marker):]
+          needle='    local rc=$?\n    set -e\n    python3 - \"$RESULT_DIR/$name.json\"'
+          replacement='    local rc=$?\n    set -e\n    sed -i \'s/[[:blank:]]\\+$//\' \"$RESULT_DIR/$name.out\"\n    python3 - \"$RESULT_DIR/$name.json\"'
+          if needle not in block:
+              raise SystemExit('run_and_record normalization anchor missing')
+          block=block.replace(needle,replacement,1)
           Path('/tmp/dev01-r02-v10.sh').write_text('#!/usr/bin/env bash\n'+block)
           PY
           chmod +x /tmp/dev01-r02-v10.sh
