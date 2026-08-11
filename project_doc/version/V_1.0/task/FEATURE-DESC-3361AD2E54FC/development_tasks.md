@@ -3,17 +3,17 @@
 > 该文件由 `development_tasks.yaml` 确定性生成，仅用于阅读；YAML 是唯一事实源。
 
 - Plan: `TP-FEATURE-DESC-3361AD2E54FC`
-- Revision: `TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25`
+- Revision: `TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a`
 - Status: `PASSED`
 - Execution: `SEQUENTIAL`
-- Review round: `4`
+- Review round: `5`
 
 ## Input Revisions
 
 - requirement_analysis: `REQAN-P2-R01@d08612768131`
 - business_model: `BM-R20`
 - design: `DESIGN-P2-R30`
-- test_design: `TESTDESIGN-P2-R31`
+- test_design: `TESTDESIGN-P2-R32`
 
 ## Tasks
 
@@ -139,6 +139,7 @@
 - Module: `dec-core-compiler`
 - Component: `modelaccess compilation and publication`
 - P2 source-scope mapping - SRC-P2-T03-POLICY, SRC-P2-T04-COMPILER, SRC-P2-T07-PRIMARY, SRC-P2-T11-STATIC
+- TESTDESIGN-P2-R32 nested ModelPath oracle mapping - CASE-P2-TD-NESTED-OBJECT-PATH-001, CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001, CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001, CASE-P2-TD-NESTED-COLLECTION-PATH-001, CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001, CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001
 - 以 TargetKeyModelPathContractTest、ModelAccessPolicyContractTest、AtomicPublicationContractTest、P2DiagnosticDeterminismTest 建立目标 RED。
 - 进入 development 后先为 dec-core-compiler/modelaccess compilation and publication 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。
 - 同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。

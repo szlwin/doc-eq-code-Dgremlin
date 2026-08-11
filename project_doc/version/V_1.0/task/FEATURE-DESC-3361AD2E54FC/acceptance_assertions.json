@@ -654,6 +654,123 @@
       "verified_by_agent": "TestEvidenceReviewAgent",
       "verified_at": "2026-08-11T03:22:12+00:00",
       "reason": "PASSED: R32 evidence is complete and deterministic."
+    },
+    {
+      "assertion_id": "ASRT-P2-TP-R05-ARCH-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "Independent architecture review of exact R05 minimal R32 rebind.",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000202",
+        "EVD-000200",
+        "EVD-000201"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-11T04:28:31+00:00",
+      "reason": "PASSED: exact R05 minimal R32 rebind is consistent and executable."
+    },
+    {
+      "assertion_id": "ASRT-P2-TP-R05-EXEC-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-006",
+      "statement": "Independent executability review of exact R05 unchanged nine-slice plan.",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000200",
+        "EVD-000202",
+        "EVD-000204",
+        "EVD-000205",
+        "EVD-000206",
+        "EVD-000207",
+        "EVD-000208",
+        "EVD-000209"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-11T04:28:38+00:00",
+      "reason": "PASSED: exact R05 minimal R32 rebind is consistent and executable."
+    },
+    {
+      "assertion_id": "ASRT-P2-TP-R05-SCOPE-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "Independent plan scope/order/verification review of exact R05.",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PlanReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000200",
+        "EVD-000204",
+        "EVD-000205",
+        "EVD-000206",
+        "EVD-000207",
+        "EVD-000208",
+        "EVD-000209",
+        "EVD-000201",
+        "EVD-000203",
+        "EVD-000202"
+      ],
+      "verified_by_agent": "PlanReviewAgent",
+      "verified_at": "2026-08-11T04:28:47+00:00",
+      "reason": "PASSED: exact R05 minimal R32 rebind is consistent and executable."
+    },
+    {
+      "assertion_id": "ASRT-P2-TP-R05-COVERAGE-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "Independent TestDesign coverage review of exact R05 against R32.",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-IMPLEMENTATION-PLAN-001#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000200",
+        "EVD-000204",
+        "EVD-000205",
+        "EVD-000206",
+        "EVD-000207",
+        "EVD-000208",
+        "EVD-000209",
+        "EVD-000201"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-11T04:28:55+00:00",
+      "reason": "PASSED: exact R05 minimal R32 rebind is consistent and executable."
     }
   ]
 }

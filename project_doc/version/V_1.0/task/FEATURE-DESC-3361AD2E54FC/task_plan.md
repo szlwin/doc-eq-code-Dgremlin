@@ -467,9 +467,9 @@
     "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
     "revision_reason": "Clarify existing nested ModelPath semantics with explicit TestDesign oracles; P1 implementation, BM-R20 and DESIGN-P2-R30 remain unchanged.",
     "title": "形成 P2 System、RuleView 与 model-access 可执行 Implementation Plan",
-    "objective": "把当前设计与 95-case/23-class TestDesign 转换为 dependency-ordered vertical development tasks，并完成同 Revision Plan Review 门禁。",
+    "objective": "Rebind the unchanged nine-slice Implementation Plan to TESTDESIGN-P2-R32 and explicitly bind the six nested ModelPath/exact-authorization oracles to DEV-03 without changing architecture or task DAG.",
     "phase": "implementation_plan",
-    "status": "REWORK",
+    "status": "PASSED",
     "depends_on": [
       "TASK-P2-TESTDESIGN-001"
     ],
@@ -482,7 +482,7 @@
     ],
     "input_revisions": {
       "design": "DESIGN-P2-R30",
-      "test_design": ""
+      "test_design": "TESTDESIGN-P2-R32"
     },
     "allowed_files": [
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml",
@@ -495,7 +495,10 @@
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/stage_outcomes.md",
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/review_issues.md",
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**",
-      "version/V_1.0/work_record.md"
+      "version/V_1.0/work_record.md",
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml",
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.md",
+      "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"
     ],
     "acceptance_trace_ids": [
       "TR-P2-SYSTEM-RULEVIEW-001",
@@ -528,15 +531,16 @@
     "validation_commands": [
       "python3 /home/oai/skills/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --require-revision",
       "python3 -c \"import yaml,re,collections; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); c=collections.defaultdict(list); [c[re.match(r'SRC-(P2-T\\\\d{2})(?:-|$)',a['id']).group(1)].append(t['task_id']) for t in p['tasks'] for a in t['acceptance_criteria'] if re.match(r'SRC-(P2-T\\\\d{2})(?:-|$)',a['id'])]; e={f'P2-T{i:02d}' for i in range(1,13)}; assert set(c)==e and all(c[x] for x in e); print('P2 source-scope mapping 12/12 PASSED')\"",
-      "python3 -c \"import yaml; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); b={t['task_id']:t for t in p['tasks']}; d4=b['TASK-P2-DEV-04-CONTEXT-MATERIALIZATION']; d7=b['TASK-P2-DEV-07-STARTER-GUARDED-ACCESS']; d8=b['TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY']; assert 'dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java' in d4['implementation']['affected_files']; assert any('CompiledModelSetBuilder' in x and 'mandatory' in x for x in d4['implementation']['steps']); assert 'dec-core-starter/pom.xml' in d7['implementation']['affected_files']; assert any('dec-core-model dependency' in x and '不得推迟到 DEV-08' in x for x in d7['implementation']['steps']); assert any('不得承担首次 dec-core-model dependency wiring' in x for x in d8['implementation']['steps']); print('R04 bounded-slice P1 closure 2/2 PASSED')\"",
+      "python3 -c \"import yaml; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); b={t['task_id']:t for t in p['tasks']}; d4=b['TASK-P2-DEV-04-CONTEXT-MATERIALIZATION']; d7=b['TASK-P2-DEV-07-STARTER-GUARDED-ACCESS']; d8=b['TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY']; assert 'dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java' in d4['implementation']['affected_files']; assert 'dec-core-starter/pom.xml' in d7['implementation']['affected_files']; assert any('不得承担首次 dec-core-model dependency wiring' in x for x in d8['implementation']['steps']); print('R04 bounded-slice P1 closure preserved')\"",
+      "python3 -c \"import yaml; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); assert len(p['tasks'])==9; assert p['input_revisions']['test_design']=='TESTDESIGN-P2-R32'; d=next(t for t in p['tasks'] if t['task_id']=='TASK-P2-DEV-03-MODEL-ACCESS-POLICY'); req=['CASE-P2-TD-NESTED-OBJECT-PATH-001','CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001','CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001','CASE-P2-TD-NESTED-COLLECTION-PATH-001','CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001','CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001']; text=' '.join(d['implementation']['steps']); assert all(x in text for x in req); assert any('TargetKeyModelPathContractTest' in c and 'ModelAccessPolicyContractTest' in c for c in d['validation_commands']); print('R32 nested ModelPath plan mapping 6/6 PASSED')\"",
       "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
       "git diff --check"
     ],
     "expected_results": [
       "development_tasks.yaml preserves an explicit machine-parseable P2-T01..P2-T12 -> nine Development Task mapping; every source item has at least one exact implementation/test/compatibility destination.",
-      "development_tasks.yaml contains dependency-ordered vertical tasks covering all ten stable P2 trace IDs and the 23 exact R31 TestClasses.",
-      "The exact TP revision passes PlanReviewAgent, ArchitectureReviewAgent, TestDesignAgent and DevelopAgent serial task-plan reviews.",
-      "R04 closes both bounded-slice execution P1s: DEV-04 atomically owns the production CompiledModelSetBuilder adaptation when CompiledViewMaterializationIndex becomes mandatory, and DEV-07 owns first starter -> model Maven wiring before STARTER imports MODEL API; DEV-08 only verifies dependency direction/bypass.",
+      "development_tasks.yaml contains the same nine dependency-ordered vertical tasks covering all ten stable P2 trace IDs and the 23 exact TESTDESIGN-P2-R32 TestClasses; the six new nested ModelPath cases are explicitly owned by DEV-03.",
+      "The exact R05 revision passes PlanReviewAgent, ArchitectureReviewAgent, TestDesignAgent and DevelopAgent serial task-plan reviews.",
+      "R05 preserves both R04 bounded-slice P1 closures while only rebinding TestDesign authority from R31 to R32.",
       "Implementation Plan is machine-valid and executable without starting TDD or Development."
     ],
     "stop_conditions": [
@@ -545,10 +549,21 @@
       "计划要求改变已冻结业务/设计语义或提前进入 TDD/Development。"
     ],
     "risk_triggers": [],
-    "attempts": 0,
+    "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "",
-    "validation_evidence_ids": []
+    "output_revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+    "validation_evidence_ids": [
+      "EVD-000200",
+      "EVD-000201",
+      "EVD-000202",
+      "EVD-000203",
+      "EVD-000204",
+      "EVD-000205",
+      "EVD-000206",
+      "EVD-000207",
+      "EVD-000208",
+      "EVD-000209"
+    ]
   }
 ]
 ```
