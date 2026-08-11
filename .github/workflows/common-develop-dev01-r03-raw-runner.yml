@@ -1,0 +1,22 @@
+name: common-develop DEV-01 R03 raw RC9 pre-Maven
+
+on:
+  push:
+    branches: [common-develop/dev01-r03-ar-final-20260812]
+    paths:
+      - .github/workflows/common-develop-dev01-r03-raw-runner.yml
+      - .common-develop-dev01-r03-raw-runner.sh
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-r03-ar-final-20260812
+          fetch-depth: 0
+      - name: Prepare R03 candidate without validation
+        run: bash .common-develop-dev01-r03-raw-runner.sh
