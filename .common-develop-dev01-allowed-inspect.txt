@@ -1,0 +1,473 @@
+/tmp/common-develop/scripts/long_task.py-464-    elif isinstance(inline_output, str):
+/tmp/common-develop/scripts/long_task.py-465-        digest = hashlib.sha256(inline_output.encode('utf-8')).hexdigest()
+/tmp/common-develop/scripts/long_task.py-466-    else:
+/tmp/common-develop/scripts/long_task.py-467-        raise ValueError(f'command result requires output or output_ref: {ref}')
+/tmp/common-develop/scripts/long_task.py-468-    if digest != value['output_digest']:
+/tmp/common-develop/scripts/long_task.py-469-        raise ValueError(f'command result output_digest mismatch: {ref}')
+/tmp/common-develop/scripts/long_task.py-470-    return value
+/tmp/common-develop/scripts/long_task.py-471-
+/tmp/common-develop/scripts/long_task.py-472-
+/tmp/common-develop/scripts/long_task.py-473-def validate_attempt_completion_evidence(
+/tmp/common-develop/scripts/long_task.py-474-    task_dir: Path,
+/tmp/common-develop/scripts/long_task.py-475-    task: dict[str, Any],
+/tmp/common-develop/scripts/long_task.py-476-    status: str,
+/tmp/common-develop/scripts/long_task.py-477-    output_revision: str,
+/tmp/common-develop/scripts/long_task.py-478-    modified_files: list[str],
+/tmp/common-develop/scripts/long_task.py-479-    command_evidence_ids: list[str],
+/tmp/common-develop/scripts/long_task.py-480-    evidence_ids: list[str],
+/tmp/common-develop/scripts/long_task.py-481-) -> None:
+/tmp/common-develop/scripts/long_task.py-482-    if status != 'PASSED':
+/tmp/common-develop/scripts/long_task.py-483-        return
+/tmp/common-develop/scripts/long_task.py-484-    for evidence_id in evidence_ids:
+/tmp/common-develop/scripts/long_task.py-485-        evidence.require_evidence(task_dir, evidence_id, expected_revision=output_revision)
+/tmp/common-develop/scripts/long_task.py-486-    allowed = set(task.get('allowed_files') or [])
+/tmp/common-develop/scripts/long_task.py-487-    unexpected = sorted(set(modified_files) - allowed)
+/tmp/common-develop/scripts/long_task.py-488-    if unexpected:
+/tmp/common-develop/scripts/long_task.py:489:        raise ValueError(f'modified files are outside allowed_files: {unexpected}')
+/tmp/common-develop/scripts/long_task.py-490-    commands = list(task.get('validation_commands') or [])
+/tmp/common-develop/scripts/long_task.py-491-    if commands and not command_evidence_ids:
+/tmp/common-develop/scripts/long_task.py-492-        raise ValueError('PASSED attempt requires command evidence IDs for validation_commands')
+/tmp/common-develop/scripts/long_task.py-493-    results: list[dict[str, Any]] = []
+/tmp/common-develop/scripts/long_task.py-494-    for evidence_id in command_evidence_ids:
+/tmp/common-develop/scripts/long_task.py-495-        entry = evidence.require_evidence(
+/tmp/common-develop/scripts/long_task.py-496-            task_dir, evidence_id, expected_revision=output_revision, allowed_types={'command_ref'}
+/tmp/common-develop/scripts/long_task.py-497-        )
+/tmp/common-develop/scripts/long_task.py-498-        command_result_ref = str(entry.get('command_result_ref') or '')
+/tmp/common-develop/scripts/long_task.py-499-        if not command_result_ref:
+/tmp/common-develop/scripts/long_task.py-500-            raise ValueError(f'command evidence missing command_result_ref: {evidence_id}')
+/tmp/common-develop/scripts/long_task.py-501-        results.append(command_result_payload(task_dir, command_result_ref))
+/tmp/common-develop/scripts/long_task.py-502-    for result in results:
+/tmp/common-develop/scripts/long_task.py-503-        if result.get('exit_code') != 0:
+/tmp/common-develop/scripts/long_task.py-504-            raise ValueError(f'validation command failed: {result.get("command")} exit={result.get("exit_code")}')
+/tmp/common-develop/scripts/long_task.py-505-        if result.get('revision') != output_revision:
+/tmp/common-develop/scripts/long_task.py-506-            raise ValueError('command result revision does not match attempt output_revision')
+/tmp/common-develop/scripts/long_task.py-507-    if commands:
+/tmp/common-develop/scripts/long_task.py-508-        executed = {str(result.get('command')) for result in results}
+/tmp/common-develop/scripts/long_task.py-509-        missing = [command for command in commands if command not in executed]
+/tmp/common-develop/scripts/long_task.py-510-        if missing:
+/tmp/common-develop/scripts/long_task.py-511-            raise ValueError(f'validation_commands missing command results: {missing}')
+/tmp/common-develop/scripts/long_task.py-512-
+/tmp/common-develop/scripts/long_task.py-513-
+/tmp/common-develop/scripts/long_task.py-514-def validate_start_gate(
+/tmp/common-develop/scripts/long_task.py-515-    task_dir: Path,
+/tmp/common-develop/scripts/long_task.py-516-    state: dict[str, Any],
+/tmp/common-develop/scripts/long_task.py-517-    tasks: list[dict[str, Any]],
+/tmp/common-develop/scripts/long_task.py-518-    task: dict[str, Any],
+/tmp/common-develop/scripts/long_task.py-519-    issues: list[dict[str, Any]],
+/tmp/common-develop/scripts/long_task.py-520-) -> None:
+/tmp/common-develop/scripts/long_task.py-521-    actual_mode = actual_work_mode_state(task_dir)
+/tmp/common-develop/scripts/long_task.py-522-    minimal = bool(actual_mode.get('minimal'))
+/tmp/common-develop/scripts/long_task.py-523-    phase = str(task.get('phase') or '')
+/tmp/common-develop/scripts/long_task.py-524-    artifacts = state.get('artifact_revisions') or {}
+/tmp/common-develop/scripts/long_task.py-525-    for predecessor in phase_predecessors(phase, minimal):
+/tmp/common-develop/scripts/long_task.py-526-        item = artifacts.get(predecessor)
+/tmp/common-develop/scripts/long_task.py-527-        status = item.get('status') if isinstance(item, dict) else None
+/tmp/common-develop/scripts/long_task.py-528-        if status != 'PASSED' and not (phase_skip_allowed(predecessor, minimal, state) and status == 'NOT_APPLICABLE'):
+/tmp/common-develop/scripts/long_task.py-529-            raise ValueError(f'{phase} cannot start because predecessor {predecessor} is {status}')
+/tmp/common-develop/scripts/long_task.py-530-    if phase_skip_allowed(phase, minimal, state):
+/tmp/common-develop/scripts/long_task.py-531-        if minimal and phase in set(work_mode.MINIMAL_PHASES):
+/tmp/common-develop/scripts/long_task.py-532-            raise ValueError(f'{phase} is skipped by wk -min and cannot start')
+/tmp/common-develop/scripts/long_task.py-533-        raise ValueError(f'{phase} is skipped by the active workflow and cannot start')
+/tmp/common-develop/scripts/long_task.py-534-    current_artifact = artifacts.get(phase)
+/tmp/common-develop/scripts/long_task.py-535-    current_revision = (
+/tmp/common-develop/scripts/long_task.py-536-        str(current_artifact.get('revision') or '')
+/tmp/common-develop/scripts/long_task.py-537-        if isinstance(current_artifact, dict) else ''
+/tmp/common-develop/scripts/long_task.py-538-    )
+/tmp/common-develop/scripts/long_task.py-539-    current_iteration_no = (
+/tmp/common-develop/scripts/long_task.py-540-        int(current_artifact.get('iteration_no') or 0)
+/tmp/common-develop/scripts/long_task.py-541-        if isinstance(current_artifact, dict) else 0
+/tmp/common-develop/scripts/long_task.py-542-    )
+/tmp/common-develop/scripts/long_task.py-543-    current_phase_index = PHASES.index(phase)
+/tmp/common-develop/scripts/long_task.py-544-    critical = [
+/tmp/common-develop/scripts/long_task.py-545-        str(item.get('id')) for item in issues
+/tmp/common-develop/scripts/long_task.py-546-        if isinstance(item, dict)
+/tmp/common-develop/scripts/long_task.py-547-        and item.get('status') in OPEN_ISSUE_STATUSES
+/tmp/common-develop/scripts/long_task.py-548-        and item.get('severity') in {'P0', 'P1'}
+/tmp/common-develop/scripts/long_task.py-549-        and not (
+--
+/tmp/common-develop/scripts/test_process_gates.py-692-        with contextlib.redirect_stdout(io.StringIO()):
+/tmp/common-develop/scripts/test_process_gates.py-693-            self.start("DEV-1", "DevelopAgent")
+/tmp/common-develop/scripts/test_process_gates.py-694-        _, attempts = self.block("task_attempts.md", "task-attempts")
+/tmp/common-develop/scripts/test_process_gates.py-695-        attempt_id = attempts[-1]["attempt_id"]
+/tmp/common-develop/scripts/test_process_gates.py-696-        with self.assertRaisesRegex(ValueError, "unknown evidence_id"):
+/tmp/common-develop/scripts/test_process_gates.py-697-            long_task.command_finish_attempt(
+/tmp/common-develop/scripts/test_process_gates.py-698-                argparse.Namespace(
+/tmp/common-develop/scripts/test_process_gates.py-699-                    task_dir=str(self.task_dir), attempt_id=attempt_id, status="PASSED",
+/tmp/common-develop/scripts/test_process_gates.py-700-                    output_revision="DEV-R01", failure_type="", failure_reason="",
+/tmp/common-develop/scripts/test_process_gates.py-701-                    modified_file=["src/DEV-1.py"], command_ref=[], evidence_ref=["missing.log"],
+/tmp/common-develop/scripts/test_process_gates.py-702-                    summary="", next_action="", next_agent="ProjectManagerAgent", agent="DevelopAgent",
+/tmp/common-develop/scripts/test_process_gates.py-703-                )
+/tmp/common-develop/scripts/test_process_gates.py-704-            )
+/tmp/common-develop/scripts/test_process_gates.py-705-
+/tmp/common-develop/scripts/test_process_gates.py-706-    def test_finish_passed_rejects_files_outside_allowed_scope(self) -> None:
+/tmp/common-develop/scripts/test_process_gates.py-707-        document, state = self.block("task_state.md", "task-state")
+/tmp/common-develop/scripts/test_process_gates.py-708-        self.pass_phase(state, "implementation_plan", "PLAN-R01")
+/tmp/common-develop/scripts/test_process_gates.py-709-        self.pass_phase(state, "tdd", "TDD-RED-R01")
+/tmp/common-develop/scripts/test_process_gates.py-710-        state["current_phase"] = "development"
+/tmp/common-develop/scripts/test_process_gates.py-711-        state["next_agent"] = "DevelopAgent"
+/tmp/common-develop/scripts/test_process_gates.py-712-        long_task.write_block(self.task_dir / "task_state.md", "task-state", document, state)
+/tmp/common-develop/scripts/test_process_gates.py-713-        self.write("task_plan.md", "task-plan", [self.plan_task("DEV-1", "development")])
+/tmp/common-develop/scripts/test_process_gates.py-714-        with contextlib.redirect_stdout(io.StringIO()):
+/tmp/common-develop/scripts/test_process_gates.py-715-            self.start("DEV-1", "DevelopAgent")
+/tmp/common-develop/scripts/test_process_gates.py-716-        _, attempts = self.block("task_attempts.md", "task-attempts")
+/tmp/common-develop/scripts/test_process_gates.py:717:        with self.assertRaisesRegex(ValueError, "outside allowed_files"):
+/tmp/common-develop/scripts/test_process_gates.py-718-            self.finish_pass(attempts[-1]["attempt_id"], "DevelopAgent", "DEV-R01", modified="src/other.py")
+/tmp/common-develop/scripts/test_process_gates.py-719-
+/tmp/common-develop/scripts/test_process_gates.py-720-    def test_validation_command_must_pass_and_match_revision(self) -> None:
+/tmp/common-develop/scripts/test_process_gates.py-721-        document, state = self.block("task_state.md", "task-state")
+/tmp/common-develop/scripts/test_process_gates.py-722-        self.pass_phase(state, "implementation_plan", "PLAN-R01")
+/tmp/common-develop/scripts/test_process_gates.py-723-        self.pass_phase(state, "tdd", "TDD-RED-R01")
+/tmp/common-develop/scripts/test_process_gates.py-724-        state["current_phase"] = "development"
+/tmp/common-develop/scripts/test_process_gates.py-725-        state["next_agent"] = "DevelopAgent"
+/tmp/common-develop/scripts/test_process_gates.py-726-        long_task.write_block(self.task_dir / "task_state.md", "task-state", document, state)
+/tmp/common-develop/scripts/test_process_gates.py-727-        task = self.plan_task("DEV-1", "development", validation_commands=["python -m unittest"])
+/tmp/common-develop/scripts/test_process_gates.py-728-        self.write("task_plan.md", "task-plan", [task])
+/tmp/common-develop/scripts/test_process_gates.py-729-        with contextlib.redirect_stdout(io.StringIO()):
+/tmp/common-develop/scripts/test_process_gates.py-730-            self.start("DEV-1", "DevelopAgent")
+/tmp/common-develop/scripts/test_process_gates.py-731-        _, attempts = self.block("task_attempts.md", "task-attempts")
+/tmp/common-develop/scripts/test_process_gates.py-732-        with self.assertRaisesRegex(ValueError, "validation command failed"):
+/tmp/common-develop/scripts/test_process_gates.py-733-            self.finish_pass(
+/tmp/common-develop/scripts/test_process_gates.py-734-                attempts[-1]["attempt_id"], "DevelopAgent", "DEV-R01",
+/tmp/common-develop/scripts/test_process_gates.py-735-                modified="src/DEV-1.py", command_ref=self.command_result("DEV-R01", exit_code=1),
+/tmp/common-develop/scripts/test_process_gates.py-736-            )
+/tmp/common-develop/scripts/test_process_gates.py-737-
+/tmp/common-develop/scripts/test_process_gates.py-738-    def test_code_review_risk_trigger_requires_specialist(self) -> None:
+/tmp/common-develop/scripts/test_process_gates.py-739-        document, state = self.block("task_state.md", "task-state")
+/tmp/common-develop/scripts/test_process_gates.py-740-        self.pass_phase(state, "development", "DEV-R01")
+/tmp/common-develop/scripts/test_process_gates.py-741-        source = self.task_dir / "src" / "auth" / "PermissionService.py"
+/tmp/common-develop/scripts/test_process_gates.py-742-        source.parent.mkdir(parents=True, exist_ok=True)
+/tmp/common-develop/scripts/test_process_gates.py-743-        source.write_text("authorize permission token", encoding="utf-8")
+/tmp/common-develop/scripts/test_process_gates.py-744-        long_task.risk_detect.scan(
+/tmp/common-develop/scripts/test_process_gates.py-745-            self.task_dir, agent="ProjectManagerAgent", revision="DEV-R01",
+/tmp/common-develop/scripts/test_process_gates.py-746-            refs=[str(source.relative_to(self.task_dir))],
+/tmp/common-develop/scripts/test_process_gates.py-747-        )
+/tmp/common-develop/scripts/test_process_gates.py-748-        state["current_phase"] = "code_review"
+/tmp/common-develop/scripts/test_process_gates.py-749-        state["next_agent"] = "ProjectManagerAgent"
+/tmp/common-develop/scripts/test_process_gates.py-750-        long_task.write_block(self.task_dir / "task_state.md", "task-state", document, state)
+/tmp/common-develop/scripts/test_process_gates.py-751-        task = self.plan_task("REVIEW-1", "code_review", risk_triggers=["security"], reviewer_agents=[])
+/tmp/common-develop/scripts/test_process_gates.py-752-        self.write("task_plan.md", "task-plan", [task])
+/tmp/common-develop/scripts/test_process_gates.py-753-        with self.assertRaisesRegex(ValueError, "missing triggered risk reviewers"):
+/tmp/common-develop/scripts/test_process_gates.py-754-            self.start("REVIEW-1", "ProjectManagerAgent")
+/tmp/common-develop/scripts/test_process_gates.py-755-
+/tmp/common-develop/scripts/test_process_gates.py-756-    def test_advance_phase_requires_current_stage_outcome(self) -> None:
+/tmp/common-develop/scripts/test_process_gates.py-757-        document, state = self.block("task_state.md", "task-state")
+/tmp/common-develop/scripts/test_process_gates.py-758-        self.pass_phase(state, "requirement_confirmation", "REQCONF-R01")
+/tmp/common-develop/scripts/test_process_gates.py-759-        long_task.write_block(self.task_dir / "task_state.md", "task-state", document, state)
+/tmp/common-develop/scripts/test_process_gates.py-760-        with self.assertRaisesRegex(ValueError, "no current PASSED StageOutcome"):
+/tmp/common-develop/scripts/test_process_gates.py-761-            long_task.command_advance_phase(
+/tmp/common-develop/scripts/test_process_gates.py-762-                argparse.Namespace(task_dir=str(self.task_dir), agent="ProjectManagerAgent")
+/tmp/common-develop/scripts/test_process_gates.py-763-            )
+/tmp/common-develop/scripts/test_process_gates.py-764-
+/tmp/common-develop/scripts/test_process_gates.py-765-    def test_advance_phase_succeeds_with_current_outcome(self) -> None:
+/tmp/common-develop/scripts/test_process_gates.py-766-        document, state = self.block("task_state.md", "task-state")
+/tmp/common-develop/scripts/test_process_gates.py-767-        self.pass_phase(state, "requirement_confirmation", "REQCONF-R01")
+/tmp/common-develop/scripts/test_process_gates.py-768-        long_task.write_block(self.task_dir / "task_state.md", "task-state", document, state)
+/tmp/common-develop/scripts/test_process_gates.py-769-        artifact = state["artifact_revisions"]["requirement_confirmation"]
+/tmp/common-develop/scripts/test_process_gates.py-770-        evidence = self.evidence("reqconf.log")
+/tmp/common-develop/scripts/test_process_gates.py-771-        outcome = {
+/tmp/common-develop/scripts/test_process_gates.py-772-            "id": "SO-REQCONF-1", "phase": "requirement_confirmation", "round": "REQCONF-R01",
+/tmp/common-develop/scripts/test_process_gates.py-773-            "iteration_id": artifact["iteration_id"], "iteration_no": artifact["iteration_no"],
+/tmp/common-develop/scripts/test_process_gates.py-774-            "is_current": True, "superseded_by": "", "status": "PASSED",
+/tmp/common-develop/scripts/test_process_gates.py-775-            "produced_by_agent": "RequirementConfirmationAgent", "input_revisions": {},
+/tmp/common-develop/scripts/test_process_gates.py-776-            "output_revision": "REQCONF-R01", "evidence_ids": [self.evidence_id("reqconf.log", "REQCONF-R01", "requirement_confirmation", agent="RequirementConfirmationAgent")], "open_risks": [],
+/tmp/common-develop/scripts/test_process_gates.py-777-            "started_at": "2026-07-22T10:00:00-05:00", "completed_at": "2026-07-22T10:05:00-05:00",
+471-
+472-
+473-def validate_attempt_completion_evidence(
+474-    task_dir: Path,
+475-    task: dict[str, Any],
+476-    status: str,
+477-    output_revision: str,
+478-    modified_files: list[str],
+479-    command_evidence_ids: list[str],
+480-    evidence_ids: list[str],
+481-) -> None:
+482-    if status != 'PASSED':
+483-        return
+484-    for evidence_id in evidence_ids:
+485-        evidence.require_evidence(task_dir, evidence_id, expected_revision=output_revision)
+486:    allowed = set(task.get('allowed_files') or [])
+487-    unexpected = sorted(set(modified_files) - allowed)
+488-    if unexpected:
+489:        raise ValueError(f'modified files are outside allowed_files: {unexpected}')
+490-    commands = list(task.get('validation_commands') or [])
+491-    if commands and not command_evidence_ids:
+492-        raise ValueError('PASSED attempt requires command evidence IDs for validation_commands')
+493-    results: list[dict[str, Any]] = []
+494-    for evidence_id in command_evidence_ids:
+495-        entry = evidence.require_evidence(
+496-            task_dir, evidence_id, expected_revision=output_revision, allowed_types={'command_ref'}
+497-        )
+498-        command_result_ref = str(entry.get('command_result_ref') or '')
+499-        if not command_result_ref:
+500-            raise ValueError(f'command evidence missing command_result_ref: {evidence_id}')
+501-        results.append(command_result_payload(task_dir, command_result_ref))
+502-    for result in results:
+503-        if result.get('exit_code') != 0:
+504-            raise ValueError(f'validation command failed: {result.get("command")} exit={result.get("exit_code")}')
+505-        if result.get('revision') != output_revision:
+506-            raise ValueError('command result revision does not match attempt output_revision')
+507-    if commands:
+508-        executed = {str(result.get('command')) for result in results}
+509-        missing = [command for command in commands if command not in executed]
+510-        if missing:
+511-            raise ValueError(f'validation_commands missing command results: {missing}')
+512-
+513-
+514-def validate_start_gate(
+515-    task_dir: Path,
+516-    state: dict[str, Any],
+517-    tasks: list[dict[str, Any]],
+518-    task: dict[str, Any],
+519-    issues: list[dict[str, Any]],
+520-) -> None:
+521-    actual_mode = actual_work_mode_state(task_dir)
+522-    minimal = bool(actual_mode.get('minimal'))
+523-    phase = str(task.get('phase') or '')
+524-    artifacts = state.get('artifact_revisions') or {}
+525-    for predecessor in phase_predecessors(phase, minimal):
+526-        item = artifacts.get(predecessor)
+527-        status = item.get('status') if isinstance(item, dict) else None
+528-        if status != 'PASSED' and not (phase_skip_allowed(predecessor, minimal, state) and status == 'NOT_APPLICABLE'):
+529-            raise ValueError(f'{phase} cannot start because predecessor {predecessor} is {status}')
+530-    if phase_skip_allowed(phase, minimal, state):
+531-        if minimal and phase in set(work_mode.MINIMAL_PHASES):
+532-            raise ValueError(f'{phase} is skipped by wk -min and cannot start')
+533-        raise ValueError(f'{phase} is skipped by the active workflow and cannot start')
+534-    current_artifact = artifacts.get(phase)
+535-    current_revision = (
+536-        str(current_artifact.get('revision') or '')
+537-        if isinstance(current_artifact, dict) else ''
+538-    )
+539-    current_iteration_no = (
+--
+762-            if logical_task_id in logical_task_ids:
+763-                errors.append(f'duplicate logical_task_id: {logical_task_id}')
+764-            logical_task_ids.add(logical_task_id)
+765-        if not isinstance(task.get('iteration_no'), int) or isinstance(task.get('iteration_no'), bool) or task.get('iteration_no') < 1:
+766-            errors.append(f'{prefix} iteration_no must be a positive integer')
+767-        if not isinstance(task.get('feature_id'), str):
+768-            errors.append(f'{prefix} feature_id must be a string')
+769-        if not isinstance(task.get('supersedes_iteration_id'), str):
+770-            errors.append(f'{prefix} supersedes_iteration_id must be a string')
+771-        if KNOWN_AGENTS and is_nonempty_string(task.get('owner_agent')) and (task.get('owner_agent') not in KNOWN_AGENTS):
+772-            errors.append(f"{prefix} unknown owner_agent: {task.get('owner_agent')}")
+773-        if task.get('phase') not in phases:
+774-            errors.append(f"{prefix} invalid phase: {task.get('phase')}")
+775-        if task.get('status') not in PLAN_TASK_STATUSES:
+776-            errors.append(f"{prefix} invalid status: {task.get('status')}")
+777:        for key in ('depends_on', 'reviewer_agents', 'allowed_files', 'acceptance_trace_ids', 'flow_refs', 'flow_step_refs', 'validation_commands', 'expected_results', 'stop_conditions', 'validation_evidence_ids', 'risk_triggers'):
+778-            if not validate_string_list(task.get(key, [])):
+779-                errors.append(f'{prefix} {key} must be a string array')
+780-        doc_layout.validate_task_plan_paths(task, prefix, errors)
+781-        for reviewer in task.get('reviewer_agents') or []:
+782-            if KNOWN_AGENTS and reviewer not in KNOWN_AGENTS:
+783-                errors.append(f'{prefix} unknown reviewer: {reviewer}')
+784-        declared_triggers = set(task.get('risk_triggers') or [])
+785-        unknown_triggers = sorted(declared_triggers - set(RISK_REVIEWER_CATALOG))
+786-        if unknown_triggers:
+787-            errors.append(
+788-                f"{prefix} unknown risk_triggers: {unknown_triggers}; "
+789-                f"allowed values: {sorted(RISK_REVIEWER_CATALOG)}"
+790-            )
+791-        task_phase = str(task.get('phase') or '')
+792-        for trigger in sorted(declared_triggers & set(RISK_REVIEWER_CATALOG)):
+793-            allowed_phases = set(RISK_REVIEWER_CATALOG[trigger].get('allowedPhases', []))
+794-            if task_phase and task_phase not in allowed_phases:
+795-                errors.append(
+796-                    f"{prefix} risk trigger {trigger} is not allowed in phase {task_phase}; "
+797-                    f"allowed phases: {sorted(allowed_phases)}"
+798-                )
+799-        input_revisions = task.get('input_revisions')
+800-        if not isinstance(input_revisions, dict):
+801-            errors.append(f'{prefix} input_revisions must be an object')
+802-        attempts = task.get('attempts')
+803-        max_attempts = task.get('max_attempts')
+804-        if not isinstance(attempts, int) or isinstance(attempts, bool) or attempts < 0:
+805-            errors.append(f'{prefix} attempts must be a non-negative integer')
+806-        if not isinstance(max_attempts, int) or isinstance(max_attempts, bool) or max_attempts < 1:
+807-            errors.append(f'{prefix} max_attempts must be a positive integer')
+808-        if isinstance(attempts, int) and isinstance(max_attempts, int) and (attempts > max_attempts):
+809-            errors.append(f'{prefix} attempts exceeds max_attempts')
+810-        if task.get('status') == 'PASSED':
+811-            if not is_nonempty_string(task.get('output_revision')):
+812-                errors.append(f'{prefix} PASSED without output_revision')
+813-            if not task.get('validation_evidence_ids'):
+814-                errors.append(f'{prefix} PASSED without validation_evidence_ids')
+815-        graph[task_id] = list(task.get('depends_on') or [])
+816-        linked_traces: list[dict[str, Any]] = []
+817-        for trace_id in task.get('acceptance_trace_ids') or []:
+818-            if trace_id not in trace_ids:
+819-                errors.append(f'{prefix} references unknown traceability id: {trace_id}')
+820-            elif isinstance(trace_map.get(trace_id), dict):
+821-                linked_traces.append(trace_map[trace_id])
+822-        flow_refs = task.get('flow_refs') or []
+823-        flow_step_refs = task.get('flow_step_refs') or []
+824-        invalid_flow_refs = [item for item in flow_refs if not re.fullmatch(r'FLOW-[A-Z0-9_-]+', str(item))]
+825-        invalid_step_refs = [item for item in flow_step_refs if not re.fullmatch(r'STEP-[A-Z0-9_-]+', str(item))]
+826-        if invalid_flow_refs:
+827-            errors.append(f'{prefix} invalid flow_refs: {invalid_flow_refs}')
+--
+1952-        task_dir,
+1953-        acceptance_assertions,
+1954-        traceability,
+1955-        artifacts if isinstance(artifacts, dict) else {},
+1956-        collaboration_reviews if isinstance(collaboration_reviews, dict) else {},
+1957-        tasks,
+1958-        completion_required=(
+1959-            state.get('task_status') == 'COMPLETED'
+1960-            or (isinstance(completion_artifact_for_assertions, dict) and completion_artifact_for_assertions.get('status') == 'PASSED')
+1961-        ),
+1962-        errors=errors,
+1963-        validated_entries=evidence_entries,
+1964-    )
+1965-
+1966-    handoff_dir = task_dir / 'handoff'
+1967:    handoffs = sorted(handoff_dir.glob('*.md')) if handoff_dir.is_dir() else []
+1968-    for handoff_path in handoffs:
+1969-        prefix = f'handoff {handoff_path.name}'
+1970-        try:
+1971-            _, handoff = read_block(handoff_path, 'handoff')
+1972-        except ValueError as exc:
+1973-            errors.append(str(exc))
+1974-            continue
+1975-        if not isinstance(handoff, dict):
+1976-            errors.append(f'{prefix} must be a JSON object')
+1977-            continue
+1978-        validate_allowed_fields(handoff, HANDOFF_FIELDS, prefix, errors)
+1979-        if handoff.get('schema_version') != schema_version:
+1980-            errors.append(f'{prefix} schema_version must match task-state: {schema_version}')
+1981-        required_handoff_fields = ['target_id', 'version', 'phase', 'round', 'from_agent', 'to_agent', 'next_action', 'created_at']
+1982-        for key in required_handoff_fields:
+1983-            if not is_nonempty_string(handoff.get(key)):
+1984-                errors.append(f'{prefix} missing {key}')
+1985-        if handoff.get('target_id') != state.get('target_id'):
+1986-            errors.append(f'{prefix} target_id does not match task-state')
+1987-        if handoff.get('version') != state.get('version'):
+1988-            errors.append(f'{prefix} version does not match task-state')
+1989-        if handoff.get('phase') not in phases:
+1990-            errors.append(f"{prefix} invalid phase: {handoff.get('phase')}")
+1991-        if KNOWN_AGENTS:
+1992-            agent_keys = ('from_agent', 'to_agent')
+1993-            for key in agent_keys:
+1994-                value = handoff.get(key)
+1995-                if is_nonempty_string(value) and value not in KNOWN_AGENTS:
+1996-                    errors.append(f'{prefix} unknown {key}: {value}')
+1997-        for key in ('decision_ids', 'validation', 'open_issues', 'blockers', 'stop_conditions'):
+1998-            if not validate_string_list(handoff.get(key, [])):
+1999-                errors.append(f'{prefix} {key} must be a string array')
+2000-    if state.get('task_status') not in {'READY', 'COMPLETED', 'CANCELLED'} and (not handoffs):
+2001-        warnings.append('active task has no handoff file')
+2002-    if state.get('task_status') == 'COMPLETED':
+2003-        if derived_open:
+2004-            errors.append('COMPLETED task still has open issues')
+2005-        stale_or_failed = [phase for phase, item in artifacts.items() if isinstance(item, dict) and item.get('status') in {'STALE', 'FAILED', 'BLOCKED'}]
+2006-        if stale_or_failed:
+2007-            errors.append(f'COMPLETED task has invalid artifacts: {stale_or_failed}')
+2008-        incomplete_artifacts = []
+2009-        for phase in phases:
+2010-            item = artifacts.get(phase)
+2011-            status = item.get('status') if isinstance(item, dict) else None
+2012-            if status == 'PASSED':
+2013-                continue
+2014-            if status == 'NOT_APPLICABLE' and phase_skip_allowed(phase, minimal_mode, state):
+2015-                continue
+2016-            incomplete_artifacts.append(phase)
+2017-        if incomplete_artifacts:
+--
+2694-    exact_output = int(bool(output_revision) and output_revision == current_revisions.get(phase, ''))
+2695-    inputs = handoff.get('input_revisions') if isinstance(handoff.get('input_revisions'), dict) else {}
+2696-    known_inputs = [(str(key), str(value or '')) for key, value in inputs.items() if str(key) in current_revisions]
+2697-    matching_inputs = sum(1 for key, value in known_inputs if value and value == current_revisions.get(key))
+2698-    stale_inputs = sum(1 for key, value in known_inputs if value and value != current_revisions.get(key))
+2699-    return exact_output, matching_inputs, -stale_inputs
+2700-
+2701-
+2702-def _handoff_iteration(value: Any) -> int:
+2703-    numbers = re.findall(r'(?:I|R)(\d+)', str(value or '').upper())
+2704-    return max((int(item) for item in numbers), default=0)
+2705-
+2706-
+2707-def latest_handoff(task_dir: Path, state: Optional[dict[str, Any]] = None) -> Optional[Path]:
+2708-    handoff_dir = task_dir / 'handoff'
+2709:    handoffs = sorted(handoff_dir.glob('*.md')) if handoff_dir.is_dir() else []
+2710-    if not handoffs:
+2711-        return None
+2712-    if state is None:
+2713-        try:
+2714-            _, loaded = read_block(task_dir / 'task_state.md', 'task-state')
+2715-            state = loaded if isinstance(loaded, dict) else {}
+2716-        except (OSError, ValueError):
+2717-            state = {}
+2718-    ranked: list[tuple[tuple[Any, ...], Path]] = []
+2719-    for path in handoffs:
+2720-        try:
+2721-            _, handoff = read_block(path, 'handoff')
+2722-        except (OSError, ValueError):
+2723-            handoff = {}
+2724-        if not isinstance(handoff, dict):
+2725-            handoff = {}
+2726-        try:
+2727-            created = datetime.fromisoformat(str(handoff.get('created_at') or '').replace('Z', '+00:00'))
+2728-            created_key = created.isoformat()
+2729-        except ValueError:
+2730-            created_key = ''
+2731-        revision_score = _handoff_revision_score(handoff, state)
+2732-        phase_order = PHASE_INDEX.get(str(handoff.get('phase') or ''), -1)
+2733-        key = (*revision_score, _handoff_iteration(handoff.get('round')), phase_order, created_key, path.name)
+2734-        ranked.append((key, path))
+2735-    return max(ranked, key=lambda item: item[0])[1]
+2736-
+2737-def command_resume(args: argparse.Namespace) -> int:
+2738-    task_dir = Path(args.task_dir)
+2739-    errors, warnings, state, issues = validate_task(task_dir)
+2740-    try:
+2741-        current_agent = authorize_task_command(args, 'resume', state, task_dir)
+2742-    except agent_context.AgentAuthorizationError as exc:
+2743-        print(f'ERROR: {exc}', file=sys.stderr)
+2744-        return 1
+2745-    if errors and (not args.allow_invalid):
+2746-        for error in errors:
+2747-            print(f'ERROR: {error}', file=sys.stderr)
+2748-        return 1
+2749-    schema_version = int(state.get('schema_version', 0)) if state else LONG_TASK_SCHEMA_VERSION
+2750-    tasks: list[dict[str, Any]] = []
+2751-    attempts: list[dict[str, Any]] = []
+2752-    decisions: list[dict[str, Any]] = []
+2753-    outcomes: list[dict[str, Any]] = []
+2754-    for filename, block_name, variable in (('task_plan.md', 'task-plan', 'tasks'), ('task_attempts.md', 'task-attempts', 'attempts'), ('decision_log.md', 'decision-log', 'decisions'), ('stage_outcomes.md', 'stage-outcomes', 'outcomes')):
+2755-        path = task_dir / filename
+2756-        if not path.is_file():
+2757-            continue
+2758-        _, value = read_block(path, block_name)
+2759-        if variable == 'tasks' and isinstance(value, list):
+--
+3770-    return 0
+3771-
+3772-
+3773-def command_render_work_record(args: argparse.Namespace) -> int:
+3774-    agent = agent_context.selected_agent(args)
+3775-    agent_context.authorize_declared(agent, 'long_task', 'work-events')
+3776-    path = Path(args.doc_root) / 'version' / args.version / 'work_record.md'
+3777-    _, events = read_work_events(path)
+3778-    print(work_record.render_markdown(args.version, events), end='')
+3779-    return 0
+3780-
+3781-
+3782-def build_parser() -> argparse.ArgumentParser:
+3783-    from types import SimpleNamespace
+3784-    from _long_task.cli import build_parser as _build_parser
+3785:    runtime = sys.modules.get(__name__) or SimpleNamespace(**globals())
+3786-    return _build_parser(runtime)
+3787-
+3788-def main(argv: Optional[Iterable[str]]=None) -> int:
+3789-    parser = build_parser()
+3790-    args = parser.parse_args(list(argv) if argv is not None else None)
+3791-    try:
+3792-        doc_layout.validate_cli_namespace(args)
+3793-        return int(args.func(args))
+3794-    except (agent_context.AgentAuthorizationError, OSError, ValueError) as exc:
+3795-        print(f'ERROR: {exc}', file=sys.stderr)
+3796-        return 1
+3797-if __name__ == '__main__':
+3798-    raise SystemExit(main())
