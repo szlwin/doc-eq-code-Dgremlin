@@ -6,9 +6,9 @@
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
   "task_status": "PARTIAL",
-  "current_phase": "implementation_plan",
-  "current_round": "IMPLEMENTATION_PLAN-I007",
-  "current_agent": "ProjectManagerAgent",
+  "current_phase": "test_design",
+  "current_round": "TEST_DESIGN-I006",
+  "current_agent": "TestDesignAgent",
   "project_manager_agent": "ProjectManagerAgent",
   "execution_mode": "SEQUENTIAL",
   "active_task_ids": [],
@@ -36,14 +36,14 @@
   "architecture_review": {
     "enabled": true,
     "step": "SKELETON",
-    "skeleton_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-007",
+    "skeleton_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008",
     "skeleton_revision": "",
     "skeleton_review_result_refs": [],
     "implementation_iteration_id": "",
     "implementation_revision": "",
     "final_review_revision": "",
     "final_review_result_refs": [],
-    "updated_at": "2026-08-10T15:24:24+00:00"
+    "updated_at": "2026-08-11T03:10:57+00:00"
   },
   "artifact_revisions": {
     "requirement_confirmation": {
@@ -71,46 +71,46 @@
       "iteration_no": 4
     },
     "test_design": {
-      "revision": "TESTDESIGN-P2-R31",
-      "status": "PASSED",
-      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
-      "iteration_no": 5
+      "revision": "TESTDESIGN-P2-R32",
+      "status": "IN_PROGRESS",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006",
+      "iteration_no": 6
     },
     "implementation_plan": {
-      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
-      "status": "PASSED",
-      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
-      "iteration_no": 7
+      "revision": "",
+      "status": "STALE",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008",
+      "iteration_no": 8
     },
     "tdd": {
       "revision": "",
       "status": "STALE",
-      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-007",
-      "iteration_no": 7
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-008",
+      "iteration_no": 8
     },
     "development": {
       "revision": "",
       "status": "STALE",
-      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-007",
-      "iteration_no": 7
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008",
+      "iteration_no": 8
     },
     "code_review": {
       "revision": "",
       "status": "STALE",
-      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-007",
-      "iteration_no": 7
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-008",
+      "iteration_no": 8
     },
     "testing": {
       "revision": "",
       "status": "STALE",
-      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-007",
-      "iteration_no": 7
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-008",
+      "iteration_no": 8
     },
     "completion_verification": {
       "revision": "",
       "status": "STALE",
-      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-007",
-      "iteration_no": 7
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-008",
+      "iteration_no": 8
     }
   },
   "collaboration_reviews": {
@@ -548,7 +548,7 @@
       ]
     },
     "test_design": {
-      "artifact_revision": "TESTDESIGN-P2-R31",
+      "artifact_revision": "TESTDESIGN-P2-R32",
       "required_reviewers": [
         "DesignReviewAgent",
         "RequirementReviewAgent",
@@ -556,42 +556,9 @@
         "TestEvidenceReviewAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {
-        "RequirementReviewAgent": {
-          "profile_id": "test_design:RequirementReviewAgent",
-          "revision": "TESTDESIGN-P2-R31",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000050",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T12:17:36+00:00"
-        },
-        "DesignReviewAgent": {
-          "profile_id": "test_design:DesignReviewAgent",
-          "revision": "TESTDESIGN-P2-R31",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000051",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T12:17:40+00:00"
-        },
-        "TDDReviewAgent": {
-          "profile_id": "test_design:TDDReviewAgent",
-          "revision": "TESTDESIGN-P2-R31",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000052",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T12:17:44+00:00"
-        },
-        "TestEvidenceReviewAgent": {
-          "profile_id": "test_design:TestEvidenceReviewAgent",
-          "revision": "TESTDESIGN-P2-R31",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000053",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T12:17:48+00:00"
-        }
-      },
-      "status": "PASSED",
-      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
+      "independent_conclusions": {},
+      "status": "IN_REVIEW",
+      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006",
       "review_history": [
         {
           "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-003",
@@ -672,11 +639,51 @@
             }
           },
           "archived_at": "2026-08-10T12:02:06+00:00"
+        },
+        {
+          "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
+          "artifact_revision": "TESTDESIGN-P2-R31",
+          "status": "PASSED",
+          "independent_conclusions": {
+            "RequirementReviewAgent": {
+              "profile_id": "test_design:RequirementReviewAgent",
+              "revision": "TESTDESIGN-P2-R31",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000050",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T12:17:36+00:00"
+            },
+            "DesignReviewAgent": {
+              "profile_id": "test_design:DesignReviewAgent",
+              "revision": "TESTDESIGN-P2-R31",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000051",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T12:17:40+00:00"
+            },
+            "TDDReviewAgent": {
+              "profile_id": "test_design:TDDReviewAgent",
+              "revision": "TESTDESIGN-P2-R31",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000052",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T12:17:44+00:00"
+            },
+            "TestEvidenceReviewAgent": {
+              "profile_id": "test_design:TestEvidenceReviewAgent",
+              "revision": "TESTDESIGN-P2-R31",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000053",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T12:17:48+00:00"
+            }
+          },
+          "archived_at": "2026-08-11T03:10:57+00:00"
         }
       ]
     },
     "implementation_plan": {
-      "artifact_revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+      "artifact_revision": "",
       "required_reviewers": [
         "ArchitectureReviewAgent",
         "DevelopAgent",
@@ -684,42 +691,9 @@
         "TestDesignAgent"
       ],
       "additional_reviewers": {},
-      "independent_conclusions": {
-        "ArchitectureReviewAgent": {
-          "profile_id": "implementation_plan:ArchitectureReviewAgent",
-          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000062",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T15:35:30+00:00"
-        },
-        "DevelopAgent": {
-          "profile_id": "implementation_plan:DevelopAgent",
-          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000063",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T15:35:56+00:00"
-        },
-        "PlanReviewAgent": {
-          "profile_id": "implementation_plan:PlanReviewAgent",
-          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000064",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T15:36:35+00:00"
-        },
-        "TestDesignAgent": {
-          "profile_id": "implementation_plan:TestDesignAgent",
-          "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
-          "conclusion": "PASSED",
-          "review_result_ref": "REV-000065",
-          "finding_ids": [],
-          "reviewed_at": "2026-08-10T15:36:40+00:00"
-        }
-      },
-      "status": "PASSED",
-      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
+      "independent_conclusions": {},
+      "status": "PENDING",
+      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008",
       "review_history": [
         {
           "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-005",
@@ -800,6 +774,46 @@
             }
           },
           "archived_at": "2026-08-10T15:24:24+00:00"
+        },
+        {
+          "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
+          "artifact_revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+          "status": "PASSED",
+          "independent_conclusions": {
+            "ArchitectureReviewAgent": {
+              "profile_id": "implementation_plan:ArchitectureReviewAgent",
+              "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000062",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T15:35:30+00:00"
+            },
+            "DevelopAgent": {
+              "profile_id": "implementation_plan:DevelopAgent",
+              "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000063",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T15:35:56+00:00"
+            },
+            "PlanReviewAgent": {
+              "profile_id": "implementation_plan:PlanReviewAgent",
+              "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000064",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T15:36:35+00:00"
+            },
+            "TestDesignAgent": {
+              "profile_id": "implementation_plan:TestDesignAgent",
+              "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+              "conclusion": "PASSED",
+              "review_result_ref": "REV-000065",
+              "finding_ids": [],
+              "reviewed_at": "2026-08-10T15:36:40+00:00"
+            }
+          },
+          "archived_at": "2026-08-11T03:10:57+00:00"
         }
       ]
     },
@@ -811,7 +825,7 @@
       "additional_reviewers": {},
       "independent_conclusions": {},
       "status": "PENDING",
-      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-007",
+      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TDD-008",
       "review_history": []
     },
     "code_review": {
@@ -824,7 +838,7 @@
       "additional_reviewers": {},
       "independent_conclusions": {},
       "status": "PENDING",
-      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-007",
+      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-008",
       "review_history": []
     },
     "testing": {
@@ -835,7 +849,7 @@
       "additional_reviewers": {},
       "independent_conclusions": {},
       "status": "PENDING",
-      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-007",
+      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-008",
       "review_history": []
     },
     "development": {
@@ -847,7 +861,7 @@
       "additional_reviewers": {},
       "independent_conclusions": {},
       "status": "PENDING",
-      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-007",
+      "current_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-008",
       "review_history": []
     }
   },
@@ -855,8 +869,8 @@
   "open_issue_ids": [],
   "last_gate": "test_design",
   "failed_attempts": {},
-  "next_action": "运行 advance-phase 推进 implementation_plan 的下一阶段",
-  "next_agent": "ProjectManagerAgent",
+  "next_action": "由 DesignReviewAgent 审查 test_design@TESTDESIGN-P2-R32",
+  "next_agent": "DesignReviewAgent",
   "resume_from": "执行 long_task.py task-context 获取当前任务、最新 attempt、开放问题和恢复引用；需要细节时再按引用读取",
   "max_auto_review_rounds": 3,
   "stale_events": [
@@ -961,9 +975,25 @@
       "reason": "Independent exact-R03 execution review found two new P1 bounded-slice defects: DEV-07 requires dec-core-model before starter POM wiring, and DEV-04 makes CompiledViewMaterializationIndex mandatory before adapting the production CompiledModelSetBuilder construction seam. Reopen only implementation_plan; preserve BM-R20/DESIGN-P2-R30/TESTDESIGN-P2-R31 and block TDD/Development.",
       "created_at": "2026-08-10T15:24:24+00:00",
       "executed_by_agent": "ProjectManagerAgent"
+    },
+    {
+      "from_phase": "test_design",
+      "source_revision": "DESIGN-P2-R30",
+      "invalidated_phases": [
+        "test_design",
+        "implementation_plan",
+        "tdd",
+        "development",
+        "code_review",
+        "testing",
+        "completion_verification"
+      ],
+      "reason": "Clarify existing nested ModelPath semantics with explicit TestDesign oracles; P1 implementation, BM-R20 and DESIGN-P2-R30 remain unchanged.",
+      "created_at": "2026-08-11T03:10:57+00:00",
+      "executed_by_agent": "ProjectManagerAgent"
     }
   ],
-  "checkpoint_at": "2026-08-10T15:37:20+00:00"
+  "checkpoint_at": "2026-08-11T03:11:18+00:00"
 }
 ```
 

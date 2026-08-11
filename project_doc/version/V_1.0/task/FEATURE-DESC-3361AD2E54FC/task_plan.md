@@ -367,10 +367,10 @@
     "id": "TASK-P2-TESTDESIGN-001",
     "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-TEST-DESIGN",
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
-    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
-    "iteration_no": 5,
-    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-004",
-    "revision_reason": "RC9 machine-state migration: bind already-completed semantic authority chain BM-R20 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R31 into new lifecycle iterations without rewriting historical PASSED revisions or redoing semantic content.",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006",
+    "iteration_no": 6,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
+    "revision_reason": "Clarify existing nested ModelPath semantics with explicit TestDesign oracles; P1 implementation, BM-R20 and DESIGN-P2-R30 remain unchanged.",
     "title": "设计 P2 System、RuleView 与 model-access 可执行测试矩阵",
     "objective": "RC9 machine-state migration: re-register the already-completed TESTDESIGN-P2-R31 95-case/23-class test design without changing its test semantics.",
     "phase": "test_design",
@@ -428,8 +428,8 @@
       "STEP-CONFIG-COMPILE-07"
     ],
     "validation_commands": [
-      "python3 -c \"from pathlib import Path; import re; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); assert 'TESTDESIGN-P2-R31' in s; assert len(set(re.findall(r'CASE-P2-TD-[A-Z0-9-]+-001',s)))==95; pat=chr(96)+r'[A-Z0-9_]+ \\\\| [^|]+ \\\\| ([A-Za-z0-9]+Test) \\\\|'; assert len(set(re.findall(pat,s)))==23\"",
-      "python3 -c \"import json; from pathlib import Path; t=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); marker=chr(96)*3+'json traceability'+chr(10); i=s.index(marker)+len(marker); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); assert len(a)==10 and all(x.get('status')=='COVERED' and x.get('test_case_ids') and all(c in t for c in x['test_case_ids']) for x in a)\"",
+      "python3 -c \"from pathlib import Path; import re; s=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); req=['CASE-P2-TD-NESTED-OBJECT-PATH-001','CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001','CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001','CASE-P2-TD-NESTED-COLLECTION-PATH-001','CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001','CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001']; assert 'TESTDESIGN-P2-R32' in s; assert len(set(re.findall(r'CASE-P2-TD-[A-Z0-9-]+-001',s)))==101; assert len(set(re.findall(r'\\| ([A-Za-z0-9_]+Test) \\|',s)))==23; assert all(x in s for x in req)\"",
+      "python3 -c \"import json,re; from pathlib import Path; s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); marker=chr(96)*3+'json traceability'+chr(10); i=s.index(marker)+len(marker); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); by={x['id']:x for x in a}; req=['CASE-P2-TD-NESTED-OBJECT-PATH-001','CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001','CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001','CASE-P2-TD-NESTED-COLLECTION-PATH-001','CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001','CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001']; assert len(a)==10; assert all(x in by['TR-P2-SYSTEM-RULEVIEW-005']['test_case_ids'] for x in req); assert req[-1] in by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids']\"",
       "python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g TestDesignAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
       "git diff --check"
     ],
@@ -447,29 +447,29 @@
     "risk_triggers": [],
     "attempts": 1,
     "max_attempts": 3,
-    "output_revision": "TESTDESIGN-P2-R31",
+    "output_revision": "TESTDESIGN-P2-R32",
     "validation_evidence_ids": [
-      "EVD-000146",
-      "EVD-000147",
-      "EVD-000148",
-      "EVD-000149",
-      "EVD-000150",
-      "EVD-000151",
-      "EVD-000152"
+      "EVD-000193",
+      "EVD-000194",
+      "EVD-000195",
+      "EVD-000196",
+      "EVD-000197",
+      "EVD-000198",
+      "EVD-000199"
     ]
   },
   {
     "id": "TASK-P2-IMPLEMENTATION-PLAN-001",
     "logical_task_id": "LOGICAL-P2-SYSTEM-RULEVIEW-IMPLEMENTATION-PLAN",
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
-    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
-    "iteration_no": 7,
-    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-006",
-    "revision_reason": "Independent exact-R03 execution review found two new P1 bounded-slice defects: DEV-07 requires dec-core-model before starter POM wiring, and DEV-04 makes CompiledViewMaterializationIndex mandatory before adapting the production CompiledModelSetBuilder construction seam. Reopen only implementation_plan; preserve BM-R20/DESIGN-P2-R30/TESTDESIGN-P2-R31 and block TDD/Development.",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008",
+    "iteration_no": 8,
+    "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
+    "revision_reason": "Clarify existing nested ModelPath semantics with explicit TestDesign oracles; P1 implementation, BM-R20 and DESIGN-P2-R30 remain unchanged.",
     "title": "形成 P2 System、RuleView 与 model-access 可执行 Implementation Plan",
     "objective": "把当前设计与 95-case/23-class TestDesign 转换为 dependency-ordered vertical development tasks，并完成同 Revision Plan Review 门禁。",
     "phase": "implementation_plan",
-    "status": "PASSED",
+    "status": "REWORK",
     "depends_on": [
       "TASK-P2-TESTDESIGN-001"
     ],
@@ -482,7 +482,7 @@
     ],
     "input_revisions": {
       "design": "DESIGN-P2-R30",
-      "test_design": "TESTDESIGN-P2-R31"
+      "test_design": ""
     },
     "allowed_files": [
       "version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml",
@@ -545,18 +545,10 @@
       "计划要求改变已冻结业务/设计语义或提前进入 TDD/Development。"
     ],
     "risk_triggers": [],
-    "attempts": 1,
+    "attempts": 0,
     "max_attempts": 3,
-    "output_revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
-    "validation_evidence_ids": [
-      "EVD-000185",
-      "EVD-000186",
-      "EVD-000187",
-      "EVD-000188",
-      "EVD-000189",
-      "EVD-000190",
-      "EVD-000191"
-    ]
+    "output_revision": "",
+    "validation_evidence_ids": []
   }
 ]
 ```

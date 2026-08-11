@@ -313,8 +313,8 @@
     "round": "TEST_DESIGN-I005",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-005",
     "iteration_no": 5,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006",
     "status": "PASSED",
     "produced_by_agent": "TestDesignAgent",
     "input_revisions": {
@@ -403,8 +403,8 @@
     "round": "IMPLEMENTATION_PLAN-I007",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-007",
     "iteration_no": 7,
-    "is_current": true,
-    "superseded_by": "",
+    "is_current": false,
+    "superseded_by": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-008",
     "status": "PASSED",
     "produced_by_agent": "ImplementationPlanAgent",
     "input_revisions": {
@@ -429,6 +429,33 @@
     "open_risks": [],
     "started_at": "2026-08-10T15:32:17+00:00",
     "completed_at": "2026-08-10T15:37:20+00:00"
+  },
+  {
+    "id": "SO-FEATURE-DESC-3361AD2E54FC-TEST_DESIGN-I006",
+    "phase": "test_design",
+    "round": "TEST_DESIGN-I006",
+    "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-006",
+    "iteration_no": 6,
+    "is_current": true,
+    "superseded_by": "",
+    "status": "RUNNING",
+    "produced_by_agent": "TestDesignAgent",
+    "input_revisions": {
+      "design": "DESIGN-P2-R30"
+    },
+    "output_revision": "TESTDESIGN-P2-R32",
+    "evidence_ids": [
+      "EVD-000193",
+      "EVD-000194",
+      "EVD-000195",
+      "EVD-000196",
+      "EVD-000197",
+      "EVD-000198",
+      "EVD-000199"
+    ],
+    "open_risks": [],
+    "started_at": "2026-08-11T03:11:18+00:00",
+    "completed_at": ""
   }
 ]
 ```
