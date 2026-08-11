@@ -1,0 +1,45 @@
+name: common-develop DEV-01 R02 truthful closure v2
+
+on:
+  push:
+    branches: [common-develop/dev01-r02-run-20260812]
+    paths: [.github/workflows/common-develop-dev01-r02-run-v2.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  dev01-r02:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: common-develop/dev01-r02-run-20260812
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Reuse v1 runner with syntax correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+          src=Path('.github/workflows/common-develop-dev01-r02-run.yml').read_text()
+          marker='        run: |\n'
+          if marker not in src:
+              raise SystemExit('v1 run block missing')
+          block=textwrap.dedent(src.split(marker,1)[1])
+          start='new="""review_path=TD/'
+          end="'formalDevelopmentCheckpoint':'DEFERRED_UNTIL_STAGE_OUTCOME_PASSED'}\"\"\""
+          if start not in block or end not in block:
+              raise SystemExit('closure triple-quote anchors missing')
+          block=block.replace(start,"new='''review_path=TD/",1)
+          block=block.replace(end,"'formalDevelopmentCheckpoint':'DEFERRED_UNTIL_STAGE_OUTCOME_PASSED'}'''",1)
+          Path('/tmp/dev01-r02-v2.sh').write_text('#!/usr/bin/env bash\n'+block)
+          PY
+          chmod +x /tmp/dev01-r02-v2.sh
+          /tmp/dev01-r02-v2.sh
