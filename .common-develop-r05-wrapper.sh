@@ -72,6 +72,8 @@ if 'TESTDESIGN-P2-R32 nested ModelPath oracle mapping' not in s:
     s=s.replace(anchor,anchor+'\n'+mapping,1)
 p.write_text(s,encoding='utf-8')
 PY'''
-Path('/tmp/r05-plan.sh').write_text(s[:start]+pre+'\n'+new+'\n'+s[end:],encoding='utf-8')
+patched=s[:start]+pre+'\n'+new+'\n'+s[end:]
+patched=patched.replace('task_plan.py finalize -g ImplementationPlanAgent','task_plan.py finalize -g ProjectManagerAgent',1)
+Path('/tmp/r05-plan.sh').write_text(patched,encoding='utf-8')
 PY
 exec bash /tmp/r05-plan.sh
