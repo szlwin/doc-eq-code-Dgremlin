@@ -18,16 +18,14 @@ jobs:
           import sys,inspect
           sys.path.insert(0,'/tmp/common-develop/scripts')
           import manual_review
+          for name in ['command_draft','load_review_context','build_review_context','resolve_review_context','prepare_review_context']:
+              obj=getattr(manual_review,name,None)
+              if obj:
+                  print('\n===',name,'===\n'+inspect.getsource(obj))
+          print('\n=== context-like functions ===')
           for name in dir(manual_review):
-              if any(k in name.lower() for k in ['answer','detail','draft','parse']):
-                  obj=getattr(manual_review,name)
-                  if callable(obj):
-                      try:
-                          src=inspect.getsource(obj)
-                      except Exception:
-                          continue
-                      if '--answer' in src or '--detail' in src or 'answer' in name.lower() or 'detail' in name.lower():
-                          print('\n===',name,'===\n'+src)
+              if 'context' in name.lower() and callable(getattr(manual_review,name)):
+                  try: print(name, inspect.signature(getattr(manual_review,name)))
+                  except Exception: pass
           PY
-          echo '--- parser anchors ---'
-          grep -n -E "add_argument\(.*--(answer|detail)|detail_ref|UNKNOWN|parse_.*answer|answer_exceptions" /tmp/common-develop/scripts/manual_review.py || true
+          sed -n '1015,1065p' /tmp/common-develop/scripts/manual_review.py
