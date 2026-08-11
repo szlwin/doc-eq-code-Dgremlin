@@ -1,0 +1,39 @@
+name: PR36 review command inspect
+on:
+  push:
+    branches:
+      - feature/p2-design-testdesign-20260808
+permissions:
+  contents: write
+jobs:
+  inspect:
+    if: contains(github.event.head_commit.message, '[review-inspect]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/common-develop
+          git clone --depth=1 https://gitee.com/szlwin/common-develop.git /tmp/common-develop
+          {
+            echo '=== acceptance add ==='
+            python3 /tmp/common-develop/scripts/acceptance.py add --help || true
+            echo '=== acceptance manual ==='
+            python3 /tmp/common-develop/scripts/acceptance.py manual --help || true
+            echo '=== manual review prepare ==='
+            python3 /tmp/common-develop/scripts/manual_review.py prepare --help || true
+            echo '=== manual review draft ==='
+            python3 /tmp/common-develop/scripts/manual_review.py draft --help || true
+            echo '=== manual review submit ==='
+            python3 /tmp/common-develop/scripts/manual_review.py submit --help || true
+            echo '=== review-like scripts ==='
+            find /tmp/common-develop/scripts -maxdepth 1 -type f -printf '%f\n' | sort | grep -Ei 'review|accept'
+          } > .review-inspect.txt 2>&1
+          git config user.name common-develop-bot
+          git config user.email common-develop-bot@users.noreply.github.com
+          git add .review-inspect.txt
+          git commit -m 'chore: capture RC9 review assertion commands'
+          git push origin HEAD:feature/p2-design-testdesign-20260808
