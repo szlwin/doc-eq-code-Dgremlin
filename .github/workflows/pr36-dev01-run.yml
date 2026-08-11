@@ -50,15 +50,19 @@ jobs:
           s=s.replace("len([t for t in source['tasks'] if t['id'] not in existing])","len([t for t in source['tasks'] if (t.get('task_id') or t.get('id')) not in existing])",1)
           s=s.replace("'allowed_files':impl.get('affected_files') or []","'allowed_files':src.get('affected_files') or impl.get('affected_files') or []",1)
           old_scope="'allowed_files':src.get('affected_files') or impl.get('affected_files') or []"
-          exact_dev01=[
-            'dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java',
-            'dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java',
-            'dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java'
-          ]
+          exact_dev01=['dec-core-compiler/src/main/java/dec/core/compiler/symbol/SymbolTableBuilder.java','dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java','dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java']
           expanded="'allowed_files':sorted(set((src.get('affected_files') or impl.get('affected_files') or []) + ("+repr(exact_dev01)+" if tid == 'TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION' else [])))"
           if old_scope not in s: raise SystemExit('allowed scope materializer anchor missing')
           s=s.replace(old_scope,expanded,1)
           s=s.replace('--input-revision "$SKELREV"','--input-revision "$TDDREV"',1)
+          sk='git diff -- "$BUILDER" "$SYS_TEST" "$RV_TEST" > "$TDIR/evidence/commands/dev01-skeleton.patch"'
+          skn=sk+'\nsed -i \'s/[[:blank:]]\\+$//\' "$TDIR/evidence/commands/dev01-skeleton.patch"'
+          if sk not in s: raise SystemExit('skeleton patch anchor missing')
+          s=s.replace(sk,skn,1)
+          impl='git diff -- "$BUILDER" "$SYS_TEST" "$RV_TEST" > "$TDIR/evidence/commands/dev01-implementation.patch"'
+          impln=impl+'\nsed -i \'s/[[:blank:]]\\+$//\' "$TDIR/evidence/commands/dev01-implementation.patch"'
+          if impl not in s: raise SystemExit('implementation patch anchor missing')
+          s=s.replace(impl,impln,1)
           publish_marker="python3 /home/oai/skills/common-develop/scripts/long_task.py publish-artifact -g DevelopAgent --task-dir \"$TDIR\" --attempt-id \"$DEV_ATTEMPT\""
           pos=s.find(publish_marker)
           if pos<0: raise SystemExit('concrete publish marker missing')
