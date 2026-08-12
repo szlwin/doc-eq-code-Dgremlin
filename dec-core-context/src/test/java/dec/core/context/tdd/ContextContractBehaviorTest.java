@@ -143,6 +143,7 @@ class ContextContractBehaviorTest {
         List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
         CompiledModelSet model = new CompiledModelSet(
                 PublishedSourceManifest.empty(),
+                dec.core.context.model.CompiledViewMaterializationIndex.empty(),
                 registry,
                 deferred,
                 diagnostics,
@@ -164,6 +165,7 @@ class ContextContractBehaviorTest {
     private static CompiledModelSet emptyModelSet() {
         return new CompiledModelSet(
                 PublishedSourceManifest.empty(),
+                dec.core.context.model.CompiledViewMaterializationIndex.empty(),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(

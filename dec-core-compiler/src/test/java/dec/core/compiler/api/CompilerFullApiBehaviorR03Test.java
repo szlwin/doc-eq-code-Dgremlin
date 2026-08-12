@@ -291,6 +291,7 @@ class CompilerFullApiBehaviorR03Test {
             List<Diagnostic> diagnostics) {
         return new CompiledModelSet(
                 PublishedSourceManifest.empty(),
+                dec.core.context.model.CompiledViewMaterializationIndex.empty(),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(

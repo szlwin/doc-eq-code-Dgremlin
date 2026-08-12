@@ -2,6 +2,7 @@ package dec.core.compiler.pass;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -138,8 +139,13 @@ class CandidateContextT14Test {
                         fixture.deferredDefinition.key()).get());
         assertEquals(Collections.singletonList(warning),
                 actual.compiledModelSet().diagnostics());
-        assertEquals(fixture.boundInput.digestPair(),
-                actual.compiledModelSet().digestPair());
+        // P2 materialization aggregate 进入最终 semantic digest，但 source provenance 保持不变。
+        assertEquals(fixture.boundInput.digestPair().sourceDigest(),
+                actual.compiledModelSet().digestPair().sourceDigest());
+        assertNotEquals(fixture.boundInput.digestPair().semanticDigest(),
+                actual.compiledModelSet().digestPair().semanticDigest());
+        assertTrue(actual.compiledModelSet().digestPair()
+                .semanticDigest().matches("[0-9a-f]{64}"));
         assertEquals("compiler-t14", actual.compiledModelSet().compilerVersion());
         assertEquals("schema-v1", actual.compiledModelSet().schemaVersion());
         assertEquals("options-v1", actual.compiledModelSet().optionsVersion());

@@ -1,6 +1,7 @@
 package dec.core.context;
 
 import dec.core.context.model.CompiledModelSet;
+import dec.core.context.model.CompiledViewMaterializationIndex;
 import java.util.Objects;
 
 /**
@@ -22,23 +23,24 @@ public final class EngineContext {
         this.projection = CoreConfigProjection.from(compiledModelSet);
     }
 
-    /**
-     * 返回 Context 持有的完整模型。
-     */
+    /** 返回 Context 持有的完整模型。 */
     public CompiledModelSet compiledModelSet() {
         return compiledModelSet;
     }
 
-    /**
-     * 兼容旧调用方的模型读取别名。
-     */
+    /** 兼容旧调用方的模型读取别名。 */
     public CompiledModelSet modelSet() {
         return compiledModelSet;
     }
 
     /**
-     * 返回从同一个模型派生的只读 Projection。
+     * 精确代理当前 Context 捕获的 materialization aggregate，不读取任何全局/默认 Context。
      */
+    public CompiledViewMaterializationIndex viewMaterializationIndex() {
+        return compiledModelSet.viewMaterializationIndex();
+    }
+
+    /** 返回从同一个模型派生的只读 Projection。 */
     public CoreConfigProjection projection() {
         return projection;
     }

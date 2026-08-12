@@ -18,13 +18,12 @@ import dec.core.context.model.PublishedSourceManifest;
 import dec.core.context.model.ViewKey;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/** TESTDESIGN-P2-R32 DEV-04 materialization aggregate 精确 oracle。 */
+/** TESTDESIGN-P2-R32 DEV-04 materialization aggregate exact oracle. */
 class P2MaterializationAggregateExactTest {
 
     @Test
@@ -38,7 +37,9 @@ class P2MaterializationAggregateExactTest {
         assertEquals(left, same);
         assertEquals(left.hashCode(), same.hashCode());
         assertNotEquals(left, different);
-        assertNotEquals(left.aggregateSemanticDigest(), different.aggregateSemanticDigest());
+        assertNotEquals(
+                left.digestPair().semanticDigest(),
+                different.digestPair().semanticDigest());
         assertThrows(NullPointerException.class, () -> model(null));
     }
 

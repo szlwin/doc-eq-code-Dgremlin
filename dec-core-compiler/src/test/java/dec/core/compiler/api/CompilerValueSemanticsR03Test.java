@@ -142,6 +142,7 @@ class CompilerValueSemanticsR03Test {
     private static CompiledModelSet modelSet(Diagnostic warning) {
         return new CompiledModelSet(
                 PublishedSourceManifest.empty(),
+                dec.core.context.model.CompiledViewMaterializationIndex.empty(),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(
