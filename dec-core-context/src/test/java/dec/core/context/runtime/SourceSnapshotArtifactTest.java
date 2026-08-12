@@ -22,7 +22,8 @@ class SourceSnapshotArtifactTest {
     void exportSourceSnapshotForLocalVerification() throws IOException {
         // Maven 在多模块构建时提供仓库根目录；快照只包含源码与治理文档，不包含构建产物。
         Path repositoryRoot = Paths.get(System.getProperty("maven.multiModuleProjectDirectory")).toAbsolutePath().normalize();
-        Path output = Paths.get(System.getProperty("user.dir"))
+        Path output = repositoryRoot
+                .resolve("dec-core-context")
                 .resolve("target")
                 .resolve("surefire-reports")
                 .resolve("source-snapshot.zip")
