@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 public final class CompiledModelSet {
     private final PublishedSourceManifest sourceManifest;
     private final CompiledViewMaterializationIndex viewMaterializationIndex;
+    private final ModelAccessPolicyIndex modelAccessPolicyIndex;
     private final ImmutableRegistry<DefinitionKey, CompiledDefinition> definitions;
     private final TypedDefinitionRegistries typedRegistries;
     private final ImmutableDeferredRegistry deferred;
@@ -30,6 +31,7 @@ public final class CompiledModelSet {
      *
      * @param sourceManifest Context 中立 SourceManifest 发布视图
      * @param viewMaterializationIndex 随模型原子发布的 View 物化索引
+     * @param modelAccessPolicyIndex 随模型原子发布的精确 ModelAccess 授权索引
      * @param definitions 已编译定义 Registry
      * @param deferred Deferred Registry
      * @param diagnostics 无 ERROR 的稳定诊断集合
@@ -41,6 +43,7 @@ public final class CompiledModelSet {
     public CompiledModelSet(
             PublishedSourceManifest sourceManifest,
             CompiledViewMaterializationIndex viewMaterializationIndex,
+            ModelAccessPolicyIndex modelAccessPolicyIndex,
             Registry<DefinitionKey, CompiledDefinition> definitions,
             DeferredRegistry deferred,
             List<Diagnostic> diagnostics,
@@ -52,13 +55,17 @@ public final class CompiledModelSet {
         this.viewMaterializationIndex = Objects.requireNonNull(
                 viewMaterializationIndex,
                 "viewMaterializationIndex");
+        this.modelAccessPolicyIndex = Objects.requireNonNull(
+                modelAccessPolicyIndex,
+                "modelAccessPolicyIndex");
         this.definitions = snapshotDefinitions(
                 Objects.requireNonNull(definitions, "definitions"));
         this.deferred = snapshotDeferred(Objects.requireNonNull(deferred, "deferred"));
         this.diagnostics = immutablePublishedDiagnostics(diagnostics);
-        this.digestPair = withMaterializationDigest(
+        this.digestPair = withRuntimeAggregateDigest(
                 Objects.requireNonNull(digestPair, "digestPair"),
-                this.viewMaterializationIndex);
+                this.viewMaterializationIndex,
+                this.modelAccessPolicyIndex);
         this.compilerVersion = AbstractDefinitionKey.requireText(
                 compilerVersion,
                 "compilerVersion");
@@ -81,6 +88,11 @@ public final class CompiledModelSet {
         return viewMaterializationIndex;
     }
 
+    /** 返回与当前模型同一快照原子发布的精确授权索引。 */
+    public ModelAccessPolicyIndex modelAccessPolicyIndex() {
+        return modelAccessPolicyIndex;
+    }
+
     /** 返回完整 Definition Registry，供统一遍历和兼容读取使用。 */
     public Registry<DefinitionKey, CompiledDefinition> definitions() {
         return definitions;
@@ -101,7 +113,7 @@ public final class CompiledModelSet {
         return diagnostics;
     }
 
-    /** 返回源摘要和包含 materialization aggregate 的最终语义摘要。 */
+    /** 返回源摘要和包含 P2 runtime aggregates 的最终语义摘要。 */
     public DigestPair digestPair() {
         return digestPair;
     }
@@ -199,6 +211,7 @@ public final class CompiledModelSet {
         CompiledModelSet that = (CompiledModelSet) other;
         return sourceManifest.equals(that.sourceManifest)
                 && viewMaterializationIndex.equals(that.viewMaterializationIndex)
+                && modelAccessPolicyIndex.equals(that.modelAccessPolicyIndex)
                 && definitions.equals(that.definitions)
                 && typedRegistries.equals(that.typedRegistries)
                 && deferred.equals(that.deferred)
@@ -214,6 +227,7 @@ public final class CompiledModelSet {
         return Objects.hash(
                 sourceManifest,
                 viewMaterializationIndex,
+                modelAccessPolicyIndex,
                 definitions,
                 typedRegistries,
                 deferred,
@@ -229,6 +243,7 @@ public final class CompiledModelSet {
         return "CompiledModelSet{"
                 + "sources=" + sourceManifest.sources().size()
                 + ", materializationPlans=" + viewMaterializationIndex.viewKeys().size()
+                + ", modelAccessRules=" + modelAccessPolicyIndex.keys().size()
                 + ", definitions=" + definitions.size()
                 + ", deferred=" + deferred.size()
                 + ", digestPair=" + digestPair
@@ -236,17 +251,20 @@ public final class CompiledModelSet {
     }
 
     /**
-     * 将已绑定的 compiler semantic digest 与 materialization aggregate 组合为最终发布摘要。
+     * 将 compiler semantic digest 与全部 mandatory runtime aggregate 组合为最终发布摘要。
      * sourceDigest 保持原始输入 provenance，不被运行聚合重写。
      */
-    private static DigestPair withMaterializationDigest(
+    private static DigestPair withRuntimeAggregateDigest(
             DigestPair base,
-            CompiledViewMaterializationIndex index) {
+            CompiledViewMaterializationIndex materializationIndex,
+            ModelAccessPolicyIndex policyIndex) {
         return new DigestPair(
                 base.sourceDigest(),
                 sha256(base.semanticDigest()
                         + "\nmaterialization="
-                        + index.canonicalForm()));
+                        + materializationIndex.canonicalForm()
+                        + "\nmodelAccessPolicy="
+                        + policyIndex.canonicalForm()));
     }
 
     /** 使用固定 UTF-8 和小写十六进制生成稳定 SHA-256。 */

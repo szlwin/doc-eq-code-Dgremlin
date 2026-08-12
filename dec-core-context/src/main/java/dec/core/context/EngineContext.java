@@ -2,6 +2,7 @@ package dec.core.context;
 
 import dec.core.context.model.CompiledModelSet;
 import dec.core.context.model.CompiledViewMaterializationIndex;
+import dec.core.context.model.ModelAccessPolicyIndex;
 import java.util.Objects;
 
 /**
@@ -38,6 +39,13 @@ public final class EngineContext {
      */
     public CompiledViewMaterializationIndex viewMaterializationIndex() {
         return compiledModelSet.viewMaterializationIndex();
+    }
+
+    /**
+     * 精确代理当前 Context 捕获的授权索引；Guard 不允许重新编译或读取其它 Context 的策略。
+     */
+    public ModelAccessPolicyIndex modelAccessPolicyIndex() {
+        return compiledModelSet.modelAccessPolicyIndex();
     }
 
     /** 返回从同一个模型派生的只读 Projection。 */

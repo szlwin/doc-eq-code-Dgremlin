@@ -5,6 +5,7 @@ import dec.core.context.EngineContext;
 import dec.core.context.model.CompiledModelSet;
 import dec.core.context.model.CompiledViewMaterializationIndex;
 import dec.core.context.model.Diagnostic;
+import dec.core.context.model.ModelAccessPolicyIndex;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,12 +47,13 @@ public final class CompiledModelSetBuilder {
 
         /**
          * 使用当前稳定 Diagnostic 快照构造完整模型和 candidate Context。
-         * DEV-04 只负责 mandatory aggregate construction adaptation；具体 descriptor 生成归 DEV-03。
+         * DEV-03 的 policy compiler 尚未接入 pipeline 前显式发布空索引，避免隐式 null/全局策略来源。
          */
         EngineContext candidate(List<Diagnostic> diagnostics) {
             return new EngineContext(new CompiledModelSet(
                     boundInput.sourceManifest(),
                     CompiledViewMaterializationIndex.empty(),
+                    ModelAccessPolicyIndex.empty(),
                     boundInput.definitions(),
                     boundInput.deferred(),
                     Objects.requireNonNull(diagnostics, "diagnostics"),
