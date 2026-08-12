@@ -15,9 +15,18 @@ import java.util.Objects;
 public final class ModelPathCompiler {
 
     /**
-     * 按 source View 的真实 property shape 编译路径；通配符只在编译期有限展开，绝不进入运行时 Key。
+     * 按冻结 TestDesign seam 编译路径。AccessMode 显式进入编译上下文，禁止运行期再猜 READ/WRITE。
      */
     public ModelPathCompilationResult compile(
+            SharedModelPath sourcePath,
+            AccessMode accessMode,
+            RawDefinition sourceView) {
+        Objects.requireNonNull(accessMode, "accessMode");
+        return compileAgainstView(sourceView, sourcePath);
+    }
+
+    /** 按 source View 的真实 property shape 编译；通配符仅在编译期有限展开。 */
+    private ModelPathCompilationResult compileAgainstView(
             RawDefinition sourceView,
             SharedModelPath sourcePath) {
         Objects.requireNonNull(sourceView, "sourceView");
