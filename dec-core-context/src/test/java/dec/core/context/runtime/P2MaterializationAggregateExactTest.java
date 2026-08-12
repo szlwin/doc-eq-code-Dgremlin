@@ -64,6 +64,7 @@ class P2MaterializationAggregateExactTest {
         return new CompiledModelSet(
                 PublishedSourceManifest.empty(),
                 index,
+                dec.core.context.model.ModelAccessPolicyIndex.empty(),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(
