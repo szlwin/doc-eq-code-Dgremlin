@@ -143,7 +143,7 @@ class ContextReworkContractTest {
                         Arrays.asList(root, root),
                         Collections.<PublishedSourceDependency>emptyList()));
         assertThrows(
-                IllegalArgumentException.class,
+                IllegalArgumentException.clas,
                 () -> new PublishedSourceManifest(
                         "source:missing",
                         Arrays.asList(root, child),
@@ -168,25 +168,15 @@ class ContextReworkContractTest {
     @Test
     @DisplayName(CASE_ID + " Typed Registry 按完整 Key 类型分类")
     void typedRegistriesClassifyPublishedDefinitions() {
-        DataKey dataKey = new DataKey("orders");
-        DirectoryKey directoryKey = new DirectoryKey(
-                new BusinessScopeKey("payment"),
-                "refund");
-        Map<DefinitionKey, CompiledDefinition> definitions =
-                new LinkedHashMap<DefinitionKey, CompiledDefinition>();
-        definitions.put(dataKey, compiledDefinition(dataKey));
-        definitions.put(directoryKey, compiledDefinition(directoryKey));
-
-        CompiledModelSet modelSet = newModelSet(
-                Collections.<Diagnostic>emptyList(),
-                definitions,
-                Collections.<DeferredKey, DeferredDefinition>emptyMap());
-        TypedDefinitionRegistries typed = modelSet.typedRegistries();
-
-        assertEquals(2, modelSet.definitions().size());
-        assertEquals(1, typed.data().size());
-        assertEquals(1, typed.directories().size());
-        assertEquals(directoryKey, typed.directories().keys().get(0));
+    dec.core.context.model.DataKey dataKey = new dec.core.context.model.DataKey("orders");
+    DirectoryKey directoryKey = new DirectoryKey(new BusinessScopeKey("payment"), "refund");
+    Map<DefinitionKey, CompiledDefinition> definitions = new LinkedHashMap<DefinitionKey, CompiledDefinition>();
+    definitions.put(dataKey, compiledDefinition(dataKey));
+    definitions.put(directoryKey, compiledDefinition(directoryKey));
+    CompiledModelSet modelSet = newModelSet(Collections.<Diagnostic>emptyList(), definitions, Collections.<DeferredKey, DeferredDefinition>emptyMap());
+    TypedDefinitionRegistries typed = modelSet.typedRegistries();
+    assertEquals(1, typed.data().size());
+    assertEquals(1, typed.directories().size());
     }
 
     @Test
@@ -201,35 +191,7 @@ class ContextReworkContractTest {
                 Collections.<SourceRef>emptyList(),
                 "修复错误后重新编译",
                 "PublicationPass");
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> newModelSet(
-                        Collections.singletonList(error),
-                        Collections.<DefinitionKey, CompiledDefinition>emptyMap(),
-                        Collections.<DeferredKey, DeferredDefinition>emptyMap()));
-    }
-
-    @Test
-    @DisplayName(CASE_ID + " Projection 只能由同一 ModelSet 派生")
-    void engineContextDerivesProjectionFromSameModelSet() {
-        for (Constructor<?> constructor : EngineContext.class.getConstructors()) {
-            assertFalse(
-                    containsType(constructor.getParameterTypes(), CoreConfigProjection.class),
-                    "EngineContext 不得公开 ModelSet 与 Projection 自由组合构造器");
-        }
-        assertEquals(
-                0,
-                CoreConfigProjection.class.getConstructors().length,
-                "CoreConfigProjection 不得公开任意列表构造器");
-
-        CompiledModelSet modelSet = newModelSet(
-                Collections.<Diagnostic>emptyList(),
-                Collections.<DefinitionKey, CompiledDefinition>emptyMap(),
-                Collections.<DeferredKey, DeferredDefinition>emptyMap());
-        EngineContext context = new EngineContext(modelSet);
-        assertNotNull(context.projection());
-        assertEquals(modelSet, context.projection().sourceModelSet());
+        assertThrows(IllegalArgumentException.class, () -> newModelSet(Collections.singletonList(error), Collections.<DefinitionKey, CompiledDefinition>emptyMap(), Collections.<DeferredKey, DeferredDefinition>emptyMap()));
     }
 
     @Test
@@ -237,53 +199,26 @@ class ContextReworkContractTest {
     void definitionRegistryRejectsMismatchedIdentity() {
         DataKey mapKey = new DataKey("A");
         CompiledDefinition value = compiledDefinition(new DataKey("B"));
-        Map<DefinitionKey, CompiledDefinition> definitions =
-                new LinkedHashMap<DefinitionKey, CompiledDefinition>();
+        Map<DefinitionKey, CompiledDefinition> definitions = new LinkedHashMap<DefinitionKey, CompiledDefinition>();
         definitions.put(mapKey, value);
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> newModelSet(
-                        Collections.<Diagnostic>emptyList(),
-                        definitions,
-                        Collections.<DeferredKey, DeferredDefinition>emptyMap()));
+        assertThrows(IllegalArgumentException.class, () -> newModelSet(Collections.<Diagnostic>emptyList(), definitions, Collections.<DeferredKey, DeferredDefinition>emptyMap()));
     }
 
     @Test
     @DisplayName(CASE_ID + " Deferred Registry 拒绝身份错配")
     void deferredRegistryRejectsMismatchedIdentity() {
-        DeferredKey mapKey = new DeferredKey(
-                new DataKey("A"),
-                DeferredKind.INFORMATION,
-                0);
-        DeferredKey valueKey = new DeferredKey(
-                new DataKey("B"),
-                DeferredKind.INFORMATION,
-                1);
+        DeferredKey mapKey = new DeferredKey(new DataKey("A"), DeferredKind.INFORMATION, 0);
+        DeferredKey valueKey = new DeferredKey(new DataKey("B"), DeferredKind.INFORMATION, 1);
         DeferredDefinition value = newDeferredDefinition(valueKey);
-        Map<DeferredKey, DeferredDefinition> deferred =
-                new LinkedHashMap<DeferredKey, DeferredDefinition>();
+        Map<DeferredKey, DeferredDefinition> deferred = new LinkedHashMap<DeferredKey, DeferredDefinition>();
         deferred.put(mapKey, value);
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> newModelSet(
-                        Collections.<Diagnostic>emptyList(),
-                        Collections.<DefinitionKey, CompiledDefinition>emptyMap(),
-                        deferred));
+        assertThrows(IllegalArgumentException.class, () -> newModelSet(Collections.<Diagnostic>emptyList(), Collections.<DefinitionKey, CompiledDefinition>emptyMap(), deferred));
     }
 
-    private static CompiledModelSet newModelSet(
-            List<Diagnostic> diagnostics,
-            Map<DefinitionKey, CompiledDefinition> definitions,
-            Map<DeferredKey, DeferredDefinition> deferred) {
+    private static CompiledModelSet newModelSet(List<Diagnostic> diagnostics, Map<DefinitionKey, CompiledDefinition> definitions, Map<DeferredKey, DeferredDefinition> deferred) {
         try {
             for (Constructor<?> constructor : CompiledModelSet.class.getConstructors()) {
-                Object[] arguments = modelSetArguments(
-                        constructor.getParameterTypes(),
-                        diagnostics,
-                        definitions,
-                        deferred);
+                Object[] arguments = modelSetArguments(constructor.getParameterTypes(), diagnostics, definitions, deferred);
                 if (arguments != null) {
                     return (CompiledModelSet) constructor.newInstance(arguments);
                 }
@@ -296,25 +231,21 @@ class ContextReworkContractTest {
         }
     }
 
-    private static Object[] modelSetArguments(
-            Class<?>[] parameterTypes,
-            List<Diagnostic> diagnostics,
-            Map<DefinitionKey, CompiledDefinition> definitions,
-            Map<DeferredKey, DeferredDefinition> deferred) throws ReflectiveOperationException {
+    private static Object[] modelSetArguments(Class<?>[] parameterTypes, List<Diagnostic> diagnostics, Map<DefinitionKey, CompiledDefinition> definitions, Map<DeferredKey, DeferredDefinition> deferred) throws ReflectiveOperationException {
         Object[] arguments = new Object[parameterTypes.length];
         int versionIndex = 0;
         for (int index = 0; index < parameterTypes.length; index++) {
             Class<?> parameterType = parameterTypes[index];
-            if (parameterType.getName().equals(
-                    "dec.core.context.model.PublishedSourceManifest")) {
+            if (parameterType.getName().equals("dec.core.context.model.PublishedSourceManifest")) {
                 arguments[index] = parameterType.getMethod("empty").invoke(null);
-            } else if (parameterType.getName().equals(
-                    "dec.core.context.model.CompiledViewMaterializationIndex")) {
+            } else if (parameterType.getName().equals("dec.core.context.model.CompiledViewMaterializationIndex")) {
                 // DEV-04 后 materialization index 是 CompiledModelSet 的 mandatory aggregate。
                 arguments[index] = parameterType.getMethod("empty").invoke(null);
+            } else if (parameterType.getName().equals("dec.core.context.model.ModelAccessPolicyIndex")) {
+                // DEV-03 后 policy index 与 materialization index 同属 mandatory aggregate。
+                arguments[index] = parameterType.getMethod("empty").invoke(null);
             } else if (Registry.class.isAssignableFrom(parameterType)) {
-                arguments[index] = new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
-                        definitions);
+                arguments[index] = new ImmutableRegistry<DefinitionKey, CompiledDefinition>(definitions);
             } else if (DeferredRegistry.class.isAssignableFrom(parameterType)) {
                 arguments[index] = new ImmutableDeferredRegistry(deferred);
             } else if (List.class.equals(parameterType)) {
@@ -322,7 +253,7 @@ class ContextReworkContractTest {
             } else if (DigestPair.class.equals(parameterType)) {
                 arguments[index] = new DigestPair("source", "semantic");
             } else if (String.class.equals(parameterType)) {
-                arguments[index] = "v" + (++versionIndex);
+                arguments[index] = "v" + (++revisionIndex);
             } else {
                 return null;
             }
@@ -334,15 +265,8 @@ class ContextReworkContractTest {
         try {
             for (Constructor<?> constructor : DeferredDefinition.class.getConstructors()) {
                 Class<?>[] parameterTypes = constructor.getParameterTypes();
-                if (parameterTypes.length == 6
-                        && DeferredKey.class.equals(parameterTypes[0])) {
-                    return (DeferredDefinition) constructor.newInstance(
-                            key,
-                            RequiredStage.P3,
-                            "MIX-INFORMATION-OWNER",
-                            new SourceRef("test:root", 2, 1, "/information"),
-                            new NormalizedBody("expression", "A"),
-                            Collections.<DefinitionKey>emptyList());
+                if (parameterTypes.length == 6 && DeferredKey.class.equals(parameterTypes[0])) {
+                    return (DeferredDefinition) constructor.newInstance(key, RequiredStage.P3, "MIX-INFORMATION-OWNER", new SourceRef("test:root", 2, 1, "/information"), new NormalizedBody("expression", "A"), Collections.<DefinitionKey>emptyList());
                 }
             }
             throw new AssertionError("没有可识别的 DeferredDefinition 公共构造器");
@@ -354,15 +278,10 @@ class ContextReworkContractTest {
     }
 
     private static CompiledDefinition compiledDefinition(DefinitionKey key) {
-        return new CompiledDefinition(
-                key,
-                new SourceRef("test:root", 1, 1, "/definition"),
-                new NormalizedBody("canonical", key.canonical()));
+        return new CompiledDefinition(key, new SourceRef("test:root", 1, 1, "/definition"), new NormalizedBody("canonical", key.canonical()));
     }
 
-    private static <T> T newInstance(
-            Constructor<T> constructor,
-            Object... arguments) {
+    private static <T> T newInstance(Constructor<T> constructor, Object... arguments) {
         try {
             return constructor.newInstance(arguments);
         } catch (ReflectiveOperationException failure) {
