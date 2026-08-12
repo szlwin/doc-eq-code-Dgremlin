@@ -14,11 +14,22 @@ import java.util.Objects;
  */
 public final class CompiledModelSetBuilder {
     private final DigestBoundCompiledInput boundInput;
+    private final ModelAccessPolicyIndex policyIndex;
     private boolean frozen;
 
-    /** 创建只接受原子 provenance 输入的 Builder，禁止分别注入模型事实或摘要。 */
+    /**
+     * 保留 P1 T14 的 atomic provenance 兼容入口；生产 pipeline 必须使用显式 policy 构造器。
+     */
     public CompiledModelSetBuilder(DigestBoundCompiledInput boundInput) {
+        this(boundInput, ModelAccessPolicyIndex.empty());
+    }
+
+    /** 创建原子 provenance 与同 Session policy 的生产 Builder，禁止发布期重新推导策略。 */
+    public CompiledModelSetBuilder(
+            DigestBoundCompiledInput boundInput,
+            ModelAccessPolicyIndex policyIndex) {
         this.boundInput = Objects.requireNonNull(boundInput, "boundInput");
+        this.policyIndex = Objects.requireNonNull(policyIndex, "policyIndex");
     }
 
     /** 完成一次性冻结；重复调用稳定拒绝，避免同一 Builder 被跨 Session 复用。 */
@@ -27,16 +38,20 @@ public final class CompiledModelSetBuilder {
             throw new IllegalStateException("candidate context builder already frozen");
         }
         frozen = true;
-        return new FrozenInput(boundInput);
+        return new FrozenInput(boundInput, policyIndex);
     }
 
     /** 可安全进入 Session artifact 的不可变候选输入闭包。 */
     public static final class FrozenInput implements ImmutablePipelineArtifact {
         private final DigestBoundCompiledInput boundInput;
+        private final ModelAccessPolicyIndex policyIndex;
 
-        /** 保存已经由 T13 摘要服务原子绑定的不可变事实。 */
-        private FrozenInput(DigestBoundCompiledInput boundInput) {
+        /** 保存 T13 摘要闭包与同一 Compilation Session 编译出的 exact policy。 */
+        private FrozenInput(
+                DigestBoundCompiledInput boundInput,
+                ModelAccessPolicyIndex policyIndex) {
             this.boundInput = Objects.requireNonNull(boundInput, "boundInput");
+            this.policyIndex = Objects.requireNonNull(policyIndex, "policyIndex");
         }
 
         /** 校验当前请求的 schema/options 与摘要闭包完全一致。 */
@@ -47,13 +62,13 @@ public final class CompiledModelSetBuilder {
 
         /**
          * 使用当前稳定 Diagnostic 快照构造完整模型和 candidate Context。
-         * DEV-03 的 policy compiler 尚未接入 pipeline 前显式发布空索引，避免隐式 null/全局策略来源。
+         * policyIndex 必须来自同一 Compilation Session，禁止 null、全局或发布期重新推导。
          */
         EngineContext candidate(List<Diagnostic> diagnostics) {
             return new EngineContext(new CompiledModelSet(
                     boundInput.sourceManifest(),
                     CompiledViewMaterializationIndex.empty(),
-                    ModelAccessPolicyIndex.empty(),
+                    policyIndex,
                     boundInput.definitions(),
                     boundInput.deferred(),
                     Objects.requireNonNull(diagnostics, "diagnostics"),
