@@ -174,6 +174,7 @@ final class PipelineTestSupport {
     static EngineContext candidate() {
         CompiledModelSet modelSet = new CompiledModelSet(
                 PublishedSourceManifest.empty(),
+                dec.core.context.model.CompiledViewMaterializationIndex.empty(),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(

@@ -308,6 +308,10 @@ class ContextReworkContractTest {
             if (parameterType.getName().equals(
                     "dec.core.context.model.PublishedSourceManifest")) {
                 arguments[index] = parameterType.getMethod("empty").invoke(null);
+            } else if (parameterType.getName().equals(
+                    "dec.core.context.model.CompiledViewMaterializationIndex")) {
+                // DEV-04 后 materialization index 是 CompiledModelSet 的 mandatory aggregate。
+                arguments[index] = parameterType.getMethod("empty").invoke(null);
             } else if (Registry.class.isAssignableFrom(parameterType)) {
                 arguments[index] = new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         definitions);
