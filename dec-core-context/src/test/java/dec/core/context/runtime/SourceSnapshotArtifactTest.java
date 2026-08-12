@@ -20,8 +20,8 @@ class SourceSnapshotArtifactTest {
 
     @Test
     void exportSourceSnapshotForLocalVerification() throws IOException {
-        // Maven 在多模块构建时提供仓库根目录；快照只包含源码与治理文档，不包含构建产物。
-        Path repositoryRoot = Paths.get(System.getProperty("maven.multiModuleProjectDirectory")).toAbsolutePath().normalize();
+        // GitHub Actions 从仓库根目录启动 Maven，因此 user.dir 可稳定定位完整 checkout。
+        Path repositoryRoot = Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize();
         Path output = repositoryRoot
                 .resolve("dec-core-context")
                 .resolve("target")
