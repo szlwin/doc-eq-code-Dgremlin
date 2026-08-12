@@ -27,7 +27,7 @@ public final class ModelPathCompiler {
                     new ViewKey("<invalid-view>"), sourceView.sourceRef()));
         }
         List<RawNodeBody> roots = propertyRoots(sourceView.body());
-        if (sourcePath.wildcard()) {
+        if ("*".equals(sourcePath.value())) {
             List<ModelPath> expanded = new ArrayList<ModelPath>();
             collectPaths(roots, new ArrayList<String>(), expanded);
             if (expanded.isEmpty()) {
