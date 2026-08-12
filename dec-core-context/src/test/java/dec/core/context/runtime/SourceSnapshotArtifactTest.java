@@ -20,10 +20,13 @@ class SourceSnapshotArtifactTest {
 
     @Test
     void exportSourceSnapshotForLocalVerification() throws IOException {
-        // GitHub Actions 从仓库根目录启动 Maven，因此 user.dir 可稳定定位完整 checkout。
-        Path repositoryRoot = Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize();
-        Path output = repositoryRoot
-                .resolve("dec-core-context")
+        // Surefire 在模块目录运行，父目录即 GitHub Actions checkout 的 reactor 根目录。
+        Path moduleRoot = Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize();
+        Path repositoryRoot = moduleRoot.getParent();
+        if (repositoryRoot == null || !Files.isRegularFile(repositoryRoot.resolve("pom.xml"))) {
+            throw new IllegalStateException("无法定位 Maven reactor 根目录: " + moduleRoot);
+        }
+        Path output = moduleRoot
                 .resolve("target")
                 .resolve("surefire-reports")
                 .resolve("source-snapshot.zip")
