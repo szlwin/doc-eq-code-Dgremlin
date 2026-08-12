@@ -1,3 +1,44 @@
 package dec.core.context.runtime;
+
 /** P2 单个 runtime object/path 的单调 mutation 版本值。 */
-public final class RuntimeMutationVersion implements Comparable<RuntimeMutationVersion>{private final long value;private RuntimeMutationVersion(long value){if(value<0L)throw new IllegalArgumentException("value must be >= 0");this.value=value;}public static RuntimeMutationVersion of(long value){return new RuntimeMutationVersion(value);}public long value(){return value;}@Override public int compareTo(RuntimeMutationVersion other){return Long.compare(value,other.value);}@Override public boolean equals(Object other){return this==other||other instanceof RuntimeMutationVersion&&value==((RuntimeMutationVersion)other).value);}@Override public int hashCode(){return Long.valueOf(value).hashCode();}@Override public String toString(){return String.valueOf(value);}}
+public final class RuntimeMutationVersion implements Comparable<RuntimeMutationVersion> {
+    private final long value;
+
+    private RuntimeMutationVersion(long value) {
+        if (value < 0L) {
+            throw new IllegalArgumentException("value must be >= 0");
+        }
+        this.value = value;
+    }
+
+    /** 创建非负 mutation 版本。 */
+    public static RuntimeMutationVersion of(long value) {
+        return new RuntimeMutationVersion(value);
+    }
+
+    public long value() {
+        return value;
+    }
+
+    @Override
+    public int compareTo(RuntimeMutationVersion other) {
+        return Long.compare(value, other.value);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return this == other
+                || other instanceof RuntimeMutationVersion
+                && value == ((RuntimeMutationVersion) other).value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(value).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+}
