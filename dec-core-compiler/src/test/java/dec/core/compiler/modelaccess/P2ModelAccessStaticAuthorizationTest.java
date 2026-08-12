@@ -35,26 +35,17 @@ class P2ModelAccessStaticAuthorizationTest {
     void exactPolicyIndexSeparatesReadWriteAndHasNoParentFallback() {
         TargetKey target = TargetKey.of(new ViewKey("OrderInfo"));
         ModelAccessRuleKey readUser = ModelAccessRuleKey.of(
-                new SystemKey("order"),
-                target,
-                ModelPath.of("user"),
-                AccessOperation.READ);
+                new SystemKey("order"), target, ModelPath.of("user"), AccessOperation.READ);
         ModelAccessRuleKey writeUser = ModelAccessRuleKey.of(
-                new SystemKey("order"),
-                target,
-                ModelPath.of("user"),
-                AccessOperation.WRITE);
+                new SystemKey("order"), target, ModelPath.of("user"), AccessOperation.WRITE);
         CompiledModelAccessRule rule = CompiledModelAccessRule.of(
                 readUser,
                 AccessCompilationStatus.STATIC_ALLOW,
                 RuntimeBindingPlan.exact(
                         target,
-                        CompiledTargetBinding.propertyPath(
-                                new ViewKey("OrderInfo"),
-                                "user")),
+                        CompiledTargetBinding.propertyPath(new ViewKey("OrderInfo"), "user")),
                 new SourceRef("systems.xml", 1, 1, "/read"));
-        ModelAccessPolicyIndex index = ModelAccessPolicyIndex.of(
-                Collections.singletonList(rule));
+        ModelAccessPolicyIndex index = ModelAccessPolicyIndex.of(Collections.singletonList(rule));
 
         assertEquals(AccessCompilationStatus.STATIC_ALLOW, index.classify(readUser));
         assertEquals(AccessCompilationStatus.STATIC_DENY, index.classify(writeUser));
@@ -75,14 +66,10 @@ class P2ModelAccessStaticAuthorizationTest {
         TargetKey source = TargetKey.of(new ViewKey("OrderInfo"));
         RuntimeBindingPlan first = RuntimeBindingPlan.exact(
                 source,
-                CompiledTargetBinding.propertyPath(
-                        new ViewKey("UserInfo"),
-                        "user.authInfo"));
+                CompiledTargetBinding.propertyPath(new ViewKey("UserInfo"), "user.authInfo"));
         RuntimeBindingPlan second = RuntimeBindingPlan.exact(
                 source,
-                CompiledTargetBinding.propertyPath(
-                        new ViewKey("UserInfo"),
-                        "user.authInfo.role"));
+                CompiledTargetBinding.propertyPath(new ViewKey("UserInfo"), "user.authInfo.role"));
         assertEquals(source, first.sourceTargetKey());
         assertEquals("user.authInfo", first.compiledTargetBinding().exactResolvedValue());
         assertNotEquals(first, second);
@@ -94,9 +81,7 @@ class P2ModelAccessStaticAuthorizationTest {
         RawDefinitionSet definitions = ModelAccessTestFixture.nestedPropertyFallback();
         RawDefinition sourceView = requireView(definitions, "OrderInfo");
         ModelPathCompilationResult result = new ModelPathCompiler().compile(
-                new SharedModelPath("payInfo.payDetailList"),
-                AccessMode.READ,
-                sourceView);
+                new SharedModelPath("payInfo.payDetailList"), AccessMode.READ, sourceView);
         assertTrue(result.compiled(), result.diagnostics().toString());
         assertEquals(
                 Collections.singletonList(ModelPath.of("payInfo.payDetailList")),
@@ -109,9 +94,7 @@ class P2ModelAccessStaticAuthorizationTest {
         RawDefinitionSet definitions = ModelAccessTestFixture.nestedPropertyFallback();
         RawDefinition sourceView = requireView(definitions, "OrderInfo");
         ModelPathCompilationResult result = new ModelPathCompiler().compile(
-                new SharedModelPath("*"),
-                AccessMode.READ,
-                sourceView);
+                new SharedModelPath("*"), AccessMode.READ, sourceView);
         assertTrue(result.compiled(), result.diagnostics().toString());
         assertEquals(
                 Arrays.asList(
@@ -127,14 +110,11 @@ class P2ModelAccessStaticAuthorizationTest {
     void p1BindingsCompileAtomicallyIntoExactP2Policy() {
         RawDefinitionSet definitions = ModelAccessTestFixture.nestedPropertyFallback();
         SymbolTable symbols = ModelAccessTestFixture.symbols(definitions);
-        ModelAccessCompilationResult p1 = new ModelAccessCompiler().compile(
-                definitions,
-                symbols);
+        ModelAccessCompilationResult p1 = new ModelAccessCompiler().compile(definitions, symbols);
         assertTrue(p1.compilation().isPresent());
 
         ModelAccessPolicyCompilationResult p2 = new ModelAccessPolicyCompiler().compile(
-                p1.compilation().get(),
-                symbols);
+                p1.compilation().get(), symbols);
         assertTrue(p2.compiled(), p2.diagnostics().toString());
         ModelAccessPolicyIndex index = p2.policyIndex().get();
         ModelAccessRuleKey expected = ModelAccessRuleKey.of(
@@ -142,17 +122,15 @@ class P2ModelAccessStaticAuthorizationTest {
                 TargetKey.of(new ViewKey("OrderInfo")),
                 ModelPath.of("payInfo.payDetailList"),
                 AccessOperation.READ);
-        assertEquals(AccessCompilationStatus.STATIC_ALLOW, index.classify(expected));
+        // P1 binding 指向运行时目标对象，静态授权成立但最终对象绑定必须由 Guard 复核。
+        assertEquals(AccessCompilationStatus.RUNTIME_GUARD_REQUIRED, index.classify(expected));
         assertEquals(
                 CompiledTargetBinding.Kind.PROPERTY_PATH,
-                index.find(expected).get().runtimeBindingPlan()
-                        .compiledTargetBinding().kind());
+                index.find(expected).get().runtimeBindingPlan().compiledTargetBinding().kind());
     }
 
     /** 按完整 ViewKey 精确取得测试 source View，不做 bare-name fallback。 */
-    private static RawDefinition requireView(
-            RawDefinitionSet definitions,
-            String name) {
+    private static RawDefinition requireView(RawDefinitionSet definitions, String name) {
         for (RawDefinition definition : definitions.definitions(RawDefinitionKind.VIEW)) {
             if (name.equals(definition.name().orElse(null))) {
                 return definition;
