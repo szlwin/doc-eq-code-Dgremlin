@@ -42,8 +42,9 @@ public final class ModelAccessPolicyCompiler {
                 continue;
             }
             ModelPathCompilationResult paths = pathCompiler.compile(
-                    sourceView,
-                    binding.sourcePath());
+                    binding.sourcePath(),
+                    binding.accessMode(),
+                    sourceView);
             if (!paths.compiled()) {
                 diagnostics.addAll(paths.diagnostics());
                 continue;
