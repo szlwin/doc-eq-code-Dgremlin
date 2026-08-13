@@ -209,7 +209,7 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
                 modelSet.diagnostics(),
                 modelSet,
                 engineContext,
-                digests,
+                modelSet.digestPair(),
                 "compiler-1",
                 "schema-1",
                 "options-1",
