@@ -175,6 +175,7 @@ final class PipelineTestSupport {
         CompiledModelSet modelSet = new CompiledModelSet(
                 PublishedSourceManifest.empty(),
                 dec.core.context.model.CompiledViewMaterializationIndex.empty(),
+                dec.core.context.model.ModelAccessPolicyIndex.empty(),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(
