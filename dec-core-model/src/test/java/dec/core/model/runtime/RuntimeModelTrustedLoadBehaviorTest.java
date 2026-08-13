@@ -34,6 +34,7 @@ import dec.core.context.model.ViewKey;
 import dec.core.model.container.ModelLoader;
 import dec.core.model.container.SynContainer;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,6 +49,7 @@ class RuntimeModelTrustedLoadBehaviorTest {
         assertTrue(result.loaded());
         RuntimeModelHandle handle = result.handle().get();
         assertEquals(Integer.valueOf(10), handle.modelData().getValue("amount"));
+        assertEquals(f.plan, handle.provenance().runtimeBindingPlan());
         assertTrue(handle.container() instanceof SynContainer);
 
         Field listField = SynContainer.class.getDeclaredField("list");
@@ -81,6 +83,39 @@ class RuntimeModelTrustedLoadBehaviorTest {
         assertEquals(RuntimeModelLoadFailureCode.MATERIALIZATION_DESCRIPTOR_NOT_FOUND,
                 missing.failure().get().code());
         assertFalse(missingMaterialization.root.accessScope().available());
+    }
+
+    void rejectsCallerSuppliedModelData() {
+        Fixture f = fixture(true);
+        RuntimeModelLoadResult result = f.root.load(f.request(f.plan, new CallerModelData()));
+        assertFalse(result.loaded());
+        assertEquals(RuntimeModelLoadFailureCode.ORIGIN_NOT_MATERIALIZABLE,
+                result.failure().get().code());
+        assertFalse(f.root.accessScope().available());
+    }
+
+    void materializesOnlyCompiledFields() {
+        Fixture f = fixture(true);
+        f.origin.put("uncompiled", "must-not-leak");
+        RuntimeModelLoadResult result = f.root.load(f.request(f.plan, f.origin));
+        assertTrue(result.loaded());
+        ModelData data = result.handle().get().modelData();
+        assertEquals(Integer.valueOf(10), data.getValue("amount"));
+        assertFalse(data.getAllValues().containsKey("uncompiled"));
+    }
+
+    void productionApiHasNoModelDataInjectionSeam() {
+        boolean productionFound = false;
+        for (Method method : RuntimeModelExecutionRoots.class.getDeclaredMethods()) {
+            if (!"production".equals(method.getName())) {
+                continue;
+            }
+            productionFound = true;
+            for (Class<?> parameterType : method.getParameterTypes()) {
+                assertFalse(ModelData.class.isAssignableFrom(parameterType));
+            }
+        }
+        assertTrue(productionFound);
     }
 
     void closedRootRejectsLoadAndScope() {
@@ -138,5 +173,10 @@ class RuntimeModelTrustedLoadBehaviorTest {
         private RuntimeModelLoadRequest request(RuntimeBindingPlan requestedPlan, Object requestedOrigin) {
             return RuntimeModelLoadRequest.of(requestedPlan, requestedOrigin, "testRule", "testConnection");
         }
+    }
+
+    private static final class CallerModelData extends ModelData {
+        private static final long serialVersionUID = 1L;
+        private CallerModelData() { super(); }
     }
 }
