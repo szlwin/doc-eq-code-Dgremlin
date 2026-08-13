@@ -60,7 +60,8 @@ public class ModelDataFactory {
 
         ModelData modelData = new ModelData();
         modelData.setName(plan.viewKey().name());
-        Map<String, Object> values = new HashMap<String, Object>();
+        // legacy ModelContainer 的成功写回路径要求 values 同时实现 FastJSON JSON；因此根对象必须用 JSONObject。
+        Map<String, Object> values = new JSONObject();
         for (CompiledMaterializationNode node : plan.fields()) {
             materializePath(values, node.path().segments());
         }
@@ -100,7 +101,8 @@ public class ModelDataFactory {
             }
             Object current = cursor.get(segment);
             if (current == null) {
-                Map<String, Object> child = new HashMap<String, Object>();
+                // 嵌套对象同样保持 JSON Map 语义，保证真实 originData 写回时可以安全递归转换。
+                Map<String, Object> child = new JSONObject();
                 cursor.put(segment, child);
                 cursor = child;
             } else if (current instanceof Map) {
@@ -188,7 +190,7 @@ public class ModelDataFactory {
 		Iterator<RelationProperty> it = rProCollection.iterator();
 		
 		while(it.hasNext()){
-			RelationProperty rProperty = rProCollection.iterator().next();
+			RelationProperty rProperty = it.next();
 			map.put(rProperty.getName(), null);
 		}
 		
