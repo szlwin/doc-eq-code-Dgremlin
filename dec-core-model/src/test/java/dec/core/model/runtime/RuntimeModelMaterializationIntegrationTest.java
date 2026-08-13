@@ -20,19 +20,19 @@ class RuntimeModelMaterializationIntegrationTest {
     void productionContainerTrustBoundary() throws Exception { behavior.successfulLoadUsesCapturedPlanAndSameModelData(); }
 
     @Test @DisplayName("CASE-P2-TD-TRUSTED-MATERIALIZATION-INPUT-001")
-    void trustedMaterializationInput() { behavior.preScopeFailuresDoNotMintTrustedScope(); }
+    void trustedMaterializationInput() { behavior.rejectsCallerSuppliedModelData(); }
 
     @Test @DisplayName("CASE-P2-TD-TRUSTED-MATERIALIZATION-EXACT-VIEW-001")
     void trustedMaterializationExactView() { behavior.preScopeFailuresDoNotMintTrustedScope(); }
 
     @Test @DisplayName("CASE-P2-TD-COMPILED-VIEW-MATERIALIZATION-PLAN-001")
-    void compiledViewMaterializationPlan() throws Exception { behavior.successfulLoadUsesCapturedPlanAndSameModelData(); }
+    void compiledViewMaterializationPlan() { behavior.materializesOnlyCompiledFields(); }
 
     @Test @DisplayName("CASE-P2-TD-PRODUCTION-OBJECT-WRITEBACK-001")
     void productionObjectWriteback() throws Exception { behavior.successfulLoadUsesCapturedPlanAndSameModelData(); }
 
     @Test @DisplayName("CASE-P2-TD-R26-FRESH-SNAPSHOT-SEAM-ABSENT-001")
-    void freshSnapshotSeamAbsent() throws Exception { behavior.successfulLoadUsesCapturedPlanAndSameModelData(); }
+    void freshSnapshotSeamAbsent() { behavior.productionApiHasNoModelDataInjectionSeam(); }
 
     @Test @DisplayName("CASE-P2-TD-TRUSTED-FRAME-PRECONDITION-FAILURE-MATRIX-001")
     void trustedFramePreconditionFailureMatrix() { behavior.closedRootRejectsLoadAndScope(); }
