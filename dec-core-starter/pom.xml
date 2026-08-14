@@ -21,6 +21,10 @@
       <artifactId>dec-core-frontends</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-core-model</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
