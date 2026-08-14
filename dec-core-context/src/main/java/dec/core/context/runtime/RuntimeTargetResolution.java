@@ -39,4 +39,19 @@ public final class RuntimeTargetResolution {
     public RuntimeTargetResolutionStatus status() { return status; }
     public Optional<ResolvedRuntimeTarget> target() { return Optional.ofNullable(target); }
     public Optional<DenialCode> denialCode() { return Optional.ofNullable(denialCode); }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof RuntimeTargetResolution)) return false;
+        RuntimeTargetResolution that = (RuntimeTargetResolution) other;
+        return status == that.status
+                && Objects.equals(target, that.target)
+                && denialCode == that.denialCode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(status, target, denialCode);
+    }
 }
