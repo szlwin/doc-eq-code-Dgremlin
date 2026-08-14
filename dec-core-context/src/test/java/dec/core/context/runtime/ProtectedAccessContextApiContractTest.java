@@ -5,15 +5,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dec.core.context.model.AccessOperation;
 import dec.core.context.model.CompiledTargetBinding;
 import dec.core.context.model.CompiledViewMaterializationIndex;
 import dec.core.context.model.ModelAccessRuleKey;
+import dec.core.context.model.ModelPath;
+import dec.core.context.model.SystemKey;
 import dec.core.context.model.TargetKey;
+import dec.core.context.model.ViewKey;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-/** TESTDESIGN-P2-R32 executable CONTEXT contract. */
+/** TESTDESIGN-P2-R32 plus R33/R31 executable CONTEXT contract. */
 class ProtectedAccessContextApiContractTest {
 
     @Test
@@ -77,6 +81,14 @@ class ProtectedAccessContextApiContractTest {
                 RuntimeExecutionFrameId.class,
                 RuntimeResolutionOwnerId.class,
                 Optional.class);
+        ProtectedAccessInvocation.class.getMethod(
+                "write",
+                ProtectedInvocationId.class,
+                ModelAccessRuleKey.class,
+                RuntimeExecutionFrameId.class,
+                RuntimeResolutionOwnerId.class,
+                Optional.class,
+                RuntimeFactValue.class);
         ResolvedRuntimeTarget.class.getMethod(
                 "of",
                 RuntimeModelSessionId.class,
@@ -96,8 +108,74 @@ class ProtectedAccessContextApiContractTest {
                 Optional.class,
                 ResolvedRuntimeTarget.class,
                 RuntimeMutationStamp.class);
+        ResolvedWriteIntent.class.getMethod(
+                "of",
+                RuntimeWriteIntentId.class,
+                ModelAccessRuleKey.class,
+                Optional.class,
+                ResolvedRuntimeTarget.class,
+                RuntimeMutationStamp.class,
+                RuntimeFactValue.class);
         ResolvedProtectedWriteAccess.class.getMethod(
                 "of", ProtectedInvocationId.class, ResolvedWriteIntent.class);
         ProtectedAccessPort.class.getMethod("invoke", ProtectedAccessInvocation.class);
+    }
+
+    @Test
+    @DisplayName("DEV-P2-DEV04R-R03-R31-WRITE-VALUE-TRANSPORT")
+    void r31_write_value_is_frozen_and_value_less_intent_fails_closed() {
+        TargetKey targetKey = TargetKey.of(new ViewKey("Order"));
+        ModelPath path = ModelPath.of("user.authInfo");
+        ModelAccessRuleKey writeKey = ModelAccessRuleKey.of(
+                new SystemKey("Trade"), targetKey, path, AccessOperation.WRITE);
+        ProtectedInvocationId invocationId = ProtectedInvocationId.of("inv-write-1");
+        RuntimeExecutionFrameId frameId = RuntimeExecutionFrameId.of("frame-1");
+        RuntimeResolutionOwnerId ownerId = RuntimeResolutionOwnerId.of("owner-1");
+        RuntimeFactValue value = RuntimeFactValue.stringValue("A");
+
+        ProtectedAccessInvocation readShape = ProtectedAccessInvocation.of(
+                invocationId, writeKey, frameId, ownerId, Optional.<RuntimeCollectionCursorId>empty());
+        assertFalse(readShape.writeValue().isPresent());
+
+        ProtectedAccessInvocation writeInvocation = ProtectedAccessInvocation.write(
+                invocationId,
+                writeKey,
+                frameId,
+                ownerId,
+                Optional.<RuntimeCollectionCursorId>empty(),
+                value);
+        assertEquals(Optional.of(value), writeInvocation.writeValue());
+        assertThrows(NullPointerException.class, () -> ProtectedAccessInvocation.write(
+                invocationId,
+                writeKey,
+                frameId,
+                ownerId,
+                Optional.<RuntimeCollectionCursorId>empty(),
+                null));
+
+        RuntimeModelSessionId sessionId = RuntimeModelSessionId.of("session-1");
+        RuntimeObjectId objectId = RuntimeObjectId.of("object-1");
+        ResolvedRuntimeTarget target = ResolvedRuntimeTarget.of(
+                sessionId, objectId, targetKey, RuntimeBindingProof.exact("proof-1"));
+        RuntimeMutationStamp stamp = RuntimeMutationStamp.of(
+                sessionId, objectId, path, RuntimeMutationVersion.of(7L));
+        RuntimeWriteIntentId intentId = RuntimeWriteIntentId.of("intent-1");
+
+        ResolvedWriteIntent valueLessIntent = ResolvedWriteIntent.of(
+                intentId, writeKey, Optional.empty(), target, stamp);
+        assertFalse(valueLessIntent.writeValue().isPresent());
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> ResolvedProtectedWriteAccess.of(invocationId, valueLessIntent));
+
+        ResolvedWriteIntent executableIntent = ResolvedWriteIntent.of(
+                intentId, writeKey, Optional.empty(), target, stamp, value);
+        assertEquals(Optional.of(value), executableIntent.writeValue());
+        ResolvedProtectedWriteAccess writeAccess =
+                ResolvedProtectedWriteAccess.of(invocationId, executableIntent);
+        assertEquals(value, writeAccess.value());
+        assertEquals(target, writeAccess.target());
+        assertEquals(path, writeAccess.modelPath());
+        assertEquals(stamp, writeAccess.mutationStamp());
     }
 }
