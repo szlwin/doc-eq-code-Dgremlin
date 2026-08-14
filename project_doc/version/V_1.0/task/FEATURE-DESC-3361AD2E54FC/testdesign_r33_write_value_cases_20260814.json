@@ -1,0 +1,28 @@
+{
+  "revision": "TESTDESIGN-P2-R33",
+  "base": "TESTDESIGN-P2-R32",
+  "status": "REVIEW",
+  "design_input": "DESIGN-P2-R31@685dc64b1a8bb21438440185f4a25d68d120d75f",
+  "preserve_all_r32_cases": true,
+  "cases": [
+    {
+      "id": "CASE-P2-TD-WRITE-VALUE-MISSING-DENY-001",
+      "owner_task": "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "test_class": "dec.core.starter.access.ProtectedWriteIntentResolutionTest",
+      "oracle": "WRITE invocation without RuntimeFactValue must deny as WRITE_INTENT_NOT_FOUND before MODEL effect."
+    },
+    {
+      "id": "CASE-P2-TD-WRITE-VALUE-FREEZE-STABILITY-001",
+      "owner_task": "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "test_class": "dec.core.starter.access.ProtectedWriteIntentResolutionTest",
+      "oracle": "The exact immutable RuntimeFactValue is frozen with the same target/path/version and cannot be replaced after capability freeze."
+    },
+    {
+      "id": "CASE-P2-TD-REAL-WRITE-OPERATION-001",
+      "owner_task": "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "test_class": "dec.core.starter.access.ProtectedRuntimeModelAdapterIntegrationTest",
+      "oracle_update": "ALLOW WRITE reaches the private same-session MODEL port with the exact frozen value and yields a consumer receipt only after MODEL success; missing/stale/deny yields effect zero."
+    }
+  ],
+  "out_of_scope": ["DEV-08 production composition", "DEV-08 concurrency"]
+}
