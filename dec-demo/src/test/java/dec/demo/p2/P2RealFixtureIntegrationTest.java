@@ -38,7 +38,13 @@ import dec.core.starter.access.ProtectedAccessComposition;
 import dec.core.starter.access.ProtectedAccessCompositionResult;
 import dec.core.starter.access.ProtectedAccessRuntimeFactory;
 import dec.demo.support.DemoMySqlTestSupport;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -162,7 +168,7 @@ class P2RealFixtureIntegrationTest {
     private PublishedCompilationResult compileRealFixture() {
         RecordingPublisher publisher = new RecordingPublisher();
         CompilerBootstrap bootstrap = CompilerBootstrap.builder()
-                .classLoader(getClass().getClassLoader())
+                .classLoader(new UniqueMixFixtureClassLoader(getClass().getClassLoader()))
                 .allowedRoot("classpath:mix/")
                 .publisher(publisher)
                 .build();
@@ -192,6 +198,29 @@ class P2RealFixtureIntegrationTest {
         Optional<CompiledModelAccessRule> rule = context.modelAccessPolicyIndex().find(key);
         assertTrue(rule.isPresent(), "missing compiled access rule: " + key);
         return rule.get();
+    }
+
+    /**
+     * dec-demo 为兼容历史资源同时在 main/test 输出同一 mix fixture；测试显式选取 classpath 中第一份真实 fixture，
+     * 避免测试打包结构制造伪 duplicate，而生产 Compiler 的 duplicate fail-closed 行为保持不变。
+     */
+    private static final class UniqueMixFixtureClassLoader extends ClassLoader {
+        private UniqueMixFixtureClassLoader(ClassLoader parent) {
+            super(parent);
+        }
+
+        @Override
+        public Enumeration<URL> getResources(String name) throws IOException {
+            Enumeration<URL> resources = super.getResources(name);
+            if (!name.startsWith("mix/")) {
+                return resources;
+            }
+            List<URL> uniqueFixture = new ArrayList<URL>(1);
+            if (resources.hasMoreElements()) {
+                uniqueFixture.add(resources.nextElement());
+            }
+            return Collections.enumeration(uniqueFixture);
+        }
     }
 
     /** 记录真实 CAS 发布，确保测试读取的是 Publisher 实际暴露的 Context。 */
