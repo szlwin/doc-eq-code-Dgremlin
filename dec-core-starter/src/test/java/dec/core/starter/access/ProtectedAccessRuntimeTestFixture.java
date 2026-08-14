@@ -49,6 +49,7 @@ import dec.core.model.runtime.RuntimeModelSession;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 /** Test-only constructor of real MODEL session/effect objects; it does not add a production minting seam. */
 final class ProtectedAccessRuntimeTestFixture implements AutoCloseable {
