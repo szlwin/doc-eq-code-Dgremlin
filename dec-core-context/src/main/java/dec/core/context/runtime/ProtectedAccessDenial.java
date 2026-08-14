@@ -28,9 +28,24 @@ public final class ProtectedAccessDenial {
     public DenialCode code() { return code; }
     public String stableMessage() { return stableMessage; }
 
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof ProtectedAccessDenial)) return false;
+        ProtectedAccessDenial that = (ProtectedAccessDenial) other;
+        return invocationId.equals(that.invocationId)
+                && code == that.code
+                && stableMessage.equals(that.stableMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(invocationId, code, stableMessage);
+    }
+
     private static String requireMessage(String value) {
         Objects.requireNonNull(value, "stableMessage");
-        if (value.isEmpty() || !value.equals(value.trim())) {
+        if (value.trim().isEmpty() || !value.equals(value.trim())) {
             throw new IllegalArgumentException("stableMessage must be non-blank and trimmed");
         }
         return value;
