@@ -42,7 +42,6 @@ import dec.core.model.runtime.RuntimeModelProvenance;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -201,11 +200,11 @@ final class ProtectedAccessProductionTestFixture {
                 start.countDown();
                 try {
                     if (!finish.await(5, TimeUnit.SECONDS)) {
-                        throw new ExecuteRuleException("TEST", "timed out waiting for concurrent release");
+                        throw new ExecuteRuleException("timed out waiting for concurrent release");
                     }
                 } catch (InterruptedException interrupted) {
                     Thread.currentThread().interrupt();
-                    throw new ExecuteRuleException("TEST", "interrupted");
+                    throw new ExecuteRuleException("interrupted");
                 }
             }
             return this;
