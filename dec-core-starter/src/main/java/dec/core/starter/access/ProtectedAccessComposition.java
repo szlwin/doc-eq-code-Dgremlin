@@ -4,20 +4,16 @@ import dec.core.context.runtime.ProtectedAccessPort;
 import dec.core.context.runtime.RuntimeModelSessionId;
 import dec.core.model.runtime.RuntimeModelSession;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * STARTER-owned protected-access composition boundary.
- *
- * <p>DEV-P2-DEV08-SKEL-R01 freezes one shared guarded port, consumer-entry parity and one exact MODEL
- * Session identity. Concrete close/stale lifecycle remains intentionally unimplemented until the skeleton
- * review gate passes.
- */
+/** STARTER-owned protected-access composition sharing one guarded port and one exact MODEL Session. */
 public final class ProtectedAccessComposition implements AutoCloseable {
     private final ProtectedAccessPort protectedAccessPort;
     private final RuleProtectedAccessEntry ruleEntry;
     private final ChangeProtectedAccessEntry changeEntry;
     private final CustomActionProtectedAccessEntry customActionEntry;
     private final RuntimeModelSession session;
+    private final AtomicBoolean closed = new AtomicBoolean();
 
     ProtectedAccessComposition(
             ProtectedAccessPort protectedAccessPort,
@@ -54,7 +50,12 @@ public final class ProtectedAccessComposition implements AutoCloseable {
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException(
-                "DEV-P2-DEV08-SKEL-R01: composition close/stale lifecycle not installed");
+        if (closed.compareAndSet(false, true)) {
+            session.close();
+        }
+    }
+
+    boolean closed() {
+        return closed.get();
     }
 }
