@@ -21,7 +21,6 @@ public final class RuntimeMutationStamp {
         this.version = Objects.requireNonNull(version, "version");
     }
 
-    /** 把 Guard 前观察到的精确 mutation 版本冻结到同一目标和路径。 */
     public static RuntimeMutationStamp of(
             RuntimeModelSessionId sessionId,
             RuntimeObjectId runtimeObjectId,
@@ -30,19 +29,24 @@ public final class RuntimeMutationStamp {
         return new RuntimeMutationStamp(sessionId, runtimeObjectId, modelPath, version);
     }
 
-    public RuntimeModelSessionId sessionId() {
-        return sessionId;
+    public RuntimeModelSessionId sessionId() { return sessionId; }
+    public RuntimeObjectId runtimeObjectId() { return runtimeObjectId; }
+    public ModelPath modelPath() { return modelPath; }
+    public RuntimeMutationVersion version() { return version; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof RuntimeMutationStamp)) return false;
+        RuntimeMutationStamp that = (RuntimeMutationStamp) other;
+        return sessionId.equals(that.sessionId)
+                && runtimeObjectId.equals(that.runtimeObjectId)
+                && modelPath.equals(that.modelPath)
+                && version.equals(that.version);
     }
 
-    public RuntimeObjectId runtimeObjectId() {
-        return runtimeObjectId;
-    }
-
-    public ModelPath modelPath() {
-        return modelPath;
-    }
-
-    public RuntimeMutationVersion version() {
-        return version;
+    @Override
+    public int hashCode() {
+        return Objects.hash(sessionId, runtimeObjectId, modelPath, version);
     }
 }
