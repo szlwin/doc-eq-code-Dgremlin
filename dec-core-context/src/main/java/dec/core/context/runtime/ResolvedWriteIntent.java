@@ -41,4 +41,21 @@ public final class ResolvedWriteIntent {
     public Optional<RuleKey> ruleKeyProvenance() { return ruleKeyProvenance; }
     public ResolvedRuntimeTarget resolvedRuntimeTarget() { return resolvedRuntimeTarget; }
     public RuntimeMutationStamp mutationStamp() { return mutationStamp; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof ResolvedWriteIntent)) return false;
+        ResolvedWriteIntent that = (ResolvedWriteIntent) other;
+        return id.equals(that.id)
+                && modelAccessRuleKey.equals(that.modelAccessRuleKey)
+                && ruleKeyProvenance.equals(that.ruleKeyProvenance)
+                && resolvedRuntimeTarget.equals(that.resolvedRuntimeTarget)
+                && mutationStamp.equals(that.mutationStamp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, modelAccessRuleKey, ruleKeyProvenance, resolvedRuntimeTarget, mutationStamp);
+    }
 }
