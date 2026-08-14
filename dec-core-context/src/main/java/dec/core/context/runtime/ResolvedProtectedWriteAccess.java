@@ -42,7 +42,7 @@ public final class ResolvedProtectedWriteAccess {
                 mutationStamp);
     }
 
-    /** DESIGN-P2-R30 preserved R29 neutral seam; no caller value or operation port is introduced. */
+    /** R30/R31 neutral seam: executable R31 intent projects its already-frozen value. */
     public static ResolvedProtectedWriteAccess of(
             ProtectedInvocationId invocationId,
             ResolvedWriteIntent writeIntent) {
@@ -52,7 +52,7 @@ public final class ResolvedProtectedWriteAccess {
                 intent,
                 intent.resolvedRuntimeTarget(),
                 intent.modelAccessRuleKey().path(),
-                null,
+                intent.writeValue().orElse(null),
                 intent.mutationStamp());
     }
 
