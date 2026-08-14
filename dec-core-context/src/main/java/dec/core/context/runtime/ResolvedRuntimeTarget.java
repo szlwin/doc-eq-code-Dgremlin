@@ -21,7 +21,6 @@ public final class ResolvedRuntimeTarget {
         this.bindingProof = Objects.requireNonNull(bindingProof, "bindingProof");
     }
 
-    /** 冻结 resolver 已选中的精确 runtime object；该对象自身不授予 READ/WRITE 权限。 */
     public static ResolvedRuntimeTarget of(
             RuntimeModelSessionId sessionId,
             RuntimeObjectId runtimeObjectId,
@@ -30,19 +29,24 @@ public final class ResolvedRuntimeTarget {
         return new ResolvedRuntimeTarget(sessionId, runtimeObjectId, targetKey, bindingProof);
     }
 
-    public RuntimeModelSessionId sessionId() {
-        return sessionId;
+    public RuntimeModelSessionId sessionId() { return sessionId; }
+    public RuntimeObjectId runtimeObjectId() { return runtimeObjectId; }
+    public TargetKey targetKey() { return targetKey; }
+    public RuntimeBindingProof bindingProof() { return bindingProof; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof ResolvedRuntimeTarget)) return false;
+        ResolvedRuntimeTarget that = (ResolvedRuntimeTarget) other;
+        return sessionId.equals(that.sessionId)
+                && runtimeObjectId.equals(that.runtimeObjectId)
+                && targetKey.equals(that.targetKey)
+                && bindingProof.equals(that.bindingProof);
     }
 
-    public RuntimeObjectId runtimeObjectId() {
-        return runtimeObjectId;
-    }
-
-    public TargetKey targetKey() {
-        return targetKey;
-    }
-
-    public RuntimeBindingProof bindingProof() {
-        return bindingProof;
+    @Override
+    public int hashCode() {
+        return Objects.hash(sessionId, runtimeObjectId, targetKey, bindingProof);
     }
 }
