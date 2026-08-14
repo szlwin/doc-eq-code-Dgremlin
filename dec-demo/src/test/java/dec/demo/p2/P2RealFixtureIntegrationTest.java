@@ -59,6 +59,7 @@ import org.junit.jupiter.api.Test;
 class P2RealFixtureIntegrationTest {
     private static final String ROOT = "classpath:mix/orm-config.xml";
     private static final String OPTIONS = "p2-dev09-real-fixture";
+    private static final String LEGACY_ORDER_RULE = "save-Order";
 
     /**
      * 真实 systems.xml 必须产生稳定发布事实，并发布业务 owner 对共享模型的精确 READ/WRITE 权限。
@@ -127,10 +128,11 @@ class P2RealFixtureIntegrationTest {
                     context,
                     ProductionContainerKind.SYNCHRONIZED);
             try {
+                // ruleName 必须引用 legacy Container 中真实存在的 rule-view-info，不能使用模型/列表逻辑名称。
                 RuntimeModelLoadResult load = root.load(RuntimeModelLoadRequest.of(
                         writeRule.runtimeBindingPlan(),
                         originData,
-                        "orderList",
+                        LEGACY_ORDER_RULE,
                         "con1"));
                 assertTrue(load.loaded(), String.valueOf(load.failure()));
                 RuntimeModelScopeResult scopeResult = root.accessScope();
