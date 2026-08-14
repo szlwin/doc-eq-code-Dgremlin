@@ -42,17 +42,19 @@ public final class ResolvedProtectedWriteAccess {
                 mutationStamp);
     }
 
-    /** R30/R31 neutral seam: executable R31 intent projects its already-frozen value. */
+    /** R30/R31 neutral seam: only an executable intent carrying a frozen value can become WRITE access. */
     public static ResolvedProtectedWriteAccess of(
             ProtectedInvocationId invocationId,
             ResolvedWriteIntent writeIntent) {
         ResolvedWriteIntent intent = Objects.requireNonNull(writeIntent, "writeIntent");
+        RuntimeFactValue frozenValue = intent.writeValue().orElseThrow(
+                () -> new IllegalArgumentException("writeIntent must carry RuntimeFactValue"));
         return new ResolvedProtectedWriteAccess(
                 Objects.requireNonNull(invocationId, "invocationId"),
                 intent,
                 intent.resolvedRuntimeTarget(),
                 intent.modelAccessRuleKey().path(),
-                intent.writeValue().orElse(null),
+                frozenValue,
                 intent.mutationStamp());
     }
 
