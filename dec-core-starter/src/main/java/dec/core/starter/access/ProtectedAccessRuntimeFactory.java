@@ -7,9 +7,9 @@ import java.util.Objects;
 /**
  * Production STARTER root; caller may supply only captured EngineContext and MODEL-minted Scope.
  *
- * <p>DEV-P2-DEV07-SKEL-R02 preserves the no-injection boundary: callers cannot provide Guard,
- * RuntimeModelEffectProvider, RuntimeModelOperationPort, or mutable MODEL internals. R31 WRITE value
- * transport remains invocation data and does not expand this factory surface.
+ * <p>DEV-P2-DEV08-SKEL-R01 delegates all Session/effect composition to a STARTER-private coordinator.
+ * Caller injection of Guard, RuntimeModelEffectProvider, RuntimeModelOperationPort or mutable MODEL internals
+ * remains impossible through this public surface.
  */
 public final class ProtectedAccessRuntimeFactory {
     private final EngineContext context;
@@ -23,8 +23,7 @@ public final class ProtectedAccessRuntimeFactory {
     }
 
     public ProtectedAccessCompositionResult create(RuntimeModelAccessScope scope) {
-        Objects.requireNonNull(scope, "scope");
-        throw new UnsupportedOperationException("DEV-P2-DEV07-SKEL-R02: concrete composition not installed");
+        return ProductionCompositionCoordinator.create(context, Objects.requireNonNull(scope, "scope"));
     }
 
     EngineContext capturedContext() {
