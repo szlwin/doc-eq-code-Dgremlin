@@ -1,0 +1,53 @@
+{
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R07",
+  "base": "TP-FEATURE-DESC-3361AD2E54FC-R06",
+  "status": "REVIEW",
+  "inputs": {
+    "design": "DESIGN-P2-R31@685dc64b1a8bb21438440185f4a25d68d120d75f",
+    "test_design": "TESTDESIGN-P2-R33@ac9c0aecd1bf3ebee325d88d2f1b4027d727761d"
+  },
+  "execution_mode": "SEQUENTIAL",
+  "changes": [
+    {
+      "task": "TASK-P2-DEV-04R-CONTEXT-PROTECTED-ACCESS-CONTRACTS",
+      "next_revision": "DEV-P2-DEV04R-R03",
+      "scope": [
+        "Add ProtectedAccessInvocation.write(..., RuntimeFactValue) + writeValue().",
+        "Add ResolvedWriteIntent overload with RuntimeFactValue + writeValue().",
+        "Make ResolvedProtectedWriteAccess.of(invocationId,intent) expose the frozen intent value for executable WRITE.",
+        "Extend ProtectedAccessContextApiContractTest with R31 value transport/fail-closed contract evidence."
+      ],
+      "affected_files": [
+        "dec-core-context/src/main/java/dec/core/context/runtime/**",
+        "dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java"
+      ],
+      "required_reviews": ["SpecComplianceReviewAgent", "EngineeringStandardsReviewAgent", "ArchitectureReviewAgent"]
+    },
+    {
+      "task": "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+      "depends_on_revision": "DEV-P2-DEV04R-R03",
+      "skeleton_reopen": true,
+      "skeleton_revision": "DEV-P2-DEV07-SKEL-R02",
+      "skeleton_change_rule": "No new public MODEL injection seam; update/freeze only the R31 value-transport boundary and re-review against R31/R33.",
+      "concrete_requirements": [
+        "WRITE without value -> WRITE_INTENT_NOT_FOUND before effect.",
+        "Freeze exact RuntimeFactValue with target/path/version into one-shot intent/capability.",
+        "Guard still uses only exact ModelAccessRuleKey and same target/proof.",
+        "ALLOW WRITE passes exact frozen value only to STARTER-private MODEL operation port.",
+        "Consumer receipt is produced only after successful MODEL write."
+      ],
+      "registered_testclasses": [
+        "ProtectedAccessStarterApiContractTest",
+        "ProtectedWriteIntentResolutionTest",
+        "ProtectedRuntimeModelAdapterIntegrationTest"
+      ],
+      "preserve_r05_forbidden_changes": true
+    }
+  ],
+  "unchanged": [
+    "All previously PASSED DEV-01..DEV-06 revisions except additive DEV-04R remediation.",
+    "DEV-08 production composition/concurrency ownership.",
+    "DEV-09 real fixture compatibility ownership.",
+    "BM-R20 and FLOW-R11 semantics."
+  ]
+}
