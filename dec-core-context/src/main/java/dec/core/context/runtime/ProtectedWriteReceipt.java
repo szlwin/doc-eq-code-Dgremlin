@@ -18,7 +18,6 @@ public final class ProtectedWriteReceipt {
         this.version = Objects.requireNonNull(version, "version");
     }
 
-    /** 冻结已经提交成功后的目标、路径和新 mutation 版本。 */
     public static ProtectedWriteReceipt of(
             ResolvedRuntimeTarget target,
             ModelPath modelPath,
@@ -26,15 +25,22 @@ public final class ProtectedWriteReceipt {
         return new ProtectedWriteReceipt(target, modelPath, version);
     }
 
-    public ResolvedRuntimeTarget target() {
-        return target;
+    public ResolvedRuntimeTarget target() { return target; }
+    public ModelPath modelPath() { return modelPath; }
+    public RuntimeMutationVersion version() { return version; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof ProtectedWriteReceipt)) return false;
+        ProtectedWriteReceipt that = (ProtectedWriteReceipt) other;
+        return target.equals(that.target)
+                && modelPath.equals(that.modelPath)
+                && version.equals(that.version);
     }
 
-    public ModelPath modelPath() {
-        return modelPath;
-    }
-
-    public RuntimeMutationVersion version() {
-        return version;
+    @Override
+    public int hashCode() {
+        return Objects.hash(target, modelPath, version);
     }
 }
