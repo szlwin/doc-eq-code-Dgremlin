@@ -26,8 +26,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * DEV-07 guarded core. Construction is package-private so the MODEL operation port cannot become a
- * caller-injection seam; DEV-08 production composition is responsible for obtaining/binding it.
+ * STARTER guarded core. Construction is package-private so the MODEL operation port cannot become a
+ * caller-injection seam. DEV-08 adds a composition-local non-blocking write coordination domain while
+ * MODEL remains the final mutation-stamp authority.
  */
 final class GuardedProtectedAccessPort implements ProtectedAccessPort {
     private static final AtomicLong WRITE_INTENT_SEQUENCE = new AtomicLong();
@@ -36,6 +37,7 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
     private final RuntimeTargetResolver resolver;
     private final RuntimeModelSession session;
     private final RuntimeModelOperationPort operationPort;
+    private final WriteCoordinationDomain writeCoordination = new WriteCoordinationDomain();
 
     GuardedProtectedAccessPort(
             EngineContext context,
@@ -95,39 +97,58 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
         if (!invocation.writeValue().isPresent()) {
             return deny(invocation, DenialCode.WRITE_INTENT_NOT_FOUND, "WRITE value is required");
         }
-        RuntimeMutationVersion version = session.currentVersion(
+
+        WriteCoordinationDomain.Claim coordination = writeCoordination.tryAcquire(
                 target, invocation.modelAccessRuleKey().path());
-        if (version == null) {
-            return deny(invocation, DenialCode.WRITE_INTENT_STALE, "WRITE target version unavailable");
+        if (coordination == null) {
+            return deny(
+                    invocation,
+                    DenialCode.CAPABILITY_ALREADY_CONSUMED,
+                    "overlapping WRITE already owns the exact runtime object/path");
         }
-        RuntimeMutationStamp stamp = RuntimeMutationStamp.of(
-                target.sessionId(),
-                target.runtimeObjectId(),
-                invocation.modelAccessRuleKey().path(),
-                version);
-        RuntimeWriteIntentId writeIntentId = RuntimeWriteIntentId.of(
-                "starter-write-" + WRITE_INTENT_SEQUENCE.incrementAndGet());
-        ResolvedWriteIntent frozenIntent = ResolvedWriteIntent.of(
-                writeIntentId,
-                invocation.modelAccessRuleKey(),
-                Optional.empty(),
-                target,
-                stamp,
-                invocation.writeValue().get());
-        OneShotWriteCapability capability = new OneShotWriteCapability(frozenIntent);
-        ResolvedWriteIntent consumed = capability.consume();
-        if (consumed == null) {
-            return deny(invocation, DenialCode.CAPABILITY_ALREADY_CONSUMED, "WRITE capability already consumed");
+        try {
+            RuntimeMutationVersion version = session.currentVersion(
+                    target, invocation.modelAccessRuleKey().path());
+            if (version == null) {
+                return deny(invocation, DenialCode.WRITE_INTENT_STALE, "WRITE target version unavailable");
+            }
+            coordination.freeze(version);
+
+            RuntimeMutationStamp stamp = RuntimeMutationStamp.of(
+                    target.sessionId(),
+                    target.runtimeObjectId(),
+                    invocation.modelAccessRuleKey().path(),
+                    version);
+            RuntimeWriteIntentId writeIntentId = RuntimeWriteIntentId.of(
+                    "starter-write-" + WRITE_INTENT_SEQUENCE.incrementAndGet());
+            ResolvedWriteIntent frozenIntent = ResolvedWriteIntent.of(
+                    writeIntentId,
+                    invocation.modelAccessRuleKey(),
+                    Optional.empty(),
+                    target,
+                    stamp,
+                    invocation.writeValue().get());
+            OneShotWriteCapability capability = new OneShotWriteCapability(frozenIntent);
+            ResolvedWriteIntent consumed = capability.consume();
+            if (consumed == null) {
+                return deny(
+                        invocation,
+                        DenialCode.CAPABILITY_ALREADY_CONSUMED,
+                        "WRITE capability already consumed");
+            }
+
+            ProtectedWriteReceipt modelReceipt = operationPort.write(
+                    ResolvedProtectedWriteAccess.of(invocation.invocationId(), consumed));
+            if (modelReceipt == null) {
+                return deny(invocation, DenialCode.RUNTIME_WRITE_FAILED, "runtime WRITE failed");
+            }
+            return ProtectedAccessResult.allowWrite(ProtectedWriteReceipt.of(
+                    invocation.invocationId(),
+                    writeIntentId,
+                    modelReceipt.version()));
+        } finally {
+            coordination.close();
         }
-        ProtectedWriteReceipt modelReceipt = operationPort.write(
-                ResolvedProtectedWriteAccess.of(invocation.invocationId(), consumed));
-        if (modelReceipt == null) {
-            return deny(invocation, DenialCode.RUNTIME_WRITE_FAILED, "runtime WRITE failed");
-        }
-        return ProtectedAccessResult.allowWrite(ProtectedWriteReceipt.of(
-                invocation.invocationId(),
-                writeIntentId,
-                modelReceipt.version()));
     }
 
     private static ProtectedAccessResult deny(
