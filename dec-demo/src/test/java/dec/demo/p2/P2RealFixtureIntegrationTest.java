@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -76,9 +77,10 @@ class P2RealFixtureIntegrationTest {
     }
 
     /**
-     * 在 MySQL P0 中使用真实 Container 执行 READ/WRITE，WRITE 成功后必须修改 trusted Handle 中同一个 ModelData。
+     * 在 MySQL P0 中使用真实 Container 执行 READ/WRITE；WRITE 后再次 READ 必须看到同一 trusted runtime object 的新值。
      */
     @Test
+    @Tag("mysql-it")
     @DisplayName("CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001")
     void realFixtureFlowsThroughModelAndStarterReadWrite() throws Exception {
         Assumptions.assumeTrue(
@@ -136,8 +138,17 @@ class P2RealFixtureIntegrationTest {
                                     RuntimeFactValue.integerValue(2L)));
                     assertTrue(write.allowed(), String.valueOf(write.denial()));
                     assertTrue(write.writeReceipt().isPresent());
-                    assertSame(load.handle().get().modelData(), scope.frame().handles().get(0).modelData());
-                    assertEquals(Long.valueOf(2L), load.handle().get().modelData().getValue("status"));
+
+                    // 通过同一 scope 上的再次 READ 验证 WRITE 已写入 trusted runtime object，不暴露 MODEL 包内句柄实现。
+                    ProtectedAccessResult reread = composition.ruleEntry().invoke(
+                            ProtectedAccessInvocation.of(
+                                    ProtectedInvocationId.of("dev09-real-reread"),
+                                    readKey,
+                                    scope.frame().frameId(),
+                                    scope.frame().ownerResolutionId(),
+                                    Optional.<RuntimeCollectionCursorId>empty()));
+                    assertTrue(reread.allowed(), String.valueOf(reread.denial()));
+                    assertEquals(RuntimeFactValue.integerValue(2L), reread.readValue().get().value());
                 } finally {
                     composition.close();
                 }
