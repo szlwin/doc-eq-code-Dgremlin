@@ -40,4 +40,21 @@ public final class ProtectedAccessInvocation {
     public RuntimeExecutionFrameId frameId() { return frameId; }
     public RuntimeResolutionOwnerId ownerResolutionId() { return ownerResolutionId; }
     public Optional<RuntimeCollectionCursorId> cursorId() { return cursorId; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof ProtectedAccessInvocation)) return false;
+        ProtectedAccessInvocation that = (ProtectedAccessInvocation) other;
+        return invocationId.equals(that.invocationId)
+                && modelAccessRuleKey.equals(that.modelAccessRuleKey)
+                && frameId.equals(that.frameId)
+                && ownerResolutionId.equals(that.ownerResolutionId)
+                && cursorId.equals(that.cursorId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(invocationId, modelAccessRuleKey, frameId, ownerResolutionId, cursorId);
+    }
 }
