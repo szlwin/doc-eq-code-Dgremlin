@@ -12,20 +12,24 @@ public final class ResolvedWriteIntent {
     private final Optional<RuleKey> ruleKeyProvenance;
     private final ResolvedRuntimeTarget resolvedRuntimeTarget;
     private final RuntimeMutationStamp mutationStamp;
+    private final Optional<RuntimeFactValue> writeValue;
 
     private ResolvedWriteIntent(
             RuntimeWriteIntentId id,
             ModelAccessRuleKey modelAccessRuleKey,
             Optional<RuleKey> ruleKeyProvenance,
             ResolvedRuntimeTarget resolvedRuntimeTarget,
-            RuntimeMutationStamp mutationStamp) {
+            RuntimeMutationStamp mutationStamp,
+            Optional<RuntimeFactValue> writeValue) {
         this.id = Objects.requireNonNull(id, "id");
         this.modelAccessRuleKey = Objects.requireNonNull(modelAccessRuleKey, "modelAccessRuleKey");
         this.ruleKeyProvenance = Objects.requireNonNull(ruleKeyProvenance, "ruleKeyProvenance");
         this.resolvedRuntimeTarget = Objects.requireNonNull(resolvedRuntimeTarget, "resolvedRuntimeTarget");
         this.mutationStamp = Objects.requireNonNull(mutationStamp, "mutationStamp");
+        this.writeValue = Objects.requireNonNull(writeValue, "writeValue");
     }
 
+    /** R30/R29 compatibility factory; value-less intent is not executable as an R31 WRITE. */
     public static ResolvedWriteIntent of(
             RuntimeWriteIntentId id,
             ModelAccessRuleKey modelAccessRuleKey,
@@ -33,7 +37,29 @@ public final class ResolvedWriteIntent {
             ResolvedRuntimeTarget resolvedRuntimeTarget,
             RuntimeMutationStamp mutationStamp) {
         return new ResolvedWriteIntent(
-                id, modelAccessRuleKey, ruleKeyProvenance, resolvedRuntimeTarget, mutationStamp);
+                id,
+                modelAccessRuleKey,
+                ruleKeyProvenance,
+                resolvedRuntimeTarget,
+                mutationStamp,
+                Optional.<RuntimeFactValue>empty());
+    }
+
+    /** R31 executable WRITE intent freezes the immutable replacement value with target/path/version. */
+    public static ResolvedWriteIntent of(
+            RuntimeWriteIntentId id,
+            ModelAccessRuleKey modelAccessRuleKey,
+            Optional<RuleKey> ruleKeyProvenance,
+            ResolvedRuntimeTarget resolvedRuntimeTarget,
+            RuntimeMutationStamp mutationStamp,
+            RuntimeFactValue writeValue) {
+        return new ResolvedWriteIntent(
+                id,
+                modelAccessRuleKey,
+                ruleKeyProvenance,
+                resolvedRuntimeTarget,
+                mutationStamp,
+                Optional.of(Objects.requireNonNull(writeValue, "writeValue")));
     }
 
     public RuntimeWriteIntentId id() { return id; }
@@ -41,6 +67,7 @@ public final class ResolvedWriteIntent {
     public Optional<RuleKey> ruleKeyProvenance() { return ruleKeyProvenance; }
     public ResolvedRuntimeTarget resolvedRuntimeTarget() { return resolvedRuntimeTarget; }
     public RuntimeMutationStamp mutationStamp() { return mutationStamp; }
+    public Optional<RuntimeFactValue> writeValue() { return writeValue; }
 
     @Override
     public boolean equals(Object other) {
@@ -51,11 +78,18 @@ public final class ResolvedWriteIntent {
                 && modelAccessRuleKey.equals(that.modelAccessRuleKey)
                 && ruleKeyProvenance.equals(that.ruleKeyProvenance)
                 && resolvedRuntimeTarget.equals(that.resolvedRuntimeTarget)
-                && mutationStamp.equals(that.mutationStamp);
+                && mutationStamp.equals(that.mutationStamp)
+                && writeValue.equals(that.writeValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, modelAccessRuleKey, ruleKeyProvenance, resolvedRuntimeTarget, mutationStamp);
+        return Objects.hash(
+                id,
+                modelAccessRuleKey,
+                ruleKeyProvenance,
+                resolvedRuntimeTarget,
+                mutationStamp,
+                writeValue);
     }
 }
