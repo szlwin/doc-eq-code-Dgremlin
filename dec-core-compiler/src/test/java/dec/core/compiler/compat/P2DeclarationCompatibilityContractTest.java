@@ -9,17 +9,18 @@ import dec.core.context.runtime.RuntimeFactValue;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.Test;
 
-/** DEV-09 declaration 兼容边界：保留旧入口，但禁止重新引入已退役的 authority/token 语义。 */
+/** DEV-09 declaration 兼容边界：保留旧配置入口，但禁止重新引入已退役的 authority/token 语义。 */
 class P2DeclarationCompatibilityContractTest {
 
     /**
-     * P2 必须保留现有 declaration/XML runtime 入口，删除动作属于后续阶段而不是 DEV-09。
+     * P2 必须继续携带 declaration 兼容 fixture；Compiler 只消费复制后的资源，不反向依赖 XML Parser 模块。
      */
     @Test
-    void legacyDeclarationRuntimeRemainsAvailableAtP2Boundary() throws Exception {
-        assertNotNull(Class.forName("dec.context.parse.xml.parse.config.ConfigFileParser"));
-        assertNotNull(Class.forName("dec.core.model.container.ContainerFactory"));
-        assertNotNull(Class.forName("dec.core.model.container.ModelLoader"));
+    void legacyDeclarationFixturesRemainAvailableAtP2Boundary() {
+        ClassLoader loader = getClass().getClassLoader();
+        assertNotNull(loader.getResource("test-fixture/system/orm-config.xml"));
+        assertNotNull(loader.getResource("test-fixture/mix/rule/order-rule.xml"));
+        assertNotNull(loader.getResource("test-fixture/mix/system/systems.xml"));
     }
 
     /**
