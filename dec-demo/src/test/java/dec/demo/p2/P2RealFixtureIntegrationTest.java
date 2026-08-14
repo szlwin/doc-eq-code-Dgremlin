@@ -61,7 +61,7 @@ class P2RealFixtureIntegrationTest {
     private static final String OPTIONS = "p2-dev09-real-fixture";
 
     /**
-     * 真实 systems.xml 必须产生稳定发布事实，并发布 payment/OrderInfo/status 的精确 READ/WRITE 权限。
+     * 真实 systems.xml 必须产生稳定发布事实，并发布业务 owner 对共享模型的精确 READ/WRITE 权限。
      */
     @Test
     @DisplayName("CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001")
@@ -74,16 +74,34 @@ class P2RealFixtureIntegrationTest {
         assertTrue(first.modelSet().sourceManifest().sources().size() > 1);
 
         EngineContext context = first.engineContext();
-        CompiledModelAccessRule read = rule(context, key(AccessOperation.READ));
-        CompiledModelAccessRule write = rule(context, key(AccessOperation.WRITE));
-        assertNotNull(read.runtimeBindingPlan());
-        assertNotNull(write.runtimeBindingPlan());
-        assertEquals(read.runtimeBindingPlan(), write.runtimeBindingPlan());
+
+        // order System 真实拥有 OrderInfo.status 的读写权限，READ/WRITE 必须绑定同一 trusted root。
+        CompiledModelAccessRule orderRead = rule(
+                context,
+                key("order", "status", AccessOperation.READ));
+        CompiledModelAccessRule orderWrite = rule(
+                context,
+                key("order", "status", AccessOperation.WRITE));
+        assertNotNull(orderRead.runtimeBindingPlan());
+        assertNotNull(orderWrite.runtimeBindingPlan());
+        assertEquals(orderRead.runtimeBindingPlan(), orderWrite.runtimeBindingPlan());
+
+        // payment System 只写 payInfo；禁止把 payment/status/WRITE 当成真实业务权限。
+        CompiledModelAccessRule paymentRead = rule(
+                context,
+                key("payment", "payInfo", AccessOperation.READ));
+        CompiledModelAccessRule paymentWrite = rule(
+                context,
+                key("payment", "payInfo", AccessOperation.WRITE));
+        assertNotNull(paymentRead.runtimeBindingPlan());
+        assertNotNull(paymentWrite.runtimeBindingPlan());
+        assertEquals(paymentRead.runtimeBindingPlan(), paymentWrite.runtimeBindingPlan());
+
         assertTrue(context.viewMaterializationIndex().find(new ViewKey("OrderInfo")).isPresent());
     }
 
     /**
-     * 在 MySQL P0 中使用真实 Container 执行 READ/WRITE；WRITE 后再次 READ 必须看到同一 trusted runtime object 的新值。
+     * 在 MySQL P0 中使用真实 Container 执行 order/status READ/WRITE；WRITE 后再次 READ 必须看到同一 trusted runtime object 的新值。
      */
     @Test
     @Tag("mysql-it")
@@ -97,8 +115,8 @@ class P2RealFixtureIntegrationTest {
         try (DemoMySqlTestSupport ignored = DemoMySqlTestSupport.load("system/orm-config.xml")) {
             PublishedCompilationResult published = compileRealFixture();
             EngineContext context = published.engineContext();
-            ModelAccessRuleKey readKey = key(AccessOperation.READ);
-            ModelAccessRuleKey writeKey = key(AccessOperation.WRITE);
+            ModelAccessRuleKey readKey = key("order", "status", AccessOperation.READ);
+            ModelAccessRuleKey writeKey = key("order", "status", AccessOperation.WRITE);
             CompiledModelAccessRule writeRule = rule(context, writeKey);
 
             Map<String, Object> originData = new LinkedHashMap<String, Object>();
@@ -182,12 +200,15 @@ class P2RealFixtureIntegrationTest {
         return published;
     }
 
-    /** 构造 payment System 下 OrderInfo.status 的精确授权 Key，禁止裸名称 fallback。 */
-    private static ModelAccessRuleKey key(AccessOperation operation) {
+    /** 构造 System 下 OrderInfo 精确 path/op 授权 Key，禁止裸名称或 owner fallback。 */
+    private static ModelAccessRuleKey key(
+            String systemName,
+            String path,
+            AccessOperation operation) {
         return ModelAccessRuleKey.of(
-                new SystemKey("payment"),
+                new SystemKey(systemName),
                 TargetKey.of(new ViewKey("OrderInfo")),
-                ModelPath.of("status"),
+                ModelPath.of(path),
                 operation);
     }
 
