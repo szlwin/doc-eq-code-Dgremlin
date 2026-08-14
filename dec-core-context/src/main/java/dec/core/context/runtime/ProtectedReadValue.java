@@ -18,4 +18,17 @@ public final class ProtectedReadValue {
 
     public ProtectedInvocationId invocationId() { return invocationId; }
     public RuntimeFactValue value() { return value; }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof ProtectedReadValue)) return false;
+        ProtectedReadValue that = (ProtectedReadValue) other;
+        return invocationId.equals(that.invocationId) && value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(invocationId, value);
+    }
 }
