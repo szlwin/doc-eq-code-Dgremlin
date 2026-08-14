@@ -40,6 +40,10 @@ import dec.core.starter.access.ProtectedAccessRuntimeFactory;
 import dec.demo.support.DemoMySqlTestSupport;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -59,7 +63,8 @@ import org.junit.jupiter.api.Test;
 class P2RealFixtureIntegrationTest {
     private static final String ROOT = "classpath:mix/orm-config.xml";
     private static final String OPTIONS = "p2-dev09-real-fixture";
-    private static final String LEGACY_ORDER_RULE = "save-Order";
+    private static final String LEGACY_ORDER_RULE = "dev09-save-Order";
+    private static final long DEV09_USER_ID = 909001L;
 
     /**
      * 真实 systems.xml 必须产生稳定发布事实，并发布业务 owner 对共享模型的精确 READ/WRITE 权限。
@@ -102,7 +107,7 @@ class P2RealFixtureIntegrationTest {
     }
 
     /**
-     * 在 MySQL P0 中使用真实 Container 执行 order/status READ/WRITE；WRITE 后再次 READ 必须看到同一 trusted runtime object 的新值。
+     * 在 MySQL P0 中使用真实 Container 执行 order/status READ/WRITE；WRITE 后再次 READ 与数据库都必须看到新值。
      */
     @Test
     @Tag("mysql-it")
@@ -122,13 +127,17 @@ class P2RealFixtureIntegrationTest {
 
             Map<String, Object> originData = new LinkedHashMap<String, Object>();
             originData.put("id", Long.valueOf(10001L));
+            originData.put("userId", Long.valueOf(DEV09_USER_ID));
+            originData.put("productCount", Integer.valueOf(1));
+            originData.put("totalPrice", Double.valueOf(10.0D));
+            originData.put("totalAmount", Double.valueOf(10.0D));
             originData.put("status", Integer.valueOf(1));
 
             RuntimeModelExecutionRoot root = RuntimeModelExecutionRoots.production(
                     context,
                     ProductionContainerKind.SYNCHRONIZED);
             try {
-                // ruleName 必须引用 legacy Container 中真实存在的 rule-view-info，不能使用模型/列表逻辑名称。
+                // ruleName 指向专用真实 insert rule；它仍走 legacy Container/MySQL，只排除与 status 无关的集合写规则。
                 RuntimeModelLoadResult load = root.load(RuntimeModelLoadRequest.of(
                         writeRule.runtimeBindingPlan(),
                         originData,
@@ -175,11 +184,30 @@ class P2RealFixtureIntegrationTest {
                                     Optional.<RuntimeCollectionCursorId>empty()));
                     assertTrue(reread.allowed(), String.valueOf(reread.denial()));
                     assertEquals(RuntimeFactValue.integerValue(2L), reread.readValue().get().value());
+
+                    // 独立 JDBC 查询证明真实 Container effect 已写入 MySQL，而不是只改了内存 ModelData。
+                    assertOrderStatusPersisted(DEV09_USER_ID, 2);
                 } finally {
                     composition.close();
                 }
             } finally {
                 root.close();
+            }
+        }
+    }
+
+    /** 使用独立连接验证 DEV-09 唯一业务键对应的订单状态已真实落库。 */
+    private static void assertOrderStatusPersisted(long userId, int expectedStatus) throws Exception {
+        try (Connection connection = DriverManager.getConnection(
+                System.getenv("DEC_MYSQL_URL"),
+                System.getenv("DEC_MYSQL_USER"),
+                System.getenv("DEC_MYSQL_PASSWORD"));
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT o_status FROM order_info WHERE o_userId = ? ORDER BY o_id DESC LIMIT 1")) {
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                assertTrue(resultSet.next(), "DEV-09 Container WRITE 未产生 order_info 数据库记录");
+                assertEquals(expectedStatus, resultSet.getInt(1));
             }
         }
     }

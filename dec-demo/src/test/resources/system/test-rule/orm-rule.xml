@@ -13,6 +13,14 @@
 		<rule name="insertPayDetailList" type="insert" property="payInfo.payDetailList" />
 	</rule-view-info>
 
+	<!--
+		DEV-09 真实 WRITE effect 只验证 OrderInfo 根对象：继续使用真实 insert Container rule，
+		但不把完整订单的 orderDetail/payInfo 集合构造混入单字段 status 写测试。
+	-->
+	<rule-view-info name="dev09-save-Order" view-ref="OrderInfo">
+		<rule name="insertOrder" type="insert" property="OrderInfo" />
+	</rule-view-info>
+
 	<rule-view-info name="save-User" view-ref="UserInfo">
 		<rule name="insertUser" type="insert" property="UserInfo" />
 	</rule-view-info>
