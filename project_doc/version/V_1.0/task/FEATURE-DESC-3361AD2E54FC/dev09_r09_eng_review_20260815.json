@@ -1,0 +1,15 @@
+{
+  "task": "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY",
+  "revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "reviewer": "EngineeringStandardsReviewAgent",
+  "conclusion": "PASSED",
+  "validation": {
+    "p0_run": 31858378409,
+    "p0_number": 1825,
+    "conclusion": "success",
+    "core_verify": "success",
+    "mysql_it": "success"
+  },
+  "findings": [],
+  "summary": "DEV-09 改动保持现有模块边界：生产变更仅位于 compiler/modelaccess publication wiring，测试与真实 fixture 位于 dec-demo/compiler contract 层。Materialization 聚合使用 TreeMap/TreeSet 与 immutable Context value types 保持确定性；缺失 exact rule 不做 fallback。真实 E2E 使用既有 Order 聚合保持 one-to-many Collection shape，不通过修改 legacy UpdateKeyUtil 掩盖 fixture 问题。新增/修改的重要测试逻辑包含中文说明，Java Override 注解保持独立行；P0 core 与 MySQL 全部通过。"
+}
