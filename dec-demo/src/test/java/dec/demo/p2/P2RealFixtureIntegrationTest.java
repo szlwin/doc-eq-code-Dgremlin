@@ -38,6 +38,8 @@ import dec.core.starter.access.ProtectedAccessComposition;
 import dec.core.starter.access.ProtectedAccessCompositionResult;
 import dec.core.starter.access.ProtectedAccessRuntimeFactory;
 import dec.demo.support.DemoMySqlTestSupport;
+import dec.demo.system.dom.Order;
+import dec.demo.system.dom.OrderDetail;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -47,9 +49,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Assumptions;
@@ -125,13 +125,11 @@ class P2RealFixtureIntegrationTest {
             ModelAccessRuleKey writeKey = key("order", "status", AccessOperation.WRITE);
             CompiledModelAccessRule writeRule = rule(context, writeKey);
 
-            Map<String, Object> originData = new LinkedHashMap<String, Object>();
-            originData.put("id", Long.valueOf(10001L));
-            originData.put("userId", Long.valueOf(DEV09_USER_ID));
-            originData.put("productCount", Integer.valueOf(1));
-            originData.put("totalPrice", Double.valueOf(10.0D));
-            originData.put("totalAmount", Double.valueOf(10.0D));
-            originData.put("status", Integer.valueOf(1));
+            // 使用真实 Order 聚合提供 legacy View 所需 relation shape；one-to-many 必须保持 Collection 语义。
+            Order originOrder = new Order();
+            originOrder.setUserId(Long.valueOf(DEV09_USER_ID));
+            originOrder.setStatus(Integer.valueOf(1));
+            originOrder.setOrderDetailList(Collections.singletonList(new OrderDetail()));
 
             RuntimeModelExecutionRoot root = RuntimeModelExecutionRoots.production(
                     context,
@@ -140,7 +138,7 @@ class P2RealFixtureIntegrationTest {
                 // ruleName 指向专用真实 insert rule；它仍走 legacy Container/MySQL，只排除与 status 无关的集合写规则。
                 RuntimeModelLoadResult load = root.load(RuntimeModelLoadRequest.of(
                         writeRule.runtimeBindingPlan(),
-                        originData,
+                        originOrder,
                         LEGACY_ORDER_RULE,
                         "con1"));
                 assertTrue(load.loaded(), String.valueOf(load.failure()));
