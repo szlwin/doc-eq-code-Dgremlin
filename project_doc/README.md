@@ -18,13 +18,14 @@
 - P0：`PASSED`。
 - P1：`PASSED / MERGED / ARCHIVED`。历史保持不改写。
 - P2：DEV-01～DEV-09 的实际开发结果已经完成，最新 closure 为 `DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba`。
-- PR36 formalization HEAD `681428adedad2cc7b55b0cdcfe921ebf747abc00` 的 P0 Build Gate #1829 / run `31938373829` 已 `SUCCESS`；旧 #1825/#1828 继续只作为其 exact revision 的 provenance。
+- PR36 formalization HEAD `d459ab1bc1401ad3f0c4658a766001913a71d9dd` 的 P0 Build Gate #1830 / run `31939601690` 已 `SUCCESS`；#1829/#1828/#1825 继续只作为各自 exact revision 的 provenance。
 - P2 当前机器态仍为 `development / IN_PROGRESS / FORMALIZATION_REQUIRED`。禁止在 upstream TestDesign current-profile gate 未闭合时把 development 手工覆盖成 PASSED。
 - DEV09 R09 的 `development:TDDReviewAgent` 语义审计已基于 exact-head P0 #1825 完整日志/artifact 得到 `PASSED`，但尚不是 canonical v4 ReviewResult。
 - R31 / R07 standalone reviewer 集合可覆盖当前 profile，但 canonical v4 exact-revision 注册仍未执行；该注册现因 upstream R33 blocker 暂缓，而不是缺失事实被忽略。
 - **R33 current-profile Review 已实际执行**：`DesignReviewAgent=PASSED`、`RequirementReviewAgent=PASSED`、`TDDReviewAgent=BLOCKED`、`TestEvidenceReviewAgent=BLOCKED`。
 - R33 blocker 已收敛为 `R33_TDD_EVIDENCE_REQUIRED`：exact R33 test source 仍是 R32 placeholder，R33 新增/加强的 write-value Case 在该 revision 没有 target-specific executable RED；DEV-07 production write-value implementation 又早于后续 executable write-value oracle test，因此后置 GREEN 不能倒算成 pre-fix RED。
-- 当前下一合法动作：先查找是否存在不可变的 R33 target-specific pre-implementation RED command/test evidence；若不存在，必须在新的上游 TestDesign/TDD revision 中按 test-first 重新产生合规 Evidence。当前 `review_only=true` formalization 不允许修改测试/生产代码来制造历史证据。
+- R33 historical RED Evidence Recovery 已完成：`evidence/commands`、`evidence/command-results`、DEV-07 gate/closure、exact R33 test source、production 直接父版本以及三条 TestClass 的 pre-production Git path history 均未发现可合法恢复的 target-specific pre-development RED；结论为 `HISTORICAL_TARGET_RED_NOT_FOUND`。
+- 当前不能仅创建“形式上的”新 TestDesign/TDD revision 来补历史：production 已经 GREEN，且 `review_only=true` 禁止 tests/config/production mutation；没有真实未实现的新行为时，文档 revision 本身无法形成 `RC-TDD-001` 有效 RED，也不得通过回退/破坏生产实现制造 RED。
 - 只有 R33 mandatory current profiles 真正 PASSED 后，才能完成 R31/R33/R07/DEV09 canonical v4 exact-revision 注册，随后 `reconcile -> close development -> PHASE_FINAL_CODE_REVIEW`。
 - P3—P8：`TODO`。
 
@@ -43,7 +44,9 @@
 - `rc23_reconciliation_20260816_r01.json`：初始 authority drift；
 - `rc23_development_formalization_20260816_r02.json`：DEV09 TDD Evidence 复核；
 - `testdesign_r33_current_profile_audit_20260816_r01.json`：R33 当前 mandatory Review Profile 的真实逐项结论；
-- `rc23_development_formalization_20260816_r03.json`：本轮 fail-closed development formalization 决策。
+- `rc23_development_formalization_20260816_r03.json`：R33 current-profile fail-closed development formalization 决策；
+- `r33_historical_red_evidence_search_20260816_r01.json`：仓库历史与注册 Evidence 的 target-specific RED 恢复审计；
+- `rc23_development_formalization_20260816_r04.json`：historical RED 未恢复后的合法 remediation / lifecycle 决策。
 
 ## 执行约束
 
