@@ -18,15 +18,16 @@
 - P0：`PASSED`。
 - P1：`PASSED / MERGED / ARCHIVED`。历史保持不改写。
 - P2：DEV-01～DEV-09 的实际开发结果已经完成，最新 closure 为 `DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba`。
-- PR36 formalization HEAD `d459ab1bc1401ad3f0c4658a766001913a71d9dd` 的 P0 Build Gate #1830 / run `31939601690` 已 `SUCCESS`；#1829/#1828/#1825 继续只作为各自 exact revision 的 provenance。
+- PR36 evidence-recovery HEAD `5629e2b60f0a03fb16bb0fe67b75ab8c0b27f92f` 的 P0 Build Gate #1831 / run `31940608244` 已 `SUCCESS`；#1830/#1829/#1828/#1825 继续只作为各自 exact revision 的 provenance。
 - P2 当前机器态仍为 `development / IN_PROGRESS / FORMALIZATION_REQUIRED`。禁止在 upstream TestDesign current-profile gate 未闭合时把 development 手工覆盖成 PASSED。
 - DEV09 R09 的 `development:TDDReviewAgent` 语义审计已基于 exact-head P0 #1825 完整日志/artifact 得到 `PASSED`，但尚不是 canonical v4 ReviewResult。
 - R31 / R07 standalone reviewer 集合可覆盖当前 profile，但 canonical v4 exact-revision 注册仍未执行；该注册现因 upstream R33 blocker 暂缓，而不是缺失事实被忽略。
 - **R33 current-profile Review 已实际执行**：`DesignReviewAgent=PASSED`、`RequirementReviewAgent=PASSED`、`TDDReviewAgent=BLOCKED`、`TestEvidenceReviewAgent=BLOCKED`。
 - R33 blocker 已收敛为 `R33_TDD_EVIDENCE_REQUIRED`：exact R33 test source 仍是 R32 placeholder，R33 新增/加强的 write-value Case 在该 revision 没有 target-specific executable RED；DEV-07 production write-value implementation 又早于后续 executable write-value oracle test，因此后置 GREEN 不能倒算成 pre-fix RED。
-- R33 historical RED Evidence Recovery 已完成：`evidence/commands`、`evidence/command-results`、DEV-07 gate/closure、exact R33 test source、production 直接父版本以及三条 TestClass 的 pre-production Git path history 均未发现可合法恢复的 target-specific pre-development RED；结论为 `HISTORICAL_TARGET_RED_NOT_FOUND`。
-- 当前不能仅创建“形式上的”新 TestDesign/TDD revision 来补历史：production 已经 GREEN，且 `review_only=true` 禁止 tests/config/production mutation；没有真实未实现的新行为时，文档 revision 本身无法形成 `RC-TDD-001` 有效 RED，也不得通过回退/破坏生产实现制造 RED。
-- 只有 R33 mandatory current profiles 真正 PASSED 后，才能完成 R31/R33/R07/DEV09 canonical v4 exact-revision 注册，随后 `reconcile -> close development -> PHASE_FINAL_CODE_REVIEW`。
+- R33 historical RED Evidence Recovery 已完成：当前仓库历史与注册 Evidence 中未发现可合法恢复的 target-specific pre-development RED；结论为 `HISTORICAL_TARGET_RED_NOT_FOUND`。
+- **`P2_CODE_PRESERVATION_LOCK=ACTIVE`**：历史 TDD Evidence 缺口是 lifecycle/conformance blocker，不是当前 P2 功能缺陷；现有 production/test/config 保持不变，不允许为了补历史 RED 而回退、破坏或重写已经 GREEN 的 P2 实现。
+- 当前不能仅创建“形式上的”新 TestDesign/TDD revision 来补历史。只有真实尚未实现的新行为或独立验证出的当前功能缺陷被授权后，才能先通过正式工作流退出 `review_only`，建立新语义 TestDesign/TDD revision，并在对应 production change **之前**取得真实 RED。
+- 只有 mandatory upstream gates 真正 PASSED 后，才能完成 exact-revision canonical registration，随后 `reconcile -> close development -> PHASE_FINAL_CODE_REVIEW`。
 - P3—P8：`TODO`。
 
 ## P2 有效业务/设计事实
@@ -46,11 +47,14 @@
 - `testdesign_r33_current_profile_audit_20260816_r01.json`：R33 当前 mandatory Review Profile 的真实逐项结论；
 - `rc23_development_formalization_20260816_r03.json`：R33 current-profile fail-closed development formalization 决策；
 - `r33_historical_red_evidence_search_20260816_r01.json`：仓库历史与注册 Evidence 的 target-specific RED 恢复审计；
-- `rc23_development_formalization_20260816_r04.json`：historical RED 未恢复后的合法 remediation / lifecycle 决策。
+- `rc23_development_formalization_20260816_r04.json`：historical RED 未恢复后的合法 remediation / lifecycle 决策；
+- `p2_code_preservation_decision_20260816_r01.json`：现有 P2 production/test/config 保持冻结的正式决策；
+- `rc23_development_formalization_20260816_r05.json`：code-preservation 边界确认后的 fail-closed lifecycle 决策。
 
 ## 执行约束
 
 - 当前 reconciliation / formalization 均为 docs/Evidence-only，不修改业务代码、测试或配置。
+- 不得仅为了补历史 `RC-TDD-001` RED Evidence 修改、回退、删除或故意破坏当前已经 GREEN 的 P2 production/test/config。
 - 任何 P0/P1、authority conflict、provenance/Evidence 缺口继续 fail-closed。
 - standalone JSON、旧 reviewer identity 或人工摘要不能替代 canonical exact-revision ReviewResult。
 - README / `project_process.md` 只是高层摘要；发生冲突时以 `task_events.jsonl` reducer、Evidence、Review Registry 和 exact Git revision 为准。
