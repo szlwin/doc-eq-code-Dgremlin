@@ -15,7 +15,7 @@
 
 ## 当前阶段
 
-- P0：`PASSED`（冻结 P2 代码最后已验证 HEAD `7925ec4f218c167240fc12571336244e1f7849ad` 的 P0 #1832 / run `31941036385` 为 `SUCCESS`；本轮仅 `project_doc` 提交的新 HEAD 会重新触发 P0，不改变 P2 代码内容）。
+- P0：`PASSED`（冻结 P2 代码最后已验证 HEAD `7925ec4f218c167240fc12571336244e1f7849ad` 的 P0 #1832 / run `31941036385` 为 `SUCCESS`；后续 Final Review 提交均仅为 `project_doc`/PROCESS_ONLY，不改变 P2 代码内容）。
 - P1：`PASSED / MERGED / ARCHIVED`。历史保持不改写。
 - P2：DEV-01～DEV-09 的实际开发结果已经完成，冻结 closure 为 `DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba`。
 - DEV09 closure 已明确 `development_overall=PASSED / DEVELOPMENT_TASKS_COMPLETE / open_p0_p1=0 / next_task=PHASE_FINAL_CODE_REVIEW`；`development:TDDReviewAgent` exact-revision 语义审计也已 PASSED。
