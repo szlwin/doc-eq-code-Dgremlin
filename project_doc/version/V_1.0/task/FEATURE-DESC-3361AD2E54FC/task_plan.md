@@ -1,6 +1,8 @@
-# FEATURE-DESC-3361AD2E54FC RC21 静态任务计划
+# FEATURE-DESC-3361AD2E54FC RC23 当前静态任务计划
 
-> RC21 / storage model 6：本文件只保存尚未完成的静态执行规格；pre-RC13 完整计划已冻结到 `evidence/legacy-runtime/pre-rc13/task_plan.pre-rc21.md`。运行状态只来自 `task_events.jsonl`。
+> RC23 / storage model 6：本文件只保存尚未完成的静态执行规格；pre-RC13 完整计划已冻结到 `evidence/legacy-runtime/pre-rc13/task_plan.pre-rc21.md`。运行状态只来自 `task_events.jsonl`。
+>
+> RC23 reconciliation（2026-08-16）：现有 standalone finalization 已确认 Design R31、TestDesign R33、Implementation Plan R07 为当前有效内容 authority；本文件将当前 development closure 的 implementation-plan 输入由历史 R05 重绑定为 R07。该重绑定不等于 development closure PASSED；canonical Review Registry 与 `development:TDDReviewAgent` exact-revision 门禁仍须独立满足。
 
 ```json task-plan
 [
@@ -16,18 +18,18 @@
     "logical_task_id": "LOGICAL-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
     "iteration_no": 9,
-    "revision_reason": "RC21 storage-model-6 rebaseline: historical DEV-01~DEV-09 results exist, but current Evidence/Review Registry must be rebound before the development phase can be formally finalized.",
+    "revision_reason": "RC23 authority reconciliation over the RC21 storage-model-6 rebaseline: DEV-01~DEV-09 results exist; current implementation-plan authority is R07, while canonical exact-revision Review/Evidence bindings must still be formalized before development can be finalized.",
     "title": "形式化 DEV-01~DEV-09 已完成事实并关闭 development",
-    "objective": "不修改业务代码；仅基于现有 exact revision、P0、Review 与 closure 资料补齐 RC21 Evidence/Review/StageOutcome，使 development 可被 fail-closed 地正式完成。",
+    "objective": "不修改业务代码；仅基于现有 exact revision、P0、Review 与 closure 资料补齐 RC23 可解析的 Evidence/Review/StageOutcome，使 development 可被 fail-closed 地正式完成。",
     "phase": "development",
     "depends_on": [],
     "owner_agent": "DevelopAgent",
     "reviewer_agents": ["TDDReviewAgent"],
-    "input_revisions": {"implementation_plan":"TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a","tdd":"TDD-P2-R01@3f282bb4e1f6"},
-    "allowed_files": ["project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/**","project_doc/version/V_1.0/work_record.md","project_doc/README.md","project_doc/version/V_1.0/project_process.md"],
+    "input_revisions": {"implementation_plan":"TP-FEATURE-DESC-3361AD2E54FC-R07@604f26f1641e0cf9d7d70a8ee11e90d1d1ffdf1a","tdd":"TDD-P2-R01@3f282bb4e1f6"},
+    "allowed_files": ["project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/**","project_doc/version/V_1.0/work_record.md","project_doc/README.md","project_doc/version/V_1.0/project_process.md","project_doc/version/V_1.0/work.md"],
     "validation_commands": ["python3 /mnt/data/common-develop/scripts/long_task.py validate -g DevelopAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC"],
-    "expected_results": ["业务代码零修改","DEV-09 exact revision DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba 具有 RC21 可解析的 Evidence","development:TDDReviewAgent 对同一 exact revision 形成可验证 PASSED 结论","development StageOutcome 正式 PASSED，随后可 advance-phase 到 code_review"],
-    "stop_conditions": ["需要修改生产代码才能让门禁通过","无法证明 DEV-09 closure/P0 与 exact revision 的 provenance","出现新的 P0/P1 语义问题"]
+    "expected_results": ["业务代码零修改","DEV-09 exact revision DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba 具有 RC23 可解析的 Evidence","development:TDDReviewAgent 对同一 exact revision 形成可验证 PASSED 结论","development StageOutcome 正式 PASSED，随后可 advance-phase 到 code_review"],
+    "stop_conditions": ["需要修改生产代码才能让门禁通过","无法证明 DEV-09 closure/P0 与 exact revision 的 provenance","canonical Review Registry 无法证明当前 authority 或 development:TDDReviewAgent","出现新的 P0/P1 语义问题"]
   },
   {
     "feature_id": "P2-SYSTEM-RULEVIEW-F01",
@@ -41,7 +43,7 @@
     "logical_task_id": "LOGICAL-P2-PHASE-FINAL-CODE-REVIEW",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009",
     "iteration_no": 9,
-    "revision_reason": "RC21 rebaseline preserves the existing next lifecycle boundary: phase-final code review follows formal development closure.",
+    "revision_reason": "RC23 preserves the existing lifecycle boundary: phase-final code review follows formal development closure.",
     "title": "执行 P2 Phase Final Code Review",
     "objective": "对冻结后的 development exact revision 执行 Spec Compliance 与 Engineering Standards 独立 Review；只读审查代码，Review 记录写入 project_doc。",
     "phase": "code_review",
@@ -66,7 +68,7 @@
     "logical_task_id": "LOGICAL-P2-PHASE-TESTING",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-009",
     "iteration_no": 9,
-    "revision_reason": "Testing remains downstream of phase-final code review under RC21.",
+    "revision_reason": "Testing remains downstream of phase-final code review under RC23.",
     "title": "执行 P2 Testing",
     "objective": "在 code_review 通过后执行并冻结 P2 测试结果与 TestEvidenceReview。",
     "phase": "testing",
@@ -91,7 +93,7 @@
     "logical_task_id": "LOGICAL-P2-PHASE-COMPLETION-VERIFICATION",
     "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-009",
     "iteration_no": 9,
-    "revision_reason": "Completion verification remains the final P2 lifecycle phase under RC21.",
+    "revision_reason": "Completion verification remains the final P2 lifecycle phase under RC23.",
     "title": "执行 P2 Completion Verification",
     "objective": "验证 P2 acceptance/traceability/evidence/lifecycle 全部闭合；不得把开发任务完成误报为整个 P2 完成。",
     "phase": "completion_verification",
