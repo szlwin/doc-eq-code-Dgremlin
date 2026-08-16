@@ -15,16 +15,15 @@
 
 ## 当前阶段
 
-- P0：`PASSED`。
+- P0：`PASSED`（冻结 P2 代码最后已验证 HEAD `7925ec4f218c167240fc12571336244e1f7849ad` 的 P0 #1832 / run `31941036385` 为 `SUCCESS`；本轮仅 `project_doc` 提交的新 HEAD 会重新触发 P0，不改变 P2 代码内容）。
 - P1：`PASSED / MERGED / ARCHIVED`。历史保持不改写。
 - P2：DEV-01～DEV-09 的实际开发结果已经完成，冻结 closure 为 `DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba`。
-- PR36 当前 HEAD `7925ec4f218c167240fc12571336244e1f7849ad` 的 P0 Build Gate #1832 / run `31941036385` 已 `SUCCESS`；该 HEAD 相对 DEV09 只包含 `project_doc`/PROCESS_ONLY 变更，因此当前 P0 同时验证了冻结 P2 代码仍为 GREEN。
 - DEV09 closure 已明确 `development_overall=PASSED / DEVELOPMENT_TASKS_COMPLETE / open_p0_p1=0 / next_task=PHASE_FINAL_CODE_REVIEW`；`development:TDDReviewAgent` exact-revision 语义审计也已 PASSED。
 - **生命周期解释已纠正**：canonical machine state 从未通过 `reopen-phase` 把 standalone TestDesign R33 替换为 current TestDesign；当前 canonical TestDesign 仍是 `TESTDESIGN-P2-R32=PASSED`。因此 R33 历史 RED Evidence 缺口保留为历史 process/Evidence non-conformance，但不再作为当前 P2 代码正确性或 Development Closure 的永久 blocker。
 - R33 historical RED Evidence Recovery 结论仍保留：`HISTORICAL_TARGET_RED_NOT_FOUND`。不得把后置 GREEN 冒充历史 RED，也不得为了补历史流程回退、破坏或重写已经 GREEN 的 P2 实现。
 - **`P2_CODE_PRESERVATION_LOCK=ACTIVE`**：现有 production/test/config 保持不变；除非发现真实当前缺陷或授权真实新行为，不允许进行 P2 代码修改。
 - Final Code Review 已按当前 risk contract 完成语义审查：`SpecCompliance / EngineeringStandards / Security / Concurrency / Performance / Architecture / ImpactAnalysis / CrossModuleIntegration` 全部 `PASSED`，开放 P0/P1 finding 为 0，且不需要 production/test/config 修改。
-- Final Review 当前 P0 #1832 focused Evidence：14 个相关 suite、57 tests、0 failure、0 error、0 skipped；详细 Evidence 已内嵌在 `p2_final_code_review_20260816_r01.json`。
+- Final Review 的 P0 #1832 focused Evidence：14 个相关 suite、57 tests、0 failure、0 error、0 skipped；详细 Evidence 已内嵌在 `p2_final_code_review_20260816_r01.json`。
 - **当前唯一剩余阻塞是 canonical 写入传输**：可用 GitHub 写接口只能整文件替换，而 `evidence/evidence_index.json` 是大型单行 append-only Registry；在无法获得完整本地 checkout/append-capable transport 时，不允许截断、重建或伪造 Registry。因此语义 Development Closure / Final Code Review 已 PASSED，但 canonical `StageOutcome/current_phase` 仍保持原值，未伪造 `wk close` 或 `advance-phase`。
 - 后续只需在获得安全完整 checkout/append-capable transport 后，使用官方 `evidence/manual_review/wk` machinery 将已完成的 DEV09 TDD Review 与 Final Code Review 结果写入 canonical Registry，再执行 `wk reconcile -> wk close development -> advance code_review`；机器接受后即可发布 canonical Final Code Review StageOutcome 并进入 Testing。
 - P3—P8：`TODO`。
