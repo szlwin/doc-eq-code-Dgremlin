@@ -18,11 +18,14 @@
 - P0：`PASSED`。
 - P1：`PASSED / MERGED / ARCHIVED`。历史保持不改写。
 - P2：DEV-01～DEV-09 的实际开发结果已经完成，最新 closure 为 `DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba`。
-- PR36 reconciliation HEAD `4bb11919019f455e400c7088b74b7da413fe80b2` 的 P0 Build Gate #1828 / run `31927101610` 已 `SUCCESS`。
-- P2 当前机器态仍为 `development / IN_PROGRESS / FORMALIZATION_REQUIRED`。RC23 reconciliation 已识别 R31/R33/R07 为当前 standalone authority，但在 canonical Review Registry 完成 exact-revision 绑定前，不把机器态直接覆盖成 PASSED。
-- 2026-08-16 formalization attempt 已完成 DEV09 R09 的 `development:TDDReviewAgent` 语义审计：基于 exact-head P0 #1825 的完整 core/mysql job 日志和两个未过期 artifact，五项 profile criterion 可得出语义 `PASSED`；但该审计尚不是 canonical v4 ReviewResult，因此不作为机器 PASSED 绑定。
-- 当前 canonical blocker：R31/R07 standalone reviewer 集合可覆盖当前 profile 但尚未注册；R33 standalone reviewer 集合与当前 `test_design` machine profile 不等价，仍需 exact-revision `DesignReviewAgent`、`TDDReviewAgent`、`TestEvidenceReviewAgent` 等 current-profile Review/Evidence 正式写入 v4 registry。
-- 当前下一动作仍是 **Evidence/Review formalization**；只有 `evidence/evidence_index.json` 与 `evidence/reviews.jsonl` 完成 exact-revision 注册、reconcile/close 真正通过后，才能关闭 development 并进入 `PHASE_FINAL_CODE_REVIEW`。
+- PR36 formalization HEAD `681428adedad2cc7b55b0cdcfe921ebf747abc00` 的 P0 Build Gate #1829 / run `31938373829` 已 `SUCCESS`；旧 #1825/#1828 继续只作为其 exact revision 的 provenance。
+- P2 当前机器态仍为 `development / IN_PROGRESS / FORMALIZATION_REQUIRED`。禁止在 upstream TestDesign current-profile gate 未闭合时把 development 手工覆盖成 PASSED。
+- DEV09 R09 的 `development:TDDReviewAgent` 语义审计已基于 exact-head P0 #1825 完整日志/artifact 得到 `PASSED`，但尚不是 canonical v4 ReviewResult。
+- R31 / R07 standalone reviewer 集合可覆盖当前 profile，但 canonical v4 exact-revision 注册仍未执行；该注册现因 upstream R33 blocker 暂缓，而不是缺失事实被忽略。
+- **R33 current-profile Review 已实际执行**：`DesignReviewAgent=PASSED`、`RequirementReviewAgent=PASSED`、`TDDReviewAgent=BLOCKED`、`TestEvidenceReviewAgent=BLOCKED`。
+- R33 blocker 已收敛为 `R33_TDD_EVIDENCE_REQUIRED`：exact R33 test source 仍是 R32 placeholder，R33 新增/加强的 write-value Case 在该 revision 没有 target-specific executable RED；DEV-07 production write-value implementation 又早于后续 executable write-value oracle test，因此后置 GREEN 不能倒算成 pre-fix RED。
+- 当前下一合法动作：先查找是否存在不可变的 R33 target-specific pre-implementation RED command/test evidence；若不存在，必须在新的上游 TestDesign/TDD revision 中按 test-first 重新产生合规 Evidence。当前 `review_only=true` formalization 不允许修改测试/生产代码来制造历史证据。
+- 只有 R33 mandatory current profiles 真正 PASSED 后，才能完成 R31/R33/R07/DEV09 canonical v4 exact-revision 注册，随后 `reconcile -> close development -> PHASE_FINAL_CODE_REVIEW`。
 - P3—P8：`TODO`。
 
 ## P2 有效业务/设计事实
@@ -35,11 +38,17 @@
 - TDD：`TDD-P2-R01@3f282bb4e1f6`
 - Development closure：`DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba`
 
-当前 canonical machine state 仍保留较早的 R30/R32/R05 Review 绑定；`rc23_reconciliation_20260816_r01.json` 记录初始 drift，`rc23_development_formalization_20260816_r02.json` 记录本轮真实门禁检查结果。fail-closed 规则禁止通过手工状态覆盖绕过该缺口。
+当前 canonical machine state 仍保留较早的 R30/R32/R05 Review 绑定。过程审计链为：
+
+- `rc23_reconciliation_20260816_r01.json`：初始 authority drift；
+- `rc23_development_formalization_20260816_r02.json`：DEV09 TDD Evidence 复核；
+- `testdesign_r33_current_profile_audit_20260816_r01.json`：R33 当前 mandatory Review Profile 的真实逐项结论；
+- `rc23_development_formalization_20260816_r03.json`：本轮 fail-closed development formalization 决策。
 
 ## 执行约束
 
-- 当前 reconciliation / formalization 均为 docs/Evidence-only，不修改业务代码。
-- 任何 P0/P1、authority conflict、provenance 缺口继续 fail-closed。
+- 当前 reconciliation / formalization 均为 docs/Evidence-only，不修改业务代码、测试或配置。
+- 任何 P0/P1、authority conflict、provenance/Evidence 缺口继续 fail-closed。
+- standalone JSON、旧 reviewer identity 或人工摘要不能替代 canonical exact-revision ReviewResult。
 - README / `project_process.md` 只是高层摘要；发生冲突时以 `task_events.jsonl` reducer、Evidence、Review Registry 和 exact Git revision 为准。
-- `project_env.md` / `harness_env.md` 可在进入 Testing 前按实际 capability 补齐；它们不是本次 development formalization 的前置条件。
+- `project_env.md` / `harness_env.md` 可在进入 Testing 前按实际 capability 补齐；它们不是当前 R33 TDD Evidence blocker 的替代品。
