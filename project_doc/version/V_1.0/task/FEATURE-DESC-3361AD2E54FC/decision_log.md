@@ -63,7 +63,7 @@
       "A: P2 seam/no-bypass；真实 integrations 下沉 P3/P4/P6",
       "B: P2 提供真实 production Rule/change/custom-action representative consumers"
     ],
-    "decision": "采用 Option B。P2 必须交付并通过真实 production main-source Rule、change、custom-action 三类 representative protected-access consumers；三类入口都真实执行授权/未授权场景幵经过同一个 production composition -> ProtectedExecutionBridge -> Gateway -> Guard 权限链。P3/P4/P6 完整业务语义仍留后续阶段。",
+    "decision": "采用 Option B。P2 必须交付并通过真实 production main-source Rule、change、custom-action 三类 representative protected-access consumers；三类入口都真实执行授权/未授权场景并经过同一个 production composition -> ProtectedExecutionBridge -> Gateway -> Guard 权限链。P3/P4/P6 完整业务语义仍留后续阶段。",
     "rationale": "用户明确选择 Option B；保留原 AC-007 concrete-entry acceptance，不用 seam-only 替代。",
     "decided_by": "user",
     "decided_at": "2026-08-09T11:55:00+08:00",
