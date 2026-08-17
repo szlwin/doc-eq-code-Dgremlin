@@ -63,7 +63,7 @@
       "A: P2 seam/no-bypass；真实 integrations 下沉 P3/P4/P6",
       "B: P2 提供真实 production Rule/change/custom-action representative consumers"
     ],
-    "decision": "采用 Option B。P2 必须交付并通过真实 production main-source Rule、change、custom-action 三类 representative protected-access consumers；三类入口都真实执行授权/未授权场景并经过同一个 production composition -> ProtectedExecutionBridge -> Gateway -> Guard 权限链。P3/P4/P6 完整业务语义仍留后续阶段。",
+    "decision": "采用 Option B。P2 必须交付并通过真实 production main-source Rule、change、custom-action 三类 representative protected-access consumers；三类入口都真实执行授权/未授权场景幵经过同一个 production composition -> ProtectedExecutionBridge -> Gateway -> Guard 权限链。P3/P4/P6 完整业务语义仍留后续阶段。",
     "rationale": "用户明确选择 Option B；保留原 AC-007 concrete-entry acceptance，不用 seam-only 替代。",
     "decided_by": "user",
     "decided_at": "2026-08-09T11:55:00+08:00",
@@ -189,6 +189,9 @@
 - Direct Bridge / AC-007 Option B / READ-WRITE only：ACTIVE。
 - MODEL loading：direct `RuntimeModelLoadRequest` ACTIVE；opaque production invocation credential = NOT_ADOPTED / DEFERRED；MODEL production lifecycle = trusted P2 boundary；request != permission；Guard/ModelAccessRuleKey = sole READ/WRITE authority。
 - Legacy post-copy rollback exclusion：ACTIVE；不要求恢复已 copy 后再遇到 later legacy commit failure 的 POJO/Map；pre-effect fail-closed 与正常成功 originData write-back 继续要求。
+- 历史审计：Exact independent Review `54545677040fdb2fe3539423fd6ef5a0a56d6a9a` 对 Requirement+R04 / BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31 的结论为 SEMANTIC PASS；当时 formal closure 仍 governance/risk/machine blocked。
+- 历史审计：RC9 exact-revision local risk scan executed + validator PASSED；local Evidence 未注册仓库 namespace，canonical `risk_detection.json` 当时仍 `NOT_SCANNED`。
+- 历史审计：Implementation Plan / TDD / Development 在上述旧 gate 下 remain BLOCKED；该事实保留，不作为当前阶段授权。
 - Single runtime Context：`DEC-P2-SINGLE-RUNTIME-CONTEXT-001` ACTIVE；每个 runtime generation 只绑定一次 EngineContext，配置更新必须 restart；live swap/hot reload = NOT_SUPPORTED；Compiler 可跨 session/generation 构造多个 candidate。
 - DESIGN-P2-R32 / TESTDESIGN-P2-R36 中依赖 multi-context runtime 前提的 context-binding/cross-context 条款被当前决策 supersede，必须通过新的 Design/TestDesign candidate 回修；历史内容保持可审计。
 - Canonical `task_events.jsonl` 仍停在 `TE-000094 -> DESIGN-P2-R32 PASSED / TESTDESIGN-P2-R34 PASSED`；新的 reopen/finalize 必须由 common-develop append-only writer/reducer 安全写入，禁止手改 ledger。
