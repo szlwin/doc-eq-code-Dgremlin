@@ -1,0 +1,78 @@
+name: common-develop PR36 exact bundle publish
+
+on:
+  push:
+    branches:
+      - common-develop/pr36-code-review-testing-publish-20260817
+    paths:
+      - .common-develop-publish/trigger.json
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify exact bundle and fast-forward PR36
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euxo pipefail
+          TARGET_BRANCH="feature/p2-design-testdesign-20260808"
+          PUBLISH_BRANCH="common-develop/pr36-code-review-testing-publish-20260817"
+          EXPECTED_PARENT="29be37932c2fd445f410bc94ddc20ba262a0ab2d"
+          TRANSFER_TARGET="a24fe3dc76a7e3228a090799ee572c1822c7a749"
+          EXPECTED_CP_TREE="8c213d6915af6e211e14e67a1dddb30670552dc4"
+          EXPECTED_TRANSITION_TREE="5e35acc4a5a0f4d0310ca2d4f36a93602c6308cc"
+          EXPECTED_BUNDLE_SIZE="117677"
+          EXPECTED_B64_SIZE="156904"
+          EXPECTED_BUNDLE_SHA256="cc7041c548ad005089ebae2fd9c572debc0d4bdd9dd6209eebae43700d87975c"
+
+          git init repo
+          cd repo
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          remote_head="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
+          test "$remote_head" = "$EXPECTED_PARENT"
+          git fetch --no-tags origin "$EXPECTED_PARENT"
+
+          cat ../.common-develop-publish/chunk-*.b64 | tr -cd 'A-Za-z0-9+/=' > /tmp/pr36.b64
+          test "$(wc -c < /tmp/pr36.b64)" -eq "$EXPECTED_B64_SIZE"
+          base64 -d /tmp/pr36.b64 > /tmp/pr36.bundle
+          test "$(wc -c < /tmp/pr36.bundle)" -eq "$EXPECTED_BUNDLE_SIZE"
+          test "$(sha256sum /tmp/pr36.bundle | awk '{print $1}')" = "$EXPECTED_BUNDLE_SHA256"
+          git bundle verify /tmp/pr36.bundle
+          git fetch /tmp/pr36.bundle refs/heads/common-develop-transfer-target
+          test "$(git rev-parse FETCH_HEAD)" = "$TRANSFER_TARGET"
+
+          transfer_transition="$(git rev-parse FETCH_HEAD)"
+          transfer_checkpoint="$(git rev-parse "${transfer_transition}^")"
+          test "$(git rev-parse "${transfer_checkpoint}^{tree}")" = "$EXPECTED_CP_TREE"
+          test "$(git rev-parse "${transfer_transition}^{tree}")" = "$EXPECTED_TRANSITION_TREE"
+
+          git show -s --format=%B "$transfer_checkpoint" > /tmp/checkpoint.msg
+          git show -s --format=%B "$transfer_transition" > /tmp/transition.msg
+
+          export GIT_AUTHOR_NAME="szlwin"
+          export GIT_AUTHOR_EMAIL="szlwin@163.com"
+          export GIT_COMMITTER_NAME="szlwin"
+          export GIT_COMMITTER_EMAIL="szlwin@163.com"
+          checkpoint_commit="$(git commit-tree "$EXPECTED_CP_TREE" -p "$EXPECTED_PARENT" < /tmp/checkpoint.msg)"
+          transition_commit="$(git commit-tree "$EXPECTED_TRANSITION_TREE" -p "$checkpoint_commit" < /tmp/transition.msg)"
+
+          test "$(git rev-parse "${checkpoint_commit}^")" = "$EXPECTED_PARENT"
+          test "$(git rev-parse "${checkpoint_commit}^{tree}")" = "$EXPECTED_CP_TREE"
+          test "$(git rev-parse "${transition_commit}^")" = "$checkpoint_commit"
+          test "$(git rev-parse "${transition_commit}^{tree}")" = "$EXPECTED_TRANSITION_TREE"
+          grep -Fq 'WK-Checkpoint: CP-V_1.0-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009' /tmp/checkpoint.msg
+          grep -Fq 'WK-Revision: DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba' /tmp/checkpoint.msg
+          grep -Fq 'advance P2 lifecycle to testing' /tmp/transition.msg
+
+          git push origin "$transition_commit:refs/heads/${TARGET_BRANCH}"
+          updated_head="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
+          test "$updated_head" = "$transition_commit"
+
+          git push origin --delete "$PUBLISH_BRANCH" || true
+          printf 'CHECKPOINT_COMMIT=%s\nTRANSITION_COMMIT=%s\n' "$checkpoint_commit" "$transition_commit"
