@@ -2,12 +2,791 @@
   "schema_version": 1,
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
-  "input_revision": "",
-  "input_files": [],
-  "input_digest": "",
-  "status": "NOT_SCANNED",
-  "scanned_by_agent": "",
-  "scanned_at": "",
-  "detections": [],
-  "waivers": []
+  "input_revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "input_files": [
+    "dec-core-compiler/src/main/java/dec/core/compiler/modelaccess/ViewMaterializationCompiler.java",
+    "dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java",
+    "dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java",
+    "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/ProtectedAccessComposition.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/ProtectedAccessRuntimeFactory.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/UnifiedProtectedAccessEntry.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/WriteCoordinationDomain.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionTestFixture.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessRuntimeTestFixture.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java",
+    "dec-demo/src/main/resources/mix/system/systems.xml",
+    "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java",
+    "dec-demo/src/test/resources/mix/system/systems.xml",
+    "dec-demo/src/test/resources/system/test-rule/orm-rule.xml"
+  ],
+  "input_digest": "b7edf4962d2dab8fff6406afb0b9abc6ac8ede298bc7611498716cfe85a5e3ed",
+  "status": "SCANNED",
+  "scanned_by_agent": "ProjectManagerAgent",
+  "scanned_at": "2026-08-17T03:23:16+00:00",
+  "detections": [
+    {
+      "detection_id": "DET-0571B02DF7B0",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000283"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-0CA1A76C7916",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000283"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-0CF77AD65B4F",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000273"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-19DEC36DAFD9",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000270"
+      ],
+      "status": "WAIVED",
+      "reason": "file:**/*dependency*, content:dependency, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-29E1243C3FFD",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000281"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-2F788AFAF58A",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000269"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-31274BA9B29D",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000283"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-35F9432A004E",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000275"
+      ],
+      "status": "WAIVED",
+      "reason": "content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-368D82FC371A",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000274"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-4101E0148F79",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000272"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-4152902CCA0F",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000277"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-5318ACCCE0EB",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000278"
+      ],
+      "status": "WAIVED",
+      "reason": "content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-58A85122AF3F",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000271"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-59FF28732548",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000272"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-6602C10F094B",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000276"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-70F1E85DF7D7",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000284"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-733FE20B9897",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000267"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-74609E297EEC",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000281"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-79A37DC339F3",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000284"
+      ],
+      "status": "WAIVED",
+      "reason": "file:**/*architecture*, file:**/*dependency*, content:dependency, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-7AA317CD7E68",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "status": "WAIVED",
+      "reason": "content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-83295D996495",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000285"
+      ],
+      "status": "DETECTED",
+      "reason": "content:synchronized, content:atomic, content:compareandset",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-90771D6D35FD",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000277"
+      ],
+      "status": "DETECTED",
+      "reason": "content:lock(, content:atomic, content:await, content:executor",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-90BA6A48F063",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000271"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-9264FC2A3F0A",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000268"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-9DB81EA9763D",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000282"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-AAE06112EE1B",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000269"
+      ],
+      "status": "DETECTED",
+      "reason": "content:token",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-BBC0F9234139",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000279"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-BEB5D795E8A5",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000268"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-BF000A165D70",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000279"
+      ],
+      "status": "DETECTED",
+      "reason": "content:lock(, content:atomic, content:await",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-BFD23C3AC6CF",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000278"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-C3974790F54D",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000276"
+      ],
+      "status": "DETECTED",
+      "reason": "content:synchronized, content:atomic, content:compareandset",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-CF0C9D654DAA",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000273"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic, content:compareandset",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-D0D647C18C3F",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000267"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-D4D4AA0C9F5C",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000280"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-E510EA389E76",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000285"
+      ],
+      "status": "WAIVED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-EE2FB1292AC8",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000269"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F038F2449065",
+      "rule_id": "RISK-IMP-TRACE-001",
+      "risk_type": "impact_analysis",
+      "confidence": 9,
+      "required_reviewer": "ImpactAnalysisReviewAgent",
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability impact_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F19C5230BF4D",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000285"
+      ],
+      "status": "DETECTED",
+      "reason": "content:password",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-FE4B1454B988",
+      "rule_id": "RISK-XMOD-TRACE-001",
+      "risk_type": "cross_module_integration",
+      "confidence": 9,
+      "required_reviewer": "CrossModuleIntegrationReviewAgent",
+      "evidence_ids": [
+        "EVD-000286"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability cross_module_implementation_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
+      "source": "DETECTOR"
+    }
+  ],
+  "waivers": [
+    {
+      "detection_id": "DET-0CA1A76C7916",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:05+00:00"
+    },
+    {
+      "detection_id": "DET-0CF77AD65B4F",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:06+00:00"
+    },
+    {
+      "detection_id": "DET-19DEC36DAFD9",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:07+00:00"
+    },
+    {
+      "detection_id": "DET-2F788AFAF58A",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:08+00:00"
+    },
+    {
+      "detection_id": "DET-35F9432A004E",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:09+00:00"
+    },
+    {
+      "detection_id": "DET-368D82FC371A",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:10+00:00"
+    },
+    {
+      "detection_id": "DET-4152902CCA0F",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:11+00:00"
+    },
+    {
+      "detection_id": "DET-5318ACCCE0EB",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:13+00:00"
+    },
+    {
+      "detection_id": "DET-59FF28732548",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:14+00:00"
+    },
+    {
+      "detection_id": "DET-6602C10F094B",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:15+00:00"
+    },
+    {
+      "detection_id": "DET-74609E297EEC",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:16+00:00"
+    },
+    {
+      "detection_id": "DET-79A37DC339F3",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:17+00:00"
+    },
+    {
+      "detection_id": "DET-7AA317CD7E68",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:18+00:00"
+    },
+    {
+      "detection_id": "DET-90BA6A48F063",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:19+00:00"
+    },
+    {
+      "detection_id": "DET-BBC0F9234139",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:20+00:00"
+    },
+    {
+      "detection_id": "DET-BEB5D795E8A5",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:21+00:00"
+    },
+    {
+      "detection_id": "DET-D0D647C18C3F",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:22+00:00"
+    },
+    {
+      "detection_id": "DET-D4D4AA0C9F5C",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:23+00:00"
+    },
+    {
+      "detection_id": "DET-E510EA389E76",
+      "reason": "Duplicate risk assignment only: ArchitectureReviewAgent is already mandatory for code_review and REV-000100 PASSED on the same exact DEV09 revision; architecture review itself is not waived.",
+      "approved_by": [
+        "ArchitectureReviewAgent",
+        "ProjectManagerAgent"
+      ],
+      "evidence_ids": [
+        "EVD-000303",
+        "EVD-000304"
+      ],
+      "approved_at": "2026-08-17T04:54:24+00:00"
+    }
+  ]
 }

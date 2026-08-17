@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "kind": "P2_CODE_REVIEW_FOCUSED_TEST_METRICS",
+  "phase": "code_review",
+  "revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "source": {
+    "workflowRun": "P0 #1832",
+    "artifactFile": "p0-1832-core.zip",
+    "artifactSha256": "91ca1bba298340914696ca5dfe2914cbd8ee15348cc46a9e1b758b1c1b9646c1",
+    "verifiedHead": "7925ec4f218c167240fc12571336244e1f7849ad"
+  },
+  "selection": "Surefire suites whose class name contains P2, ProtectedAccess, ProtectedRuntime, ProtectedWrite, WriteCoordination, ModelAccess, or ProductionComposition.",
+  "totals": {
+    "suites": 27,
+    "tests": 126,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "reportedSuiteTimeSeconds": 0.779
+  },
+  "suites": [
+    {
+      "suite": "dec.core.compiler.compat.P2DeclarationCompatibilityContractTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.005
+    },
+    {
+      "suite": "dec.core.compiler.contract.P2CompilerContextConstructibilityContractTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.001
+    },
+    {
+      "suite": "dec.core.compiler.contract.P2RevisionDependencyDagContractTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.003
+    },
+    {
+      "suite": "dec.core.compiler.diagnostic.P2DiagnosticDeterminismTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.001
+    },
+    {
+      "suite": "dec.core.compiler.model.access.ModelAccessPolicyContractTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.005
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessFailureTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.018
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessI002IndependentReviewTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.004
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessI003IndependentReviewTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.001
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessIndependentReviewTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.012
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessReworkBoundaryTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.036
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessReworkResourceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.021
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessSelectorTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.009
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.ModelAccessTypedKeyLexicalReworkTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.008
+    },
+    {
+      "suite": "dec.core.compiler.modelaccess.P2ModelAccessStaticAuthorizationTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.007
+    },
+    {
+      "suite": "dec.core.context.runtime.P2ContextNeutralValueExactTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.014
+    },
+    {
+      "suite": "dec.core.context.runtime.P2MaterializationAggregateExactTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.01
+    },
+    {
+      "suite": "dec.core.context.runtime.P2PolicyPublicationAggregateExactTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.011
+    },
+    {
+      "suite": "dec.core.context.runtime.ProtectedAccessContextApiContractTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.013
+    },
+    {
+      "suite": "dec.core.model.runtime.ProtectedAccessModelApiContractTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.12
+    },
+    {
+      "suite": "dec.core.model.runtime.ProtectedWriteTransactionIntegrationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.064
+    },
+    {
+      "suite": "dec.core.starter.access.ProtectedAccessConcurrencyTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.012
+    },
+    {
+      "suite": "dec.core.starter.access.ProtectedAccessProductionCompositionTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.139
+    },
+    {
+      "suite": "dec.core.starter.access.ProtectedAccessStarterApiContractTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.003
+    },
+    {
+      "suite": "dec.core.starter.access.ProtectedRuntimeModelAdapterIntegrationTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.012
+    },
+    {
+      "suite": "dec.core.starter.access.ProtectedWriteIntentResolutionTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.013
+    },
+    {
+      "suite": "dec.core.starter.architecture.ProtectedAccessDependencyDirectionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.002
+    },
+    {
+      "suite": "dec.demo.p2.P2RealFixtureIntegrationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 0.235
+    }
+  ],
+  "interpretation": "Focused P2/protected-access regression evidence; all selected tests passed. Suite timing is CI test-runtime evidence, not a production latency benchmark."
+}

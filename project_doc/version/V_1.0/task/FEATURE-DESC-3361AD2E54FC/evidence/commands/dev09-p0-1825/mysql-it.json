@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify",
+  "executed_at": "2026-08-15T02:08:37.6320106+00:00",
+  "revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "exit_code": 0,
+  "output_ref": "evidence/commands/dev09-p0-1825/mysql-it.out",
+  "output_digest": "efb5d2a9d1ce15cf029631a9d1d4cd2390249db473be8d3c15d01b453a359a45"
+}
