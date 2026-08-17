@@ -17,32 +17,41 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Verify carrier chunks, reassemble, and verify exact checkpoint bundle
+      - name: Verify carrier parts, reassemble, and verify exact checkpoint bundle
         shell: bash
         run: |
           set -euo pipefail
-          for f in .github/p2-carrier/chunk_0{0,1,2,3,4}.b64; do
-            printf '%s chars=' "$f"
-            wc -c < "$f"
-            sha256sum "$f"
-          done
-          test "$(wc -c < .github/p2-carrier/chunk_00.b64)" -eq 16000
-          test "$(sha256sum .github/p2-carrier/chunk_00.b64 | awk '{print $1}')" = "c9552dd9cfe14e7fe88651e3551a11fd660c71abd8c450a91fc237d25230c013"
-          test "$(wc -c < .github/p2-carrier/chunk_01.b64)" -eq 16000
-          test "$(sha256sum .github/p2-carrier/chunk_01.b64 | awk '{print $1}')" = "a49ee247229ce0cdc6fddaaf0d2a8116eb4de16424012c2693728c5c59075f97"
-          test "$(wc -c < .github/p2-carrier/chunk_02.b64)" -eq 16000
-          test "$(sha256sum .github/p2-carrier/chunk_02.b64 | awk '{print $1}')" = "e7688a820c145a7f13a886e6b2b52af664c595027f217ad97ca78095adecf7b9"
-          test "$(wc -c < .github/p2-carrier/chunk_03.b64)" -eq 16000
-          test "$(sha256sum .github/p2-carrier/chunk_03.b64 | awk '{print $1}')" = "fd112493dfcb59eaf9c09aa053e5140541c4065ad9785fd651fc3ee70d69a8ba"
-          test "$(wc -c < .github/p2-carrier/chunk_04.b64)" -eq 856
-          test "$(sha256sum .github/p2-carrier/chunk_04.b64 | awk '{print $1}')" = "20c518af304ac29b786bbd02538d6064e89782ab4c218f34ad577edcfd646e41"
+          check_part() {
+            local file="$1" expected_len="$2" expected_sha="$3"
+            test "$(wc -c < "$file")" -eq "$expected_len"
+            test "$(sha256sum "$file" | awk '{print $1}')" = "$expected_sha"
+          }
+          check_part .github/p2-carrier/chunk_00.b64 16000 c9552dd9cfe14e7fe88651e3551a11fd660c71abd8c450a91fc237d25230c013
+          check_part .github/p2-carrier/chunk_01_0.b64 4000 cba8cd1de1e9ad02d62ddaa9b23c8288a37429456f3e1c6e68d18a1f734423df
+          check_part .github/p2-carrier/chunk_01_1.b64 4000 c8c7d3c2b04843ba7aa31654e701a343bbfc637df29d2c5c0123d6ca426e2312
+          check_part .github/p2-carrier/chunk_01_2.b64 4000 658cd14720ea17bc71765e34a7273f7683668deb2c806ec37c3b71b49c292fd9
+          check_part .github/p2-carrier/chunk_01_3.b64 4000 a9ce62c8d9344ecb60dd1eced37793bf30b325e0aad894276b7da6573dab93fb
+          check_part .github/p2-carrier/chunk_02_0.b64 4000 a5a9697f73cf14c8f1fad8b690674da3a19812806d645d3973d92501dca074b2
+          check_part .github/p2-carrier/chunk_02_1.b64 4000 8cdeedccbd1ac07e49b58adbb9f46404b7349c5b11c0e6921bd29af2855b376d
+          check_part .github/p2-carrier/chunk_02_2.b64 4000 f604504f7a5a9f681f77fd5ae741e8fd9a33407e2be156103098c752a0c9a2aa
+          check_part .github/p2-carrier/chunk_02_3.b64 4000 826a48d0dc026d0c03ef3366ff70090f3b47e75a47680c8b3eef110588e5db94
+          check_part .github/p2-carrier/chunk_03.b64 16000 fd112493dfcb59eaf9c09aa053e5140541c4065ad9785fd651fc3ee70d69a8ba
+          check_part .github/p2-carrier/chunk_04.b64 856 20c518af304ac29b786bbd02538d6064e89782ab4c218f34ad577edcfd646e41
+
           cat \
             .github/p2-carrier/chunk_00.b64 \
-            .github/p2-carrier/chunk_01.b64 \
-            .github/p2-carrier/chunk_02.b64 \
+            .github/p2-carrier/chunk_01_0.b64 \
+            .github/p2-carrier/chunk_01_1.b64 \
+            .github/p2-carrier/chunk_01_2.b64 \
+            .github/p2-carrier/chunk_01_3.b64 \
+            .github/p2-carrier/chunk_02_0.b64 \
+            .github/p2-carrier/chunk_02_1.b64 \
+            .github/p2-carrier/chunk_02_2.b64 \
+            .github/p2-carrier/chunk_02_3.b64 \
             .github/p2-carrier/chunk_03.b64 \
             .github/p2-carrier/chunk_04.b64 \
             | base64 -d > /tmp/p2-testdesign-checkpoints.bundle
+
           test "$(wc -c < /tmp/p2-testdesign-checkpoints.bundle)" -eq 48640
           git bundle verify /tmp/p2-testdesign-checkpoints.bundle
           git fetch /tmp/p2-testdesign-checkpoints.bundle \
