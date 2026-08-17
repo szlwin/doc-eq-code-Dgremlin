@@ -1,0 +1,103 @@
+name: P2 Security RED Proof
+
+on:
+  push:
+    branches:
+      - agent/p2-security-red-20260817
+
+permissions:
+  contents: read
+
+jobs:
+  prove-red:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact RED revision
+        uses: actions/checkout@v6
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Verify Maven Wrapper
+        run: ./mvnw --version
+
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+
+      - name: Execute target RED oracles and verify assertion morphology
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dec-core-model/target/surefire-reports dec-core-starter/target/surefire-reports
+          set +e
+          ./mvnw --batch-mode --no-transfer-progress \
+            -pl dec-core-model -am \
+            -Dtest=RuntimeModelAuthorityBoundaryTest \
+            -Dsurefire.failIfNoSpecifiedTests=false test \
+            > /tmp/model-red.log 2>&1
+          model_rc=$?
+          ./mvnw --batch-mode --no-transfer-progress \
+            -pl dec-core-starter -am \
+            -Dtest=ProtectedAccessContextIdentityBoundaryTest \
+            -Dsurefire.failIfNoSpecifiedTests=false test \
+            > /tmp/starter-red.log 2>&1
+          starter_rc=$?
+          set -e
+
+          cat /tmp/model-red.log
+          cat /tmp/starter-red.log
+          test "$model_rc" -ne 0
+          test "$starter_rc" -ne 0
+
+          python3 - <<'PY'
+          import glob
+          import os
+          import sys
+          import xml.etree.ElementTree as ET
+
+          expected = {
+              "RuntimeModelAuthorityBoundaryTest": "dec-core-model/target/surefire-reports",
+              "ProtectedAccessContextIdentityBoundaryTest": "dec-core-starter/target/surefire-reports",
+          }
+          for cls, report_dir in expected.items():
+              files = glob.glob(os.path.join(report_dir, "TEST-*.xml"))
+              matches = []
+              for path in files:
+                  root = ET.parse(path).getroot()
+                  name = root.attrib.get("name", "")
+                  if cls in name:
+                      matches.append((path, root))
+              if len(matches) != 1:
+                  raise SystemExit(f"expected exactly one surefire XML for {cls}, got {len(matches)}")
+              path, root = matches[0]
+              tests = int(root.attrib.get("tests", "0"))
+              failures = int(root.attrib.get("failures", "0"))
+              errors = int(root.attrib.get("errors", "0"))
+              skipped = int(root.attrib.get("skipped", "0"))
+              if tests != 1 or failures != 1 or errors != 0 or skipped != 0:
+                  raise SystemExit(
+                      f"invalid RED morphology for {cls}: tests={tests}, failures={failures}, errors={errors}, skipped={skipped}"
+                  )
+              print(f"VALID_RED {cls} tests={tests} failures={failures} errors={errors} skipped={skipped} report={path}")
+          PY
+
+          cp /tmp/model-red.log model-red.log
+          cp /tmp/starter-red.log starter-red.log
+
+      - name: Upload immutable RED reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-security-red-proof
+          path: |
+            model-red.log
+            starter-red.log
+            dec-core-model/target/surefire-reports/**
+            dec-core-starter/target/surefire-reports/**
+          if-no-files-found: error
+          retention-days: 14
