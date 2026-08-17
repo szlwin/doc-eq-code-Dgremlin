@@ -586,6 +586,128 @@
       "verified_by_agent": "TestDesignAgent",
       "verified_at": "2026-08-17T03:44:00+00:00",
       "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-ARCHITECTUREREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "ArchitectureReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-17T18:19:39+00:00",
+      "reason": "PASSED: ArchitectureReviewAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-REQUIREMENTREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "RequirementReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-17T18:19:47+00:00",
+      "reason": "PASSED: RequirementReviewAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-TESTDESIGNAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "TestDesignAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342",
+        "EVD-000348"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-17T18:20:27+00:00",
+      "reason": "PASSED: TestDesignAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-IMPACTANALYSISREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "ImpactAnalysisReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-17T18:20:35+00:00",
+      "reason": "PASSED: ImpactAnalysisReviewAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-CROSSMODULEINTEGRATIONREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "CrossModuleIntegrationReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342",
+        "EVD-000349"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-17T18:21:51+00:00",
+      "reason": "PASSED: CrossModuleIntegrationReviewAgent confirms R33 module/flow/API ownership and no cross-module P0/P1."
     }
   ]
 }
