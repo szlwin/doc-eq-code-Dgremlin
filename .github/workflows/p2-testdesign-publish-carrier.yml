@@ -17,10 +17,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reassemble and verify exact checkpoint bundle
+      - name: Verify carrier chunks, reassemble, and verify exact checkpoint bundle
         shell: bash
         run: |
           set -euo pipefail
+          for f in .github/p2-carrier/chunk_0{0,1,2,3,4}.b64; do
+            printf '%s chars=' "$f"
+            wc -c < "$f"
+            sha256sum "$f"
+          done
+          test "$(wc -c < .github/p2-carrier/chunk_00.b64)" -eq 16000
+          test "$(sha256sum .github/p2-carrier/chunk_00.b64 | awk '{print $1}')" = "c9552dd9cfe14e7fe88651e3551a11fd660c71abd8c450a91fc237d25230c013"
+          test "$(wc -c < .github/p2-carrier/chunk_01.b64)" -eq 16000
+          test "$(sha256sum .github/p2-carrier/chunk_01.b64 | awk '{print $1}')" = "a49ee247229ce0cdc6fddaaf0d2a8116eb4de16424012c2693728c5c59075f97"
+          test "$(wc -c < .github/p2-carrier/chunk_02.b64)" -eq 16000
+          test "$(sha256sum .github/p2-carrier/chunk_02.b64 | awk '{print $1}')" = "e7688a820c145a7f13a886e6b2b52af664c595027f217ad97ca78095adecf7b9"
+          test "$(wc -c < .github/p2-carrier/chunk_03.b64)" -eq 16000
+          test "$(sha256sum .github/p2-carrier/chunk_03.b64 | awk '{print $1}')" = "fd112493dfcb59eaf9c09aa053e5140541c4065ad9785fd651fc3ee70d69a8ba"
+          test "$(wc -c < .github/p2-carrier/chunk_04.b64)" -eq 856
+          test "$(sha256sum .github/p2-carrier/chunk_04.b64 | awk '{print $1}')" = "20c518af304ac29b786bbd02538d6064e89782ab4c218f34ad577edcfd646e41"
           cat \
             .github/p2-carrier/chunk_00.b64 \
             .github/p2-carrier/chunk_01.b64 \
@@ -28,6 +43,7 @@ jobs:
             .github/p2-carrier/chunk_03.b64 \
             .github/p2-carrier/chunk_04.b64 \
             | base64 -d > /tmp/p2-testdesign-checkpoints.bundle
+          test "$(wc -c < /tmp/p2-testdesign-checkpoints.bundle)" -eq 48640
           git bundle verify /tmp/p2-testdesign-checkpoints.bundle
           git fetch /tmp/p2-testdesign-checkpoints.bundle \
             refs/heads/agent/p2-remediation-testdesign:refs/remotes/carrier/p2
