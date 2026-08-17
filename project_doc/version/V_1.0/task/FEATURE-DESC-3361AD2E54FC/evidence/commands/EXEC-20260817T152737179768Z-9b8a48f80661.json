@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 -c \"from pathlib import Path; a=Path('dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java').read_text(); b=Path('dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java').read_text(); bad=('public RuntimeModelEffectProvider effectProvider()' in a and 'public Optional<RuntimeModelOperationPort> operationPort()' in b); print('RED:P2-CR-001 raw MODEL effect seam is publicly reachable' if bad else 'GREEN:P2-CR-001 raw seam closed'); raise SystemExit(1 if bad else 0)\"",
+  "exit_code": 1,
+  "executed_at": "2026-08-17T15:27:36+00:00",
+  "revision": "TESTDESIGN-P2-R34",
+  "output_digest": "820afedab7ab9d7041930536c3d1b81b31371f9f9a26be05f5d46ee6dcce7727",
+  "metadata": {
+    "cwd": "/mnt/data/p2-remediation-work",
+    "phase": "test_design",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "RED:P2-CR-001 raw MODEL effect seam is publicly reachable\n"
+}
