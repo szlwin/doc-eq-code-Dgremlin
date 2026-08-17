@@ -427,6 +427,60 @@
 | 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I008-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I008-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000350"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"DESIGN-P2-R33","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-008","iteration_no":8,"modified_files_summary":["project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r10_single_runtime_context_security_remediation.md"],"next_action":"Publish TESTDESIGN-P2-R37 and register Requirement/TestEvidence reviews.","next_agent":"ProjectManagerAgent","output_revision":"TESTDESIGN-P2-R37","phase":"test_design","record_id":"WR-20260817-182455-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED","render_digest":"b16640f3bf2c07d97db8417f4477c47b2e6ea70c5a083a3fa65515c669b997d2","schema_version":4,"scope":"形成 P2 raw-authority remediation TestDesign 与 single-runtime lifecycle 验证","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"TESTDESIGN-P2-R37 freezes four genuine P0 REDs, retires superseded cross-context cases, and adds single-context/no-hot-reload/restart verification while retaining R36 RED→GREEN integrity.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION","task_type":"test_design","timestamp":"2026-08-17T18:24:55+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260817-182455-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-17T18:24:55+00:00 |
+| 执行 Agent | TestDesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 形成 P2 raw-authority remediation TestDesign 与 single-runtime lifecycle 验证 |
+| 阶段 | test_design |
+| 任务类型 | test_design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | TESTDESIGN-P2-R37 freezes four genuine P0 REDs, retires superseded cross-context cases, and adds single-context/no-hot-reload/restart verification while retaining R36 RED→GREEN integrity. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I008-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-008 / 8 |
+| 输入 Revision | DESIGN-P2-R33 |
+| 输出 Revision | TESTDESIGN-P2-R37 |
+| StageOutcome | 无 |
+| Evidence | EVD-000350 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish TESTDESIGN-P2-R37 and register Requirement/TestEvidence reviews. |
+
+### 变更摘要
+
+- TESTDESIGN-P2-R37 freezes four genuine P0 REDs, retires superseded cross-context cases, and adds single-context/no-hot-reload/restart verification while retaining R36 RED→GREEN integrity.
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r10_single_runtime_context_security_remediation.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
