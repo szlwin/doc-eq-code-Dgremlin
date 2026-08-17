@@ -65,9 +65,20 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
       "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-002",
@@ -128,9 +139,20 @@
       "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-003",
@@ -189,9 +211,20 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-004",
@@ -258,9 +291,20 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/modelaccess/P2ModelAccessStaticAuthorizationTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-005",
@@ -327,9 +371,20 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/modelaccess/P2ModelAccessStaticAuthorizationTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-006",
@@ -391,9 +446,20 @@
       "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java",
       "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-007",
@@ -468,9 +534,20 @@
       "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java",
       "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-008",
@@ -532,9 +609,20 @@
       "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-009",
@@ -595,9 +683,20 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java",
       "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   },
   {
     "id": "TR-P2-SYSTEM-RULEVIEW-010",
@@ -652,9 +751,20 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java",
       "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
     ],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
-    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger."
+    "verification_evidence_ids": [
+      "EVD-000305",
+      "EVD-000306",
+      "EVD-000307",
+      "EVD-000308",
+      "EVD-000309",
+      "EVD-000310",
+      "EVD-000311"
+    ],
+    "verified_by_agents": [
+      "TestAgent",
+      "TestEvidenceReviewAgent"
+    ],
+    "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED."
   }
 ]
 ```

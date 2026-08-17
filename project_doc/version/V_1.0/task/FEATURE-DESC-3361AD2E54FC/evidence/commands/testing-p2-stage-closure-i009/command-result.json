@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "P0 #1832 Testing freshness: core-verify attempt 2 + mysql-it attempt 3",
+  "exit_code": 0,
+  "executed_at": "2026-08-17T06:48:55+00:00",
+  "revision": "TESTING-P2-STAGE-CLOSURE-R01@7925ec4f218c",
+  "result": "PASSED",
+  "commands": [
+    {
+      "command": "./mvnw --batch-mode --no-transfer-progress clean verify",
+      "fresh_attempt": 2,
+      "job_id": 95306242177,
+      "exit_code": 0,
+      "result": "PASSED",
+      "artifact_id": 9279010659,
+      "artifact_sha256": "00d2f7275198a857ea9c86125de51a89a94bf945f676fa3d1419df81c82f9514"
+    },
+    {
+      "command": "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify",
+      "fresh_attempt": 3,
+      "job_id": 95306689166,
+      "exit_code": 0,
+      "result": "PASSED",
+      "artifact_id": 9279084486,
+      "artifact_sha256": "d61f539251dcf829eb6a25af3fa70498a8075eaabbf7a6c0aab742fa1ae9f846"
+    }
+  ],
+  "metrics": {
+    "result": "PASSED",
+    "input_code_review_revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+    "tested_head": "7925ec4f218c167240fc12571336244e1f7849ad",
+    "run_id": 31941036385,
+    "core_verify": {
+      "command": "./mvnw --batch-mode --no-transfer-progress clean verify",
+      "fresh_attempt": 2,
+      "job_id": 95306242177,
+      "exit_code": 0,
+      "result": "PASSED",
+      "artifact_id": 9279010659,
+      "artifact_sha256": "00d2f7275198a857ea9c86125de51a89a94bf945f676fa3d1419df81c82f9514"
+    },
+    "mysql_it": {
+      "command": "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify",
+      "fresh_attempt": 3,
+      "job_id": 95306689166,
+      "exit_code": 0,
+      "result": "PASSED",
+      "artifact_id": 9279084486,
+      "artifact_sha256": "d61f539251dcf829eb6a25af3fa70498a8075eaabbf7a6c0aab742fa1ae9f846"
+    },
+    "p2_focused_tests": {
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "mysql_tests": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "database_final_state": {
+      "execution_markers": 3,
+      "order_count": 1,
+      "order_detail_count": 1,
+      "pay_count": 1,
+      "pay_detail_count": 1,
+      "product_count": 1,
+      "user_count": 1
+    },
+    "diagnostic_failure_gate": {
+      "suite": "dec.core.context.gate.P0IntentionalFailureTest",
+      "report": "TEST-dec.core.context.gate.P0IntentionalFailureTest.xml",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "expected_failure": true,
+      "diagnostic": "P0 failure-gate proof"
+    }
+  },
+  "claim_boundary": "Testing I009 verifies the frozen DEV09 code through code-equivalent P0 head 7925ec4f; later PR changes are project_doc/process/provenance only and are not extrapolated as new production-code behavior.",
+  "output": "{\"core_verify\":{\"artifact_id\":9279010659,\"artifact_sha256\":\"00d2f7275198a857ea9c86125de51a89a94bf945f676fa3d1419df81c82f9514\",\"command\":\"./mvnw --batch-mode --no-transfer-progress clean verify\",\"exit_code\":0,\"fresh_attempt\":2,\"job_id\":95306242177,\"result\":\"PASSED\"},\"database_final_state\":{\"execution_markers\":3,\"order_count\":1,\"order_detail_count\":1,\"pay_count\":1,\"pay_detail_count\":1,\"product_count\":1,\"user_count\":1},\"diagnostic_failure_gate\":{\"diagnostic\":\"P0 failure-gate proof\",\"errors\":0,\"expected_failure\":true,\"failures\":1,\"report\":\"TEST-dec.core.context.gate.P0IntentionalFailureTest.xml\",\"skipped\":0,\"suite\":\"dec.core.context.gate.P0IntentionalFailureTest\",\"tests\":1},\"input_code_review_revision\":\"DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba\",\"mysql_it\":{\"artifact_id\":9279084486,\"artifact_sha256\":\"d61f539251dcf829eb6a25af3fa70498a8075eaabbf7a6c0aab742fa1ae9f846\",\"command\":\"./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify\",\"exit_code\":0,\"fresh_attempt\":3,\"job_id\":95306689166,\"result\":\"PASSED\"},\"mysql_tests\":{\"errors\":0,\"failures\":0,\"skipped\":0,\"tests\":4},\"p2_focused_tests\":{\"errors\":0,\"failures\":0,\"skipped\":0,\"tests\":50},\"result\":\"PASSED\",\"run_id\":31941036385,\"tested_head\":\"7925ec4f218c167240fc12571336244e1f7849ad\"}",
+  "output_digest": "66b1f7b9afa26e9e7be208423dcb00fdc62b6fc40f06a5387c052bafe0584d71"
+}
