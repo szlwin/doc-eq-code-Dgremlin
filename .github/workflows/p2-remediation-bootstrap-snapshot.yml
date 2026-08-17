@@ -1,0 +1,40 @@
+name: P2 Remediation Bootstrap Snapshot
+
+on:
+  push:
+    branches:
+      - agent/p2-remediation-bootstrap-20260817
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify source head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --short
+          git rev-parse HEAD
+          git rev-parse HEAD^
+      - name: Package checkout including git metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -czf /tmp/p2-remediation-bootstrap-repo.tgz .
+          sha256sum /tmp/p2-remediation-bootstrap-repo.tgz | tee /tmp/p2-remediation-bootstrap-repo.tgz.sha256
+      - name: Upload checkout snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: p2-remediation-bootstrap-repo
+          path: |
+            /tmp/p2-remediation-bootstrap-repo.tgz
+            /tmp/p2-remediation-bootstrap-repo.tgz.sha256
+          if-no-files-found: error
+          retention-days: 1
