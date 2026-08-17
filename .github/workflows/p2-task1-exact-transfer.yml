@@ -1,0 +1,41 @@
+name: P2 Task 1 exact checkpoint transfer
+
+on:
+  push:
+    branches:
+      - automation/p2-task1-exact-transfer-20260818
+    paths:
+      - .github/workflows/p2-task1-exact-transfer.yml
+
+permissions:
+  contents: write
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Publish exact common-develop checkpoints to PR36 branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euxo pipefail
+          EXPECTED_PARENT="bcf3a029517c239aeac1ccfcb3e7f1b5d7ae0c7d"
+          TARGET_SHA="8a64b4bee3ffececcaaab67200e24131de4b0319"
+          TARGET_BRANCH="feature/p2-design-testdesign-20260808"
+          EXPECTED_BUNDLE_SHA256="1f80649875111db30249a905b1318e3e09e2cbea316b2d59bc018dbde6e32641"
+          CURRENT_SHA="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
+          test "$CURRENT_SHA" = "$EXPECTED_PARENT"
+          cat .p2-transfer/task1/chunk-*.b64 | tr -cd 'A-Za-z0-9+/=' > /tmp/p2-task1.b64
+          test "$(wc -c < /tmp/p2-task1.b64)" -eq 22984
+          base64 -d /tmp/p2-task1.b64 > /tmp/p2-task1.bundle
+          test "$(wc -c < /tmp/p2-task1.bundle)" -eq 17237
+          test "$(sha256sum /tmp/p2-task1.bundle | awk '{print $1}')" = "$EXPECTED_BUNDLE_SHA256"
+          git bundle verify /tmp/p2-task1.bundle
+          git fetch /tmp/p2-task1.bundle refs/heads/common-develop-transfer-p2-task1
+          test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "${TARGET_SHA}^")" = "$EXPECTED_PARENT"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$TARGET_SHA:refs/heads/${TARGET_BRANCH}"
