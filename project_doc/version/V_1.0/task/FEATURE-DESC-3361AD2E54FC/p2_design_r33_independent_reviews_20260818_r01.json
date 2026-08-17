@@ -1,0 +1,94 @@
+{
+  "artifactRevision": "DESIGN-P2-R33",
+  "decision": "DEC-P2-SINGLE-RUNTIME-CONTEXT-001",
+  "reviewedAt": "2026-08-17T17:24:00Z",
+  "canonicalRegistration": "PENDING_SAFE_APPEND",
+  "reviews": [
+    {
+      "reviewId": "CAND-REV-P2-R33-ARCH-001",
+      "reviewerAgent": "ArchitectureReviewAgent",
+      "conclusion": "PASSED",
+      "p0": 0,
+      "p1": 0,
+      "criteria": {
+        "RC-ARCH-001": "PASSED",
+        "RC-ARCH-002": "PASSED",
+        "RC-ARCH-003": "PASSED",
+        "RC-ARCH-004": "PASSED",
+        "RC-ARCH-005": "PASSED",
+        "RC-ARCH-006": "PASSED",
+        "RC-DES-002": "PASSED",
+        "RC-DES-005": "PASSED",
+        "RC-DES-007": "PASSED",
+        "RC-DES-008": "PASSED",
+        "RC-BFLOW-003": "PASSED",
+        "RC-BFLOW-004": "PASSED",
+        "RC-ARCH-007": "PASSED"
+      },
+      "evidence": [
+        "DESIGN-P2-R33#R33-1: runtime generation binds one EngineContext once; restart-only update.",
+        "DESIGN-P2-R33#R33-3: P2-CR-001 Guard/raw-authority closure remains blocking.",
+        "DESIGN-P2-R33#R33-4: RuntimeContextBinding and cross-context rejection are removed as unsupported-runtime YAGNI.",
+        "DESIGN-P2-R33#R33-5: compiler multi-candidate capability is separated from active runtime consumption.",
+        "dec-core-starter/ProtectedAccessRuntimeFactory: instance captures one EngineContext in a final field.",
+        "dec-core-compiler/CompiledModelSetBuilder: each compilation may create a new EngineContext candidate."
+      ],
+      "notes": "No architectural P0/P1 remains in the candidate. The single-context decision narrows runtime support without weakening Guard authority."
+    },
+    {
+      "reviewId": "CAND-REV-P2-R33-REQ-001",
+      "reviewerAgent": "RequirementReviewAgent",
+      "conclusion": "PASSED",
+      "p0": 0,
+      "p1": 0,
+      "criteria": {
+        "RC-REQ-002": "PASSED",
+        "RC-REQ-003": "PASSED",
+        "RC-REQ-004": "PASSED",
+        "RC-REQ-005": "PASSED",
+        "RC-DES-001": "PASSED",
+        "RC-BFLOW-002": "PASSED",
+        "RC-BM-001": "PASSED",
+        "RC-BM-003": "PASSED",
+        "RC-BM-004": "PASSED",
+        "RC-BM-005": "PASSED",
+        "RC-BM-006": "PASSED",
+        "RC-BFLOW-004": "PASSED",
+        "RC-BM-008": "PASSED"
+      },
+      "evidence": [
+        "Requirement Overlay R04 explicitly preserves atomic publication, old Context preservation and Context isolation but does not require live runtime replacement.",
+        "DESIGN-P2-R33#R33-2 scopes publication semantics to Compiler/distinct runtime generations while retaining R04/BM-R20/FLOW-R11.",
+        "DEC-P2-SINGLE-RUNTIME-CONTEXT-001 is explicit user architecture authority.",
+        "READ/WRITE-only, AC-007 production consumers, default DENY and Guard authority remain unchanged."
+      ],
+      "notes": "Requirement/BM/Flow do not need semantic revision; Design is the earliest artifact whose multi-context runtime assumption changes."
+    },
+    {
+      "reviewId": "CAND-REV-P2-R33-TEST-001",
+      "reviewerAgent": "TestDesignAgent",
+      "conclusion": "PASSED",
+      "p0": 0,
+      "p1": 0,
+      "criteriaSummary": "All required design:TestDesignAgent criteria PASSED.",
+      "evidence": [
+        "R33 freezes four genuine current-defect RED targets and explicitly forbids fake cross-context GREEN.",
+        "Raw/proofless security seam remains implementation-neutral and supports surface closure or authorized internal primitive.",
+        "Single-runtime lifecycle has observable bind-once/no-hot-reload/restart contracts.",
+        "No private RuntimeContextBinding implementation is forced."
+      ],
+      "notes": "Design is testable without requiring unsupported hot-reload/multi-context behavior."
+    }
+  ],
+  "aggregate": {
+    "conclusion": "PASSED",
+    "p0": 0,
+    "p1": 0,
+    "requiredReviewers": [
+      "ArchitectureReviewAgent",
+      "RequirementReviewAgent",
+      "TestDesignAgent"
+    ],
+    "authorizedNextPhaseAfterCanonicalFinalization": "test_design"
+  }
+}

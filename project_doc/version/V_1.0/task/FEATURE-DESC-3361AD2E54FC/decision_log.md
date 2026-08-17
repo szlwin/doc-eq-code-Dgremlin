@@ -152,6 +152,30 @@
       "development"
     ],
     "supersedes": ""
+  },
+  {
+    "id": "DEC-P2-SINGLE-RUNTIME-CONTEXT-001",
+    "status": "ACTIVE",
+    "category": "ARCHITECTURE",
+    "question": "P2 production runtime 是否支持同一 runtime lifecycle 内的 EngineContext 热替换/多 Context 共存，并因此要求逐 Scope/Handle 的 exact RuntimeContextBinding？",
+    "options_considered": [
+      "同一 runtime 支持多 EngineContext / hot reload，并保留 exact RuntimeContextBinding 与 cross-context provenance 拒绝",
+      "一个 runtime lifecycle 只绑定一个 EngineContext；配置更新必须重启；不支持 hot reload"
+    ],
+    "decision": "采用 single-runtime-context。每个 production runtime lifecycle/generation 只在 bootstrap 时绑定一次 compiler-published EngineContext，并在该 lifecycle 内保持不可替换；配置变化必须先终止旧 runtime（关闭旧 Root/Scope/Frame/Handle），再启动新的 runtime generation 并绑定新 EngineContext；不支持 live context swap、runtime republish 或 hot reload。Compiler、测试和离线编译仍可在不同 compilation/session 或不同 runtime generation 中构造多个 candidate EngineContext；该能力不等于同一 active runtime 支持多 Context。P2 不再要求 RuntimeContextBinding，也不再把 same-plan cross-context mixing 作为受支持运行态的阻断性验收场景。",
+    "rationale": "用户于 2026-08-18 明确确认真实运行模型为单 EngineContext/runtime lifecycle。该约束消除了 DESIGN-P2-R32 中 P2-CR-002 的运行前提，避免为不支持的 hot-reload/multi-context 场景传播额外 context identity；P2-CR-001 的 Guard 唯一权限 authority 与 raw MODEL bypass closure 完全保留。Requirement Overlay R04 的 atomic publication/old Context preservation/Context isolation 继续适用于 Compiler publication 与不同 runtime generation，不被解释为 live runtime replacement 要求。",
+    "decided_by": "user",
+    "decided_at": "2026-08-18T01:14:00+08:00",
+    "affects": [
+      "design",
+      "test_design",
+      "impact_analysis",
+      "cross_module_integration",
+      "implementation_plan",
+      "tdd",
+      "development"
+    ],
+    "supersedes": ""
   }
 ]
 ```
@@ -165,6 +189,7 @@
 - Direct Bridge / AC-007 Option B / READ-WRITE only：ACTIVE。
 - MODEL loading：direct `RuntimeModelLoadRequest` ACTIVE；opaque production invocation credential = NOT_ADOPTED / DEFERRED；MODEL production lifecycle = trusted P2 boundary；request != permission；Guard/ModelAccessRuleKey = sole READ/WRITE authority。
 - Legacy post-copy rollback exclusion：ACTIVE；不要求恢复已 copy 后再遇到 later legacy commit failure 的 POJO/Map；pre-effect fail-closed 与正常成功 originData write-back 继续要求。
-- Exact independent Review `54545677040fdb2fe3539423fd6ef5a0a56d6a9a`：Requirement+R04 / BM-R20 / FLOW-R11 / P2-IMPACT-R29 / DESIGN-P2-R30 / TESTDESIGN-P2-R31 = SEMANTIC PASS；formal closure 仍 governance/risk/machine blocked。
-- RC9 exact-revision local risk scan executed + validator PASSED；local Evidence 未注册仓库 namespace，canonical `risk_detection.json` 仍 `NOT_SCANNED`。
-- Implementation Plan / TDD / Development remain BLOCKED。
+- Single runtime Context：`DEC-P2-SINGLE-RUNTIME-CONTEXT-001` ACTIVE；每个 runtime generation 只绑定一次 EngineContext，配置更新必须 restart；live swap/hot reload = NOT_SUPPORTED；Compiler 可跨 session/generation 构造多个 candidate。
+- DESIGN-P2-R32 / TESTDESIGN-P2-R36 中依赖 multi-context runtime 前提的 context-binding/cross-context 条款被当前决策 supersede，必须通过新的 Design/TestDesign candidate 回修；历史内容保持可审计。
+- Canonical `task_events.jsonl` 仍停在 `TE-000094 -> DESIGN-P2-R32 PASSED / TESTDESIGN-P2-R34 PASSED`；新的 reopen/finalize 必须由 common-develop append-only writer/reducer 安全写入，禁止手改 ledger。
+- Implementation Plan / TDD / Development remain BLOCKED until corrected Design/TestDesign are canonically finalized。
