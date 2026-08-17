@@ -38,7 +38,7 @@ jobs:
           test "$remote_head" = "$EXPECTED_PARENT"
           git fetch --no-tags origin "$EXPECTED_PARENT"
 
-          cat ../.common-develop-publish/chunk-*.b64 | tr -cd 'A-Za-z0-9+/=' > /tmp/pr36.b64
+          cat ../.common-develop-publish/chunk-[0-9][0-9][0-9].b64 | tr -cd 'A-Za-z0-9+/=' > /tmp/pr36.b64
           test "$(wc -c < /tmp/pr36.b64)" -eq "$EXPECTED_B64_SIZE"
           base64 -d /tmp/pr36.b64 > /tmp/pr36.bundle
           test "$(wc -c < /tmp/pr36.bundle)" -eq "$EXPECTED_BUNDLE_SIZE"
