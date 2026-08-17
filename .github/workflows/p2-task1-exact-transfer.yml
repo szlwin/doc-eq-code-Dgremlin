@@ -24,6 +24,7 @@ jobs:
         run: |
           set -euxo pipefail
           EXPECTED_PARENT="bcf3a029517c239aeac1ccfcb3e7f1b5d7ae0c7d"
+          DESIGN_SHA="405442d4e7d2ec88157c40734d5232afd32a46a5"
           TARGET_SHA="8a64b4bee3ffececcaaab67200e24131de4b0319"
           TARGET_BRANCH="feature/p2-design-testdesign-20260808"
           EXPECTED_BUNDLE_SHA256="1f80649875111db30249a905b1318e3e09e2cbea316b2d59bc018dbde6e32641"
@@ -37,5 +38,6 @@ jobs:
           git bundle verify /tmp/p2-task1.bundle
           git fetch /tmp/p2-task1.bundle refs/heads/common-develop-transfer-p2-task1
           test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
-          test "$(git rev-parse "${TARGET_SHA}^")" = "$EXPECTED_PARENT"
+          test "$(git rev-parse "${TARGET_SHA}^")" = "$DESIGN_SHA"
+          test "$(git rev-parse "${DESIGN_SHA}^")" = "$EXPECTED_PARENT"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$TARGET_SHA:refs/heads/${TARGET_BRANCH}"
