@@ -1,0 +1,716 @@
+schemaVersion: 1
+artifact: dependency_impact
+scope:
+  project: doc-eq-code
+  version: V_1.0
+  module: COMPILER
+  targetIds:
+    - P1-COMPILER-F01
+    - FEATURE-DESC-3361AD2E54FC
+revision: BM-R07@7d7bf504ca9d
+baseRevision: 'BM-R06@6a0bce4fa0ae'
+nodes:
+  - id: P1-COMPILER-F01
+    type: FEATURE
+    name: Unified mix compiler
+    module: COMPILER
+    status: ACTIVE
+    refs:
+      - version/V_1.0/doc/P1-COMPILER-F01/requirement.md#P1-COMPILER-F01
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-002
+      - TR-P1-COMPILER-003
+      - TR-P1-COMPILER-004
+      - TR-P1-COMPILER-005
+      - TR-P1-COMPILER-006
+      - TR-P1-COMPILER-007
+      - TR-P1-COMPILER-008
+      - TR-P1-COMPILER-009
+  - id: DEC-CORE-COMPILER
+    type: MODULE
+    name: Compiler core
+    module: COMPILER
+    status: PROPOSED
+    refs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md#arc-module-boundary
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-005
+  - id: DEC-CORE-CONTEXT
+    type: MODULE
+    name: Immutable context model
+    module: CONTEXT
+    status: ACTIVE
+    refs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#design-compiled-model-set
+    traceIds:
+      - TR-P1-COMPILER-005
+      - TR-P1-COMPILER-006
+  - id: DEC-DOCUMENT-FRONTENDS
+    type: MODULE
+    name: XML and YAML frontends
+    module: FRONTEND
+    status: ACTIVE
+    refs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md#api-source-frontend
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-002
+  - id: DEC-CORE-STARTER
+    type: MODULE
+    name: Compiler assembly
+    module: STARTER
+    status: ACTIVE
+    refs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md#arc-compile-flow
+    traceIds:
+      - TR-P1-COMPILER-005
+  - id: DEC-DEMO
+    type: MODULE
+    name: Mix contract fixtures
+    module: DEMO
+    status: ACTIVE
+    refs:
+      - dec-demo/src/test/java/dec/demo/contract/MixContractTest.java
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-008
+      - TR-P1-COMPILER-009
+  - id: DEC-EXPAND-DECLARATION
+    type: MODULE
+    name: Retired declaration expansion
+    module: DECLARATION
+    status: DEPRECATED
+    refs:
+      - version/V_1.0/doc/P1-COMPILER-F01/requirement.md#AC-P1-COMPILER-007
+    traceIds:
+      - TR-P1-COMPILER-007
+  - id: FEATURE-DESC-3361AD2E54FC
+    type: FEATURE
+    name: P2 System and RuleView ownership
+    module: COMPILER
+    status: ACTIVE
+    refs:
+      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#P2-SYSTEM-RULEVIEW-F01
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+      - TR-P2-SYSTEM-RULEVIEW-008
+      - TR-P2-SYSTEM-RULEVIEW-009
+      - TR-P2-SYSTEM-RULEVIEW-010
+  - id: DEC-COMPILER-DOC-LEGACY
+    type: MODULE
+    name: Legacy compiler document identity DEC_COMPILER
+    module: COMPILER
+    status: SUPERSEDED
+    refs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-010
+relationships:
+  - id: REL-P1-COMPILER-IMPLEMENTS
+    from: P1-COMPILER-F01
+    to: DEC-CORE-COMPILER
+    type: IMPLEMENTED_BY
+    direction: DIRECTED
+    rationale: Compiler owns the session, deterministic pipeline, and atomic publication coordination.
+    conditions: []
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-003
+      - TR-P1-COMPILER-004
+      - TR-P1-COMPILER-005
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#design-compilation-session
+  - id: REL-COMPILER-CONTEXT
+    from: DEC-CORE-COMPILER
+    to: DEC-CORE-CONTEXT
+    type: DEPENDS_ON
+    direction: DIRECTED
+    rationale: Compiler constructs context-owned immutable publication models; context never depends on compiler.
+    conditions:
+      - compilation has no ERROR
+    traceIds:
+      - TR-P1-COMPILER-004
+      - TR-P1-COMPILER-005
+      - TR-P1-COMPILER-006
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md#arc-module-boundary
+  - id: REL-FRONTENDS-COMPILER
+    from: DEC-DOCUMENT-FRONTENDS
+    to: DEC-CORE-COMPILER
+    type: DEPENDS_ON
+    direction: DIRECTED
+    rationale: Concrete frontend implementations depend on compiler SPI and context value contracts; compiler invokes only injected SPI instances.
+    conditions:
+      - source format is registered
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-002
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md#api-source-frontend
+  - id: REL-STARTER-COMPILER
+    from: DEC-CORE-STARTER
+    to: DEC-CORE-COMPILER
+    type: DEPENDS_ON
+    direction: DIRECTED
+    rationale: Starter assembles providers, frontends, expectedCurrent, and publisher, then invokes compileAndPublish once.
+    conditions: []
+    traceIds:
+      - TR-P1-COMPILER-005
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md#arc-compile-flow
+  - id: REL-DEMO-VERIFIES-COMPILER
+    from: DEC-DEMO
+    to: P1-COMPILER-F01
+    type: VERIFIED_BY
+    direction: DIRECTED
+    rationale: Demo resources are contract fixtures only and are never a production dependency.
+    conditions: []
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-008
+      - TR-P1-COMPILER-009
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md#test-mix-contract
+  - id: REL-P1-RETIRES-DECLARATION
+    from: P1-COMPILER-F01
+    to: DEC-EXPAND-DECLARATION
+    type: SUPERSEDES
+    direction: DIRECTED
+    rationale: The unified compiler removes the temporary declaration module without an adapter or dual runtime.
+    conditions: []
+    traceIds:
+      - TR-P1-COMPILER-007
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#design-declaration-retirement
+  - id: REL-P2-SYSTEM-RULEVIEW-COMPILER
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-CORE-COMPILER
+    type: IMPLEMENTED_BY
+    direction: DIRECTED
+    rationale: Compiler owns System registration, RuleView composite resolution, ModelPath compilation, static access validation and atomic publication.
+    conditions: []
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-008
+      - TR-P2-SYSTEM-RULEVIEW-009
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-SYSTEM-COMPILED-CONFIG
+  - id: REL-P2-SYSTEM-RULEVIEW-CONTEXT
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-CORE-CONTEXT
+    type: AFFECTS
+    direction: DIRECTED
+    rationale: Published Context exposes immutable System- and RuleView-qualified compiled facts and access rules without global mutable lookup.
+    conditions:
+      - candidate compilation has no ERROR
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-008
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM
+  - id: REL-P2-SYSTEM-RULEVIEW-STARTER
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-CORE-STARTER
+    type: AFFECTS
+    direction: DIRECTED
+    rationale: Runtime assembly/callers resolve RuleView using system-ref + rule-ref and honor compiled/runtime access decisions without bare-name fallback.
+    conditions: []
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+    evidenceRefs:
+      - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-003
+  - id: REL-P2-SYSTEM-RULEVIEW-DECLARATION
+    from: FEATURE-DESC-3361AD2E54FC
+    to: DEC-EXPAND-DECLARATION
+    type: AFFECTS
+    direction: DIRECTED
+    rationale: P2 preserves the declaration compatibility boundary and must not create a second runtime authority; final convergence remains P7.
+    conditions: []
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-010
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
+  - id: REL-COMPILER-DOC-LINEAGE
+    from: DEC-CORE-COMPILER
+    to: DEC-COMPILER-DOC-LEGACY
+    type: SUPERSEDES
+    direction: DIRECTED
+    rationale: COMPILER is the canonical current documentation identity for the same logical compiler modeled historically under DEC_COMPILER; this is a documentation/module-code normalization only and must not create a second compiler, registry, context, or runtime authority.
+    conditions: []
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-010
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml
+      - version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml
+impactPolicies:
+  - id: IMP-P1-COMPILER-PUBLICATION
+    sourceRef: P1-COMPILER-F01
+    sourceAction: compileAndPublish
+    targetRefs:
+      - DEC-CORE-CONTEXT
+      - DEC-CORE-STARTER
+    policy: REJECT_OPERATION
+    conditions:
+      - compilation contains ERROR
+      - deadline or cancellation is observed
+      - candidate construction or compare-and-set fails
+    consistency: ATOMIC
+    transactionBoundary: One CompilationSession constructs a complete candidate and performs at most one caller-injected compare-and-set before returning.
+    idempotency: Equal semantic input and versions produce the same semanticDigest; publication conflict is not retried implicitly.
+    failureHandling: Return FailedCompilationResult with a stable Diagnostic and leave the caller-held old EngineContext unchanged.
+    compensation: No data compensation is required because an unpublished candidate is never visible.
+    historyHandling: Previous revisions, reviews, evidence, and already held EngineContext instances remain immutable.
+    traceIds:
+      - TR-P1-COMPILER-005
+    testCaseIds:
+      - CASE-P1-CONTEXT-001
+      - CASE-P1-PUBLISH-ATOMIC-001
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md#api-publication
+  - id: IMP-P1-DECLARATION-RETIREMENT
+    sourceRef: P1-COMPILER-F01
+    sourceAction: retireTemporaryDeclarationModule
+    targetRefs:
+      - DEC-EXPAND-DECLARATION
+    policy: CASCADE_HARD_DELETE
+    conditions:
+      - unified compiler contract is the only implementation path
+    consistency: ATOMIC
+    transactionBoundary: Repository, Reactor, dependencies, services, reflection strings, and artifact inventory are verified as one release gate.
+    idempotency: Repeated residue scans return the same empty result for an unchanged revision.
+    failureHandling: Any residue blocks completion.
+    compensation: Repository recovery uses Git revert; no runtime adapter is retained.
+    historyHandling: Historical source remains available only through Git and immutable Evidence.
+    traceIds:
+      - TR-P1-COMPILER-007
+    testCaseIds:
+      - CASE-P1-RETIREMENT-001
+    evidenceRefs:
+      - version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md#design-declaration-retirement
+  - id: IMP-P2-MODEL-ACCESS-AUTHORIZATION
+    sourceRef: FEATURE-DESC-3361AD2E54FC
+    sourceAction: compileAndAuthorizeModelAccess
+    targetRefs:
+      - DEC-CORE-COMPILER
+      - DEC-CORE-CONTEXT
+      - DEC-CORE-STARTER
+    policy: REJECT_OPERATION
+    conditions:
+      - static access is undeclared or invalid
+      - runtime guard denies a genuinely dynamic access
+    consistency: ATOMIC
+    transactionBoundary: Static denial blocks complete candidate publication; runtime denial occurs before mutation or external side effect.
+    idempotency: The same System/target/path/operation and authority facts yield the same decision; denial has no state mutation to replay.
+    failureHandling: Emit stable source-aware denial and preserve the old EngineContext or current business state.
+    compensation: No compensation is required for denied access because no mutation is allowed before authorization.
+    historyHandling: Previous compiled Context and Evidence remain immutable.
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+      - TR-P2-SYSTEM-RULEVIEW-008
+    testCaseIds:
+      - CASE-P2-ACCESS-STATIC-001
+      - CASE-P2-ACCESS-RUNTIME-001
+      - CASE-P2-ACCESS-NO-BYPASS-001
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#POL-MODEL-ACCESS-AUTHORIZATION
+  - id: IMP-P2-DECLARATION-BOUNDARY
+    sourceRef: FEATURE-DESC-3361AD2E54FC
+    sourceAction: preserveDeclarationCompatibilityBoundary
+    targetRefs:
+      - DEC-EXPAND-DECLARATION
+    policy: RETAIN_UNCHANGED
+    conditions:
+      - current phase is P2
+    consistency: ATOMIC
+    transactionBoundary: P2 changes do not delete or re-author declaration runtime ownership; P7 remains the convergence gate.
+    idempotency: Repeated P2 compilation keeps the same declaration migration boundary.
+    failureHandling: Any attempt to delete the boundary or create a second runtime authority blocks P2 completion.
+    compensation: Revert the P2 change that crosses the declared phase boundary.
+    historyHandling: Historical declaration facts remain available through Git/Evidence until P7 convergence.
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-010
+    testCaseIds:
+      - CASE-P2-DECLARATION-BOUNDARY-001
+    evidenceRefs:
+      - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#INV-COMPILER-022
+crossModuleImplementations:
+  - id: CMI-P1-COMPILER-001
+    businessFlowRef: FLOW-CONFIG-COMPILE
+    businessStepRefs:
+      - STEP-CONFIG-COMPILE-01
+      - STEP-CONFIG-COMPILE-02
+      - STEP-CONFIG-COMPILE-03
+      - STEP-CONFIG-COMPILE-04
+      - STEP-CONFIG-COMPILE-05
+      - STEP-CONFIG-COMPILE-06
+      - STEP-CONFIG-COMPILE-07
+    name: Deterministic configuration compilation and publication
+    trigger: Starter or a test caller submits a root SourceReference and explicit publication request.
+    participants:
+      - id: CMPART-STARTER
+        module: STARTER
+        responsibility: Assemble explicit provider, frontend registry, expectedCurrent, and ContextPublisher; receive the final result without republishing.
+        contractRefs:
+          - DEC_COMPILER_api_contract.md#api-compiler
+      - id: CMPART-COMPILER
+        module: COMPILER
+        responsibility: Own CompilationSession, deterministic passes, digest, candidate construction, and atomic publication coordination.
+        contractRefs:
+          - DEC_COMPILER_api_contract.md#api-compiler
+          - DEC_COMPILER_api_contract.md#api-publication
+      - id: CMPART-FRONTEND
+        module: XML-YAML
+        responsibility: Securely convert DocumentSource into CanonicalDocumentNode without global mutation.
+        contractRefs:
+          - DEC_COMPILER_api_contract.md#api-source-frontend
+      - id: CMPART-CONTEXT
+        module: CONTEXT
+        responsibility: Provide compiler-neutral immutable keys, registries, CompiledModelSet, EngineContext, and read-only projection.
+        contractRefs:
+          - DEC_COMPILER_design.md#design-compiled-model-set
+      - id: CMPART-PUBLISHER
+        module: CALLER-CONTEXT
+        responsibility: Implement the caller-scoped compare-and-set holder supplied through PublicationRequest.
+        contractRefs:
+          - DEC_COMPILER_api_contract.md#api-publication
+    steps:
+      - id: CMSTEP-P1-COMPILER-01
+        order: 1
+        from: CMPART-STARTER
+        to: CMPART-COMPILER
+        interactionType: COMMAND
+        action: Invoke compileAndPublish with explicit requests
+        contractRef: DEC_COMPILER_api_contract.md#api-compiler
+        preconditions:
+          - request values have passed constructor null checks
+        postconditions:
+          - a new isolated CompilationSession exists
+        idempotency: A retry always creates a new Session and never reuses mutable builders.
+        timeout: Caller-supplied monotonic Deadline
+        failureHandling: Invalid business input becomes FailedCompilationResult; constructor null remains a caller programming error.
+        compensation: ''
+        traceIds:
+          - TR-P1-COMPILER-001
+          - TR-P1-COMPILER-005
+      - id: CMSTEP-P1-COMPILER-02
+        order: 2
+        from: CMPART-COMPILER
+        to: CMPART-FRONTEND
+        interactionType: SYNC_API
+        action: Resolve sources and parse canonical nodes
+        contractRef: DEC_COMPILER_api_contract.md#api-source-frontend
+        preconditions:
+          - source policy and format registry are available
+        postconditions:
+          - all discovered sources have canonical nodes or stable Diagnostics
+        idempotency: Equal source bytes and frontend versions produce equal canonical semantics.
+        timeout: Checked at source and parse boundaries
+        failureHandling: Security, policy, IO, and syntax ERROR stop publication.
+        compensation: Discard Session-local nodes.
+        traceIds:
+          - TR-P1-COMPILER-001
+          - TR-P1-COMPILER-002
+      - id: CMSTEP-P1-COMPILER-03
+        order: 3
+        from: CMPART-COMPILER
+        to: CMPART-COMPILER
+        interactionType: DATA_WRITE
+        action: Build Raw definitions, register symbols, resolve references, classify Deferred, and compute digest input
+        contractRef: DEC_COMPILER_design.md#design-compiler-pipeline
+        preconditions:
+          - canonical nodes are available without ERROR
+        postconditions:
+          - SemanticDigestInput and stable Diagnostics are complete
+        idempotency: Stable canonical inputs and options produce equal ordered builders.
+        timeout: Checked at every Pass boundary
+        failureHandling: Aggregate ERROR and transition the Session to FAILED.
+        compensation: Discard Session-local builders.
+        traceIds:
+          - TR-P1-COMPILER-003
+          - TR-P1-COMPILER-004
+          - TR-P1-COMPILER-008
+          - TR-P1-COMPILER-009
+      - id: CMSTEP-P1-COMPILER-04
+        order: 4
+        from: CMPART-COMPILER
+        to: CMPART-CONTEXT
+        interactionType: DATA_WRITE
+        action: Construct immutable CompiledModelSet and candidate EngineContext
+        contractRef: DEC_COMPILER_design.md#design-compiled-model-set
+        preconditions:
+          - semantic validation completed without ERROR
+        postconditions:
+          - a complete unpublished candidate exists
+        idempotency: Equal semantic input produces equal digest and immutable model content.
+        timeout: Checked before candidate construction
+        failureHandling: Construction failure returns MIX-CONTEXT-CONSTRUCTION-FAILED.
+        compensation: Unpublished candidate is discarded.
+        traceIds:
+          - TR-P1-COMPILER-004
+          - TR-P1-COMPILER-005
+          - TR-P1-COMPILER-006
+      - id: CMSTEP-P1-COMPILER-05
+        order: 5
+        from: CMPART-COMPILER
+        to: CMPART-PUBLISHER
+        interactionType: SYNC_API
+        action: Invoke the caller-injected ContextPublisher exactly once
+        contractRef: DEC_COMPILER_api_contract.md#api-publication
+        preconditions:
+          - complete candidate and expectedCurrent are available
+        postconditions:
+          - Session is PUBLISHED only when PublicationResult is PUBLISHED
+        idempotency: No implicit CAS retry; a conflict requires a new explicit compilation request.
+        timeout: No hidden retry or wait
+        failureHandling: Conflict, null, or exception returns FAILED and leaves old Context unchanged.
+        compensation: No compensation because failed publication exposes no candidate.
+        traceIds:
+          - TR-P1-COMPILER-005
+      - id: CMSTEP-P1-COMPILER-06
+        order: 6
+        from: CMPART-COMPILER
+        to: CMPART-STARTER
+        interactionType: CALLBACK
+        action: Return PublishedCompilationResult or FailedCompilationResult
+        contractRef: DEC_COMPILER_api_contract.md#api-result
+        preconditions:
+          - Session reached PUBLISHED or FAILED
+        postconditions:
+          - Starter returns the same result and performs no second publication
+        idempotency: Result values are immutable.
+        timeout: Synchronous return
+        failureHandling: No partial result is returned.
+        compensation: ''
+        traceIds:
+          - TR-P1-COMPILER-005
+    successCriteria:
+      - The immutable candidate becomes visible exactly once and the returned status is PUBLISHED.
+      - Context never depends on compiler and Starter never republishes after return.
+      - Equal semantic inputs and versions produce equal semanticDigest.
+    failurePaths:
+      - id: CMFAIL-P1-COMPILER-PARSE
+        atStep: CMSTEP-P1-COMPILER-02
+        condition: Source policy, secure parsing, or syntax failure
+        result: Session reaches FAILED and no publisher call occurs.
+        compensationSteps:
+          - Discard Session-local source and canonical builders.
+        manualRecovery: Fix configuration using Diagnostic SourceRef and submit a new request.
+        traceIds:
+          - TR-P1-COMPILER-001
+          - TR-P1-COMPILER-002
+      - id: CMFAIL-P1-COMPILER-SEMANTIC
+        atStep: CMSTEP-P1-COMPILER-03
+        condition: Structural, symbol, reference, ownership, selector, or Deferred ERROR
+        result: Session reaches FAILED and no CompiledModelSet is published.
+        compensationSteps:
+          - Discard Session-local semantic builders.
+        manualRecovery: Fix the referenced definition and submit a new request.
+        traceIds:
+          - TR-P1-COMPILER-003
+          - TR-P1-COMPILER-004
+          - TR-P1-COMPILER-008
+          - TR-P1-COMPILER-009
+      - id: CMFAIL-P1-COMPILER-PUBLISH
+        atStep: CMSTEP-P1-COMPILER-05
+        condition: ContextPublisher reports conflict, returns null, or throws
+        result: Session reaches FAILED and the old EngineContext remains visible.
+        compensationSteps:
+          - Discard the unpublished candidate.
+        manualRecovery: Re-read expectedCurrent and explicitly submit a new compilation request if retry is desired.
+        traceIds:
+          - TR-P1-COMPILER-005
+    traceIds:
+      - TR-P1-COMPILER-001
+      - TR-P1-COMPILER-002
+      - TR-P1-COMPILER-003
+      - TR-P1-COMPILER-004
+      - TR-P1-COMPILER-005
+      - TR-P1-COMPILER-006
+      - TR-P1-COMPILER-008
+      - TR-P1-COMPILER-009
+    testCaseIds:
+      - CASE-P1-MIX-DISCOVERY-001
+      - CASE-P1-MIX-RAW-001
+      - CASE-P1-SYMBOL-001
+      - CASE-P1-DEFERRED-001
+      - CASE-P1-PUBLISH-ATOMIC-001
+      - CASE-P1-SYSTEM-INFORMATION-001
+      - CASE-P1-MODEL-ACCESS-TARGET-MAIN-001
+    diagramRef: docs/_relations/dependency_graph.md#CMI-P1-COMPILER-001
+  - id: CMI-P2-SYSTEM-RULEVIEW-001
+    businessFlowRef: FLOW-CONFIG-COMPILE
+    businessStepRefs:
+      - STEP-CONFIG-COMPILE-01
+      - STEP-CONFIG-COMPILE-03
+      - STEP-CONFIG-COMPILE-04
+      - STEP-CONFIG-COMPILE-05
+      - STEP-CONFIG-COMPILE-06
+      - STEP-CONFIG-COMPILE-07
+    name: System-scoped RuleView and fail-closed model access compilation/runtime handoff
+    trigger: A caller compiles configuration containing System, RuleView and model-access facts, then resolves or executes a System-owned RuleView.
+    participants:
+      - id: CMPART-P2-FRONTEND
+        module: FRONTEND
+        responsibility: Preserve explicit System ownership, RuleView system/name and model-access SourceRef facts without global mutation.
+        contractRefs:
+          - FLOW-CONFIG-COMPILE
+      - id: CMPART-P2-COMPILER
+        module: COMPILER
+        responsibility: Register System identities, resolve RuleView composite keys, compile ModelPath, make static access decisions and build a complete immutable candidate.
+        contractRefs:
+          - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#AGG-SYSTEM-COMPILED-CONFIG
+      - id: CMPART-P2-CONTEXT
+        module: CONTEXT
+        responsibility: Hold immutable owner-qualified System/RuleView/access facts and keep Context instances isolated.
+        contractRefs:
+          - version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml#ENT-COMPILED-SYSTEM
+      - id: CMPART-P2-STARTER
+        module: STARTER
+        responsibility: Use system-ref + rule-ref for runtime lookup and route genuinely dynamic access through the common Guard before mutation.
+        contractRefs:
+          - version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#AC-P2-SYSTEM-RULEVIEW-003
+    steps:
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-01
+        order: 1
+        from: CMPART-P2-FRONTEND
+        to: CMPART-P2-COMPILER
+        interactionType: COMMAND
+        action: Submit explicit System/RuleView/model-access canonical facts
+        preconditions:
+          - sources passed structural parsing
+        postconditions:
+          - owner/source facts remain explicit
+        idempotency: Equivalent source ordering produces equivalent canonical facts.
+        failureHandling: Malformed or unknown facts become Diagnostic; no runtime state is changed.
+        compensation: No compensation; fix source and recompile.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-001
+          - TR-P2-SYSTEM-RULEVIEW-009
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-02
+        order: 2
+        from: CMPART-P2-COMPILER
+        to: CMPART-P2-CONTEXT
+        interactionType: DATA_WRITE
+        action: Publish complete owner-qualified System, RuleView and access candidate
+        preconditions:
+          - all duplicate/reference/path/static-access checks passed
+        postconditions:
+          - one immutable Context becomes visible atomically
+        idempotency: Same semantic input produces equivalent semanticDigest.
+        failureHandling: Any ERROR leaves the old Context unchanged.
+        compensation: Discard unpublished candidate.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-002
+          - TR-P2-SYSTEM-RULEVIEW-004
+          - TR-P2-SYSTEM-RULEVIEW-005
+          - TR-P2-SYSTEM-RULEVIEW-008
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-03
+        order: 3
+        from: CMPART-P2-STARTER
+        to: CMPART-P2-CONTEXT
+        interactionType: QUERY
+        action: Resolve RuleView by system-ref + rule-ref
+        preconditions:
+          - SystemKey and RuleView name are explicit
+        postconditions:
+          - exact RuleViewKey is returned or lookup fails explicitly
+        idempotency: Repeated lookup in the same immutable Context returns the same result.
+        failureHandling: Unknown composite key or bare-name request fails; no fallback lookup.
+        compensation: None.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-002
+          - TR-P2-SYSTEM-RULEVIEW-003
+      - id: CMSTEP-P2-SYSTEM-RULEVIEW-04
+        order: 4
+        from: CMPART-P2-STARTER
+        to: CMPART-P2-CONTEXT
+        interactionType: COMMAND
+        action: Request dynamic model access authorization before mutation when compilation marked RuntimeGuardRequired
+        preconditions:
+          - static compilation already accepted the rule boundary
+        postconditions:
+          - ALLOW permits mutation; DENY returns before state change/external side effect
+        idempotency: Repeated decision over unchanged authority/resource facts is stable.
+        failureHandling: DENY is fail-closed and preserves current state.
+        compensation: No compensation because mutation has not started.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-006
+          - TR-P2-SYSTEM-RULEVIEW-007
+    successCriteria:
+      - System and RuleView identities are deterministic and owner-qualified
+      - static illegal access blocks publication
+      - dynamic denial occurs before mutation
+      - declaration compatibility remains a P7 boundary
+    failurePaths:
+      - id: CMFAIL-P2-SYSTEM-RULEVIEW-01
+        atStep: CMSTEP-P2-SYSTEM-RULEVIEW-02
+        condition: duplicate/unknown/path/static permission error
+        result: candidate is not published and old Context remains active
+        compensationSteps: []
+        manualRecovery: Correct configuration and recompile.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-001
+          - TR-P2-SYSTEM-RULEVIEW-004
+          - TR-P2-SYSTEM-RULEVIEW-005
+          - TR-P2-SYSTEM-RULEVIEW-008
+      - id: CMFAIL-P2-SYSTEM-RULEVIEW-02
+        atStep: CMSTEP-P2-SYSTEM-RULEVIEW-03
+        condition: bare RuleView name or unknown composite key
+        result: lookup fails explicitly without cross-System fallback
+        compensationSteps: []
+        manualRecovery: Supply explicit valid system-ref + rule-ref.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-003
+      - id: CMFAIL-P2-SYSTEM-RULEVIEW-03
+        atStep: CMSTEP-P2-SYSTEM-RULEVIEW-04
+        condition: runtime Guard denies access
+        result: operation fails before mutation or external side effect
+        compensationSteps: []
+        manualRecovery: Correct authority/resource state before retry.
+        traceIds:
+          - TR-P2-SYSTEM-RULEVIEW-006
+          - TR-P2-SYSTEM-RULEVIEW-007
+    traceIds:
+      - TR-P2-SYSTEM-RULEVIEW-001
+      - TR-P2-SYSTEM-RULEVIEW-002
+      - TR-P2-SYSTEM-RULEVIEW-003
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-005
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+      - TR-P2-SYSTEM-RULEVIEW-008
+      - TR-P2-SYSTEM-RULEVIEW-009
+      - TR-P2-SYSTEM-RULEVIEW-010
+    testCaseIds:
+      - CASE-P2-SYSTEM-001
+      - CASE-P2-RULEVIEW-ISOLATION-001
+      - CASE-P2-ACCESS-STATIC-001
+      - CASE-P2-ACCESS-RUNTIME-001
+      - CASE-P2-CONTEXT-ATOMIC-001
+      - CASE-P2-DECLARATION-BOUNDARY-001
+    diagramRef: project_doc/docs/_relations/dependency_graph.md#CMI-P2-SYSTEM-RULEVIEW-001
