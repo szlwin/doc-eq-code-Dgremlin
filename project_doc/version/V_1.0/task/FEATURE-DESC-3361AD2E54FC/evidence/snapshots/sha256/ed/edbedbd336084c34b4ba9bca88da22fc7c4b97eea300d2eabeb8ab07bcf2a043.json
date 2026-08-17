@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/long_task.py validate -g CompletionVerificationAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "exit_code": 0,
+  "executed_at": "2026-08-17T08:17:01+00:00",
+  "revision": "COMPLETION-VERIFICATION-P2-I009-R01@a0e0f1c3e3af",
+  "result": "PASSED",
+  "output": "OK: project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "output_digest": "d160df29f0dd904b80b5b0c153009f7a11db1fe5e37abdba10a9bcec0391e79a",
+  "metrics": {
+    "frozen_task_plan_validation_command": true,
+    "result": "PASSED"
+  }
+}
