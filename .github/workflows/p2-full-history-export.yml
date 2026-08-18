@@ -1,0 +1,36 @@
+name: P2 temporary full history export
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-history-export-base-20260818
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Fetch all branch history and export bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+          git bundle create /tmp/p2-full-history.bundle --all
+          git bundle verify /tmp/p2-full-history.bundle
+          sha256sum /tmp/p2-full-history.bundle | tee /tmp/p2-full-history.bundle.sha256
+          git rev-parse refs/remotes/origin/feature/p2-design-testdesign-20260808 | tee /tmp/p2-pr36-head.txt
+      - uses: actions/upload-artifact@v6
+        with:
+          name: p2-full-history-bundle
+          path: |
+            /tmp/p2-full-history.bundle
+            /tmp/p2-full-history.bundle.sha256
+            /tmp/p2-pr36-head.txt
+          if-no-files-found: error
+          compression-level: 0
