@@ -22,14 +22,14 @@ jobs:
           set -euo pipefail
           cat .common-develop-validation/task4.patch.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/task4.patch.xz.b64
           base64 -d /tmp/task4.patch.xz.b64 > /tmp/task4.patch.xz
-          test "$(sha256sum /tmp/task4.patch.xz | awk '{print $1}')" = "c8bc47ec0029bd66d6f0c7ac5e1f5ce10dc9d48cce20c0b1ae6235e5e3d3575c"
+          test "$(sha256sum /tmp/task4.patch.xz | awk '{print $1}')" = "34048c4689273e7e381569195e068bd74c9a812c8f041dcb104bebd1b334e83c"
           xz -dc /tmp/task4.patch.xz > /tmp/task4.patch
-          test "$(sha256sum /tmp/task4.patch | awk '{print $1}')" = "bc0cb7c87cf8df5efde1f7b5f6d5cc0348c25606cac5ab7106d9af649f3214af"
+          test "$(sha256sum /tmp/task4.patch | awk '{print $1}')" = "544155ef6a5bb0ff2de59531ca5832f26a79d03e835e20070d2d91ee09beb802"
           git checkout --detach ee4c77a5e3aeb1b5f081d79eef21627c2c092481
           git apply --check /tmp/task4.patch
           git apply /tmp/task4.patch
           { git diff --name-only; git ls-files --others --exclude-standard; } | sort -u | tee /tmp/task4-changed-paths.txt
-          bad="$(cat /tmp/task4-changed-paths.txt | grep -Ev '^dec-core-(model|starter)/src/main/java/' || true)"
+          bad="$(grep -Ev '^dec-core-(model|starter)/src/main/java/' /tmp/task4-changed-paths.txt || true)"
           if [ -n "$bad" ]; then
             echo "unexpected task4 paths:" >&2
             echo "$bad" >&2
