@@ -45,8 +45,12 @@ jobs:
           git fetch --no-tags origin "+refs/heads/${TARGET_BRANCH}:refs/remotes/origin/target"
           CURRENT_SHA="$(git rev-parse refs/remotes/origin/target)"
           test "$CURRENT_SHA" = "$EXPECTED_PARENT"
-          cat .common-develop-publish/checkpoint.bundle.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
-          base64 -d /tmp/checkpoint.bundle.xz.b64 > /tmp/checkpoint.bundle.xz
+          if test -f .common-develop-publish/checkpoint.bundle.xz; then
+            cp .common-develop-publish/checkpoint.bundle.xz /tmp/checkpoint.bundle.xz
+          else
+            cat .common-develop-publish/checkpoint.bundle.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
+            base64 -d /tmp/checkpoint.bundle.xz.b64 > /tmp/checkpoint.bundle.xz
+          fi
           test "$(sha256sum /tmp/checkpoint.bundle.xz | awk '{print $1}')" = "$BUNDLE_XZ_SHA256"
           xz -dc /tmp/checkpoint.bundle.xz > /tmp/checkpoint.bundle
           test "$(sha256sum /tmp/checkpoint.bundle | awk '{print $1}')" = "$BUNDLE_SHA256"
