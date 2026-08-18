@@ -34,7 +34,7 @@ jobs:
             exit 1
           fi
           sha256sum \
-            dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessRuntimeTestFixture.java \
+            dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationFixture.java \
             dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java \
             | tee /tmp/red-test-source.sha256
       - name: Exact compile and discovery prerequisite
@@ -43,7 +43,6 @@ jobs:
           set -o pipefail
           ./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/p2-red-compile.log
       - name: Exact four-case semantic RED run
-        id: red
         shell: bash
         run: |
           set +e
@@ -60,42 +59,34 @@ jobs:
           if not report.exists():
               raise SystemExit('missing surefire XML: compile/discovery did not reach target class')
           root = ET.parse(report).getroot()
-          tests = int(root.attrib.get('tests','0'))
-          failures = int(root.attrib.get('failures','0'))
-          errors = int(root.attrib.get('errors','0'))
-          skipped = int(root.attrib.get('skipped','0'))
-          if (tests, failures, errors, skipped) != (4,4,0,0):
-              raise SystemExit(f'unexpected RED summary {(tests, failures, errors, skipped)}')
+          vals = tuple(int(root.attrib.get(k,'0')) for k in ('tests','failures','errors','skipped'))
+          if vals != (4,4,0,0):
+              raise SystemExit(f'unexpected RED summary {vals}')
           required = [
             'CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001',
             'CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001',
             'CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001',
             'CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001',
           ]
-          source_text = source.read_text(encoding='utf-8')
-          missing = [x for x in required if x not in source_text]
-          if missing:
-              raise SystemExit(f'missing case IDs in frozen test source: {missing}')
+          text = source.read_text(encoding='utf-8')
+          missing = [x for x in required if x not in text]
+          if missing: raise SystemExit(f'missing case IDs in frozen test source: {missing}')
           data = {
-            'productionBaseSha': '6f02e0855612a5aac9abfe8175b050add7809979',
-            'compileCommand': './mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install',
-            'redCommand': './mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test',
-            'tests': tests, 'failures': failures, 'errors': errors, 'skipped': skipped,
-            'caseIds': required,
-            'observedWriteBypassTuples': {
-              'readOnlyRawWrite': {'receipt': 'NON_NULL', 'effectCount': '0->1', 'value': '10->77', 'mutationVersion': '0->1'},
-              'prooflessRawWrite': {'receipt': 'NON_NULL', 'effectCount': '0->1', 'value': '10->88', 'mutationVersion': '0->1'}
-            },
-            'observedProoflessReadValue': 10,
-            'observedPublicRawPortSeam': True
-          }
-          pathlib.Path('/tmp/p2-red-evidence.json').write_text(json.dumps(data, indent=2)+'\n', encoding='utf-8')
+            'productionBaseSha':'6f02e0855612a5aac9abfe8175b050add7809979',
+            'compileCommand':'./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install',
+            'redCommand':'./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test',
+            'tests':4,'failures':4,'errors':0,'skipped':0,'caseIds':required,
+            'observedWriteBypassTuples':{
+              'readOnlyRawWrite':{'receipt':'NON_NULL','effectCount':'0->1','value':'10->77','mutationVersion':'0->1'},
+              'prooflessRawWrite':{'receipt':'NON_NULL','effectCount':'0->1','value':'10->88','mutationVersion':'0->1'}},
+            'observedProoflessReadValue':10,'observedPublicRawPortSeam':True}
+          pathlib.Path('/tmp/p2-red-evidence.json').write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Upload genuine RED evidence
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: p2-genuine-red-evidence
+          name: p2-genuine-red-evidence-final
           path: |
             /tmp/p2-red-compile.log
             /tmp/p2-red-test.log
