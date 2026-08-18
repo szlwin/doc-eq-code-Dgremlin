@@ -73,6 +73,10 @@ final class ProtectedAccessRuntimeTestFixture implements AutoCloseable {
     final GuardedProtectedAccessPort guardedPort;
 
     ProtectedAccessRuntimeTestFixture() throws Exception {
+        this(true);
+    }
+
+    ProtectedAccessRuntimeTestFixture(boolean includeWriteRule) throws Exception {
         data.put("amount", Long.valueOf(10L));
         CompiledViewMaterializationPlan materialization = CompiledViewMaterializationPlan.of(
                 view, Collections.singletonList(CompiledMaterializationNode.of(path)));
@@ -81,7 +85,9 @@ final class ProtectedAccessRuntimeTestFixture implements AutoCloseable {
         context = new EngineContext(new CompiledModelSet(
                 PublishedSourceManifest.empty(),
                 CompiledViewMaterializationIndex.of(Collections.singletonList(materialization)),
-                ModelAccessPolicyIndex.of(Arrays.asList(readRule, writeRule)),
+                ModelAccessPolicyIndex.of(includeWriteRule
+                        ? Arrays.asList(readRule, writeRule)
+                        : Collections.singletonList(readRule)),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(Collections.<DeferredKey, DeferredDefinition>emptyMap()),
                 Collections.emptyList(),
@@ -191,8 +197,9 @@ final class ProtectedAccessRuntimeTestFixture implements AutoCloseable {
 
     static final class Effect implements Container {
         boolean success = true;
+        int executeCount;
         @Override public Container load(ModelLoader loader) { return this; }
-        @Override public Container execute() throws ExecuteRuleException { return this; }
+        @Override public Container execute() throws ExecuteRuleException { executeCount++; return this; }
         @Override public Container addListener(ContainerListener listener) { return this; }
         @Override public ResultInfo getResult() {
             return success ? ResultInfo.success() : ResultInfo.fail("TEST", "rejected");
