@@ -23,7 +23,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-/** TESTDESIGN-P2-R37 single-runtime EngineContext lifecycle verification. */
+/** TESTDESIGN-P2-R37 single-runtime EngineContext lifecycle verification. Exact task7 harness. */
 class SingleEngineContextRuntimeLifecycleTest {
 
     @Test
