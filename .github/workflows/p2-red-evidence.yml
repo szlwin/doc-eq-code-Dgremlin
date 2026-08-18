@@ -1,0 +1,100 @@
+name: P2 temporary genuine RED evidence
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-red-evidence-base-20260818
+
+permissions:
+  contents: read
+
+jobs:
+  red-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Verify exact pre-fix production base
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^2 2>/dev/null || true)" = "" || true
+          git diff --name-only 6f02e0855612a5aac9abfe8175b050add7809979...HEAD | tee /tmp/red-changed-paths.txt
+          if git diff --name-only 6f02e0855612a5aac9abfe8175b050add7809979...HEAD | grep -E '(^|/)src/main/|(^|/)pom.xml$|(^|/)application[^/]*\.(ya?ml|properties)$'; then
+            echo 'Production mutation detected in RED branch' >&2
+            exit 1
+          fi
+          sha256sum \
+            dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessRuntimeTestFixture.java \
+            dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java \
+            | tee /tmp/red-test-source.sha256
+      - name: Exact compile and discovery prerequisite
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/p2-red-compile.log
+      - name: Exact four-case semantic RED run
+        id: red
+        shell: bash
+        run: |
+          set +e
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/p2-red-test.log
+          rc=${PIPESTATUS[0]}
+          echo "$rc" > /tmp/p2-red-test.rc
+          set -e
+          test "$rc" -ne 0
+          python3 - <<'PY'
+          import json, pathlib, xml.etree.ElementTree as ET
+          report = pathlib.Path('dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.P2SecurityAuthorityRemediationTest.xml')
+          if not report.exists():
+              raise SystemExit('missing surefire XML: compile/discovery did not reach target class')
+          root = ET.parse(report).getroot()
+          tests = int(root.attrib.get('tests','0'))
+          failures = int(root.attrib.get('failures','0'))
+          errors = int(root.attrib.get('errors','0'))
+          skipped = int(root.attrib.get('skipped','0'))
+          if (tests, failures, errors, skipped) != (4,4,0,0):
+              raise SystemExit(f'unexpected RED summary {(tests, failures, errors, skipped)}')
+          cases = [tc.attrib.get('name','') for tc in root.findall('testcase')]
+          required = [
+            'CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001',
+            'CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001',
+            'CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001',
+            'CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001',
+          ]
+          xml_text = report.read_text(encoding='utf-8')
+          missing = [x for x in required if x not in xml_text]
+          if missing:
+              raise SystemExit(f'missing case IDs in semantic RED report: {missing}')
+          data = {
+            'productionBaseSha': '6f02e0855612a5aac9abfe8175b050add7809979',
+            'compileCommand': './mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install',
+            'redCommand': './mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test',
+            'tests': tests, 'failures': failures, 'errors': errors, 'skipped': skipped,
+            'caseIds': required,
+          }
+          pathlib.Path('/tmp/p2-red-evidence.json').write_text(json.dumps(data, indent=2)+'\n', encoding='utf-8')
+          PY
+      - name: Upload genuine RED evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-genuine-red-evidence
+          path: |
+            /tmp/p2-red-compile.log
+            /tmp/p2-red-test.log
+            /tmp/p2-red-test.rc
+            /tmp/p2-red-evidence.json
+            /tmp/red-test-source.sha256
+            /tmp/red-changed-paths.txt
+            dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.P2SecurityAuthorityRemediationTest.xml
+            dec-core-starter/target/surefire-reports/dec.core.starter.access.P2SecurityAuthorityRemediationTest.txt
+          if-no-files-found: error
