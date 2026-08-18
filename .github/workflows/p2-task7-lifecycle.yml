@@ -41,6 +41,11 @@ jobs:
         run: |
           set -o pipefail
           ./mvnw -pl dec-core-starter -Dtest=SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/task7-lifecycle.log
+      - name: Prepare dec-demo reactor dependencies
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-demo -am -DskipTests install 2>&1 | tee /tmp/task7-dec-demo-prep.log
       - name: Exact dec-demo real fixture regression
         shell: bash
         run: |
@@ -56,6 +61,7 @@ jobs:
             /tmp/task7-source.sha256
             /tmp/task7-compile.log
             /tmp/task7-lifecycle.log
+            /tmp/task7-dec-demo-prep.log
             /tmp/task7-real-fixture.log
             dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.SingleEngineContextRuntimeLifecycleTest.xml
             dec-demo/target/surefire-reports/TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml
