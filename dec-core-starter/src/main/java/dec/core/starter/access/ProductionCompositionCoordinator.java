@@ -12,7 +12,7 @@ import dec.core.model.runtime.RuntimeModelEffectBindingFailureCode;
 import dec.core.model.runtime.RuntimeModelEffectBindingResult;
 import dec.core.model.runtime.RuntimeModelFrame;
 import dec.core.model.runtime.RuntimeModelHandle;
-import dec.core.model.runtime.RuntimeModelOperationPort;
+import dec.core.model.runtime.RuntimeModelStarterEffectBridge;
 import dec.core.model.runtime.RuntimeModelSession;
 import dec.core.model.runtime.RuntimeModelSessionException;
 import dec.core.model.runtime.RuntimeModelSessionFailureCode;
@@ -68,12 +68,13 @@ final class ProductionCompositionCoordinator {
                 session.close();
                 return failed(failureCode);
             }
-            RuntimeModelOperationPort operationPort = binding.operationPort().get();
+            GuardAuthorizedModelEffectPort effectPort =
+                    RuntimeModelStarterEffectBridge.guardedEffectPort(binding);
             GuardedProtectedAccessPort guarded = new GuardedProtectedAccessPort(
                     context,
                     new ExactRuntimeTargetResolver(targets),
                     session,
-                    operationPort);
+                    effectPort);
             UnifiedProtectedAccessEntry entry = new UnifiedProtectedAccessEntry(guarded);
             return ProtectedAccessCompositionResult.created(new ProtectedAccessComposition(
                     guarded,

@@ -32,6 +32,7 @@ public final class RuntimeModelAccessScope {
     private static final AtomicLong OBJECT_SEQUENCE = new AtomicLong();
 
     private final RuntimeModelFrame frame;
+    private final boolean exposeRawOperationPort;
     private final RuntimeModelEffectProvider effectProvider = new ScopeEffectProvider(this);
     private final IdentityHashMap<RuntimeModelHandle, ScopeSession> leases =
             new IdentityHashMap<RuntimeModelHandle, ScopeSession>();
@@ -40,7 +41,17 @@ public final class RuntimeModelAccessScope {
     private boolean active = true;
 
     RuntimeModelAccessScope(RuntimeModelFrame frame) {
+        this(frame, true);
+    }
+
+    /** Production root passes false so ordinary callers cannot extract a usable raw effect port. */
+    RuntimeModelAccessScope(RuntimeModelFrame frame, boolean exposeRawOperationPort) {
         this.frame = Objects.requireNonNull(frame, "frame");
+        this.exposeRawOperationPort = exposeRawOperationPort;
+    }
+
+    boolean exposeRawOperationPort() {
+        return exposeRawOperationPort;
     }
 
     /** 返回 MODEL 冻结的 trusted frame；frame 中只携带 opaque provenance/handle。 */
@@ -295,15 +306,17 @@ public final class RuntimeModelAccessScope {
                 return RuntimeModelEffectBindingResult.failed(
                         RuntimeModelEffectBindingFailureCode.SESSION_NOT_SEALED);
             }
+            BoundOperationPort port = new BoundOperationPort(ownerScope, session);
             return RuntimeModelEffectBindingResult.bound(
-                    new BoundOperationPort(ownerScope, session));
+                    port, port, ownerScope.exposeRawOperationPort());
         }
     }
 
     /**
      * MODEL 私有 effect port：每次调用重新验证 trusted target，并在写入前原子重验 mutation stamp。
      */
-    private static final class BoundOperationPort implements RuntimeModelOperationPort {
+    private static final class BoundOperationPort
+            implements RuntimeModelOperationPort, RuntimeModelGuardedOperationPort {
         private final RuntimeModelAccessScope ownerScope;
         private final ScopeSession session;
 
@@ -317,6 +330,18 @@ public final class RuntimeModelAccessScope {
         /** READ 只返回深不可变 RuntimeFactValue；无法精确定位或不支持的 live 类型均 fail closed。 */
         @Override
         public RuntimeFactValue read(ResolvedProtectedReadAccess access) {
+            if (!ownerScope.exposeRawOperationPort()) {
+                return null;
+            }
+            return readInternal(access);
+        }
+
+        @Override
+        public RuntimeFactValue readAuthorized(ResolvedProtectedReadAccess access) {
+            return readInternal(access);
+        }
+
+        private RuntimeFactValue readInternal(ResolvedProtectedReadAccess access) {
             Objects.requireNonNull(access, "access");
             RuntimeModelHandle handle = session.registeredHandle(access.target());
             if (handle == null) {
@@ -335,6 +360,18 @@ public final class RuntimeModelAccessScope {
          */
         @Override
         public ProtectedWriteReceipt write(ResolvedProtectedWriteAccess access) {
+            if (!ownerScope.exposeRawOperationPort()) {
+                return null;
+            }
+            return writeInternal(access);
+        }
+
+        @Override
+        public ProtectedWriteReceipt writeAuthorized(ResolvedProtectedWriteAccess access) {
+            return writeInternal(access);
+        }
+
+        private ProtectedWriteReceipt writeInternal(ResolvedProtectedWriteAccess access) {
             Objects.requireNonNull(access, "access");
             RuntimeModelHandle handle = session.registeredHandle(access.target());
             if (handle == null || !matchesStamp(access)) {

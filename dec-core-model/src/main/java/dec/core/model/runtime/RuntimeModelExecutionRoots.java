@@ -71,7 +71,7 @@ public final class RuntimeModelExecutionRoots {
                         RuntimeResolutionOwnerId.of("model-owner-" + rootId),
                         null,
                         handles);
-                scope = new RuntimeModelAccessScope(frame);
+                scope = new RuntimeModelAccessScope(frame, false);
             }
             if (!scope.active()) return RuntimeModelScopeResult.failed(RuntimeModelScopeFailureCode.SCOPE_INACTIVE);
             return RuntimeModelScopeResult.available(scope);

@@ -26,9 +26,10 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * STARTER guarded core. Construction is package-private so the MODEL operation port cannot become a
- * caller-injection seam. DEV-08 adds a composition-local non-blocking write coordination domain while
- * MODEL remains the final mutation-stamp authority.
+ * STARTER guarded core. Construction is package-private so the MODEL operation primitive cannot
+ * become a caller-injection seam. Production uses a Guard-authorized effect adapter; the raw-port
+ * overload remains only for historical/internal test fixtures and still receives Guard-minted
+ * authorization before calling the raw primitive.
  */
 final class GuardedProtectedAccessPort implements ProtectedAccessPort {
     private static final AtomicLong WRITE_INTENT_SEQUENCE = new AtomicLong();
@@ -36,18 +37,27 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
     private final ExactModelAccessGuard guard;
     private final RuntimeTargetResolver resolver;
     private final RuntimeModelSession session;
-    private final RuntimeModelOperationPort operationPort;
+    private final GuardAuthorizedModelEffectPort effectPort;
     private final WriteCoordinationDomain writeCoordination = new WriteCoordinationDomain();
 
     GuardedProtectedAccessPort(
             EngineContext context,
             RuntimeTargetResolver resolver,
             RuntimeModelSession session,
-            RuntimeModelOperationPort operationPort) {
+            GuardAuthorizedModelEffectPort effectPort) {
         this.guard = new ExactModelAccessGuard(Objects.requireNonNull(context, "context"));
         this.resolver = Objects.requireNonNull(resolver, "resolver");
         this.session = Objects.requireNonNull(session, "session");
-        this.operationPort = Objects.requireNonNull(operationPort, "operationPort");
+        this.effectPort = Objects.requireNonNull(effectPort, "effectPort");
+    }
+
+    /** Compatibility constructor for historical test fixtures that own an internal raw MODEL port. */
+    GuardedProtectedAccessPort(
+            EngineContext context,
+            RuntimeTargetResolver resolver,
+            RuntimeModelSession session,
+            RuntimeModelOperationPort operationPort) {
+        this(context, resolver, session, new LegacyRawEffectAdapter(operationPort));
     }
 
     @Override
@@ -71,19 +81,23 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
         }
 
         if (invocation.modelAccessRuleKey().operation() == AccessOperation.READ) {
-            return read(invocation, target);
+            return read(rule, invocation, target);
         }
         if (invocation.modelAccessRuleKey().operation() == AccessOperation.WRITE) {
-            return write(invocation, target);
+            return write(rule, invocation, target);
         }
         return deny(invocation, DenialCode.POLICY_MISMATCH, "unsupported model-access operation");
     }
 
     private ProtectedAccessResult read(
+            CompiledModelAccessRule rule,
             ProtectedAccessInvocation invocation,
             ResolvedRuntimeTarget target) {
-        RuntimeFactValue value = operationPort.read(ResolvedProtectedReadAccess.of(
-                invocation.invocationId(), invocation.modelAccessRuleKey(), target));
+        ModelEffectAuthorization authorization = guard.authorizeRead(rule, invocation, target);
+        if (authorization == null) {
+            return deny(invocation, DenialCode.POLICY_MISMATCH, "READ authorization mint denied");
+        }
+        RuntimeFactValue value = effectPort.read(authorization);
         if (value == null) {
             return deny(invocation, DenialCode.RUNTIME_OBJECT_NOT_FOUND, "runtime READ target unavailable");
         }
@@ -92,6 +106,7 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
     }
 
     private ProtectedAccessResult write(
+            CompiledModelAccessRule rule,
             ProtectedAccessInvocation invocation,
             ResolvedRuntimeTarget target) {
         if (!invocation.writeValue().isPresent()) {
@@ -137,8 +152,12 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
                         "WRITE capability already consumed");
             }
 
-            ProtectedWriteReceipt modelReceipt = operationPort.write(
-                    ResolvedProtectedWriteAccess.of(invocation.invocationId(), consumed));
+            ModelEffectAuthorization authorization = guard.authorizeWrite(
+                    rule, invocation, target, consumed);
+            if (authorization == null) {
+                return deny(invocation, DenialCode.POLICY_MISMATCH, "WRITE authorization mint denied");
+            }
+            ProtectedWriteReceipt modelReceipt = effectPort.write(authorization);
             if (modelReceipt == null) {
                 return deny(invocation, DenialCode.RUNTIME_WRITE_FAILED, "runtime WRITE failed");
             }
@@ -157,5 +176,42 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
             String message) {
         return ProtectedAccessResult.deny(
                 ProtectedAccessDenial.of(invocation.invocationId(), code, message));
+    }
+
+    /** Legacy/internal adapter: Guard authorization is consumed before the raw primitive is called. */
+    private static final class LegacyRawEffectAdapter implements GuardAuthorizedModelEffectPort {
+        private final RuntimeModelOperationPort raw;
+
+        private LegacyRawEffectAdapter(RuntimeModelOperationPort raw) {
+            this.raw = Objects.requireNonNull(raw, "raw");
+        }
+
+        @Override
+        public RuntimeFactValue read(ModelEffectAuthorization authorization) {
+            if (authorization == null) {
+                return null;
+            }
+            ModelEffectAuthorization.ReadClaim claim = authorization.consumeRead();
+            if (claim == null) {
+                return null;
+            }
+            return raw.read(ResolvedProtectedReadAccess.of(
+                    claim.invocationId(), claim.modelAccessRuleKey(), claim.target()));
+        }
+
+        @Override
+        public ProtectedWriteReceipt write(ModelEffectAuthorization authorization) {
+            if (authorization == null) {
+                return null;
+            }
+            ModelEffectAuthorization.WriteClaim claim = authorization.consumeWrite();
+            if (claim == null
+                    || !claim.modelAccessRuleKey().equals(claim.writeIntent().modelAccessRuleKey())
+                    || !claim.target().equals(claim.writeIntent().resolvedRuntimeTarget())) {
+                return null;
+            }
+            return raw.write(ResolvedProtectedWriteAccess.of(
+                    claim.invocationId(), claim.writeIntent()));
+        }
     }
 }
