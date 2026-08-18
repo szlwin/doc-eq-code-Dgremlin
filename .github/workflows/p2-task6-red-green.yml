@@ -1,0 +1,82 @@
+name: P2 temporary task6 RED-to-GREEN validation
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-task6-validation-base-20260818
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Reconstruct exact controlled adaptation patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .common-develop-validation/task6.patch.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/task6.patch.xz.b64
+          base64 -d /tmp/task6.patch.xz.b64 > /tmp/task6.patch.xz
+          test "$(sha256sum /tmp/task6.patch.xz | awk '{print $1}')" = "35f47801cad32b32667e9e37104b58ea976f6c87fdb680293ccf6a7d654258f1"
+          xz -dc /tmp/task6.patch.xz > /tmp/task6.patch
+          test "$(sha256sum /tmp/task6.patch | awk '{print $1}')" = "aa99a6bd4081e7aedd05eee8ba9eed0cd540c2e60afe0b48aaf7d7df76d8cf7d"
+          git checkout --detach 71126eb02c2015781112154911299c7762c3c255
+          git apply --check /tmp/task6.patch
+          git apply /tmp/task6.patch
+          { git diff --name-only; git ls-files --others --exclude-standard; } | sort -u | tee /tmp/task6-changed-paths.txt
+          test "$(wc -l < /tmp/task6-changed-paths.txt | tr -d ' ')" -eq 2
+          if grep -Ev '^dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthority(RemediationTest|GreenFixture)\.java$' /tmp/task6-changed-paths.txt; then exit 1; fi
+          test "$(sha256sum dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationFixture.java | awk '{print $1}')" = "30d4721b117eb3325ea7e3a0727709c6b4660703e7772a6bbf008b6d68d8700d"
+          sha256sum dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java | tee /tmp/task6-green-source.sha256
+          git diff --check
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Exact compile prerequisite
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/task6-compile.log
+      - name: Four adapted R37 cases must be GREEN
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/task6-green.log
+          python3 - <<'PY'
+          import pathlib,xml.etree.ElementTree as ET
+          p=pathlib.Path('dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.P2SecurityAuthorityRemediationTest.xml')
+          r=ET.parse(p).getroot(); vals=tuple(int(r.attrib.get(k,'0')) for k in ('tests','failures','errors','skipped'))
+          if vals != (4,0,0,0): raise SystemExit(f'unexpected GREEN summary {vals}')
+          required=['CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001','CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001','CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001','CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001']
+          src=pathlib.Path('dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java').read_text()
+          missing=[x for x in required if x not in src]
+          if missing: raise SystemExit(f'missing stable case IDs {missing}')
+          PY
+      - name: Existing authority and one-shot regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=ProtectedRuntimeModelAdapterIntegrationTest,ProtectedWriteIntentResolutionTest,ProtectedAccessConcurrencyTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/task6-authority-regression.log
+      - name: Upload task6 evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-task6-red-green-integrity
+          path: |
+            /tmp/task6.patch
+            /tmp/task6-changed-paths.txt
+            /tmp/task6-green-source.sha256
+            /tmp/task6-compile.log
+            /tmp/task6-green.log
+            /tmp/task6-authority-regression.log
+            dec-core-starter/target/surefire-reports/
+          if-no-files-found: warn
