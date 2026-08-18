@@ -1,0 +1,56 @@
+name: P2 temporary exact checkpoint transport
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-gp-base-20260818-1638
+    paths:
+      - '.common-develop-publish/**'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  publish:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify bundle and fast-forward PR36 branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+          TARGET_BRANCH: feature/p2-design-testdesign-20260808
+          EXPECTED_PARENT: 671a0bd20face84198ae7162a98331eefa5d8c67
+          TARGET_SHA: f4525c5330086130466925557d6bba52b3374f29
+          TARGET_TREE: 1de2212f36468d7b0b5d58523cfd7f5075c10715
+          BUNDLE_SHA256: 26c1e5199c19366cab272e6569dfd7d697475053f4dcdf7619afd6a1f85a97d2
+          BUNDLE_XZ_SHA256: 5be93cf349195948623f71ea7d69d291414d2b5a9f47788ea205cdecea2b559e
+        run: |
+          set -euo pipefail
+          git init /tmp/p2-gp-transport
+          cd /tmp/p2-gp-transport
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin \
+            "+refs/heads/${HEAD_REF}:refs/remotes/origin/payload" \
+            "+refs/heads/${TARGET_BRANCH}:refs/remotes/origin/target"
+          CURRENT_SHA="$(git rev-parse refs/remotes/origin/target)"
+          test "$CURRENT_SHA" = "$EXPECTED_PARENT"
+          git checkout --detach refs/remotes/origin/payload
+          cat .common-develop-publish/task2.bundle.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/task2.bundle.xz.b64
+          base64 -d /tmp/task2.bundle.xz.b64 > /tmp/task2.bundle.xz
+          test "$(sha256sum /tmp/task2.bundle.xz | awk '{print $1}')" = "$BUNDLE_XZ_SHA256"
+          xz -dc /tmp/task2.bundle.xz > /tmp/task2.bundle
+          test "$(sha256sum /tmp/task2.bundle | awk '{print $1}')" = "$BUNDLE_SHA256"
+          git bundle verify /tmp/task2.bundle
+          git fetch /tmp/task2.bundle refs/heads/common-develop-transfer-target
+          test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "${TARGET_SHA}^")" = "$EXPECTED_PARENT"
+          test "$(git rev-parse "${TARGET_SHA}^{tree}")" = "$TARGET_TREE"
+          git show -s --format=%B "$TARGET_SHA" | grep -F 'WK-Checkpoint: CP-V_1.0-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-010'
+          git show -s --format=%B "$TARGET_SHA" | grep -F 'WK-Revision: TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c'
+          git merge-base --is-ancestor "$CURRENT_SHA" "$TARGET_SHA"
+          git push origin "$TARGET_SHA:refs/heads/$TARGET_BRANCH"
+          REMOTE_SHA="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')"
+          test "$REMOTE_SHA" = "$TARGET_SHA"
