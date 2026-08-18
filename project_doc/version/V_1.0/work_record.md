@@ -699,6 +699,60 @@
 | 测试与验证 | Run 32141152384: production compile PASSED; MODEL 6/6; STARTER 34/34; diff scope exactly 10 production files; long_task validate PASSED after deterministic risk refresh. |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"WR-20260818-134613-TASK-P2-DEV-P2CR002-SUPERSEDED-PASSED","event_type":"ARCHITECTURE_ITEM_SUPERSEDED","execution_mode":"SEQUENTIAL","input_revision":"DESIGN-P2-R33 / TESTDESIGN-P2-R37","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012","iteration_no":12,"modified_files_summary":["No production/test source changes. Only append-only work_record event for architecture supersession."],"next_action":"Proceed to TASK-P2-DEV-RED-GREEN-INTEGRITY using the four frozen R37 RED case IDs and controlled adaptation rules.","next_agent":"DevelopAgent","output_revision":"DEV-P2-R37-P2CR002-SUPERSEDED-R01@5a1d17ae546d","phase":"development","record_id":"WR-20260818-134613-TASK-P2-DEV-P2CR002-SUPERSEDED-PASSED","render_digest":"a3928b72e6560ab3310121f534ea470ae1ab4fcfd64dbf1b18614b86291fa4a8","schema_version":4,"scope":"P2-CR-002 same-plan cross-context provenance / RuntimeContextBinding implementation","source":"DEC-P2-SINGLE-RUNTIME-CONTEXT-001 / DESIGN-P2-R33","sql_change_summary":"None.","state_change":"P2-CR-002: ACTIVE/PLANNED historical item -> SUPERSEDED_BY_ARCH_DECISION; implementation obligation removed.","status":"PASSED","summary":"P2-CR-002 implementation is formally SUPERSEDED_BY_ARCH_DECISION. DEC-P2-SINGLE-RUNTIME-CONTEXT-001 makes same-plan cross-EngineContext coexistence/live replacement unsupported for current P2; RuntimeContextBinding must not be implemented or propagated.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-P2CR002-SUPERSEDED","task_type":"architecture_supersession","timestamp":"2026-08-18T13:46:13+00:00","validation_summary":"Design authority DESIGN-P2-R33 explicitly marks P2-CR-002 SUPERSEDED_BY_ARCH_DECISION and forbids RuntimeContextBinding; grep confirms current task4 production checkpoint introduced no RuntimeContextBinding implementation.","version":"V_1.0"} -->
+## WR-20260818-134613-TASK-P2-DEV-P2CR002-SUPERSEDED-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-18T13:46:13+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | DEC-P2-SINGLE-RUNTIME-CONTEXT-001 / DESIGN-P2-R33 |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | P2-CR-002 same-plan cross-context provenance / RuntimeContextBinding implementation |
+| 阶段 | development |
+| 任务类型 | architecture_supersession |
+| 事件类型 | ARCHITECTURE_ITEM_SUPERSEDED |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P2-CR-002 implementation is formally SUPERSEDED_BY_ARCH_DECISION. DEC-P2-SINGLE-RUNTIME-CONTEXT-001 makes same-plan cross-EngineContext coexistence/live replacement unsupported for current P2; RuntimeContextBinding must not be implemented or propagated. |
+| 状态 | PASSED |
+| 状态变更 | P2-CR-002: ACTIVE/PLANNED historical item -> SUPERSEDED_BY_ARCH_DECISION; implementation obligation removed. |
+| Task | TASK-P2-DEV-P2CR002-SUPERSEDED |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012 / 12 |
+| 输入 Revision | DESIGN-P2-R33 / TESTDESIGN-P2-R37 |
+| 输出 Revision | DEV-P2-R37-P2CR002-SUPERSEDED-R01@5a1d17ae546d |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | Proceed to TASK-P2-DEV-RED-GREEN-INTEGRITY using the four frozen R37 RED case IDs and controlled adaptation rules. |
+
+### 变更摘要
+
+- P2-CR-002 implementation is formally SUPERSEDED_BY_ARCH_DECISION. DEC-P2-SINGLE-RUNTIME-CONTEXT-001 makes same-plan cross-EngineContext coexistence/live replacement unsupported for current P2; RuntimeContextBinding must not be implemented or propagated.
+
+### 文件变更摘要
+
+- `No production/test source changes. Only append-only work_record event for architecture supersession.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | None. |
+| 测试与验证 | Design authority DESIGN-P2-R33 explicitly marks P2-CR-002 SUPERSEDED_BY_ARCH_DECISION and forbids RuntimeContextBinding; grep confirms current task4 production checkpoint introduced no RuntimeContextBinding implementation. |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
