@@ -1,0 +1,80 @@
+name: P2 task8 full regression closure
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-task8-base-20260818
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true
+      DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+      DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+      DEC_MYSQL_USER: root
+      DEC_MYSQL_PASSWORD: root
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Exact full Maven regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress clean verify 2>&1 | tee /tmp/task8-clean-verify.log
+      - name: Start and initialize MySQL
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo systemctl start mysql.service
+          for attempt in $(seq 1 30); do
+            if MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysqladmin --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" ping --silent; then break; fi
+            sleep 1
+          done
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" < dec-demo/src/test/resources/mysql/schema.sql
+          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
+            MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" --database=demo-test2 < dec-demo/src/test/resources/mysql/data.sql
+          fi
+      - name: Exact MySQL integration regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify 2>&1 | tee /tmp/task8-mysql-verify.log
+      - name: Exact MySQL report verification
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/remediation/verify_dec_demo_mysql_it.py 2>&1 | tee /tmp/task8-mysql-report-verify.log
+      - name: Freeze MySQL database effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p target/dec-demo-mysql-it
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" --database=demo-test2 -e "SELECT * FROM dec_test_execution_audit ORDER BY test_case; SELECT COUNT(*) AS order_count FROM order_info; SELECT COUNT(*) AS order_detail_count FROM order_detail_info; SELECT COUNT(*) AS pay_count FROM pay_info; SELECT COUNT(*) AS pay_detail_count FROM pay_detail_info; SELECT COUNT(*) AS product_count FROM product_info; SELECT COUNT(*) AS user_count FROM user_info;" | tee target/dec-demo-mysql-it/database-evidence.txt
+          git rev-parse HEAD | tee /tmp/task8-runner-head.txt
+      - name: Upload task8 evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-task8-regression-evidence
+          path: |
+            /tmp/task8-clean-verify.log
+            /tmp/task8-mysql-verify.log
+            /tmp/task8-mysql-report-verify.log
+            /tmp/task8-runner-head.txt
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            target/dec-demo-mysql-it/**
+          if-no-files-found: warn
