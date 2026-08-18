@@ -16,6 +16,27 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: Reconstruct and apply exact task4 patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .common-develop-validation/task4.patch.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/task4.patch.xz.b64
+          base64 -d /tmp/task4.patch.xz.b64 > /tmp/task4.patch.xz
+          test "$(sha256sum /tmp/task4.patch.xz | awk '{print $1}')" = "c8bc47ec0029bd66d6f0c7ac5e1f5ce10dc9d48cce20c0b1ae6235e5e3d3575c"
+          xz -dc /tmp/task4.patch.xz > /tmp/task4.patch
+          test "$(sha256sum /tmp/task4.patch | awk '{print $1}')" = "bc0cb7c87cf8df5efde1f7b5f6d5cc0348c25606cac5ab7106d9af649f3214af"
+          git checkout --detach ee4c77a5e3aeb1b5f081d79eef21627c2c092481
+          git apply --check /tmp/task4.patch
+          git apply /tmp/task4.patch
+          { git diff --name-only; git ls-files --others --exclude-standard; } | sort -u | tee /tmp/task4-changed-paths.txt
+          bad="$(cat /tmp/task4-changed-paths.txt | grep -Ev '^dec-core-(model|starter)/src/main/java/' || true)"
+          if [ -n "$bad" ]; then
+            echo "unexpected task4 paths:" >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+          test "$(wc -l < /tmp/task4-changed-paths.txt | tr -d ' ')" -eq 10
+          git diff --check
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -23,17 +44,6 @@ jobs:
           cache: maven
       - name: Bootstrap repository-bundled legacy dependencies
         run: scripts/remediation/bootstrap_legacy_dependencies.sh
-      - name: Verify task4 mutation scope
-        shell: bash
-        run: |
-          set -euo pipefail
-          git diff --name-only ee4c77a5e3aeb1b5f081d79eef21627c2c092481...HEAD | tee /tmp/task4-changed-paths.txt
-          bad="$(git diff --name-only ee4c77a5e3aeb1b5f081d79eef21627c2c092481...HEAD | grep -Ev '^dec-core-(model|starter)/src/main/java/' || true)"
-          if [ -n "$bad" ]; then
-            echo "unexpected task4 paths:" >&2
-            echo "$bad" >&2
-            exit 1
-          fi
       - name: Exact production compile gate
         shell: bash
         run: |
@@ -55,6 +65,7 @@ jobs:
         with:
           name: p2-task4-authority-closure-validation
           path: |
+            /tmp/task4.patch
             /tmp/task4-changed-paths.txt
             /tmp/task4-compile.log
             /tmp/task4-model-tests.log
