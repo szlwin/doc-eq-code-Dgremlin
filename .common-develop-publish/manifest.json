@@ -5,6 +5,8 @@
   "targetTree": "99060feb36feea3e069eb78cce463339100f0619",
   "bundleSha256": "6cc35de78b1a4aac6dfeb649e5624d9c7c219ded19b2c893c428808902934243",
   "bundleXzSha256": "84a41c4dbd2729d9f755a1ed7a20cce18690f044f0aeb0f3a93f8e3f9ce09c4c",
+  "expectedPartCount": 7,
+  "bundleBase64Sha256": "9364cd80f5138b65d98cc6703b8946c8a6aad78d009e2d3eafd2e9da456a8759",
   "requiredMessageMarkers": [
     "WK-Subtask: TASK-P2-DEV-SECURITY-RED-EVIDENCE",
     "WK-Revision: DEV-P2-R37-RED-R01@1b271dcae13a"
