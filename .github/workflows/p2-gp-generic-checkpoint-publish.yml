@@ -54,10 +54,15 @@ jobs:
           set -a; . /tmp/manifest.env; set +a
           CURRENT_SHA="$(git rev-parse refs/remotes/origin/target)"
           test "$CURRENT_SHA" = "$EXPECTED_PARENT"
-          PART_GLOB=".common-develop-publish/${PAYLOAD_PREFIX}.part.*"
-          compgen -G "$PART_GLOB" >/dev/null
-          cat $PART_GLOB | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
-          base64 -d /tmp/checkpoint.bundle.xz.b64 > /tmp/checkpoint.bundle.xz
+          BINARY_PAYLOAD=".common-develop-publish/${PAYLOAD_PREFIX}"
+          if [ -f "$BINARY_PAYLOAD" ]; then
+            cp "$BINARY_PAYLOAD" /tmp/checkpoint.bundle.xz
+          else
+            PART_GLOB=".common-develop-publish/${PAYLOAD_PREFIX}.part.*"
+            compgen -G "$PART_GLOB" >/dev/null
+            cat $PART_GLOB | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
+            base64 -d /tmp/checkpoint.bundle.xz.b64 > /tmp/checkpoint.bundle.xz
+          fi
           test "$(sha256sum /tmp/checkpoint.bundle.xz | awk '{print $1}')" = "$BUNDLE_XZ_SHA256"
           xz -dc /tmp/checkpoint.bundle.xz > /tmp/checkpoint.bundle
           test "$(sha256sum /tmp/checkpoint.bundle | awk '{print $1}')" = "$BUNDLE_SHA256"
