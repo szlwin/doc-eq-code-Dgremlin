@@ -765,7 +765,7 @@
       "phase": "implementation_plan",
       "revision": "TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c",
       "blocking": true,
-      "status": "VERIFIED",
+      "status": "PENDING",
       "parameters": {
         "reviewer_agent": "DevelopAgent",
         "review_phase": "implementation_plan"
@@ -773,18 +773,10 @@
       "source_refs": [
         "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/3"
       ],
-      "evidence_ids": [
-        "EVD-000356",
-        "EVD-000357",
-        "EVD-000359",
-        "EVD-000353",
-        "EVD-000354",
-        "EVD-000355",
-        "EVD-000358"
-      ],
-      "verified_by_agent": "DevelopAgent",
-      "verified_at": "2026-08-18T05:35:31+00:00",
-      "reason": "R06 is feasible in the current reactor: concrete files/commands exist, R37 supplies executable RED/GREEN oracles, raw P0 seams are reproducible, production mutation is correctly gated behind four REDs, and single-context verification does not require RuntimeContextBinding."
+      "evidence_ids": [],
+      "verified_by_agent": "",
+      "verified_at": "",
+      "reason": ""
     },
     {
       "assertion_id": "ASRT-P2-IMPLEMENTATION-PLAN-I010-PLANREVIEWAGENT",
@@ -794,7 +786,7 @@
       "phase": "implementation_plan",
       "revision": "TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c",
       "blocking": true,
-      "status": "VERIFIED",
+      "status": "PENDING",
       "parameters": {
         "reviewer_agent": "PlanReviewAgent",
         "review_phase": "implementation_plan"
@@ -802,20 +794,10 @@
       "source_refs": [
         "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/3"
       ],
-      "evidence_ids": [
-        "EVD-000356",
-        "EVD-000359",
-        "EVD-000353",
-        "EVD-000354",
-        "EVD-000355",
-        "EVD-000358",
-        "EVD-000357",
-        "EVD-000360",
-        "EVD-000361"
-      ],
-      "verified_by_agent": "PlanReviewAgent",
-      "verified_at": "2026-08-18T05:35:38+00:00",
-      "reason": "R06 provides bounded sequential coverage for R33/R37, concrete validation/evidence/stop conditions, traceable flow/requirement/design/test inputs, no cross-context scope drift, and preserves RED-before-production ordering."
+      "evidence_ids": [],
+      "verified_by_agent": "",
+      "verified_at": "",
+      "reason": ""
     }
   ]
 }
