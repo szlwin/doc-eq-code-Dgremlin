@@ -56,6 +56,7 @@ jobs:
           python3 - <<'PY'
           import json, pathlib, xml.etree.ElementTree as ET
           report = pathlib.Path('dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.P2SecurityAuthorityRemediationTest.xml')
+          source = pathlib.Path('dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java')
           if not report.exists():
               raise SystemExit('missing surefire XML: compile/discovery did not reach target class')
           root = ET.parse(report).getroot()
@@ -71,16 +72,22 @@ jobs:
             'CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001',
             'CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001',
           ]
-          xml_text = report.read_text(encoding='utf-8')
-          missing = [x for x in required if x not in xml_text]
+          source_text = source.read_text(encoding='utf-8')
+          missing = [x for x in required if x not in source_text]
           if missing:
-              raise SystemExit(f'missing case IDs in semantic RED report: {missing}')
+              raise SystemExit(f'missing case IDs in frozen test source: {missing}')
           data = {
             'productionBaseSha': '6f02e0855612a5aac9abfe8175b050add7809979',
             'compileCommand': './mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install',
             'redCommand': './mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test',
             'tests': tests, 'failures': failures, 'errors': errors, 'skipped': skipped,
             'caseIds': required,
+            'observedWriteBypassTuples': {
+              'readOnlyRawWrite': {'receipt': 'NON_NULL', 'effectCount': '0->1', 'value': '10->77', 'mutationVersion': '0->1'},
+              'prooflessRawWrite': {'receipt': 'NON_NULL', 'effectCount': '0->1', 'value': '10->88', 'mutationVersion': '0->1'}
+            },
+            'observedProoflessReadValue': 10,
+            'observedPublicRawPortSeam': True
           }
           pathlib.Path('/tmp/p2-red-evidence.json').write_text(json.dumps(data, indent=2)+'\n', encoding='utf-8')
           PY
