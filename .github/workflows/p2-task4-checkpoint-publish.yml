@@ -1,0 +1,58 @@
+name: P2 temporary task4 exact checkpoint publish
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-task4-publish-base-20260818
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TARGET_BRANCH: feature/p2-design-testdesign-20260808
+      EXPECTED_PARENT: ee4c77a5e3aeb1b5f081d79eef21627c2c092481
+      TARGET_SHA: 8b2faf836fe15f80df8ddb8895c35dbc53326d94
+      TARGET_TREE: ad216c30fa9c9c1e4b15486666e229f2e9708b2a
+      BUNDLE_SHA256: 6d16d9f884c6cd00273d3f004ef6032843ae451aac88e912ca55c152ccbd285a
+      BUNDLE_XZ_SHA256: 997294485dc0284ae85b1dab653dacd98a0a1527722a79ccfc4f1afb967f78b5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Verify bundle and fast-forward PR36 branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          git init /tmp/p2-task4-publish
+          cd /tmp/p2-task4-publish
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin \
+            "+refs/heads/${HEAD_REF}:refs/remotes/origin/payload" \
+            "+refs/heads/${TARGET_BRANCH}:refs/remotes/origin/target"
+          CURRENT_SHA="$(git rev-parse refs/remotes/origin/target)"
+          test "$CURRENT_SHA" = "$EXPECTED_PARENT"
+          git checkout --detach refs/remotes/origin/payload
+          cat .common-develop-publish/checkpoint.bundle.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
+          base64 -d /tmp/checkpoint.bundle.xz.b64 > /tmp/checkpoint.bundle.xz
+          test "$(sha256sum /tmp/checkpoint.bundle.xz | awk '{print $1}')" = "$BUNDLE_XZ_SHA256"
+          xz -dc /tmp/checkpoint.bundle.xz > /tmp/checkpoint.bundle
+          test "$(sha256sum /tmp/checkpoint.bundle | awk '{print $1}')" = "$BUNDLE_SHA256"
+          git bundle verify /tmp/checkpoint.bundle
+          git fetch /tmp/checkpoint.bundle HEAD
+          test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "${TARGET_SHA}^")" = "$EXPECTED_PARENT"
+          test "$(git rev-parse "${TARGET_SHA}^{tree}")" = "$TARGET_TREE"
+          git show -s --format=%B "$TARGET_SHA" | grep -F 'WK-Subtask: TASK-P2-DEV-RAW-AUTHORITY-CLOSURE'
+          git show -s --format=%B "$TARGET_SHA" | grep -F 'WK-Revision: DEV-P2-R37-AUTHORITY-R01@544155ef6a5b'
+          git merge-base --is-ancestor "$CURRENT_SHA" "$TARGET_SHA"
+          git push origin "$TARGET_SHA:refs/heads/$TARGET_BRANCH"
+          REMOTE_SHA="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')"
+          test "$REMOTE_SHA" = "$TARGET_SHA"
