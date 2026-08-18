@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --require-revision",
+  "exit_code": 0,
+  "executed_at": "2026-08-18T08:57:35+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c",
+  "output_digest": "07b4fa25299142b919a1e66323553ec082c61619ae5a9e8dff71b61656a427b5",
+  "metadata": {
+    "cwd": "/mnt/data/p2-current",
+    "phase": "implementation_plan",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "{\n  \"status\": \"PASSED\",\n  \"planRevision\": \"TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c\",\n  \"planStatus\": \"PASSED\",\n  \"taskCount\": 5,\n  \"reviewCount\": 24,\n  \"errors\": []\n}\n"
+}
