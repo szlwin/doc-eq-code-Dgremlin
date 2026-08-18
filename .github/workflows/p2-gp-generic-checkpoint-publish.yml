@@ -36,23 +36,27 @@ jobs:
           MANIFEST=.common-develop-publish/manifest.json
           test -f "$MANIFEST"
           python3 - "$MANIFEST" > /tmp/manifest.env <<'PY'
-          import json,re,sys
+          import json,re,shlex,sys
           m=json.load(open(sys.argv[1],encoding='utf-8'))
-          required=['expected_parent','target_sha','target_tree','bundle_sha256','bundle_xz_sha256','checkpoint_trailer','revision_trailer']
+          required=['expected_parent','target_sha','target_tree','bundle_sha256','bundle_xz_sha256','checkpoint_trailer','revision_trailer','payload_prefix']
           for k in required:
               if not isinstance(m.get(k),str) or not m[k]: raise SystemExit(f'missing/invalid {k}')
           for k in ['expected_parent','target_sha','target_tree']:
               if not re.fullmatch(r'[0-9a-f]{40}',m[k]): raise SystemExit(f'invalid sha {k}')
           for k in ['bundle_sha256','bundle_xz_sha256']:
               if not re.fullmatch(r'[0-9a-f]{64}',m[k]): raise SystemExit(f'invalid digest {k}')
+          if not re.fullmatch(r'[A-Za-z0-9._-]+',m['payload_prefix']): raise SystemExit('invalid payload_prefix')
           for k in ['checkpoint_trailer','revision_trailer']:
               if '\n' in m[k] or '\r' in m[k]: raise SystemExit(f'invalid trailer {k}')
-          for k in required[:5]: print(f'{k.upper()}={m[k]}')
+          for k in ['expected_parent','target_sha','target_tree','bundle_sha256','bundle_xz_sha256','payload_prefix']:
+              print(f'{k.upper()}={shlex.quote(m[k])}')
           PY
           set -a; . /tmp/manifest.env; set +a
           CURRENT_SHA="$(git rev-parse refs/remotes/origin/target)"
           test "$CURRENT_SHA" = "$EXPECTED_PARENT"
-          cat .common-develop-publish/checkpoint.bundle.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
+          PART_GLOB=".common-develop-publish/${PAYLOAD_PREFIX}.part.*"
+          compgen -G "$PART_GLOB" >/dev/null
+          cat $PART_GLOB | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
           base64 -d /tmp/checkpoint.bundle.xz.b64 > /tmp/checkpoint.bundle.xz
           test "$(sha256sum /tmp/checkpoint.bundle.xz | awk '{print $1}')" = "$BUNDLE_XZ_SHA256"
           xz -dc /tmp/checkpoint.bundle.xz > /tmp/checkpoint.bundle
