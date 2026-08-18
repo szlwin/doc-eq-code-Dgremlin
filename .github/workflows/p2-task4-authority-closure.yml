@@ -1,0 +1,64 @@
+name: P2 temporary task4 authority closure validation
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-task4-validation-base-20260818
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Verify task4 mutation scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only ee4c77a5e3aeb1b5f081d79eef21627c2c092481...HEAD | tee /tmp/task4-changed-paths.txt
+          bad="$(git diff --name-only ee4c77a5e3aeb1b5f081d79eef21627c2c092481...HEAD | grep -Ev '^dec-core-(model|starter)/src/main/java/' || true)"
+          if [ -n "$bad" ]; then
+            echo "unexpected task4 paths:" >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+      - name: Exact production compile gate
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-context,dec-core-model,dec-core-starter -am -Dmaven.test.skip=true install 2>&1 | tee /tmp/task4-compile.log
+      - name: MODEL legacy/internal regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-model -Dtest=RuntimeModelSessionEffectBehaviorTest,ProtectedWriteTransactionIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/task4-model-tests.log
+      - name: STARTER guarded production composition regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=ProtectedAccessProductionCompositionTest,ProtectedRuntimeModelAdapterIntegrationTest,ProtectedAccessStarterApiContractTest,ProtectedWriteIntentResolutionTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/task4-starter-tests.log
+      - name: Upload task4 validation evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-task4-authority-closure-validation
+          path: |
+            /tmp/task4-changed-paths.txt
+            /tmp/task4-compile.log
+            /tmp/task4-model-tests.log
+            /tmp/task4-starter-tests.log
+            dec-core-model/target/surefire-reports/
+            dec-core-starter/target/surefire-reports/
+          if-no-files-found: warn
