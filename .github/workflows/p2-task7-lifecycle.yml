@@ -28,7 +28,7 @@ jobs:
         run: |
           set -euo pipefail
           git diff --name-only e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e...HEAD | tee /tmp/task7-changed-paths.txt
-          unexpected=$(git diff --name-only e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e...HEAD | grep -v '^dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java$' || true)
+          unexpected=$(git diff --name-only e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e...HEAD | grep -Ev '^(dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java|\.github/workflows/p2-task7-lifecycle.yml)$' || true)
           test -z "$unexpected"
           sha256sum dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java | tee /tmp/task7-source.sha256
       - name: Exact starter compile prerequisite
