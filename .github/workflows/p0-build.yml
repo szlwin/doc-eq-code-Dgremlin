@@ -16,14 +16,9 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       - name: Export source snapshot for stage closure development
         run: tar --exclude=.git --exclude='*/target' -czf /tmp/source-snapshot.tar.gz .
-
-      - name: Export Git object history for common-develop recovery
-        run: git bundle create /tmp/common-develop-history.bundle --all
 
       - uses: actions/setup-java@v5
         with:
@@ -55,7 +50,6 @@ jobs:
             **/target/t14-mutation-proof/**
             target/p1-t15-retirement/**
             /tmp/source-snapshot.tar.gz
-            /tmp/common-develop-history.bundle
           if-no-files-found: warn
 
   mysql-it:
