@@ -1,0 +1,72 @@
+name: P2 temporary generic exact checkpoint publish
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-gp-generic-base-20260818
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TARGET_BRANCH: feature/p2-design-testdesign-20260808
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Verify manifest, bundle, and fast-forward PR36 branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          git init /tmp/p2-gp-generic
+          cd /tmp/p2-gp-generic
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin \
+            "+refs/heads/${HEAD_REF}:refs/remotes/origin/payload" \
+            "+refs/heads/${TARGET_BRANCH}:refs/remotes/origin/target"
+          git checkout --detach refs/remotes/origin/payload
+          MANIFEST=.common-develop-publish/manifest.json
+          test -f "$MANIFEST"
+          python3 - "$MANIFEST" > /tmp/manifest.env <<'PY'
+          import json,re,sys
+          m=json.load(open(sys.argv[1],encoding='utf-8'))
+          required=['expected_parent','target_sha','target_tree','bundle_sha256','bundle_xz_sha256','checkpoint_trailer','revision_trailer']
+          for k in required:
+              if not isinstance(m.get(k),str) or not m[k]: raise SystemExit(f'missing/invalid {k}')
+          for k in ['expected_parent','target_sha','target_tree']:
+              if not re.fullmatch(r'[0-9a-f]{40}',m[k]): raise SystemExit(f'invalid sha {k}')
+          for k in ['bundle_sha256','bundle_xz_sha256']:
+              if not re.fullmatch(r'[0-9a-f]{64}',m[k]): raise SystemExit(f'invalid digest {k}')
+          for k in ['checkpoint_trailer','revision_trailer']:
+              if '\n' in m[k] or '\r' in m[k]: raise SystemExit(f'invalid trailer {k}')
+          for k in required[:5]: print(f'{k.upper()}={m[k]}')
+          PY
+          set -a; . /tmp/manifest.env; set +a
+          CURRENT_SHA="$(git rev-parse refs/remotes/origin/target)"
+          test "$CURRENT_SHA" = "$EXPECTED_PARENT"
+          cat .common-develop-publish/checkpoint.bundle.xz.b64.part.* | tr -cd 'A-Za-z0-9+/=' > /tmp/checkpoint.bundle.xz.b64
+          base64 -d /tmp/checkpoint.bundle.xz.b64 > /tmp/checkpoint.bundle.xz
+          test "$(sha256sum /tmp/checkpoint.bundle.xz | awk '{print $1}')" = "$BUNDLE_XZ_SHA256"
+          xz -dc /tmp/checkpoint.bundle.xz > /tmp/checkpoint.bundle
+          test "$(sha256sum /tmp/checkpoint.bundle | awk '{print $1}')" = "$BUNDLE_SHA256"
+          git bundle verify /tmp/checkpoint.bundle
+          git fetch /tmp/checkpoint.bundle HEAD
+          test "$(git rev-parse FETCH_HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "${TARGET_SHA}^")" = "$EXPECTED_PARENT"
+          test "$(git rev-parse "${TARGET_SHA}^{tree}")" = "$TARGET_TREE"
+          CHECKPOINT_TRAILER="$(python3 -c 'import json;print(json.load(open(".common-develop-publish/manifest.json"))["checkpoint_trailer"])')"
+          REVISION_TRAILER="$(python3 -c 'import json;print(json.load(open(".common-develop-publish/manifest.json"))["revision_trailer"])')"
+          git show -s --format=%B "$TARGET_SHA" | grep -F -- "$CHECKPOINT_TRAILER"
+          git show -s --format=%B "$TARGET_SHA" | grep -F -- "$REVISION_TRAILER"
+          git merge-base --is-ancestor "$CURRENT_SHA" "$TARGET_SHA"
+          git push origin "$TARGET_SHA:refs/heads/$TARGET_BRANCH"
+          REMOTE_SHA="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | awk '{print $1}')"
+          test "$REMOTE_SHA" = "$TARGET_SHA"
