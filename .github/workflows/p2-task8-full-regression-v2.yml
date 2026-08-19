@@ -1,0 +1,118 @@
+name: P2 task8 full regression v2
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-task8-base-v2-20260819
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mysqldb
+          MYSQL_DATABASE: demo-test2
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pmysqldb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Reconstruct and verify exact local task7 checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d .common-develop-publish/task8-task7.bundle.b64 > /tmp/task8-task7.bundle
+          echo 'eec3431e31c7769673c2dd9c483a5b8d0acae02bcd1fb8d019d319dccae2617f  /tmp/task8-task7.bundle' | sha256sum -c -
+          git bundle verify /tmp/task8-task7.bundle
+          git fetch /tmp/task8-task7.bundle refs/heads/feature/p2-design-testdesign-20260808:refs/task8/local
+          git checkout --detach refs/task8/local
+          test "$(git rev-parse HEAD)" = '19b2479045968a37c0fb9b23bb49caafe9587095'
+          test "$(git rev-parse HEAD^)" = 'e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e'
+          test "$(git rev-parse HEAD^{tree})" = '03d103f71fe49c9a3e7842126405c256c27bf4f9'
+          git diff --name-only e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e..HEAD | tee /tmp/task8-input-changes.txt
+          if grep -E '(^|/)src/main/' /tmp/task8-input-changes.txt; then
+            echo 'task7 checkpoint unexpectedly changes production source' >&2
+            exit 1
+          fi
+          git rev-parse HEAD > /tmp/task8-exact-revision.txt
+          git rev-parse HEAD^{tree} > /tmp/task8-exact-tree.txt
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Initialize MySQL schema and data
+        shell: bash
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          set -euo pipefail
+          test -f dec-demo/src/test/resources/mysql/schema.sql
+          docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" -i "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' < dec-demo/src/test/resources/mysql/schema.sql
+          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
+            docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" -i "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' < dec-demo/src/test/resources/mysql/data.sql
+          fi
+      - name: Exact full clean verify
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress clean verify 2>&1 | tee /tmp/task8-clean-verify.log
+      - name: Exact MySQL integration verify
+        shell: bash
+        env:
+          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_USER: root
+          DEC_MYSQL_PASSWORD: mysqldb
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify 2>&1 | tee /tmp/task8-mysql-it.log
+      - name: Exact dec-demo MySQL report verifier
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/remediation/verify_dec_demo_mysql_it.py 2>&1 | tee /tmp/task8-mysql-report-verify.log
+      - name: Freeze MySQL business execution markers and effects
+        shell: bash
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        run: |
+          set -euo pipefail
+          mkdir -p target/dec-demo-mysql-it
+          marker_count="$(docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" "$MYSQL_CONTAINER_ID" mysql -N -uroot --database='demo-test2' -e "SELECT COUNT(*) FROM dec_test_execution_audit WHERE test_case IN ('RuleTests.orderRulesWriteExpectedRowsToBothDatabases','DirectoryTest.directoryRangeReturnsOnlyRegisterAndAuthUsers','OrderTest.saveOrderWritesCompleteAggregate');")"
+          test "$marker_count" = '3'
+          printf 'marker_count=%s\n' "$marker_count" | tee target/dec-demo-mysql-it/execution-marker-count.txt
+          docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' -e "SELECT * FROM dec_test_execution_audit ORDER BY test_case; SELECT COUNT(*) AS order_count FROM order_info; SELECT COUNT(*) AS order_detail_count FROM order_detail_info; SELECT COUNT(*) AS pay_count FROM pay_info; SELECT COUNT(*) AS pay_detail_count FROM pay_detail_info; SELECT COUNT(*) AS product_count FROM product_info; SELECT COUNT(*) AS user_count FROM user_info;" | tee target/dec-demo-mysql-it/database-evidence.txt
+      - name: Upload task8 full regression evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-task8-full-regression-evidence-v2
+          path: |
+            /tmp/task8-input-changes.txt
+            /tmp/task8-exact-revision.txt
+            /tmp/task8-exact-tree.txt
+            /tmp/task8-clean-verify.log
+            /tmp/task8-mysql-it.log
+            /tmp/task8-mysql-report-verify.log
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            target/dec-demo-mysql-it/**
+          if-no-files-found: warn
+          compression-level: 6
