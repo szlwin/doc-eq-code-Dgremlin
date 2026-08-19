@@ -1,0 +1,70 @@
+name: P2 task7 lifecycle verification v2
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-task7-base-v2-20260819
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Verify exact task7 scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          task6=e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e
+          base=origin/agent/p2-task7-base-v2-20260819
+          head='${{ github.event.pull_request.head.sha }}'
+          test "$(git rev-parse "$base^")" = "$task6"
+          git diff --name-only "$task6...$base" | tee /tmp/task7-base-changes.txt
+          test "$(cat /tmp/task7-base-changes.txt)" = '.github/workflows/p2-task7-lifecycle-v2.yml'
+          git diff --name-only "$base...$head" | tee /tmp/task7-changed-paths.txt
+          test "$(cat /tmp/task7-changed-paths.txt)" = 'dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java'
+          sha256sum dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java | tee /tmp/task7-source.sha256
+      - name: Exact starter compile prerequisite
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/task7-compile.log
+      - name: Exact single-context lifecycle test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/task7-lifecycle.log
+      - name: Exact dec-demo real fixture regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/task7-real-fixture.log
+      - name: Upload task7 evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-task7-lifecycle-evidence-v2
+          path: |
+            /tmp/task7-base-changes.txt
+            /tmp/task7-changed-paths.txt
+            /tmp/task7-source.sha256
+            /tmp/task7-compile.log
+            /tmp/task7-lifecycle.log
+            /tmp/task7-real-fixture.log
+            dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java
+            dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.SingleEngineContextRuntimeLifecycleTest.xml
+            dec-demo/target/surefire-reports/TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml
+          if-no-files-found: warn
+          compression-level: 6
