@@ -1,10 +1,1 @@
-{
-  "expected_parent": "fbe16820eb84080af1e774736e7aaf787c1db8a0",
-  "target_sha": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
-  "target_tree": "0eca0fe239bf1e40da3db4612dcd3d4b4f3b3729",
-  "bundle_sha256": "a466599d9c87fe16949f5fd04fb29d35039c390d0d0e0d78c61c164011b891da",
-  "bundle_xz_sha256": "21a4f241958a59e4436f28463900c6021b0eca5be9a653ef7fee3d940db05f92",
-  "checkpoint_trailer": "WK-Subtask: TASK-P2-DEV-P2-REGRESSION-CLOSURE",
-  "revision_trailer": "WK-Revision: DEV-P2-R37-REGRESSION-R01@fbe16820eb84",
-  "payload_prefix": "task8s.bundle.xz.b64"
-}
+{"schema_version":1,"expected_parent":"1a936fdd2a4559178518dce3ab1214a058c5e2ab","target_sha":"437b8547d0b660cfa912d9e3333452fc6f248f3e","target_tree":"1afa672f0386778b722d27656407971f39b596c2","bundle_sha256":"c709868e13bd8298fb1bba3dd63c7a4bc530d218d2e93f139aae720fd6b392ec","bundle_xz_sha256":"377c7e49b1ac01cd555ff3b16a09a62355f4d518161ed9c686fd65769fbb9e06","checkpoint_trailer":"WK-Checkpoint: CP-V_1.0-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-013","revision_trailer":"WK-Revision: DEV-P2-R37-SKELETON-R01@a5723c233bdf","payload_prefix":"i013v1.bundle.xz.b64"}
