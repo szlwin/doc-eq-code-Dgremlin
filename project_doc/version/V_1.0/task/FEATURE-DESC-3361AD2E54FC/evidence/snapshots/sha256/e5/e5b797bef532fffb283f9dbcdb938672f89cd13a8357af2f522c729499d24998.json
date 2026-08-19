@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "kind": "test_report_manifest",
+  "task_id": "TASK-P2-PHASE-TESTING",
+  "revision": "TESTING-P2-R37-FINALHEAD-R01@647a02301618",
+  "captured_at": "2026-08-19T17:00:22+00:00",
+  "input_code_review_revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "tested_code": {
+    "pr36_head_sha": "647a023016181aafdabdfb8318e849bf352ab010",
+    "tree_sha": "60a19d6559760e0902d5851a1cc155c1a09a6eee",
+    "binding": "EXACT_HEAD_EXECUTED",
+    "development_checkpoint": "8298cde932dfd0f8f60eb31a09e8666d1184dcce",
+    "intervening_non_project_doc_changes": []
+  },
+  "workflow": {
+    "runner_pr": 60,
+    "run_id": 32278778894,
+    "run_number": 1,
+    "runner_head_sha": "ac7aa1cfd0a549921ac0d25f50159d813ff045e6",
+    "conclusion": "SUCCESS",
+    "core_verify": {
+      "job_id": 96152322690,
+      "conclusion": "SUCCESS",
+      "artifact_id": 9375122654,
+      "artifact_digest": "sha256:3a8bc6bd89cecaf3774a87f8cefc98be2c8d47cdb1bdd94024989fa6ad6f985f"
+    },
+    "mysql_it": {
+      "job_id": 96152322962,
+      "conclusion": "SUCCESS",
+      "artifact_id": 9375116975,
+      "artifact_digest": "sha256:f7f2b1ec312995bc88e1220f9d48adf66e77e19262f98ef64eaa0a0bc0e207a8"
+    }
+  },
+  "core_reports": {
+    "xml_reports": 142,
+    "artifact_totals_including_deliberate_failure_gate": {
+      "tests": 778,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "functional_reports_excluding_deliberate_failure_gate": {
+      "tests": 777,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "focused_suites": [
+      {
+        "suite": "dec.core.starter.access.P2SecurityAuthorityRemediationTest",
+        "report": "TEST-dec.core.starter.access.P2SecurityAuthorityRemediationTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/core/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.P2SecurityAuthorityRemediationTest.xml"
+      },
+      {
+        "suite": "dec.core.starter.access.SingleEngineContextRuntimeLifecycleTest",
+        "report": "TEST-dec.core.starter.access.SingleEngineContextRuntimeLifecycleTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/core/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.SingleEngineContextRuntimeLifecycleTest.xml"
+      },
+      {
+        "suite": "dec.demo.p2.P2RealFixtureIntegrationTest",
+        "report": "TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/core/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml"
+      },
+      {
+        "suite": "dec.core.starter.access.ProtectedAccessConcurrencyTest",
+        "report": "TEST-dec.core.starter.access.ProtectedAccessConcurrencyTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/core/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.ProtectedAccessConcurrencyTest.xml"
+      },
+      {
+        "suite": "dec.core.starter.access.ProtectedAccessProductionCompositionTest",
+        "report": "TEST-dec.core.starter.access.ProtectedAccessProductionCompositionTest.xml",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/core/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.ProtectedAccessProductionCompositionTest.xml"
+      },
+      {
+        "suite": "dec.core.starter.access.ProtectedRuntimeModelAdapterIntegrationTest",
+        "report": "TEST-dec.core.starter.access.ProtectedRuntimeModelAdapterIntegrationTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/core/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/surefire-reports/TEST-dec.core.starter.access.ProtectedRuntimeModelAdapterIntegrationTest.xml"
+      }
+    ],
+    "focused_totals": {
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "deliberate_failure_suites": [
+      {
+        "suite": "dec.core.context.gate.P0IntentionalFailureTest",
+        "report": "TEST-dec.core.context.gate.P0IntentionalFailureTest.xml",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/core/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/surefire-reports/TEST-dec.core.context.gate.P0IntentionalFailureTest.xml"
+      }
+    ]
+  },
+  "mysql_reports": {
+    "xml_reports": 4,
+    "required_suites": [
+      {
+        "suite": "dec.demo.directory.DirectoryTest",
+        "report": "TEST-dec.demo.directory.DirectoryTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.directory.DirectoryTest.xml"
+      },
+      {
+        "suite": "dec.demo.model.RuleTests",
+        "report": "TEST-dec.demo.model.RuleTests.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.model.RuleTests.xml"
+      },
+      {
+        "suite": "dec.demo.p2.P2RealFixtureIntegrationTest",
+        "report": "TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml"
+      },
+      {
+        "suite": "dec.demo.system.OrderTest",
+        "report": "TEST-dec.demo.system.OrderTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.system.OrderTest.xml"
+      }
+    ],
+    "required_totals": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "required_business_report_check": "PASSED"
+  },
+  "database_final_state": {
+    "execution_markers": 3,
+    "order_count": 1,
+    "order_detail_count": 1,
+    "pay_count": 1,
+    "pay_detail_count": 1,
+    "product_count": 1,
+    "user_count": 1
+  },
+  "gates": {
+    "exact_head_tree": "PASSED",
+    "security_authority": "PASSED",
+    "single_context_lifecycle": "PASSED",
+    "real_fixture": "PASSED",
+    "full_clean_verify": "PASSED",
+    "t14_provenance_mutation_gate": "PASSED",
+    "intentional_failing_test_gate": "PASSED",
+    "t15_declaration_runtime_retirement": "PASSED",
+    "mysql_schema_and_business_runtime": "PASSED"
+  },
+  "claim_boundary": "Testing I014 executed PR36 exact head 647a023016181aafdabdfb8318e849bf352ab010 and tree 60a19d6559760e0902d5851a1cc155c1a09a6eee. No conclusion is extrapolated to a later metadata/checkpoint head."
+}
