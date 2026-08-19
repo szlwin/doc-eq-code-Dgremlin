@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "exit_code": 0,
+  "executed_at": "2026-08-19T15:45:45+00:00",
+  "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "output_digest": "2655de7ca740edce4211484b3d15f802454c674cf163d8e37a5682703c117054",
+  "metadata": {
+    "cwd": "/mnt/data/project_doc",
+    "phase": "code_review",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "OK: project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC\n"
+}
