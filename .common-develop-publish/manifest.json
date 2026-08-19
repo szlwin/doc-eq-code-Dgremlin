@@ -1,10 +1,10 @@
 {
-  "expected_parent": "8298cde932dfd0f8f60eb31a09e8666d1184dcce",
-  "target_sha": "647a023016181aafdabdfb8318e849bf352ab010",
-  "target_tree": "60a19d6559760e0902d5851a1cc155c1a09a6eee",
-  "bundle_sha256": "958a7675860e8eb1ac6628865c6fed0c31806e5f4b9209f116e10c5cb03216a1",
-  "bundle_xz_sha256": "989e270c38ba9f7a21dd99bfb310ff13924e9bacb7a502a3e3fc1230b59f40ce",
-  "checkpoint_trailer": "WK-Checkpoint: CP-V_1.0-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-014",
-  "revision_trailer": "WK-Revision: DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
-  "payload_prefix": "cr14b.bundle.xz.b64"
+  "expected_parent": "647a023016181aafdabdfb8318e849bf352ab010",
+  "target_sha": "1547f4fff2375798d1faa2a80ad77518a73bfdc8",
+  "target_tree": "ca833077c720711558a75f179c5e3c0ed148956e",
+  "bundle_sha256": "32ac76ab5bd24c50a4bac20e7186bdc507f0648da19625aef04ea10f0a548bb2",
+  "bundle_xz_sha256": "56c66f1a87b39cc08ce3f9344f779de49848ae6c5c7c2fb56590906ac06fe383",
+  "checkpoint_trailer": "WK-Checkpoint: CP-V_1.0-FEATURE-DESC-3361AD2E54FC-TESTING-014",
+  "revision_trailer": "WK-Revision: TESTING-P2-R37-FINALHEAD-R01@647a02301618",
+  "payload_prefix": "testing-i014.bundle.xz.b64"
 }
