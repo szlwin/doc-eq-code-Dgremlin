@@ -1,0 +1,179 @@
+name: P2 Testing I014 exact final-head validation
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-testing-i014-base-20260820
+
+permissions:
+  contents: read
+
+jobs:
+  core-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: 647a023016181aafdabdfb8318e849bf352ab010
+          fetch-depth: 0
+      - name: Verify exact PR36 target
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "647a023016181aafdabdfb8318e849bf352ab010"
+          test "$(git rev-parse HEAD^{tree})" = "60a19d6559760e0902d5851a1cc155c1a09a6eee"
+          printf 'target_sha=%s\ntarget_tree=%s\n' "$(git rev-parse HEAD)" "$(git rev-parse HEAD^{tree})" | tee /tmp/testing-target.txt
+          tar --exclude=.git --exclude='*/target' -czf /tmp/source-snapshot.tar.gz .
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Verify Maven Wrapper
+        run: ./mvnw --version
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Focused P2 security authority validation
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/testing-bootstrap-core.log
+          ./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/testing-security.log
+      - name: Focused single-context lifecycle validation
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/testing-lifecycle.log
+      - name: Prepare dec-demo in-repo dependencies
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-datasource-orm-mysql,dec-context-config-parse-yaml,dec-context-config-parse-xml -am -DskipTests install 2>&1 | tee /tmp/testing-demo-bootstrap.log
+      - name: Focused real fixture validation
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/testing-real-fixture.log
+      - name: Core build and tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress clean verify 2>&1 | tee /tmp/testing-core-verify.log
+      - name: Prove T14 provenance mutation gate
+        run: sh scripts/remediation/prove_t14_provenance_mutation_gate.sh
+      - name: Prove failing tests block the build
+        shell: bash
+        run: |
+          set -o pipefail
+          scripts/remediation/prove_test_failure_gate.sh 2>&1 | tee /tmp/testing-failure-gate.log
+      - name: Prove T15 declaration runtime retirement
+        run: sh scripts/remediation/prove_p1_t15_retirement_gate.sh
+      - name: Upload core testing evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-testing-i014-core-evidence
+          path: |
+            /tmp/testing-target.txt
+            /tmp/source-snapshot.tar.gz
+            /tmp/testing-bootstrap-core.log
+            /tmp/testing-security.log
+            /tmp/testing-lifecycle.log
+            /tmp/testing-demo-bootstrap.log
+            /tmp/testing-real-fixture.log
+            /tmp/testing-core-verify.log
+            /tmp/testing-failure-gate.log
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            **/target/site/jacoco/**
+            **/target/t14-mutation-proof/**
+            target/p1-t15-retirement/**
+          if-no-files-found: warn
+
+  mysql-it:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mysqldb
+          MYSQL_DATABASE: demo-test2
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pmysqldb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: 647a023016181aafdabdfb8318e849bf352ab010
+          fetch-depth: 0
+      - name: Verify exact PR36 target
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "647a023016181aafdabdfb8318e849bf352ab010"
+          test "$(git rev-parse HEAD^{tree})" = "60a19d6559760e0902d5851a1cc155c1a09a6eee"
+          printf 'target_sha=%s\ntarget_tree=%s\n' "$(git rev-parse HEAD)" "$(git rev-parse HEAD^{tree})" | tee /tmp/testing-target-mysql.txt
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Initialize MySQL schema and data
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dec-demo/src/test/resources/mysql/schema.sql
+          docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" -i "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' < dec-demo/src/test/resources/mysql/schema.sql
+          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
+            docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" -i "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' < dec-demo/src/test/resources/mysql/data.sql
+          fi
+      - name: Run dec-demo MySQL business tests
+        shell: bash
+        env:
+          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_USER: root
+          DEC_MYSQL_PASSWORD: mysqldb
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify 2>&1 | tee /tmp/testing-mysql-it.log
+      - name: Verify dec-demo MySQL test reports
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/remediation/verify_dec_demo_mysql_it.py 2>&1 | tee /tmp/testing-mysql-verify.log
+      - name: Freeze business execution markers and database effects
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p target/dec-demo-mysql-it
+          marker_count="$(docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" "$MYSQL_CONTAINER_ID" mysql -N -uroot --database='demo-test2' -e "SELECT COUNT(*) FROM dec_test_execution_audit WHERE test_case IN ('RuleTests.orderRulesWriteExpectedRowsToBothDatabases','DirectoryTest.directoryRangeReturnsOnlyRegisterAndAuthUsers','OrderTest.saveOrderWritesCompleteAggregate');")"
+          test "$marker_count" = "3"
+          docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' -e "SELECT * FROM dec_test_execution_audit ORDER BY test_case; SELECT COUNT(*) AS order_count FROM order_info; SELECT COUNT(*) AS order_detail_count FROM order_detail_info; SELECT COUNT(*) AS pay_count FROM pay_info; SELECT COUNT(*) AS pay_detail_count FROM pay_detail_info; SELECT COUNT(*) AS product_count FROM product_info; SELECT COUNT(*) AS user_count FROM user_info;" | tee target/dec-demo-mysql-it/database-evidence.txt
+      - name: Upload MySQL testing evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-testing-i014-mysql-evidence
+          path: |
+            /tmp/testing-target-mysql.txt
+            /tmp/testing-mysql-it.log
+            /tmp/testing-mysql-verify.log
+            dec-demo/target/surefire-reports/**
+            target/dec-demo-mysql-it/**
+          if-no-files-found: error
