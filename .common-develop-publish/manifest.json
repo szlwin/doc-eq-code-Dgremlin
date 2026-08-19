@@ -1,1 +1,10 @@
-{"schema_version":1,"expected_parent":"e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e","target_sha":"fbe16820eb84080af1e774736e7aaf787c1db8a0","target_tree":"0da4a1f727db32d4ce3d3602a73548745db5f2e5","bundle_sha256":"9abfbb30755c94e18338409798402e5928812760d72de9c20b531e1a839e1df6","bundle_xz_sha256":"d5171a6b2e040455c1e4a8ba75c5f8c38261a1d02288b870529bc626e4689bd8","checkpoint_trailer":"WK-Subtask: TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE","revision_trailer":"WK-Revision: DEV-P2-R37-LIFECYCLE-R01@c76532d452f7","payload_prefix":"task7v3.bundle.xz.b64"}
+{
+  "expected_parent": "fbe16820eb84080af1e774736e7aaf787c1db8a0",
+  "target_sha": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
+  "target_tree": "0eca0fe239bf1e40da3db4612dcd3d4b4f3b3729",
+  "bundle_sha256": "a466599d9c87fe16949f5fd04fb29d35039c390d0d0e0d78c61c164011b891da",
+  "bundle_xz_sha256": "21a4f241958a59e4436f28463900c6021b0eca5be9a653ef7fee3d940db05f92",
+  "checkpoint_trailer": "WK-Subtask: TASK-P2-DEV-P2-REGRESSION-CLOSURE",
+  "revision_trailer": "WK-Revision: DEV-P2-R37-REGRESSION-R01@fbe16820eb84",
+  "payload_prefix": "task8s.bundle.xz.b64"
+}
