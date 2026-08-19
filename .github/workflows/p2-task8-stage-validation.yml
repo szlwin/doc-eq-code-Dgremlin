@@ -1,0 +1,144 @@
+name: P2 task8 development stage validation
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-task8-stage-base-20260819
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true
+      DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+      DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+      DEC_MYSQL_USER: root
+      DEC_MYSQL_PASSWORD: root
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Verify executable-source equivalence
+        shell: bash
+        run: |
+          set -euo pipefail
+          task6=e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e
+          head='${{ github.event.pull_request.head.sha }}'
+          git diff --name-only "$task6...$head" | tee /tmp/task8-stage-changed.txt
+          code_changes=$(git diff --name-only "$task6...$head" | grep -v '^\.github/workflows/' || true)
+          test "$code_changes" = 'dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java'
+          test "$(git hash-object dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java)" = '8b3200201546d4fd333cca768b049ab5036176e6'
+          if git diff --name-only "$task6...$head" | grep -E '(^|/)src/main/'; then
+            echo 'unexpected production source drift' >&2
+            exit 1
+          fi
+          git rev-parse HEAD | tee /tmp/task8-stage-runner-head.txt
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: R06 command 2
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/r06-cmd02.log
+      - name: R06 command 3
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/r06-cmd03.log
+      - name: R06 command 4
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-context,dec-core-model,dec-core-starter -am -Dmaven.test.skip=true install 2>&1 | tee /tmp/r06-cmd04.log
+      - name: R06 command 5
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-context,dec-core-model,dec-core-starter test 2>&1 | tee /tmp/r06-cmd05.log
+      - name: R06 command 6
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=ProtectedAccessProductionCompositionTest,ProtectedRuntimeModelAdapterIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/r06-cmd06.log
+      - name: R06 command 7
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/r06-cmd07.log
+      - name: R06 command 8
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/r06-cmd08.log
+      - name: R06 command 9
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/r06-cmd09.log
+      - name: R06 command 10
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress clean verify 2>&1 | tee /tmp/r06-cmd10.log
+      - name: Start and initialize MySQL
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo systemctl start mysql.service
+          for attempt in $(seq 1 30); do
+            if MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysqladmin --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" ping --silent; then break; fi
+            sleep 1
+          done
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" < dec-demo/src/test/resources/mysql/schema.sql
+          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
+            MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" --database=demo-test2 < dec-demo/src/test/resources/mysql/data.sql
+          fi
+      - name: R06 command 11
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify 2>&1 | tee /tmp/r06-cmd11.log
+      - name: R06 command 12
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/remediation/verify_dec_demo_mysql_it.py 2>&1 | tee /tmp/r06-cmd12.log
+      - name: Freeze MySQL database effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p target/dec-demo-mysql-it
+          MYSQL_PWD="$DEC_MYSQL_PASSWORD" mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user="$DEC_MYSQL_USER" --database=demo-test2 -e "SELECT * FROM dec_test_execution_audit ORDER BY test_case; SELECT COUNT(*) AS order_count FROM order_info; SELECT COUNT(*) AS order_detail_count FROM order_detail_info; SELECT COUNT(*) AS pay_count FROM pay_info; SELECT COUNT(*) AS pay_detail_count FROM pay_detail_info; SELECT COUNT(*) AS product_count FROM product_info; SELECT COUNT(*) AS user_count FROM user_info;" | tee target/dec-demo-mysql-it/database-evidence.txt
+      - name: Upload stage validation evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-task8-development-stage-validation
+          path: |
+            /tmp/task8-stage-changed.txt
+            /tmp/task8-stage-runner-head.txt
+            /tmp/r06-cmd02.log
+            /tmp/r06-cmd03.log
+            /tmp/r06-cmd04.log
+            /tmp/r06-cmd05.log
+            /tmp/r06-cmd06.log
+            /tmp/r06-cmd07.log
+            /tmp/r06-cmd08.log
+            /tmp/r06-cmd09.log
+            /tmp/r06-cmd10.log
+            /tmp/r06-cmd11.log
+            /tmp/r06-cmd12.log
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            target/dec-demo-mysql-it/**
+          if-no-files-found: warn
+          compression-level: 6
