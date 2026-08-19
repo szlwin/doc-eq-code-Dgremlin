@@ -2,7 +2,7 @@
   "schema_version": 1,
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
-  "input_revision": "DEV-P2-R37-REGRESSION-R01@fbe16820eb84",
+  "input_revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
   "input_files": [
     "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java",
     "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java",
@@ -22,7 +22,7 @@
   "input_digest": "fcdb21b67d38229ab96e7bb6a52d58fc1c1f38e2d74f9c213d4cf5cdb1c39f6f",
   "status": "SCANNED",
   "scanned_by_agent": "ProjectManagerAgent",
-  "scanned_at": "2026-08-19T12:34:41+00:00",
+  "scanned_at": "2026-08-19T15:10:27+00:00",
   "detections": [
     {
       "detection_id": "DET-13CD2A50BF59",
@@ -31,7 +31,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000390"
+        "EVD-000458"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -44,7 +44,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000397"
+        "EVD-000465"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -57,7 +57,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000391"
+        "EVD-000459"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -70,7 +70,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000384"
+        "EVD-000452"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -83,7 +83,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000385"
+        "EVD-000453"
       ],
       "status": "DETECTED",
       "reason": "content:adapter, content:port",
@@ -96,7 +96,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000397"
+        "EVD-000465"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -109,7 +109,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000394"
+        "EVD-000462"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -122,7 +122,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000386"
+        "EVD-000454"
       ],
       "status": "DETECTED",
       "reason": "content:for (",
@@ -135,7 +135,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000393"
+        "EVD-000461"
       ],
       "status": "DETECTED",
       "reason": "content:for (",
@@ -148,7 +148,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000387"
+        "EVD-000455"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -161,7 +161,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000389"
+        "EVD-000457"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -174,7 +174,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000392"
+        "EVD-000460"
       ],
       "status": "DETECTED",
       "reason": "content:module, content:port",
@@ -187,7 +187,7 @@
       "confidence": 8,
       "required_reviewer": "ConcurrencyReviewAgent",
       "evidence_ids": [
-        "EVD-000391"
+        "EVD-000459"
       ],
       "status": "DETECTED",
       "reason": "content:atomic",
@@ -200,7 +200,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000393"
+        "EVD-000461"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -213,7 +213,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000388"
+        "EVD-000456"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -226,7 +226,7 @@
       "confidence": 8,
       "required_reviewer": "ConcurrencyReviewAgent",
       "evidence_ids": [
-        "EVD-000392"
+        "EVD-000460"
       ],
       "status": "DETECTED",
       "reason": "content:atomic, content:compareandset",
@@ -239,7 +239,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000395"
+        "EVD-000463"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -252,7 +252,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000397"
+        "EVD-000465"
       ],
       "status": "DETECTED",
       "reason": "content:for (",
@@ -265,7 +265,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000391"
+        "EVD-000459"
       ],
       "status": "DETECTED",
       "reason": "content:adapter, content:port",
@@ -278,7 +278,7 @@
       "confidence": 8,
       "required_reviewer": "ConcurrencyReviewAgent",
       "evidence_ids": [
-        "EVD-000384"
+        "EVD-000452"
       ],
       "status": "DETECTED",
       "reason": "content:synchronized, content:atomic",
@@ -291,7 +291,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000384"
+        "EVD-000452"
       ],
       "status": "DETECTED",
       "reason": "content:module, content:adapter, content:port",
@@ -304,7 +304,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000387"
+        "EVD-000455"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -317,7 +317,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000388"
+        "EVD-000456"
       ],
       "status": "DETECTED",
       "reason": "content:dependency, content:adapter, content:port",
@@ -330,7 +330,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000386"
+        "EVD-000454"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -343,7 +343,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000390"
+        "EVD-000458"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -356,7 +356,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000396"
+        "EVD-000464"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -369,7 +369,7 @@
       "confidence": 7,
       "required_reviewer": "PerformanceReviewAgent",
       "evidence_ids": [
-        "EVD-000384"
+        "EVD-000452"
       ],
       "status": "DETECTED",
       "reason": "content:for (, content:while (",
@@ -382,7 +382,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000394"
+        "EVD-000462"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -395,7 +395,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000389"
+        "EVD-000457"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -408,7 +408,7 @@
       "confidence": 8,
       "required_reviewer": "ConcurrencyReviewAgent",
       "evidence_ids": [
-        "EVD-000386"
+        "EVD-000454"
       ],
       "status": "DETECTED",
       "reason": "content:synchronized, content:atomic",
@@ -421,7 +421,7 @@
       "confidence": 9,
       "required_reviewer": "ImpactAnalysisReviewAgent",
       "evidence_ids": [
-        "EVD-000398"
+        "EVD-000466"
       ],
       "status": "DETECTED",
       "reason": "traceability impact_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
@@ -434,7 +434,7 @@
       "confidence": 8,
       "required_reviewer": "ArchitectureReviewAgent",
       "evidence_ids": [
-        "EVD-000396"
+        "EVD-000464"
       ],
       "status": "DETECTED",
       "reason": "content:port",
@@ -447,7 +447,7 @@
       "confidence": 9,
       "required_reviewer": "SecurityReviewAgent",
       "evidence_ids": [
-        "EVD-000393"
+        "EVD-000461"
       ],
       "status": "DETECTED",
       "reason": "content:authorize",
@@ -460,7 +460,7 @@
       "confidence": 8,
       "required_reviewer": "ConcurrencyReviewAgent",
       "evidence_ids": [
-        "EVD-000397"
+        "EVD-000465"
       ],
       "status": "DETECTED",
       "reason": "content:synchronized",
@@ -473,7 +473,7 @@
       "confidence": 9,
       "required_reviewer": "CrossModuleIntegrationReviewAgent",
       "evidence_ids": [
-        "EVD-000398"
+        "EVD-000466"
       ],
       "status": "DETECTED",
       "reason": "traceability cross_module_implementation_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",

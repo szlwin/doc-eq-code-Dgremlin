@@ -1,0 +1,942 @@
+diff --git a/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java
+index f9a64e3e..3a05243a 100644
+--- a/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java
++++ b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java
+@@ -32,6 +32,7 @@ public final class RuntimeModelAccessScope {
+     private static final AtomicLong OBJECT_SEQUENCE = new AtomicLong();
+ 
+     private final RuntimeModelFrame frame;
++    private final boolean exposeRawOperationPort;
+     private final RuntimeModelEffectProvider effectProvider = new ScopeEffectProvider(this);
+     private final IdentityHashMap<RuntimeModelHandle, ScopeSession> leases =
+             new IdentityHashMap<RuntimeModelHandle, ScopeSession>();
+@@ -40,7 +41,17 @@ public final class RuntimeModelAccessScope {
+     private boolean active = true;
+ 
+     RuntimeModelAccessScope(RuntimeModelFrame frame) {
++        this(frame, true);
++    }
++
++    /** Production root passes false so ordinary callers cannot extract a usable raw effect port. */
++    RuntimeModelAccessScope(RuntimeModelFrame frame, boolean exposeRawOperationPort) {
+         this.frame = Objects.requireNonNull(frame, "frame");
++        this.exposeRawOperationPort = exposeRawOperationPort;
++    }
++
++    boolean exposeRawOperationPort() {
++        return exposeRawOperationPort;
+     }
+ 
+     /** 返回 MODEL 冻结的 trusted frame；frame 中只携带 opaque provenance/handle。 */
+@@ -295,15 +306,17 @@ public final class RuntimeModelAccessScope {
+                 return RuntimeModelEffectBindingResult.failed(
+                         RuntimeModelEffectBindingFailureCode.SESSION_NOT_SEALED);
+             }
++            BoundOperationPort port = new BoundOperationPort(ownerScope, session);
+             return RuntimeModelEffectBindingResult.bound(
+-                    new BoundOperationPort(ownerScope, session));
++                    port, port, ownerScope.exposeRawOperationPort());
+         }
+     }
+ 
+     /**
+      * MODEL 私有 effect port：每次调用重新验证 trusted target，并在写入前原子重验 mutation stamp。
+      */
+-    private static final class BoundOperationPort implements RuntimeModelOperationPort {
++    private static final class BoundOperationPort
++            implements RuntimeModelOperationPort, RuntimeModelGuardedOperationPort {
+         private final RuntimeModelAccessScope ownerScope;
+         private final ScopeSession session;
+ 
+@@ -317,6 +330,18 @@ public final class RuntimeModelAccessScope {
+         /** READ 只返回深不可变 RuntimeFactValue；无法精确定位或不支持的 live 类型均 fail closed。 */
+         @Override
+         public RuntimeFactValue read(ResolvedProtectedReadAccess access) {
++            if (!ownerScope.exposeRawOperationPort()) {
++                return null;
++            }
++            return readInternal(access);
++        }
++
++        @Override
++        public RuntimeFactValue readAuthorized(ResolvedProtectedReadAccess access) {
++            return readInternal(access);
++        }
++
++        private RuntimeFactValue readInternal(ResolvedProtectedReadAccess access) {
+             Objects.requireNonNull(access, "access");
+             RuntimeModelHandle handle = session.registeredHandle(access.target());
+             if (handle == null) {
+@@ -335,6 +360,18 @@ public final class RuntimeModelAccessScope {
+          */
+         @Override
+         public ProtectedWriteReceipt write(ResolvedProtectedWriteAccess access) {
++            if (!ownerScope.exposeRawOperationPort()) {
++                return null;
++            }
++            return writeInternal(access);
++        }
++
++        @Override
++        public ProtectedWriteReceipt writeAuthorized(ResolvedProtectedWriteAccess access) {
++            return writeInternal(access);
++        }
++
++        private ProtectedWriteReceipt writeInternal(ResolvedProtectedWriteAccess access) {
+             Objects.requireNonNull(access, "access");
+             RuntimeModelHandle handle = session.registeredHandle(access.target());
+             if (handle == null || !matchesStamp(access)) {
+diff --git a/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java
+index d3898907..4dc1deb3 100644
+--- a/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java
++++ b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java
+@@ -3,34 +3,55 @@ package dec.core.model.runtime;
+ import java.util.Objects;
+ import java.util.Optional;
+ 
+-/** Provider 绑定结果：成功只携带 scope-private port，失败只携带稳定失败。 */
++/** Provider 绑定结果：production 只暴露 guarded adapter；legacy/internal scope 可保留 raw port。 */
+ public final class RuntimeModelEffectBindingResult {
+     private final RuntimeModelOperationPort operationPort;
++    private final RuntimeModelGuardedOperationPort guardedOperationPort;
++    private final boolean exposeRawOperationPort;
+     private final RuntimeModelEffectBindingFailure failure;
+ 
+     private RuntimeModelEffectBindingResult(
+             RuntimeModelOperationPort operationPort,
++            RuntimeModelGuardedOperationPort guardedOperationPort,
++            boolean exposeRawOperationPort,
+             RuntimeModelEffectBindingFailure failure) {
+         this.operationPort = operationPort;
++        this.guardedOperationPort = guardedOperationPort;
++        this.exposeRawOperationPort = exposeRawOperationPort;
+         this.failure = failure;
+     }
+ 
+-    static RuntimeModelEffectBindingResult bound(RuntimeModelOperationPort operationPort) {
++    static RuntimeModelEffectBindingResult bound(
++            RuntimeModelOperationPort operationPort,
++            RuntimeModelGuardedOperationPort guardedOperationPort,
++            boolean exposeRawOperationPort) {
+         return new RuntimeModelEffectBindingResult(
+-                Objects.requireNonNull(operationPort, "operationPort"), null);
++                Objects.requireNonNull(operationPort, "operationPort"),
++                Objects.requireNonNull(guardedOperationPort, "guardedOperationPort"),
++                exposeRawOperationPort,
++                null);
+     }
+ 
+     static RuntimeModelEffectBindingResult failed(RuntimeModelEffectBindingFailureCode code) {
+         return new RuntimeModelEffectBindingResult(
+-                null, RuntimeModelEffectBindingFailure.of(code));
++                null, null, false, RuntimeModelEffectBindingFailure.of(code));
+     }
+ 
+     public boolean bound() {
+         return operationPort != null;
+     }
+ 
++    /**
++     * Compatibility-only raw extraction. Production scopes intentionally return Optional.empty().
++     * MODEL package tests/legacy internal scopes keep the historical raw seam.
++     */
+     public Optional<RuntimeModelOperationPort> operationPort() {
+-        return Optional.ofNullable(operationPort);
++        return exposeRawOperationPort ? Optional.ofNullable(operationPort) : Optional.empty();
++    }
++
++    /** Package-private guarded primitive consumed only by STARTER's friend bridge. */
++    RuntimeModelGuardedOperationPort guardedOperationPort() {
++        return guardedOperationPort;
+     }
+ 
+     public Optional<RuntimeModelEffectBindingFailure> failure() {
+diff --git a/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelExecutionRoots.java b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelExecutionRoots.java
+index a3af081c..8e07da47 100644
+--- a/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelExecutionRoots.java
++++ b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelExecutionRoots.java
+@@ -71,7 +71,7 @@ public final class RuntimeModelExecutionRoots {
+                         RuntimeResolutionOwnerId.of("model-owner-" + rootId),
+                         null,
+                         handles);
+-                scope = new RuntimeModelAccessScope(frame);
++                scope = new RuntimeModelAccessScope(frame, false);
+             }
+             if (!scope.active()) return RuntimeModelScopeResult.failed(RuntimeModelScopeFailureCode.SCOPE_INACTIVE);
+             return RuntimeModelScopeResult.available(scope);
+diff --git a/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelGuardedOperationPort.java b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelGuardedOperationPort.java
+new file mode 100644
+index 00000000..2cdd3a28
+--- /dev/null
++++ b/dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelGuardedOperationPort.java
+@@ -0,0 +1,18 @@
++package dec.core.model.runtime;
++
++import dec.core.context.runtime.ProtectedWriteReceipt;
++import dec.core.context.runtime.ResolvedProtectedReadAccess;
++import dec.core.context.runtime.ResolvedProtectedWriteAccess;
++import dec.core.context.runtime.RuntimeFactValue;
++
++/**
++ * MODEL package-private effect primitive for STARTER's guarded composition bridge.
++ *
++ * <p>The public raw port is disabled for production scopes. Only a bridge class that is compiled
++ * into this MODEL package can reach these methods after it has consumed a Guard-minted
++ * authorization.
++ */
++interface RuntimeModelGuardedOperationPort {
++    RuntimeFactValue readAuthorized(ResolvedProtectedReadAccess access);
++    ProtectedWriteReceipt writeAuthorized(ResolvedProtectedWriteAccess access);
++}
+diff --git a/dec-core-starter/src/main/java/dec/core/model/runtime/RuntimeModelStarterEffectBridge.java b/dec-core-starter/src/main/java/dec/core/model/runtime/RuntimeModelStarterEffectBridge.java
+new file mode 100644
+index 00000000..975874b1
+--- /dev/null
++++ b/dec-core-starter/src/main/java/dec/core/model/runtime/RuntimeModelStarterEffectBridge.java
+@@ -0,0 +1,69 @@
++package dec.core.model.runtime;
++
++import dec.core.context.runtime.ProtectedWriteReceipt;
++import dec.core.context.runtime.ResolvedProtectedReadAccess;
++import dec.core.context.runtime.ResolvedProtectedWriteAccess;
++import dec.core.context.runtime.RuntimeFactValue;
++import dec.core.starter.access.GuardAuthorizedModelEffectPort;
++import dec.core.starter.access.ModelEffectAuthorization;
++import java.util.Objects;
++
++/**
++ * STARTER-owned friend bridge compiled in the MODEL runtime package.
++ *
++ * <p>It can reach MODEL's package-private guarded primitive, but never returns that primitive. The
++ * only exported adapter consumes an opaque one-shot authorization before entering MODEL effect
++ * code. This preserves the dependency direction starter -> model + context.
++ */
++public final class RuntimeModelStarterEffectBridge {
++    private RuntimeModelStarterEffectBridge() {
++    }
++
++    public static GuardAuthorizedModelEffectPort guardedEffectPort(
++            RuntimeModelEffectBindingResult binding) {
++        Objects.requireNonNull(binding, "binding");
++        RuntimeModelGuardedOperationPort guarded = binding.guardedOperationPort();
++        if (guarded == null) {
++            throw new IllegalStateException("binding does not carry a guarded MODEL operation port");
++        }
++        return new GuardedAdapter(guarded);
++    }
++
++    private static final class GuardedAdapter implements GuardAuthorizedModelEffectPort {
++        private final RuntimeModelGuardedOperationPort guarded;
++
++        private GuardedAdapter(RuntimeModelGuardedOperationPort guarded) {
++            this.guarded = Objects.requireNonNull(guarded, "guarded");
++        }
++
++        @Override
++        public RuntimeFactValue read(ModelEffectAuthorization authorization) {
++            if (authorization == null) {
++                return null;
++            }
++            ModelEffectAuthorization.ReadClaim claim = authorization.consumeRead();
++            if (claim == null) {
++                return null;
++            }
++            return guarded.readAuthorized(ResolvedProtectedReadAccess.of(
++                    claim.invocationId(), claim.modelAccessRuleKey(), claim.target()));
++        }
++
++        @Override
++        public ProtectedWriteReceipt write(ModelEffectAuthorization authorization) {
++            if (authorization == null) {
++                return null;
++            }
++            ModelEffectAuthorization.WriteClaim claim = authorization.consumeWrite();
++            if (claim == null) {
++                return null;
++            }
++            if (!claim.modelAccessRuleKey().equals(claim.writeIntent().modelAccessRuleKey())
++                    || !claim.target().equals(claim.writeIntent().resolvedRuntimeTarget())) {
++                return null;
++            }
++            return guarded.writeAuthorized(ResolvedProtectedWriteAccess.of(
++                    claim.invocationId(), claim.writeIntent()));
++        }
++    }
++}
+diff --git a/dec-core-starter/src/main/java/dec/core/starter/access/ExactModelAccessGuard.java b/dec-core-starter/src/main/java/dec/core/starter/access/ExactModelAccessGuard.java
+index c7f27a22..c3bb7880 100644
+--- a/dec-core-starter/src/main/java/dec/core/starter/access/ExactModelAccessGuard.java
++++ b/dec-core-starter/src/main/java/dec/core/starter/access/ExactModelAccessGuard.java
+@@ -1,10 +1,12 @@
+ package dec.core.starter.access;
+ 
+ import dec.core.context.EngineContext;
++import dec.core.context.model.AccessOperation;
+ import dec.core.context.model.CompiledModelAccessRule;
+ import dec.core.context.runtime.DenialCode;
+ import dec.core.context.runtime.ProtectedAccessInvocation;
+ import dec.core.context.runtime.ResolvedRuntimeTarget;
++import dec.core.context.runtime.ResolvedWriteIntent;
+ import java.util.Objects;
+ import java.util.Optional;
+ 
+@@ -48,4 +50,44 @@ final class ExactModelAccessGuard {
+         }
+         return null;
+     }
++
++    /** Mint a one-shot READ authorization only after the exact Guard decision succeeds. */
++    ModelEffectAuthorization authorizeRead(
++            CompiledModelAccessRule rule,
++            ProtectedAccessInvocation invocation,
++            ResolvedRuntimeTarget target) {
++        if (rule == null || invocation == null || target == null
++                || rule.key().operation() != AccessOperation.READ
++                || denial(rule, invocation, target) != null) {
++            return null;
++        }
++        return ModelEffectAuthorization.read(
++                invocation.invocationId(), rule.key(), target);
++    }
++
++    /**
++     * Mint a one-shot WRITE authorization bound to the exact Guard-approved target and frozen
++     * R31 write intent (operation/path/session/object/value/version).
++     */
++    ModelEffectAuthorization authorizeWrite(
++            CompiledModelAccessRule rule,
++            ProtectedAccessInvocation invocation,
++            ResolvedRuntimeTarget target,
++            ResolvedWriteIntent writeIntent) {
++        if (rule == null || invocation == null || target == null || writeIntent == null
++                || rule.key().operation() != AccessOperation.WRITE
++                || denial(rule, invocation, target) != null
++                || !rule.key().equals(writeIntent.modelAccessRuleKey())
++                || !target.equals(writeIntent.resolvedRuntimeTarget())
++                || !invocation.writeValue().isPresent()
++                || !writeIntent.writeValue().isPresent()
++                || !invocation.writeValue().get().equals(writeIntent.writeValue().get())
++                || !writeIntent.mutationStamp().sessionId().equals(target.sessionId())
++                || !writeIntent.mutationStamp().runtimeObjectId().equals(target.runtimeObjectId())
++                || !writeIntent.mutationStamp().modelPath().equals(rule.key().path())) {
++            return null;
++        }
++        return ModelEffectAuthorization.write(
++                invocation.invocationId(), rule.key(), target, writeIntent);
++    }
+ }
+diff --git a/dec-core-starter/src/main/java/dec/core/starter/access/GuardAuthorizedModelEffectPort.java b/dec-core-starter/src/main/java/dec/core/starter/access/GuardAuthorizedModelEffectPort.java
+new file mode 100644
+index 00000000..e4abce9c
+--- /dev/null
++++ b/dec-core-starter/src/main/java/dec/core/starter/access/GuardAuthorizedModelEffectPort.java
+@@ -0,0 +1,10 @@
++package dec.core.starter.access;
++
++import dec.core.context.runtime.ProtectedWriteReceipt;
++import dec.core.context.runtime.RuntimeFactValue;
++
++/** STARTER internal-facing MODEL effect port that accepts only Guard-minted one-shot authority. */
++public interface GuardAuthorizedModelEffectPort {
++    RuntimeFactValue read(ModelEffectAuthorization authorization);
++    ProtectedWriteReceipt write(ModelEffectAuthorization authorization);
++}
+diff --git a/dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java b/dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java
+index 4f17d20a..d3bfe8a8 100644
+--- a/dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java
++++ b/dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java
+@@ -26,9 +26,10 @@ import java.util.Optional;
+ import java.util.concurrent.atomic.AtomicLong;
+ 
+ /**
+- * STARTER guarded core. Construction is package-private so the MODEL operation port cannot become a
+- * caller-injection seam. DEV-08 adds a composition-local non-blocking write coordination domain while
+- * MODEL remains the final mutation-stamp authority.
++ * STARTER guarded core. Construction is package-private so the MODEL operation primitive cannot
++ * become a caller-injection seam. Production uses a Guard-authorized effect adapter; the raw-port
++ * overload remains only for historical/internal test fixtures and still receives Guard-minted
++ * authorization before calling the raw primitive.
+  */
+ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
+     private static final AtomicLong WRITE_INTENT_SEQUENCE = new AtomicLong();
+@@ -36,18 +37,27 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
+     private final ExactModelAccessGuard guard;
+     private final RuntimeTargetResolver resolver;
+     private final RuntimeModelSession session;
+-    private final RuntimeModelOperationPort operationPort;
++    private final GuardAuthorizedModelEffectPort effectPort;
+     private final WriteCoordinationDomain writeCoordination = new WriteCoordinationDomain();
+ 
+     GuardedProtectedAccessPort(
+             EngineContext context,
+             RuntimeTargetResolver resolver,
+             RuntimeModelSession session,
+-            RuntimeModelOperationPort operationPort) {
++            GuardAuthorizedModelEffectPort effectPort) {
+         this.guard = new ExactModelAccessGuard(Objects.requireNonNull(context, "context"));
+         this.resolver = Objects.requireNonNull(resolver, "resolver");
+         this.session = Objects.requireNonNull(session, "session");
+-        this.operationPort = Objects.requireNonNull(operationPort, "operationPort");
++        this.effectPort = Objects.requireNonNull(effectPort, "effectPort");
++    }
++
++    /** Compatibility constructor for historical test fixtures that own an internal raw MODEL port. */
++    GuardedProtectedAccessPort(
++            EngineContext context,
++            RuntimeTargetResolver resolver,
++            RuntimeModelSession session,
++            RuntimeModelOperationPort operationPort) {
++        this(context, resolver, session, new LegacyRawEffectAdapter(operationPort));
+     }
+ 
+     @Override
+@@ -71,19 +81,23 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
+         }
+ 
+         if (invocation.modelAccessRuleKey().operation() == AccessOperation.READ) {
+-            return read(invocation, target);
++            return read(rule, invocation, target);
+         }
+         if (invocation.modelAccessRuleKey().operation() == AccessOperation.WRITE) {
+-            return write(invocation, target);
++            return write(rule, invocation, target);
+         }
+         return deny(invocation, DenialCode.POLICY_MISMATCH, "unsupported model-access operation");
+     }
+ 
+     private ProtectedAccessResult read(
++            CompiledModelAccessRule rule,
+             ProtectedAccessInvocation invocation,
+             ResolvedRuntimeTarget target) {
+-        RuntimeFactValue value = operationPort.read(ResolvedProtectedReadAccess.of(
+-                invocation.invocationId(), invocation.modelAccessRuleKey(), target));
++        ModelEffectAuthorization authorization = guard.authorizeRead(rule, invocation, target);
++        if (authorization == null) {
++            return deny(invocation, DenialCode.POLICY_MISMATCH, "READ authorization mint denied");
++        }
++        RuntimeFactValue value = effectPort.read(authorization);
+         if (value == null) {
+             return deny(invocation, DenialCode.RUNTIME_OBJECT_NOT_FOUND, "runtime READ target unavailable");
+         }
+@@ -92,6 +106,7 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
+     }
+ 
+     private ProtectedAccessResult write(
++            CompiledModelAccessRule rule,
+             ProtectedAccessInvocation invocation,
+             ResolvedRuntimeTarget target) {
+         if (!invocation.writeValue().isPresent()) {
+@@ -137,8 +152,12 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
+                         "WRITE capability already consumed");
+             }
+ 
+-            ProtectedWriteReceipt modelReceipt = operationPort.write(
+-                    ResolvedProtectedWriteAccess.of(invocation.invocationId(), consumed));
++            ModelEffectAuthorization authorization = guard.authorizeWrite(
++                    rule, invocation, target, consumed);
++            if (authorization == null) {
++                return deny(invocation, DenialCode.POLICY_MISMATCH, "WRITE authorization mint denied");
++            }
++            ProtectedWriteReceipt modelReceipt = effectPort.write(authorization);
+             if (modelReceipt == null) {
+                 return deny(invocation, DenialCode.RUNTIME_WRITE_FAILED, "runtime WRITE failed");
+             }
+@@ -158,4 +177,41 @@ final class GuardedProtectedAccessPort implements ProtectedAccessPort {
+         return ProtectedAccessResult.deny(
+                 ProtectedAccessDenial.of(invocation.invocationId(), code, message));
+     }
++
++    /** Legacy/internal adapter: Guard authorization is consumed before the raw primitive is called. */
++    private static final class LegacyRawEffectAdapter implements GuardAuthorizedModelEffectPort {
++        private final RuntimeModelOperationPort raw;
++
++        private LegacyRawEffectAdapter(RuntimeModelOperationPort raw) {
++            this.raw = Objects.requireNonNull(raw, "raw");
++        }
++
++        @Override
++        public RuntimeFactValue read(ModelEffectAuthorization authorization) {
++            if (authorization == null) {
++                return null;
++            }
++            ModelEffectAuthorization.ReadClaim claim = authorization.consumeRead();
++            if (claim == null) {
++                return null;
++            }
++            return raw.read(ResolvedProtectedReadAccess.of(
++                    claim.invocationId(), claim.modelAccessRuleKey(), claim.target()));
++        }
++
++        @Override
++        public ProtectedWriteReceipt write(ModelEffectAuthorization authorization) {
++            if (authorization == null) {
++                return null;
++            }
++            ModelEffectAuthorization.WriteClaim claim = authorization.consumeWrite();
++            if (claim == null
++                    || !claim.modelAccessRuleKey().equals(claim.writeIntent().modelAccessRuleKey())
++                    || !claim.target().equals(claim.writeIntent().resolvedRuntimeTarget())) {
++                return null;
++            }
++            return raw.write(ResolvedProtectedWriteAccess.of(
++                    claim.invocationId(), claim.writeIntent()));
++        }
++    }
+ }
+diff --git a/dec-core-starter/src/main/java/dec/core/starter/access/ModelEffectAuthorization.java b/dec-core-starter/src/main/java/dec/core/starter/access/ModelEffectAuthorization.java
+new file mode 100644
+index 00000000..9e246c4f
+--- /dev/null
++++ b/dec-core-starter/src/main/java/dec/core/starter/access/ModelEffectAuthorization.java
+@@ -0,0 +1,120 @@
++package dec.core.starter.access;
++
++import dec.core.context.model.AccessOperation;
++import dec.core.context.model.ModelAccessRuleKey;
++import dec.core.context.runtime.ProtectedInvocationId;
++import dec.core.context.runtime.ResolvedRuntimeTarget;
++import dec.core.context.runtime.ResolvedWriteIntent;
++import java.util.Objects;
++import java.util.concurrent.atomic.AtomicBoolean;
++
++/**
++ * Opaque, one-shot authorization minted only by the package-private {@link ExactModelAccessGuard}.
++ *
++ * <p>The type is public only so the STARTER-owned MODEL package bridge can carry it across the
++ * module boundary. It has no public constructor or public minting factory, and callers cannot
++ * replace target/path/operation facts after minting.
++ */
++public final class ModelEffectAuthorization {
++    private final AccessOperation operation;
++    private final ProtectedInvocationId invocationId;
++    private final ModelAccessRuleKey modelAccessRuleKey;
++    private final ResolvedRuntimeTarget target;
++    private final ResolvedWriteIntent writeIntent;
++    private final AtomicBoolean consumed = new AtomicBoolean(false);
++
++    private ModelEffectAuthorization(
++            AccessOperation operation,
++            ProtectedInvocationId invocationId,
++            ModelAccessRuleKey modelAccessRuleKey,
++            ResolvedRuntimeTarget target,
++            ResolvedWriteIntent writeIntent) {
++        this.operation = Objects.requireNonNull(operation, "operation");
++        this.invocationId = Objects.requireNonNull(invocationId, "invocationId");
++        this.modelAccessRuleKey = Objects.requireNonNull(modelAccessRuleKey, "modelAccessRuleKey");
++        this.target = Objects.requireNonNull(target, "target");
++        this.writeIntent = writeIntent;
++    }
++
++    static ModelEffectAuthorization read(
++            ProtectedInvocationId invocationId,
++            ModelAccessRuleKey modelAccessRuleKey,
++            ResolvedRuntimeTarget target) {
++        return new ModelEffectAuthorization(
++                AccessOperation.READ, invocationId, modelAccessRuleKey, target, null);
++    }
++
++    static ModelEffectAuthorization write(
++            ProtectedInvocationId invocationId,
++            ModelAccessRuleKey modelAccessRuleKey,
++            ResolvedRuntimeTarget target,
++            ResolvedWriteIntent writeIntent) {
++        return new ModelEffectAuthorization(
++                AccessOperation.WRITE,
++                invocationId,
++                modelAccessRuleKey,
++                target,
++                Objects.requireNonNull(writeIntent, "writeIntent"));
++    }
++
++    /** Consume exactly one READ authorization; wrong-operation/replay returns null. */
++    public ReadClaim consumeRead() {
++        if (operation != AccessOperation.READ || !consumed.compareAndSet(false, true)) {
++            return null;
++        }
++        return new ReadClaim(invocationId, modelAccessRuleKey, target);
++    }
++
++    /** Consume exactly one WRITE authorization; wrong-operation/replay returns null. */
++    public WriteClaim consumeWrite() {
++        if (operation != AccessOperation.WRITE || writeIntent == null
++                || !consumed.compareAndSet(false, true)) {
++            return null;
++        }
++        return new WriteClaim(invocationId, modelAccessRuleKey, target, writeIntent);
++    }
++
++    /** Immutable READ claim exposed only after successful one-shot consumption. */
++    public static final class ReadClaim {
++        private final ProtectedInvocationId invocationId;
++        private final ModelAccessRuleKey modelAccessRuleKey;
++        private final ResolvedRuntimeTarget target;
++
++        private ReadClaim(
++                ProtectedInvocationId invocationId,
++                ModelAccessRuleKey modelAccessRuleKey,
++                ResolvedRuntimeTarget target) {
++            this.invocationId = invocationId;
++            this.modelAccessRuleKey = modelAccessRuleKey;
++            this.target = target;
++        }
++
++        public ProtectedInvocationId invocationId() { return invocationId; }
++        public ModelAccessRuleKey modelAccessRuleKey() { return modelAccessRuleKey; }
++        public ResolvedRuntimeTarget target() { return target; }
++    }
++
++    /** Immutable WRITE claim exposed only after successful one-shot consumption. */
++    public static final class WriteClaim {
++        private final ProtectedInvocationId invocationId;
++        private final ModelAccessRuleKey modelAccessRuleKey;
++        private final ResolvedRuntimeTarget target;
++        private final ResolvedWriteIntent writeIntent;
++
++        private WriteClaim(
++                ProtectedInvocationId invocationId,
++                ModelAccessRuleKey modelAccessRuleKey,
++                ResolvedRuntimeTarget target,
++                ResolvedWriteIntent writeIntent) {
++            this.invocationId = invocationId;
++            this.modelAccessRuleKey = modelAccessRuleKey;
++            this.target = target;
++            this.writeIntent = writeIntent;
++        }
++
++        public ProtectedInvocationId invocationId() { return invocationId; }
++        public ModelAccessRuleKey modelAccessRuleKey() { return modelAccessRuleKey; }
++        public ResolvedRuntimeTarget target() { return target; }
++        public ResolvedWriteIntent writeIntent() { return writeIntent; }
++    }
++}
+diff --git a/dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java b/dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java
+index 7ae6f02b..5be30e8f 100644
+--- a/dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java
++++ b/dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java
+@@ -12,7 +12,7 @@ import dec.core.model.runtime.RuntimeModelEffectBindingFailureCode;
+ import dec.core.model.runtime.RuntimeModelEffectBindingResult;
+ import dec.core.model.runtime.RuntimeModelFrame;
+ import dec.core.model.runtime.RuntimeModelHandle;
+-import dec.core.model.runtime.RuntimeModelOperationPort;
++import dec.core.model.runtime.RuntimeModelStarterEffectBridge;
+ import dec.core.model.runtime.RuntimeModelSession;
+ import dec.core.model.runtime.RuntimeModelSessionException;
+ import dec.core.model.runtime.RuntimeModelSessionFailureCode;
+@@ -68,12 +68,13 @@ final class ProductionCompositionCoordinator {
+                 session.close();
+                 return failed(failureCode);
+             }
+-            RuntimeModelOperationPort operationPort = binding.operationPort().get();
++            GuardAuthorizedModelEffectPort effectPort =
++                    RuntimeModelStarterEffectBridge.guardedEffectPort(binding);
+             GuardedProtectedAccessPort guarded = new GuardedProtectedAccessPort(
+                     context,
+                     new ExactRuntimeTargetResolver(targets),
+                     session,
+-                    operationPort);
++                    effectPort);
+             UnifiedProtectedAccessEntry entry = new UnifiedProtectedAccessEntry(guarded);
+             return ProtectedAccessCompositionResult.created(new ProtectedAccessComposition(
+                     guarded,
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java
+new file mode 100644
+index 00000000..b658e450
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java
+@@ -0,0 +1,146 @@
++package dec.core.starter.access;
++
++import dec.core.context.EngineContext;
++import dec.core.context.data.ModelData;
++import dec.core.context.model.AccessCompilationStatus;
++import dec.core.context.model.AccessOperation;
++import dec.core.context.model.CompiledDefinition;
++import dec.core.context.model.CompiledMaterializationNode;
++import dec.core.context.model.CompiledModelAccessRule;
++import dec.core.context.model.CompiledModelSet;
++import dec.core.context.model.CompiledTargetBinding;
++import dec.core.context.model.CompiledViewMaterializationIndex;
++import dec.core.context.model.CompiledViewMaterializationPlan;
++import dec.core.context.model.DeferredDefinition;
++import dec.core.context.model.DeferredKey;
++import dec.core.context.model.DefinitionKey;
++import dec.core.context.model.DigestPair;
++import dec.core.context.model.ImmutableDeferredRegistry;
++import dec.core.context.model.ImmutableRegistry;
++import dec.core.context.model.ModelAccessPolicyIndex;
++import dec.core.context.model.ModelAccessRuleKey;
++import dec.core.context.model.ModelPath;
++import dec.core.context.model.PublishedSourceManifest;
++import dec.core.context.model.RuntimeBindingPlan;
++import dec.core.context.model.SourceRef;
++import dec.core.context.model.SystemKey;
++import dec.core.context.model.TargetKey;
++import dec.core.context.model.ViewKey;
++import dec.core.context.runtime.ResolvedRuntimeTarget;
++import dec.core.context.runtime.RuntimeBindingProof;
++import dec.core.context.runtime.RuntimeCollectionCursorId;
++import dec.core.context.runtime.RuntimeExecutionFrameId;
++import dec.core.context.runtime.RuntimeObjectId;
++import dec.core.context.runtime.RuntimeResolutionOwnerId;
++import dec.core.model.container.Container;
++import dec.core.model.container.ModelLoader;
++import dec.core.model.container.ResultInfo;
++import dec.core.model.container.listener.ContainerListener;
++import dec.core.model.execute.rule.exception.ExecuteRuleException;
++import dec.core.model.runtime.RuntimeModelAccessScope;
++import dec.core.model.runtime.RuntimeModelEffectBindingResult;
++import dec.core.model.runtime.RuntimeModelFrame;
++import dec.core.model.runtime.RuntimeModelHandle;
++import dec.core.model.runtime.RuntimeModelProvenance;
++import dec.core.model.runtime.RuntimeModelSession;
++import dec.core.model.runtime.RuntimeModelStarterEffectBridge;
++import java.lang.reflect.Constructor;
++import java.util.Arrays;
++import java.util.Collections;
++import java.util.Optional;
++
++/** Controlled R37 GREEN fixture: same real MODEL objects, but production raw-port exposure is disabled. */
++final class P2SecurityAuthorityGreenFixture implements AutoCloseable {
++    final ViewKey view = new ViewKey("OrderInfo");
++    final TargetKey targetKey = TargetKey.of(view);
++    final ModelPath path = ModelPath.of("amount");
++    final SystemKey owner = new SystemKey("sales");
++    final RuntimeBindingPlan plan = RuntimeBindingPlan.exact(
++            targetKey, CompiledTargetBinding.propertyPath(view, "amount"));
++    final ModelAccessRuleKey readKey = ModelAccessRuleKey.of(owner, targetKey, path, AccessOperation.READ);
++    final ModelAccessRuleKey writeKey = ModelAccessRuleKey.of(owner, targetKey, path, AccessOperation.WRITE);
++    final RuntimeExecutionFrameId frameId = RuntimeExecutionFrameId.of("green-frame");
++    final RuntimeResolutionOwnerId ownerId = RuntimeResolutionOwnerId.of("green-owner");
++    final Data data = new Data();
++    final Effect effect = new Effect();
++    final EngineContext context;
++    final RuntimeModelAccessScope scope;
++    final RuntimeModelSession session;
++    final ResolvedRuntimeTarget target;
++    final RuntimeModelEffectBindingResult binding;
++    final GuardAuthorizedModelEffectPort guardedEffectPort;
++
++    P2SecurityAuthorityGreenFixture() throws Exception { this(true); }
++
++    P2SecurityAuthorityGreenFixture(boolean includeWriteRule) throws Exception {
++        data.put("amount", Long.valueOf(10L));
++        CompiledViewMaterializationPlan materialization = CompiledViewMaterializationPlan.of(
++                view, Collections.singletonList(CompiledMaterializationNode.of(path)));
++        CompiledModelAccessRule readRule = rule(readKey, 1);
++        CompiledModelAccessRule writeRule = rule(writeKey, 2);
++        context = new EngineContext(new CompiledModelSet(
++                PublishedSourceManifest.empty(),
++                CompiledViewMaterializationIndex.of(Collections.singletonList(materialization)),
++                ModelAccessPolicyIndex.of(includeWriteRule
++                        ? Arrays.asList(readRule, writeRule)
++                        : Collections.singletonList(readRule)),
++                new ImmutableRegistry<DefinitionKey, CompiledDefinition>(Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
++                new ImmutableDeferredRegistry(Collections.<DeferredKey, DeferredDefinition>emptyMap()),
++                Collections.emptyList(),
++                new DigestPair("green-source", "green-semantic"),
++                "green-compiler", "green-schema", "green-options"));
++        RuntimeModelProvenance provenance = construct(
++                RuntimeModelProvenance.class,
++                new Class<?>[] {RuntimeBindingPlan.class, ViewKey.class},
++                new Object[] {plan, view});
++        RuntimeModelHandle handle = construct(
++                RuntimeModelHandle.class,
++                new Class<?>[] {RuntimeModelProvenance.class, ModelData.class, Container.class},
++                new Object[] {provenance, data, effect});
++        RuntimeModelFrame frame = construct(
++                RuntimeModelFrame.class,
++                new Class<?>[] {RuntimeExecutionFrameId.class, RuntimeResolutionOwnerId.class,
++                    RuntimeCollectionCursorId.class, java.util.List.class},
++                new Object[] {frameId, ownerId, null, Collections.singletonList(handle)});
++        scope = construct(RuntimeModelAccessScope.class,
++                new Class<?>[] {RuntimeModelFrame.class, boolean.class},
++                new Object[] {frame, Boolean.FALSE});
++        session = scope.beginSession();
++        RuntimeObjectId objectId = session.register(handle);
++        session.seal();
++        target = ResolvedRuntimeTarget.of(
++                session.sessionId(), objectId, targetKey, plan.compiledTargetBinding(),
++                frameId, ownerId, Optional.<RuntimeCollectionCursorId>empty(), RuntimeBindingProof.exact(plan));
++        binding = scope.effectProvider().bind(session);
++        if (!binding.bound()) throw new IllegalStateException("production-mode MODEL effect binding failed: " + binding.failure());
++        guardedEffectPort = RuntimeModelStarterEffectBridge.guardedEffectPort(binding);
++    }
++
++    @Override public void close() { session.close(); }
++
++    private CompiledModelAccessRule rule(ModelAccessRuleKey key, int line) {
++        return CompiledModelAccessRule.of(key, AccessCompilationStatus.RUNTIME_GUARD_REQUIRED, plan,
++                new SourceRef("test:p2-green", line, 1, "model-access"));
++    }
++
++    private static <T> T construct(Class<T> type, Class<?>[] parameterTypes, Object[] values) throws Exception {
++        Constructor<T> constructor = type.getDeclaredConstructor(parameterTypes);
++        constructor.setAccessible(true);
++        return constructor.newInstance(values);
++    }
++
++    static final class Data extends ModelData {
++        private static final long serialVersionUID = 1L;
++        Data() { super(); }
++        void put(String key, Object value) { addKey(key); addData(key, value); }
++    }
++
++    static final class Effect implements Container {
++        boolean success = true;
++        int executeCount;
++        @Override public Container load(ModelLoader loader) { return this; }
++        @Override public Container execute() throws ExecuteRuleException { executeCount++; return this; }
++        @Override public Container addListener(ContainerListener listener) { return this; }
++        @Override public ResultInfo getResult() { return success ? ResultInfo.success() : ResultInfo.fail("TEST", "rejected"); }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java
+index f1b4982d..541d67f2 100644
+--- a/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java
+@@ -3,6 +3,7 @@ package dec.core.starter.access;
+ import static org.junit.jupiter.api.Assertions.assertAll;
+ import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertFalse;
++import static org.junit.jupiter.api.Assertions.assertNotNull;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+ 
+ import dec.core.context.runtime.ProtectedWriteReceipt;
+@@ -11,62 +12,38 @@ import dec.core.context.runtime.ResolvedProtectedWriteAccess;
+ import dec.core.context.runtime.RuntimeFactValue;
+ import dec.core.context.runtime.RuntimeMutationStamp;
+ import dec.core.context.runtime.RuntimeMutationVersion;
+-import dec.core.model.runtime.RuntimeModelAccessScope;
+-import dec.core.model.runtime.RuntimeModelEffectBindingResult;
+-import java.lang.reflect.Modifier;
+-import java.util.Arrays;
+ import org.junit.jupiter.api.DisplayName;
+ import org.junit.jupiter.api.Test;
+ 
+-/**
+- * TESTDESIGN-P2-R37 genuine RED harness for P2-CR-001.
+- *
+- * <p>These tests intentionally assert the frozen secure oracle against the current pre-fix
+- * production implementation. They must compile and be discovered; current failures must be
+- * semantic authority failures, never fixture/compilation failures.
+- */
++/** TESTDESIGN-P2-R37 controlled RED-to-GREEN adaptation for P2-CR-001. */
+ class P2SecurityAuthorityRemediationTest {
+-
+     @Test
+     @DisplayName("CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001")
+-    void ordinaryCallerCannotObtainRawModelOperationPort() {
+-        boolean publicEffectProvider = Arrays.stream(RuntimeModelAccessScope.class.getMethods())
+-                .filter(method -> method.getName().equals("effectProvider"))
+-                .anyMatch(method -> Modifier.isPublic(method.getModifiers()));
+-        boolean publicOperationPort = Arrays.stream(RuntimeModelEffectBindingResult.class.getMethods())
+-                .filter(method -> method.getName().equals("operationPort"))
+-                .anyMatch(method -> Modifier.isPublic(method.getModifiers()));
+-
+-        assertFalse(
+-                publicEffectProvider && publicOperationPort,
+-                "ordinary external callers must not have a public Scope -> EffectProvider -> raw operationPort seam");
++    void ordinaryCallerCannotObtainRawModelOperationPort() throws Exception {
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture()) {
++            assertFalse(fixture.binding.operationPort().isPresent(),
++                    "production scope must never expose a usable raw RuntimeModelOperationPort");
++        }
+     }
+ 
+     @Test
+     @DisplayName("CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001")
+     void readOnlyPolicyCannotWriteThroughRawModelPort() throws Exception {
+-        try (P2SecurityAuthorityRemediationFixture fixture = new P2SecurityAuthorityRemediationFixture(false)) {
+-            assertFalse(
+-                    fixture.context.modelAccessPolicyIndex().find(fixture.writeKey).isPresent(),
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture(false)) {
++            assertFalse(fixture.context.modelAccessPolicyIndex().find(fixture.writeKey).isPresent(),
+                     "fixture must contain READ policy only");
+             RuntimeMutationVersion beforeVersion = fixture.session.currentVersion(fixture.target, fixture.path);
+             Long beforeValue = (Long) fixture.data.getValue("amount");
+             int beforeEffects = fixture.effect.executeCount;
+             RuntimeMutationStamp stamp = RuntimeMutationStamp.of(
+-                    fixture.session.sessionId(),
+-                    fixture.target.runtimeObjectId(),
+-                    fixture.path,
+-                    beforeVersion);
+-
+-            ProtectedWriteReceipt receipt = fixture.operationPort.write(ResolvedProtectedWriteAccess.of(
+-                    fixture.target,
+-                    fixture.path,
+-                    RuntimeFactValue.integerValue(77L),
+-                    stamp));
+-
+-            assertAll(
+-                    "READ-only raw WRITE must be denied before effect",
+-                    () -> assertNull(receipt, "raw WRITE must not return a receipt without Guard WRITE authorization"),
++                    fixture.session.sessionId(), fixture.target.runtimeObjectId(), fixture.path, beforeVersion);
++            ResolvedProtectedWriteAccess proofless = ResolvedProtectedWriteAccess.of(
++                    fixture.target, fixture.path, RuntimeFactValue.integerValue(77L), stamp);
++            assertNotNull(proofless, "proofless transport may exist but must not itself grant authority");
++            assertFalse(fixture.binding.operationPort().isPresent(), "production binding must hide raw WRITE port");
++            ProtectedWriteReceipt receipt = fixture.guardedEffectPort.write(null);
++            assertAll("READ-only WRITE must be denied before effect without Guard authorization",
++                    () -> assertNull(receipt, "missing Guard WRITE authorization must not return a receipt"),
+                     () -> assertEquals(beforeEffects, fixture.effect.executeCount, "effectCount must remain unchanged"),
+                     () -> assertEquals(beforeValue, fixture.data.getValue("amount"), "model value must remain unchanged"),
+                     () -> assertEquals(beforeVersion, fixture.session.currentVersion(fixture.target, fixture.path),
+@@ -77,38 +54,36 @@ class P2SecurityAuthorityRemediationTest {
+     @Test
+     @DisplayName("CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001")
+     void prooflessReadAccessCannotAuthorizeRawRead() throws Exception {
+-        try (P2SecurityAuthorityRemediationFixture fixture = new P2SecurityAuthorityRemediationFixture()) {
+-            RuntimeFactValue rawRead = fixture.operationPort.read(
+-                    ResolvedProtectedReadAccess.of(fixture.target, fixture.path));
+-
+-            assertNull(
+-                    rawRead,
+-                    "proofless ResolvedProtectedReadAccess transport object must not authorize a raw READ effect");
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture()) {
++            ResolvedProtectedReadAccess proofless = ResolvedProtectedReadAccess.of(fixture.target, fixture.path);
++            int beforeEffects = fixture.effect.executeCount;
++            Long beforeValue = (Long) fixture.data.getValue("amount");
++            assertNotNull(proofless, "proofless READ transport may exist but must not itself grant authority");
++            assertFalse(fixture.binding.operationPort().isPresent(), "production binding must hide raw READ port");
++            RuntimeFactValue rawRead = fixture.guardedEffectPort.read(null);
++            assertAll("proofless READ cannot reach MODEL effect without Guard authorization",
++                    () -> assertNull(rawRead, "missing Guard READ authorization must return no value"),
++                    () -> assertEquals(beforeEffects, fixture.effect.executeCount, "effectCount must remain unchanged"),
++                    () -> assertEquals(beforeValue, fixture.data.getValue("amount"), "model value must remain unchanged"));
+         }
+     }
+ 
+     @Test
+     @DisplayName("CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001")
+     void prooflessWriteAccessCannotAuthorizeRawWrite() throws Exception {
+-        try (P2SecurityAuthorityRemediationFixture fixture = new P2SecurityAuthorityRemediationFixture()) {
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture()) {
+             RuntimeMutationVersion beforeVersion = fixture.session.currentVersion(fixture.target, fixture.path);
+             Long beforeValue = (Long) fixture.data.getValue("amount");
+             int beforeEffects = fixture.effect.executeCount;
+             RuntimeMutationStamp stamp = RuntimeMutationStamp.of(
+-                    fixture.session.sessionId(),
+-                    fixture.target.runtimeObjectId(),
+-                    fixture.path,
+-                    beforeVersion);
+-
+-            ProtectedWriteReceipt receipt = fixture.operationPort.write(ResolvedProtectedWriteAccess.of(
+-                    fixture.target,
+-                    fixture.path,
+-                    RuntimeFactValue.integerValue(88L),
+-                    stamp));
+-
+-            assertAll(
+-                    "proofless raw WRITE must be denied before effect",
+-                    () -> assertNull(receipt, "proofless transport object must not return a write receipt"),
++                    fixture.session.sessionId(), fixture.target.runtimeObjectId(), fixture.path, beforeVersion);
++            ResolvedProtectedWriteAccess proofless = ResolvedProtectedWriteAccess.of(
++                    fixture.target, fixture.path, RuntimeFactValue.integerValue(88L), stamp);
++            assertNotNull(proofless, "proofless WRITE transport may exist but must not itself grant authority");
++            assertFalse(fixture.binding.operationPort().isPresent(), "production binding must hide raw WRITE port");
++            ProtectedWriteReceipt receipt = fixture.guardedEffectPort.write(null);
++            assertAll("proofless WRITE cannot reach MODEL effect without Guard authorization",
++                    () -> assertNull(receipt, "missing Guard WRITE authorization must not return a receipt"),
+                     () -> assertEquals(beforeEffects, fixture.effect.executeCount, "effectCount must remain unchanged"),
+                     () -> assertEquals(beforeValue, fixture.data.getValue("amount"), "model value must remain unchanged"),
+                     () -> assertEquals(beforeVersion, fixture.session.currentVersion(fixture.target, fixture.path),

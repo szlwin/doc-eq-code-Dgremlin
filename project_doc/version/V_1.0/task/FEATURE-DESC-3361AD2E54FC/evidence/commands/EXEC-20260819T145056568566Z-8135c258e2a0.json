@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/imports/development-implementation-i014/validate_concrete_binding.py",
+  "exit_code": 0,
+  "executed_at": "2026-08-19T14:50:55+00:00",
+  "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "output_digest": "e008b8ab3ced75b2fe5ae5cf12e4f54ce152d4045bf763af95fc4658891e41ad",
+  "metadata": {
+    "cwd": "/mnt/data/project_doc",
+    "phase": "development",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "CONCRETE_BINDING_VALIDATION=PASSED\ncanonical_head=437b8547d0b660cfa912d9e3333452fc6f248f3e\nnon_project_doc_committed_changes_since_task8_closure=0\nnon_project_doc_worktree_changes=0\nguard_authority_boundary=PASSED\none_shot_authorization_boundary=PASSED\nguarded_call_order=PASSED\nsingle_engine_context_generation_boundary=PASSED\nforbidden_runtime_context_binding=ABSENT\nlifecycle_test_blob=8b3200201546d4fd333cca768b049ab5036176e6\n"
+}

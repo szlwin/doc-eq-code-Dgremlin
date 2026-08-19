@@ -820,52 +820,12 @@
       "reason": "PASSED: projection-only repair restores runtime executability without plan semantic drift; no blocking P0/P1."
     },
     {
-      "assertion_id": "ASRT-P2-DEV-I013-ARCH-001",
-      "acceptance_id": "AC-P2-R37-REGRESSION-CORE",
-      "statement": "ArchitectureReviewAgent independently confirms the I013 architecture skeleton freezes the approved authority and single-EngineContext boundaries, exposes complete orchestration/failure/side-effect boundaries, and contains no concrete production side effects.",
-      "type": "MANUAL_REVIEW",
-      "phase": "development",
-      "revision": "DEV-P2-R37-SKELETON-R01@a5723c233bdf",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "ArchitectureReviewAgent",
-        "review_phase": "development"
-      },
-      "source_refs": [
-        "wk-ar:ARCHITECTURE_SKELETON"
-      ],
-      "evidence_ids": [
-        "EVD-000414",
-        "EVD-000416",
-        "EVD-000413",
-        "EVD-000415",
-        "EVD-000417",
-        "EVD-000419",
-        "EVD-000420",
-        "EVD-000421",
-        "EVD-000422",
-        "EVD-000423",
-        "EVD-000424",
-        "EVD-000425",
-        "EVD-000426",
-        "EVD-000427",
-        "EVD-000428",
-        "EVD-000429",
-        "EVD-000430",
-        "EVD-000431"
-      ],
-      "verified_by_agent": "ArchitectureReviewAgent",
-      "verified_at": "2026-08-19T14:10:12+00:00",
-      "reason": "PASSED. I013 skeleton keeps ExactModelAccessGuard as the sole READ/WRITE authority, has no raw/proofless executable effect seam, makes all denial branches precede effect, freezes READ/WRITE and one-shot authority boundaries, and models a bind-once EngineContext generation with no live rebind/hot reload. Concrete persistence/network/MODEL behavior remains explicitly deferred; the skeleton compiles and has no production side effects."
-    },
-    {
-      "assertion_id": "ASRT-P2-DEV-I013-SPEC-001",
+      "assertion_id": "ASRT-P2-DEV-I014-SPEC-001",
       "acceptance_id": "AC-P2-R37-AUTHORITY-CLOSURE",
-      "statement": "SpecComplianceReviewAgent independently confirms the same I013 skeleton maps DESIGN-P2-R33, TESTDESIGN-P2-R37 and R06 acceptance/flow constraints without scope drift, including Guard-only authority and bind-once/no-hot-reload lifecycle.",
+      "statement": "SpecComplianceReviewAgent independently reviews the exact I014 concrete implementation revision and reports PASSED with no open P0/P1 while preserving the I013 skeleton contract.",
       "type": "MANUAL_REVIEW",
       "phase": "development",
-      "revision": "DEV-P2-R37-SKELETON-R01@a5723c233bdf",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -873,29 +833,73 @@
         "review_phase": "development"
       },
       "source_refs": [
-        "wk-ar:ARCHITECTURE_SKELETON"
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION"
       ],
       "evidence_ids": [
-        "EVD-000414",
-        "EVD-000413",
-        "EVD-000415",
-        "EVD-000416",
-        "EVD-000420",
-        "EVD-000421",
-        "EVD-000422",
-        "EVD-000423",
-        "EVD-000424",
-        "EVD-000425",
-        "EVD-000426",
-        "EVD-000427",
-        "EVD-000428",
-        "EVD-000429",
-        "EVD-000430",
-        "EVD-000431"
+        "EVD-000450",
+        "EVD-000451",
+        "EVD-000446",
+        "EVD-000447",
+        "EVD-000448",
+        "EVD-000433",
+        "EVD-000435",
+        "EVD-000436",
+        "EVD-000437",
+        "EVD-000438",
+        "EVD-000439",
+        "EVD-000440",
+        "EVD-000441",
+        "EVD-000442",
+        "EVD-000443",
+        "EVD-000444",
+        "EVD-000445",
+        "EVD-000432"
       ],
       "verified_by_agent": "SpecComplianceReviewAgent",
-      "verified_at": "2026-08-19T14:10:58+00:00",
-      "reason": "PASSED. The fixed I013 diff is evidence-only and maps DESIGN-P2-R33 / TESTDESIGN-P2-R37 / TP-R06 without scope drift: ExactModelAccessGuard remains sole authority; READ/WRITE and exact target/path/session boundaries are retained; raw/proofless effects are absent; bind-once/no-hot-reload/restart-generation lifecycle is represented; concrete lower-level effect and bootstrap behavior is deferred rather than redesigned."
+      "verified_at": "2026-08-19T15:07:28+00:00",
+      "reason": "PASSED。审查对象固定为 development@DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5；EVD-000448 固定 RED 基线到 GREEN concrete implementation 的相关 diff，EVD-000446/447 固定当前代码、测试与 R33/R37/R06/I013 contract。当前 7 个 production boundary 的 Git blob 与 Task8 closure/executable baseline 逐文件一致，I013/I014 仅增加 project_doc lifecycle/evidence，无 production/test/config 漂移。ExactModelAccessGuard 仍是唯一 READ/WRITE authority，one-shot authorization、denial-before-effect、raw/proofless 不可形成 executable authority、single EngineContext generation/no live rebind 均与已审 skeleton 一致。RC-AR-003 针对架构两步法的“第一步”：I013 skeleton 本身只定义签名/编排/边界且无 production side effect，I014 concrete implementation 未反向改变该已审契约。未发现缺失需求、部分实现或 scope drift。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DEV-I014-TDD-001",
+      "acceptance_id": "AC-P2-R37-REGRESSION-CORE",
+      "statement": "TDDReviewAgent independently reviews the exact I014 concrete implementation revision and confirms the four genuine RED-to-GREEN closures plus lifecycle/regression evidence with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION"
+      ],
+      "evidence_ids": [
+        "EVD-000450",
+        "EVD-000451",
+        "EVD-000446",
+        "EVD-000447",
+        "EVD-000433",
+        "EVD-000435",
+        "EVD-000436",
+        "EVD-000437",
+        "EVD-000438",
+        "EVD-000439",
+        "EVD-000440",
+        "EVD-000441",
+        "EVD-000442",
+        "EVD-000443",
+        "EVD-000444",
+        "EVD-000445",
+        "EVD-000432",
+        "EVD-000434",
+        "EVD-000448",
+        "EVD-000449"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-19T15:07:47+00:00",
+      "reason": "PASSED。EVD-000449/450/451 固定并重审 immutable RED→production fix→GREEN lineage：ee4c77a5 的四个 R37 security Case 为 4/4 genuine semantic RED，失败来自 raw/proofless authority bypass 而非环境/编译；8b2faf83 后关闭 production raw authority seam；e5f12c9c 之后同四 Case 在 Design 授权的 controlled harness adaptation 下 4/4 GREEN，17 项 authority regressions 同时通过，zero-side-effect 与 proofless-no-authority oracle 未弱化。EVD-000434/446 证明当前 production/test blobs 与 Task8 成功 executable baseline 一致；EVD-000433 与 EVD-000435..445 保存当前 preflight 和 12 条 validation command 的命令/退出码/输出 digest，其中 02–12 明确标记为 executable-source-equivalence rebind、并未伪称 I014 重跑。测试使用真实 EngineContext/MODEL data/effect/session，断言 receipt/effectCount/value/mutationVersion 等可观察行为；fixture 的反射仅用于构造真实测试对象，不替代 authority/effect oracle。主路径、READ-only/WRITE、proofless READ/WRITE、public raw seam、single-context lifecycle、real fixture 与 MySQL regression 均有证据覆盖。"
     }
   ]
 }
