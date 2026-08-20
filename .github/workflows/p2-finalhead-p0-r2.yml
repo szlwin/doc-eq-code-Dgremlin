@@ -1,0 +1,173 @@
+name: P2 ultimate true final-head P0 validation
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-finalhead-p0-base-r2-20260820
+
+permissions:
+  contents: read
+
+jobs:
+  core-p0:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: 6387ed6ba5b78676aff653f9252d8d1b776292a0
+          fetch-depth: 0
+      - name: Verify exact PR36 final head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "6387ed6ba5b78676aff653f9252d8d1b776292a0"
+          test "$(git rev-parse HEAD^{tree})" = "654f3b6af77946da8062c48072449bc02a8d4b19"
+          printf 'target_sha=%s\ntarget_tree=%s\n' "$(git rev-parse HEAD)" "$(git rev-parse HEAD^{tree})" | tee /tmp/finalhead-target.txt
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Focused P2 security authority
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install 2>&1 | tee /tmp/finalhead-bootstrap.log
+          ./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/finalhead-security.log
+      - name: Focused single-context lifecycle
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-core-starter -Dtest=SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/finalhead-lifecycle.log
+      - name: Prepare dec-demo dependencies
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-datasource-orm-mysql,dec-context-config-parse-yaml,dec-context-config-parse-xml -am -DskipTests install 2>&1 | tee /tmp/finalhead-demo-bootstrap.log
+      - name: Focused real fixture
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test 2>&1 | tee /tmp/finalhead-real-fixture.log
+      - name: Full clean verify
+        shell: bash
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress clean verify 2>&1 | tee /tmp/finalhead-clean-verify.log
+      - name: T14 provenance mutation gate
+        run: sh scripts/remediation/prove_t14_provenance_mutation_gate.sh
+      - name: Failure blocks build gate
+        shell: bash
+        run: |
+          set -o pipefail
+          scripts/remediation/prove_test_failure_gate.sh 2>&1 | tee /tmp/finalhead-failure-gate.log
+      - name: T15 retirement gate
+        run: sh scripts/remediation/prove_p1_t15_retirement_gate.sh
+      - name: Upload final-head core evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-finalhead-p0-core-r2
+          path: |
+            /tmp/finalhead-target.txt
+            /tmp/finalhead-bootstrap.log
+            /tmp/finalhead-security.log
+            /tmp/finalhead-lifecycle.log
+            /tmp/finalhead-demo-bootstrap.log
+            /tmp/finalhead-real-fixture.log
+            /tmp/finalhead-clean-verify.log
+            /tmp/finalhead-failure-gate.log
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+            **/target/t14-mutation-proof/**
+            target/p1-t15-retirement/**
+          if-no-files-found: warn
+
+  mysql-p0:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: mysqldb
+          MYSQL_DATABASE: demo-test2
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pmysqldb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: 6387ed6ba5b78676aff653f9252d8d1b776292a0
+          fetch-depth: 0
+      - name: Verify exact PR36 final head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "6387ed6ba5b78676aff653f9252d8d1b776292a0"
+          test "$(git rev-parse HEAD^{tree})" = "654f3b6af77946da8062c48072449bc02a8d4b19"
+          printf 'target_sha=%s\ntarget_tree=%s\n' "$(git rev-parse HEAD)" "$(git rev-parse HEAD^{tree})" | tee /tmp/finalhead-target-mysql.txt
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Bootstrap repository-bundled legacy dependencies
+        run: scripts/remediation/bootstrap_legacy_dependencies.sh
+      - name: Initialize MySQL schema/data
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" -i "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' < dec-demo/src/test/resources/mysql/schema.sql
+          if [ -f dec-demo/src/test/resources/mysql/data.sql ]; then
+            docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" -i "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' < dec-demo/src/test/resources/mysql/data.sql
+          fi
+      - name: Run MySQL business integration
+        shell: bash
+        env:
+          DEC_MYSQL_URL: jdbc:mysql://127.0.0.1:3306/demo-test2?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_URL_SECONDARY: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_URL_2: jdbc:mysql://127.0.0.1:3306/demo-test1?useSSL=false&allowPublicKeyRetrieval=true
+          DEC_MYSQL_USER: root
+          DEC_MYSQL_PASSWORD: mysqldb
+        run: |
+          set -o pipefail
+          ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify 2>&1 | tee /tmp/finalhead-mysql-it.log
+      - name: Verify MySQL reports
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/remediation/verify_dec_demo_mysql_it.py 2>&1 | tee /tmp/finalhead-mysql-verify.log
+      - name: Freeze MySQL effects
+        env:
+          MYSQL_CONTAINER_ID: ${{ job.services.mysql.id }}
+          MYSQL_TEST_PASSWORD: mysqldb
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p target/finalhead-mysql
+          marker_count="$(docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" "$MYSQL_CONTAINER_ID" mysql -N -uroot --database='demo-test2' -e "SELECT COUNT(*) FROM dec_test_execution_audit WHERE test_case IN ('RuleTests.orderRulesWriteExpectedRowsToBothDatabases','DirectoryTest.directoryRangeReturnsOnlyRegisterAndAuthUsers','OrderTest.saveOrderWritesCompleteAggregate');")"
+          test "$marker_count" = "3"
+          docker exec -e MYSQL_PWD="$MYSQL_TEST_PASSWORD" "$MYSQL_CONTAINER_ID" mysql -uroot --database='demo-test2' -e "SELECT * FROM dec_test_execution_audit ORDER BY test_case; SELECT COUNT(*) AS order_count FROM order_info; SELECT COUNT(*) AS order_detail_count FROM order_detail_info; SELECT COUNT(*) AS pay_count FROM pay_info; SELECT COUNT(*) AS pay_detail_count FROM pay_detail_info; SELECT COUNT(*) AS product_count FROM product_info; SELECT COUNT(*) AS user_count FROM user_info;" | tee target/finalhead-mysql/database-evidence.txt
+      - name: Upload final-head MySQL evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-finalhead-p0-mysql-r2
+          path: |
+            /tmp/finalhead-target-mysql.txt
+            /tmp/finalhead-mysql-it.log
+            /tmp/finalhead-mysql-verify.log
+            dec-demo/target/surefire-reports/**
+            target/finalhead-mysql/**
+          if-no-files-found: error
