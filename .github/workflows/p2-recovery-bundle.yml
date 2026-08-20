@@ -1,0 +1,42 @@
+name: P2 exact-history recovery bundle
+
+on:
+  pull_request:
+    branches:
+      - agent/p2-recovery-bundle-base-20260820
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: 1547f4fff2375798d1faa2a80ad77518a73bfdc8
+          fetch-depth: 0
+      - name: Verify exact target and create full-history bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "1547f4fff2375798d1faa2a80ad77518a73bfdc8"
+          test "$(git rev-parse HEAD^{tree})" = "ca833077c720711558a75f179c5e3c0ed148956e"
+          git branch recovery-snapshot 1547f4fff2375798d1faa2a80ad77518a73bfdc8
+          git bundle create /tmp/p2-current-full.bundle recovery-snapshot
+          git bundle verify /tmp/p2-current-full.bundle
+          sha256sum /tmp/p2-current-full.bundle | tee /tmp/p2-current-full.bundle.sha256
+          git rev-list --count recovery-snapshot | tee /tmp/p2-current-history-count.txt
+          git log -1 --format='%H%n%P%n%T%n%B' recovery-snapshot | tee /tmp/p2-current-head.txt
+      - name: Upload exact recovery bundle
+        uses: actions/upload-artifact@v6
+        with:
+          name: p2-exact-history-recovery-bundle
+          path: |
+            /tmp/p2-current-full.bundle
+            /tmp/p2-current-full.bundle.sha256
+            /tmp/p2-current-history-count.txt
+            /tmp/p2-current-head.txt
+          if-no-files-found: error
+          compression-level: 0
