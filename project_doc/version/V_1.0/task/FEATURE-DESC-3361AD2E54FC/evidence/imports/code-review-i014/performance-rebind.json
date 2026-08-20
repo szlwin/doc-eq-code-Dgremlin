@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "CODE_REVIEW_PERFORMANCE_REBIND",
+  "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "phase": "code_review",
+  "current_git_head": "8298cde932dfd0f8f60eb31a09e8666d1184dcce",
+  "validated_executable_baseline": "fbe16820eb84080af1e774736e7aaf787c1db8a0",
+  "rebind_mode": "REBIND_BY_EXECUTABLE_SOURCE_EQUIVALENCE",
+  "non_project_doc_diff_from_validated_baseline": [],
+  "source_equivalence_status": "PROVEN",
+  "measurement_origin": {
+    "workflow_run_id": 32205252873,
+    "artifact_id": 9348948914,
+    "artifact_sha256": "2bff57f64c3cff2d26b3410134d2b65957133fd91d324caadb58c781f4f2f0b7",
+    "note": "Measurements were produced by the successful Task8 runner and are rebound to the current Code Review revision because executable production/test source bytes are unchanged. This is not a claim that the commands were rerun during Code Review."
+  },
+  "focused_measurements": [
+    {
+      "file": "security-remediation-surefire.xml",
+      "suite": "dec.core.starter.access.P2SecurityAuthorityRemediationTest",
+      "time_seconds": 0.109,
+      "tests": 4,
+      "errors": 0,
+      "skipped": 0,
+      "failures": 0
+    },
+    {
+      "file": "lifecycle-surefire.xml",
+      "suite": "dec.core.starter.access.SingleEngineContextRuntimeLifecycleTest",
+      "time_seconds": 0.114,
+      "tests": 3,
+      "errors": 0,
+      "skipped": 0,
+      "failures": 0
+    },
+    {
+      "file": "real-fixture-surefire.xml",
+      "suite": "dec.demo.p2.P2RealFixtureIntegrationTest",
+      "time_seconds": 0.884,
+      "tests": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failures": 0
+    }
+  ],
+  "build_measurements": {
+    "r06_cmd02_total_seconds": 3.673,
+    "r06_cmd03_total_seconds": 2.268,
+    "r06_cmd04_total_seconds": 1.314,
+    "r06_cmd05_total_seconds": 3.955,
+    "r06_cmd10_total_seconds": 17.04,
+    "r06_cmd11_total_seconds": 98.0
+  },
+  "review_interpretation": {
+    "critical_path": "in-memory exact Guard -> target resolution -> one-shot authorization -> MODEL effect; no new DB/network call added by the authority remediation",
+    "capacity_applicability": "No cache, queue, worker pool, remote fan-out, or persistent capacity surface is introduced by this change; capacity-specific criterion is N/A for the reviewed remediation.",
+    "budget_statement": "No product SLO/latency budget is introduced by R33/R37/R06; reviewer may only conclude no regression-inducing amplification in the reviewed code path, not assert an unprovided external SLO."
+  }
+}

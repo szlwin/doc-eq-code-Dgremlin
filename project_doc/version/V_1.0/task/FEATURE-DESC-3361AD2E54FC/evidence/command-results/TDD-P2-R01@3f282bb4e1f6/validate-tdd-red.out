@@ -1,0 +1,34 @@
+{
+  "status": "PASSED",
+  "revision": "TDD-P2-R01@3f282bb4e1f6",
+  "exactTestClasses": 23,
+  "blockingCases": 101,
+  "validRedClasses": [
+    "ADAPTER",
+    "API_COMPILER",
+    "API_CTX",
+    "API_MODEL",
+    "API_STARTER",
+    "COMPOSE",
+    "CONC",
+    "DEP",
+    "DIAG",
+    "FIXTURE",
+    "ID",
+    "INTENT",
+    "LOCATOR",
+    "MATERIALIZE",
+    "POLICY",
+    "PUB",
+    "TARGET",
+    "TXN",
+    "VALUE"
+  ],
+  "characterizationGreenClasses": [
+    "COMPAT",
+    "DAG",
+    "RULEVIEW",
+    "SYSTEM"
+  ],
+  "errors": []
+}

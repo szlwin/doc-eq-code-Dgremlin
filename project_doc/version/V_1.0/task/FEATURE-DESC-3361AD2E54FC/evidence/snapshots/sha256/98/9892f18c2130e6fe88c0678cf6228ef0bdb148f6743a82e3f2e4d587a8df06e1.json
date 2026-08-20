@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "runtime_result",
+  "task_id": "TASK-P2-PHASE-TESTING",
+  "revision": "TESTING-P2-R37-FINALHEAD-R01@647a02301618",
+  "input_code_review_revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "automatic_pr36_p0": {
+    "run_id": 32277158143,
+    "run_number": 1866,
+    "head_sha": "647a023016181aafdabdfb8318e849bf352ab010",
+    "status": "completed",
+    "conclusion": "action_required",
+    "jobs": 0,
+    "usable_as_pass_evidence": false
+  },
+  "isolated_runner": {
+    "pr": 60,
+    "run_id": 32278778894,
+    "run_number": 1,
+    "head_sha": "ac7aa1cfd0a549921ac0d25f50159d813ff045e6",
+    "status": "completed",
+    "conclusion": "success",
+    "forced_checkout_sha": "647a023016181aafdabdfb8318e849bf352ab010",
+    "forced_checkout_tree": "60a19d6559760e0902d5851a1cc155c1a09a6eee",
+    "core_job_id": 96152322690,
+    "mysql_job_id": 96152322962
+  },
+  "artifact_digests": {
+    "core": "sha256:3a8bc6bd89cecaf3774a87f8cefc98be2c8d47cdb1bdd94024989fa6ad6f985f",
+    "mysql": "sha256:f7f2b1ec312995bc88e1220f9d48adf66e77e19262f98ef64eaa0a0bc0e207a8"
+  },
+  "result": "PASSED",
+  "environment": {
+    "runner": "ubuntu-24.04",
+    "java": "Temurin 17",
+    "mysql": "8.0"
+  },
+  "claim_boundary": "Runner PR60 is trigger-only and is never merged; both jobs forcibly checked out and verified PR36 exact target before execution."
+}

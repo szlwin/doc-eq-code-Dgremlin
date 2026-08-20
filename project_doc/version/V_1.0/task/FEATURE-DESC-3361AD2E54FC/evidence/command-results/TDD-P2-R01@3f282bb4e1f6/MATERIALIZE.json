@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-model -Dtest=RuntimeModelMaterializationIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 1,
+  "executed_at": "2026-08-11T05:30:23.032404+00:00",
+  "revision": "TDD-P2-R01@3f282bb4e1f6",
+  "output_ref": "evidence/command-results/TDD-P2-R01@3f282bb4e1f6/MATERIALIZE.out",
+  "output_digest": "523f0019d1bbe6c9d9c558127bcf542bbc3522bf23f25ef692e09798dfdc4a8f"
+}

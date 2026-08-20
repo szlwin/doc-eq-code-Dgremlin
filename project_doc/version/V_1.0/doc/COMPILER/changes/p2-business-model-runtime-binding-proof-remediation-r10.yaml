@@ -1,0 +1,305 @@
+schemaVersion: 1
+changeSet:
+  id: CHG-V_1.0-COMPILER-P2-BM-R10
+  version: V_1.0
+  module: COMPILER
+  featureCode: P2-SYSTEM-RULEVIEW
+  reason: >-
+    Close independent Review findings FND-P2-REV-017 and FND-P2-REV-018 by freezing
+    a production dynamic-binding classification rule over current access-consumer IR and
+    by representing runtime object membership with a framework-owned opaque binding proof,
+    so AC-006 can distinguish runtime ALLOW/DENY under one statically authorized tuple.
+  baseRevisions:
+    business_model: BM-R09
+  resultRevisions:
+    business_model: BM-R10
+  affectedTraceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+operations:
+  - artifact: business_model
+    collection: terms
+    operation: add
+    targetId: TERM-DYNAMIC-BINDING-CLASSIFICATION
+    after:
+      id: TERM-DYNAMIC-BINDING-CLASSIFICATION
+      name: DynamicBindingClassification
+      definition: >-
+        Static authorization 完成后的 compiler 生产分类事实。STATIC_BOUND 表示 resolved
+        access-consumer IR 直接指向一个 exact model location，不含 runtime collection
+        iteration/element selection；RUNTIME_OBJECT_BOUND 表示 exact static authorization
+        已成立，但当前已冻结的 IR 需要在运行时从 collection 中解析实际 element/object。
+      forbiddenSynonyms:
+        - test stub choice
+        - implementation heuristic
+        - every access is dynamic
+      sourceRefs:
+        - REQAN-P2-R01
+        - FND-P2-REV-018
+
+  - artifact: business_model
+    collection: valueObjects
+    operation: add
+    targetId: VO-DYNAMIC-BINDING-CLASSIFICATION
+    after:
+      id: VO-DYNAMIC-BINDING-CLASSIFICATION
+      name: DynamicBindingClassification
+      identity: classification
+      attributes:
+        - name: classification
+          type: STATIC_BOUND|RUNTIME_OBJECT_BOUND
+          required: true
+        - name: reasonCode
+          type: DynamicBindingReasonCode
+          required: true
+        - name: sourceRef
+          type: SourceRef
+          required: true
+      behaviors:
+        - classifyDeterministicallyFromResolvedAccessIr
+        - rejectUnsupportedDynamicForm
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-006
+
+  - artifact: business_model
+    collection: valueObjects
+    operation: add
+    targetId: VO-RUNTIME-BINDING-PLAN
+    after:
+      id: VO-RUNTIME-BINDING-PLAN
+      name: RuntimeBindingPlan
+      identity: authorizedRuleKey+kind+collectionPath+elementRelativePath+modelShapeDigest
+      attributes:
+        - name: authorizedRuleKey
+          type: ModelAccessRuleKey
+          required: true
+        - name: kind
+          type: COLLECTION_ELEMENT_MEMBERSHIP
+          required: true
+        - name: collectionPath
+          type: ModelPath
+          required: true
+        - name: elementRelativePath
+          type: ModelPath
+          required: true
+        - name: modelShapeDigest
+          type: Digest
+          required: true
+        - name: sourceRef
+          type: SourceRef
+          required: true
+      behaviors:
+        - canonical
+        - deriveStablePlanKey
+        - publishWithSelectedRule
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-008
+
+  - artifact: business_model
+    collection: valueObjects
+    operation: add
+    targetId: VO-RUNTIME-BINDING-HANDLE
+    after:
+      id: VO-RUNTIME-BINDING-HANDLE
+      name: RuntimeBindingHandle
+      identity: engineContextId+planKey+selectedRuleKey+resolutionId
+      attributes:
+        - name: engineContextId
+          type: EngineContextId
+          required: true
+        - name: planKey
+          type: RuntimeBindingPlanKey
+          required: true
+        - name: selectedRuleKey
+          type: ModelAccessRuleKey
+          required: true
+        - name: resolutionId
+          type: OpaqueResolutionId
+          required: true
+      behaviors:
+        - issuedOnlyByFrameworkResolver
+        - verifyActualCollectionMembership
+        - rejectReplayAcrossContextPlanOrRule
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: services
+    operation: add
+    targetId: SVC-DYNAMIC-BINDING-CLASSIFICATION
+    after:
+      id: SVC-DYNAMIC-BINDING-CLASSIFICATION
+      name: DynamicBindingClassificationService
+      reason: >-
+        AC-006 的 STATIC/RUNTIME 分支必须由 production compiler 根据 resolved access-consumer
+        IR 确定，不能由 Test stub 或 Development heuristic 决定。
+      inputs:
+        - ResolvedAccessConsumerIr
+        - CompiledModelShape
+        - ModelAccessRuleKey
+      outputs:
+        - DynamicBindingClassification
+        - RuntimeBindingPlan when RUNTIME_OBJECT_BOUND
+        - Diagnostic
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-006
+
+  - artifact: business_model
+    collection: services
+    operation: add
+    targetId: SVC-RUNTIME-BINDING-RESOLUTION
+    after:
+      id: SVC-RUNTIME-BINDING-RESOLUTION
+      name: RuntimeBindingResolutionService
+      reason: >-
+        同一静态 System/target/path/operation 下的实际 collection element 可能不同；Guard
+        需要 framework-issued opaque proof 来验证实际对象仍属于 compiler-published plan 的
+        授权边界，而不是重复比较静态 tuple 或接受 caller 自报对象。
+      inputs:
+        - CurrentEngineContext
+        - RuntimeBindingPlan
+        - ActualFrameworkModelResolution
+      outputs:
+        - RuntimeBindingHandle
+        - RuntimeBindingVerification
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: policies
+    operation: add
+    targetId: POL-DYNAMIC-BINDING-CLASSIFICATION
+    after:
+      id: POL-DYNAMIC-BINDING-CLASSIFICATION
+      name: DynamicBindingClassificationPolicy
+      reason: >-
+        当前 P2 只接受已冻结、可确定性识别的 dynamic IR；未知动态形式必须 fail-closed
+        编译失败，避免 implementation 自行扩大 runtime 权限。
+      inputs:
+        - ResolvedAccessConsumerIr
+        - CompiledModelShape
+      outputs:
+        - STATIC_BOUND|RUNTIME_OBJECT_BOUND|Diagnostic
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-006
+      rules:
+        - id: DBR-P2-DIRECT-EXACT
+          when: >-
+            access node is a direct exact path and contains no collection iteration,
+            runtime index/key/filter/find/selector or element-selection operator
+          then: STATIC_BOUND
+        - id: DBR-P2-EVERY-COLLECTION-ELEMENT
+          when: >-
+            access node is current supported every(collectionPath, elementExpression),
+            collectionPath resolves exactly to a collection and protected member access resolves
+            exactly relative to the collection element type
+          then: RUNTIME_OBJECT_BOUND
+        - id: DBR-P2-UNSUPPORTED-DYNAMIC
+          when: >-
+            access node contains any other runtime index/key/filter/find/selector or cannot resolve
+            a deterministic element type/path under the current Design revision
+          then: Diagnostic(MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED)
+
+  - artifact: business_model
+    collection: scenarios
+    operation: update
+    targetId: SCN-P2-MODEL-ACCESS-RUNTIME
+    beforeRef: COMPILER_business_model.yaml#SCN-P2-MODEL-ACCESS-RUNTIME
+    after:
+      id: SCN-P2-MODEL-ACCESS-RUNTIME
+      given:
+        - static System/target/exact path/operation authorization is valid
+        - current real source grammar contains order.ordered rule-data status=1 and every(orderDetailList,status=1)
+      when: compiler classifies each resolved protected access-consumer IR and runtime later resolves the actual object
+      then:
+        - direct status access is STATIC_BOUND and compiles STATIC_ALLOW
+        - every(orderDetailList,status) element read is RUNTIME_OBJECT_BOUND
+        - compiler publishes RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + RuntimeBindingPlan
+        - framework resolver issues an opaque RuntimeBindingHandle for the actual collection element
+        - handle for an actual member of the planned collection may ALLOW
+        - handle for a foreign collection/object, stale Context, wrong plan or wrong rule deterministically DENY
+        - caller cannot mint a proof, submit a raw POJO or expand the statically authorized exact surface
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: invariants
+    operation: add
+    targetId: INV-COMPILER-023
+    after:
+      id: INV-COMPILER-023
+      statement: >-
+        DynamicBindingClassification 必须由 production compiler 对 resolved access-consumer IR
+        确定性计算。当前仅 DIRECT_EXACT=STATIC_BOUND、EVERY_COLLECTION_ELEMENT=RUNTIME_OBJECT_BOUND；
+        未冻结的 dynamic IR 必须产生 MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED。
+      trigger: static authorization success before access rule publication
+      failure: MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-006
+
+  - artifact: business_model
+    collection: invariants
+    operation: add
+    targetId: INV-COMPILER-024
+    after:
+      id: INV-COMPILER-024
+      statement: >-
+        RUNTIME_GUARD_REQUIRED 的 ALLOW 必须以 framework-issued runtime object binding proof
+        验证实际对象属于当前 EngineContext、selected rule 与 RuntimeBindingPlan 的授权边界；
+        仅比较 System/target/path/operation 四元组、caller 自报 boolean/raw object 或可伪造 handle
+        均不得授权。foreign/stale/replayed proof 必须在 protected operation 前 DENY。
+      trigger: runtime protected access for RUNTIME_GUARD_REQUIRED
+      failure: RUNTIME_BINDING_PROOF_INVALID
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: businessErrors
+    operation: add
+    targetId: ERR-MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED
+    after:
+      id: ERR-MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED
+      condition: resolved access-consumer IR uses a dynamic binding form not frozen by the current P2 contract
+      meaning: compiler cannot safely choose STATIC_BOUND or RUNTIME_OBJECT_BOUND
+      retryable: false
+      stateChanged: false
+      diagnosticCode: MIX-MODEL-ACCESS-DYNAMIC-BINDING-UNSUPPORTED
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-006
+
+realFixtureBindings:
+  source: dec-demo/src/main/resources/mix/system/systems.xml
+  system: order
+  information: ordered
+  ruleData:
+    staticExample: "status = 1"
+    dynamicExample: "every(orderDetailList, status = 1)"
+  requiredClassification:
+    directStatusRead: STATIC_BOUND
+    everyElementStatusRead: RUNTIME_OBJECT_BOUND
+  notes:
+    - read path="*" must expand to the exact readable element member path before classification can publish a runtime rule
+    - no parent-path permission fallback is allowed
+    - change-data write semantics are not widened by this fixture; AC-006 uses the protected READ side unless an exact child WRITE rule exists
+
+acceptance:
+  - Production classifier, not a stub, proves the real static/dynamic fixture classification.
+  - Same static authorization tuple can distinguish member handle A from foreign/stale/replayed handle B.
+  - No raw POJO or caller-mintable proof is accepted as Guard authority.
+  - Unsupported dynamic forms fail compilation rather than becoming implementation-defined.
+  - No finding is CLOSED until BM-R10 is materialized through formal RC9 lifecycle and exact-revision Review.

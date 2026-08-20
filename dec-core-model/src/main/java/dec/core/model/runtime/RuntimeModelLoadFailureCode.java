@@ -1,0 +1,10 @@
+package dec.core.model.runtime;
+
+/** DESIGN-P2-R30 L01-L06 的封闭失败代数。 */
+public enum RuntimeModelLoadFailureCode {
+    EXECUTION_CLOSED,
+    PLAN_NOT_IN_CAPTURED_CONTEXT,
+    MATERIALIZATION_DESCRIPTOR_NOT_FOUND,
+    ORIGIN_NOT_MATERIALIZABLE,
+    CONTAINER_LOAD_REJECTED
+}

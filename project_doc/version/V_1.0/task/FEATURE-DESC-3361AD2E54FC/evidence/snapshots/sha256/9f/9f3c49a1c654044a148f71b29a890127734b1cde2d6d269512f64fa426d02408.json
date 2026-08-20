@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "kind": "development_closure_revision_binding",
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012",
+  "attempt_id": "ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001",
+  "revision": "DEV-P2-R37-CLOSURE-R01@1a936fdd2a45",
+  "canonical_head": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
+  "task7_head": "fbe16820eb84080af1e774736e7aaf787c1db8a0",
+  "task8_runner_head": "b93e7f0659618c5dfac4777a029631e706164cdb",
+  "task8_run_id": 32205252873,
+  "task8_artifact_sha256": "2bff57f64c3cff2d26b3410134d2b65957133fd91d324caadb58c781f4f2f0b7",
+  "executable_source_equivalence": "PROVEN",
+  "current_head_delta_from_task7": "project_doc-only; no src/main, src/test, pom, workflow or scripts drift",
+  "binding_semantics": "The command outputs are imported from the already-successful Task8 run and rebound to this closure artifact only because executable-source equivalence to the current canonical head is proven. This does not claim the commands were re-executed at the metadata commit SHA.",
+  "source_equivalence_ref": "../task8-run-32205252873/current-head-source-equivalence.json"
+}

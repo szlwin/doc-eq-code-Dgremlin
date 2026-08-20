@@ -1,0 +1,16 @@
+test_case	executed_at
+DirectoryTest.directoryRangeReturnsOnlyRegisterAndAuthUsers	2026-08-19 17:00:05
+OrderTest.saveOrderWritesCompleteAggregate	2026-08-19 17:00:11
+RuleTests.orderRulesWriteExpectedRowsToBothDatabases	2026-08-19 17:00:07
+order_count
+1
+order_detail_count
+1
+pay_count
+1
+pay_detail_count
+1
+product_count
+1
+user_count
+1

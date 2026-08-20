@@ -1,0 +1,17 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "executed_at": "2026-08-19T01:34:46+00:00",
+  "revision": "DEV-P2-R37-SKELETON-R01@a5723c233bdf",
+  "exit_code": 0,
+  "output_ref": "evidence/imports/task8-run-32205252873/r06-cmd09.log",
+  "output_digest": "fbc0919c5d525a8b6bf3bfa20b5c27ad1c1a775591f36c5725bd93219a82f52f",
+  "provenance": {
+    "mode": "REBIND_BY_EXECUTABLE_SOURCE_EQUIVALENCE",
+    "original_workflow_run_id": 32205252873,
+    "current_canonical_head": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
+    "equivalence_evidence": "evidence/imports/development-skeleton-i013/skeleton-executable-equivalence.json",
+    "rebound_from_revision": "DEV-P2-R37-CLOSURE-R01@1a936fdd2a45"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "status": "PASSED",
+  "requiredClasses": [
+    "dec.demo.directory.DirectoryTest",
+    "dec.demo.model.RuleTests",
+    "dec.demo.system.OrderTest"
+  ],
+  "discovered": {
+    "dec.demo.directory.DirectoryTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "dec.demo.model.RuleTests": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "dec.demo.system.OrderTest": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "missingClasses": [],
+  "totals": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

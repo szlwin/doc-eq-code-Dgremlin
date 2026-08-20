@@ -1,0 +1,28 @@
+{
+  "schema": "RC21_COMPLETION_ACCEPTANCE_RECONCILIATION_V1",
+  "revision": "COMPLETION-VERIFICATION-P2-I009-R01@a0e0f1c3e3af",
+  "assertionCount": 76,
+  "currentBlockingAssertions": {
+    "count": 47,
+    "verified": 47,
+    "unverified": 0
+  },
+  "legacyCompatibilityAssertions": {
+    "count": 29,
+    "blocking": 0,
+    "notApplicable": 29,
+    "policy": "Historical RC21 compatibility-retirement assertions remain NOT_APPLICABLE with original evidence/reviewer/reason, but are non-blocking because current-profile assertions replace them."
+  },
+  "currentAcceptanceCoverage": {
+    "AC-P2-SYSTEM-RULEVIEW-001": true,
+    "AC-P2-SYSTEM-RULEVIEW-002": true,
+    "AC-P2-SYSTEM-RULEVIEW-003": true,
+    "AC-P2-SYSTEM-RULEVIEW-004": true,
+    "AC-P2-SYSTEM-RULEVIEW-005": true,
+    "AC-P2-SYSTEM-RULEVIEW-006": true,
+    "AC-P2-SYSTEM-RULEVIEW-007": true,
+    "AC-P2-SYSTEM-RULEVIEW-008": true,
+    "AC-P2-SYSTEM-RULEVIEW-009": true,
+    "AC-P2-SYSTEM-RULEVIEW-010": true
+  }
+}

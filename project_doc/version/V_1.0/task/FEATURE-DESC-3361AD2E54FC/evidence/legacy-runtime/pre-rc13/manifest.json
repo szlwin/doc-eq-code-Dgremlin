@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "PRE_RC13_RUNTIME_FREEZE",
+  "targetId": "FEATURE-DESC-3361AD2E54FC",
+  "version": "V_1.0",
+  "frozenAt": "2026-08-15T19:08:00+00:00",
+  "sourceHead": "4e56e5308cf674e822387c49277d93574f8db370",
+  "commonDevelopRelease": "2.44 RC21",
+  "storageModelVersion": 6,
+  "reason": "Docs-only controlled rebaseline. Exact legacy blobs are preserved for provenance; active runtime no longer reads them.",
+  "sourceCodeModified": false,
+  "blobs": {
+    "task_state.md": "5a88927a7af75360ea4c95823ebe8d3e12fb0d48",
+    "task_attempts.md": "9b575d9504709e75e7b24aa3136d699a309fb228",
+    "stage_outcomes.md": "c3da6db382db4b0ffe14bc6522922652dd372726",
+    "review_issues.md": "aedb998983d5410e4d6c746913d943ac93a6b106",
+    "resume_context.md": "e3251bc7eb28338acdbf0269c70fab4852a4d568",
+    "development_tasks.md": "7bb73202c9eee3a55b126612bfda9fd2bdf07b49",
+    "task_plan.pre-rc21.md": "cb6d674975c789721ae1faffafda58430a67c899",
+    "version_work_record.pre-rc21.md": "b34fc663c7a9ef005fb6ddcaf0c71a0c367a31a3"
+  },
+  "effectiveFacts": {
+    "design": "DESIGN-P2-R31@685dc64b1a8bb21438440185f4a25d68d120d75f",
+    "testDesign": "TESTDESIGN-P2-R33@ac9c0aecd1bf3ebee325d88d2f1b4027d727761d",
+    "implementationPlan": "TP-FEATURE-DESC-3361AD2E54FC-R07@604f26f1641e0cf9d7d70a8ee11e90d1d1ffdf1a",
+    "tdd": "TDD-P2-R01@3f282bb4e1f6",
+    "developmentClosure": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+    "previousHeadP0": {"runNumber":1826,"runId":31858840200,"head":"4e56e5308cf674e822387c49277d93574f8db370","conclusion":"success"}
+  },
+  "formalizationBoundary": {
+    "machineRegistryBoundDesign": "DESIGN-P2-R30",
+    "machineRegistryBoundTestDesign": "TESTDESIGN-P2-R32",
+    "machineRegistryBoundImplementationPlan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+    "developmentPhase": "IN_PROGRESS / FORMALIZATION_REQUIRED",
+    "nextLifecycleAfterFormalization": "PHASE_FINAL_CODE_REVIEW",
+    "note": "RC21 does not infer or fabricate missing exact-revision Evidence/Review Registry bindings."
+  }
+}

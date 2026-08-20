@@ -1,0 +1,12 @@
+GitHub Actions P0 run #1825 (runId 31858378409), job mysql-it (jobId 94947193533)
+Checked out PR36 merge of head 4a82335fbdce7a56b58fd6626af0ec67a7cbebba into base 4dce0f35390da4e90d9406e2d41d3ac8b57efd52.
+MySQL 8.0 service became healthy on port 3306.
+COMMAND: ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify
+RESULT: Reactor Summary: all 12 modules SUCCESS; BUILD SUCCESS; total time 02:25 min.
+P2 evidence: P2ModelAccessStaticAuthorizationTest 5/0/0/0; RuleViewCompilationContractTest 13/0/0/0; P2RevisionDependencyDagContractTest 2/0/0/0.
+Starter evidence: ProtectedAccessProductionCompositionTest 17/0/0/0; ProtectedAccessConcurrencyTest 3/0/0/0; ProtectedWriteIntentResolutionTest 8/0/0/0; ProtectedAccessDependencyDirectionTest 1/0/0/0.
+Real fixture: P2RealFixtureIntegrationTest 1/0/0/0 and dev09-save-Order executed successfully.
+verify_dec_demo_mysql_it.py: PASSED; required business tests 3, failures 0, errors 0, skipped 0.
+Database execution audit markers: 3; order/order_detail/pay/pay_detail/product/user counts all 1.
+Artifact: dec-demo-mysql-business-reports, id 9239776432, SHA256 6c47eb3fc11236e8da9e3200841c9ef50837a41fef07e8a62c22e887c12613ac.
+Job completed successfully.

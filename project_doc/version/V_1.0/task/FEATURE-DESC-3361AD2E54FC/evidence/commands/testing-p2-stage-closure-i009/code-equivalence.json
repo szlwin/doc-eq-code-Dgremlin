@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "kind": "code_equivalence",
+  "revision": "TESTING-P2-STAGE-CLOSURE-R01@7925ec4f218c",
+  "input_code_review_revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "base_sha": "4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "tested_head_sha": "7925ec4f218c167240fc12571336244e1f7849ad",
+  "github_compare_status": "ahead",
+  "commits": 7,
+  "changed_path_policy": "ALL_CHANGED_PATHS_UNDER_PROJECT_DOC",
+  "production_code_changes": 0,
+  "test_code_changes": 0,
+  "runtime_config_changes": 0,
+  "conclusion": "CODE_EQUIVALENT_FOR_TESTING",
+  "captured_at": "2026-08-17T06:48:55+00:00"
+}

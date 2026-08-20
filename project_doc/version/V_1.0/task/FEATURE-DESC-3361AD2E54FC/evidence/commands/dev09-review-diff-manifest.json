@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "base": "b5f1948c01fd25b88978cf4b843da17884c4ff91",
+  "head": "4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "status": "ahead",
+  "aheadBy": 39,
+  "reviewedFiles": [
+    "dec-core-compiler/src/main/java/dec/core/compiler/modelaccess/ViewMaterializationCompiler.java",
+    "dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/WriteCoordinationDomain.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java",
+    "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
+  ]
+}

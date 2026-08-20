@@ -1,0 +1,77 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "P0 #1832 Testing freshness: core-verify attempt 2 + mysql-it attempt 3",
+  "exit_code": 0,
+  "executed_at": "2026-08-19T17:00:22+00:00",
+  "revision": "TESTING-P2-R37-FINALHEAD-R01@647a02301618",
+  "result": "PASSED",
+  "execution_mode": "FRESH_EXACT_HEAD_REPLACEMENT",
+  "historical_descriptor_note": "The task-plan string names historical P0 #1832 attempts; Testing I014 does not claim to rerun #1832. It satisfies the same freshness gate with isolated fresh run 32278778894 bound to current exact PR36 head.",
+  "commands": [
+    {
+      "command": "./mvnw --batch-mode --no-transfer-progress clean verify",
+      "job_id": 96152322690,
+      "exit_code": 0,
+      "result": "PASSED",
+      "artifact_id": 9375122654,
+      "artifact_sha256": "3a8bc6bd89cecaf3774a87f8cefc98be2c8d47cdb1bdd94024989fa6ad6f985f"
+    },
+    {
+      "command": "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify",
+      "job_id": 96152322962,
+      "exit_code": 0,
+      "result": "PASSED",
+      "artifact_id": 9375116975,
+      "artifact_sha256": "f7f2b1ec312995bc88e1220f9d48adf66e77e19262f98ef64eaa0a0bc0e207a8"
+    }
+  ],
+  "metrics": {
+    "result": "PASSED",
+    "input_code_review_revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+    "tested_head": "647a023016181aafdabdfb8318e849bf352ab010",
+    "tested_tree": "60a19d6559760e0902d5851a1cc155c1a09a6eee",
+    "fresh_run_id": 32278778894,
+    "runner_pr": 60,
+    "core_verify": {
+      "job_id": 96152322690,
+      "result": "PASSED",
+      "artifact_id": 9375122654,
+      "artifact_sha256": "3a8bc6bd89cecaf3774a87f8cefc98be2c8d47cdb1bdd94024989fa6ad6f985f"
+    },
+    "mysql_it": {
+      "job_id": 96152322962,
+      "result": "PASSED",
+      "artifact_id": 9375116975,
+      "artifact_sha256": "f7f2b1ec312995bc88e1220f9d48adf66e77e19262f98ef64eaa0a0bc0e207a8"
+    },
+    "focused_tests": {
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "mysql_tests": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "database_final_state": {
+      "execution_markers": 3,
+      "order_count": 1,
+      "order_detail_count": 1,
+      "pay_count": 1,
+      "pay_detail_count": 1,
+      "product_count": 1,
+      "user_count": 1
+    },
+    "diagnostic_failure_gate": {
+      "expected_failure": true,
+      "proof": "P0 failure gate proved: failing test returned status 1"
+    }
+  },
+  "claim_boundary": "Fresh Testing I014 evidence is exact-head bound to 647a0230; it does not claim the historical #1832 run itself was rerun.",
+  "output": "{\"core_verify\":{\"artifact_id\":9375122654,\"artifact_sha256\":\"3a8bc6bd89cecaf3774a87f8cefc98be2c8d47cdb1bdd94024989fa6ad6f985f\",\"job_id\":96152322690,\"result\":\"PASSED\"},\"database_final_state\":{\"execution_markers\":3,\"order_count\":1,\"order_detail_count\":1,\"pay_count\":1,\"pay_detail_count\":1,\"product_count\":1,\"user_count\":1},\"diagnostic_failure_gate\":{\"expected_failure\":true,\"proof\":\"P0 failure gate proved: failing test returned status 1\"},\"focused_tests\":{\"errors\":0,\"failures\":0,\"skipped\":0,\"tests\":34},\"fresh_run_id\":32278778894,\"input_code_review_revision\":\"DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5\",\"mysql_it\":{\"artifact_id\":9375116975,\"artifact_sha256\":\"f7f2b1ec312995bc88e1220f9d48adf66e77e19262f98ef64eaa0a0bc0e207a8\",\"job_id\":96152322962,\"result\":\"PASSED\"},\"mysql_tests\":{\"errors\":0,\"failures\":0,\"skipped\":0,\"tests\":4},\"result\":\"PASSED\",\"runner_pr\":60,\"tested_head\":\"647a023016181aafdabdfb8318e849bf352ab010\",\"tested_tree\":\"60a19d6559760e0902d5851a1cc155c1a09a6eee\"}",
+  "output_digest": "3ad74c023da6eda983c5ed74cfcb62f7b6d68842fdbe589d9db224316f0fd5c4"
+}

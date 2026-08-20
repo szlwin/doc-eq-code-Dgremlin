@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"from pathlib import Path; s=Path('project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md').read_text(); assert 'DESIGN-P2-R30' in s and 'BM-R20' in s and 'FLOW-R11' in s and 'P2-IMPACT-R29' in s\"",
+  "executed_at": "2026-08-10T12:13:32+00:00",
+  "revision": "DESIGN-P2-R30",
+  "exit_code": 0,
+  "output_ref": "evidence/commands/rc9-machine-design-r30/01.out",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

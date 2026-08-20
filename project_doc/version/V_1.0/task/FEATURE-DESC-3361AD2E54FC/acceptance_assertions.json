@@ -10,8 +10,8 @@
       "type": "MANUAL_REVIEW",
       "phase": "requirement_confirmation",
       "revision": "REQCONF-P2-R02@ef30059b327d",
-      "blocking": true,
-      "status": "VERIFIED",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "RequirementAnalysisAgent",
         "review_phase": "requirement_confirmation"
@@ -31,7 +31,7 @@
       ],
       "verified_by_agent": "RequirementAnalysisAgent",
       "verified_at": "2026-08-07T16:13:19+00:00",
-      "reason": "RequirementAnalysisAgent 独立复核 R02：格式规范化未改变 P2 固定语义；目标、范围、失败恢复与关键决策继续满足需求分析入口门禁。"
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
       "assertion_id": "ASRT-P2-REQCONF-R02-TD-001",
@@ -40,8 +40,8 @@
       "type": "MANUAL_REVIEW",
       "phase": "requirement_confirmation",
       "revision": "REQCONF-P2-R02@ef30059b327d",
-      "blocking": true,
-      "status": "VERIFIED",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "TestDesignAgent",
         "review_phase": "requirement_confirmation"
@@ -56,7 +56,7 @@
       ],
       "verified_by_agent": "TestDesignAgent",
       "verified_at": "2026-08-07T16:13:20+00:00",
-      "reason": "TestDesignAgent 独立复核 R02：格式规范化未改变完成标准；正常、边界、失败与无副作用场景继续可测试、可观察。"
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
       "assertion_id": "ASRT-P2-REQAN-BM-001",
@@ -65,8 +65,8 @@
       "type": "MANUAL_REVIEW",
       "phase": "requirement_analysis",
       "revision": "REQAN-P2-R01@d08612768131",
-      "blocking": true,
-      "status": "VERIFIED",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "BusinessModelAgent",
         "review_phase": "requirement_analysis"
@@ -84,7 +84,7 @@
       ],
       "verified_by_agent": "BusinessModelAgent",
       "verified_at": "2026-08-07T16:32:41+00:00",
-      "reason": "P2 需求分析已给出可建模的 System、RuleView、ModelAccess 语义与一致性边界，未提前锁定实现。"
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
       "assertion_id": "ASRT-P2-REQAN-DES-001",
@@ -93,8 +93,8 @@
       "type": "MANUAL_REVIEW",
       "phase": "requirement_analysis",
       "revision": "REQAN-P2-R01@d08612768131",
-      "blocking": true,
-      "status": "VERIFIED",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "DesignAgent",
         "review_phase": "requirement_analysis"
@@ -113,7 +113,7 @@
       ],
       "verified_by_agent": "DesignAgent",
       "verified_at": "2026-08-07T16:32:42+00:00",
-      "reason": "P2 分析达到设计输入标准：边界明确、失败可观察、现有编译骨架具备承载点且未在需求层锁死实现。"
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
       "assertion_id": "ASRT-P2-REQAN-TD-001",
@@ -122,8 +122,8 @@
       "type": "MANUAL_REVIEW",
       "phase": "requirement_analysis",
       "revision": "REQAN-P2-R01@d08612768131",
-      "blocking": true,
-      "status": "VERIFIED",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "TestDesignAgent",
         "review_phase": "requirement_analysis"
@@ -142,7 +142,7 @@
       ],
       "verified_by_agent": "TestDesignAgent",
       "verified_at": "2026-08-07T16:32:44+00:00",
-      "reason": "P2 AC 已具备完整测试维度和可观察结果，可进入正式 Test Design。"
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
       "assertion_id": "ASRT-P2-REQAN-IMP-001",
@@ -151,8 +151,8 @@
       "type": "MANUAL_REVIEW",
       "phase": "requirement_analysis",
       "revision": "REQAN-P2-R01@d08612768131",
-      "blocking": true,
-      "status": "VERIFIED",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "ImpactAnalysisReviewAgent",
         "review_phase": "requirement_analysis"
@@ -171,7 +171,7 @@
       ],
       "verified_by_agent": "ImpactAnalysisReviewAgent",
       "verified_at": "2026-08-07T16:32:45+00:00",
-      "reason": "P2 对现有编译链、Context、Starter 与 declaration 的影响边界已识别，无需求分析阶段未处置的阻塞影响。"
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
       "assertion_id": "ASRT-P2-REQAN-XMOD-001",
@@ -180,8 +180,8 @@
       "type": "MANUAL_REVIEW",
       "phase": "requirement_analysis",
       "revision": "REQAN-P2-R01@d08612768131",
-      "blocking": true,
-      "status": "VERIFIED",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "CrossModuleIntegrationReviewAgent",
         "review_phase": "requirement_analysis"
@@ -200,17 +200,17 @@
       ],
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
       "verified_at": "2026-08-07T16:32:46+00:00",
-      "reason": "P2 跨模块职责、顺序、失败传播、恢复与测试映射可追踪；未引入循环依赖或隐藏回退。"
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
-      "assertion_id": "ASRT-P2-BM-R07-BM-001",
+      "assertion_id": "ASRT-P2-BM-R20-RC9-BMR-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-004",
-      "statement": "BusinessModelReviewAgent 独立确认 BM-R07 全量继承 BM-R05 stable IDs、保持 BM-R06 P2 语义，并以单一逻辑模块 lineage 提供完整业务对象、聚合、不变量和失败边界。",
+      "statement": "RC9 same-revision independent review of already-completed BM-R20 by BusinessModelReviewAgent.",
       "type": "MANUAL_REVIEW",
       "phase": "business_model",
-      "revision": "BM-R07@7d7bf504ca9d",
-      "blocking": true,
-      "status": "VERIFIED",
+      "revision": "BM-R20",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "BusinessModelReviewAgent",
         "review_phase": "business_model"
@@ -219,29 +219,25 @@
         "TASK-P2-BMODEL-001#expected_results/0"
       ],
       "evidence_ids": [
-        "EVD-000049",
-        "EVD-000050",
-        "EVD-000053",
-        "EVD-000054",
-        "EVD-000055",
-        "EVD-000056",
-        "EVD-000051",
-        "EVD-000052",
-        "EVD-000058"
+        "EVD-000122",
+        "EVD-000127",
+        "EVD-000123",
+        "EVD-000124",
+        "EVD-000126"
       ],
       "verified_by_agent": "BusinessModelReviewAgent",
-      "verified_at": "2026-08-08T04:17:00+00:00",
-      "reason": "BM-R07 保留 BM-R05/BM-R06 全部稳定业务语义，仅新增文档 lineage；17 节视图、聚合、不变量、错误、追踪与 P2 边界完整。"
+      "verified_at": "2026-08-10T12:11:12+00:00",
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
-      "assertion_id": "ASRT-P2-BM-R07-REQ-001",
+      "assertion_id": "ASRT-P2-BM-R20-RC9-REQ-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
-      "statement": "RequirementReviewAgent 独立确认 BM-R07 lineage/readability rework 不改变已确认 P2 目标、范围、失败恢复和阶段边界。",
+      "statement": "RC9 same-revision independent review of already-completed BM-R20 by RequirementReviewAgent.",
       "type": "MANUAL_REVIEW",
       "phase": "business_model",
-      "revision": "BM-R07@7d7bf504ca9d",
-      "blocking": true,
-      "status": "VERIFIED",
+      "revision": "BM-R20",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "RequirementReviewAgent",
         "review_phase": "business_model"
@@ -250,25 +246,23 @@
         "TASK-P2-BMODEL-001#expected_results/1"
       ],
       "evidence_ids": [
-        "EVD-000054",
-        "EVD-000051",
-        "EVD-000052",
-        "EVD-000057",
-        "EVD-000058"
+        "EVD-000123",
+        "EVD-000125",
+        "EVD-000128"
       ],
       "verified_by_agent": "RequirementReviewAgent",
-      "verified_at": "2026-08-08T04:17:05+00:00",
-      "reason": "BM-R07 rework 只修正文档谱系与可读投影，不改变已确认 P2 System/RuleView/model-access 目标、范围、失败恢复或 P3-P8 边界。"
+      "verified_at": "2026-08-10T12:11:27+00:00",
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
-      "assertion_id": "ASRT-P2-BM-R07-DES-001",
+      "assertion_id": "ASRT-P2-BM-R20-RC9-DES-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
-      "statement": "DesignReviewAgent 独立确认 BM-R07 作为单一 COMPILER 模型谱系可无歧义支撑 System、RuleView、ModelPath、ModelAccess 的后续 Design，且未建立第二 runtime authority。",
+      "statement": "RC9 same-revision independent review of already-completed BM-R20 by DesignReviewAgent.",
       "type": "MANUAL_REVIEW",
       "phase": "business_model",
-      "revision": "BM-R07@7d7bf504ca9d",
-      "blocking": true,
-      "status": "VERIFIED",
+      "revision": "BM-R20",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "DesignReviewAgent",
         "review_phase": "business_model"
@@ -277,78 +271,254 @@
         "TASK-P2-BMODEL-001#expected_results/2"
       ],
       "evidence_ids": [
-        "EVD-000056",
-        "EVD-000049",
-        "EVD-000050",
-        "EVD-000055",
-        "EVD-000053",
-        "EVD-000054",
-        "EVD-000057"
+        "EVD-000124",
+        "EVD-000127",
+        "EVD-000122",
+        "EVD-000123",
+        "EVD-000125",
+        "EVD-000126"
       ],
       "verified_by_agent": "DesignReviewAgent",
-      "verified_at": "2026-08-08T04:17:09+00:00",
-      "reason": "BM-R07 明确单一 COMPILER 模型谱系，并保持 CompiledSystem、RuleViewKey、ModelPath、ModelAccessRule 与原子发布输入，足以无歧义进入 Design。"
+      "verified_at": "2026-08-10T12:11:30+00:00",
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
-      "assertion_id": "ASRT-P2-BM-R07-TD-001",
+      "assertion_id": "ASRT-P2-BM-R20-RC9-TD-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
-      "statement": "TestDesignAgent 独立确认 BM-R07 的 stable-ID 继承、同名 RuleView 隔离、静态拒绝、运行时 Guard、路径失败和原子发布规则均可形成可观察测试 Case。",
+      "statement": "RC9 same-revision independent review of already-completed BM-R20 by TestDesignAgent.",
       "type": "MANUAL_REVIEW",
       "phase": "business_model",
-      "revision": "BM-R07@7d7bf504ca9d",
-      "blocking": true,
-      "status": "VERIFIED",
+      "revision": "BM-R20",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "TestDesignAgent",
         "review_phase": "business_model"
       },
       "source_refs": [
-        "TASK-P2-BMODEL-001#expected_results/2"
+        "TASK-P2-BMODEL-001#expected_results/3"
       ],
       "evidence_ids": [
-        "EVD-000057",
-        "EVD-000053",
-        "EVD-000054"
+        "EVD-000125",
+        "EVD-000123",
+        "EVD-000127"
       ],
       "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-08-08T04:17:15+00:00",
-      "reason": "BM-R07 的 stable-ID 继承、同名 RuleView 隔离、静态拒绝、运行时 Guard、ModelPath 失败与无部分发布均有可观察测试边界。"
+      "verified_at": "2026-08-10T12:11:34+00:00",
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
-      "assertion_id": "ASRT-P2-BM-R07-IMP-001",
+      "assertion_id": "ASRT-P2-BM-R20-RC9-IMP-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
-      "statement": "ImpactAnalysisReviewAgent 独立确认 DEC_COMPILER→COMPILER lineage、影响传播、下游 STALE 与 P7 declaration 边界已显式记录且没有隐藏模块分叉。",
+      "statement": "RC9 same-revision independent review of already-completed BM-R20 by ImpactAnalysisReviewAgent.",
       "type": "MANUAL_REVIEW",
       "phase": "business_model",
-      "revision": "BM-R07@7d7bf504ca9d",
-      "blocking": true,
-      "status": "VERIFIED",
+      "revision": "BM-R20",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
       "parameters": {
         "reviewer_agent": "ImpactAnalysisReviewAgent",
         "review_phase": "business_model"
       },
       "source_refs": [
-        "TASK-P2-BMODEL-001#expected_results/1"
+        "TASK-P2-BMODEL-001#expected_results/4"
       ],
       "evidence_ids": [
-        "EVD-000049",
-        "EVD-000050",
-        "EVD-000053",
-        "EVD-000054",
-        "EVD-000056",
-        "EVD-000057"
+        "EVD-000122",
+        "EVD-000123",
+        "EVD-000124",
+        "EVD-000127",
+        "EVD-000125"
       ],
       "verified_by_agent": "ImpactAnalysisReviewAgent",
-      "verified_at": "2026-08-08T04:17:19+00:00",
-      "reason": "dependency impact 显式标识 DEC_COMPILER 历史文档身份被当前 COMPILER 谱系 supersede；下游重新 STALE，P7 declaration 边界未被提前删除。"
+      "verified_at": "2026-08-10T12:11:38+00:00",
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
     },
     {
-      "assertion_id": "ASRT-P2-BM-R07-XMOD-001",
+      "assertion_id": "ASRT-P2-BM-R20-RC9-XMOD-001",
       "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-003",
-      "statement": "CrossModuleIntegrationReviewAgent 独立确认 BM-R07 保持 Compiler/Context/Starter/Frontend 的单一责任链，RuleView 复合身份与 model-access runtime Guard 不存在跨模块旁路。",
+      "statement": "RC9 same-revision independent review of already-completed BM-R20 by CrossModuleIntegrationReviewAgent.",
       "type": "MANUAL_REVIEW",
       "phase": "business_model",
-      "revision": "BM-R07@7d7bf504ca9d",
+      "revision": "BM-R20",
+      "blocking": false,
+      "status": "NOT_APPLICABLE",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P2-BMODEL-001#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000127",
+        "EVD-000124",
+        "EVD-000126",
+        "EVD-000122",
+        "EVD-000125"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-10T12:11:41+00:00",
+      "reason": "RC21 compatibility-retirement audit archive: this legacy MANUAL_REVIEW assertion is preserved for historical traceability but is no longer a current lifecycle gate; a current-profile exact-revision ReviewResult is registered separately."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-REQUIREMENT-CONFIRMATION-REQUIREMENTANALYSIS",
+      "acceptance_id": "AC-RC21-COMPAT-REQUIREMENT-CONFIRMATION",
+      "statement": "Current RC21 RequirementAnalysisAgent profile is satisfied for preserved exact revision REQCONF-P2-R02@ef30059b327d.",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-P2-R02@ef30059b327d",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_phase": "requirement_confirmation"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000009",
+        "EVD-000014"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-REQUIREMENT-ANALYSIS-BUSINESSMODEL",
+      "acceptance_id": "AC-RC21-COMPAT-REQUIREMENT-ANALYSIS",
+      "statement": "Current RC21 BusinessModelAgent profile is satisfied for preserved exact revision REQAN-P2-R01@d08612768131.",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000015",
+        "EVD-000017",
+        "EVD-000024",
+        "EVD-000016",
+        "EVD-000025"
+      ],
+      "verified_by_agent": "BusinessModelAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-REQUIREMENT-ANALYSIS-CROSSMODULEINTEGRATIONREVIEW",
+      "acceptance_id": "AC-RC21-COMPAT-REQUIREMENT-ANALYSIS",
+      "statement": "Current RC21 CrossModuleIntegrationReviewAgent profile is satisfied for preserved exact revision REQAN-P2-R01@d08612768131.",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000025",
+        "EVD-000026",
+        "EVD-000016"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-REQUIREMENT-ANALYSIS-IMPACTANALYSISREVIEW",
+      "acceptance_id": "AC-RC21-COMPAT-REQUIREMENT-ANALYSIS",
+      "statement": "Current RC21 ImpactAnalysisReviewAgent profile is satisfied for preserved exact revision REQAN-P2-R01@d08612768131.",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000024",
+        "EVD-000015"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-REQUIREMENT-ANALYSIS-TESTDESIGN",
+      "acceptance_id": "AC-RC21-COMPAT-REQUIREMENT-ANALYSIS",
+      "statement": "Current RC21 TestDesignAgent profile is satisfied for preserved exact revision REQAN-P2-R01@d08612768131.",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_analysis"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000015",
+        "EVD-000027",
+        "EVD-000026",
+        "EVD-000016"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-BUSINESS-MODEL-BUSINESSMODELREVIEW",
+      "acceptance_id": "AC-RC21-COMPAT-BUSINESS-MODEL",
+      "statement": "Current RC21 BusinessModelReviewAgent profile is satisfied for preserved exact revision BM-R20.",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R20",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000123",
+        "EVD-000122",
+        "EVD-000124"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-BUSINESS-MODEL-CROSSMODULEINTEGRATIONREVIEW",
+      "acceptance_id": "AC-RC21-COMPAT-BUSINESS-MODEL",
+      "statement": "Current RC21 CrossModuleIntegrationReviewAgent profile is satisfied for preserved exact revision BM-R20.",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R20",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -356,19 +526,1751 @@
         "review_phase": "business_model"
       },
       "source_refs": [
-        "TASK-P2-BMODEL-001#expected_results/3"
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
       ],
       "evidence_ids": [
-        "EVD-000056",
-        "EVD-000053",
-        "EVD-000055",
-        "EVD-000049",
-        "EVD-000050",
-        "EVD-000057"
+        "EVD-000124",
+        "EVD-000127",
+        "EVD-000125",
+        "EVD-000126",
+        "EVD-000122"
       ],
       "verified_by_agent": "CrossModuleIntegrationReviewAgent",
-      "verified_at": "2026-08-08T04:17:24+00:00",
-      "reason": "Compiler/Context/Starter/Frontend 责任链与 FLOW-CONFIG-COMPILE 保持单一；RuleView composite lookup 和 runtime Guard 均无裸名称或权限旁路。"
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-BUSINESS-MODEL-IMPACTANALYSISREVIEW",
+      "acceptance_id": "AC-RC21-COMPAT-BUSINESS-MODEL",
+      "statement": "Current RC21 ImpactAnalysisReviewAgent profile is satisfied for preserved exact revision BM-R20.",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R20",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000122",
+        "EVD-000123"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-RC21-REBIND-BUSINESS-MODEL-TESTDESIGN",
+      "acceptance_id": "AC-RC21-COMPAT-BUSINESS-MODEL",
+      "statement": "Current RC21 TestDesignAgent profile is satisfied for preserved exact revision BM-R20.",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-R20",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "RC21-COMPATIBILITY-RETIREMENT-REBIND"
+      ],
+      "evidence_ids": [
+        "EVD-000123",
+        "EVD-000125"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-17T03:44:00+00:00",
+      "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-ARCHITECTUREREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "ArchitectureReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-17T18:19:39+00:00",
+      "reason": "PASSED: ArchitectureReviewAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-REQUIREMENTREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "RequirementReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-17T18:19:47+00:00",
+      "reason": "PASSED: RequirementReviewAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-TESTDESIGNAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "TestDesignAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342",
+        "EVD-000348"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-17T18:20:27+00:00",
+      "reason": "PASSED: TestDesignAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-IMPACTANALYSISREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "ImpactAnalysisReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-17T18:20:35+00:00",
+      "reason": "PASSED: ImpactAnalysisReviewAgent independently confirms DESIGN-P2-R33 on the current revision with no blocking P0/P1 finding."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I006-CROSSMODULEINTEGRATIONREVIEWAGENT",
+      "acceptance_id": "AC-P2-DESIGN-I006",
+      "statement": "CrossModuleIntegrationReviewAgent independently reviews DESIGN-P2-R33 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R33",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000347",
+        "EVD-000342",
+        "EVD-000349"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-17T18:21:51+00:00",
+      "reason": "PASSED: CrossModuleIntegrationReviewAgent confirms R33 module/flow/API ownership and no cross-module P0/P1."
+    },
+    {
+      "assertion_id": "ASRT-P2-TESTDESIGN-I008-REQUIREMENTREVIEWAGENT",
+      "acceptance_id": "AC-P2-TESTDESIGN-I008",
+      "statement": "RequirementReviewAgent independently reviews TESTDESIGN-P2-R37 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R37",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000350"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-17T18:25:24+00:00",
+      "reason": "PASSED: RequirementReviewAgent independently confirms TESTDESIGN-P2-R37 with four genuine REDs, superseded-case retirement, and lifecycle verification."
+    },
+    {
+      "assertion_id": "ASRT-P2-TESTDESIGN-I008-TESTEVIDENCEREVIEWAGENT",
+      "acceptance_id": "AC-P2-TESTDESIGN-I008",
+      "statement": "TestEvidenceReviewAgent independently reviews TESTDESIGN-P2-R37 and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R37",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000350",
+        "EVD-000351",
+        "EVD-000352"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-17T18:25:34+00:00",
+      "reason": "PASSED: TestEvidenceReviewAgent independently confirms TESTDESIGN-P2-R37 with four genuine REDs, superseded-case retirement, and lifecycle verification."
+    },
+    {
+      "assertion_id": "ASRT-P2-IMPLEMENTATION-PLAN-I011-DEVELOPAGENT",
+      "acceptance_id": "AC-P2-IMPLEMENTATION-PLAN-I011",
+      "statement": "DevelopAgent independently revalidates unchanged TP R06 plus repaired lifecycle runtime projection and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000356",
+        "EVD-000357",
+        "EVD-000359",
+        "EVD-000365",
+        "EVD-000358",
+        "EVD-000364",
+        "EVD-000366",
+        "EVD-000367"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-18T09:01:52+00:00",
+      "reason": "PASSED: R06 remains feasible and testable after projection-only repair; no blocking P0/P1."
+    },
+    {
+      "assertion_id": "ASRT-P2-IMPLEMENTATION-PLAN-I011-PLANREVIEWAGENT",
+      "acceptance_id": "AC-P2-IMPLEMENTATION-PLAN-I011",
+      "statement": "PlanReviewAgent independently revalidates unchanged TP R06 plus repaired lifecycle runtime projection and reports PASSED with no P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PlanReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000356",
+        "EVD-000365",
+        "EVD-000358",
+        "EVD-000357",
+        "EVD-000359",
+        "EVD-000360",
+        "EVD-000364",
+        "EVD-000366",
+        "EVD-000367",
+        "EVD-000361"
+      ],
+      "verified_by_agent": "PlanReviewAgent",
+      "verified_at": "2026-08-18T09:01:59+00:00",
+      "reason": "PASSED: projection-only repair restores runtime executability without plan semantic drift; no blocking P0/P1."
+    },
+    {
+      "assertion_id": "ASRT-P2-DEV-I014-SPEC-001",
+      "acceptance_id": "AC-P2-R37-AUTHORITY-CLOSURE",
+      "statement": "SpecComplianceReviewAgent independently reviews the exact I014 concrete implementation revision and reports PASSED with no open P0/P1 while preserving the I013 skeleton contract.",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "SpecComplianceReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION"
+      ],
+      "evidence_ids": [
+        "EVD-000450",
+        "EVD-000451",
+        "EVD-000446",
+        "EVD-000447",
+        "EVD-000448",
+        "EVD-000433",
+        "EVD-000435",
+        "EVD-000436",
+        "EVD-000437",
+        "EVD-000438",
+        "EVD-000439",
+        "EVD-000440",
+        "EVD-000441",
+        "EVD-000442",
+        "EVD-000443",
+        "EVD-000444",
+        "EVD-000445",
+        "EVD-000432"
+      ],
+      "verified_by_agent": "SpecComplianceReviewAgent",
+      "verified_at": "2026-08-19T15:07:28+00:00",
+      "reason": "PASSED。审查对象固定为 development@DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5；EVD-000448 固定 RED 基线到 GREEN concrete implementation 的相关 diff，EVD-000446/447 固定当前代码、测试与 R33/R37/R06/I013 contract。当前 7 个 production boundary 的 Git blob 与 Task8 closure/executable baseline 逐文件一致，I013/I014 仅增加 project_doc lifecycle/evidence，无 production/test/config 漂移。ExactModelAccessGuard 仍是唯一 READ/WRITE authority，one-shot authorization、denial-before-effect、raw/proofless 不可形成 executable authority、single EngineContext generation/no live rebind 均与已审 skeleton 一致。RC-AR-003 针对架构两步法的“第一步”：I013 skeleton 本身只定义签名/编排/边界且无 production side effect，I014 concrete implementation 未反向改变该已审契约。未发现缺失需求、部分实现或 scope drift。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DEV-I014-TDD-001",
+      "acceptance_id": "AC-P2-R37-REGRESSION-CORE",
+      "statement": "TDDReviewAgent independently reviews the exact I014 concrete implementation revision and confirms the four genuine RED-to-GREEN closures plus lifecycle/regression evidence with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "development",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TDDReviewAgent",
+        "review_phase": "development"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION"
+      ],
+      "evidence_ids": [
+        "EVD-000450",
+        "EVD-000451",
+        "EVD-000446",
+        "EVD-000447",
+        "EVD-000433",
+        "EVD-000435",
+        "EVD-000436",
+        "EVD-000437",
+        "EVD-000438",
+        "EVD-000439",
+        "EVD-000440",
+        "EVD-000441",
+        "EVD-000442",
+        "EVD-000443",
+        "EVD-000444",
+        "EVD-000445",
+        "EVD-000432",
+        "EVD-000434",
+        "EVD-000448",
+        "EVD-000449"
+      ],
+      "verified_by_agent": "TDDReviewAgent",
+      "verified_at": "2026-08-19T15:07:47+00:00",
+      "reason": "PASSED。EVD-000449/450/451 固定并重审 immutable RED→production fix→GREEN lineage：ee4c77a5 的四个 R37 security Case 为 4/4 genuine semantic RED，失败来自 raw/proofless authority bypass 而非环境/编译；8b2faf83 后关闭 production raw authority seam；e5f12c9c 之后同四 Case 在 Design 授权的 controlled harness adaptation 下 4/4 GREEN，17 项 authority regressions 同时通过，zero-side-effect 与 proofless-no-authority oracle 未弱化。EVD-000434/446 证明当前 production/test blobs 与 Task8 成功 executable baseline 一致；EVD-000433 与 EVD-000435..445 保存当前 preflight 和 12 条 validation command 的命令/退出码/输出 digest，其中 02–12 明确标记为 executable-source-equivalence rebind、并未伪称 I014 重跑。测试使用真实 EngineContext/MODEL data/effect/session，断言 receipt/effectCount/value/mutationVersion 等可观察行为；fixture 的反射仅用于构造真实测试对象，不替代 authority/effect oracle。主路径、READ-only/WRITE、proofless READ/WRITE、public raw seam、single-context lifecycle、real fixture 与 MySQL regression 均有证据覆盖。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-ARCH-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "ArchitectureReviewAgent independently reviews exact I014 final-code-review revision and confirms architecture and same-skeleton-boundary conformance with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000469",
+        "EVD-000468",
+        "EVD-000467",
+        "EVD-000470",
+        "EVD-000471"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-19T16:05:39+00:00",
+      "reason": "PASSED。当前 implementation 与 DESIGN-P2-R33 / I013 skeleton 的 ownership 和调用主线一致：CONTEXT 持有不可变契约，MODEL 持有 session/effect primitive，STARTER 私有组合并由 ExactModelAccessGuard 唯一授权后进入 Guard-authorized effect。denial 在 effect 前，session/binding 失败会 close，WRITE 失败保持 value/version；ProtectedAccessRuntimeFactory 与 RuntimeModelExecutionRoot 捕获 final EngineContext，无 live rebind/hot reload。RuntimeBindingPlan.equals() 仅用于结构 binding/provenance 检查，实际 READ/WRITE authority 仍来自 Guard-minted one-shot authorization；未重新引入已 supersede 的 P2-CR-002。未发现 P0/P1 架构 finding。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-ENG-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "EngineeringStandardsReviewAgent independently reviews exact I014 final-code-review revision and confirms engineering standards, maintainability, and test-evidence quality with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "EngineeringStandardsReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000468",
+        "EVD-000469",
+        "EVD-000470",
+        "EVD-000467",
+        "EVD-000471",
+        "EVD-000472"
+      ],
+      "verified_by_agent": "EngineeringStandardsReviewAgent",
+      "verified_at": "2026-08-19T16:06:32+00:00",
+      "reason": "PASSED。fixed diff 职责集中于 authority closure、MODEL friend bridge、Guard authorization 与 production composition；构造/可见性边界窄，无 TODO/FIXME、调试输出或投机性抽象。失败路径使用稳定 denial/failure algebra 并在 effect 前 fail closed，资源在 finally/close 释放。current code/test bytes、R33/R37/R06 契约、fixed diff、traceability 与 risk evidence 均绑定 exact revision；现有真实/负向/并发/lifecycle 测试覆盖关键语义。未发现 P0/P1 工程质量 finding。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-SPEC-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "SpecComplianceReviewAgent independently reviews exact I014 final-code-review revision and confirms specification compliance and fixed-scope traceability with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "SpecComplianceReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000468",
+        "EVD-000469",
+        "EVD-000470"
+      ],
+      "verified_by_agent": "SpecComplianceReviewAgent",
+      "verified_at": "2026-08-19T16:06:53+00:00",
+      "reason": "PASSED。EVD-000470 fixed implementation diff 与 R33/R37/R06 逐项一致：ordinary production caller 无可用 raw MODEL effect seam；READ 与 WRITE authorization 分离并绑定 exact target/path/session/value/version；missing/mismatch/replay 在 effect 前拒绝；single runtime generation 捕获一个 immutable EngineContext，配置更新仅允许 restart/new generation。变更范围未扩展到 DB/schema、Compiler grammar、P3/P4/P6 或 hot reload。未发现遗漏 requirement 或 scope drift。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-CONC-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "ConcurrencyReviewAgent independently reviews exact I014 final-code-review revision and confirms shared-state, atomicity, replay, and concurrency behavior with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ConcurrencyReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000468",
+        "EVD-000469",
+        "EVD-000467",
+        "EVD-000471"
+      ],
+      "verified_by_agent": "ConcurrencyReviewAgent",
+      "verified_at": "2026-08-19T16:07:09+00:00",
+      "reason": "PASSED。共享状态和所有权边界明确：Scope lease/session 操作同步，exact object/path 的 MutationCell 串行化 version+write，STARTER WriteCoordinationDomain 通过 putIfAbsent 非阻塞独占并在 finally 释放；ModelEffectAuthorization/OneShotWriteCapability 使用原子 one-shot consume 防 replay。失败 write 回滚值并保持 version，跨 session ownership conflict 可释放后重试。ProtectedAccessConcurrencyTest 与 transaction/session tests 覆盖 concurrent consume、overlapping write、ownership conflict 与 stale version。未发现死锁、重复副作用或 P0/P1 并发 finding。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-XMOD-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "CrossModuleIntegrationReviewAgent independently reviews exact I014 final-code-review revision and confirms cross-module ownership, sequence, consistency, and recovery boundaries with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000469",
+        "EVD-000475",
+        "EVD-000468",
+        "EVD-000471",
+        "EVD-000476",
+        "EVD-000477"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-19T16:09:35+00:00",
+      "reason": "PASSED。跨模块 owner/依赖方向保持 context <- model <- starter：MODEL 维护 Scope/Session/实际 effect primitive，STARTER 的 split-package friend bridge 只导出 GuardAuthorizedModelEffectPort，普通 STARTER public consumer surface 不暴露 RuntimeModelOperationPort/EffectProvider/ModelData。EVD-000475 冻结 factory -> coordinator -> sealed MODEL session -> guarded bridge -> ExactModelAccessGuard -> MODEL effect 的顺序、owner、一致性与 failure/recovery；EVD-000477 绑定对应 integration/dependency tests。binding/session failure 有稳定映射和 close/recovery，未发现 partial-success、旁路或 P0/P1 integration finding。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-IMPACT-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "ImpactAnalysisReviewAgent independently reviews exact I014 final-code-review revision and confirms impact propagation, compatibility, and affected-node coverage with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000469",
+        "EVD-000476",
+        "EVD-000468",
+        "EVD-000475",
+        "EVD-000477"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-19T16:10:27+00:00",
+      "reason": "PASSED。EVD-000476 将受影响节点、owner、disposition、历史/在途数据与测试映射图化冻结：影响集中于 dec-core-model / dec-core-starter 的 authority seam、production composition 和相应 tests；DB/schema/持久数据、Compiler grammar、RuleView/PolicyIndex ownership 均 NO_CHANGE。历史 multi-context P2-CR-002 已由 architecture decision supersede，本实现未扩散 context token。EVD-000477 覆盖 security/concurrency/lifecycle/integration 映射，未发现遗漏传播节点或 P0/P1 impact finding。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-PERF-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "PerformanceReviewAgent independently reviews exact I014 final-code-review revision and confirms critical-path, loop, allocation, and resource performance risk with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PerformanceReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000473",
+        "EVD-000468",
+        "EVD-000469",
+        "EVD-000467",
+        "EVD-000471"
+      ],
+      "verified_by_agent": "PerformanceReviewAgent",
+      "verified_at": "2026-08-19T16:10:58+00:00",
+      "reason": "PASSED（按本次变更的性能合同范围）。authority remediation 的关键路径仍是内存中的 exact rule/target lookup、one-shot authorization 与 MODEL effect，没有新增 DB/网络 IO、远程 fan-out、分页或无界批处理；循环仅遍历已加载 frame handles / policy keys，per-scope lease/mutation maps 受 runtime lifecycle 与 handle/path 集合约束。EVD-000473 将 Task8 成功 runner 的可重复 timings 通过 executable-source exact equivalence 绑定到当前 revision：security 4 tests 0.109s、lifecycle 3 tests 0.114s、real fixture 1 test 0.884s，并保留全量构建 timing。R33/R37/R06 未定义外部产品级 P95/P99 SLO，因此本结论仅确认本次变更无性能放大/预算退化，不声称一个未提供的业务 SLA。未发现 P0/P1 performance finding。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CODE-REVIEW-I014-SEC-001",
+      "acceptance_id": "AC-P2-FINAL-CODE-REVIEW-I014",
+      "statement": "SecurityReviewAgent independently reviews exact I014 final-code-review revision and confirms authorization, replay, fail-closed, input/output, and security counterexamples with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "code_review",
+      "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "SecurityReviewAgent",
+        "review_phase": "code_review"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "evidence_ids": [
+        "EVD-000468",
+        "EVD-000469",
+        "EVD-000477",
+        "EVD-000467"
+      ],
+      "verified_by_agent": "SecurityReviewAgent",
+      "verified_at": "2026-08-19T16:11:30+00:00",
+      "reason": "PASSED。ExactModelAccessGuard 仍是唯一 READ/WRITE policy authority；authorization 无 public constructor/mint factory，精确绑定 operation/invocation/rule/target，WRITE 进一步绑定 immutable writeIntent/mutation stamp/value，并由 AtomicBoolean one-shot consume 防 replay/wrong-operation。production binding 隐藏 raw operationPort，proofless transport 本身不能 effect；denied WRITE 保持 effect count/value/version 不变。typed runtime IDs/path/plan 校验与 stable denial 不暴露敏感对象，本变更不引入 secret/credential。EVD-000477 冻结四个 R37 security counterexample 与 production negative tests。未发现 P0/P1 security finding。"
+    },
+    {
+      "assertion_id": "ASRT-P2-TESTING-I014-EVID-001",
+      "acceptance_id": "AC-P2-TESTING-I014",
+      "statement": "TestEvidenceReviewAgent independently reviews Testing I014 exact-head evidence and confirms target binding, test integrity, expected failure-gate semantics, MySQL business reports/effects, and evidence provenance with no open P0/P1.",
+      "type": "MANUAL_REVIEW",
+      "phase": "testing",
+      "revision": "TESTING-P2-R37-FINALHEAD-R01@647a02301618",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "testing"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-TESTING"
+      ],
+      "evidence_ids": [
+        "EVD-000485",
+        "EVD-000478",
+        "EVD-000479",
+        "EVD-000481",
+        "EVD-000480",
+        "EVD-000483",
+        "EVD-000484"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-19T17:07:58+00:00",
+      "reason": "PASSED。审查对象固定为 testing@TESTING-P2-R37-FINALHEAD-R01@647a02301618。EVD-000479/485 证明两条 fresh runner job 在执行任何测试前均强制 checkout 并验证 PR36 exact SHA 647a023016181aafdabdfb8318e849bf352ab010 与 tree 60a19d6559760e0902d5851a1cc155c1a09a6eee；runner PR60 仅为触发器且不合并。EVD-000478/485 显示功能性 core reports 777/777 green，P2SecurityAuthorityRemediationTest 4/4、SingleEngineContextRuntimeLifecycleTest 3/3、P2RealFixtureIntegrationTest green，完整 clean verify BUILD SUCCESS；唯一失败是 EVD-000483 明确设计为故意失败门禁，并证明 failing test status=1 会阻断 build。MySQL required suites 4/4 green，EVD-000481/482 的 execution markers=3 且 order/order_detail/pay/pay_detail/product/user 最终计数均为 1。EVD-000484 证明 Development checkpoint 到 tested Code Review checkpoint 无非 project_doc 漂移。命令、日志、报告、artifact digest 与数据库 effects 相互一致，未发现 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "Given 当前真实 `systems.xml` 以及语义等价的多文件/重排输入 When 通过统一配置编译流程发现并编译 System 定义 Then 当前 fixture 的显式 System 均形成稳定一等身份，多文件和输入顺序变化不改变合法结果或 semantic digest And 重复/冲突 System 会产生稳定 ERROR，且失败不发布任何部分候选 Context。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC001.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-001"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:23+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC002",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-002",
+      "statement": "Given 两个不同 System 均声明同名 RuleView，并另有同一 System 内重复同名的失败 fixture When 执行符号注册、引用解析和 Registry 发布 Then 跨 System 同名项以各自 `(system,name)` 同时存在且互不污染，同 System 重复项被拒绝 And 新 RuleView 缺失 System 时不会回退为裸名称全局注册。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC002.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-002"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:25+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC003",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-003",
+      "statement": "Given 已发布的不同 System 同名 RuleView 和包含 `system-ref + rule-ref` 的调用事实 When 以正确/错误 System、正确/错误 RuleView 以及裸名称分别发起解析 Then 只有完整且存在的复合身份解析到目标 RuleView，错误或缺失身份得到稳定失败 And 不发生跨 System 同名搜索、裸名称 fallback 或错误 RuleView 执行。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC003.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-003"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:27+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC004",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-004",
+      "statement": "Given 对同一模型/View/path 分别声明 READ、WRITE、EXECUTE 的允许与未声明组合 When 编译权限事实并对各访问类型执行判定 Then 每种访问意图仅在自身明确授权时允许，未声明共享 WRITE 默认拒绝，权限类型互不隐含 And 拒绝路径不会修改模型、推进状态或触发外部副作用。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC004.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-004"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:29+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC005",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-005",
+      "statement": "Given rule/change/query 等消费者引用同一组合法路径、未知路径、穿越非法结构或目标不匹配路径 When 路径进入统一规范化和静态校验 Then 合法路径得到一致规范化身份，静态非法路径/目标在编译期产生 source-aware ERROR 并阻断发布 And 不使用模糊匹配、跨 View 搜索或不同消费者各自解释同一路径。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC005.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-005"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:31+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC006",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-006",
+      "statement": "Given 一条静态结构合法但最终对象依赖运行时值的访问，以及允许和拒绝两种运行态 When 该访问到达受保护读取/写入/执行边界 Then 编译结果明确要求 runtime check，Guard 对允许态放行、对拒绝态在副作用前 DENY And “静态不可完全判定”不会被当作默认允许，Guard 不可用时也不会 fail-open。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC006.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-006"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:33+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC007",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "Given Rule、change、custom action 三类入口尝试访问相同受保护模型路径 When 分别执行允许和未授权场景 Then 三类入口遵循同一 System、路径和访问类型权限结果，未授权场景全部被阻断 And 不存在跳过 Guard 的可执行分支、兼容入口或二次 fallback。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC007.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-007"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:35+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC008",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "Given 一个已发布有效 Context、一个成功新编译、一个含 System/RuleView/access ERROR 的失败编译以及两个并行独立 Context When 执行编译和发布 Then 成功候选全量发布，失败候选完全不发布且旧 Context 保持可用，并行 Context 的 Registry/权限事实互不污染 And 不创建新的全局 current Context 或共享可变 Registry。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC008.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-008"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:37+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC009",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-009",
+      "statement": "Given 重复 System、缺失 RuleView System、未知复合引用、非法路径和越权访问样例 When 连续重复执行编译或运行时拒绝 Then Diagnostic/拒绝结果稳定关联 System、RuleView、访问类型、规范化路径和 SourceRef 中适用字段，排序/错误码可重复 And 不以 null-success、吞异常或仅控制台日志替代失败结果，也不泄露不必要敏感配置。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC009.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-009"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:39+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-AC010",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-010",
+      "statement": "Given 当前 declaration System 旧入口和 P2 新 System 编译模型 When 完成 P2 并执行兼容/残留检查 Then 旧入口仅作为明确迁移边界保留，其映射/差异和 P7 删除条件可追踪，P2 新代码不依赖第二套 declaration runtime And P2 不提前删除旧入口、不复制旧实现，也不实现 P3～P7 完整业务执行语义。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.acceptance_criteria.AC010.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "acceptance:AC-P2-SYSTEM-RULEVIEW-010"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:41+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER001",
+      "acceptance_id": "AC-P2-CV-EXPECTED-001",
+      "statement": "四个 TESTDESIGN-P2-R37 MANDATORY_RED 均形成 genuine semantic RED，且 compile/discovery 成功。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER001.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:43+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER002",
+      "acceptance_id": "AC-P2-CV-EXPECTED-002",
+      "statement": "每个 RED 均绑定 exact pre-fix production revision、测试源码 digest、精确命令和失败输出。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER002.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:45+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER003",
+      "acceptance_id": "AC-P2-CV-EXPECTED-003",
+      "statement": "WRITE 相关 RED Evidence 能够证明 pre-fix 越权副作用，并冻结后续 GREEN 的 zero-side-effect tuple。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER003.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:47+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER004",
+      "acceptance_id": "AC-P2-CV-EXPECTED-004",
+      "statement": "TestEvidenceReviewAgent 对四个 RED Evidence 独立 PASSED，P0/P1=0。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER004.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:49+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER005",
+      "acceptance_id": "AC-P2-CV-EXPECTED-005",
+      "statement": "raw MODEL public/proofless executable bypass 不存在，或残留 internal primitive 在缺少 Guard authority 时 fail closed。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER005.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/4"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:51+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER006",
+      "acceptance_id": "AC-P2-CV-EXPECTED-006",
+      "statement": "现有合法 guarded READ/WRITE 与 WRITE mutationStamp/version/value 语义保持一致。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER006.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/5"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:53+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER007",
+      "acceptance_id": "AC-P2-CV-EXPECTED-007",
+      "statement": "模块依赖方向保持不变且未引入 RuntimeContextBinding。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER007.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/6"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:52:55+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER008",
+      "acceptance_id": "AC-P2-CV-EXPECTED-008",
+      "statement": "四个 R37 MANDATORY_RED 在整改 revision 上全部 GREEN，且每个结果与对应冻结 RED Evidence 一一关联。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER008.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/7"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:32+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER009",
+      "acceptance_id": "AC-P2-CV-EXPECTED-009",
+      "statement": "WRITE denial 的 zero-side-effect、READ/WRITE 分离和 exact binding oracles 全部通过。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER009.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/8"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:34+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER010",
+      "acceptance_id": "AC-P2-CV-EXPECTED-010",
+      "statement": "任何 harness adaptation 均有独立 TestEvidenceReviewAgent PASSED。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER010.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/9"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:36+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER011",
+      "acceptance_id": "AC-P2-CV-EXPECTED-011",
+      "statement": "bind-once 与 no-hot-reload 两个 GREEN_ONLY case 通过。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER011.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/10"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:38+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER012",
+      "acceptance_id": "AC-P2-CV-EXPECTED-012",
+      "statement": "restart-new-generation regression 通过，同时保留 Compiler 多 candidate 能力。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER012.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/11"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:40+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER013",
+      "acceptance_id": "AC-P2-CV-EXPECTED-013",
+      "statement": "未引入 RuntimeContextBinding、JVM global singleton 或 EngineContext equality 语义变化。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER013.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/12"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:42+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER014",
+      "acceptance_id": "AC-P2-CV-EXPECTED-014",
+      "statement": "core/starter/compiler/dec-demo P2 regression 全部通过且测试报告与 exact development revision 绑定。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER014.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/13"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:45+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER015",
+      "acceptance_id": "AC-P2-CV-EXPECTED-015",
+      "statement": "Rule/change/custom-action production consumers 继续经唯一 Guard authority 路径执行。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER015.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/14"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:47+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER016",
+      "acceptance_id": "AC-P2-CV-EXPECTED-016",
+      "statement": "MySQL business integration 的 execution markers 与 database effects 可复核。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER016.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/15"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:53:49+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER017",
+      "acceptance_id": "AC-P2-CV-EXPECTED-017",
+      "statement": "risk detection 已覆盖最终 changed files，并为 Final Code Review 同步必要专项 Reviewer。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER017.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/16"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:05+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER018",
+      "acceptance_id": "AC-P2-CV-EXPECTED-018",
+      "statement": "SpecComplianceReviewAgent 对 exact development revision PASSED",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER018.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:06+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER019",
+      "acceptance_id": "AC-P2-CV-EXPECTED-019",
+      "statement": "EngineeringStandardsReviewAgent 对 exact development revision PASSED",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER019.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:08+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER020",
+      "acceptance_id": "AC-P2-CV-EXPECTED-020",
+      "statement": "任何 P0/P1 均 fail-closed，不通过文档改写绕过",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER020.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:10+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER021",
+      "acceptance_id": "AC-P2-CV-EXPECTED-021",
+      "statement": "Testing artifact 与 exact code_review revision 绑定",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER021.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-TESTING#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:13+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER022",
+      "acceptance_id": "AC-P2-CV-EXPECTED-022",
+      "statement": "TestEvidenceReviewAgent PASSED",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER022.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-TESTING#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:15+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER023",
+      "acceptance_id": "AC-P2-CV-EXPECTED-023",
+      "statement": "失败不修改业务代码而是回到相应 remediation 生命周期",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER023.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-TESTING#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:17+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER024",
+      "acceptance_id": "AC-P2-CV-EXPECTED-024",
+      "statement": "Completion Verification PASSED 前不得宣告 P2 complete",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER024.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-COMPLETION-VERIFICATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:19+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER025",
+      "acceptance_id": "AC-P2-CV-EXPECTED-025",
+      "statement": "所有 blocking acceptance assertions VERIFIED",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER025.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-COMPLETION-VERIFICATION#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:36+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER026",
+      "acceptance_id": "AC-P2-CV-EXPECTED-026",
+      "statement": "最终 exact HEAD P0 与完成事实一致",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER026.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-PHASE-COMPLETION-VERIFICATION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:38+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER027",
+      "acceptance_id": "AC-P2-CV-EXPECTED-027",
+      "statement": "DESIGN-P2-R33 keeps P2-CR-001 Guard/raw authority closure blocking",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER027.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:40+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER028",
+      "acceptance_id": "AC-P2-CV-EXPECTED-028",
+      "statement": "one active runtime generation binds exactly one EngineContext and exposes no hot reload/rebind",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER028.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:42+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER029",
+      "acceptance_id": "AC-P2-CV-EXPECTED-029",
+      "statement": "RuntimeContextBinding is not introduced; RuntimeBindingPlan.equals remains structural only",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER029.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:44+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER030",
+      "acceptance_id": "AC-P2-CV-EXPECTED-030",
+      "statement": "READ/WRITE only and default DENY remain unchanged",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER030.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:46+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER031",
+      "acceptance_id": "AC-P2-CV-EXPECTED-031",
+      "statement": "TESTDESIGN-P2-R37 defines exactly four genuine P0 MANDATORY_RED cases",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER031.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:48+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER032",
+      "acceptance_id": "AC-P2-CV-EXPECTED-032",
+      "statement": "cross-context identity cases are RETIRED_SUPERSEDED rather than fake GREEN",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER032.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:54:50+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER033",
+      "acceptance_id": "AC-P2-CV-EXPECTED-033",
+      "statement": "single-runtime bind-once/no-hot-reload/restart contracts are observable",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER033.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:55:06+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER034",
+      "acceptance_id": "AC-P2-CV-EXPECTED-034",
+      "statement": "R36 source-digest and controlled harness adaptation integrity remains active",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER034.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/3"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:55:08+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER035",
+      "acceptance_id": "AC-P2-CV-EXPECTED-035",
+      "statement": "R06 精确绑定 DESIGN-P2-R33 / TESTDESIGN-P2-R37，并保留 R05 与历史 Review。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER035.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:55:10+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER036",
+      "acceptance_id": "AC-P2-CV-EXPECTED-036",
+      "statement": "R06 仅规划四个 genuine RED 与 P2-CR-001 authority closure，不规划 RuntimeContextBinding。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER036.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:55:12+00:00",
+      "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P2-CV-I014-ER037",
+      "acceptance_id": "AC-P2-CV-EXPECTED-037",
+      "statement": "五个开发任务形成无环 SEQUENTIAL DAG，并为每项给出明确文件、命令、验收、Evidence 与 stop conditions。",
+      "type": "JSON_PATH",
+      "phase": "completion_verification",
+      "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "path": "$.expected_results.ER037.status",
+        "expected": "VERIFIED",
+        "operator": "EQUALS"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000490"
+      ],
+      "verified_by_agent": "CompletionVerificationAgent",
+      "verified_at": "2026-08-20T00:55:14+00:00",
+      "reason": ""
     }
   ]
 }

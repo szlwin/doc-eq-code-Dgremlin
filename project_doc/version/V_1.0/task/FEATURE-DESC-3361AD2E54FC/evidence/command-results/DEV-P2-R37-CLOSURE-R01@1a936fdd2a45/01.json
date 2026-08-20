@@ -1,0 +1,16 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 /mnt/data/common-develop/scripts/auto_remediation.py preflight -g DevelopAgent --authority-current true --test-oracle-authoritative true --fixture-representative true --configuration-semantically-valid true --environment-stable true --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --json",
+  "executed_at": "2026-08-19T12:33:00+00:00",
+  "revision": "DEV-P2-R37-CLOSURE-R01@1a936fdd2a45",
+  "exit_code": 0,
+  "output_ref": "evidence/imports/task8-run-32205252873/current-head-preflight.json",
+  "output_digest": "a6fe62feb48ec5fe8c8db5be33737a330ca73999b3dd2c67bb7399d394bd967f",
+  "provenance": {
+    "mode": "REBIND_BY_EXECUTABLE_SOURCE_EQUIVALENCE",
+    "original_workflow_run_id": null,
+    "current_canonical_head": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
+    "equivalence_evidence": "evidence/imports/development-closure-i012/closure-revision-binding.json"
+  }
+}

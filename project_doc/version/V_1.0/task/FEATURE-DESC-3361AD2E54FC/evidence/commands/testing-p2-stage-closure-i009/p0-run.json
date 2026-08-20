@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "runtime_result",
+  "task_id": "TASK-P2-PHASE-TESTING",
+  "revision": "TESTING-P2-STAGE-CLOSURE-R01@7925ec4f218c",
+  "input_code_review_revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "run_id": 31941036385,
+  "run_number": 1832,
+  "head_sha": "7925ec4f218c167240fc12571336244e1f7849ad",
+  "final_run_attempt": 3,
+  "final_status": "completed",
+  "final_conclusion": "success",
+  "updated_at": "2026-08-17T06:48:55Z",
+  "executions": {
+    "core-verify": {
+      "fresh_attempt": 2,
+      "job_id": 95306242177,
+      "result": "PASSED",
+      "artifact_id": 9279010659,
+      "artifact_sha256": "00d2f7275198a857ea9c86125de51a89a94bf945f676fa3d1419df81c82f9514"
+    },
+    "mysql-it": {
+      "fresh_attempt": 3,
+      "job_id": 95306689166,
+      "result": "PASSED",
+      "artifact_id": 9279084486,
+      "artifact_sha256": "d61f539251dcf829eb6a25af3fa70498a8075eaabbf7a6c0aab742fa1ae9f846"
+    }
+  },
+  "steps": {
+    "maven_wrapper": "PASSED",
+    "legacy_dependency_bootstrap": "PASSED",
+    "core_build_and_tests": "PASSED",
+    "t14_provenance_mutation_gate": "PASSED",
+    "intentional_failure_blocks_build": "PASSED",
+    "t15_declaration_runtime_retirement": "PASSED",
+    "mysql_schema": "PASSED",
+    "mysql_business_tests": "PASSED",
+    "mysql_report_verification": "PASSED",
+    "mysql_database_effects": "PASSED"
+  },
+  "environment": {
+    "runner": "ubuntu-24.04",
+    "java": "Temurin 17",
+    "mysql": "8.0",
+    "workflow": ".github/workflows/p0-build.yml"
+  },
+  "database_evidence_ref": "evidence/commands/testing-p2-stage-closure-i009/database-evidence.txt",
+  "claim_boundary": "Testing I009 verifies the frozen DEV09 code through code-equivalent P0 head 7925ec4f; later PR changes are project_doc/process/provenance only and are not extrapolated as new production-code behavior."
+}

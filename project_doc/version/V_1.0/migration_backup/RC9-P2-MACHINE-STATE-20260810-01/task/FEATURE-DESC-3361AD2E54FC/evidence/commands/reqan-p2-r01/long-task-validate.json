@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/long_task.py validate -g RequirementAnalysisAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:26:16+00:00",
+  "revision": "REQAN-P2-R01@d08612768131",
+  "output_ref": "evidence/commands/reqan-p2-r01/long-task-validate.out",
+  "output_digest": "b5de439c446a719d2cfbeeb3965c1f44f46c5339a86e8967444689ae2f4b68f3"
+}

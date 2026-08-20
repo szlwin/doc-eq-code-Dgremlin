@@ -47,9 +47,7 @@ import org.junit.jupiter.api.Test;
  */
 class CompilerStarterBehaviorT15IndependentReviewTest {
 
-    /**
-     * Starter 必须只调用注入的 Compiler 一次，并保持输入与返回结果的对象同一性。
-     */
+    /** Starter 必须只调用注入的 Compiler 一次，并保持输入与返回结果的对象同一性。 */
     @Test
     void compileAndPublishDelegatesExactlyOnceWithSameInstances() {
         CompilationResult expectedResult = terminalResult();
@@ -58,9 +56,7 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
         CompilationRequest request = compilationRequest();
         PublicationRequest publicationRequest = publicationRequest();
 
-        CompilationResult actualResult = starter.compileAndPublish(
-                request,
-                publicationRequest);
+        CompilationResult actualResult = starter.compileAndPublish(request, publicationRequest);
 
         assertSame(expectedResult, actualResult);
         assertEquals(1, compiler.callCount);
@@ -68,9 +64,7 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
         assertSame(publicationRequest, compiler.actualPublicationRequest);
     }
 
-    /**
-     * 参数校验必须在委托前完成，避免无效输入触发 Compiler 副作用。
-     */
+    /** 参数校验必须在委托前完成，避免无效输入触发 Compiler 副作用。 */
     @Test
     void rejectsNullInputsBeforeInvokingCompiler() {
         RecordingCompiler compiler = new RecordingCompiler(terminalResult());
@@ -94,14 +88,11 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
         assertEquals(0, compiler.callCount);
     }
 
-    /**
-     * Projection 必须直接来自已发布结果持有的同一个 EngineContext。
-     */
+    /** Projection 必须直接来自已发布结果持有的同一个 EngineContext。 */
     @Test
     void projectionReturnsTheExactPublishedContextProjection() {
         PublishedCompilationResult result = publishedResult();
-        CompilerStarter starter = new CompilerStarter(
-                new RecordingCompiler(result));
+        CompilerStarter starter = new CompilerStarter(new RecordingCompiler(result));
 
         CoreConfigProjection projection = starter.projection(result);
 
@@ -109,13 +100,10 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
         assertSame(projection, starter.projection(result));
     }
 
-    /**
-     * 非发布结果和空结果必须稳定拒绝，不能伪造可读取 Projection。
-     */
+    /** 非发布结果和空结果必须稳定拒绝，不能伪造可读取 Projection。 */
     @Test
     void projectionRejectsNullAndNonPublishedResults() {
-        CompilerStarter starter = new CompilerStarter(
-                new RecordingCompiler(terminalResult()));
+        CompilerStarter starter = new CompilerStarter(new RecordingCompiler(terminalResult()));
 
         NullPointerException nullError = assertThrows(
                 NullPointerException.class,
@@ -130,9 +118,7 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
                 stateError.getMessage());
     }
 
-    /**
-     * 创建只用于验证委托对象同一性的完整 CompilationRequest。
-     */
+    /** 创建只用于验证委托对象同一性的完整 CompilationRequest。 */
     private static CompilationRequest compilationRequest() {
         DocumentSourceProvider sourceProvider = new DocumentSourceProvider() {
             @Override
@@ -189,9 +175,7 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
                 observer);
     }
 
-    /**
-     * 创建不会被 Starter 主动调用的条件发布边界测试替身。
-     */
+    /** 创建不会被 Starter 主动调用的条件发布边界测试替身。 */
     private static PublicationRequest publicationRequest() {
         ContextPublisher publisher = new ContextPublisher() {
             @Override
@@ -204,13 +188,13 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
         return new PublicationRequest(Optional.<EngineContext>empty(), publisher);
     }
 
-    /**
-     * 创建最小合法发布事实，验证 Projection 与 EngineContext 的同源同一性。
-     */
+    /** 创建最小合法发布事实，验证 Projection 与 EngineContext 的同源同一性。 */
     private static PublishedCompilationResult publishedResult() {
         DigestPair digests = new DigestPair("source-digest", "semantic-digest");
         CompiledModelSet modelSet = new CompiledModelSet(
                 PublishedSourceManifest.empty(),
+                dec.core.context.model.CompiledViewMaterializationIndex.empty(),
+                dec.core.context.model.ModelAccessPolicyIndex.empty(),
                 new ImmutableRegistry<DefinitionKey, CompiledDefinition>(
                         Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
                 new ImmutableDeferredRegistry(
@@ -225,16 +209,14 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
                 modelSet.diagnostics(),
                 modelSet,
                 engineContext,
-                digests,
+                modelSet.digestPair(),
                 "compiler-1",
                 "schema-1",
                 "options-1",
                 "sha-256-v1");
     }
 
-    /**
-     * 创建不带候选 Context 的普通终态结果，用于委托和拒绝路径验证。
-     */
+    /** 创建不带候选 Context 的普通终态结果，用于委托和拒绝路径验证。 */
     private static CompilationResult terminalResult() {
         return new CompilationResult() {
             @Override
@@ -249,9 +231,7 @@ class CompilerStarterBehaviorT15IndependentReviewTest {
         };
     }
 
-    /**
-     * 记录 Starter 委托事实，不执行真实编译或发布副作用。
-     */
+    /** 记录 Starter 委托事实，不执行真实编译或发布副作用。 */
     private static final class RecordingCompiler implements ModelCompiler {
         private final CompilationResult result;
         private int callCount;

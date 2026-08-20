@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/requirement_doc.py validate -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md --stage analysis --json",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:26:16+00:00",
+  "revision": "REQAN-P2-R01@d08612768131",
+  "output_ref": "evidence/commands/reqan-p2-r01/requirement-validate.out",
+  "output_digest": "c500b9a745086863b9e2bb254ec5162d543644a2a0644763412e28df63706ac1"
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/long_task.py validate -g BusinessModelAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --json",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:47:17+00:00",
+  "revision": "BM-R06@6a0bce4fa0ae",
+  "output_ref": "evidence/commands/bm-p2-r06/long-task-validate.out",
+  "output_digest": "d687bf2d4cc928b7e74808a885c9b217894d5c5bc791f9c974272eb4da86b0a3"
+}

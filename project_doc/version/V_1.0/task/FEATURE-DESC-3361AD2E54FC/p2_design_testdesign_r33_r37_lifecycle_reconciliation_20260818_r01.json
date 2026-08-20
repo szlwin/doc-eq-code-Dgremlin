@@ -1,0 +1,73 @@
+{
+  "decision": "DEC-P2-SINGLE-RUNTIME-CONTEXT-001",
+  "candidateDesignRevision": "DESIGN-P2-R33",
+  "candidateTestDesignRevision": "TESTDESIGN-P2-R37",
+  "canonicalCurrent": {
+    "lastEventId": "TE-000094",
+    "lastEventType": "STAGE_OUTCOME_FINALIZED",
+    "design": {
+      "revision": "DESIGN-P2-R32",
+      "status": "PASSED",
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-005",
+      "iterationNo": 5
+    },
+    "testDesign": {
+      "revision": "TESTDESIGN-P2-R34",
+      "status": "PASSED",
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-007",
+      "iterationNo": 7,
+      "outcomeId": "SO-FEATURE-DESC-3361AD2E54FC-TEST_DESIGN-I007"
+    },
+    "implementationPlan": {
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-009",
+      "iterationNo": 9
+    }
+  },
+  "nonCanonicalCandidateHistory": [
+    {
+      "revision": "TESTDESIGN-P2-R35",
+      "status": "NEEDS_CHANGES",
+      "reason": "P2-TD-REV-002"
+    },
+    {
+      "revision": "TESTDESIGN-P2-R36",
+      "status": "PASSED_CANDIDATE_ONLY",
+      "note": "Reviews documented but never safely appended to canonical ledger; now superseded by architecture decision."
+    }
+  ],
+  "requiredSafeTransition": [
+    "Append DEC-P2-SINGLE-RUNTIME-CONTEXT-001 decision/evidence through normal governance projection where applicable.",
+    "reopen_phase(design) from DESIGN-P2-R32 historical PASSED; expected next design iteration is monotonic I006 but machine writer is authoritative.",
+    "publish DESIGN-P2-R33 and attach ArchitectureReviewAgent + RequirementReviewAgent + TestDesignAgent PASSED reviews.",
+    "finalize Design only after machine review/risk gates allow it.",
+    "invalidate downstream TestDesign / Implementation Plan / Development / Code Review / Testing / Completion Verification.",
+    "reopen/start TestDesign from the finalized R33 Design; expected next TestDesign iteration is monotonic I008 but machine writer is authoritative.",
+    "publish TESTDESIGN-P2-R37 and attach RequirementReviewAgent + TestEvidenceReviewAgent PASSED reviews.",
+    "finalize TestDesign only after machine gates allow it.",
+    "advance to implementation_plan and refresh the stale plan against R33/R37."
+  ],
+  "upstreamPreserved": {
+    "requirementAnalysis": "REQAN-P2-R01@d08612768131",
+    "requirementOverlay": "REQAN-P2-R01+DEC-OVERLAY-20260809-R04",
+    "businessModel": "BM-R20",
+    "businessFlow": "FLOW-R11",
+    "reason": "No upstream artifact requires live Context replacement inside one active runtime; R04 publication/isolation semantics remain compiler/distinct-generation semantics."
+  },
+  "testGateDelta": {
+    "previousCandidateR36MandatoryRed": 6,
+    "currentR37MandatoryRed": 4,
+    "retiredCrossContextRed": 2,
+    "retiredContextBindingGreenOnly": 1,
+    "productionMutationGate": "four active genuine RED evidence records before P2-CR-001 production changes"
+  },
+  "canonicalLedgerWriteStatus": "PENDING_SAFE_APPEND",
+  "canonicalLedgerMutationPerformed": false,
+  "reason": "GitHub connector can replace files but cannot safely execute common-develop append-only lifecycle writer/reducer on the remote repository; task_events.jsonl was intentionally not edited.",
+  "phaseAuthorization": {
+    "designCandidate": "REVIEW_PASSED_NONCANONICAL",
+    "testDesignCandidate": "REVIEW_PASSED_NONCANONICAL",
+    "implementationPlan": "BLOCKED_UNTIL_CANONICAL_FINALIZATION",
+    "development": "BLOCKED"
+  }
+}

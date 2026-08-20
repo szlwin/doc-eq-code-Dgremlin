@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+  "remediation_task": "TASK-P2-DEV-01-R02-ORACLE-CLOSURE-CORRECTION",
+  "authority": "TESTDESIGN-P2-R32",
+  "executed_test_methods": 14,
+  "exact_oracles_closed_by_dev01": 7,
+  "partial_oracles": 2,
+  "characterization_only": 5,
+  "all_r32_oracles_closed": false,
+  "rule": "JUnit GREEN does not imply exact R32 oracle closure",
+  "rows": [
+    {
+      "test": "SystemCompilationContractTest.systemIdentitySetIsSourceOrderIndependent",
+      "r32_case": "CASE-P2-TD-SYSTEM-DETERMINISM-001",
+      "role": "PARTIAL_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "verified": "SystemKey set source-order determinism",
+      "deferred": "semantic digest determinism"
+    },
+    {
+      "test": "SystemCompilationContractTest.duplicateSystemDiagnosticIsSourceOrderIndependent",
+      "r32_case": "CASE-P2-TD-SYSTEM-DUPLICATE-001",
+      "role": "EXACT_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "closure": "CLOSED_BY_DEV01"
+    },
+    {
+      "test": "SystemCompilationContractTest.ruleViewMayPrecedeSystemButMissingOwnerFails",
+      "r32_case": "CASE-P2-TD-SYSTEM-FORWARD-REF-001",
+      "role": "EXACT_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "closure": "CLOSED_BY_DEV01"
+    },
+    {
+      "test": "SystemCompilationContractTest.systemDefinitionIsFrozenFromMutableInputAttributes",
+      "r32_case": "CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001",
+      "role": "EXACT_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "closure": "CLOSED_BY_DEV01"
+    },
+    {
+      "test": "SystemCompilationContractTest.schemaVersionChangesDefinitionValueButNotSystemIdentity",
+      "r32_case": "CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001",
+      "role": "PARTIAL_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "verified": "SystemKey version-independent identity and schemaVersion value change",
+      "deferred": "compiled aggregate semantic digest"
+    },
+    {
+      "test": "SystemCompilationContractTest.systemKeyUsesCanonicalSharedIdentity",
+      "r32_case": "CASE-P2-TD-BM-CANONICAL-PAIR-001",
+      "role": "EXACT_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "closure": "CLOSED_BY_DEV01"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.missingSystemOwnerFailsWithoutPartialPublication",
+      "r32_case": "CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001",
+      "role": "EXACT_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "closure": "CLOSED_BY_DEV01"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.duplicateRuleViewDiagnosticIsSourceOrderIndependent",
+      "r32_case": "CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001",
+      "role": "EXACT_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "closure": "CLOSED_BY_DEV01"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.sameLocalNameIsIsolatedByOwningSystem",
+      "r32_case": "CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001",
+      "role": "EXACT_ORACLE",
+      "semantic_owner_task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION",
+      "closure": "CLOSED_BY_DEV01"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.explicitOwnerNeverFallsBackToMostRecentSystem",
+      "characterization_id": "DEV01-CHAR-EXPLICIT-SYSTEM-OWNER-NO-RECENCY-FALLBACK-001",
+      "target_r32_case": "CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001",
+      "role": "CHARACTERIZATION",
+      "semantic_owner_task": "TASK-P2-DEV-02-RULEVIEW-REFERENCE",
+      "closure": "DEFERRED"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.compositeRuleViewIdentityRemainsCaseSensitive",
+      "characterization_id": "DEV01-CHAR-RULEVIEWKEY-CASE-SENSITIVE-001",
+      "target_r32_case": "CASE-P2-TD-RULEKEY-CONTRACT-001",
+      "role": "CHARACTERIZATION",
+      "semantic_owner_task": "TASK-P2-DEV-02-RULEVIEW-REFERENCE",
+      "closure": "DEFERRED"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.noBareStringRuleViewKeyConstructorExists",
+      "characterization_id": "DEV01-CHAR-RULEVIEWKEY-NO-BARE-CONSTRUCTOR-001",
+      "target_r32_case": "CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001",
+      "role": "CHARACTERIZATION",
+      "semantic_owner_task": "TASK-P2-DEV-02-RULEVIEW-REFERENCE",
+      "closure": "DEFERRED"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.explicitLexicalOwnerAndNameMapToSharedCompositeKey",
+      "characterization_id": "DEV01-CHAR-LEXICAL-OWNER-NORMALIZATION-001",
+      "target_r32_case": "CASE-P2-TD-KEY-SOURCE-COMPAT-001",
+      "role": "CHARACTERIZATION",
+      "semantic_owner_task": "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY",
+      "closure": "DEFERRED"
+    },
+    {
+      "test": "RuleViewCompilationContractTest.localNameNeverAuthorizesCrossSystemLookup",
+      "characterization_id": "DEV01-CHAR-CROSS-SYSTEM-NEGATIVE-LOOKUP-001",
+      "target_r32_case": "CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001",
+      "role": "CHARACTERIZATION",
+      "semantic_owner_task": "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY",
+      "closure": "DEFERRED"
+    }
+  ]
+}

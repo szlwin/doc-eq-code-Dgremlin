@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "kind": "RC23_AUTHORITY_RECONCILIATION",
+  "targetId": "FEATURE-DESC-3361AD2E54FC",
+  "version": "V_1.0",
+  "reconciledAt": "2026-08-16T04:33:49+00:00",
+  "sourceHead": "8fcd249322f26ab0a2412a4c67b2ac82d0641cbf",
+  "commonDevelopRelease": "2.44 RC23",
+  "changeClassification": "PROCESS_ONLY",
+  "sourceCodeModified": false,
+  "status": "FORMALIZATION_REQUIRED",
+  "standaloneAuthority": {
+    "design": "DESIGN-P2-R31@685dc64b1a8bb21438440185f4a25d68d120d75f",
+    "test_design": "TESTDESIGN-P2-R33@ac9c0aecd1bf3ebee325d88d2f1b4027d727761d",
+    "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R07@604f26f1641e0cf9d7d70a8ee11e90d1d1ffdf1a",
+    "tdd": "TDD-P2-R01@3f282bb4e1f6",
+    "development": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba"
+  },
+  "machineSeedAuthority": {
+    "design": "DESIGN-P2-R30",
+    "test_design": "TESTDESIGN-P2-R32",
+    "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a"
+  },
+  "evidenceSources": {
+    "design": "design_r31_finalization_20260814.json",
+    "test_design": "testdesign_r33_finalization_20260814.json",
+    "implementation_plan": "plan_r07_finalization_20260814.json",
+    "development": "dev09_closure_20260815_r01.json"
+  },
+  "reviewRegistryFindings": [
+    "Current canonical evidence/reviews.jsonl does not contain DEV-P2-DEV09-R09.",
+    "No canonical development:TDDReviewAgent conclusion is bound to DEV-P2-DEV09-R09.",
+    "R31/R33/R07 standalone finalization exists, but machine state must not claim a new canonical PASSED binding until exact-revision Review records are formalized."
+  ],
+  "appliedAdjustments": [
+    "Enable RC23 review_only mutation policy in version/V_1.0/work.md.",
+    "Rebind the current development closure task implementation-plan input from R05 to R07.",
+    "Append a TASK_STATE_PATCHED event that synchronizes work mode and records the fail-closed reconciliation outcome.",
+    "Update human-readable project summaries without advancing current_phase."
+  ],
+  "deferredUntilGateSatisfied": [
+    "Replace canonical machine artifact/review bindings from R30/R32/R05 to R31/R33/R07.",
+    "Finalize development StageOutcome as PASSED.",
+    "Advance current_phase to code_review."
+  ],
+  "nextRequiredGate": {
+    "profile": "development:TDDReviewAgent",
+    "revision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+    "requiredResult": "PASSED"
+  }
+}

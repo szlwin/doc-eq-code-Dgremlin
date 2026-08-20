@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-context -Dtest=OpaqueRuntimeIdContractTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 1,
+  "executed_at": "2026-08-11T05:30:29.543880+00:00",
+  "revision": "TDD-P2-R01@3f282bb4e1f6",
+  "output_ref": "evidence/command-results/TDD-P2-R01@3f282bb4e1f6/ID.out",
+  "output_digest": "0384856823c17b70b0ba40abedbc5c132e23e007bc217e07b409edc2cc30c5b8"
+}

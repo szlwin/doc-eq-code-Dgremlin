@@ -1,0 +1,2 @@
+.github/workflows/p2-task8-stage-validation-v2.yml
+dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java

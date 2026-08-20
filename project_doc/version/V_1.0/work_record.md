@@ -4,365 +4,35 @@
 
 > 本文件记录当前版本跨任务的工作摘要，只追加，不覆盖。
 >
-> 单次执行细节位于 `task/{TARGET_ID}/task_attempts.md`；Evidence、Review、StageOutcome 和 Git 检查点仅通过 ID 引用。
+> 单次执行细节位于 `task/{TARGET_ID}/task_events.jsonl`；Evidence、Review、StageOutcome 和 Git 检查点仅通过 ID 引用。
 
 <!-- work-record-events-start -->
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-REQCONF-001-I001-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQCONF-001-I001-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000001","EVD-000002","EVD-000003"],"execution_mode":"standard / sequential","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-001","iteration_no":1,"next_action":"RequirementAnalysisAgent 与 TestDesignAgent 独立 Review","output_revision":"REQCONF-R01@ac6d126dafb3","phase":"requirement_confirmation","record_id":"WR-20260724-120920-TASK-P1-REQCONF-001-PASSED","render_digest":"4b98c53cbba0898e4a919b4305f1f2dac06eb8187b700814430252035aa6857f","review_result_refs":["REV-000001","REV-000002"],"schema_version":4,"scope":"确认 P1 编译骨架目标与范围","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I001"],"state_change":"TASK-P1-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"P1 目标、范围、约束、关键决策和可测试完成维度已确认","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-07-24T12:09:20+00:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260724-120920-TASK-P1-REQCONF-001-PASSED
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"WR-20260815-190800-FEATURE-DESC-3361AD2E54FC-PARTIAL","event_type":"RUNTIME_REBASELINE","execution_mode":"standard / sequential","next_action":"DevelopAgent 只做文档/Evidence 形式化：绑定 DEV-09 exact revision、required TDDReviewAgent 与 development StageOutcome；随后进入 PHASE_FINAL_CODE_REVIEW。","next_agent":"DevelopAgent","phase":"development","record_id":"WR-20260815-190800-FEATURE-DESC-3361AD2E54FC-PARTIAL","render_digest":"ce6b84efec8e79d455548c29bc2fec43a110bbd64eb4030df4273cbcab760ce8","schema_version":4,"scope":"P2 Task Storage V3 / storage model 6 runtime rebaseline","source":"common-develop RC21 docs-only rebaseline","state_change":"pre-RC13 active runtime -> EVENT_LEDGER_V3; development remains IN_PROGRESS pending exact-revision formalization","status":"PARTIAL","summary":"将 P2 active runtime 从 pre-RC13 多文件状态模型切换为 RC21 task_events.jsonl reducer；历史 runtime/work_record 按原 blob 冻结，未修改业务代码。","target_id":"FEATURE-DESC-3361AD2E54FC","task_type":"runtime_rebaseline","timestamp":"2026-08-15T19:08:00+00:00","validation_summary":"RC21 static task-plan shape and task-event hash chain validated locally; source-code changes=0","version":"V_1.0"} -->
+## WR-20260815-190800-FEATURE-DESC-3361AD2E54FC-PARTIAL
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-| 时间 | 2026-07-24T12:09:20+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 确认 P1 编译骨架目标与范围 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | P1 目标、范围、约束、关键决策和可测试完成维度已确认 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQCONF-001: RUNNING → PASSED |
-| Task | TASK-P1-REQCONF-001 |
-| Attempt | ATTEMPT-TASK-P1-REQCONF-001-I001-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-001 / 1 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-R01@ac6d126dafb3 |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I001 |
-| Evidence | EVD-000001、EVD-000002、EVD-000003 |
-| Review | REV-000001、REV-000002 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | 未登记 |
-| 后续事项 | RequirementAnalysisAgent 与 TestDesignAgent 独立 Review |
-
-### 变更摘要
-
-- P1 目标、范围、约束、关键决策和可测试完成维度已确认
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 0 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P1-REQAN-001-I001-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQAN-001-I001-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000011","EVD-000012","EVD-000013","EVD-000014","EVD-000192","EVD-000193","EVD-000194","EVD-000195"],"execution_mode":"standard / sequential","input_revision":"REQCONF-R01@ac6d126dafb3","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-001","iteration_no":1,"next_action":"执行需求分析阶段独立 Review","output_revision":"REQAN-R02@d38b7f83f222","phase":"requirement_analysis","record_id":"WR-20260724-122336-TASK-P1-REQAN-001-PASSED","render_digest":"002403af9f8447d23ac54c9f8279fb990e6a678260c8d2aa52e8b48da856ec1d","review_result_refs":["REV-000003","REV-000004","REV-000005","REV-000006","REV-000007"],"schema_version":4,"scope":"分析 P1 功能、规则、异常与追踪","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-I001"],"state_change":"TASK-P1-REQAN-001: RUNNING → PASSED","status":"PASSED","summary":"需求分析完成：13 BR、6 CR、9 EX、6 AC、七步流程、影响与 CMI 映射","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQAN-001","task_type":"requirement_analysis","timestamp":"2026-07-24T12:23:36+00:00","validation_summary":"登记 Evidence 8 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260724-122336-TASK-P1-REQAN-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-24T12:23:36+00:00 |
-| 执行 Agent | RequirementAnalysisAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 分析 P1 功能、规则、异常与追踪 |
-| 阶段 | requirement_analysis |
-| 任务类型 | requirement_analysis |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 需求分析完成：13 BR、6 CR、9 EX、6 AC、七步流程、影响与 CMI 映射 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQAN-001: RUNNING → PASSED |
-| Task | TASK-P1-REQAN-001 |
-| Attempt | ATTEMPT-TASK-P1-REQAN-001-I001-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-001 / 1 |
-| 输入 Revision | REQCONF-R01@ac6d126dafb3 |
-| 输出 Revision | REQAN-R02@d38b7f83f222 |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-I001 |
-| Evidence | EVD-000011、EVD-000012、EVD-000013、EVD-000014、EVD-000192、EVD-000193、EVD-000194、EVD-000195 |
-| Review | REV-000003、REV-000004、REV-000005、REV-000006、REV-000007 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | 未登记 |
-| 后续事项 | 执行需求分析阶段独立 Review |
-
-### 变更摘要
-
-- 需求分析完成：13 BR、6 CR、9 EX、6 AC、七步流程、影响与 CMI 映射
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 8 项；命令 Evidence 0 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P1-BMODEL-001-I001-A001","event_id":"EVENT-ATTEMPT-TASK-P1-BMODEL-001-I001-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000074","EVD-000075","EVD-000077","EVD-000196","EVD-000197","EVD-000198","EVD-000081"],"execution_mode":"standard / sequential","input_revision":"REQAN-R02@d38b7f83f222","iteration_id":"ITER-P1-COMPILER-F01-BUSINESS-MODEL-001","iteration_no":1,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md","project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"],"next_action":"执行 business_model 阶段独立 Review","output_revision":"BM-R01@52a58f20cb32","phase":"business_model","record_id":"WR-20260724-123741-TASK-P1-BMODEL-001-PASSED","render_digest":"cf9f347412a15d94095618bc7555f11d8cb1ea6ea802b6a3ca26fbfd1d574cfc","review_result_refs":["REV-000008","REV-000009","REV-000010","REV-000011","REV-000012","REV-000013"],"schema_version":4,"scope":"建立编译领域模型与不变量","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-BUSINESS-MODEL-I001"],"state_change":"TASK-P1-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"完成 P1 编译领域模型：8 术语、2 聚合、7 不变量、1 状态机、8 业务错误和 6 条追踪映射","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-BMODEL-001","task_type":"business_model","timestamp":"2026-07-24T12:37:41+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260724-123741-TASK-P1-BMODEL-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-24T12:37:41+00:00 |
-| 执行 Agent | BusinessModelAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 建立编译领域模型与不变量 |
-| 阶段 | business_model |
-| 任务类型 | business_model |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 完成 P1 编译领域模型：8 术语、2 聚合、7 不变量、1 状态机、8 业务错误和 6 条追踪映射 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-BMODEL-001: RUNNING → PASSED |
-| Task | TASK-P1-BMODEL-001 |
-| Attempt | ATTEMPT-TASK-P1-BMODEL-001-I001-A001 |
-| Iteration | ITER-P1-COMPILER-F01-BUSINESS-MODEL-001 / 1 |
-| 输入 Revision | REQAN-R02@d38b7f83f222 |
-| 输出 Revision | BM-R01@52a58f20cb32 |
-| StageOutcome | SO-P1-COMPILER-F01-BUSINESS-MODEL-I001 |
-| Evidence | EVD-000074、EVD-000075、EVD-000077、EVD-000196、EVD-000197、EVD-000198、EVD-000081 |
-| Review | REV-000008、REV-000009、REV-000010、REV-000011、REV-000012、REV-000013 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | 未登记 |
-| 后续事项 | 执行 business_model 阶段独立 Review |
-
-### 变更摘要
-
-- 完成 P1 编译领域模型：8 术语、2 聚合、7 不变量、1 状态机、8 业务错误和 6 条追踪映射
-
-### 文件变更摘要
-
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md`
-- `project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 0 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I001-A001","event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I001-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000126","EVD-000127","EVD-000128","EVD-000129","EVD-000130","EVD-000131","EVD-000199","EVD-000200"],"execution_mode":"standard / sequential","input_revision":"BM-R01@52a58f20cb32","iteration_id":"ITER-P1-COMPILER-F01-DESIGN-001","iteration_no":1,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md","project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"],"next_action":"执行七项独立设计 Review","output_revision":"DESIGN-R01@a7a6820a381e","phase":"design","record_id":"WR-20260724-124734-TASK-P1-DESIGN-001-PASSED","render_digest":"b7d5971454688380526b9f92ed1c802b81272912fa07c669a494ad676d3954ce","review_result_refs":["REV-000014","REV-000015","REV-000016","REV-000017","REV-000018","REV-000019","REV-000020"],"schema_version":4,"scope":"设计 AST、Registry、Compiler 与 EngineContext","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-DESIGN-I001"],"state_change":"TASK-P1-DESIGN-001: RUNNING → PASSED","status":"PASSED","summary":"完成 P1 AST、Registry、Compiler、EngineContext 与只读 Legacy Adapter 详细设计，覆盖模块边界、API 契约、安全、确定性、失败发布和测试接缝。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-24T12:47:34+00:00","validation_summary":"登记 Evidence 8 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260724-124734-TASK-P1-DESIGN-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-24T12:47:34+00:00 |
-| 执行 Agent | DesignAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 设计 AST、Registry、Compiler 与 EngineContext |
-| 阶段 | design |
-| 任务类型 | design |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 完成 P1 AST、Registry、Compiler、EngineContext 与只读 Legacy Adapter 详细设计，覆盖模块边界、API 契约、安全、确定性、失败发布和测试接缝。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-DESIGN-001: RUNNING → PASSED |
-| Task | TASK-P1-DESIGN-001 |
-| Attempt | ATTEMPT-TASK-P1-DESIGN-001-I001-A001 |
-| Iteration | ITER-P1-COMPILER-F01-DESIGN-001 / 1 |
-| 输入 Revision | BM-R01@52a58f20cb32 |
-| 输出 Revision | DESIGN-R01@a7a6820a381e |
-| StageOutcome | SO-P1-COMPILER-F01-DESIGN-I001 |
-| Evidence | EVD-000126、EVD-000127、EVD-000128、EVD-000129、EVD-000130、EVD-000131、EVD-000199、EVD-000200 |
-| Review | REV-000014、REV-000015、REV-000016、REV-000017、REV-000018、REV-000019、REV-000020 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | 未登记 |
-| 后续事项 | 执行七项独立设计 Review |
-
-### 变更摘要
-
-- 完成 P1 AST、Registry、Compiler、EngineContext 与只读 Legacy Adapter 详细设计，覆盖模块边界、API 契约、安全、确定性、失败发布和测试接缝。
-
-### 文件变更摘要
-
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
-- `project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 8 项；命令 Evidence 0 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-GOVERNANCE-REPAIR-GOV-T01-T03-PASSED","event_type":"GOVERNANCE_REPAIR_COMPLETED","execution_mode":"standard / sequential","modified_files_summary":["project_doc/README.md","project_doc/docs/_plans/","project_doc/version/V_1.0/project_process.md","project_doc/version/V_1.0/doc/P1-GOVERNANCE-REPAIR/governance_plan.md","docs/remediation/status.md"],"next_action":"执行 P0 动态门禁；GOV-T04 保持未执行","next_agent":"ProjectManagerAgent","record_id":"WR-20260725-063325-GOV-T01-GOV-T03-PASSED","render_digest":"ad39b69fc13975377317ce201f9767562d4748f12b3a4dca44e932d3e70273cc","schema_version":4,"scope":"环境绑定、总体计划唯一事实源、全串行调度","source":"用户要求完成 P1-GOVERNANCE-REPAIR GOV-T01 至 GOV-T03","state_change":"GOV-T01、GOV-T02、GOV-T03: TODO → PASSED","status":"PASSED","summary":"完成 common-develop 2.35 环境绑定、P0—P8 唯一计划事实源迁移，以及阶段/任务/Review 全串行规则收敛","target_id":"P1-GOVERNANCE-REPAIR","task_id":"GOV-T01-GOV-T03","task_type":"governance","timestamp":"2026-07-25T06:33:25+00:00","validation_summary":"P0 静态验证通过；重复计划正文已收敛为单一事实源；旧路径仅保留跳转说明","version":"V_1.0"} -->
-## WR-20260725-063325-GOV-T01-GOV-T03-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-25T06:33:25+00:00 |
+| 时间 | 2026-08-15T19:08:00+00:00 |
 | 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | 用户要求完成 P1-GOVERNANCE-REPAIR GOV-T01 至 GOV-T03 |
+| 命令或来源 | common-develop RC21 docs-only rebaseline |
 | 版本 | V_1.0 |
-| 目标 | P1-GOVERNANCE-REPAIR |
-| 范围 | 环境绑定、总体计划唯一事实源、全串行调度 |
-| 阶段 | 无 / 未登记 |
-| 任务类型 | governance |
-| 事件类型 | GOVERNANCE_REPAIR_COMPLETED |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | P2 Task Storage V3 / storage model 6 runtime rebaseline |
+| 阶段 | development |
+| 任务类型 | runtime_rebaseline |
+| 事件类型 | RUNTIME_REBASELINE |
 | 执行模式 | standard / sequential |
 
 ### 执行结果与追踪
 
 | 字段 | 内容 |
 |---|---|
-| 本次结论 | 完成 common-develop 2.35 环境绑定、P0—P8 唯一计划事实源迁移，以及阶段/任务/Review 全串行规则收敛 |
-| 状态 | PASSED |
-| 状态变更 | GOV-T01、GOV-T02、GOV-T03: TODO → PASSED |
-| Task | GOV-T01-GOV-T03 |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | 无 / 未登记 |
-| 输出 Revision | 无 / 未登记 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 执行 P0 动态门禁；GOV-T04 保持未执行 |
-
-### 变更摘要
-
-- 完成 common-develop 2.35 环境绑定、P0—P8 唯一计划事实源迁移，以及阶段/任务/Review 全串行规则收敛
-
-### 文件变更摘要
-
-- `project_doc/README.md`
-- `project_doc/docs/_plans/`
-- `project_doc/version/V_1.0/project_process.md`
-- `project_doc/version/V_1.0/doc/P1-GOVERNANCE-REPAIR/governance_plan.md`
-- `docs/remediation/status.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | P0 静态验证通过；重复计划正文已收敛为单一事实源；旧路径仅保留跳转说明 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","blockers":["DNS 无法解析 repo.maven.apache.org 和 github.com","系统无 Maven、Wrapper 缓存为空","GitHub CLI 未安装"],"event_id":"EVENT-P0-DYNAMIC-VERIFICATION-20260725-BLOCKED","event_type":"P0_DYNAMIC_VERIFICATION","execution_mode":"standard / sequential","modified_files_summary":["pom.xml",".mvn/wrapper/maven-wrapper.properties","scripts/remediation/run_p0_dynamic_verification.sh","scripts/remediation/verify_p0_github_actions.sh","docs/remediation/P0/dynamic-verification-guide.md"],"next_action":"在可联网且已安装 gh 的本地环境运行两个验证脚本并回传证据","next_agent":"ProjectManagerAgent","record_id":"WR-20260725-063326-P0-T02-P0-T03-P0-T09-BLOCKED","render_digest":"46bda7cb4b1b75e00c54ee836d2fe8e97a36afb0190ed385a0f3d4dc5ca234fe","schema_version":4,"scope":"P0-T02、P0-T03、P0-T09","source":"当前容器实际执行 P0 Wrapper、失败门禁和 GitHub Actions 验证","state_change":"P0-T02、P0-T03、P0-T09: REVIEWING → BLOCKED","status":"BLOCKED","summary":"修正 Maven 版本为 3.9.15 后，静态验证通过；当前容器仍因 DNS、无 Maven 缓存和无 gh 而无法完成三项动态门禁","target_id":"P0-DYNAMIC-CLOSE","task_id":"P0-T02-P0-T03-P0-T09","task_type":"verification","timestamp":"2026-07-25T06:33:26+00:00","validation_summary":"mvnw exit=6；validate_p0 exit=0；GitHub 验证脚本 exit=2","version":"V_1.0"} -->
-## WR-20260725-063326-P0-T02-P0-T03-P0-T09-BLOCKED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-25T06:33:26+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | 当前容器实际执行 P0 Wrapper、失败门禁和 GitHub Actions 验证 |
-| 版本 | V_1.0 |
-| 目标 | P0-DYNAMIC-CLOSE |
-| 范围 | P0-T02、P0-T03、P0-T09 |
-| 阶段 | 无 / 未登记 |
-| 任务类型 | verification |
-| 事件类型 | P0_DYNAMIC_VERIFICATION |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 修正 Maven 版本为 3.9.15 后，静态验证通过；当前容器仍因 DNS、无 Maven 缓存和无 gh 而无法完成三项动态门禁 |
-| 状态 | BLOCKED |
-| 状态变更 | P0-T02、P0-T03、P0-T09: REVIEWING → BLOCKED |
-| Task | P0-T02-P0-T03-P0-T09 |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | 无 / 未登记 |
-| 输出 Revision | 无 / 未登记 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 在可联网且已安装 gh 的本地环境运行两个验证脚本并回传证据 |
-
-### 变更摘要
-
-- 修正 Maven 版本为 3.9.15 后，静态验证通过；当前容器仍因 DNS、无 Maven 缓存和无 gh 而无法完成三项动态门禁
-
-### 文件变更摘要
-
-- `pom.xml`
-- `.mvn/wrapper/maven-wrapper.properties`
-- `scripts/remediation/run_p0_dynamic_verification.sh`
-- `scripts/remediation/verify_p0_github_actions.sh`
-- `docs/remediation/P0/dynamic-verification-guide.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | mvnw exit=6；validate_p0 exit=0；GitHub 验证脚本 exit=2 |
-| 问题与阻塞 | DNS 无法解析 repo.maven.apache.org 和 github.com、系统无 Maven、Wrapper 缓存为空、GitHub CLI 未安装 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","blockers":["尚未在干净工作树上执行 run_p0_local_verification.sh 并生成同一 commit 的正式核心与 MySQL Evidence"],"event_id":"EVENT-P0-LOCAL-VERIFICATION-STRATEGY-20260725","event_type":"P0_VERIFICATION_STRATEGY_ADJUSTED","execution_mode":"standard / sequential","modified_files_summary":["project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md","docs/remediation/P0/dynamic-verification-guide.md","docs/remediation/P0/task-status.md","docs/remediation/P0/evidence.md","docs/remediation/P0/handoff.md","docs/remediation/P0/known-issues.md","docs/remediation/status.md","project_doc/README.md","scripts/remediation/run_p0_dynamic_verification.sh","scripts/remediation/run_p0_local_mysql_verification.sh","scripts/remediation/run_p0_local_verification.sh","scripts/remediation/verify_p0_github_actions.sh"],"next_action":"提交当前调整后，在干净工作树上设置 DEC_MYSQL_* 并执行 scripts/remediation/run_p0_local_verification.sh","next_agent":"ProjectManagerAgent","record_id":"WR-20260725-131538-P0-T09-PARTIAL","render_digest":"7b92edd19d5d28a5f1ee512ac6af0832dba0b4e8b08f9b3a7a4447746f8a17c5","schema_version":4,"scope":"P0-T02、P0-T03、P0-T06、P0-T09 动态验收口径与执行脚本","source":"用户要求因环境不稳定将 P0 正式验证调整为本地环境","sql_change_summary":"无；本地测试数据库 schema/fixture 由执行环境显式准备","state_change":"P0: BLOCKED → REVIEWING；P0-T09: BLOCKED → REVIEWING；P0-T02、P0-T03 保持 PASSED","status":"PARTIAL","summary":"将 P0 正式退出门禁调整为干净工作树上的本地核心与 MySQL 统一验证；GitHub Actions 降级为非阻断辅助回归","target_id":"P0-DYNAMIC-CLOSE","task_id":"P0-T09","task_type":"verification","timestamp":"2026-07-25T13:15:38+00:00","validation_summary":"新增脚本均通过 sh -n；scripts/remediation/validate_p0.py 返回 0；正式本地完整 Maven/MySQL 验证待用户环境执行","version":"V_1.0"} -->
-## WR-20260725-131538-P0-T09-PARTIAL
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-25T13:15:38+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | 用户要求因环境不稳定将 P0 正式验证调整为本地环境 |
-| 版本 | V_1.0 |
-| 目标 | P0-DYNAMIC-CLOSE |
-| 范围 | P0-T02、P0-T03、P0-T06、P0-T09 动态验收口径与执行脚本 |
-| 阶段 | 无 / 未登记 |
-| 任务类型 | verification |
-| 事件类型 | P0_VERIFICATION_STRATEGY_ADJUSTED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 将 P0 正式退出门禁调整为干净工作树上的本地核心与 MySQL 统一验证；GitHub Actions 降级为非阻断辅助回归 |
+| 本次结论 | 将 P2 active runtime 从 pre-RC13 多文件状态模型切换为 RC21 task_events.jsonl reducer；历史 runtime/work_record 按原 blob 冻结，未修改业务代码。 |
 | 状态 | PARTIAL |
-| 状态变更 | P0: BLOCKED → REVIEWING；P0-T09: BLOCKED → REVIEWING；P0-T02、P0-T03 保持 PASSED |
-| Task | P0-T09 |
+| 状态变更 | pre-RC13 active runtime -> EVENT_LEDGER_V3; development remains IN_PROGRESS pending exact-revision formalization |
+| Task | 无 / 未登记 |
 | Attempt | 无 / 未登记 |
 | Iteration | 无 / 0 |
 | 输入 Revision | 无 / 未登记 |
@@ -370,1498 +40,64 @@
 | StageOutcome | 无 |
 | Evidence | 无 |
 | Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 提交当前调整后，在干净工作树上设置 DEC_MYSQL_* 并执行 scripts/remediation/run_p0_local_verification.sh |
-
-### 变更摘要
-
-- 将 P0 正式退出门禁调整为干净工作树上的本地核心与 MySQL 统一验证；GitHub Actions 降级为非阻断辅助回归
-
-### 文件变更摘要
-
-- `project_doc/docs/_plans/mix-framework-p0-p8-detailed-task-plan.md`
-- `docs/remediation/P0/dynamic-verification-guide.md`
-- `docs/remediation/P0/task-status.md`
-- `docs/remediation/P0/evidence.md`
-- `docs/remediation/P0/handoff.md`
-- `docs/remediation/P0/known-issues.md`
-- `docs/remediation/status.md`
-- `project_doc/README.md`
-- `scripts/remediation/run_p0_dynamic_verification.sh`
-- `scripts/remediation/run_p0_local_mysql_verification.sh`
-- `scripts/remediation/run_p0_local_verification.sh`
-- `scripts/remediation/verify_p0_github_actions.sh`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无；本地测试数据库 schema/fixture 由执行环境显式准备 |
-| 测试与验证 | 新增脚本均通过 sh -n；scripts/remediation/validate_p0.py 返回 0；正式本地完整 Maven/MySQL 验证待用户环境执行 |
-| 问题与阻塞 | 尚未在干净工作树上执行 run_p0_local_verification.sh 并生成同一 commit 的正式核心与 MySQL Evidence |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P0-LOCAL-VERIFICATION-STATIC-CONTRACT-20260725","event_type":"P0_VERIFICATION_STATIC_CONTRACT_UPDATED","execution_mode":"standard / sequential","modified_files_summary":["scripts/remediation/validate_p0.py"],"next_action":"在干净工作树上执行 scripts/remediation/run_p0_local_verification.sh","next_agent":"ProjectManagerAgent","record_id":"WR-20260725-131748-P0-T09-PASSED","render_digest":"f0eb0818bb37b9a478b384e4794c81f318b0582fcf513ae5139ed3f008bc6e01","schema_version":4,"scope":"P0 新增本地验证脚本存在性、执行权限和计划口径静态检查","source":"P0 本地正式验证方案交付前静态契约补强","sql_change_summary":"无","state_change":"P0-T09 保持 REVIEWING；静态验证契约已补强","status":"PASSED","summary":"将本地核心、MySQL、统一正式验证和 GitHub 辅助脚本纳入 validate_p0.py，并校验计划中的本地主门禁与远程非阻断口径","target_id":"P0-DYNAMIC-CLOSE","task_id":"P0-T09","task_type":"verification","timestamp":"2026-07-25T13:17:48+00:00","validation_summary":"python3 -m py_compile scripts/remediation/validate_p0.py 通过；python3 scripts/remediation/validate_p0.py 返回 0","version":"V_1.0"} -->
-## WR-20260725-131748-P0-T09-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-25T13:17:48+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | P0 本地正式验证方案交付前静态契约补强 |
-| 版本 | V_1.0 |
-| 目标 | P0-DYNAMIC-CLOSE |
-| 范围 | P0 新增本地验证脚本存在性、执行权限和计划口径静态检查 |
-| 阶段 | 无 / 未登记 |
-| 任务类型 | verification |
-| 事件类型 | P0_VERIFICATION_STATIC_CONTRACT_UPDATED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 将本地核心、MySQL、统一正式验证和 GitHub 辅助脚本纳入 validate_p0.py，并校验计划中的本地主门禁与远程非阻断口径 |
-| 状态 | PASSED |
-| 状态变更 | P0-T09 保持 REVIEWING；静态验证契约已补强 |
-| Task | P0-T09 |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | 无 / 未登记 |
-| 输出 Revision | 无 / 未登记 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 在干净工作树上执行 scripts/remediation/run_p0_local_verification.sh |
-
-### 变更摘要
-
-- 将本地核心、MySQL、统一正式验证和 GitHub 辅助脚本纳入 validate_p0.py，并校验计划中的本地主门禁与远程非阻断口径
-
-### 文件变更摘要
-
-- `scripts/remediation/validate_p0.py`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 |
-| 测试与验证 | python3 -m py_compile scripts/remediation/validate_p0.py 通过；python3 scripts/remediation/validate_p0.py 返回 0 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"DebugAgent","blockers":["当前容器无法下载 Maven 3.9.15，完整 mysql-it 需在用户本地数据库环境验证"],"event_id":"EVENT-P0-MYSQL-IT-JVM-ISOLATION-20260725","event_type":"MYSQL_IT_JVM_ISOLATION_FIXED","execution_mode":"standard / sequential","modified_files_summary":["pom.xml; scripts/remediation/validate_p0.py; docs/remediation/P0/dynamic-verification-guide.md; docs/remediation/P0/known-issues.md"],"next_action":"在干净工作树和专用 MySQL 测试库上执行 scripts/remediation/run_p0_local_verification.sh","next_agent":"TestAgent","record_id":"WR-20260725-133215-P0-T09-PARTIAL","render_digest":"a356e1c46867d640bced4a215047a9c3f7d9fcd8f2297cdf0699f4b64183c5b4","schema_version":4,"scope":"mysql-it 遗留测试 JVM 隔离","source":"P0 本地完整验证发现跨测试类单例配置污染","sql_change_summary":"无","state_change":"P0-T09 保持 REVIEWING；跨测试类静态状态污染已修复，待本地 MySQL 完整验证","status":"PARTIAL","summary":"确认完整 mysql-it 在同一 Surefire JVM 中复用 ConfigFactory 单例，导致后续 DirectoryTest 重复注册 data1；在 mysql-it profile 中为 Surefire/Failsafe 设置 forkCount=1、reuseForks=false，使每个测试类独立 JVM","target_id":"P0-DYNAMIC-CLOSE","task_id":"P0-T09","task_type":"debugging","timestamp":"2026-07-25T13:32:15+00:00","validation_summary":"POM XML 解析、validate_p0.py、Shell 语法和 git diff --check 通过；当前容器无法解析 maven.aliyun.com，未执行 Maven/MySQL 动态回归","version":"V_1.0"} -->
-## WR-20260725-133215-P0-T09-PARTIAL
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-25T13:32:15+00:00 |
-| 执行 Agent | DebugAgent |
-| 命令或来源 | P0 本地完整验证发现跨测试类单例配置污染 |
-| 版本 | V_1.0 |
-| 目标 | P0-DYNAMIC-CLOSE |
-| 范围 | mysql-it 遗留测试 JVM 隔离 |
-| 阶段 | 无 / 未登记 |
-| 任务类型 | debugging |
-| 事件类型 | MYSQL_IT_JVM_ISOLATION_FIXED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 确认完整 mysql-it 在同一 Surefire JVM 中复用 ConfigFactory 单例，导致后续 DirectoryTest 重复注册 data1；在 mysql-it profile 中为 Surefire/Failsafe 设置 forkCount=1、reuseForks=false，使每个测试类独立 JVM |
-| 状态 | PARTIAL |
-| 状态变更 | P0-T09 保持 REVIEWING；跨测试类静态状态污染已修复，待本地 MySQL 完整验证 |
-| Task | P0-T09 |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | 无 / 未登记 |
-| 输出 Revision | 无 / 未登记 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | TestAgent |
-| 后续事项 | 在干净工作树和专用 MySQL 测试库上执行 scripts/remediation/run_p0_local_verification.sh |
-
-### 变更摘要
-
-- 确认完整 mysql-it 在同一 Surefire JVM 中复用 ConfigFactory 单例，导致后续 DirectoryTest 重复注册 data1；在 mysql-it profile 中为 Surefire/Failsafe 设置 forkCount=1、reuseForks=false，使每个测试类独立 JVM
-
-### 文件变更摘要
-
-- `pom.xml; scripts/remediation/validate_p0.py; docs/remediation/P0/dynamic-verification-guide.md; docs/remediation/P0/known-issues.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 |
-| 测试与验证 | POM XML 解析、validate_p0.py、Shell 语法和 git diff --check 通过；当前容器无法解析 maven.aliyun.com，未执行 Maven/MySQL 动态回归 |
-| 问题与阻塞 | 当前容器无法下载 Maven 3.9.15，完整 mysql-it 需在用户本地数据库环境验证 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"WR-20260726-025123-TASK-P1-R2-001-PASSED","event_type":"P1_GOVERNANCE_REPAIR","evidence_ids":["EVD-000215","EVD-000216","EVD-000217","EVD-000218","EVD-000219"],"execution_mode":"standard / sequential","input_revision":"REQCONF-R02-DRAFT","issue_ids":["ISSUE-P1-SCOPE-CHANGE-001"],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["P1 evidence/index.json 与不可变 snapshots；decision_log.md；review_issues.md；task_state.md；task_plan.md；handoff/2026-07-26-p1-governance-repair.md；version/V_1.0/work_record.md"],"next_action":"启动 TASK-P1-R2-001，由 RequirementConfirmationAgent 正式确认 REQCONF-R02-DRAFT 并执行串行 Review","next_agent":"RequirementConfirmationAgent","output_revision":"GOV-REPAIR-R01@2422fc8521da","phase":"requirement_confirmation","record_id":"WR-20260726-025123-TASK-P1-R2-001-PASSED","render_digest":"1ca5799b34eb0779272ef594666f4c30cb4e658e1a3c943a7bcde30760350ed7","schema_version":4,"scope":"P1 immutable Evidence recovery, scope-change closure, derived-state repair","source":"common-develop 2.35 governance repair","state_change":"P1-COMPILER-F01 BLOCKED -> READY；ISSUE-P1-SCOPE-CHANGE-001 OPEN -> CLOSED；阶段保持 requirement_confirmation","status":"PASSED","summary":"按 common-develop 2.35 将 26 条历史 DIRECT Evidence 恢复为 Git 历史不可变快照，消除由 Evidence、Attempt 与 StageOutcome 重复回查展开的 78 条治理错误；登记当前 R02 草案 Evidence 并关闭已决范围变更问题","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"project_management","timestamp":"2026-07-26T02:51:23+00:00","validation_summary":"common-develop 2.35 long_task validate PASSED：errors=0，warnings=0；未推进阶段，未伪造 Review/StageOutcome","version":"V_1.0"} -->
-## WR-20260726-025123-TASK-P1-R2-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T02:51:23+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | common-develop 2.35 governance repair |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | P1 immutable Evidence recovery, scope-change closure, derived-state repair |
-| 阶段 | requirement_confirmation |
-| 任务类型 | project_management |
-| 事件类型 | P1_GOVERNANCE_REPAIR |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 按 common-develop 2.35 将 26 条历史 DIRECT Evidence 恢复为 Git 历史不可变快照，消除由 Evidence、Attempt 与 StageOutcome 重复回查展开的 78 条治理错误；登记当前 R02 草案 Evidence 并关闭已决范围变更问题 |
-| 状态 | PASSED |
-| 状态变更 | P1-COMPILER-F01 BLOCKED -> READY；ISSUE-P1-SCOPE-CHANGE-001 OPEN -> CLOSED；阶段保持 requirement_confirmation |
-| Task | TASK-P1-R2-001 |
-| Attempt | 无 / 未登记 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
-| 输入 Revision | REQCONF-R02-DRAFT |
-| 输出 Revision | GOV-REPAIR-R01@2422fc8521da |
-| StageOutcome | 无 |
-| Evidence | EVD-000215、EVD-000216、EVD-000217、EVD-000218、EVD-000219 |
-| Review | 无 |
-| 开放问题 | ISSUE-P1-SCOPE-CHANGE-001 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementConfirmationAgent |
-| 后续事项 | 启动 TASK-P1-R2-001，由 RequirementConfirmationAgent 正式确认 REQCONF-R02-DRAFT 并执行串行 Review |
-
-### 变更摘要
-
-- 按 common-develop 2.35 将 26 条历史 DIRECT Evidence 恢复为 Git 历史不可变快照，消除由 Evidence、Attempt 与 StageOutcome 重复回查展开的 78 条治理错误；登记当前 R02 草案 Evidence 并关闭已决范围变更问题
-
-### 文件变更摘要
-
-- `P1 evidence/index.json 与不可变 snapshots；decision_log.md；review_issues.md；task_state.md；task_plan.md；handoff/2026-07-26-p1-governance-repair.md；version/V_1.0/work_record.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | common-develop 2.35 long_task validate PASSED：errors=0，warnings=0；未推进阶段，未伪造 Review/StageOutcome |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-R2-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P1-R2-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000220","EVD-000221","EVD-000222","EVD-000223","EVD-000224","EVD-000226"],"execution_mode":"standard / sequential","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-CR01/requirement_change.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md","version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json"],"next_action":"由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R02 串行独立 Review","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-R02@d0868f1b679b","phase":"requirement_confirmation","record_id":"WR-20260726-055335-TASK-P1-R2-001-PASSED","render_digest":"62ca2b45bfa1d68397069c406a4194b4f7ba93b237008d9c32d3c45e64556516","schema_version":4,"scope":"重新确认实际 mix 与模块退役范围","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002"],"state_change":"TASK-P1-R2-001: RUNNING → PASSED","status":"PASSED","summary":"REQCONF-R02 已按 common-develop 2.35 模板固化并通过需求确认机器校验；目标、范围、七项验收、失败边界和五项决策已锁定。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T05:53:35+00:00","validation_summary":"登记 Evidence 6 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260726-055335-TASK-P1-R2-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T05:53:35+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 重新确认实际 mix 与模块退役范围 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | REQCONF-R02 已按 common-develop 2.35 模板固化并通过需求确认机器校验；目标、范围、七项验收、失败边界和五项决策已锁定。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-R2-001: RUNNING → PASSED |
-| Task | TASK-P1-R2-001 |
-| Attempt | ATTEMPT-TASK-P1-R2-001-I002-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-R02@d0868f1b679b |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002 |
-| Evidence | EVD-000220、EVD-000221、EVD-000222、EVD-000223、EVD-000224、EVD-000226 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementAnalysisAgent |
-| 后续事项 | 由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R02 串行独立 Review |
-
-### 变更摘要
-
-- REQCONF-R02 已按 common-develop 2.35 模板固化并通过需求确认机器校验；目标、范围、七项验收、失败边界和五项决策已锁定。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
-- `version/V_1.0/doc/P1-COMPILER-CR01/requirement_change.md`
-- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
-- `version/V_1.0/task/P1-COMPILER-F01/acceptance_assertions.json`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 6 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","event_id":"WR-20260726-060420-TASK-P1-R2-001-PASSED","event_type":"PHASE_COMPLETED","evidence_ids":["EVD-000220","EVD-000221","EVD-000222","EVD-000223","EVD-000224","EVD-000226","EVD-000227","EVD-000228","EVD-000229"],"execution_mode":"SEQUENTIAL","input_revision":"P1-COMPILER-CR01","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["requirement.md、CR01 requirement.md、requirement_list.md、task plan/state、StageOutcome、handoff"],"next_action":"ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R02@d0868f1b679b","phase":"requirement_confirmation","record_id":"WR-20260726-060420-TASK-P1-R2-001-PASSED","render_digest":"c3c3319863ff54cc8682766f2335ec1ed4ef5cbb6c6c4374753c1566b3744eb0","review_result_refs":["REV-000021","REV-000022"],"schema_version":4,"scope":"P1-COMPILER-CR01","source":"common-develop-2.35","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002"],"state_change":"requirement_confirmation IN_PROGRESS -> PASSED","status":"PASSED","summary":"REQCONF-R02 正式需求确认完成：目标、范围、七项验收、失败边界和五项持久决策已锁定，两个独立 Review 均通过。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T06:04:20+00:00","validation_summary":"requirement_doc=PASSED; long_task=PASSED; task_verify complete-phase=PASSED; open P0/P1=0","version":"V_1.0"} -->
-## WR-20260726-060420-TASK-P1-R2-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T06:04:20+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | common-develop-2.35 |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | P1-COMPILER-CR01 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | PHASE_COMPLETED |
-| 执行模式 | SEQUENTIAL |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | REQCONF-R02 正式需求确认完成：目标、范围、七项验收、失败边界和五项持久决策已锁定，两个独立 Review 均通过。 |
-| 状态 | PASSED |
-| 状态变更 | requirement_confirmation IN_PROGRESS -> PASSED |
-| Task | TASK-P1-R2-001 |
-| Attempt | 无 / 未登记 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
-| 输入 Revision | P1-COMPILER-CR01 |
-| 输出 Revision | REQCONF-R02@d0868f1b679b |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002 |
-| Evidence | EVD-000220、EVD-000221、EVD-000222、EVD-000223、EVD-000224、EVD-000226、EVD-000227、EVD-000228、EVD-000229 |
-| Review | REV-000021、REV-000022 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis |
-
-### 变更摘要
-
-- REQCONF-R02 正式需求确认完成：目标、范围、七项验收、失败边界和五项持久决策已锁定，两个独立 Review 均通过。
-
-### 文件变更摘要
-
-- `requirement.md、CR01 requirement.md、requirement_list.md、task plan/state、StageOutcome、handoff`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | requirement_doc=PASSED; long_task=PASSED; task_verify complete-phase=PASSED; open P0/P1=0 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-REQCONF-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQCONF-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000220","EVD-000221","EVD-000222","EVD-000223","EVD-000224","EVD-000226","EVD-000227","EVD-000228","EVD-000229"],"execution_mode":"standard / sequential","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"next_action":"ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R02@d0868f1b679b","phase":"requirement_confirmation","record_id":"WR-20260726-060857-TASK-P1-REQCONF-001-PASSED","render_digest":"f25fb1be52486ce9e6fde1088dfe18a3f92b8f9be28630118b5a1b5438866112","schema_version":4,"scope":"将稳定需求确认逻辑任务对齐到 REQCONF-R02","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002"],"state_change":"TASK-P1-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"稳定需求确认逻辑任务已与 REQCONF-R02 正式 Revision、两项独立 Review 和当前 StageOutcome 对齐，未产生第二套需求事实。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T06:08:57+00:00","validation_summary":"登记 Evidence 9 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260726-060857-TASK-P1-REQCONF-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T06:08:57+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 将稳定需求确认逻辑任务对齐到 REQCONF-R02 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 稳定需求确认逻辑任务已与 REQCONF-R02 正式 Revision、两项独立 Review 和当前 StageOutcome 对齐，未产生第二套需求事实。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQCONF-001: RUNNING → PASSED |
-| Task | TASK-P1-REQCONF-001 |
-| Attempt | ATTEMPT-TASK-P1-REQCONF-001-I002-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-002 / 2 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-R02@d0868f1b679b |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I002 |
-| Evidence | EVD-000220、EVD-000221、EVD-000222、EVD-000223、EVD-000224、EVD-000226、EVD-000227、EVD-000228、EVD-000229 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | ProjectManagerAgent 执行 advance-phase 进入 requirement_analysis |
-
-### 变更摘要
-
-- 稳定需求确认逻辑任务已与 REQCONF-R02 正式 Revision、两项独立 Review 和当前 StageOutcome 对齐，未产生第二套需求事实。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 9 项；命令 Evidence 0 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-R2-001-I003-A001","event_id":"EVENT-ATTEMPT-TASK-P1-R2-001-I003-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000230","EVD-000231","EVD-000232","EVD-000233","EVD-000234","EVD-000235","EVD-000236","EVD-000237","EVD-000238","EVD-000239","EVD-000240","EVD-000241"],"execution_mode":"standard / sequential","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003","iteration_no":3,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-CR02/requirement.md","version/V_1.0/doc/P1-COMPILER-CR02/requirement_change.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md","version/V_1.0/requirement_list.md","version/V_1.0/task/P1-COMPILER-F01/decision_log.md","version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py","dec-demo/src/main/resources/mix/system/systems.xml","dec-demo/src/main/resources/mix/view/orm-view.xml","dec-demo/src/main/resources/mix/rule/user-rule.xml","dec-demo/src/main/resources/mix/business/order-business.xml","dec-demo/src/test/resources/mix/system/systems.xml","dec-demo/src/test/resources/mix/view/orm-view.xml","dec-demo/src/test/resources/mix/rule/user-rule.xml","dec-demo/src/test/resources/mix/business/order-business.xml","dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"],"next_action":"固定 REQCONF-R03 artifact revision，执行 RequirementAnalysisAgent 与 TestDesignAgent 独立 Review。","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R03@7a9c82bdc1db","phase":"requirement_confirmation","record_id":"WR-20260726-091612-TASK-P1-R2-001-PASSED","render_digest":"d8d175adfa67784dffc9752e1269eea11300910bd1cfb6059721ab5a43432fda","schema_version":4,"scope":"确认 System-owned Information 与跨 View 映射契约","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I003"],"state_change":"TASK-P1-R2-001: RUNNING → PASSED","status":"PASSED","summary":"确认 Information 归属 System、仅引用本 System View；BusinessScope 仅编排；显式 model-access read/ref 映射已落地并通过 5 项 XML 契约测试。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:16:12+00:00","validation_summary":"登记 Evidence 12 项；命令 Evidence 2 项","version":"V_1.0"} -->
-## WR-20260726-091612-TASK-P1-R2-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T09:16:12+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 确认 System-owned Information 与跨 View 映射契约 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 确认 Information 归属 System、仅引用本 System View；BusinessScope 仅编排；显式 model-access read/ref 映射已落地并通过 5 项 XML 契约测试。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-R2-001: RUNNING → PASSED |
-| Task | TASK-P1-R2-001 |
-| Attempt | ATTEMPT-TASK-P1-R2-001-I003-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003 / 3 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-R03@7a9c82bdc1db |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I003 |
-| Evidence | EVD-000230、EVD-000231、EVD-000232、EVD-000233、EVD-000234、EVD-000235、EVD-000236、EVD-000237、EVD-000238、EVD-000239、EVD-000240、EVD-000241 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 固定 REQCONF-R03 artifact revision，执行 RequirementAnalysisAgent 与 TestDesignAgent 独立 Review。 |
-
-### 变更摘要
-
-- 确认 Information 归属 System、仅引用本 System View；BusinessScope 仅编排；显式 model-access read/ref 映射已落地并通过 5 项 XML 契约测试。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
-- `version/V_1.0/doc/P1-COMPILER-CR02/requirement.md`
-- `version/V_1.0/doc/P1-COMPILER-CR02/requirement_change.md`
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md`
-- `version/V_1.0/requirement_list.md`
-- `version/V_1.0/task/P1-COMPILER-F01/decision_log.md`
-- `version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py`
-- `dec-demo/src/main/resources/mix/system/systems.xml`
-- `dec-demo/src/main/resources/mix/view/orm-view.xml`
-- `dec-demo/src/main/resources/mix/rule/user-rule.xml`
-- `dec-demo/src/main/resources/mix/business/order-business.xml`
-- `dec-demo/src/test/resources/mix/system/systems.xml`
-- `dec-demo/src/test/resources/mix/view/orm-view.xml`
-- `dec-demo/src/test/resources/mix/rule/user-rule.xml`
-- `dec-demo/src/test/resources/mix/business/order-business.xml`
-- `dec-demo/src/test/java/dec/demo/contract/MixContractTest.java`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 12 项；命令 Evidence 2 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-REQCONF-001-I003-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQCONF-001-I003-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000230","EVD-000231","EVD-000232","EVD-000240","EVD-000241"],"execution_mode":"standard / sequential","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003","iteration_no":3,"next_action":"由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R03@7a9c82bdc1db","phase":"requirement_confirmation","record_id":"WR-20260726-091831-TASK-P1-REQCONF-001-PASSED","render_digest":"3fb95d6e8ea1c8782e0035cade86ea21425c173bbcf6f17f821d06315f4b9411","schema_version":4,"scope":"将稳定需求确认逻辑任务对齐到 REQCONF-R03","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I003"],"state_change":"TASK-P1-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"稳定需求确认逻辑任务已对齐 REQCONF-R03，复用同一需求事实、Review 与 Evidence。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:18:31+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260726-091831-TASK-P1-REQCONF-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T09:18:31+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 将稳定需求确认逻辑任务对齐到 REQCONF-R03 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 稳定需求确认逻辑任务已对齐 REQCONF-R03，复用同一需求事实、Review 与 Evidence。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQCONF-001: RUNNING → PASSED |
-| Task | TASK-P1-REQCONF-001 |
-| Attempt | ATTEMPT-TASK-P1-REQCONF-001-I003-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-003 / 3 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-R03@7a9c82bdc1db |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I003 |
-| Evidence | EVD-000230、EVD-000231、EVD-000232、EVD-000240、EVD-000241 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。 |
-
-### 变更摘要
-
-- 稳定需求确认逻辑任务已对齐 REQCONF-R03，复用同一需求事实、Review 与 Evidence。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 0 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-R2-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-R2-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000243","EVD-000244","EVD-000245","EVD-000246","EVD-000247","EVD-000248","EVD-000249","EVD-000250","EVD-000251"],"execution_mode":"standard / sequential","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004","iteration_no":4,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-CR03/requirement.md","version/V_1.0/doc/P1-COMPILER-CR03/requirement_change.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md","version/V_1.0/requirement_list.md","version/V_1.0/task/P1-COMPILER-F01/decision_log.md","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md","version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py","dec-demo/src/main/resources/mix/system/systems.xml","dec-demo/src/main/resources/mix/view/orm-view.xml","dec-demo/src/test/resources/mix/system/systems.xml","dec-demo/src/test/resources/mix/view/orm-view.xml","dec-demo/src/test/java/dec/demo/contract/MixContractTest.java"],"next_action":"由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R04 独立 Review。","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-R04@c186ce681e1e","phase":"requirement_confirmation","record_id":"WR-20260726-093418-TASK-P1-R2-001-PASSED","render_digest":"3c8fa8f6fe136fbd390682b04a08e3e8f1aeeae43c04c22f392cbb95b1669111","review_result_refs":["REV-000025","REV-000026"],"schema_version":4,"scope":"确认 System-owned Information、跨 View 映射与 target-main 解析契约","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I004"],"state_change":"TASK-P1-R2-001: RUNNING → PASSED","status":"PASSED","summary":"明确 ModelAccess 源路径与目标选择器：ref@property 先匹配目标 View.target-main，失败后精确查找 property path；删除 root-property，需求与 5 项 XML 契约测试通过。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:34:18+00:00","validation_summary":"登记 Evidence 9 项；命令 Evidence 2 项","version":"V_1.0"} -->
-## WR-20260726-093418-TASK-P1-R2-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T09:34:18+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 确认 System-owned Information、跨 View 映射与 target-main 解析契约 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 明确 ModelAccess 源路径与目标选择器：ref@property 先匹配目标 View.target-main，失败后精确查找 property path；删除 root-property，需求与 5 项 XML 契约测试通过。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-R2-001: RUNNING → PASSED |
-| Task | TASK-P1-R2-001 |
-| Attempt | ATTEMPT-TASK-P1-R2-001-I004-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004 / 4 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-R04@c186ce681e1e |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I004 |
-| Evidence | EVD-000243、EVD-000244、EVD-000245、EVD-000246、EVD-000247、EVD-000248、EVD-000249、EVD-000250、EVD-000251 |
-| Review | REV-000025、REV-000026 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementAnalysisAgent |
-| 后续事项 | 由 RequirementAnalysisAgent 与 TestDesignAgent 对同一 REQCONF-R04 独立 Review。 |
-
-### 变更摘要
-
-- 明确 ModelAccess 源路径与目标选择器：ref@property 先匹配目标 View.target-main，失败后精确查找 property path；删除 root-property，需求与 5 项 XML 契约测试通过。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
-- `version/V_1.0/doc/P1-COMPILER-CR03/requirement.md`
-- `version/V_1.0/doc/P1-COMPILER-CR03/requirement_change.md`
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_mix_contract_inventory.md`
-- `version/V_1.0/requirement_list.md`
-- `version/V_1.0/task/P1-COMPILER-F01/decision_log.md`
-- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
-- `version/V_1.0/task/P1-COMPILER-F01/validation/test_system_information_contract.py`
-- `dec-demo/src/main/resources/mix/system/systems.xml`
-- `dec-demo/src/main/resources/mix/view/orm-view.xml`
-- `dec-demo/src/test/resources/mix/system/systems.xml`
-- `dec-demo/src/test/resources/mix/view/orm-view.xml`
-- `dec-demo/src/test/java/dec/demo/contract/MixContractTest.java`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 9 项；命令 Evidence 2 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P1-REQCONF-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQCONF-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000243","EVD-000244","EVD-000245","EVD-000250","EVD-000251"],"execution_mode":"standard / sequential","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004","iteration_no":4,"next_action":"由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。","next_agent":"ProjectManagerAgent","output_revision":"REQCONF-R04@c186ce681e1e","phase":"requirement_confirmation","record_id":"WR-20260726-093836-TASK-P1-REQCONF-001-PASSED","render_digest":"bb82b46bbd0b211621479a56294b95707ddbd50083815b646b6e2ebdc42c6a23","review_result_refs":["REV-000025","REV-000026"],"schema_version":4,"scope":"将稳定需求确认逻辑任务对齐到 REQCONF-R04","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I004"],"state_change":"TASK-P1-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"稳定需求确认逻辑任务已对齐 REQCONF-R04，复用同一需求事实、命令证据与独立 Review。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-07-26T09:38:36+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260726-093836-TASK-P1-REQCONF-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-26T09:38:36+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 将稳定需求确认逻辑任务对齐到 REQCONF-R04 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 稳定需求确认逻辑任务已对齐 REQCONF-R04，复用同一需求事实、命令证据与独立 Review。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQCONF-001: RUNNING → PASSED |
-| Task | TASK-P1-REQCONF-001 |
-| Attempt | ATTEMPT-TASK-P1-REQCONF-001-I004-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-004 / 4 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-R04@c186ce681e1e |
-| StageOutcome | SO-P1-COMPILER-F01-REQUIREMENT-CONFIRMATION-I004 |
-| Evidence | EVD-000243、EVD-000244、EVD-000245、EVD-000250、EVD-000251 |
-| Review | REV-000025、REV-000026 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 由 ProjectManagerAgent 生成 requirement_confirmation StageOutcome 并推进至 requirement_analysis。 |
-
-### 变更摘要
-
-- 稳定需求确认逻辑任务已对齐 REQCONF-R04，复用同一需求事实、命令证据与独立 Review。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 0 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-R04-GOVERNANCE-COMMON-INFORMATION-20260727","event_type":"GOVERNANCE_AND_COMMON_INFORMATION_UPDATED","execution_mode":"standard / sequential","input_revision":"REQCONF-R04@c186ce681e1e","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004","iteration_no":4,"modified_files_summary":["project_doc/version/V_1.0/work.md、task_plan.md、task_state.md、work_record.md","dec-demo mix systems/business 主测试配置与契约测试","DEC_COMPILER_mix_contract_inventory.md"],"next_action":"由 RequirementAnalysisAgent 基于 REQCONF-R04 启动 requirement_analysis I004。","next_agent":"RequirementAnalysisAgent","phase":"requirement_analysis","record_id":"WR-20260727-044216-GOVERNANCE-COMMON-INFORMATION-20260727-PASSED","render_digest":"cd52d5da592e29aa1f4e0c5d5bb09b466022dac4be286aedcd41198388aadde2","schema_version":4,"scope":"R04 任务治理、Git checkpoint 与跨 System Information expression","source":"用户要求；common-develop 2.40","state_change":"TASK-P1-REQAN-001: REQCONF-R03 → REQCONF-R04；git_checkpoint: false → true","status":"PASSED","summary":"清除旧 work_record.jsonl；TASK-P1-REQAN-001 已绑定 R04；启用 Git checkpoint；新增 common System 承载 common.paySuccess/common.payError 跨 System expression，并同步业务引用和契约测试。","target_id":"P1-COMPILER-F01","task_id":"GOVERNANCE-COMMON-INFORMATION-20260727","task_type":"project_management","timestamp":"2026-07-27T04:42:16+00:00","validation_summary":"Python contract 5/5 PASSED；20 个 mix XML 解析通过；主/测试 fixture 一致；task_verify 全部 PASSED；Maven 因 DNS 无法解析镜像而未执行。","version":"V_1.0"} -->
-## WR-20260727-044216-GOVERNANCE-COMMON-INFORMATION-20260727-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-27T04:42:16+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | 用户要求；common-develop 2.40 |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | R04 任务治理、Git checkpoint 与跨 System Information expression |
-| 阶段 | requirement_analysis |
-| 任务类型 | project_management |
-| 事件类型 | GOVERNANCE_AND_COMMON_INFORMATION_UPDATED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 清除旧 work_record.jsonl；TASK-P1-REQAN-001 已绑定 R04；启用 Git checkpoint；新增 common System 承载 common.paySuccess/common.payError 跨 System expression，并同步业务引用和契约测试。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQAN-001: REQCONF-R03 → REQCONF-R04；git_checkpoint: false → true |
-| Task | GOVERNANCE-COMMON-INFORMATION-20260727 |
-| Attempt | 无 / 未登记 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004 / 4 |
-| 输入 Revision | REQCONF-R04@c186ce681e1e |
-| 输出 Revision | 无 / 未登记 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementAnalysisAgent |
-| 后续事项 | 由 RequirementAnalysisAgent 基于 REQCONF-R04 启动 requirement_analysis I004。 |
-
-### 变更摘要
-
-- 清除旧 work_record.jsonl；TASK-P1-REQAN-001 已绑定 R04；启用 Git checkpoint；新增 common System 承载 common.paySuccess/common.payError 跨 System expression，并同步业务引用和契约测试。
-
-### 文件变更摘要
-
-- `project_doc/version/V_1.0/work.md、task_plan.md、task_state.md、work_record.md`
-- `dec-demo mix systems/business 主测试配置与契约测试`
-- `DEC_COMPILER_mix_contract_inventory.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | Python contract 5/5 PASSED；20 个 mix XML 解析通过；主/测试 fixture 一致；task_verify 全部 PASSED；Maven 因 DNS 无法解析镜像而未执行。 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P1-REQAN-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQAN-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000252","EVD-000253","EVD-000254","EVD-000255","EVD-000256"],"execution_mode":"git_checkpoint","input_revision":"REQCONF-R04@c186ce681e1e","iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004","iteration_no":4,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md","docs/_relations/dependency_impact.yaml"],"next_action":"由 BusinessModelAgent、DesignAgent、TestDesignAgent、ImpactAnalysisReviewAgent、CrossModuleIntegrationReviewAgent 对同一 REQAN-R04 串行独立 Review","next_agent":"BusinessModelAgent","output_revision":"REQAN-R04@7421b050ed44","phase":"requirement_analysis","record_id":"WR-20260727-053233-TASK-P1-REQAN-001-PASSED","render_digest":"285797ee257899980c502d805d76f025b4c00dda8fd052a524c275c741897701","schema_version":4,"scope":"重新分析 mix 源图与跨阶段影响","source":"long_task.py finish-attempt","state_change":"TASK-P1-REQAN-001: RUNNING → PASSED","status":"PASSED","summary":"完成 REQAN-R04：闭合 20 条业务规则、9 项 AC、7 个异常场景、9 条追踪；明确 common 跨 System expression、ModelAccess selector 和 P2-P8 影响边界。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQAN-001","task_type":"requirement_analysis","timestamp":"2026-07-27T05:32:33+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 4 项","version":"V_1.0"} -->
-## WR-20260727-053233-TASK-P1-REQAN-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-27T05:32:33+00:00 |
-| 执行 Agent | RequirementAnalysisAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 重新分析 mix 源图与跨阶段影响 |
-| 阶段 | requirement_analysis |
-| 任务类型 | requirement_analysis |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 完成 REQAN-R04：闭合 20 条业务规则、9 项 AC、7 个异常场景、9 条追踪；明确 common 跨 System expression、ModelAccess selector 和 P2-P8 影响边界。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQAN-001: RUNNING → PASSED |
-| Task | TASK-P1-REQAN-001 |
-| Attempt | ATTEMPT-TASK-P1-REQAN-001-I004-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-004 / 4 |
-| 输入 Revision | REQCONF-R04@c186ce681e1e |
-| 输出 Revision | REQAN-R04@7421b050ed44 |
-| StageOutcome | 无 |
-| Evidence | EVD-000252、EVD-000253、EVD-000254、EVD-000255、EVD-000256 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | BusinessModelAgent |
-| 后续事项 | 由 BusinessModelAgent、DesignAgent、TestDesignAgent、ImpactAnalysisReviewAgent、CrossModuleIntegrationReviewAgent 对同一 REQAN-R04 串行独立 Review |
-
-### 变更摘要
-
-- 完成 REQAN-R04：闭合 20 条业务规则、9 项 AC、7 个异常场景、9 条追踪；明确 common 跨 System expression、ModelAccess selector 和 P2-P8 影响边界。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
-- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md`
-- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md`
-- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md`
-- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
-- `docs/_relations/dependency_impact.yaml`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 4 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P1-BMODEL-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-BMODEL-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000268","EVD-000269","EVD-000270","EVD-000271","EVD-000272","EVD-000273","EVD-000274"],"execution_mode":"git_checkpoint","input_revision":"REQAN-R04@7421b050ed44","iteration_id":"ITER-P1-COMPILER-F01-BUSINESS-MODEL-004","iteration_no":4,"modified_files_summary":["version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md"],"next_action":"由六个适用 Reviewer 对同一 BM-R04 串行独立评审","next_agent":"BusinessModelReviewAgent","output_revision":"BM-R04@1b19a0ba26b6","phase":"business_model","record_id":"WR-20260727-083732-TASK-P1-BMODEL-001-PASSED","render_digest":"ec272bea966699a2c0135f830ceca001cb4e7291d39034ac4b509c707e67a7bf","schema_version":4,"scope":"形成 REQAN-R04 对应的 Compiler 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P1-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-BMODEL-001","task_type":"business_model","timestamp":"2026-07-27T08:37:32+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 3 项","version":"V_1.0"} -->
-## WR-20260727-083732-TASK-P1-BMODEL-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-27T08:37:32+00:00 |
-| 执行 Agent | BusinessModelAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 形成 REQAN-R04 对应的 Compiler 业务模型 |
-| 阶段 | business_model |
-| 任务类型 | business_model |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-BMODEL-001: RUNNING → PASSED |
-| Task | TASK-P1-BMODEL-001 |
-| Attempt | ATTEMPT-TASK-P1-BMODEL-001-I004-A001 |
-| Iteration | ITER-P1-COMPILER-F01-BUSINESS-MODEL-004 / 4 |
-| 输入 Revision | REQAN-R04@7421b050ed44 |
-| 输出 Revision | BM-R04@1b19a0ba26b6 |
-| StageOutcome | 无 |
-| Evidence | EVD-000268、EVD-000269、EVD-000270、EVD-000271、EVD-000272、EVD-000273、EVD-000274 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | BusinessModelReviewAgent |
-| 后续事项 | 由六个适用 Reviewer 对同一 BM-R04 串行独立评审 |
-
-### 变更摘要
-
-- BM-R04 已形成：97 个稳定模型 ID、15 条不变量、23 个错误、9 条追踪；结构、实物契约、长任务和任务健康验证均通过。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md`
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml`
-- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 3 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-BUSINESS-MODEL-I004-COMPLETED","event_type":"STAGE_COMPLETED","evidence_ids":["EVD-000268","EVD-000269","EVD-000270","EVD-000271","EVD-000272","EVD-000273","EVD-000274"],"execution_mode":"git_checkpoint","input_revision":"REQAN-R04@7421b050ed44","iteration_id":"ITER-P1-COMPILER-F01-BUSINESS-MODEL-004","iteration_no":4,"modified_files_summary":["DEC_COMPILER_business_model.md/yaml","traceability.md、task_plan.md、task_state.md、stage_outcomes.md","acceptance_assertions.json、evidence/reviews.jsonl、evidence_index.json"],"next_action":"由 DesignAgent 基于 BM-R04 启动 design I004。","next_agent":"DesignAgent","output_revision":"BM-R04@1b19a0ba26b6","phase":"business_model","record_id":"WR-20260727-084735-TASK-P1-BMODEL-001-PASSED","render_digest":"394789775de091c1302e42b7b5519ac2f16d1a0dd6426d64109c2d8fbd0e64bc","review_result_refs":["REV-000032","REV-000033","REV-000034","REV-000035","REV-000036","REV-000037"],"schema_version":4,"scope":"business_model I004 阶段完成","source":"common-develop 2.40 business_model gate","stage_outcome_refs":["SO-P1-COMPILER-F01-BUSINESS-MODEL-I004"],"state_change":"business_model: IN_PROGRESS → PASSED；Review: 6/6 PASSED","status":"PASSED","summary":"BM-R04 已冻结：97 个稳定模型 ID、15 条不变量、23 个稳定错误和 9 条追踪均闭合；六个独立 Reviewer 全部 PASSED。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-BMODEL-001","task_type":"business_model","timestamp":"2026-07-27T08:47:35+00:00","validation_summary":"JSON Schema、稳定 ID、Information/common/ModelAccess 契约、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。","version":"V_1.0"} -->
-## WR-20260727-084735-TASK-P1-BMODEL-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-27T08:47:35+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | common-develop 2.40 business_model gate |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | business_model I004 阶段完成 |
-| 阶段 | business_model |
-| 任务类型 | business_model |
-| 事件类型 | STAGE_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | BM-R04 已冻结：97 个稳定模型 ID、15 条不变量、23 个稳定错误和 9 条追踪均闭合；六个独立 Reviewer 全部 PASSED。 |
-| 状态 | PASSED |
-| 状态变更 | business_model: IN_PROGRESS → PASSED；Review: 6/6 PASSED |
-| Task | TASK-P1-BMODEL-001 |
-| Attempt | 无 / 未登记 |
-| Iteration | ITER-P1-COMPILER-F01-BUSINESS-MODEL-004 / 4 |
-| 输入 Revision | REQAN-R04@7421b050ed44 |
-| 输出 Revision | BM-R04@1b19a0ba26b6 |
-| StageOutcome | SO-P1-COMPILER-F01-BUSINESS-MODEL-I004 |
-| Evidence | EVD-000268、EVD-000269、EVD-000270、EVD-000271、EVD-000272、EVD-000273、EVD-000274 |
-| Review | REV-000032、REV-000033、REV-000034、REV-000035、REV-000036、REV-000037 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | DesignAgent |
-| 后续事项 | 由 DesignAgent 基于 BM-R04 启动 design I004。 |
-
-### 变更摘要
-
-- BM-R04 已冻结：97 个稳定模型 ID、15 条不变量、23 个稳定错误和 9 条追踪均闭合；六个独立 Reviewer 全部 PASSED。
-
-### 文件变更摘要
-
-- `DEC_COMPILER_business_model.md/yaml`
-- `traceability.md、task_plan.md、task_state.md、stage_outcomes.md`
-- `acceptance_assertions.json、evidence/reviews.jsonl、evidence_index.json`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | JSON Schema、稳定 ID、Information/common/ModelAccess 契约、Evidence、Acceptance、Long Task 全部 PASSED；开放 P0/P1 为 0。 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I004-A001","event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I004-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000276"],"execution_mode":"git_checkpoint","input_revision":"af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd","iteration_id":"ITER-P1-COMPILER-F01-DESIGN-004","iteration_no":4,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md"],"next_action":"由七个适用 Reviewer 对同一 DESIGN-R04 串行独立评审","next_agent":"RequirementReviewAgent","output_revision":"DESIGN-R04@1c14c8e89779","phase":"design","record_id":"WR-20260728-172754-TASK-P1-DESIGN-001-PASSED","render_digest":"a7dfb5b69260f3115946f10b61a93402cbdc27bb4432ff72cb963cd21eed5179","schema_version":4,"scope":"形成 BM-R04 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → PASSED","status":"PASSED","summary":"DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T17:27:54+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260728-172754-TASK-P1-DESIGN-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-28T17:27:54+08:00 |
-| 执行 Agent | DesignAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 形成 BM-R04 对应的 Compiler 技术设计 |
-| 阶段 | design |
-| 任务类型 | design |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-DESIGN-001: RUNNING → PASSED |
-| Task | TASK-P1-DESIGN-001 |
-| Attempt | ATTEMPT-TASK-P1-DESIGN-001-I004-A001 |
-| Iteration | ITER-P1-COMPILER-F01-DESIGN-004 / 4 |
-| 输入 Revision | af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd |
-| 输出 Revision | DESIGN-R04@1c14c8e89779 |
-| StageOutcome | 无 |
-| Evidence | EVD-000276 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementReviewAgent |
-| 后续事项 | 由七个适用 Reviewer 对同一 DESIGN-R04 串行独立评审 |
-
-### 变更摘要
-
-- DESIGN-R04 四份技术设计已与 BM-R04、实际 mix 契约和九条 TR 对齐；结构与格式验证通过
-
-### 文件变更摘要
-
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I006-A001","blockers":["UPSTREAM_INCONSISTENCY","独立复核确认冻结的 REQAN-R04 中 Atomic exposure 与需求正文/BM-R04/设计冲突，dependency impact 仍为旧 2.42 结构；必须形成新 requirement_analysis Revision 后再重建下游。"],"event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I006-A001-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"git_checkpoint","input_revision":"af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-DESIGN-006","iteration_no":6,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md","project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md","project_doc/docs/_relations/dependency_impact.yaml","project_doc/docs/_relations/dependency_graph.md","project_doc/version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml","project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml","project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md","project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"],"next_action":"重开 requirement_analysis，发布 REQAN-R05 并重新完成下游业务模型与设计门禁","next_agent":"RequirementAnalysisAgent","phase":"design","record_id":"WR-20260728-212151-TASK-P1-DESIGN-001-FAILED","render_digest":"d753b4bf1d7d8d12bf6ba12897f6a1a8a4be442582af9ff855764318c73c3b23","schema_version":4,"scope":"形成 BM-R04 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → REWORK","status":"FAILED","summary":"设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T21:21:51+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 0 项","version":"V_1.0"} -->
-## WR-20260728-212151-TASK-P1-DESIGN-001-FAILED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-28T21:21:51+08:00 |
-| 执行 Agent | DesignAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 形成 BM-R04 对应的 Compiler 技术设计 |
-| 阶段 | design |
-| 任务类型 | design |
-| 事件类型 | TASK_ATTEMPT_FAILED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。 |
-| 状态 | FAILED |
-| 状态变更 | TASK-P1-DESIGN-001: RUNNING → REWORK |
-| Task | TASK-P1-DESIGN-001 |
-| Attempt | ATTEMPT-TASK-P1-DESIGN-001-I006-A001 |
-| Iteration | ITER-P1-COMPILER-F01-DESIGN-006 / 6 |
-| 输入 Revision | af7dc453f0991fc3c4518acf5596eea3e8ebe9e3fa10ef2442a4beb829c81ffd |
-| 输出 Revision | 无 / 未登记 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | ISSUE-MR-0001、ISSUE-MR-0002、ISSUE-MR-0003、ISSUE-MR-0004 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementAnalysisAgent |
-| 后续事项 | 重开 requirement_analysis，发布 REQAN-R05 并重新完成下游业务模型与设计门禁 |
-
-### 变更摘要
-
-- 设计返修识别并修复技术边界，但发现上游冻结 Revision 需重开，当前设计 Attempt 不发布。
-
-### 文件变更摘要
-
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
-- `project_doc/version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md`
-- `project_doc/docs/_relations/dependency_impact.yaml`
-- `project_doc/docs/_relations/dependency_graph.md`
-- `project_doc/version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml`
-- `project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml`
-- `project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md`
-- `project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 0 项；命令 Evidence 0 项 |
-| 问题与阻塞 | UPSTREAM_INCONSISTENCY、独立复核确认冻结的 REQAN-R04 中 Atomic exposure 与需求正文/BM-R04/设计冲突，dependency impact 仍为旧 2.42 结构；必须形成新 requirement_analysis Revision 后再重建下游。 |
-
-<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P1-REQAN-001-I005-A001","event_id":"EVENT-ATTEMPT-TASK-P1-REQAN-001-I005-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000280"],"execution_mode":"git_checkpoint","input_revision":"REQCONF-R04@c186ce681e1e","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-005","iteration_no":5,"modified_files_summary":["version/V_1.0/doc/P1-COMPILER-F01/requirement.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md","version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md","docs/_relations/dependency_impact.yaml","docs/_relations/dependency_graph.md","version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml","version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml","version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md"],"next_action":"发布 REQAN-R05 并由 5 个需求分析 Reviewer 串行独立 Review","next_agent":"BusinessModelAgent","output_revision":"REQAN-R05@7de35e8dc15b","phase":"requirement_analysis","record_id":"WR-20260728-213435-TASK-P1-REQAN-001-PASSED","render_digest":"67fda3e9b75db4f28260659b744b18d7b5d496904b487cbb92258658ceecdc53","schema_version":4,"scope":"重新分析 mix 源图与跨阶段影响","source":"long_task.py finish-attempt","state_change":"TASK-P1-REQAN-001: RUNNING → PASSED","status":"PASSED","summary":"形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-REQAN-001","task_type":"requirement_analysis","timestamp":"2026-07-28T21:34:35+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260728-213435-TASK-P1-REQAN-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-28T21:34:35+08:00 |
-| 执行 Agent | RequirementAnalysisAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 重新分析 mix 源图与跨阶段影响 |
-| 阶段 | requirement_analysis |
-| 任务类型 | requirement_analysis |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-REQAN-001: RUNNING → PASSED |
-| Task | TASK-P1-REQAN-001 |
-| Attempt | ATTEMPT-TASK-P1-REQAN-001-I005-A001 |
-| Iteration | ITER-P1-COMPILER-F01-REQUIREMENT-ANALYSIS-005 / 5 |
-| 输入 Revision | REQCONF-R04@c186ce681e1e |
-| 输出 Revision | REQAN-R05@7de35e8dc15b |
-| StageOutcome | 无 |
-| Evidence | EVD-000280 |
-| Review | 无 |
-| 开放问题 | ISSUE-MR-0001、ISSUE-MR-0002、ISSUE-MR-0003、ISSUE-MR-0004 |
-| Git 检查点 | 无 |
-| 下一 Agent | BusinessModelAgent |
-| 后续事项 | 发布 REQAN-R05 并由 5 个需求分析 Reviewer 串行独立 Review |
-
-### 变更摘要
-
-- 形成 REQAN-R05：修正 Compiler-owned 原子发布与源发现责任，迁移 2.43 dependency impact/CMI，保持 20 BR、9 AC、9 TR 与 fixture 合同。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/P1-COMPILER-F01/requirement.md`
-- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_requirement_analysis.md`
-- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_analysis_test_matrix.md`
-- `version/V_1.0/doc/P1-COMPILER-F01/P1_COMPILER_testability_notes.md`
-- `docs/_relations/dependency_impact.yaml`
-- `docs/_relations/dependency_graph.md`
-- `version/V_1.0/doc/_flows/COMPILER/changes/001-layout-migration.yaml`
-- `version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml`
-- `version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md`
-- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P1-BMODEL-001-I005-A001","event_id":"EVENT-ATTEMPT-TASK-P1-BMODEL-001-I005-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000282"],"execution_mode":"git_checkpoint","input_revision":"REQAN-R05@7de35e8dc15b","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-BUSINESS-MODEL-005","iteration_no":5,"modified_files_summary":["version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md","version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml","version/V_1.0/task/P1-COMPILER-F01/traceability.md","version/V_1.0/task/P1-COMPILER-F01/task_plan.md"],"next_action":"发布 BM-R05 并由六个 Reviewer 串行独立评审","next_agent":"RequirementReviewAgent","output_revision":"BM-R05@4ecb1f8c09f4","phase":"business_model","record_id":"WR-20260728-221738-TASK-P1-BMODEL-001-PASSED","render_digest":"ef96dd4204cc5e0ac3cd90cf485e8543440d959219994ec60b7e27e49e4d77b4","schema_version":4,"scope":"形成 REQAN-R05 对应的 Compiler 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P1-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"形成 BM-R05：保持既有领域模型并统一 compiler-owned expectedCurrent 条件原子发布，YAML/Markdown/九条 TR 一致。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-BMODEL-001","task_type":"business_model","timestamp":"2026-07-28T22:17:38+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260728-221738-TASK-P1-BMODEL-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-28T22:17:38+08:00 |
-| 执行 Agent | BusinessModelAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 形成 REQAN-R05 对应的 Compiler 业务模型 |
-| 阶段 | business_model |
-| 任务类型 | business_model |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 形成 BM-R05：保持既有领域模型并统一 compiler-owned expectedCurrent 条件原子发布，YAML/Markdown/九条 TR 一致。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-BMODEL-001: RUNNING → PASSED |
-| Task | TASK-P1-BMODEL-001 |
-| Attempt | ATTEMPT-TASK-P1-BMODEL-001-I005-A001 |
-| Iteration | ITER-P1-COMPILER-F01-BUSINESS-MODEL-005 / 5 |
-| 输入 Revision | REQAN-R05@7de35e8dc15b |
-| 输出 Revision | BM-R05@4ecb1f8c09f4 |
-| StageOutcome | 无 |
-| Evidence | EVD-000282 |
-| Review | 无 |
-| 开放问题 | ISSUE-MR-0001、ISSUE-MR-0002、ISSUE-MR-0003、ISSUE-MR-0004 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementReviewAgent |
-| 后续事项 | 发布 BM-R05 并由六个 Reviewer 串行独立评审 |
-
-### 变更摘要
-
-- 形成 BM-R05：保持既有领域模型并统一 compiler-owned expectedCurrent 条件原子发布，YAML/Markdown/九条 TR 一致。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.md`
-- `version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml`
-- `version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-- `version/V_1.0/task/P1-COMPILER-F01/task_plan.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P1-DESIGN-001-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-DESIGN-001-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000284"],"execution_mode":"git_checkpoint","input_revision":"BM-R05@4ecb1f8c09f4","issue_ids":["ISSUE-MR-0001","ISSUE-MR-0002","ISSUE-MR-0003","ISSUE-MR-0004"],"iteration_id":"ITER-P1-COMPILER-F01-DESIGN-007","iteration_no":7,"modified_files_summary":["project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md","project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md"],"next_action":"发布设计产物并执行七类独立 Reviewer","next_agent":"RequirementReviewAgent","output_revision":"DESIGN-R05@0b37a9b4dd48","phase":"design","record_id":"WR-20260728-225152-TASK-P1-DESIGN-001-PASSED","render_digest":"28bf1ec379bb4c94728584a4e131620b5e0751d8eb79e33192f7b63e19fe3b59","schema_version":4,"scope":"形成 BM-R05 对应的 Compiler 技术设计","source":"long_task.py finish-attempt","state_change":"TASK-P1-DESIGN-001: RUNNING → PASSED","status":"PASSED","summary":"DESIGN-R05 已冻结并通过 Java 8、发布职责、源图、摘要、计时、关系、流程、Maven 合同、文档布局与 diff 验证。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-DESIGN-001","task_type":"design","timestamp":"2026-07-28T22:51:52+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260728-225152-TASK-P1-DESIGN-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-28T22:51:52+08:00 |
-| 执行 Agent | DesignAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 形成 BM-R05 对应的 Compiler 技术设计 |
-| 阶段 | design |
-| 任务类型 | design |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | DESIGN-R05 已冻结并通过 Java 8、发布职责、源图、摘要、计时、关系、流程、Maven 合同、文档布局与 diff 验证。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-DESIGN-001: RUNNING → PASSED |
-| Task | TASK-P1-DESIGN-001 |
-| Attempt | ATTEMPT-TASK-P1-DESIGN-001-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-DESIGN-007 / 7 |
-| 输入 Revision | BM-R05@4ecb1f8c09f4 |
-| 输出 Revision | DESIGN-R05@0b37a9b4dd48 |
-| StageOutcome | 无 |
-| Evidence | EVD-000284 |
-| Review | 无 |
-| 开放问题 | ISSUE-MR-0001、ISSUE-MR-0002、ISSUE-MR-0003、ISSUE-MR-0004 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementReviewAgent |
-| 后续事项 | 发布设计产物并执行七类独立 Reviewer |
-
-### 变更摘要
-
-- DESIGN-R05 已冻结并通过 Java 8、发布职责、源图、摘要、计时、关系、流程、Maven 合同、文档布局与 diff 验证。
-
-### 文件变更摘要
-
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_architecture.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
-- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md`
-- `project_doc/version/V_1.0/task/P1-COMPILER-F01/traceability.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P1-R2-005-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-R2-005-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000286","EVD-000287"],"execution_mode":"git_checkpoint","input_revision":"DESIGN-R05@0b37a9b4dd48","iteration_id":"ITER-P1-COMPILER-F01-TEST-DESIGN-007","iteration_no":7,"next_action":"由 ImplementationPlanAgent 形成 P1-T01～T15 实施计划","next_agent":"ImplementationPlanAgent","output_revision":"TESTDESIGN-R01@ba7779cf089b","phase":"test_design","record_id":"WR-20260731-163512-TASK-P1-R2-005-PASSED","render_digest":"c6c96a2de454255c41b7db3c1248ce97e2966003848a7f566d17cdce43b018b3","review_result_refs":["REV-000057","REV-000058","REV-000059","REV-000060"],"schema_version":4,"scope":"形成 DESIGN-R05 的可执行测试设计","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-TEST_DESIGN-I007"],"state_change":"TASK-P1-R2-005: RUNNING → PASSED","status":"PASSED","summary":"形成 41 个可执行 Case并通过四项独立 Review。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-005","task_type":"test_design","timestamp":"2026-07-31T16:35:12+00:00","validation_summary":"41 Case / 9 TR / 9 AC；命令验证 PASSED","version":"V_1.0"} -->
-## WR-20260731-163512-TASK-P1-R2-005-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-07-31T16:35:12+00:00 |
-| 执行 Agent | TestDesignAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 形成 DESIGN-R05 的可执行测试设计 |
-| 阶段 | test_design |
-| 任务类型 | test_design |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 形成 41 个可执行 Case并通过四项独立 Review。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-R2-005: RUNNING → PASSED |
-| Task | TASK-P1-R2-005 |
-| Attempt | ATTEMPT-TASK-P1-R2-005-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-TEST-DESIGN-007 / 7 |
-| 输入 Revision | DESIGN-R05@0b37a9b4dd48 |
-| 输出 Revision | TESTDESIGN-R01@ba7779cf089b |
-| StageOutcome | SO-P1-COMPILER-F01-TEST_DESIGN-I007 |
-| Evidence | EVD-000286、EVD-000287 |
-| Review | REV-000057、REV-000058、REV-000059、REV-000060 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ImplementationPlanAgent |
-| 后续事项 | 由 ImplementationPlanAgent 形成 P1-T01～T15 实施计划 |
-
-### 变更摘要
-
-- 形成 41 个可执行 Case并通过四项独立 Review。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 41 Case / 9 TR / 9 AC；命令验证 PASSED |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ImplementationPlanAgent","attempt_id":"ATTEMPT-TASK-P1-R2-006-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-R2-006-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000288","EVD-000289"],"execution_mode":"git_checkpoint","input_revision":"TESTDESIGN-R01@ba7779cf089b","iteration_id":"ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-007","iteration_no":7,"next_action":"由 TddAgent 执行 TASK-P1-T01 有效 RED","next_agent":"TddAgent","output_revision":"TP-P1-COMPILER-F01-R01@88b56e6caa64","phase":"implementation_plan","record_id":"WR-20260801-025021-TASK-P1-R2-006-PASSED","render_digest":"7c13b653fc81b879b40a13bcf4e7677e3545d4afba6ce2adedb2c0fe626bd367","review_result_refs":["TPR-000001","TPR-000002","TPR-000003","TPR-000004"],"schema_version":4,"scope":"形成 P1-T01～T15 实施计划","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-IMPLEMENTATION_PLAN-I007"],"state_change":"TASK-P1-R2-006: RUNNING → PASSED","status":"PASSED","summary":"wk -tp 冻结 15 个严格串行开发增量。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-R2-006","task_type":"implementation_plan","timestamp":"2026-08-01T02:50:21+00:00","validation_summary":"15 tasks / 4 reviews / 9 TR；命令验证 PASSED","version":"V_1.0"} -->
-## WR-20260801-025021-TASK-P1-R2-006-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-01T02:50:21+00:00 |
-| 执行 Agent | ImplementationPlanAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 形成 P1-T01～T15 实施计划 |
-| 阶段 | implementation_plan |
-| 任务类型 | implementation_plan |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | wk -tp 冻结 15 个严格串行开发增量。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-R2-006: RUNNING → PASSED |
-| Task | TASK-P1-R2-006 |
-| Attempt | ATTEMPT-TASK-P1-R2-006-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-IMPLEMENTATION-PLAN-007 / 7 |
-| 输入 Revision | TESTDESIGN-R01@ba7779cf089b |
-| 输出 Revision | TP-P1-COMPILER-F01-R01@88b56e6caa64 |
-| StageOutcome | SO-P1-COMPILER-F01-IMPLEMENTATION_PLAN-I007 |
-| Evidence | EVD-000288、EVD-000289 |
-| Review | TPR-000001、TPR-000002、TPR-000003、TPR-000004 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | TddAgent |
-| 后续事项 | 由 TddAgent 执行 TASK-P1-T01 有效 RED |
-
-### 变更摘要
-
-- wk -tp 冻结 15 个严格串行开发增量。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 15 tasks / 4 reviews / 9 TR；命令验证 PASSED |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"TddAgent","attempt_id":"ATTEMPT-TASK-P1-T01-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000290","EVD-000291"],"execution_mode":"git_checkpoint","input_revision":"TP-P1-COMPILER-F01-R01@88b56e6caa64","iteration_id":"ITER-P1-COMPILER-F01-TDD-007","iteration_no":7,"modified_files_summary":["dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java","dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java","dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java","dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java"],"next_action":"由 DevelopAgent 实现最小生产契约使 RED 转 GREEN","next_agent":"DevelopAgent","output_revision":"TDD-P1-T01-R01@4ebeed4dad6a","phase":"tdd","record_id":"WR-20260801-033719-TASK-P1-T01-PASSED","render_digest":"579a7b3158906a1b1bdf81d3e7946fdb7bddc9ff3df7fa8cb6524ef95107a46c","review_result_refs":["REV-000061"],"schema_version":4,"scope":"建立 Context 中立不可变编译契约的有效 RED","source":"long_task.py finish-attempt","stage_outcome_refs":["SO-P1-COMPILER-F01-TDD-I007"],"state_change":"TASK-P1-T01: RUNNING → PASSED","status":"PASSED","summary":"三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01","task_type":"tdd","timestamp":"2026-08-01T03:37:19+00:00","validation_summary":"test-compile PASSED；baseline PASSED；dependency direction PASSED；RED 3 failures / 0 errors","version":"V_1.0"} -->
-## WR-20260801-033719-TASK-P1-T01-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-01T03:37:19+00:00 |
-| 执行 Agent | TddAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 建立 Context 中立不可变编译契约的有效 RED |
-| 阶段 | tdd |
-| 任务类型 | tdd |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-T01: RUNNING → PASSED |
-| Task | TASK-P1-T01 |
-| Attempt | ATTEMPT-TASK-P1-T01-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-TDD-007 / 7 |
-| 输入 Revision | TP-P1-COMPILER-F01-R01@88b56e6caa64 |
-| 输出 Revision | TDD-P1-T01-R01@4ebeed4dad6a |
-| StageOutcome | SO-P1-COMPILER-F01-TDD-I007 |
-| Evidence | EVD-000290、EVD-000291 |
-| Review | REV-000061 |
 | 开放问题 | 无 |
 | Git 检查点 | 无 |
 | 下一 Agent | DevelopAgent |
-| 后续事项 | 由 DevelopAgent 实现最小生产契约使 RED 转 GREEN |
+| 后续事项 | DevelopAgent 只做文档/Evidence 形式化：绑定 DEV-09 exact revision、required TDDReviewAgent 与 development StageOutcome；随后进入 PHASE_FINAL_CODE_REVIEW。 |
 
 ### 变更摘要
 
-- 三项公共契约测试源码可编译并实际执行为 3 failures / 0 errors；旧 Context 基线保持 GREEN，context 不依赖 compiler。
-
-### 文件变更摘要
-
-- `dec-core-context/src/test/java/dec/core/context/tdd/ContractReflectionAssertions.java`
-- `dec-core-context/src/test/java/dec/core/context/tdd/ContextValueContractTest.java`
-- `dec-core-context/src/test/java/dec/core/context/tdd/RegistryImmutabilityTest.java`
-- `dec-core-context/src/test/java/dec/core/context/tdd/EngineContextApiTest.java`
+- 将 P2 active runtime 从 pre-RC13 多文件状态模型切换为 RC21 task_events.jsonl reducer；历史 runtime/work_record 按原 blob 冻结，未修改业务代码。
 
 ### SQL、验证与阻塞
 
 | 项目 | 内容 |
 |---|---|
 | SQL 变更 | 无 / 未登记 |
-| 测试与验证 | test-compile PASSED；baseline PASSED；dependency direction PASSED；RED 3 failures / 0 errors |
+| 测试与验证 | RC21 static task-plan shape and task-event hash chain validated locally; source-code changes=0 |
 | 问题与阻塞 | 无 |
 
-<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P1-T01-DEV-SKELETON-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-DEV-SKELETON-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000293","EVD-000294"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"TDD-P1-T01-R01@4ebeed4dad6a","iteration_id":"ITER-P1-COMPILER-F01-DEVELOPMENT-007","iteration_no":7,"modified_files_summary":["dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java","dec-core-context/src/main/java/dec/core/context/EngineContext.java","dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java","dec-core-context/src/main/java/dec/core/context/model/ActionKey.java","dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java","dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java","dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java","dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java","dec-core-context/src/main/java/dec/core/context/model/DataKey.java","dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java","dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java","dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java","dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java","dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java","dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java","dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java","dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java","dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java","dec-core-context/src/main/java/dec/core/context/model/DigestPair.java","dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java","dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java","dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java","dec-core-context/src/main/java/dec/core/context/model/InformationKey.java","dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java","dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java","dec-core-context/src/main/java/dec/core/context/model/Registry.java","dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java","dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java","dec-core-context/src/main/java/dec/core/context/model/SourceRef.java","dec-core-context/src/main/java/dec/core/context/model/SystemKey.java","dec-core-context/src/main/java/dec/core/context/model/ViewKey.java"],"next_action":"发布骨架 Revision，依次由 ArchitectureReviewAgent 和 SpecComplianceReviewAgent 审查。","next_agent":"ArchitectureReviewAgent","output_revision":"DEVSKEL-P1-T01-R01@57bbc887eb13","phase":"development","record_id":"WR-20260801-080206-TASK-P1-T01-DEV-SKELETON-PASSED","render_digest":"280ddc9b611b3b1246ba4d9b21290b304d96634931fded3517782c3a58635ac5","schema_version":4,"scope":"建立 T01 Context 公共契约架构骨架","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-DEV-SKELETON: RUNNING → PASSED","status":"PASSED","summary":"31 个 Context 公共契约骨架使用 Java 8 编译通过；包边界、不可变形状和无反向依赖检查通过，具体行为保持 ARCHITECTURE_SKELETON。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-DEV-SKELETON","task_type":"development","timestamp":"2026-08-01T08:02:06+00:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260801-080206-TASK-P1-T01-DEV-SKELETON-PASSED
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000288","EVD-000289","EVD-000290","EVD-000293"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"c5c509002da3ba610ac6095919a0a085d18c905e64323a9e5b6e22a124c0008a","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009","iteration_no":9,"next_action":"reconcile and close development","next_agent":"ProjectManagerAgent","output_revision":"DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba","phase":"development","record_id":"WR-20260817-033940-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED","render_digest":"cb979491091b086bf0e15e9bf0f45c3870732b86eb7d9c84deda1ce3d14d0873","schema_version":4,"scope":"形式化 DEV-01~DEV-09 已完成事实并关闭 development","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED","status":"PASSED","summary":"Existing DEV01-DEV09 closure formalized on exact DEV09 revision; current RC21 TDD and Spec reviews PASSED; P0 mysql-it verify passed; no code/test/config mutation.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-17T03:39:40+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260817-033940-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-| 时间 | 2026-08-01T08:02:06+00:00 |
+| 时间 | 2026-08-17T03:39:40+00:00 |
 | 执行 Agent | DevelopAgent |
 | 命令或来源 | long_task.py finish-attempt |
 | 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 建立 T01 Context 公共契约架构骨架 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 形式化 DEV-01~DEV-09 已完成事实并关闭 development |
 | 阶段 | development |
 | 任务类型 | development |
 | 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
 
 ### 执行结果与追踪
 
 | 字段 | 内容 |
 |---|---|
-| 本次结论 | 31 个 Context 公共契约骨架使用 Java 8 编译通过；包边界、不可变形状和无反向依赖检查通过，具体行为保持 ARCHITECTURE_SKELETON。 |
+| 本次结论 | Existing DEV01-DEV09 closure formalized on exact DEV09 revision; current RC21 TDD and Spec reviews PASSED; P0 mysql-it verify passed; no code/test/config mutation. |
 | 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-DEV-SKELETON: RUNNING → PASSED |
-| Task | TASK-P1-T01-DEV-SKELETON |
-| Attempt | ATTEMPT-TASK-P1-T01-DEV-SKELETON-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-DEVELOPMENT-007 / 7 |
-| 输入 Revision | TDD-P1-T01-R01@4ebeed4dad6a |
-| 输出 Revision | DEVSKEL-P1-T01-R01@57bbc887eb13 |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I009-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009 / 9 |
+| 输入 Revision | c5c509002da3ba610ac6095919a0a085d18c905e64323a9e5b6e22a124c0008a |
+| 输出 Revision | DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba |
 | StageOutcome | 无 |
-| Evidence | EVD-000293、EVD-000294 |
+| Evidence | EVD-000288、EVD-000289、EVD-000290、EVD-000293 |
 | Review | 无 |
 | 开放问题 | 无 |
 | Git 检查点 | 无 |
-| 下一 Agent | ArchitectureReviewAgent |
-| 后续事项 | 发布骨架 Revision，依次由 ArchitectureReviewAgent 和 SpecComplianceReviewAgent 审查。 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | reconcile and close development |
 
 ### 变更摘要
 
-- 31 个 Context 公共契约骨架使用 Java 8 编译通过；包边界、不可变形状和无反向依赖检查通过，具体行为保持 ARCHITECTURE_SKELETON。
-
-### 文件变更摘要
-
-- `dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java`
-- `dec-core-context/src/main/java/dec/core/context/EngineContext.java`
-- `dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ActionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java`
-- `dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DataKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DigestPair.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/InformationKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/Registry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java`
-- `dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/SourceRef.java`
-- `dec-core-context/src/main/java/dec/core/context/model/SystemKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ViewKey.java`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P1-T01-DEV-SKELETON-I008-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-DEV-SKELETON-I008-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000295","EVD-000296"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"TDD-P1-T01-R01@4ebeed4dad6a","iteration_id":"ITER-P1-COMPILER-F01-DEVELOPMENT-008","iteration_no":8,"modified_files_summary":["dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java","dec-core-context/src/main/java/dec/core/context/model/ActionKey.java","dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java","dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java","dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java","dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java","dec-core-context/src/main/java/dec/core/context/model/DataKey.java","dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java","dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java","dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java","dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java","dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java","dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java","dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java","dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java","dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java","dec-core-context/src/main/java/dec/core/context/model/DigestPair.java","dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java","dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java","dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java","dec-core-context/src/main/java/dec/core/context/model/InformationKey.java","dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java","dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java","dec-core-context/src/main/java/dec/core/context/model/Registry.java","dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java","dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java","dec-core-context/src/main/java/dec/core/context/model/SourceRef.java","dec-core-context/src/main/java/dec/core/context/model/SystemKey.java","dec-core-context/src/main/java/dec/core/context/model/ViewKey.java","dec-core-context/src/main/java/dec/core/context/EngineContext.java","dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java","dec-core-context/src/test/java/dec/core/context/tdd/ContextContractBehaviorTest.java"],"next_action":"由 TDDReviewAgent 复核 DEV-P1-T01-R01 后完成 Development 阶段。","next_agent":"TDDReviewAgent","output_revision":"DEV-P1-T01-R01@de1adfd37c9b","phase":"development","record_id":"WR-20260801-081704-TASK-P1-T01-DEV-SKELETON-PASSED","render_digest":"7c1c2aa3551bcb7d4c3eeb70f2799ebd0e6ce92ca340c45f75cf648aa9d3be06","schema_version":4,"scope":"实现 T01 Context 中立不可变公共契约并转 GREEN","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-DEV-SKELETON: RUNNING → PASSED","status":"PASSED","summary":"31 个 Context 中立不可变公共类型和 1 个语义回归测试完成；冻结合同与模块回归 GREEN，Java 8 和依赖方向通过。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-DEV-SKELETON","task_type":"development","timestamp":"2026-08-01T08:17:04+00:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260801-081704-TASK-P1-T01-DEV-SKELETON-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-01T08:17:04+00:00 |
-| 执行 Agent | DevelopAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 实现 T01 Context 中立不可变公共契约并转 GREEN |
-| 阶段 | development |
-| 任务类型 | development |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 31 个 Context 中立不可变公共类型和 1 个语义回归测试完成；冻结合同与模块回归 GREEN，Java 8 和依赖方向通过。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-DEV-SKELETON: RUNNING → PASSED |
-| Task | TASK-P1-T01-DEV-SKELETON |
-| Attempt | ATTEMPT-TASK-P1-T01-DEV-SKELETON-I008-A001 |
-| Iteration | ITER-P1-COMPILER-F01-DEVELOPMENT-008 / 8 |
-| 输入 Revision | TDD-P1-T01-R01@4ebeed4dad6a |
-| 输出 Revision | DEV-P1-T01-R01@de1adfd37c9b |
-| StageOutcome | 无 |
-| Evidence | EVD-000295、EVD-000296 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | TDDReviewAgent |
-| 后续事项 | 由 TDDReviewAgent 复核 DEV-P1-T01-R01 后完成 Development 阶段。 |
-
-### 变更摘要
-
-- 31 个 Context 中立不可变公共类型和 1 个语义回归测试完成；冻结合同与模块回归 GREEN，Java 8 和依赖方向通过。
-
-### 文件变更摘要
-
-- `dec-core-context/src/main/java/dec/core/context/model/AbstractDefinitionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ActionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/BusinessScopeKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/CompiledDefinition.java`
-- `dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ConnectionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DataKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DataSourceKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredDefinition.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredKind.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DeferredRegistry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DefinitionKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/Diagnostic.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DiagnosticCode.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DiagnosticSeverity.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DigestPair.java`
-- `dec-core-context/src/main/java/dec/core/context/model/DirectoryKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ImmutableDeferredRegistry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ImmutableRegistry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/InformationKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/NormalizedBody.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ProduceKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/Registry.java`
-- `dec-core-context/src/main/java/dec/core/context/model/RequiredStage.java`
-- `dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/SourceRef.java`
-- `dec-core-context/src/main/java/dec/core/context/model/SystemKey.java`
-- `dec-core-context/src/main/java/dec/core/context/model/ViewKey.java`
-- `dec-core-context/src/main/java/dec/core/context/EngineContext.java`
-- `dec-core-context/src/main/java/dec/core/context/CoreConfigProjection.java`
-- `dec-core-context/src/test/java/dec/core/context/tdd/ContextContractBehaviorTest.java`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P1-T01-CODE-REVIEW-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-CODE-REVIEW-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000321","EVD-000322","EVD-000323","EVD-000324"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"DEV-P1-T01-R01@de1adfd37c9b","iteration_id":"ITER-P1-COMPILER-F01-CODE-REVIEW-007","iteration_no":7,"modified_files_summary":["version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/review-report.json","version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/command-result.json"],"next_action":"由七个 required reviewers 对同一 CODEREVIEW Revision 串行独立确认。","next_agent":"SpecComplianceReviewAgent","output_revision":"CODEREVIEW-P1-T01-R01@488bc81150f7","phase":"code_review","record_id":"WR-20260801-082639-TASK-P1-T01-CODE-REVIEW-PASSED","render_digest":"488563ea1936ccd96b510d141bf78158051e4a14c3003fc3a88cad9b4a26eda0","schema_version":4,"scope":"审查 T01 Context 中立不可变公共契约","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-CODE-REVIEW: RUNNING → PASSED","status":"PASSED","summary":"固定 DEV-P1-T01-R01 的最终代码 Review 对象、静态检查和风险分类；无开放 finding。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-CODE-REVIEW","task_type":"code_review","timestamp":"2026-08-01T08:26:39+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260801-082639-TASK-P1-T01-CODE-REVIEW-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-01T08:26:39+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 审查 T01 Context 中立不可变公共契约 |
-| 阶段 | code_review |
-| 任务类型 | code_review |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 固定 DEV-P1-T01-R01 的最终代码 Review 对象、静态检查和风险分类；无开放 finding。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-CODE-REVIEW: RUNNING → PASSED |
-| Task | TASK-P1-T01-CODE-REVIEW |
-| Attempt | ATTEMPT-TASK-P1-T01-CODE-REVIEW-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-CODE-REVIEW-007 / 7 |
-| 输入 Revision | DEV-P1-T01-R01@de1adfd37c9b |
-| 输出 Revision | CODEREVIEW-P1-T01-R01@488bc81150f7 |
-| StageOutcome | 无 |
-| Evidence | EVD-000321、EVD-000322、EVD-000323、EVD-000324 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | SpecComplianceReviewAgent |
-| 后续事项 | 由七个 required reviewers 对同一 CODEREVIEW Revision 串行独立确认。 |
-
-### 变更摘要
-
-- 固定 DEV-P1-T01-R01 的最终代码 Review 对象、静态检查和风险分类；无开放 finding。
-
-### 文件变更摘要
-
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/review-report.json`
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/code-review-p1-t01-r01/command-result.json`
+- Existing DEV01-DEV09 closure formalized on exact DEV09 revision; current RC21 TDD and Spec reviews PASSED; P0 mysql-it verify passed; no code/test/config mutation.
 
 ### SQL、验证与阻塞
 
@@ -1871,53 +107,147 @@
 | 测试与验证 | 登记 Evidence 4 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
-<!-- work-record-meta: {"agent":"TestAgent","attempt_id":"ATTEMPT-TASK-P1-T01-TESTING-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-TESTING-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000330","EVD-000331","EVD-000332"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"CODEREVIEW-P1-T01-R01@488bc81150f7","iteration_id":"ITER-P1-COMPILER-F01-TESTING-007","iteration_no":7,"modified_files_summary":["version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/test-report-manifest.json","version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/p0-run.json","version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/command-result.json"],"next_action":"发布 Testing Revision 并由 TestEvidenceReviewAgent 独立复核 Evidence 完整性。","next_agent":"TestEvidenceReviewAgent","output_revision":"TESTING-P1-T01-R01@2c618f7c32a6","phase":"testing","record_id":"WR-20260801-090451-TASK-P1-T01-TESTING-PASSED","render_digest":"50baa46302683d115eecf605374bc9af819e293c27ddb3c3e94ccc872a7c7069","schema_version":4,"scope":"验证 T01 Context 不可变契约与主干回归","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-TESTING: RUNNING → PASSED","status":"PASSED","summary":"R02 专项验证与真实源码树标准 P0 全部通过；14 个普通测试全绿，故意失败测试被门禁正确阻断，T01 无数据库变更。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-TESTING","task_type":"testing","timestamp":"2026-08-01T09:04:51+00:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260801-090451-TASK-P1-T01-TESTING-PASSED
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000294","EVD-000295","EVD-000296","EVD-000297","EVD-000298","EVD-000299","EVD-000300"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009","iteration_no":9,"next_action":"Publish frozen DEV09 as the code_review artifact, execute eight current-profile independent reviewers, then finalize the Code Review StageOutcome.","next_agent":"ProjectManagerAgent","output_revision":"DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba","phase":"code_review","record_id":"WR-20260817-044304-TASK-P2-PHASE-FINAL-CODE-REVIEW-PASSED","render_digest":"9e053d5456a8c7247bdd5264e82414e2cc62c3c219381448c445020775cf4366","schema_version":4,"scope":"执行 P2 Phase Final Code Review","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-FINAL-CODE-REVIEW: RUNNING → PASSED","status":"PASSED","summary":"RC21 phase-final Code Review execution package is evidence-complete on frozen DEV09; exact lifecycle validation command exited 0; no production/test/config mutation.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-FINAL-CODE-REVIEW","task_type":"code_review","timestamp":"2026-08-17T04:43:04+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260817-044304-TASK-P2-PHASE-FINAL-CODE-REVIEW-PASSED
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-| 时间 | 2026-08-01T09:04:51+00:00 |
-| 执行 Agent | TestAgent |
+| 时间 | 2026-08-17T04:43:04+00:00 |
+| 执行 Agent | ProjectManagerAgent |
 | 命令或来源 | long_task.py finish-attempt |
 | 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 验证 T01 Context 不可变契约与主干回归 |
-| 阶段 | testing |
-| 任务类型 | testing |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Phase Final Code Review |
+| 阶段 | code_review |
+| 任务类型 | code_review |
 | 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
 
 ### 执行结果与追踪
 
 | 字段 | 内容 |
 |---|---|
-| 本次结论 | R02 专项验证与真实源码树标准 P0 全部通过；14 个普通测试全绿，故意失败测试被门禁正确阻断，T01 无数据库变更。 |
+| 本次结论 | RC21 phase-final Code Review execution package is evidence-complete on frozen DEV09; exact lifecycle validation command exited 0; no production/test/config mutation. |
 | 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-TESTING: RUNNING → PASSED |
-| Task | TASK-P1-T01-TESTING |
-| Attempt | ATTEMPT-TASK-P1-T01-TESTING-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-TESTING-007 / 7 |
-| 输入 Revision | CODEREVIEW-P1-T01-R01@488bc81150f7 |
-| 输出 Revision | TESTING-P1-T01-R01@2c618f7c32a6 |
+| 状态变更 | TASK-P2-PHASE-FINAL-CODE-REVIEW: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-FINAL-CODE-REVIEW |
+| Attempt | ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I009-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009 / 9 |
+| 输入 Revision | DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba |
+| 输出 Revision | DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba |
 | StageOutcome | 无 |
-| Evidence | EVD-000330、EVD-000331、EVD-000332 |
+| Evidence | EVD-000294、EVD-000295、EVD-000296、EVD-000297、EVD-000298、EVD-000299、EVD-000300 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish frozen DEV09 as the code_review artifact, execute eight current-profile independent reviewers, then finalize the Code Review StageOutcome. |
+
+### 变更摘要
+
+- RC21 phase-final Code Review execution package is evidence-complete on frozen DEV09; exact lifecycle validation command exited 0; no production/test/config mutation.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"TestAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-TESTING-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-TESTING-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000305","EVD-000306","EVD-000307","EVD-000308","EVD-000309","EVD-000310","EVD-000311"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TESTING-009","iteration_no":9,"next_action":"Publish Testing artifact and run testing:TestEvidenceReviewAgent.","next_agent":"TestEvidenceReviewAgent","output_revision":"TESTING-P2-STAGE-CLOSURE-R01@7925ec4f218c","phase":"testing","record_id":"WR-20260817-065233-TASK-P2-PHASE-TESTING-PASSED","render_digest":"ed27f169059fdb6f1d4309a74f6ddbdaf30d9de3ba3831af468aa34e03065f73","schema_version":4,"scope":"执行 P2 Testing","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-TESTING: RUNNING → PASSED","status":"PASSED","summary":"P2 Testing I009 fresh execution PASSED: P0 #1832 core-verify attempt 2 SUCCESS and mysql-it attempt 3 SUCCESS; fresh artifact digests verified locally; P2 focused 50/50 green, MySQL 4/4 green, database final-state markers/counts verified, deliberate failure gate produced expected diagnostic failure and blocked the build. No production/test/config mutation.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-TESTING","task_type":"testing","timestamp":"2026-08-17T06:52:33+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260817-065233-TASK-P2-PHASE-TESTING-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-17T06:52:33+00:00 |
+| 执行 Agent | TestAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Testing |
+| 阶段 | testing |
+| 任务类型 | testing |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P2 Testing I009 fresh execution PASSED: P0 #1832 core-verify attempt 2 SUCCESS and mysql-it attempt 3 SUCCESS; fresh artifact digests verified locally; P2 focused 50/50 green, MySQL 4/4 green, database final-state markers/counts verified, deliberate failure gate produced expected diagnostic failure and blocked the build. No production/test/config mutation. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-TESTING: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-TESTING |
+| Attempt | ATTEMPT-TASK-P2-PHASE-TESTING-I009-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TESTING-009 / 9 |
+| 输入 Revision | DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba |
+| 输出 Revision | TESTING-P2-STAGE-CLOSURE-R01@7925ec4f218c |
+| StageOutcome | 无 |
+| Evidence | EVD-000305、EVD-000306、EVD-000307、EVD-000308、EVD-000309、EVD-000310、EVD-000311 |
 | Review | 无 |
 | 开放问题 | 无 |
 | Git 检查点 | 无 |
 | 下一 Agent | TestEvidenceReviewAgent |
-| 后续事项 | 发布 Testing Revision 并由 TestEvidenceReviewAgent 独立复核 Evidence 完整性。 |
+| 后续事项 | Publish Testing artifact and run testing:TestEvidenceReviewAgent. |
 
 ### 变更摘要
 
-- R02 专项验证与真实源码树标准 P0 全部通过；14 个普通测试全绿，故意失败测试被门禁正确阻断，T01 无数据库变更。
+- P2 Testing I009 fresh execution PASSED: P0 #1832 core-verify attempt 2 SUCCESS and mysql-it attempt 3 SUCCESS; fresh artifact digests verified locally; P2 focused 50/50 green, MySQL 4/4 green, database final-state markers/counts verified, deliberate failure gate produced expected diagnostic failure and blocked the build. No production/test/config mutation.
 
-### 文件变更摘要
+### SQL、验证与阻塞
 
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/test-report-manifest.json`
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/p0-run.json`
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/testing-p1-t01-r01/command-result.json`
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"CompletionVerificationAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000312","EVD-000313","EVD-000314"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"TESTING-P2-STAGE-CLOSURE-R01@7925ec4f218c","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-009","iteration_no":9,"next_action":"Publish completion_verification artifact and execute fail-closed finalize-phase.","next_agent":"CompletionVerificationAgent","output_revision":"COMPLETION-VERIFICATION-P2-I009-R01@a0e0f1c3e3af","phase":"completion_verification","record_id":"WR-20260817-081723-TASK-P2-PHASE-COMPLETION-VERIFICATION-PASSED","render_digest":"cf81443842de17b6040c6471bb95eb774dbbe096f6c916d30f2be565d92c79f3","schema_version":4,"scope":"执行 P2 Completion Verification","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-COMPLETION-VERIFICATION: RUNNING → PASSED","status":"PASSED","summary":"Completion Verification I009 PASSED: exact final-head P0 #1841 on a0e0f1c3 succeeded for core/mysql; 58/58 assertions closed; zero open issues; prior lifecycle outcomes and current-profile reviews are complete; both current installed validator and frozen task-plan validation command pass.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-COMPLETION-VERIFICATION","task_type":"completion_verification","timestamp":"2026-08-17T08:17:23+00:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260817-081723-TASK-P2-PHASE-COMPLETION-VERIFICATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-17T08:17:23+00:00 |
+| 执行 Agent | CompletionVerificationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Completion Verification |
+| 阶段 | completion_verification |
+| 任务类型 | completion_verification |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Completion Verification I009 PASSED: exact final-head P0 #1841 on a0e0f1c3 succeeded for core/mysql; 58/58 assertions closed; zero open issues; prior lifecycle outcomes and current-profile reviews are complete; both current installed validator and frozen task-plan validation command pass. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-COMPLETION-VERIFICATION: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-COMPLETION-VERIFICATION |
+| Attempt | ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I009-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-009 / 9 |
+| 输入 Revision | TESTING-P2-STAGE-CLOSURE-R01@7925ec4f218c |
+| 输出 Revision | COMPLETION-VERIFICATION-P2-I009-R01@a0e0f1c3e3af |
+| StageOutcome | 无 |
+| Evidence | EVD-000312、EVD-000313、EVD-000314 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | CompletionVerificationAgent |
+| 后续事项 | Publish completion_verification artifact and execute fail-closed finalize-phase. |
+
+### 变更摘要
+
+- Completion Verification I009 PASSED: exact final-head P0 #1841 on a0e0f1c3 succeeded for core/mysql; 58/58 assertions closed; zero open issues; prior lifecycle outcomes and current-profile reviews are complete; both current installed validator and frozen task-plan validation command pass.
 
 ### SQL、验证与阻塞
 
@@ -1927,643 +257,111 @@
 | 测试与验证 | 登记 Evidence 3 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
-<!-- work-record-meta: {"agent":"CompletionVerificationAgent","attempt_id":"ATTEMPT-TASK-P1-T01-COMPLETION-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-COMPLETION-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000333","EVD-000334","EVD-000335","EVD-000336"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"TESTING-P1-T01-R01@2c618f7c32a6","iteration_id":"ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007","iteration_no":7,"modified_files_summary":["version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/completion-report.json","version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/p0-run.json","version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/clean-tree-manifest.json","version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/command-result.json"],"next_action":"发布 Completion Revision，完成阶段验收并将 TASK-P1-T02 保持为待执行未启动。","next_agent":"ProjectManagerAgent","output_revision":"COMPLETION-P1-T01-R01@7be02cd9af4c","phase":"completion_verification","record_id":"WR-20260801-120728-TASK-P1-T01-COMPLETION-PASSED","render_digest":"76bc52b71f206998dfbf131b5d89739eb48b6264f1714b1488376dc929b9eb59","schema_version":4,"scope":"验证 TASK-P1-T01 全流程完成与可合并性","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-COMPLETION: RUNNING → PASSED","status":"PASSED","summary":"TASK-P1-T01 全阶段 Revision/Evidence 可回查，最终干净代码 Head 的标准 P0 通过，无开放 P0/P1，临时文件为零。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-COMPLETION","task_type":"completion_verification","timestamp":"2026-08-01T12:07:28+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260801-120728-TASK-P1-T01-COMPLETION-PASSED
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I005-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I005-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000318","EVD-000319","EVD-000320","EVD-000321"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"BM-R20","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-005","iteration_no":5,"modified_files_summary":["project_doc/version/V_1.0/doc/COMPILER/COMPILER_design_security_authority_overlay_r32.md","project_doc/version/V_1.0/doc/COMPILER/COMPILER_api_contract_security_authority_overlay_r32.md","project_doc/version/V_1.0/doc/COMPILER/COMPILER_test_seams_security_authority_overlay_r32.md","project_doc/version/V_1.0/doc/COMPILER/changes/p2-security-authority-remediation-r32.md","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/p2_security_authority_independent_review_20260817_r01.json"],"next_action":"Publish DESIGN-P2-R32 and run independent Design Review.","next_agent":"ProjectManagerAgent","output_revision":"DESIGN-P2-R32","phase":"design","record_id":"WR-20260817-151011-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED","render_digest":"3595547364dcdb4a385c61e49871acaf77a037d3f91376dce7dd82194fe2cef1","schema_version":4,"scope":"冻结 P2 MODEL authority boundary 与 exact Context provenance remediation Design","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"DESIGN-P2-R32 freezes Guard-minted opaque authority, raw MODEL effect closure, exact EngineContext binding and fail-closed sequencing for P2-CR-001/P2-CR-002.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION","task_type":"design","timestamp":"2026-08-17T15:10:11+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260817-151011-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-| 时间 | 2026-08-01T12:07:28+00:00 |
-| 执行 Agent | CompletionVerificationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 验证 TASK-P1-T01 全流程完成与可合并性 |
-| 阶段 | completion_verification |
-| 任务类型 | completion_verification |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | TASK-P1-T01 全阶段 Revision/Evidence 可回查，最终干净代码 Head 的标准 P0 通过，无开放 P0/P1，临时文件为零。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-COMPLETION: RUNNING → PASSED |
-| Task | TASK-P1-T01-COMPLETION |
-| Attempt | ATTEMPT-TASK-P1-T01-COMPLETION-I007-A001 |
-| Iteration | ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-007 / 7 |
-| 输入 Revision | TESTING-P1-T01-R01@2c618f7c32a6 |
-| 输出 Revision | COMPLETION-P1-T01-R01@7be02cd9af4c |
-| StageOutcome | 无 |
-| Evidence | EVD-000333、EVD-000334、EVD-000335、EVD-000336 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 发布 Completion Revision，完成阶段验收并将 TASK-P1-T02 保持为待执行未启动。 |
-
-### 变更摘要
-
-- TASK-P1-T01 全阶段 Revision/Evidence 可回查，最终干净代码 Head 的标准 P0 通过，无开放 P0/P1，临时文件为零。
-
-### 文件变更摘要
-
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/completion-report.json`
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/p0-run.json`
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/clean-tree-manifest.json`
-- `version/V_1.0/task/P1-COMPILER-F01/evidence/commands/completion-p1-t01-r01/command-result.json`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 4 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P1-T01-CODE-REVIEW-I008-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-CODE-REVIEW-I008-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000363","EVD-000364","EVD-000366","EVD-000367","EVD-000368"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"9d9dbf8991355aa4d1ac1a44635e17b4540249791bf43a322a2e2dcea677a142","iteration_id":"ITER-P1-COMPILER-F01-CODE-REVIEW-008","iteration_no":8,"next_action":"发布 Code Review I008 artifact，并由 Spec/Engineering/Architecture 及四个风险 Reviewer 独立确认。","next_agent":"ProjectManagerAgent","output_revision":"CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47","phase":"code_review","record_id":"WR-20260807-073418-TASK-P1-T01-CODE-REVIEW-PASSED","render_digest":"d38767c6b347c0b1773202e6150d099da6a55e05ee641623745debde14874205","schema_version":4,"scope":"审查 T01 Context 中立不可变公共契约","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-CODE-REVIEW: RUNNING → PASSED","status":"PASSED","summary":"Implementation Rework Review PASS：FND-P1-STAGE-003/004 保持 CLOSED，代码级 P0/P1=0；reviewed Head 75559ecc 的 P0 CI 与 surefire artifact 已核验。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-CODE-REVIEW","task_type":"code_review","timestamp":"2026-08-07T07:34:18+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260807-073418-TASK-P1-T01-CODE-REVIEW-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T07:34:18+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 审查 T01 Context 中立不可变公共契约 |
-| 阶段 | code_review |
-| 任务类型 | code_review |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | Implementation Rework Review PASS：FND-P1-STAGE-003/004 保持 CLOSED，代码级 P0/P1=0；reviewed Head 75559ecc 的 P0 CI 与 surefire artifact 已核验。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-CODE-REVIEW: RUNNING → PASSED |
-| Task | TASK-P1-T01-CODE-REVIEW |
-| Attempt | ATTEMPT-TASK-P1-T01-CODE-REVIEW-I008-A001 |
-| Iteration | ITER-P1-COMPILER-F01-CODE-REVIEW-008 / 8 |
-| 输入 Revision | 9d9dbf8991355aa4d1ac1a44635e17b4540249791bf43a322a2e2dcea677a142 |
-| 输出 Revision | CODEREVIEW-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
-| StageOutcome | 无 |
-| Evidence | EVD-000363、EVD-000364、EVD-000366、EVD-000367、EVD-000368 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 发布 Code Review I008 artifact，并由 Spec/Engineering/Architecture 及四个风险 Reviewer 独立确认。 |
-
-### 变更摘要
-
-- Implementation Rework Review PASS：FND-P1-STAGE-003/004 保持 CLOSED，代码级 P0/P1=0；reviewed Head 75559ecc 的 P0 CI 与 surefire artifact 已核验。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"TestAgent","attempt_id":"ATTEMPT-TASK-P1-T01-TESTING-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-TESTING-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000371","EVD-000372","EVD-000373"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"3fd41a940683544bb04fe36c6aa80af70b12247df18fe46b9061359e33f07c32","iteration_id":"ITER-P1-COMPILER-F01-TESTING-009","iteration_no":9,"next_action":"发布 Testing I009 revision，并由 TestEvidenceReviewAgent 独立复核真实 run/head/artifact 绑定。","next_agent":"TestEvidenceReviewAgent","output_revision":"TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47","phase":"testing","record_id":"WR-20260807-074752-TASK-P1-T01-TESTING-PASSED","render_digest":"b442e23ad8fc0f6a5c062f6c361bc8b8665115fd3aae18930a92182eab16ecf6","schema_version":4,"scope":"验证 T01 Context 不可变契约与主干回归","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-TESTING: RUNNING → PASSED","status":"PASSED","summary":"Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-TESTING","task_type":"testing","timestamp":"2026-08-07T07:47:52+00:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260807-074752-TASK-P1-T01-TESTING-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T07:47:52+00:00 |
-| 执行 Agent | TestAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 验证 T01 Context 不可变契约与主干回归 |
-| 阶段 | testing |
-| 任务类型 | testing |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-TESTING: RUNNING → PASSED |
-| Task | TASK-P1-T01-TESTING |
-| Attempt | ATTEMPT-TASK-P1-T01-TESTING-I009-A001 |
-| Iteration | ITER-P1-COMPILER-F01-TESTING-009 / 9 |
-| 输入 Revision | 3fd41a940683544bb04fe36c6aa80af70b12247df18fe46b9061359e33f07c32 |
-| 输出 Revision | TESTING-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
-| StageOutcome | 无 |
-| Evidence | EVD-000371、EVD-000372、EVD-000373 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | TestEvidenceReviewAgent |
-| 后续事项 | 发布 Testing I009 revision，并由 TestEvidenceReviewAgent 独立复核真实 run/head/artifact 绑定。 |
-
-### 变更摘要
-
-- Stage Closure reviewed Head 75559ecc 的 P0 Build Gate 31148550742 已独立复核：core-verify 与 mysql-it 均成功；compiler 511/511、starter 13/13、Provider 7/7、StageClosure 3/3，T14/T15 与故意失败阻断门禁均通过，artifact digest 与下载文件一致。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"CompletionVerificationAgent","attempt_id":"ATTEMPT-TASK-P1-T01-COMPLETION-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P1-T01-COMPLETION-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000374","EVD-000375","EVD-000376","EVD-000377"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"1468c51497e4e57e488dd59112f96246d8a75611910d2bf1481152aaa26c320e","iteration_id":"ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009","iteration_no":9,"next_action":"发布并 finalize Completion I009，随后同步人工 Stage Closure 视图并提交 PR #31 最终 machine-state 变更。","next_agent":"ProjectManagerAgent","output_revision":"COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47","phase":"completion_verification","record_id":"WR-20260807-075208-TASK-P1-T01-COMPLETION-PASSED","render_digest":"6ddd88186f47a2b89ff11dc9d61ba3d2bf32c25ad3b00fc0e5257d90bb7da8c3","schema_version":4,"scope":"验证 TASK-P1-T01 全流程完成与可合并性","source":"long_task.py finish-attempt","state_change":"TASK-P1-T01-COMPLETION: RUNNING → PASSED","status":"PASSED","summary":"Canonical Code Review I008 与 Testing I009 均已通过；long_task/risk/evidence/acceptance 四层校验 PASSED；开放 P0/P1=0；临时导出 workflow 已删除；相对 reviewed head 75559ecc 无 project_doc 之外的差异、无生产 Java 新变化，reviewed P0 run 31148550742 的 core-verify/mysql-it 均成功。","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-T01-COMPLETION","task_type":"completion_verification","timestamp":"2026-08-07T07:52:08+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 1 项","version":"V_1.0"} -->
-## WR-20260807-075208-TASK-P1-T01-COMPLETION-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T07:52:08+00:00 |
-| 执行 Agent | CompletionVerificationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | 验证 TASK-P1-T01 全流程完成与可合并性 |
-| 阶段 | completion_verification |
-| 任务类型 | completion_verification |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | Canonical Code Review I008 与 Testing I009 均已通过；long_task/risk/evidence/acceptance 四层校验 PASSED；开放 P0/P1=0；临时导出 workflow 已删除；相对 reviewed head 75559ecc 无 project_doc 之外的差异、无生产 Java 新变化，reviewed P0 run 31148550742 的 core-verify/mysql-it 均成功。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P1-T01-COMPLETION: RUNNING → PASSED |
-| Task | TASK-P1-T01-COMPLETION |
-| Attempt | ATTEMPT-TASK-P1-T01-COMPLETION-I009-A001 |
-| Iteration | ITER-P1-COMPILER-F01-COMPLETION-VERIFICATION-009 / 9 |
-| 输入 Revision | 1468c51497e4e57e488dd59112f96246d8a75611910d2bf1481152aaa26c320e |
-| 输出 Revision | COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
-| StageOutcome | 无 |
-| Evidence | EVD-000374、EVD-000375、EVD-000376、EVD-000377 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 发布并 finalize Completion I009，随后同步人工 Stage Closure 视图并提交 PR #31 最终 machine-state 变更。 |
-
-### 变更摘要
-
-- Canonical Code Review I008 与 Testing I009 均已通过；long_task/risk/evidence/acceptance 四层校验 PASSED；开放 P0/P1=0；临时导出 workflow 已删除；相对 reviewed head 75559ecc 无 project_doc 之外的差异、无生产 Java 新变化，reviewed P0 run 31148550742 的 core-verify/mysql-it 均成功。
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 4 项；命令 Evidence 1 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-POST-CLOSURE-FACT-SYNC-20260807","event_type":"FACT_SYNC_COMPLETED","execution_mode":"standard / sequential","input_revision":"COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47","modified_files_summary":["project_process.md, work.md, requirement_list.md, handoff.md, resume_context.md, TASK-P1-STAGE-CLOSURE.md, TASK-P1-POST-CLOSURE-FACT-SYNC.md"],"next_action":"PR #31 final P0 validation, then human Review / Merge decision","next_agent":"ProjectManagerAgent","output_revision":"FACTSYNC-P1-R01@06e70cbb9fd8","phase":"completion_verification","record_id":"WR-20260807-120600-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED","render_digest":"60ebf335e5c5c35191d15692342bf1ab052fde18a551a6b0aa563f4eae11cff3","schema_version":4,"scope":"P1 post-closure projection synchronization","source":"$common-develop post-closure fact sync","stage_outcome_refs":["SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009"],"state_change":"projection facts stale -> synced to completed P1 Stage Closure","status":"PASSED","summary":"同步 project_process/work/requirement_list/handoff/resume/Stage Closure 发布后事实，不重开 canonical lifecycle revision","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-POST-CLOSURE-FACT-SYNC","task_type":"post_closure_fact_sync","timestamp":"2026-08-07T12:06:00+00:00","validation_summary":"pending final common-develop validation and post-sync P0","version":"V_1.0"} -->
-## WR-20260807-120600-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T12:06:00+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | $common-develop post-closure fact sync |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | P1 post-closure projection synchronization |
-| 阶段 | completion_verification |
-| 任务类型 | post_closure_fact_sync |
-| 事件类型 | FACT_SYNC_COMPLETED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | 同步 project_process/work/requirement_list/handoff/resume/Stage Closure 发布后事实，不重开 canonical lifecycle revision |
-| 状态 | PASSED |
-| 状态变更 | projection facts stale -> synced to completed P1 Stage Closure |
-| Task | TASK-P1-POST-CLOSURE-FACT-SYNC |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | COMPLETION-P1-STAGE-CLOSURE-R01@75559ecc2e47 |
-| 输出 Revision | FACTSYNC-P1-R01@06e70cbb9fd8 |
-| StageOutcome | SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | PR #31 final P0 validation, then human Review / Merge decision |
-
-### 变更摘要
-
-- 同步 project_process/work/requirement_list/handoff/resume/Stage Closure 发布后事实，不重开 canonical lifecycle revision
-
-### 文件变更摘要
-
-- `project_process.md, work.md, requirement_list.md, handoff.md, resume_context.md, TASK-P1-STAGE-CLOSURE.md, TASK-P1-POST-CLOSURE-FACT-SYNC.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | pending final common-develop validation and post-sync P0 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"EVENT-P1-POST-CLOSURE-FACT-SYNC-VALIDATED-20260807","event_type":"FACT_SYNC_VALIDATED","execution_mode":"standard / sequential","input_revision":"FACTSYNC-P1-R01@06e70cbb9fd8","modified_files_summary":["projection facts and task_state work-mode digest only; no production code"],"next_action":"publish to existing PR #31, run new Head P0, then human Review / Merge decision","next_agent":"ProjectManagerAgent","output_revision":"FACTSYNC-P1-R01@06e70cbb9fd8","phase":"completion_verification","record_id":"WR-20260807-120701-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED","render_digest":"d9a5e2b514f53de45edb619ae026223bf92faba3a50c82010eae71293cafd9fe","schema_version":4,"scope":"P1 post-closure projection synchronization","source":"$common-develop post-closure fact sync validation","stage_outcome_refs":["SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009"],"status":"PASSED","summary":"Post-closure Fact Sync 本地 common-develop 校验全部通过","target_id":"P1-COMPILER-F01","task_id":"TASK-P1-POST-CLOSURE-FACT-SYNC","task_type":"post_closure_fact_sync","timestamp":"2026-08-07T12:07:01+00:00","validation_summary":"long_task=OK; work_record=PASSED; risk=PASSED; evidence=PASSED(238); acceptance=PASSED(76); git diff --check=PASSED","version":"V_1.0"} -->
-## WR-20260807-120701-TASK-P1-POST-CLOSURE-FACT-SYNC-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T12:07:01+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | $common-develop post-closure fact sync validation |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | P1 post-closure projection synchronization |
-| 阶段 | completion_verification |
-| 任务类型 | post_closure_fact_sync |
-| 事件类型 | FACT_SYNC_VALIDATED |
-| 执行模式 | standard / sequential |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | Post-closure Fact Sync 本地 common-develop 校验全部通过 |
-| 状态 | PASSED |
-| 状态变更 | 未登记 |
-| Task | TASK-P1-POST-CLOSURE-FACT-SYNC |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | FACTSYNC-P1-R01@06e70cbb9fd8 |
-| 输出 Revision | FACTSYNC-P1-R01@06e70cbb9fd8 |
-| StageOutcome | SO-P1-COMPILER-F01-COMPLETION_VERIFICATION-I009 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | publish to existing PR #31, run new Head P0, then human Review / Merge decision |
-
-### 变更摘要
-
-- Post-closure Fact Sync 本地 common-develop 校验全部通过
-
-### 文件变更摘要
-
-- `projection facts and task_state work-mode digest only; no production code`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | long_task=OK; work_record=PASSED; risk=PASSED; evidence=PASSED(238); acceptance=PASSED(76); git diff --check=PASSED |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"IncrementalArchiveAgent","event_id":"WR-P1-ARCHIVE-001","event_type":"ARCHIVE_COMPLETED","execution_mode":"SEQUENTIAL","modified_files_summary":["project-level COMPILER business model/module/requirements/flow facts and archive manifest."],"next_action":"Submit archive changes to a new PR targeting dev_all.","next_agent":"ProjectManagerAgent","output_revision":"BM-R05@4ecb1f8c09f4","record_id":"WR-20260807-125045-P1-COMPILER-F01-PASSED","render_digest":"0947dfca645ac0448a75bdb13e220e91022e76a673999a0b60bc9a4c04593df4","schema_version":4,"scope":"P1","source":"common-develop-wk-d","state_change":"PASSED/MERGED -> PASSED/MERGED/ARCHIVED","status":"PASSED","summary":"P1 post-merge incremental archive completed.","target_id":"P1-COMPILER-F01","task_type":"incremental_archive","timestamp":"2026-08-07T12:50:45+00:00","validation_summary":"merge_docs archive applied; immediate validate returned zero pending increments.","version":"V_1.0"} -->
-## WR-20260807-125045-P1-COMPILER-F01-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T12:50:45+00:00 |
-| 执行 Agent | IncrementalArchiveAgent |
-| 命令或来源 | common-develop-wk-d |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | P1 |
-| 阶段 | 无 / 未登记 |
-| 任务类型 | incremental_archive |
-| 事件类型 | ARCHIVE_COMPLETED |
-| 执行模式 | SEQUENTIAL |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | P1 post-merge incremental archive completed. |
-| 状态 | PASSED |
-| 状态变更 | PASSED/MERGED -> PASSED/MERGED/ARCHIVED |
-| Task | 无 / 未登记 |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | 无 / 未登记 |
-| 输出 Revision | BM-R05@4ecb1f8c09f4 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | Submit archive changes to a new PR targeting dev_all. |
-
-### 变更摘要
-
-- P1 post-merge incremental archive completed.
-
-### 文件变更摘要
-
-- `project-level COMPILER business model/module/requirements/flow facts and archive manifest.`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | merge_docs archive applied; immediate validate returned zero pending increments. |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"WR-P1-ARCHIVE-VALIDATED-001","event_type":"ARCHIVE_VALIDATED","execution_mode":"SEQUENTIAL","modified_files_summary":["P1 archive artifacts and post-merge status projections."],"next_action":"Publish one archive commit and open a PR targeting dev_all.","next_agent":"ProjectManagerAgent","output_revision":"BM-R05@4ecb1f8c09f4","record_id":"WR-20260807-125254-P1-COMPILER-F01-PASSED","render_digest":"ffa04719ddcec885a7238ef004896014a985097c2f2247e31c3b81dc17944c30","schema_version":4,"scope":"P1","source":"common-develop-wk-d","status":"PASSED","summary":"P1 archive and post-archive fact projection validation passed.","target_id":"P1-COMPILER-F01","task_type":"incremental_archive","timestamp":"2026-08-07T12:52:54+00:00","validation_summary":"long-task PASSED; work-record PASSED; merge_docs zero pending; diff scope project_doc only; BM-R05 and module refs validated.","version":"V_1.0"} -->
-## WR-20260807-125254-P1-COMPILER-F01-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T12:52:54+00:00 |
-| 执行 Agent | ProjectManagerAgent |
-| 命令或来源 | common-develop-wk-d |
-| 版本 | V_1.0 |
-| 目标 | P1-COMPILER-F01 |
-| 范围 | P1 |
-| 阶段 | 无 / 未登记 |
-| 任务类型 | incremental_archive |
-| 事件类型 | ARCHIVE_VALIDATED |
-| 执行模式 | SEQUENTIAL |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | P1 archive and post-archive fact projection validation passed. |
-| 状态 | PASSED |
-| 状态变更 | 未登记 |
-| Task | 无 / 未登记 |
-| Attempt | 无 / 未登记 |
-| Iteration | 无 / 0 |
-| 输入 Revision | 无 / 未登记 |
-| 输出 Revision | BM-R05@4ecb1f8c09f4 |
-| StageOutcome | 无 |
-| Evidence | 无 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | ProjectManagerAgent |
-| 后续事项 | Publish one archive commit and open a PR targeting dev_all. |
-
-### 变更摘要
-
-- P1 archive and post-archive fact projection validation passed.
-
-### 文件变更摘要
-
-- `P1 archive artifacts and post-merge status projections.`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | long-task PASSED; work-record PASSED; merge_docs zero pending; diff scope project_doc only; BM-R05 and module refs validated. |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P2-REQCONF-001-I001-A001","event_id":"EVENT-ATTEMPT-TASK-P2-REQCONF-001-I001-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000001"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-001","iteration_no":1,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md"],"next_action":"发布 REQCONF-P2-R01 并由 RequirementAnalysisAgent、TestDesignAgent 独立 Review","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-P2-R01@001604ced8af","phase":"requirement_confirmation","record_id":"WR-20260807-160538-TASK-P2-REQCONF-001-PASSED","render_digest":"3961f0762d0cb2b3685ee871ef88c54a9abd0598538261e88b41467b694949ce","schema_version":4,"scope":"确认 P2 System 与 RuleView 归属需求边界","source":"long_task.py finish-attempt","state_change":"TASK-P2-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"P2 requirement_confirmation 候选 Revision 已冻结：System 一等实体、RuleView (system,name)、model-access 最小权限/WRITE 默认拒绝、失败恢复语义和 P2/P3-P8 边界均已明确，confirmation validator 通过。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-08-07T16:05:38+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 2 项","version":"V_1.0"} -->
-## WR-20260807-160538-TASK-P2-REQCONF-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T16:05:38+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
+| 时间 | 2026-08-17T15:10:11+00:00 |
+| 执行 Agent | DesignAgent |
 | 命令或来源 | long_task.py finish-attempt |
 | 版本 | V_1.0 |
 | 目标 | FEATURE-DESC-3361AD2E54FC |
-| 范围 | 确认 P2 System 与 RuleView 归属需求边界 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
+| 范围 | 冻结 P2 MODEL authority boundary 与 exact Context provenance remediation Design |
+| 阶段 | design |
+| 任务类型 | design |
 | 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
 
 ### 执行结果与追踪
 
 | 字段 | 内容 |
 |---|---|
-| 本次结论 | P2 requirement_confirmation 候选 Revision 已冻结：System 一等实体、RuleView (system,name)、model-access 最小权限/WRITE 默认拒绝、失败恢复语义和 P2/P3-P8 边界均已明确，confirmation validator 通过。 |
+| 本次结论 | DESIGN-P2-R32 freezes Guard-minted opaque authority, raw MODEL effect closure, exact EngineContext binding and fail-closed sequencing for P2-CR-001/P2-CR-002. |
 | 状态 | PASSED |
-| 状态变更 | TASK-P2-REQCONF-001: RUNNING → PASSED |
-| Task | TASK-P2-REQCONF-001 |
-| Attempt | ATTEMPT-TASK-P2-REQCONF-001-I001-A001 |
-| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-001 / 1 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-P2-R01@001604ced8af |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I005-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-005 / 5 |
+| 输入 Revision | BM-R20 |
+| 输出 Revision | DESIGN-P2-R32 |
 | StageOutcome | 无 |
-| Evidence | EVD-000001 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementAnalysisAgent |
-| 后续事项 | 发布 REQCONF-P2-R01 并由 RequirementAnalysisAgent、TestDesignAgent 独立 Review |
-
-### 变更摘要
-
-- P2 requirement_confirmation 候选 Revision 已冻结：System 一等实体、RuleView (system,name)、model-access 最小权限/WRITE 默认拒绝、失败恢复语义和 P2/P3-P8 边界均已明确，confirmation validator 通过。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementConfirmationAgent","attempt_id":"ATTEMPT-TASK-P2-REQCONF-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P2-REQCONF-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000009"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-002","iteration_no":2,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md"],"next_action":"发布 R02 并对同一 Revision 重新执行 RequirementAnalysisAgent / TestDesignAgent 独立 Review","next_agent":"RequirementAnalysisAgent","output_revision":"REQCONF-P2-R02@ef30059b327d","phase":"requirement_confirmation","record_id":"WR-20260807-161236-TASK-P2-REQCONF-001-PASSED","render_digest":"11300bb395b97813087efea78c501a0a03491b97ba8cb1634b744034a183ba9b","schema_version":4,"scope":"确认 P2 System 与 RuleView 归属需求边界","source":"long_task.py finish-attempt","state_change":"TASK-P2-REQCONF-001: RUNNING → PASSED","status":"PASSED","summary":"REQCONF-P2-R02 仅规范化模板 Markdown 行尾；P2 固定目标与 R01 完全一致，confirmation validator 与 long-task validator 通过。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-REQCONF-001","task_type":"requirement_confirmation","timestamp":"2026-08-07T16:12:36+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 2 项","version":"V_1.0"} -->
-## WR-20260807-161236-TASK-P2-REQCONF-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T16:12:36+00:00 |
-| 执行 Agent | RequirementConfirmationAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | FEATURE-DESC-3361AD2E54FC |
-| 范围 | 确认 P2 System 与 RuleView 归属需求边界 |
-| 阶段 | requirement_confirmation |
-| 任务类型 | requirement_confirmation |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | REQCONF-P2-R02 仅规范化模板 Markdown 行尾；P2 固定目标与 R01 完全一致，confirmation validator 与 long-task validator 通过。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P2-REQCONF-001: RUNNING → PASSED |
-| Task | TASK-P2-REQCONF-001 |
-| Attempt | ATTEMPT-TASK-P2-REQCONF-001-I002-A001 |
-| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-CONFIRMATION-002 / 2 |
-| 输入 Revision | 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a |
-| 输出 Revision | REQCONF-P2-R02@ef30059b327d |
-| StageOutcome | 无 |
-| Evidence | EVD-000009 |
-| Review | 无 |
-| 开放问题 | 无 |
-| Git 检查点 | 无 |
-| 下一 Agent | RequirementAnalysisAgent |
-| 后续事项 | 发布 R02 并对同一 Revision 重新执行 RequirementAnalysisAgent / TestDesignAgent 独立 Review |
-
-### 变更摘要
-
-- REQCONF-P2-R02 仅规范化模板 Markdown 行尾；P2 固定目标与 R01 完全一致，confirmation validator 与 long-task validator 通过。
-
-### 文件变更摘要
-
-- `version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md`
-
-### SQL、验证与阻塞
-
-| 项目 | 内容 |
-|---|---|
-| SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
-| 问题与阻塞 | 无 |
-
-<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P2-REQAN-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P2-REQAN-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000015","EVD-000016"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"REQCONF-P2-R02@ef30059b327d","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-ANALYSIS-002","iteration_no":2,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md","version/V_1.0/doc/_flows/COMPILER/changes/002-p2-system-ruleview-access.yaml","version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md","version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"],"next_action":"发布 REQAN-P2-R01 候选并进行五项独立 Review","next_agent":"ProjectManagerAgent","output_revision":"REQAN-P2-R01@d08612768131","phase":"requirement_analysis","record_id":"WR-20260807-162632-TASK-P2-REQAN-001-PASSED","render_digest":"65c8b21ecc2b5e8a3aa00c9e1e0999b872dd0d453f54e9b0f81d94f2c67c9565","schema_version":4,"scope":"分析 P2 System、RuleView 与 model-access 业务语义","source":"long_task.py finish-attempt","state_change":"TASK-P2-REQAN-001: RUNNING → PASSED","status":"PASSED","summary":"P2 需求分析 R01 已完成：20 BR、4 CR、10 AC、10 trace；复用 FLOW-CONFIG-COMPILE 并声明 impact/cross-module 条件 Review。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-REQAN-001","task_type":"requirement_analysis","timestamp":"2026-08-07T16:26:32+00:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 3 项","version":"V_1.0"} -->
-## WR-20260807-162632-TASK-P2-REQAN-001-PASSED
-
-### 基本信息
-
-| 字段 | 内容 |
-|---|---|
-| 时间 | 2026-08-07T16:26:32+00:00 |
-| 执行 Agent | RequirementAnalysisAgent |
-| 命令或来源 | long_task.py finish-attempt |
-| 版本 | V_1.0 |
-| 目标 | FEATURE-DESC-3361AD2E54FC |
-| 范围 | 分析 P2 System、RuleView 与 model-access 业务语义 |
-| 阶段 | requirement_analysis |
-| 任务类型 | requirement_analysis |
-| 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
-
-### 执行结果与追踪
-
-| 字段 | 内容 |
-|---|---|
-| 本次结论 | P2 需求分析 R01 已完成：20 BR、4 CR、10 AC、10 trace；复用 FLOW-CONFIG-COMPILE 并声明 impact/cross-module 条件 Review。 |
-| 状态 | PASSED |
-| 状态变更 | TASK-P2-REQAN-001: RUNNING → PASSED |
-| Task | TASK-P2-REQAN-001 |
-| Attempt | ATTEMPT-TASK-P2-REQAN-001-I002-A001 |
-| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-REQUIREMENT-ANALYSIS-002 / 2 |
-| 输入 Revision | REQCONF-P2-R02@ef30059b327d |
-| 输出 Revision | REQAN-P2-R01@d08612768131 |
-| StageOutcome | 无 |
-| Evidence | EVD-000015、EVD-000016 |
+| Evidence | EVD-000318、EVD-000319、EVD-000320、EVD-000321 |
 | Review | 无 |
 | 开放问题 | 无 |
 | Git 检查点 | 无 |
 | 下一 Agent | ProjectManagerAgent |
-| 后续事项 | 发布 REQAN-P2-R01 候选并进行五项独立 Review |
+| 后续事项 | Publish DESIGN-P2-R32 and run independent Design Review. |
 
 ### 变更摘要
 
-- P2 需求分析 R01 已完成：20 BR、4 CR、10 AC、10 trace；复用 FLOW-CONFIG-COMPILE 并声明 impact/cross-module 条件 Review。
+- DESIGN-P2-R32 freezes Guard-minted opaque authority, raw MODEL effect closure, exact EngineContext binding and fail-closed sequencing for P2-CR-001/P2-CR-002.
 
 ### 文件变更摘要
 
-- `version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md`
-- `version/V_1.0/doc/_flows/COMPILER/changes/002-p2-system-ruleview-access.yaml`
-- `version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md`
-- `version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md`
+- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_design_security_authority_overlay_r32.md`
+- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_api_contract_security_authority_overlay_r32.md`
+- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_test_seams_security_authority_overlay_r32.md`
+- `project_doc/version/V_1.0/doc/COMPILER/changes/p2-security-authority-remediation-r32.md`
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md`
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md`
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/p2_security_authority_independent_review_20260817_r01.json`
 
 ### SQL、验证与阻塞
 
 | 项目 | 内容 |
 |---|---|
 | SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 3 项 |
+| 测试与验证 | 登记 Evidence 4 项；命令 Evidence 2 项 |
 | 问题与阻塞 | 无 |
 
-<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P2-BMODEL-001-I002-A001","event_id":"EVENT-ATTEMPT-TASK-P2-BMODEL-001-I002-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000028","EVD-000029","EVD-000030","EVD-000031","EVD-000032","EVD-000033","EVD-000034","EVD-000035"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"REQAN-P2-R01@d08612768131","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002","iteration_no":2,"modified_files_summary":["project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml","project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.md","project_doc/version/V_1.0/doc/COMPILER/changes/p2-system-ruleview-business-model.yaml","project_doc/docs/_relations/dependency_impact.yaml","project_doc/docs/_relations/dependency_graph.md","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"],"next_action":"冻结 BM-R06 并执行同 Revision 六项独立 Review。","next_agent":"RequirementReviewAgent","output_revision":"BM-R06@6a0bce4fa0ae","phase":"business_model","record_id":"WR-20260807-164817-TASK-P2-BMODEL-001-PASSED","render_digest":"8a66df4712f604df4ff46412577e26115d71f5b60735845ddf5f23468642f61b","schema_version":4,"scope":"建立 P2 System、RuleView 与 model-access 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P2-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"BM-R06 候选完成：System 一等实体、RuleView composite identity、ModelPath 与静态/动态 model-access fail-closed 语义；P2 dependency impact/CMI/trace 同步。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-BMODEL-001","task_type":"business_model","timestamp":"2026-08-07T16:48:17+00:00","validation_summary":"登记 Evidence 8 项；命令 Evidence 3 项","version":"V_1.0"} -->
-## WR-20260807-164817-TASK-P2-BMODEL-001-PASSED
+<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000334","EVD-000335","EVD-000336","EVD-000337","EVD-000338"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"DESIGN-P2-R32","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-007","iteration_no":7,"modified_files_summary":["project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r07_security_authority_remediation.md","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"],"next_action":"Publish TESTDESIGN-P2-R34 and run independent Requirement/TestEvidence reviews.","next_agent":"ProjectManagerAgent","output_revision":"TESTDESIGN-P2-R34","phase":"test_design","record_id":"WR-20260817-152652-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED","render_digest":"8886e8f3451156a06a0ada9b8e9c1ec5a07cbbe08131292251b79d709663ebf8","schema_version":4,"scope":"形成 P2 authority/provenance remediation TestDesign 与真实 RED 计划","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"TESTDESIGN-P2-R34 freezes reproducible P0 raw-effect bypass and P1 same-plan cross-context RED/GREEN oracles, zero-side-effect assertions and preserved READ/WRITE regression; mandatory failing test executions remain Development pre-production gates.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION","task_type":"test_design","timestamp":"2026-08-17T15:26:52+00:00","validation_summary":"登记 Evidence 5 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260817-152652-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-| 时间 | 2026-08-07T16:48:17+00:00 |
-| 执行 Agent | BusinessModelAgent |
+| 时间 | 2026-08-17T15:26:52+00:00 |
+| 执行 Agent | TestDesignAgent |
 | 命令或来源 | long_task.py finish-attempt |
 | 版本 | V_1.0 |
 | 目标 | FEATURE-DESC-3361AD2E54FC |
-| 范围 | 建立 P2 System、RuleView 与 model-access 业务模型 |
-| 阶段 | business_model |
-| 任务类型 | business_model |
+| 范围 | 形成 P2 authority/provenance remediation TestDesign 与真实 RED 计划 |
+| 阶段 | test_design |
+| 任务类型 | test_design |
 | 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
 
 ### 执行结果与追踪
 
 | 字段 | 内容 |
 |---|---|
-| 本次结论 | BM-R06 候选完成：System 一等实体、RuleView composite identity、ModelPath 与静态/动态 model-access fail-closed 语义；P2 dependency impact/CMI/trace 同步。 |
+| 本次结论 | TESTDESIGN-P2-R34 freezes reproducible P0 raw-effect bypass and P1 same-plan cross-context RED/GREEN oracles, zero-side-effect assertions and preserved READ/WRITE regression; mandatory failing test executions remain Development pre-production gates. |
 | 状态 | PASSED |
-| 状态变更 | TASK-P2-BMODEL-001: RUNNING → PASSED |
-| Task | TASK-P2-BMODEL-001 |
-| Attempt | ATTEMPT-TASK-P2-BMODEL-001-I002-A001 |
-| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-002 / 2 |
-| 输入 Revision | REQAN-P2-R01@d08612768131 |
-| 输出 Revision | BM-R06@6a0bce4fa0ae |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I007-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-007 / 7 |
+| 输入 Revision | DESIGN-P2-R32 |
+| 输出 Revision | TESTDESIGN-P2-R34 |
 | StageOutcome | 无 |
-| Evidence | EVD-000028、EVD-000029、EVD-000030、EVD-000031、EVD-000032、EVD-000033、EVD-000034、EVD-000035 |
+| Evidence | EVD-000334、EVD-000335、EVD-000336、EVD-000337、EVD-000338 |
 | Review | 无 |
 | 开放问题 | 无 |
 | Git 检查点 | 无 |
-| 下一 Agent | RequirementReviewAgent |
-| 后续事项 | 冻结 BM-R06 并执行同 Revision 六项独立 Review。 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish TESTDESIGN-P2-R34 and run independent Requirement/TestEvidence reviews. |
 
 ### 变更摘要
 
-- BM-R06 候选完成：System 一等实体、RuleView composite identity、ModelPath 与静态/动态 model-access fail-closed 语义；P2 dependency impact/CMI/trace 同步。
+- TESTDESIGN-P2-R34 freezes reproducible P0 raw-effect bypass and P1 same-plan cross-context RED/GREEN oracles, zero-side-effect assertions and preserved READ/WRITE regression; mandatory failing test executions remain Development pre-production gates.
 
 ### 文件变更摘要
 
-- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml`
-- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_business_model.md`
-- `project_doc/version/V_1.0/doc/COMPILER/changes/p2-system-ruleview-business-model.yaml`
-- `project_doc/docs/_relations/dependency_impact.yaml`
-- `project_doc/docs/_relations/dependency_graph.md`
+- `project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r07_security_authority_remediation.md`
 - `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md`
 
 ### SQL、验证与阻塞
@@ -2571,66 +369,850 @@
 | 项目 | 内容 |
 |---|---|
 | SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 8 项；命令 Evidence 3 项 |
+| 测试与验证 | 登记 Evidence 5 项；命令 Evidence 3 项 |
 | 问题与阻塞 | 无 |
 
-<!-- work-record-meta: {"agent":"BusinessModelAgent","attempt_id":"ATTEMPT-TASK-P2-BMODEL-001-I003-A001","event_id":"EVENT-ATTEMPT-TASK-P2-BMODEL-001-I003-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000049","EVD-000050","EVD-000051","EVD-000052","EVD-000053","EVD-000054","EVD-000055","EVD-000056","EVD-000057","EVD-000058"],"execution_mode":"auto / architecture_review / git_checkpoint","input_revision":"REQAN-P2-R01@d08612768131","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003","iteration_no":3,"modified_files_summary":["version/V_1.0/doc/COMPILER/COMPILER_business_model.md","version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml","version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml","docs/_relations/dependency_impact.yaml","docs/_relations/dependency_graph.md","version/V_1.0/requirement_list.md"],"next_action":"冻结 BM-R07 并执行六项独立 Review","next_agent":"BusinessModelReviewAgent","output_revision":"BM-R07@7d7bf504ca9d","phase":"business_model","record_id":"WR-20260808-041244-TASK-P2-BMODEL-001-PASSED","render_digest":"819460fa3ba1cda1e6268244873a718caf3d8595a6d55f00238b44080bc19d64","schema_version":4,"scope":"建立 P2 System、RuleView 与 model-access 业务模型","source":"long_task.py finish-attempt","state_change":"TASK-P2-BMODEL-001: RUNNING → PASSED","status":"PASSED","summary":"BM-R07 candidate 完成：BM-R05 stable ID 全量继承、DEC_COMPILER→COMPILER lineage 显式化、完整 17 节 Markdown 恢复，并保持 BM-R06 P2 核心语义。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-BMODEL-001","task_type":"business_model","timestamp":"2026-08-08T04:12:44+00:00","validation_summary":"登记 Evidence 10 项；命令 Evidence 6 项","version":"V_1.0"} -->
-## WR-20260808-041244-TASK-P2-BMODEL-001-PASSED
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I006-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I006-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000342"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"BM-R20","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-006","iteration_no":6,"modified_files_summary":["project_doc/version/V_1.0/doc/COMPILER/COMPILER_design_security_authority_single_runtime_context_overlay_r33.md","project_doc/version/V_1.0/doc/COMPILER/COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md"],"next_action":"Publish DESIGN-P2-R33 and register Architecture/Requirement/TestDesign independent reviews.","next_agent":"ProjectManagerAgent","output_revision":"DESIGN-P2-R33","phase":"design","record_id":"WR-20260817-181645-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED","render_digest":"ea329b249e15c41e5b8caf7a274da24b4601154d9e6aa783411809c0cfb2a941","schema_version":4,"scope":"冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"DESIGN-P2-R33 preserves Guard/raw authority P0 remediation and freezes one immutable EngineContext per runtime generation; RuntimeContextBinding is superseded.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION","task_type":"design","timestamp":"2026-08-17T18:16:45+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260817-181645-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED
 
 ### 基本信息
 
 | 字段 | 内容 |
 |---|---|
-| 时间 | 2026-08-08T04:12:44+00:00 |
-| 执行 Agent | BusinessModelAgent |
+| 时间 | 2026-08-17T18:16:45+00:00 |
+| 执行 Agent | DesignAgent |
 | 命令或来源 | long_task.py finish-attempt |
 | 版本 | V_1.0 |
 | 目标 | FEATURE-DESC-3361AD2E54FC |
-| 范围 | 建立 P2 System、RuleView 与 model-access 业务模型 |
-| 阶段 | business_model |
-| 任务类型 | business_model |
+| 范围 | 冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design |
+| 阶段 | design |
+| 任务类型 | design |
 | 事件类型 | TASK_ATTEMPT_COMPLETED |
-| 执行模式 | auto / architecture_review / git_checkpoint |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
 
 ### 执行结果与追踪
 
 | 字段 | 内容 |
 |---|---|
-| 本次结论 | BM-R07 candidate 完成：BM-R05 stable ID 全量继承、DEC_COMPILER→COMPILER lineage 显式化、完整 17 节 Markdown 恢复，并保持 BM-R06 P2 核心语义。 |
+| 本次结论 | DESIGN-P2-R33 preserves Guard/raw authority P0 remediation and freezes one immutable EngineContext per runtime generation; RuntimeContextBinding is superseded. |
 | 状态 | PASSED |
-| 状态变更 | TASK-P2-BMODEL-001: RUNNING → PASSED |
-| Task | TASK-P2-BMODEL-001 |
-| Attempt | ATTEMPT-TASK-P2-BMODEL-001-I003-A001 |
-| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-BUSINESS-MODEL-003 / 3 |
-| 输入 Revision | REQAN-P2-R01@d08612768131 |
-| 输出 Revision | BM-R07@7d7bf504ca9d |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I006-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-006 / 6 |
+| 输入 Revision | BM-R20 |
+| 输出 Revision | DESIGN-P2-R33 |
 | StageOutcome | 无 |
-| Evidence | EVD-000049、EVD-000050、EVD-000051、EVD-000052、EVD-000053、EVD-000054、EVD-000055、EVD-000056、EVD-000057、EVD-000058 |
+| Evidence | EVD-000342 |
 | Review | 无 |
 | 开放问题 | 无 |
 | Git 检查点 | 无 |
-| 下一 Agent | BusinessModelReviewAgent |
-| 后续事项 | 冻结 BM-R07 并执行六项独立 Review |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish DESIGN-P2-R33 and register Architecture/Requirement/TestDesign independent reviews. |
 
 ### 变更摘要
 
-- BM-R07 candidate 完成：BM-R05 stable ID 全量继承、DEC_COMPILER→COMPILER lineage 显式化、完整 17 节 Markdown 恢复，并保持 BM-R06 P2 核心语义。
+- DESIGN-P2-R33 preserves Guard/raw authority P0 remediation and freezes one immutable EngineContext per runtime generation; RuntimeContextBinding is superseded.
 
 ### 文件变更摘要
 
-- `version/V_1.0/doc/COMPILER/COMPILER_business_model.md`
-- `version/V_1.0/doc/COMPILER/COMPILER_business_model.yaml`
-- `version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml`
-- `docs/_relations/dependency_impact.yaml`
-- `docs/_relations/dependency_graph.md`
-- `version/V_1.0/requirement_list.md`
+- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_design_security_authority_single_runtime_context_overlay_r33.md`
+- `project_doc/version/V_1.0/doc/COMPILER/COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md`
 
 ### SQL、验证与阻塞
 
 | 项目 | 内容 |
 |---|---|
 | SQL 变更 | 无 / 未登记 |
-| 测试与验证 | 登记 Evidence 10 项；命令 Evidence 6 项 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I008-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I008-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000350"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"DESIGN-P2-R33","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-008","iteration_no":8,"modified_files_summary":["project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r10_single_runtime_context_security_remediation.md"],"next_action":"Publish TESTDESIGN-P2-R37 and register Requirement/TestEvidence reviews.","next_agent":"ProjectManagerAgent","output_revision":"TESTDESIGN-P2-R37","phase":"test_design","record_id":"WR-20260817-182455-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED","render_digest":"b16640f3bf2c07d97db8417f4477c47b2e6ea70c5a083a3fa65515c669b997d2","schema_version":4,"scope":"形成 P2 raw-authority remediation TestDesign 与 single-runtime lifecycle 验证","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"TESTDESIGN-P2-R37 freezes four genuine P0 REDs, retires superseded cross-context cases, and adds single-context/no-hot-reload/restart verification while retaining R36 RED→GREEN integrity.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION","task_type":"test_design","timestamp":"2026-08-17T18:24:55+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260817-182455-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-17T18:24:55+00:00 |
+| 执行 Agent | TestDesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 形成 P2 raw-authority remediation TestDesign 与 single-runtime lifecycle 验证 |
+| 阶段 | test_design |
+| 任务类型 | test_design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | TESTDESIGN-P2-R37 freezes four genuine P0 REDs, retires superseded cross-context cases, and adds single-context/no-hot-reload/restart verification while retaining R36 RED→GREEN integrity. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I008-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-008 / 8 |
+| 输入 Revision | DESIGN-P2-R33 |
+| 输出 Revision | TESTDESIGN-P2-R37 |
+| StageOutcome | 无 |
+| Evidence | EVD-000350 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish TESTDESIGN-P2-R37 and register Requirement/TestEvidence reviews. |
+
+### 变更摘要
+
+- TESTDESIGN-P2-R37 freezes four genuine P0 REDs, retires superseded cross-context cases, and adds single-context/no-hot-reload/restart verification while retaining R36 RED→GREEN integrity.
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r10_single_runtime_context_security_remediation.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ImplementationPlanAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I010-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I010-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000356"],"execution_mode":"auto / architecture_review / git_checkpoint / review_only","input_revision":"4cdd4229d653125bcb26fa80f9bdec0898eada2ab3f55703dc85281990fc0af9","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-010","iteration_no":10,"modified_files_summary":["project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_task_reviews.jsonl","project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"],"next_action":"Publish R06 and register canonical implementation-plan collaboration reviews.","next_agent":"ProjectManagerAgent","output_revision":"TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c","phase":"implementation_plan","record_id":"WR-20260818-053037-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-PASSED","render_digest":"73b1bce80f787676672ec9e6ebf689c1d623b44c6fe66797a4aa144fe1fc8103","schema_version":4,"scope":"冻结 P2 R33/R37 安全整改 Implementation Plan R06","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"R06 focused remediation plan is machine-valid and independently PASSED by all four task-plan reviewers.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION","task_type":"implementation_plan","timestamp":"2026-08-18T05:30:37+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260818-053037-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-18T05:30:37+00:00 |
+| 执行 Agent | ImplementationPlanAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 冻结 P2 R33/R37 安全整改 Implementation Plan R06 |
+| 阶段 | implementation_plan |
+| 任务类型 | implementation_plan |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / review_only |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | R06 focused remediation plan is machine-valid and independently PASSED by all four task-plan reviewers. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I010-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-010 / 10 |
+| 输入 Revision | 4cdd4229d653125bcb26fa80f9bdec0898eada2ab3f55703dc85281990fc0af9 |
+| 输出 Revision | TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c |
+| StageOutcome | 无 |
+| Evidence | EVD-000356 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish R06 and register canonical implementation-plan collaboration reviews. |
+
+### 变更摘要
+
+- R06 focused remediation plan is machine-valid and independently PASSED by all four task-plan reviewers.
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml`
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_task_reviews.jsonl`
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 3 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ImplementationPlanAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I011-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I011-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000365"],"execution_mode":"auto / architecture_review / git_checkpoint / git_push","input_revision":"4cdd4229d653125bcb26fa80f9bdec0898eada2ab3f55703dc85281990fc0af9","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-011","iteration_no":11,"modified_files_summary":["project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md"],"next_action":"Publish unchanged R06 with fresh projection evidence and perform independent revalidation reviews.","next_agent":"ProjectManagerAgent","output_revision":"TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c","phase":"implementation_plan","record_id":"WR-20260818-085801-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-PASSED","render_digest":"9aa7324d0463483ce88bcb3588dd85d978f9b83cd347609b8511c857d479d6fb","schema_version":4,"scope":"冻结 P2 R33/R37 安全整改 Implementation Plan R06","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"Projection-only remediation PASSED: unchanged canonical TP R06 is now represented by a Development I012 umbrella over the five development_tasks.yaml sub-tasks; exact frozen validation commands and diff check pass.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION","task_type":"implementation_plan","timestamp":"2026-08-18T08:58:01+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260818-085801-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-18T08:58:01+00:00 |
+| 执行 Agent | ImplementationPlanAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 冻结 P2 R33/R37 安全整改 Implementation Plan R06 |
+| 阶段 | implementation_plan |
+| 任务类型 | implementation_plan |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / git_push |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Projection-only remediation PASSED: unchanged canonical TP R06 is now represented by a Development I012 umbrella over the five development_tasks.yaml sub-tasks; exact frozen validation commands and diff check pass. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I011-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-011 / 11 |
+| 输入 Revision | 4cdd4229d653125bcb26fa80f9bdec0898eada2ab3f55703dc85281990fc0af9 |
+| 输出 Revision | TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c |
+| StageOutcome | 无 |
+| Evidence | EVD-000365 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish unchanged R06 with fresh projection evidence and perform independent revalidation reviews. |
+
+### 变更摘要
+
+- Projection-only remediation PASSED: unchanged canonical TP R06 is now represented by a Development I012 umbrella over the five development_tasks.yaml sub-tasks; exact frozen validation commands and diff check pass.
+
+### 文件变更摘要
+
+- `project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 3 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"WR-20260818-113924-TASK-P2-DEV-SECURITY-RED-EVIDENCE-PASSED","event_type":"DEVELOPMENT_SUBTASK_COMPLETED","evidence_ids":["EVD-000368","EVD-000369","EVD-000370","EVD-000371","EVD-000372","EVD-000373"],"execution_mode":"SEQUENTIAL","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012","iteration_no":12,"modified_files_summary":["test-only: P2SecurityAuthorityRemediationFixture.java + P2SecurityAuthorityRemediationTest.java; immutable evidence imports/snapshots; no src/main changes"],"next_action":"Task 4: rerun preflight then close P2-CR-001 raw/proofless authority bypass in production.","next_agent":"DevelopAgent","output_revision":"DEV-P2-R37-RED-R01@1b271dcae13a","phase":"development","record_id":"WR-20260818-113924-TASK-P2-DEV-SECURITY-RED-EVIDENCE-PASSED","render_digest":"1cbae466b4753b7676def2faf9dfc9bcd851399fe4d0b7a62124fcee446a58f8","schema_version":4,"scope":"P2-CR-001","source":"common-develop-auto-r06","status":"PASSED","summary":"Task 3 PASSED: four TESTDESIGN-P2-R37 genuine semantic REDs compile/discover on exact pre-fix PR36@6f02e085; WRITE bypass side effects are frozen and TestEvidenceReviewAgent audit PASSED.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-SECURITY-RED-EVIDENCE","task_type":"SECURITY_RED_EVIDENCE","timestamp":"2026-08-18T11:39:24+00:00","validation_summary":"preflight PASSED; exact reactor compile PASSED; targeted test produced 4 tests / 4 failures / 0 errors / 0 skipped; TestEvidenceReviewAgent audit PASSED","version":"V_1.0"} -->
+## WR-20260818-113924-TASK-P2-DEV-SECURITY-RED-EVIDENCE-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-18T11:39:24+00:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | common-develop-auto-r06 |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | P2-CR-001 |
+| 阶段 | development |
+| 任务类型 | SECURITY_RED_EVIDENCE |
+| 事件类型 | DEVELOPMENT_SUBTASK_COMPLETED |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Task 3 PASSED: four TESTDESIGN-P2-R37 genuine semantic REDs compile/discover on exact pre-fix PR36@6f02e085; WRITE bypass side effects are frozen and TestEvidenceReviewAgent audit PASSED. |
+| 状态 | PASSED |
+| 状态变更 | 未登记 |
+| Task | TASK-P2-DEV-SECURITY-RED-EVIDENCE |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012 / 12 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c |
+| 输出 Revision | DEV-P2-R37-RED-R01@1b271dcae13a |
+| StageOutcome | 无 |
+| Evidence | EVD-000368、EVD-000369、EVD-000370、EVD-000371、EVD-000372、EVD-000373 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | Task 4: rerun preflight then close P2-CR-001 raw/proofless authority bypass in production. |
+
+### 变更摘要
+
+- Task 3 PASSED: four TESTDESIGN-P2-R37 genuine semantic REDs compile/discover on exact pre-fix PR36@6f02e085; WRITE bypass side effects are frozen and TestEvidenceReviewAgent audit PASSED.
+
+### 文件变更摘要
+
+- `test-only: P2SecurityAuthorityRemediationFixture.java + P2SecurityAuthorityRemediationTest.java; immutable evidence imports/snapshots; no src/main changes`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | preflight PASSED; exact reactor compile PASSED; targeted test produced 4 tests / 4 failures / 0 errors / 0 skipped; TestEvidenceReviewAgent audit PASSED |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"WR-20260818-132439-TASK-P2-DEV-RAW-AUTHORITY-CLOSURE-PASSED","event_type":"DEVELOPMENT_SUBTASK_CHECKPOINT","evidence_ids":["EVD-000374","EVD-000375"],"execution_mode":"SEQUENTIAL","input_revision":"DEV-P2-R37-RED-R01@1b271dcae13a","iteration_id":"DEVELOPMENT-I012","iteration_no":12,"modified_files_summary":["10 production files in dec-core-model/dec-core-starter plus immutable Evidence and governance repair of legacy DIRECT evidence EVD-000271/272 to exact historical GIT_REF without digest/revision change."],"next_action":"Checkpoint task4 to PR36, record task5 superseded architecture item, then perform controlled four-case RED-to-GREEN adaptation.","next_agent":"DevelopAgent","output_revision":"DEV-P2-R37-AUTHORITY-R01@544155ef6a5b","phase":"development","record_id":"WR-20260818-132439-TASK-P2-DEV-RAW-AUTHORITY-CLOSURE-PASSED","render_digest":"37edb109cf68e0bae4ca481299adbae24dee73552fdcce58ba04e86fcb3c4161","schema_version":4,"scope":"TASK-P2-DEV-RAW-AUTHORITY-CLOSURE","source":"common-develop","status":"PASSED","summary":"P2-CR-001 raw/proofless authority closure implemented. Production scope no longer exposes a usable ordinary raw MODEL effect seam; ExactModelAccessGuard mints one-shot exact authorization consumed by the STARTER/MODEL bridge. Runner compile and 40 focused regressions passed.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-RAW-AUTHORITY-CLOSURE","task_type":"development","timestamp":"2026-08-18T13:24:39+00:00","validation_summary":"Run 32141152384: production compile PASSED; MODEL 6/6; STARTER 34/34; diff scope exactly 10 production files; long_task validate PASSED after deterministic risk refresh.","version":"V_1.0"} -->
+## WR-20260818-132439-TASK-P2-DEV-RAW-AUTHORITY-CLOSURE-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-18T13:24:39+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | common-develop |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | TASK-P2-DEV-RAW-AUTHORITY-CLOSURE |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | DEVELOPMENT_SUBTASK_CHECKPOINT |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P2-CR-001 raw/proofless authority closure implemented. Production scope no longer exposes a usable ordinary raw MODEL effect seam; ExactModelAccessGuard mints one-shot exact authorization consumed by the STARTER/MODEL bridge. Runner compile and 40 focused regressions passed. |
+| 状态 | PASSED |
+| 状态变更 | 未登记 |
+| Task | TASK-P2-DEV-RAW-AUTHORITY-CLOSURE |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | DEVELOPMENT-I012 / 12 |
+| 输入 Revision | DEV-P2-R37-RED-R01@1b271dcae13a |
+| 输出 Revision | DEV-P2-R37-AUTHORITY-R01@544155ef6a5b |
+| StageOutcome | 无 |
+| Evidence | EVD-000374、EVD-000375 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | Checkpoint task4 to PR36, record task5 superseded architecture item, then perform controlled four-case RED-to-GREEN adaptation. |
+
+### 变更摘要
+
+- P2-CR-001 raw/proofless authority closure implemented. Production scope no longer exposes a usable ordinary raw MODEL effect seam; ExactModelAccessGuard mints one-shot exact authorization consumed by the STARTER/MODEL bridge. Runner compile and 40 focused regressions passed.
+
+### 文件变更摘要
+
+- `10 production files in dec-core-model/dec-core-starter plus immutable Evidence and governance repair of legacy DIRECT evidence EVD-000271/272 to exact historical GIT_REF without digest/revision change.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | Run 32141152384: production compile PASSED; MODEL 6/6; STARTER 34/34; diff scope exactly 10 production files; long_task validate PASSED after deterministic risk refresh. |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"WR-20260818-134613-TASK-P2-DEV-P2CR002-SUPERSEDED-PASSED","event_type":"ARCHITECTURE_ITEM_SUPERSEDED","execution_mode":"SEQUENTIAL","input_revision":"DESIGN-P2-R33 / TESTDESIGN-P2-R37","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012","iteration_no":12,"modified_files_summary":["No production/test source changes. Only append-only work_record event for architecture supersession."],"next_action":"Proceed to TASK-P2-DEV-RED-GREEN-INTEGRITY using the four frozen R37 RED case IDs and controlled adaptation rules.","next_agent":"DevelopAgent","output_revision":"DEV-P2-R37-P2CR002-SUPERSEDED-R01@5a1d17ae546d","phase":"development","record_id":"WR-20260818-134613-TASK-P2-DEV-P2CR002-SUPERSEDED-PASSED","render_digest":"a3928b72e6560ab3310121f534ea470ae1ab4fcfd64dbf1b18614b86291fa4a8","schema_version":4,"scope":"P2-CR-002 same-plan cross-context provenance / RuntimeContextBinding implementation","source":"DEC-P2-SINGLE-RUNTIME-CONTEXT-001 / DESIGN-P2-R33","sql_change_summary":"None.","state_change":"P2-CR-002: ACTIVE/PLANNED historical item -> SUPERSEDED_BY_ARCH_DECISION; implementation obligation removed.","status":"PASSED","summary":"P2-CR-002 implementation is formally SUPERSEDED_BY_ARCH_DECISION. DEC-P2-SINGLE-RUNTIME-CONTEXT-001 makes same-plan cross-EngineContext coexistence/live replacement unsupported for current P2; RuntimeContextBinding must not be implemented or propagated.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-P2CR002-SUPERSEDED","task_type":"architecture_supersession","timestamp":"2026-08-18T13:46:13+00:00","validation_summary":"Design authority DESIGN-P2-R33 explicitly marks P2-CR-002 SUPERSEDED_BY_ARCH_DECISION and forbids RuntimeContextBinding; grep confirms current task4 production checkpoint introduced no RuntimeContextBinding implementation.","version":"V_1.0"} -->
+## WR-20260818-134613-TASK-P2-DEV-P2CR002-SUPERSEDED-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-18T13:46:13+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | DEC-P2-SINGLE-RUNTIME-CONTEXT-001 / DESIGN-P2-R33 |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | P2-CR-002 same-plan cross-context provenance / RuntimeContextBinding implementation |
+| 阶段 | development |
+| 任务类型 | architecture_supersession |
+| 事件类型 | ARCHITECTURE_ITEM_SUPERSEDED |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P2-CR-002 implementation is formally SUPERSEDED_BY_ARCH_DECISION. DEC-P2-SINGLE-RUNTIME-CONTEXT-001 makes same-plan cross-EngineContext coexistence/live replacement unsupported for current P2; RuntimeContextBinding must not be implemented or propagated. |
+| 状态 | PASSED |
+| 状态变更 | P2-CR-002: ACTIVE/PLANNED historical item -> SUPERSEDED_BY_ARCH_DECISION; implementation obligation removed. |
+| Task | TASK-P2-DEV-P2CR002-SUPERSEDED |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012 / 12 |
+| 输入 Revision | DESIGN-P2-R33 / TESTDESIGN-P2-R37 |
+| 输出 Revision | DEV-P2-R37-P2CR002-SUPERSEDED-R01@5a1d17ae546d |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | Proceed to TASK-P2-DEV-RED-GREEN-INTEGRITY using the four frozen R37 RED case IDs and controlled adaptation rules. |
+
+### 变更摘要
+
+- P2-CR-002 implementation is formally SUPERSEDED_BY_ARCH_DECISION. DEC-P2-SINGLE-RUNTIME-CONTEXT-001 makes same-plan cross-EngineContext coexistence/live replacement unsupported for current P2; RuntimeContextBinding must not be implemented or propagated.
+
+### 文件变更摘要
+
+- `No production/test source changes. Only append-only work_record event for architecture supersession.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | None. |
+| 测试与验证 | Design authority DESIGN-P2-R33 explicitly marks P2-CR-002 SUPERSEDED_BY_ARCH_DECISION and forbids RuntimeContextBinding; grep confirms current task4 production checkpoint introduced no RuntimeContextBinding implementation. |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"WR-20260818-140116-TASK-P2-DEV-RED-GREEN-INTEGRITY-PASSED","event_type":"DEVELOPMENT_SUBTASK_CHECKPOINT_READY","execution_mode":"SEQUENTIAL","input_revision":"DEV-P2-R37-RED-R01@1b271dcae13a + DEV-P2-R37-AUTHORITY-R01@544155ef6a5b","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012","iteration_no":12,"modified_files_summary":["Test-only controlled adaptation: P2SecurityAuthorityRemediationTest.java updated; P2SecurityAuthorityGreenFixture.java added. No production source changes."],"next_action":"Proceed to single-runtime-context lifecycle and authority GREEN_ONLY verification.","next_agent":"DevelopAgent","output_revision":"DEV-P2-R37-RED-GREEN-R01@aa99a6bd4081","phase":"development","record_id":"WR-20260818-140116-TASK-P2-DEV-RED-GREEN-INTEGRITY-PASSED","render_digest":"fec3468655e65f37be14f4b60e3fb0f2c590dc2cfa7cc3cc0a9299650dfb5187","schema_version":4,"scope":"TASK-P2-DEV-RED-GREEN-INTEGRITY","source":"TESTDESIGN-P2-R37 / TASK-P2-DEV-RED-GREEN-INTEGRITY","sql_change_summary":"None.","state_change":"TASK-P2-DEV-RED-GREEN-INTEGRITY -> PASSED; RED/GREEN continuity and zero-side-effect denial are frozen.","status":"PASSED","summary":"Four frozen R37 MANDATORY_RED case IDs are GREEN after task4 authority closure. Controlled adaptation preserves frozen RED Evidence and semantic oracle; 4/4 GREEN plus 17 existing authority/one-shot regressions passed.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-RED-GREEN-INTEGRITY","task_type":"red_green_integrity","timestamp":"2026-08-18T14:01:16+00:00","validation_summary":"GitHub Actions run 32145323918: exact compile PASSED; P2SecurityAuthorityRemediationTest 4/4 GREEN; ProtectedRuntimeModelAdapterIntegrationTest + ProtectedAccessConcurrencyTest + ProtectedWriteIntentResolutionTest 17/17 PASSED; TestEvidenceReviewAgent PASSED.","version":"V_1.0"} -->
+## WR-20260818-140116-TASK-P2-DEV-RED-GREEN-INTEGRITY-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-18T14:01:16+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | TESTDESIGN-P2-R37 / TASK-P2-DEV-RED-GREEN-INTEGRITY |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | TASK-P2-DEV-RED-GREEN-INTEGRITY |
+| 阶段 | development |
+| 任务类型 | red_green_integrity |
+| 事件类型 | DEVELOPMENT_SUBTASK_CHECKPOINT_READY |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Four frozen R37 MANDATORY_RED case IDs are GREEN after task4 authority closure. Controlled adaptation preserves frozen RED Evidence and semantic oracle; 4/4 GREEN plus 17 existing authority/one-shot regressions passed. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-DEV-RED-GREEN-INTEGRITY -> PASSED; RED/GREEN continuity and zero-side-effect denial are frozen. |
+| Task | TASK-P2-DEV-RED-GREEN-INTEGRITY |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012 / 12 |
+| 输入 Revision | DEV-P2-R37-RED-R01@1b271dcae13a + DEV-P2-R37-AUTHORITY-R01@544155ef6a5b |
+| 输出 Revision | DEV-P2-R37-RED-GREEN-R01@aa99a6bd4081 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | Proceed to single-runtime-context lifecycle and authority GREEN_ONLY verification. |
+
+### 变更摘要
+
+- Four frozen R37 MANDATORY_RED case IDs are GREEN after task4 authority closure. Controlled adaptation preserves frozen RED Evidence and semantic oracle; 4/4 GREEN plus 17 existing authority/one-shot regressions passed.
+
+### 文件变更摘要
+
+- `Test-only controlled adaptation: P2SecurityAuthorityRemediationTest.java updated; P2SecurityAuthorityGreenFixture.java added. No production source changes.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | None. |
+| 测试与验证 | GitHub Actions run 32145323918: exact compile PASSED; P2SecurityAuthorityRemediationTest 4/4 GREEN; ProtectedRuntimeModelAdapterIntegrationTest + ProtectedAccessConcurrencyTest + ProtectedWriteIntentResolutionTest 17/17 PASSED; TestEvidenceReviewAgent PASSED. |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"WR-20260819-120849-TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE-PASSED","event_type":"DEVELOPMENT_SUBTASK_CHECKPOINT_READY","evidence_ids":["EVD-000380","EVD-000381"],"execution_mode":"SEQUENTIAL","input_revision":"DEV-P2-R37-RED-GREEN-R01@aa99a6bd4081","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012","iteration_no":12,"modified_files_summary":["Test-only addition: dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java; immutable Task7 Evidence imported under task evidence storage. No production source changes."],"next_action":"Proceed to TASK-P2-DEV-P2-REGRESSION-CLOSURE (Task8) only after this Task7 Git checkpoint is committed and pushed.","next_agent":"DevelopAgent","output_revision":"DEV-P2-R37-LIFECYCLE-R01@c76532d452f7","phase":"development","record_id":"WR-20260819-120849-TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE-PASSED","render_digest":"dab85cae1428da8ae5e95416356f93fb4542734b1e10c98a724ca86bc7a8d176","schema_version":4,"scope":"TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE","source":"TESTDESIGN-P2-R37 / TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE / GitHub Actions run 32203570492","sql_change_summary":"None.","state_change":"TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE -> PASSED; exact lifecycle test and CI evidence frozen.","status":"PASSED","summary":"Task7 single-runtime EngineContext lifecycle verification is PASSED. The exact test source validated against Task6 production base is frozen unchanged: bind-once, no-hot-reload, restart-new-generation, and real dec-demo fixture all pass; no production source changes were introduced.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE","task_type":"single_context_lifecycle","timestamp":"2026-08-19T12:08:49+00:00","validation_summary":"GitHub Actions run 32203570492: starter compile PASSED; SingleEngineContextRuntimeLifecycleTest 3/3 PASSED; P2RealFixtureIntegrationTest 1/1 PASSED; workflow scope guard proves only SingleEngineContextRuntimeLifecycleTest.java differs from Task6 executable source and no src/main drift exists. Test SHA-256 c76532d452f7... / Git blob 8b3200201546....","version":"V_1.0"} -->
+## WR-20260819-120849-TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-19T12:08:49+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | TESTDESIGN-P2-R37 / TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE / GitHub Actions run 32203570492 |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE |
+| 阶段 | development |
+| 任务类型 | single_context_lifecycle |
+| 事件类型 | DEVELOPMENT_SUBTASK_CHECKPOINT_READY |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Task7 single-runtime EngineContext lifecycle verification is PASSED. The exact test source validated against Task6 production base is frozen unchanged: bind-once, no-hot-reload, restart-new-generation, and real dec-demo fixture all pass; no production source changes were introduced. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE -> PASSED; exact lifecycle test and CI evidence frozen. |
+| Task | TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012 / 12 |
+| 输入 Revision | DEV-P2-R37-RED-GREEN-R01@aa99a6bd4081 |
+| 输出 Revision | DEV-P2-R37-LIFECYCLE-R01@c76532d452f7 |
+| StageOutcome | 无 |
+| Evidence | EVD-000380、EVD-000381 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | Proceed to TASK-P2-DEV-P2-REGRESSION-CLOSURE (Task8) only after this Task7 Git checkpoint is committed and pushed. |
+
+### 变更摘要
+
+- Task7 single-runtime EngineContext lifecycle verification is PASSED. The exact test source validated against Task6 production base is frozen unchanged: bind-once, no-hot-reload, restart-new-generation, and real dec-demo fixture all pass; no production source changes were introduced.
+
+### 文件变更摘要
+
+- `Test-only addition: dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java; immutable Task7 Evidence imported under task evidence storage. No production source changes.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | None. |
+| 测试与验证 | GitHub Actions run 32203570492: starter compile PASSED; SingleEngineContextRuntimeLifecycleTest 3/3 PASSED; P2RealFixtureIntegrationTest 1/1 PASSED; workflow scope guard proves only SingleEngineContextRuntimeLifecycleTest.java differs from Task6 executable source and no src/main drift exists. Test SHA-256 c76532d452f7... / Git blob 8b3200201546.... |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"WR-20260819-123726-TASK-P2-DEV-P2-REGRESSION-CLOSURE-PASSED","event_type":"DEVELOPMENT_SUBTASK_CHECKPOINT_READY","evidence_ids":["EVD-000382","EVD-000383","EVD-000399"],"execution_mode":"SEQUENTIAL","input_revision":"DEV-P2-R37-LIFECYCLE-R01@c76532d452f7","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012","iteration_no":12,"modified_files_summary":["Task8 adds only immutable evidence imports/bundles, risk_detection projection and work_record metadata; no src/main, src/test, runtime config or production SQL mutation."],"next_action":"Create and push the Task8 Git checkpoint. Then formalize Development artifact/review boundary; sync-risk-reviewers becomes legal only after the Development artifact revision is published.","next_agent":"ProjectManagerAgent","output_revision":"DEV-P2-R37-REGRESSION-R01@fbe16820eb84","phase":"development","record_id":"WR-20260819-123726-TASK-P2-DEV-P2-REGRESSION-CLOSURE-PASSED","render_digest":"48a1a7dcd424b8b439a2504df271acefe71988a656d76f9bd2cca07cc93aed65","schema_version":4,"scope":"TASK-P2-DEV-P2-REGRESSION-CLOSURE","source":"TP R06 / TASK-P2-DEV-P2-REGRESSION-CLOSURE / GitHub Actions run 32205252873","sql_change_summary":"None. MySQL was used only as integration-test evidence; no schema/application SQL change introduced.","state_change":"TASK-P2-DEV-P2-REGRESSION-CLOSURE -> PASSED; full regression Evidence and final changed-file risk scan frozen.","status":"PASSED","summary":"Task8 P2 final development regression is PASSED on executable-source-equivalent current canonical head: R06 commands 02-11 BUILD SUCCESS, command 12 PASSED, lifecycle 3/3, security remediation 4/4, MySQL business integration 3/3, and database effect markers/counts verified. Final changed-file risk scan is SCANNED/PASSED with six active review-risk classes. No production/test/config mutation was introduced by Task8.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-DEV-P2-REGRESSION-CLOSURE","task_type":"p2_regression_closure","timestamp":"2026-08-19T12:37:26+00:00","validation_summary":"GitHub Actions run 32205252873 SUCCESS; artifact sha256 2bff57f64c3c... verified; current head fbe16820 executable source proven equivalent to runner b93e7f06 via common Task6 base e5f12c9 + exact lifecycle test blob 8b320020. Risk scan active reviewers: Architecture, Concurrency, CrossModuleIntegration, ImpactAnalysis, Performance, Security. sync-risk-reviewers is lifecycle-deferred until Development artifact publication because current development artifact revision is still empty.","version":"V_1.0"} -->
+## WR-20260819-123726-TASK-P2-DEV-P2-REGRESSION-CLOSURE-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-19T12:37:26+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | TP R06 / TASK-P2-DEV-P2-REGRESSION-CLOSURE / GitHub Actions run 32205252873 |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | TASK-P2-DEV-P2-REGRESSION-CLOSURE |
+| 阶段 | development |
+| 任务类型 | p2_regression_closure |
+| 事件类型 | DEVELOPMENT_SUBTASK_CHECKPOINT_READY |
+| 执行模式 | SEQUENTIAL |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Task8 P2 final development regression is PASSED on executable-source-equivalent current canonical head: R06 commands 02-11 BUILD SUCCESS, command 12 PASSED, lifecycle 3/3, security remediation 4/4, MySQL business integration 3/3, and database effect markers/counts verified. Final changed-file risk scan is SCANNED/PASSED with six active review-risk classes. No production/test/config mutation was introduced by Task8. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-DEV-P2-REGRESSION-CLOSURE -> PASSED; full regression Evidence and final changed-file risk scan frozen. |
+| Task | TASK-P2-DEV-P2-REGRESSION-CLOSURE |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012 / 12 |
+| 输入 Revision | DEV-P2-R37-LIFECYCLE-R01@c76532d452f7 |
+| 输出 Revision | DEV-P2-R37-REGRESSION-R01@fbe16820eb84 |
+| StageOutcome | 无 |
+| Evidence | EVD-000382、EVD-000383、EVD-000399 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Create and push the Task8 Git checkpoint. Then formalize Development artifact/review boundary; sync-risk-reviewers becomes legal only after the Development artifact revision is published. |
+
+### 变更摘要
+
+- Task8 P2 final development regression is PASSED on executable-source-equivalent current canonical head: R06 commands 02-11 BUILD SUCCESS, command 12 PASSED, lifecycle 3/3, security remediation 4/4, MySQL business integration 3/3, and database effect markers/counts verified. Final changed-file risk scan is SCANNED/PASSED with six active review-risk classes. No production/test/config mutation was introduced by Task8.
+
+### 文件变更摘要
+
+- `Task8 adds only immutable evidence imports/bundles, risk_detection projection and work_record metadata; no src/main, src/test, runtime config or production SQL mutation.`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | None. MySQL was used only as integration-test evidence; no schema/application SQL change introduced. |
+| 测试与验证 | GitHub Actions run 32205252873 SUCCESS; artifact sha256 2bff57f64c3c... verified; current head fbe16820 executable source proven equivalent to runner b93e7f06 via common Task6 base e5f12c9 + exact lifecycle test blob 8b320020. Risk scan active reviewers: Architecture, Concurrency, CrossModuleIntegration, ImpactAnalysis, Performance, Security. sync-risk-reviewers is lifecycle-deferred until Development artifact publication because current development artifact revision is still empty. |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001","event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000400"],"execution_mode":"auto / architecture_review / git_checkpoint / git_push","input_revision":"2c85ed1478c1bc49e4d34bc627dc64e773c78ac8f5aa992116b602a82851f5f7","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012","iteration_no":12,"next_action":"Publish the I012 Development closure artifact, then repair the wk-ar SKELETON projection without reviewing concrete implementation as a skeleton.","next_agent":"DevelopAgent","output_revision":"DEV-P2-R37-CLOSURE-R01@1a936fdd2a45","phase":"development","record_id":"WR-20260819-132730-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED","render_digest":"47ac8fbefbf8fde2aa6de004f4cbff0491b26ee91a91260102c9dc16c697d84c","schema_version":4,"scope":"执行 TP R06 五项 P2 security remediation development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED","status":"PASSED","summary":"Development I012 umbrella closure: all five TP R06 sub-tasks are checkpointed and the complete validation command set is rebound to one current closure revision by proven executable-source equivalence. No additional production/test/config mutation occurs in this closure step.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-19T13:27:30+00:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 12 项","version":"V_1.0"} -->
+## WR-20260819-132730-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-19T13:27:30+00:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R06 五项 P2 security remediation development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / git_push |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Development I012 umbrella closure: all five TP R06 sub-tasks are checkpointed and the complete validation command set is rebound to one current closure revision by proven executable-source equivalence. No additional production/test/config mutation occurs in this closure step. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012 / 12 |
+| 输入 Revision | 2c85ed1478c1bc49e4d34bc627dc64e773c78ac8f5aa992116b602a82851f5f7 |
+| 输出 Revision | DEV-P2-R37-CLOSURE-R01@1a936fdd2a45 |
+| StageOutcome | 无 |
+| Evidence | EVD-000400 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | DevelopAgent |
+| 后续事项 | Publish the I012 Development closure artifact, then repair the wk-ar SKELETON projection without reviewing concrete implementation as a skeleton. |
+
+### 变更摘要
+
+- Development I012 umbrella closure: all five TP R06 sub-tasks are checkpointed and the complete validation command set is rebound to one current closure revision by proven executable-source equivalence. No additional production/test/config mutation occurs in this closure step.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 12 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I013-A001","event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I013-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000413","EVD-000414","EVD-000415","EVD-000416","EVD-000417","EVD-000418","EVD-000419"],"execution_mode":"auto / architecture_review / git_checkpoint / git_push","input_revision":"2c85ed1478c1bc49e4d34bc627dc64e773c78ac8f5aa992116b602a82851f5f7","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-013","iteration_no":13,"next_action":"Publish the I013 skeleton artifact and obtain independent ArchitectureReviewAgent + SpecComplianceReviewAgent PASSED conclusions on this exact revision.","next_agent":"ArchitectureReviewAgent","output_revision":"DEV-P2-R37-SKELETON-R01@a5723c233bdf","phase":"development","record_id":"WR-20260819-140156-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED","render_digest":"275e1c0be934ef78b4a9a92a607964fe26d6079e6b0d0657a6312d6cccd38ffe","schema_version":4,"scope":"执行 TP R06 五项 P2 security remediation development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED","status":"PASSED","summary":"Development I013 architecture skeleton candidate PASSED. Exact skeleton revision a5723c233bdf freezes signatures, call orchestration, fail-closed branches, authority ownership and single-EngineContext generation lifecycle only; executable source remains canonical HEAD 1a936fdd2a45 and all 12 inherited R06 validation commands are rebound by proven executable-source equivalence.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-19T14:01:56+00:00","validation_summary":"登记 Evidence 7 项；命令 Evidence 12 项","version":"V_1.0"} -->
+## WR-20260819-140156-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-19T14:01:56+00:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R06 五项 P2 security remediation development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / git_push |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Development I013 architecture skeleton candidate PASSED. Exact skeleton revision a5723c233bdf freezes signatures, call orchestration, fail-closed branches, authority ownership and single-EngineContext generation lifecycle only; executable source remains canonical HEAD 1a936fdd2a45 and all 12 inherited R06 validation commands are rebound by proven executable-source equivalence. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I013-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-013 / 13 |
+| 输入 Revision | 2c85ed1478c1bc49e4d34bc627dc64e773c78ac8f5aa992116b602a82851f5f7 |
+| 输出 Revision | DEV-P2-R37-SKELETON-R01@a5723c233bdf |
+| StageOutcome | 无 |
+| Evidence | EVD-000413、EVD-000414、EVD-000415、EVD-000416、EVD-000417、EVD-000418、EVD-000419 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ArchitectureReviewAgent |
+| 后续事项 | Publish the I013 skeleton artifact and obtain independent ArchitectureReviewAgent + SpecComplianceReviewAgent PASSED conclusions on this exact revision. |
+
+### 变更摘要
+
+- Development I013 architecture skeleton candidate PASSED. Exact skeleton revision a5723c233bdf freezes signatures, call orchestration, fail-closed branches, authority ownership and single-EngineContext generation lifecycle only; executable source remains canonical HEAD 1a936fdd2a45 and all 12 inherited R06 validation commands are rebound by proven executable-source equivalence.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 7 项；命令 Evidence 12 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I014-A001","event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I014-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000432","EVD-000434","EVD-000446","EVD-000447"],"execution_mode":"auto / architecture_review / git_checkpoint / git_push","input_revision":"2c85ed1478c1bc49e4d34bc627dc64e773c78ac8f5aa992116b602a82851f5f7","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-014","iteration_no":14,"next_action":"Publish the I014 implementation artifact, then obtain independent Development TDDReviewAgent and SpecComplianceReviewAgent conclusions on DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5.","next_agent":"ProjectManagerAgent","output_revision":"DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5","phase":"development","record_id":"WR-20260819-145544-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED","render_digest":"c6031bc1554c3b3b24bcefde8444359b38b4f9f2b29df8709b0409e5dc5cfb1e","schema_version":4,"scope":"执行 TP R06 五项 P2 security remediation development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED","status":"PASSED","summary":"Development I014 concrete implementation reconciliation PASSED. Existing production implementation is byte-identical to the Task8-validated executable source and conforms to the PASSED I013 skeleton boundaries; no production/test/config mutation was required. Current preflight was rerun, commands 02-12 were explicitly rebound by executable-source equivalence, and source/contract bundles are frozen on the exact I014 revision.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-19T14:55:44+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 12 项","version":"V_1.0"} -->
+## WR-20260819-145544-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-19T14:55:44+00:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R06 五项 P2 security remediation development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / git_push |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Development I014 concrete implementation reconciliation PASSED. Existing production implementation is byte-identical to the Task8-validated executable source and conforms to the PASSED I013 skeleton boundaries; no production/test/config mutation was required. Current preflight was rerun, commands 02-12 were explicitly rebound by executable-source equivalence, and source/contract bundles are frozen on the exact I014 revision. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I014-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-014 / 14 |
+| 输入 Revision | 2c85ed1478c1bc49e4d34bc627dc64e773c78ac8f5aa992116b602a82851f5f7 |
+| 输出 Revision | DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5 |
+| StageOutcome | 无 |
+| Evidence | EVD-000432、EVD-000434、EVD-000446、EVD-000447 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish the I014 implementation artifact, then obtain independent Development TDDReviewAgent and SpecComplianceReviewAgent conclusions on DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5. |
+
+### 变更摘要
+
+- Development I014 concrete implementation reconciliation PASSED. Existing production implementation is byte-identical to the Task8-validated executable source and conforms to the PASSED I013 skeleton boundaries; no production/test/config mutation was required. Current preflight was rerun, commands 02-12 were explicitly rebound by executable-source equivalence, and source/contract bundles are frozen on the exact I014 revision.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 4 项；命令 Evidence 12 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I014-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I014-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000446","EVD-000447","EVD-000448","EVD-000449","EVD-000450","EVD-000451","EVD-000452","EVD-000466","EVD-000467"],"execution_mode":"auto / architecture_review / git_checkpoint / git_push","input_revision":"d35b11d25472e70eb458117f880dfef5e8715999d05cc723780f4f3c3c03cc24","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-014","iteration_no":14,"next_action":"Publish exact development revision as code_review artifact and execute eight independent current-profile reviewers.","next_agent":"ProjectManagerAgent","output_revision":"DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5","phase":"code_review","record_id":"WR-20260819-154725-TASK-P2-PHASE-FINAL-CODE-REVIEW-PASSED","render_digest":"07e78391dfeb7f42802247abfe5eaa810abff6c89600bb91bc275b0682c1225c","schema_version":4,"scope":"执行 P2 Phase Final Code Review","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-FINAL-CODE-REVIEW: RUNNING → PASSED","status":"PASSED","summary":"Final Code Review execution package frozen on exact I014 Development revision; lifecycle validation passed; no production/test/config mutation.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-FINAL-CODE-REVIEW","task_type":"code_review","timestamp":"2026-08-19T15:47:25+00:00","validation_summary":"登记 Evidence 9 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260819-154725-TASK-P2-PHASE-FINAL-CODE-REVIEW-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-19T15:47:25+00:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Phase Final Code Review |
+| 阶段 | code_review |
+| 任务类型 | code_review |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / git_push |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Final Code Review execution package frozen on exact I014 Development revision; lifecycle validation passed; no production/test/config mutation. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-FINAL-CODE-REVIEW: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-FINAL-CODE-REVIEW |
+| Attempt | ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I014-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-014 / 14 |
+| 输入 Revision | d35b11d25472e70eb458117f880dfef5e8715999d05cc723780f4f3c3c03cc24 |
+| 输出 Revision | DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5 |
+| StageOutcome | 无 |
+| Evidence | EVD-000446、EVD-000447、EVD-000448、EVD-000449、EVD-000450、EVD-000451、EVD-000452、EVD-000466、EVD-000467 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish exact development revision as code_review artifact and execute eight independent current-profile reviewers. |
+
+### 变更摘要
+
+- Final Code Review execution package frozen on exact I014 Development revision; lifecycle validation passed; no production/test/config mutation.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 9 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"TestAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-TESTING-I014-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-TESTING-I014-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000478","EVD-000479","EVD-000480","EVD-000481","EVD-000482","EVD-000483","EVD-000484","EVD-000485"],"execution_mode":"auto / architecture_review / git_checkpoint / git_push","input_revision":"799259c8bfada19dfb85d348e36dbd57147a1dce1d4b0c79ad59aa74196fd368","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TESTING-014","iteration_no":14,"next_action":"Publish Testing artifact and run independent TestEvidenceReviewAgent.","next_agent":"TestEvidenceReviewAgent","output_revision":"TESTING-P2-R37-FINALHEAD-R01@647a02301618","phase":"testing","record_id":"WR-20260819-170529-TASK-P2-PHASE-TESTING-PASSED","render_digest":"26efb2ba75c821e5cb21604793dbc9a92b013a2e63c0b0c9aa5338ebb204f46b","schema_version":4,"scope":"执行 P2 Testing","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-TESTING: RUNNING → PASSED","status":"PASSED","summary":"Testing I014 fresh exact-head validation PASSED on PR36 647a023016181aafdabdfb8318e849bf352ab010/tree 60a19d6559760e0902d5851a1cc155c1a09a6eee. Isolated run 32278778894: 777/777 functional core tests green (plus one expected deliberate failure gate), security 4/4, lifecycle 3/3, real fixture green, MySQL 4/4, execution markers=3 and all final DB counts=1. Runner PR60 is trigger-only and never merged.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-TESTING","task_type":"testing","timestamp":"2026-08-19T17:05:29+00:00","validation_summary":"登记 Evidence 8 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260819-170529-TASK-P2-PHASE-TESTING-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-19T17:05:29+00:00 |
+| 执行 Agent | TestAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Testing |
+| 阶段 | testing |
+| 任务类型 | testing |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / git_push |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Testing I014 fresh exact-head validation PASSED on PR36 647a023016181aafdabdfb8318e849bf352ab010/tree 60a19d6559760e0902d5851a1cc155c1a09a6eee. Isolated run 32278778894: 777/777 functional core tests green (plus one expected deliberate failure gate), security 4/4, lifecycle 3/3, real fixture green, MySQL 4/4, execution markers=3 and all final DB counts=1. Runner PR60 is trigger-only and never merged. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-TESTING: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-TESTING |
+| Attempt | ATTEMPT-TASK-P2-PHASE-TESTING-I014-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TESTING-014 / 14 |
+| 输入 Revision | 799259c8bfada19dfb85d348e36dbd57147a1dce1d4b0c79ad59aa74196fd368 |
+| 输出 Revision | TESTING-P2-R37-FINALHEAD-R01@647a02301618 |
+| StageOutcome | 无 |
+| Evidence | EVD-000478、EVD-000479、EVD-000480、EVD-000481、EVD-000482、EVD-000483、EVD-000484、EVD-000485 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | TestEvidenceReviewAgent |
+| 后续事项 | Publish Testing artifact and run independent TestEvidenceReviewAgent. |
+
+### 变更摘要
+
+- Testing I014 fresh exact-head validation PASSED on PR36 647a023016181aafdabdfb8318e849bf352ab010/tree 60a19d6559760e0902d5851a1cc155c1a09a6eee. Isolated run 32278778894: 777/777 functional core tests green (plus one expected deliberate failure gate), security 4/4, lifecycle 3/3, real fixture green, MySQL 4/4, execution markers=3 and all final DB counts=1. Runner PR60 is trigger-only and never merged.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 8 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"CompletionVerificationAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I014-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I014-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000486","EVD-000487","EVD-000488","EVD-000489"],"execution_mode":"auto / architecture_review / git_checkpoint / git_push","input_revision":"7267787140789796f76fbc962c564da194bd42f260ee056f4f3e0d9591f12cac","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-014","iteration_no":14,"next_action":"Publish and finalize Completion Verification, checkpoint metadata, then rerun P0 on the resulting true final PR HEAD without creating a later commit.","next_agent":"CompletionVerificationAgent","output_revision":"COMPLETION-P2-R37-R01@48e929ecb564","phase":"completion_verification","record_id":"WR-20260820-004649-TASK-P2-PHASE-COMPLETION-VERIFICATION-PASSED","render_digest":"97b01a958cb9231fc393393e7fa3127b0a1f2e0ad2458ff2bd00e27cc73cba3e","schema_version":4,"scope":"执行 P2 Completion Verification","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-COMPLETION-VERIFICATION: RUNNING → PASSED","status":"PASSED","summary":"Completion Verification PASSED: all 42 acceptance assertions, current traceability/evidence/lifecycle validation, Testing I014, and true PR36 head 1547f4fff2375798d1faa2a80ad77518a73bfdc8 P0 run 32284575526 are closed and consistent.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-COMPLETION-VERIFICATION","task_type":"completion_verification","timestamp":"2026-08-20T00:46:49+00:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260820-004649-TASK-P2-PHASE-COMPLETION-VERIFICATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-20T00:46:49+00:00 |
+| 执行 Agent | CompletionVerificationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Completion Verification |
+| 阶段 | completion_verification |
+| 任务类型 | completion_verification |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | auto / architecture_review / git_checkpoint / git_push |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Completion Verification PASSED: all 42 acceptance assertions, current traceability/evidence/lifecycle validation, Testing I014, and true PR36 head 1547f4fff2375798d1faa2a80ad77518a73bfdc8 P0 run 32284575526 are closed and consistent. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-COMPLETION-VERIFICATION: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-COMPLETION-VERIFICATION |
+| Attempt | ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I014-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-014 / 14 |
+| 输入 Revision | 7267787140789796f76fbc962c564da194bd42f260ee056f4f3e0d9591f12cac |
+| 输出 Revision | COMPLETION-P2-R37-R01@48e929ecb564 |
+| StageOutcome | 无 |
+| Evidence | EVD-000486、EVD-000487、EVD-000488、EVD-000489 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | CompletionVerificationAgent |
+| 后续事项 | Publish and finalize Completion Verification, checkpoint metadata, then rerun P0 on the resulting true final PR HEAD without creating a later commit. |
+
+### 变更摘要
+
+- Completion Verification PASSED: all 42 acceptance assertions, current traceability/evidence/lifecycle validation, Testing I014, and true PR36 head 1547f4fff2375798d1faa2a80ad77518a73bfdc8 P0 run 32284575526 are closed and consistent.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 4 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
 <!-- work-record-events-end -->
@@ -2639,6 +1221,6 @@
 
 - 人类直接阅读本文件；AI 使用 `long_task.py work-events --json` 按隐藏元数据读取。
 - 所有记录必须通过 `finish-attempt` 或 `append-work-event` 追加，禁止手工覆盖历史。
-- `task_attempts.md` 保存单次执行细节；本文件仅保存版本级摘要与索引。
+- `task_events.jsonl` 保存 attempt、StageOutcome、stale 与 auto-remediation 事件；本文件仅保存版本级摘要与索引。
 - 更正通过新增记录并填写 `correction_of`，不得修改旧记录。
 - `validate-work-record` 会校验隐藏元数据、可读正文和 SHA-256 一致性。

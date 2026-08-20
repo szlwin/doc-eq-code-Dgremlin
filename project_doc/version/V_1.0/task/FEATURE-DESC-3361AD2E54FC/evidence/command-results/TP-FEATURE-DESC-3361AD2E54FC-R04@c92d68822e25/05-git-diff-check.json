@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "git diff --check",
+  "executed_at": "2026-08-10T15:30:08+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+  "exit_code": 0,
+  "output": "",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

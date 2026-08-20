@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-compiler -Dtest=TargetKeyModelPathContractTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 1,
+  "executed_at": "2026-08-11T05:30:01.149457+00:00",
+  "revision": "TDD-P2-R01@3f282bb4e1f6",
+  "output_ref": "evidence/command-results/TDD-P2-R01@3f282bb4e1f6/TARGET.out",
+  "output_digest": "e802a18e83d5d159fb9243abb6d129cd5ee54925e75ed54d5961c23be4b7b7c1"
+}

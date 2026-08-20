@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="dec.demo.p2.P2RealFixtureIntegrationTest" time="0.884" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/classes:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/dec-datasource-orm-mysql-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/dec-datasource-orm-sql-1.0.jar:/home/runner/.m2/repository/smarter/santr/2.0.3/santr-2.0.3.jar:/home/runner/.m2/repository/javolution/javolution/6.1.0/javolution-6.1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/dec-core-starter-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-compiler/target/dec-core-compiler-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-frontends/target/dec-core-frontends-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/target/dec-core-model-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/dec-core-context-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/target/dec-core-datasource-1.0.jar:/home/runner/.m2/repository/smarter/express-check/1.0/express-check-1.0.jar:/home/runner/.m2/repository/smarter/easy-check/1.0/easy-check-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/dec-context-config-parse-yaml-1.0.jar:/home/runner/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/context-config-parse-xml.jar:/home/runner/.m2/repository/org/dom4j/dom4j/2.2.0/dom4j-2.2.0.jar:/home/runner/.m2/repository/org/slf4j/slf4j-simple/1.7.30/slf4j-simple-1.7.30.jar:/home/runner/.m2/repository/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar:/home/runner/.m2/repository/com/alibaba/fastjson/1.2.83/fastjson-1.2.83.jar:/home/runner/.m2/repository/com/github/kahlkn/artoria/1.0.0.20210823.beta/artoria-1.0.0.20210823.beta.jar:/home/runner/.m2/repository/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar:/home/runner/.m2/repository/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar:/home/runner/.m2/repository/com/zaxxer/HikariCP/4.0.3/HikariCP-4.0.3.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.2/junit-jupiter-5.10.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.2/junit-jupiter-api-5.10.2.jar:/home/runner/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-commons/1.10.2/junit-platform-commons-1.10.2.jar:/home/runner/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.2/junit-jupiter-params-5.10.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.2/junit-jupiter-engine-5.10.2.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-engine/1.10.2/junit-platform-engine-1.10.2.jar:"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="Etc/UTC"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/temurin-17-jdk-amd64/lib"/>
+    <property name="sun.java.command" value="/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire/surefirebooter-20260819013439500_426.jar /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire 2026-08-19T01-33-06_726-jvmRun1 surefire-20260819013439500_424tmp surefire_140-20260819013439500_425tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/classes:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-mysql/target/dec-datasource-orm-mysql-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-datasource-orm-sql/target/dec-datasource-orm-sql-1.0.jar:/home/runner/.m2/repository/smarter/santr/2.0.3/santr-2.0.3.jar:/home/runner/.m2/repository/javolution/javolution/6.1.0/javolution-6.1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-starter/target/dec-core-starter-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-compiler/target/dec-core-compiler-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-frontends/target/dec-core-frontends-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-model/target/dec-core-model-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/dec-core-context-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-datasource/target/dec-core-datasource-1.0.jar:/home/runner/.m2/repository/smarter/express-check/1.0/express-check-1.0.jar:/home/runner/.m2/repository/smarter/easy-check/1.0/easy-check-1.0.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-yaml/target/dec-context-config-parse-yaml-1.0.jar:/home/runner/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-context-config-parse-xml/target/context-config-parse-xml.jar:/home/runner/.m2/repository/org/dom4j/dom4j/2.2.0/dom4j-2.2.0.jar:/home/runner/.m2/repository/org/slf4j/slf4j-simple/1.7.30/slf4j-simple-1.7.30.jar:/home/runner/.m2/repository/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar:/home/runner/.m2/repository/com/alibaba/fastjson/1.2.83/fastjson-1.2.83.jar:/home/runner/.m2/repository/com/github/kahlkn/artoria/1.0.0.20210823.beta/artoria-1.0.0.20210823.beta.jar:/home/runner/.m2/repository/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar:/home/runner/.m2/repository/com/google/protobuf/protobuf-java/3.11.4/protobuf-java-3.11.4.jar:/home/runner/.m2/repository/com/zaxxer/HikariCP/4.0.3/HikariCP-4.0.3.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.2/junit-jupiter-5.10.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.2/junit-jupiter-api-5.10.2.jar:/home/runner/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-commons/1.10.2/junit-platform-commons-1.10.2.jar:/home/runner/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.2/junit-jupiter-params-5.10.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.2/junit-jupiter-engine-5.10.2.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-engine/1.10.2/junit-platform-engine-1.10.2.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/runner"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-07-21"/>
+    <property name="java.home" value="/usr/lib/jvm/temurin-17-jdk-amd64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="surefire.real.class.path" value="/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire/surefirebooter-20260819013439500_426.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="17.0.20+8"/>
+    <property name="user.name" value="runner"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.17.0-1022-azure"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-17.0.20+8"/>
+    <property name="localRepository" value="/home/runner/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="17.0.20"/>
+    <property name="user.dir" value="/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="17.0.20+8"/>
+    <property name="java.specification.maintenance.version" value="1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="61.0"/>
+  </properties>
+  <testcase name="realFixtureFlowsThroughModelAndStarterReadWrite" classname="dec.demo.p2.P2RealFixtureIntegrationTest" time="0.861">
+    <system-err><![CDATA[[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the system/orm-config.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data2 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con2 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the system/orm-config.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:system/test-data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:system/test-data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/Pay.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/Pay.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/Product.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:product start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:product success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-data/Product.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:system/test-data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:system/test-view Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:system/test-view
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo success!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:system/test-view End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:system/test-rule Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:system/test-rule
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-rule/orm-rule.xml Start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-Order start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-Order success!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:dev09-save-Order start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:dev09-save-Order success!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-User start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-User success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/test-classes/system/test-rule/orm-rule.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:system/test-rule End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-primary - Starting...
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-primary - Start completed.
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-secondary - Starting...
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-secondary - Start completed.
+[main] INFO dec.core.model.container.SynContainer - Execute the view rule: dev09-save-Order start!
+[main] INFO dec.core.model.container.SynContainer - Execute the view rule: dev09-save-Order end!
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-secondary - Shutdown initiated...
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-secondary - Shutdown completed.
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-primary - Shutdown initiated...
+[main] INFO com.zaxxer.hikari.HikariDataSource - dec-demo-primary - Shutdown completed.
+]]></system-err>
+  </testcase>
+</testsuite>

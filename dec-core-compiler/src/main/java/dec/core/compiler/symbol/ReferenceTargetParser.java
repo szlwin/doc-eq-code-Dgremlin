@@ -1,5 +1,8 @@
 package dec.core.compiler.symbol;
 
+import dec.core.context.model.RuleViewKey;
+import dec.core.context.model.SystemKey;
+
 /**
  * 在构造 Context TypedKey 前校验并规范化 T08 引用 lexical。
  *
@@ -17,6 +20,20 @@ final class ReferenceTargetParser {
         }
         String normalized = target.trim();
         return normalized.isEmpty() ? null : normalized;
+    }
+
+    /**
+     * 使用显式 System owner 与局部 RuleView 名称构造完整复合身份。
+     *
+     * <p>本方法故意不提供 bare-name 重载；缺 owner 时调用方必须失败，
+     * 不得通过 first/last/local-name lookup 猜测 System。</p>
+     */
+    static RuleViewKey parseRuleViewKey(SystemKey owner, String target) {
+        if (owner == null) {
+            return null;
+        }
+        String normalized = parseSimple(target);
+        return normalized == null ? null : new RuleViewKey(owner, normalized);
     }
 
     /**

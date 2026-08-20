@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "event": "INDEPENDENT_REVIEW_INVALIDATION_AND_REMEDIATION",
+  "reviewed_pr": 36,
+  "reviewed_head": "cdf4c5813a1c386612cd48a5dbe68ee66d71ca6c",
+  "review_contract": "common-develop 2.44 RC9",
+  "baseline_guard": {
+    "status": "INVALID_BASELINE",
+    "reason": "missing Git tag common-develop-v2.44-rc9",
+    "fabricated_fix": false
+  },
+  "findings": {
+    "p0": 0,
+    "p1": 7,
+    "ids": [
+      "FND-P2-REV-001",
+      "FND-P2-REV-002",
+      "FND-P2-REV-003",
+      "FND-P2-REV-004",
+      "FND-P2-REV-005",
+      "FND-P2-REV-006",
+      "FND-P2-REV-007"
+    ]
+  },
+  "invalidated_current_conclusions": [
+    {
+      "artifact": "business_model",
+      "revision": "BM-R07@7d7bf504ca9d",
+      "previous_status": "PASSED",
+      "effective_status": "NEEDS_CHANGES",
+      "history_preserved": true
+    },
+    {
+      "artifact": "design",
+      "revision": "DESIGN-P2-R01@8875f042898c",
+      "previous_status": "PASSED",
+      "effective_status": "NEEDS_CHANGES",
+      "history_preserved": true
+    },
+    {
+      "artifact": "test_design",
+      "revision": "TESTDESIGN-P2-R02@d0514b9ac591",
+      "previous_status": "PASSED",
+      "effective_status": "NEEDS_CHANGES",
+      "history_preserved": true
+    }
+  ],
+  "remediation_revisions": [
+    {
+      "artifact": "business_model",
+      "revision": "BM-R08",
+      "status": "NEEDS_REVIEW",
+      "ref": "project_doc/version/V_1.0/doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml"
+    },
+    {
+      "artifact": "design",
+      "revision": "DESIGN-P2-R02",
+      "status": "NEEDS_REVIEW",
+      "ref": "project_doc/version/V_1.0/doc/COMPILER/changes/p2-design-api-review-remediation-r02.md"
+    },
+    {
+      "artifact": "test_design",
+      "revision": "TESTDESIGN-P2-R03",
+      "status": "NEEDS_REVIEW",
+      "ref": "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r03_review_remediation.md"
+    }
+  ],
+  "downstream_gate": {
+    "implementation_plan": "BLOCKED",
+    "tdd": "BLOCKED",
+    "development": "BLOCKED",
+    "reason": "P1 findings remain OPEN until independent reviewers verify the remediation revisions; specialist risk reviews are not closed."
+  },
+  "required_next_reviews": {
+    "business_model": [
+      "BusinessModelReviewAgent",
+      "RequirementReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
+    ],
+    "design": [
+      "ArchitectureReviewAgent",
+      "BusinessModelReviewAgent",
+      "DevelopAgent",
+      "RequirementReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent",
+      "ConcurrencyReviewAgent",
+      "DataMigrationReviewAgent",
+      "ApiContractReviewAgent"
+    ],
+    "test_design": [
+      "RequirementReviewAgent",
+      "DesignReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
+    ]
+  },
+  "security_note": "Security risk must be reviewed only at a stage allowed by the RC9 reviewer catalog; this state correction does not invent a Design-stage SecurityReviewAgent pass.",
+  "production_code_changed_by_remediation": false,
+  "implementation_started": false
+}

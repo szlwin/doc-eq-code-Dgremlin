@@ -1,0 +1,329 @@
+diff --git a/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/imports/development-skeleton-i013/P2AuthorityRuntimeArchitectureSkeleton.java b/evidence/imports/development-skeleton-i013/P2AuthorityRuntimeArchitectureSkeleton.java
+new file mode 100644
+index 00000000..bc855a62
+--- /dev/null
++++ b/evidence/imports/development-skeleton-i013/P2AuthorityRuntimeArchitectureSkeleton.java
+@@ -0,0 +1,323 @@
++package p2.architecture.skeleton;
++
++import java.util.Objects;
++import java.util.Optional;
++
++/**
++ * Development I013 architecture skeleton for DESIGN-P2-R33 / TESTDESIGN-P2-R37.
++ *
++ * <p>This file is lifecycle-review evidence only. It is deliberately outside src/main and src/test,
++ * performs no MODEL effect, persistence, network, compiler publication, or runtime configuration mutation,
++ * and is not linked into production. Concrete collaborators are represented only by typed ports.
++ *
++ * <p>Architecture invariants frozen here:
++ * <ul>
++ *   <li>ExactModelAccessGuard is the sole READ/WRITE policy authority.</li>
++ *   <li>Ordinary callers cannot invoke a raw/proofless executable MODEL effect seam.</li>
++ *   <li>READ and WRITE authorizations are operation/target/session/path exact and one-shot.</li>
++ *   <li>Denied WRITE reaches no effect port and therefore has zero side effects.</li>
++ *   <li>One EngineContext is captured once per production runtime generation; no live replacement API exists.</li>
++ *   <li>A configuration change creates a new generation only after the old generation is closed.</li>
++ * </ul>
++ */
++public final class P2AuthorityRuntimeArchitectureSkeleton {
++    private P2AuthorityRuntimeArchitectureSkeleton() {}
++
++    public enum Operation { READ, WRITE }
++    public enum DenialCode {
++        RULE_NOT_FOUND,
++        TARGET_NOT_FOUND,
++        POLICY_MISMATCH,
++        RUNTIME_PLAN_MISMATCH,
++        RUNTIME_CONTEXT_MISMATCH,
++        WRITE_INTENT_INVALID,
++        AUTHORIZATION_REJECTED,
++        GENERATION_CLOSED
++    }
++
++    public record EngineContextRef(String identity) {
++        public EngineContextRef { Objects.requireNonNull(identity, "identity"); }
++    }
++
++    public record RuleKey(Operation operation, String target, String path) {
++        public RuleKey {
++            Objects.requireNonNull(operation, "operation");
++            Objects.requireNonNull(target, "target");
++            Objects.requireNonNull(path, "path");
++        }
++    }
++
++    public record Invocation(
++            String invocationId,
++            RuleKey ruleKey,
++            String frameId,
++            String ownerResolutionId,
++            Optional<String> cursorId) {
++        public Invocation {
++            Objects.requireNonNull(invocationId, "invocationId");
++            Objects.requireNonNull(ruleKey, "ruleKey");
++            Objects.requireNonNull(frameId, "frameId");
++            Objects.requireNonNull(ownerResolutionId, "ownerResolutionId");
++            Objects.requireNonNull(cursorId, "cursorId");
++        }
++    }
++
++    public record CompiledRule(RuleKey key, String runtimePlanId) {
++        public CompiledRule {
++            Objects.requireNonNull(key, "key");
++            Objects.requireNonNull(runtimePlanId, "runtimePlanId");
++        }
++    }
++
++    public record ResolvedTarget(
++            String targetKey,
++            String runtimePlanId,
++            String frameId,
++            String ownerResolutionId,
++            Optional<String> cursorId) {
++        public ResolvedTarget {
++            Objects.requireNonNull(targetKey, "targetKey");
++            Objects.requireNonNull(runtimePlanId, "runtimePlanId");
++            Objects.requireNonNull(frameId, "frameId");
++            Objects.requireNonNull(ownerResolutionId, "ownerResolutionId");
++            Objects.requireNonNull(cursorId, "cursorId");
++        }
++    }
++
++    /** Frozen WRITE state correctness: operation/path/session/object/value/version are resolved before authority minting. */
++    public record ResolvedWriteIntent(
++            RuleKey ruleKey,
++            ResolvedTarget target,
++            String objectIdentity,
++            String valueDigest,
++            long expectedVersion) {
++        public ResolvedWriteIntent {
++            Objects.requireNonNull(ruleKey, "ruleKey");
++            Objects.requireNonNull(target, "target");
++            Objects.requireNonNull(objectIdentity, "objectIdentity");
++            Objects.requireNonNull(valueDigest, "valueDigest");
++        }
++    }
++
++    public sealed interface AccessResult permits AccessAllowed, AccessDenied {}
++    public record AccessAllowed(Operation operation, Object valueOrReceipt) implements AccessResult {}
++    public record AccessDenied(DenialCode code) implements AccessResult {
++        public AccessDenied { Objects.requireNonNull(code, "code"); }
++    }
++
++    /**
++     * Architecture authority owner. Mirrors the STARTER-private ExactModelAccessGuard boundary.
++     * Implementations are intentionally absent from this skeleton.
++     */
++    public interface ExactModelAccessGuardPort {
++        Optional<CompiledRule> exactRule(Invocation invocation);
++
++        /** null means exact rule + runtime proof match; non-null is fail-closed denial. */
++        DenialCode denial(CompiledRule rule, Invocation invocation, ResolvedTarget target);
++
++        /** Returns null when operation/proof is not exactly READ-authorized. */
++        ReadAuthorization authorizeRead(CompiledRule rule, Invocation invocation, ResolvedTarget target);
++
++        /** Returns null when operation/proof/frozen write intent is not exactly WRITE-authorized. */
++        WriteAuthorization authorizeWrite(
++                CompiledRule rule,
++                Invocation invocation,
++                ResolvedTarget target,
++                ResolvedWriteIntent writeIntent);
++    }
++
++    /** Non-forgeable one-shot authority boundary; concrete mint/consume mechanics are deferred. */
++    public interface ReadAuthorization {
++        ReadClaim consumeOnce();
++    }
++
++    /** Non-forgeable one-shot authority boundary; concrete mint/consume mechanics are deferred. */
++    public interface WriteAuthorization {
++        WriteClaim consumeOnce();
++    }
++
++    public record ReadClaim(String invocationId, RuleKey ruleKey, ResolvedTarget target) {}
++    public record WriteClaim(
++            String invocationId,
++            RuleKey ruleKey,
++            ResolvedTarget target,
++            ResolvedWriteIntent writeIntent) {}
++
++    /**
++     * The only executable MODEL effect surface exposed to the STARTER orchestration layer.
++     * There is intentionally no raw/proofless read(...) or write(...) overload.
++     */
++    public interface GuardAuthorizedModelEffectPort {
++        Object read(ReadAuthorization authorization);
++        Object write(WriteAuthorization authorization);
++    }
++
++    public interface RuntimeTargetResolver {
++        ResolvedTarget resolve(Invocation invocation);
++        ResolvedWriteIntent resolveWriteIntent(Invocation invocation, ResolvedTarget target);
++    }
++
++    /**
++     * Top-level call orchestration only. The skeleton defines order/branches/failure semantics but delegates
++     * all rule lookup, target resolution, authorization minting and effect execution to typed ports.
++     */
++    public static final class GuardedProtectedAccessOrchestrator {
++        private final ExactModelAccessGuardPort guard;
++        private final RuntimeTargetResolver resolver;
++        private final GuardAuthorizedModelEffectPort effectPort;
++
++        public GuardedProtectedAccessOrchestrator(
++                ExactModelAccessGuardPort guard,
++                RuntimeTargetResolver resolver,
++                GuardAuthorizedModelEffectPort effectPort) {
++            this.guard = Objects.requireNonNull(guard, "guard");
++            this.resolver = Objects.requireNonNull(resolver, "resolver");
++            this.effectPort = Objects.requireNonNull(effectPort, "effectPort");
++        }
++
++        public AccessResult invoke(Invocation invocation) {
++            Objects.requireNonNull(invocation, "invocation");
++
++            Optional<CompiledRule> exactRule = guard.exactRule(invocation);
++            if (exactRule.isEmpty()) {
++                return new AccessDenied(DenialCode.RULE_NOT_FOUND);
++            }
++
++            ResolvedTarget target = resolver.resolve(invocation);
++            if (target == null) {
++                return new AccessDenied(DenialCode.TARGET_NOT_FOUND);
++            }
++
++            DenialCode denial = guard.denial(exactRule.get(), invocation, target);
++            if (denial != null) {
++                return new AccessDenied(denial);
++            }
++
++            return switch (invocation.ruleKey().operation()) {
++                case READ -> read(exactRule.get(), invocation, target);
++                case WRITE -> write(exactRule.get(), invocation, target);
++            };
++        }
++
++        private AccessResult read(CompiledRule rule, Invocation invocation, ResolvedTarget target) {
++            ReadAuthorization authorization = guard.authorizeRead(rule, invocation, target);
++            if (authorization == null) {
++                return new AccessDenied(DenialCode.AUTHORIZATION_REJECTED);
++            }
++            return new AccessAllowed(Operation.READ, effectPort.read(authorization));
++        }
++
++        private AccessResult write(CompiledRule rule, Invocation invocation, ResolvedTarget target) {
++            ResolvedWriteIntent intent = resolver.resolveWriteIntent(invocation, target);
++            if (intent == null) {
++                return new AccessDenied(DenialCode.WRITE_INTENT_INVALID);
++            }
++            WriteAuthorization authorization = guard.authorizeWrite(rule, invocation, target, intent);
++            if (authorization == null) {
++                return new AccessDenied(DenialCode.AUTHORIZATION_REJECTED);
++            }
++            return new AccessAllowed(Operation.WRITE, effectPort.write(authorization));
++        }
++    }
++
++    /** MODEL-minted scope input; concrete load/materialization/container behavior is deferred. */
++    public interface RuntimeModelAccessScopeRef {}
++    public enum ProductionContainerKindRef { SYNCHRONIZED, COMMIT }
++
++    public interface RuntimeComposition {
++        AccessResult invoke(Invocation invocation);
++        void close();
++    }
++
++    public interface ProductionCompositionPort {
++        RuntimeComposition create(EngineContextRef context, RuntimeModelAccessScopeRef scope);
++    }
++
++    /**
++     * One production generation captures exactly one EngineContext in a final field.
++     * No set/replace/reload/rebind/swap/update Context method is present.
++     */
++    public static final class ProtectedAccessRuntimeFactorySkeleton {
++        private final EngineContextRef context;
++        private final ProductionCompositionPort compositionPort;
++
++        private ProtectedAccessRuntimeFactorySkeleton(
++                EngineContextRef context,
++                ProductionCompositionPort compositionPort) {
++            this.context = Objects.requireNonNull(context, "context");
++            this.compositionPort = Objects.requireNonNull(compositionPort, "compositionPort");
++        }
++
++        public static ProtectedAccessRuntimeFactorySkeleton production(
++                EngineContextRef context,
++                ProductionCompositionPort compositionPort) {
++            return new ProtectedAccessRuntimeFactorySkeleton(context, compositionPort);
++        }
++
++        public RuntimeComposition create(RuntimeModelAccessScopeRef scope) {
++            return compositionPort.create(context, Objects.requireNonNull(scope, "scope"));
++        }
++
++        public EngineContextRef capturedContext() {
++            return context;
++        }
++    }
++
++    public enum GenerationState { ACTIVE, CLOSED }
++
++    /**
++     * Runtime lifecycle state-machine skeleton. A new Context can enter only by constructing a distinct
++     * generation after this generation has CLOSED. There is deliberately no live Context mutation seam.
++     */
++    public static final class RuntimeGenerationSkeleton implements AutoCloseable {
++        private final EngineContextRef context;
++        private final ProductionContainerKindRef containerKind;
++        private GenerationState state = GenerationState.ACTIVE;
++
++        private RuntimeGenerationSkeleton(
++                EngineContextRef context,
++                ProductionContainerKindRef containerKind) {
++            this.context = Objects.requireNonNull(context, "context");
++            this.containerKind = Objects.requireNonNull(containerKind, "containerKind");
++        }
++
++        public static RuntimeGenerationSkeleton bootstrap(
++                EngineContextRef context,
++                ProductionContainerKindRef containerKind) {
++            return new RuntimeGenerationSkeleton(context, containerKind);
++        }
++
++        public EngineContextRef capturedContext() {
++            return context;
++        }
++
++        public ProductionContainerKindRef containerKind() {
++            return containerKind;
++        }
++
++        public GenerationState state() {
++            return state;
++        }
++
++        /**
++         * Architecture-only transition: restart is rejected while ACTIVE; after CLOSED it returns a distinct
++         * generation object capturing the supplied new Context. Concrete compiler/bootstrap work is deferred.
++         */
++        public RuntimeGenerationSkeleton restartAfterClose(EngineContextRef newContext) {
++            if (state != GenerationState.CLOSED) {
++                throw new IllegalStateException("active generation cannot replace its EngineContext");
++            }
++            return bootstrap(Objects.requireNonNull(newContext, "newContext"), containerKind);
++        }
++
++        @Override
++        public void close() {
++            state = GenerationState.CLOSED;
++        }
++    }
++
++    /** Marker proving all concrete collaborator behavior is deliberately deferred from the skeleton. */
++    public static UnsupportedOperationException unimplemented(String boundary) {
++        return new UnsupportedOperationException("architecture skeleton - unimplemented: " + boundary);
++    }
++}

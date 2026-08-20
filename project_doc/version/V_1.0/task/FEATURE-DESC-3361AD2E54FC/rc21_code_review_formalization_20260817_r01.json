@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "kind": "RC21_P2_CODE_REVIEW_FORMALIZATION",
+  "targetId": "FEATURE-DESC-3361AD2E54FC",
+  "phase": "code_review",
+  "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009",
+  "formalReleaseContract": "2.44 RC21",
+  "reviewRevision": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+  "canonicalAuthority": {
+    "requirementAnalysis": "REQAN-P2-R01@d08612768131",
+    "businessModel": "BM-R20",
+    "design": "DESIGN-P2-R30",
+    "testDesign": "TESTDESIGN-P2-R32",
+    "implementationPlan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a"
+  },
+  "implementationDiff": {
+    "base": "b5f1948c01fd25b88978cf4b843da17884c4ff91",
+    "head": "4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+    "commitCount": 39
+  },
+  "pr36CodeEquivalence": {
+    "observedHead": "232735d32226777c571654e135e8ada1a767f41e",
+    "comparisonBase": "4a82335fbdce7a56b58fd6626af0ec67a7cbebba",
+    "comparisonResult": "AHEAD_BY_12_DOCS_PROCESS_ONLY",
+    "changedPathConstraint": "all changed paths are project_doc/**",
+    "productionCodeChanged": false,
+    "testCodeChanged": false,
+    "runtimeConfigChanged": false
+  },
+  "riskTriggers": [
+    "architecture_change",
+    "concurrency",
+    "cross_module_integration",
+    "impact_analysis",
+    "performance",
+    "security"
+  ],
+  "reviewers": [
+    "ArchitectureReviewAgent",
+    "EngineeringStandardsReviewAgent",
+    "SpecComplianceReviewAgent",
+    "ConcurrencyReviewAgent",
+    "CrossModuleIntegrationReviewAgent",
+    "ImpactAnalysisReviewAgent",
+    "PerformanceReviewAgent",
+    "SecurityReviewAgent"
+  ],
+  "verification": {
+    "p0_1825": {
+      "coreVerify": "PASSED",
+      "mysqlIt": "PASSED",
+      "commandEvidence": "EVD-000293"
+    },
+    "p0_1832": {
+      "artifact": "p0-1832-core.zip",
+      "focusedMetricRef": "evidence/commands/code-review-i009/p0-1832-focused-metrics.json"
+    }
+  },
+  "mutationPolicy": {
+    "mode": "REVIEW_ONLY",
+    "productionCode": "DENY",
+    "tests": "DENY",
+    "config": "DENY",
+    "projectDocs": "ALLOW"
+  },
+  "localGitEnvironment": {
+    "gitDirectoryPresent": false,
+    "handling": "Historical GIT_REF validation is remote-Git-resolved; machinery wrappers may filter only the exact local error `GIT_REF project is not a Git repository` after proving no other validation errors."
+  },
+  "semanticReviewSeed": "Prior process-only audit exists on PR36, but current canonical review is re-bound to RC21 authority R30/R32/R05 and must be independently registered through current Review Contract."
+}

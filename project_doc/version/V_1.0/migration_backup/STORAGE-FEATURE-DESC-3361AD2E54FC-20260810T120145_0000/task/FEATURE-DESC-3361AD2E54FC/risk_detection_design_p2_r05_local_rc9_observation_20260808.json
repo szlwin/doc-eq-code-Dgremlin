@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "observation_type": "LOCAL_RC9_RISK_SCAN_NON_REPOSITORY_EVIDENCE",
+  "review_contract": "common-develop 2.44 RC9",
+  "candidate_revision": "DESIGN-P2-R05",
+  "candidate_ref": "project_doc/version/V_1.0/doc/COMPILER/changes/p2-design-runtime-requirement-wildcard-closed-facts-remediation-r05.md",
+  "local_scan": {
+    "validator_status": "PASSED",
+    "input_digest": "274b9faeef2e8e27630b04ad847967a8098a4236aad8e56c1a4bbd3e1f613351",
+    "scanned_at": "2026-08-08T10:36:28+00:00",
+    "scanned_by_agent": "ProjectManagerAgent",
+    "active_risk_types": [
+      "api_contract",
+      "architecture_change",
+      "concurrency",
+      "cross_module_integration",
+      "data_migration",
+      "impact_analysis",
+      "maintainability",
+      "security"
+    ],
+    "detections": [
+      {"detection_id":"DET-05D983436F31","risk_type":"cross_module_integration","source":"AGENT","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-15AA44A02293","risk_type":"security","source":"DETECTOR","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-1950F841A56E","risk_type":"impact_analysis","source":"DETECTOR","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-2221A2B387E9","risk_type":"security","source":"AGENT","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-40EC84C32EAD","risk_type":"concurrency","source":"DETECTOR","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-66AF905176F9","risk_type":"maintainability","source":"AGENT","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-7D12D202FA4A","risk_type":"data_migration","source":"DETECTOR","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-959A1BD70A58","risk_type":"api_contract","source":"AGENT","local_evidence_ids":["EVD-000001"]},
+      {"detection_id":"DET-F8FA095D55BF","risk_type":"architecture_change","source":"DETECTOR","local_evidence_ids":["EVD-000001"]}
+    ]
+  },
+  "local_evidence": {
+    "evidence_id": "EVD-000001",
+    "type": "code_ref",
+    "digest": "988883881684a4ab007cf697ea1e7e5dc897b895c97b4665db7f4ce6fd8575fc",
+    "revision": "DESIGN-P2-R05",
+    "phase": "development",
+    "generated_by_agent": "ProjectManagerAgent"
+  },
+  "repository_evidence_status": "NOT_REGISTERED",
+  "repository_risk_detection_status": "NOT_SCANNED",
+  "closure_eligible": false,
+  "fnd_p2_rev_005_status": "OPEN",
+  "reason": "The RC9 scan was executed against an isolated local mirror of the exact candidate Design bytes. Its EVD-000001 belongs only to that temporary evidence registry and conflicts with the repository's historical evidence namespace. The connector-only runtime cannot safely transactionally append the generated evidence to the existing compact evidence/evidence_index.json, so the local ID MUST NOT be treated as repository Evidence. The repository risk_detection.json is intentionally NOT_SCANNED until the scan is rerun in a safely mounted repository working tree.",
+  "required_next_action": "After formal reopen/publish in a real repository working tree, run RC9 risk_detect scan/add/validate against exact DESIGN-P2-R05 so new repository Evidence IDs are registered, then execute all triggered exact-revision reviewers or valid waivers."
+}

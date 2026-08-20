@@ -1,0 +1,5 @@
+COMMAND: python3 /home/oai/skills/common-develop/scripts/long_task.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
+WARN: active task has no handoff file
+OK: project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC
+
+EXIT_CODE: 0

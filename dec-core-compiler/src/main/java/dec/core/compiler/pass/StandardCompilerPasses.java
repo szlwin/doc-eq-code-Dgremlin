@@ -20,6 +20,8 @@ import dec.core.compiler.modelaccess.ModelAccessCompilation;
 import dec.core.compiler.modelaccess.ModelAccessCompilationResult;
 import dec.core.compiler.modelaccess.ModelAccessCompilationStatus;
 import dec.core.compiler.modelaccess.ModelAccessCompiler;
+import dec.core.compiler.modelaccess.ModelAccessPolicyCompilationResult;
+import dec.core.compiler.modelaccess.ModelAccessPolicyCompiler;
 import dec.core.compiler.raw.RawBuildResult;
 import dec.core.compiler.raw.RawBuildStatus;
 import dec.core.compiler.raw.RawDefinition;
@@ -51,6 +53,7 @@ import dec.core.context.model.DeferredRegistry;
 import dec.core.context.model.DefinitionKey;
 import dec.core.context.model.ImmutableDeferredRegistry;
 import dec.core.context.model.ImmutableRegistry;
+import dec.core.context.model.ModelAccessPolicyIndex;
 import dec.core.context.model.NormalizedBody;
 import dec.core.context.model.PublishedSourceDependency;
 import dec.core.context.model.PublishedSourceDescriptor;
@@ -263,6 +266,8 @@ final class StandardCompilerPasses {
     /** 第六阶段：编译 ModelAccess Binding 和其 P2 Deferred。 */
     private static final class ModelAccessPass implements CompilerPass {
         private final ModelAccessCompiler compiler = new ModelAccessCompiler();
+        private final ModelAccessPolicyCompiler policyCompiler =
+                new ModelAccessPolicyCompiler();
 
         @Override
         public String name() {
@@ -278,14 +283,26 @@ final class StandardCompilerPasses {
             ModelAccessCompilationResult result = compiler.compile(
                     information.references.symbols.structural.raw,
                     information.references.symbols.symbols);
-            if (result.status() == ModelAccessCompilationStatus.COMPILED) {
+            if (result.status() != ModelAccessCompilationStatus.COMPILED) {
+                return PassResult.of(result.diagnostics());
+            }
+
+            // DEV-03：结构 Binding 与静态授权必须在同一 Session 内一起成功，禁止发布部分策略。
+            ModelAccessPolicyCompilationResult policy = policyCompiler.compile(
+                    result.compilation().get(),
+                    information.references.symbols.symbols);
+            List<dec.core.context.model.Diagnostic> diagnostics =
+                    new ArrayList<dec.core.context.model.Diagnostic>(result.diagnostics());
+            diagnostics.addAll(policy.diagnostics());
+            if (policy.compiled()) {
                 context.putArtifact(
                         MODEL_ACCESS,
                         new ModelAccessArtifact(
                                 information,
-                                result.compilation().get()));
+                                result.compilation().get(),
+                                policy.policyIndex().get()));
             }
-            return PassResult.of(result.diagnostics());
+            return PassResult.of(diagnostics);
         }
     }
 
@@ -397,7 +414,9 @@ final class StandardCompilerPasses {
                     context.request().options());
             context.putArtifact(
                     CandidateContextPublicationPass.INPUT_ARTIFACT,
-                    new CompiledModelSetBuilder(bound).freeze());
+                    new CompiledModelSetBuilder(
+                            bound,
+                            semantic.deferred.modelAccess.policyIndex).freeze());
             return PassResult.passed();
         }
     }
@@ -673,12 +692,15 @@ final class StandardCompilerPasses {
             implements ImmutablePipelineArtifact {
         private final InformationArtifact information;
         private final ModelAccessCompilation compilation;
+        private final ModelAccessPolicyIndex policyIndex;
 
         private ModelAccessArtifact(
                 InformationArtifact information,
-                ModelAccessCompilation compilation) {
+                ModelAccessCompilation compilation,
+                ModelAccessPolicyIndex policyIndex) {
             this.information = Objects.requireNonNull(information, "information");
             this.compilation = Objects.requireNonNull(compilation, "compilation");
+            this.policyIndex = Objects.requireNonNull(policyIndex, "policyIndex");
         }
     }
 

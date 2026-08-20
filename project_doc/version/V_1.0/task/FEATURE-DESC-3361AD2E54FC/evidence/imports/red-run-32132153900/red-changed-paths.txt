@@ -1,0 +1,3 @@
+.github/workflows/p2-red-evidence.yml
+dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationFixture.java
+dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java
