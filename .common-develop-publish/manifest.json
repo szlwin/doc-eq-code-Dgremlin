@@ -1,0 +1,10 @@
+{
+  "expected_parent": "1547f4fff2375798d1faa2a80ad77518a73bfdc8",
+  "target_sha": "6387ed6ba5b78676aff653f9252d8d1b776292a0",
+  "target_tree": "654f3b6af77946da8062c48072449bc02a8d4b19",
+  "bundle_sha256": "04bacc1cedd3c5236cd6ad7281579a9d3fb8bc2bd7397164c266ee516e9776d8",
+  "bundle_xz_sha256": "6ad15a3db0b278f1c9375a680b8e4d4106ff5c806ff861947b54b94fcfd3a22b",
+  "checkpoint_trailer": "WK-Checkpoint: CP-V_1.0-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-014",
+  "revision_trailer": "WK-Revision: COMPLETION-P2-R37-R01@48e929ecb564",
+  "payload_prefix": "cv14.bundle.xz.b64"
+}
