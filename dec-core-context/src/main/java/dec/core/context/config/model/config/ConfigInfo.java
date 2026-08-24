@@ -1,5 +1,7 @@
 package dec.core.context.config.model.config;
 
+import dec.core.context.CoreConfigProjection;
+import dec.core.context.EngineContext;
 import dec.core.context.config.model.config.data.ConfigBaseData;
 import dec.core.context.config.model.config.factory.ConfigFactory;
 import dec.core.context.config.model.connection.Connection;
@@ -14,8 +16,11 @@ import dec.core.context.config.model.rule.RuleViewInfo;
 import dec.core.context.config.model.view.ViewData;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ConfigInfo {
+
+    private volatile EngineContext engineContext;
 
     public static final String CONNECTION_INFO = "orm-connection-info";
 
@@ -44,6 +49,44 @@ public class ConfigInfo {
     private String defaultConnection;
 
     private String defaultDataSource;
+
+    /**
+     * Associates this legacy configuration facade with the compiled context used by
+     * the current application configuration.
+     *
+     * <p>The existing ConfigInfo API remains available for simple callers. New code
+     * can obtain compiled definitions and projections through the same ConfigInfo
+     * instance without introducing a separate runtime access workflow.</p>
+     *
+     * @param engineContext compiled context for this configuration
+     * @return this configuration for fluent bootstrap code
+     */
+    public ConfigInfo useEngineContext(EngineContext engineContext) {
+        this.engineContext = Objects.requireNonNull(engineContext, "engineContext");
+        return this;
+    }
+
+    /** Returns whether a compiled context has been associated with this configuration. */
+    public boolean hasEngineContext() {
+        return engineContext != null;
+    }
+
+    /**
+     * Returns the associated compiled context.
+     *
+     * @throws IllegalStateException when configuration loading has not installed a context
+     */
+    public EngineContext getEngineContext() {
+        if (engineContext == null) {
+            throw new IllegalStateException("EngineContext has not been configured");
+        }
+        return engineContext;
+    }
+
+    /** Returns the read-only legacy projection derived from the same EngineContext. */
+    public CoreConfigProjection getCoreConfigProjection() {
+        return getEngineContext().projection();
+    }
 
     public Data getData(String name) {
         return (Data) get(Config.DATA, name);

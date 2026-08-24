@@ -1,158 +1,270 @@
-# P2 TestDesign R32
+<!-- template: common-develop/test-case-v1 -->
+# FEATURE-DESC-3361AD2E54FC 测试设计
 
-`TESTDESIGN-P2-R32`; base R31; inputs `REQAN-P2-R01@d08612768131 + Overlay R04 + BM-R20 + FLOW-R11 + P2-IMPACT-R29 + DESIGN-P2-R30`.
-Status `IN_REVIEW`. **101 blocking Cases -> 23 exact TestClasses**.
+> Test revision：`TESTDESIGN-P2-R40`
+> Requirement：`FEATURE-DESC-3361AD2E54FC`
+> Requirement revision：`REQAN-P2-R01`
+> Design revision：`DESIGN-P2-R36`
+> 状态：测试设计完成
 
-## Exact RED registry
+> 文档导航：[项目文档首页](../../../../docs/README.md) · [版本摘要](../../version_summary.md) · [需求文档](requirement.md) · [关联设计](../COMPILER/COMPILER_design.md) · 页面设计不适用（Java 核心运行时，无 UI）
 
-`BOOT(m)=./mvnw -pl m -am -Dmaven.test.skip=true install`
-`RED(m,c)=./mvnw -pl m -Dtest=c -Dsurefire.failIfNoSpecifiedTests=true test` (no `-am`). Pre-assert compile/setup/missing-class failure=`INVALID_RED`.
+## 1. 测试范围与环境
 
-`Key | Module | TestClass | Planned source | Commands`
-`DAG | dec-core-compiler | P2RevisionDependencyDagContractTest | dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,P2RevisionDependencyDagContractTest)`
-`SYSTEM | dec-core-compiler | SystemCompilationContractTest | dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,SystemCompilationContractTest)`
-`RULEVIEW | dec-core-compiler | RuleViewCompilationContractTest | dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,RuleViewCompilationContractTest)`
-`TARGET | dec-core-compiler | TargetKeyModelPathContractTest | dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,TargetKeyModelPathContractTest)`
-`POLICY | dec-core-compiler | ModelAccessPolicyContractTest | dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,ModelAccessPolicyContractTest)`
-`API_CTX | dec-core-context | ProtectedAccessContextApiContractTest | dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java | BOOT(dec-core-context); RED(dec-core-context,ProtectedAccessContextApiContractTest)`
-`API_COMPILER | dec-core-compiler | P2CompilerContextConstructibilityContractTest | dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,P2CompilerContextConstructibilityContractTest)`
-`API_MODEL | dec-core-model | ProtectedAccessModelApiContractTest | dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java | BOOT(dec-core-model); RED(dec-core-model,ProtectedAccessModelApiContractTest)`
-`API_STARTER | dec-core-starter | ProtectedAccessStarterApiContractTest | dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java | BOOT(dec-core-starter); RED(dec-core-starter,ProtectedAccessStarterApiContractTest)`
-`MATERIALIZE | dec-core-model | RuntimeModelMaterializationIntegrationTest | dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java | BOOT(dec-core-model); RED(dec-core-model,RuntimeModelMaterializationIntegrationTest)`
-`VALUE | dec-core-context | RuntimeFactValueContractTest | dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java | BOOT(dec-core-context); RED(dec-core-context,RuntimeFactValueContractTest)`
-`ID | dec-core-context | OpaqueRuntimeIdContractTest | dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java | BOOT(dec-core-context); RED(dec-core-context,OpaqueRuntimeIdContractTest)`
-`INTENT | dec-core-starter | ProtectedWriteIntentResolutionTest | dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java | BOOT(dec-core-starter); RED(dec-core-starter,ProtectedWriteIntentResolutionTest)`
-`ADAPTER | dec-core-starter | ProtectedRuntimeModelAdapterIntegrationTest | dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java | BOOT(dec-core-starter); RED(dec-core-starter,ProtectedRuntimeModelAdapterIntegrationTest)`
-`LOCATOR | dec-core-model | RuntimeObjectLocatorIntegrationTest | dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java | BOOT(dec-core-model); RED(dec-core-model,RuntimeObjectLocatorIntegrationTest)`
-`TXN | dec-core-model | ProtectedWriteTransactionIntegrationTest | dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java | BOOT(dec-core-model); RED(dec-core-model,ProtectedWriteTransactionIntegrationTest)`
-`COMPOSE | dec-core-starter | ProtectedAccessProductionCompositionTest | dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java | BOOT(dec-core-starter); RED(dec-core-starter,ProtectedAccessProductionCompositionTest)`
-`CONC | dec-core-starter | ProtectedAccessConcurrencyTest | dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java | BOOT(dec-core-starter); RED(dec-core-starter,ProtectedAccessConcurrencyTest)`
-`DEP | dec-core-starter | ProtectedAccessDependencyDirectionTest | dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java | BOOT(dec-core-starter); RED(dec-core-starter,ProtectedAccessDependencyDirectionTest)`
-`PUB | dec-core-compiler | AtomicPublicationContractTest | dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,AtomicPublicationContractTest)`
-`DIAG | dec-core-compiler | P2DiagnosticDeterminismTest | dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,P2DiagnosticDeterminismTest)`
-`FIXTURE | dec-demo | P2RealFixtureIntegrationTest | dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java | BOOT(dec-demo); RED(dec-demo,P2RealFixtureIntegrationTest)`
-`COMPAT | dec-core-compiler | P2DeclarationCompatibilityContractTest | dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java | BOOT(dec-core-compiler); RED(dec-core-compiler,P2DeclarationCompatibilityContractTest)`
+- 测试目标：证明 DECIMAL Kind/数值保真、AC-009 DENY 定位完整、三类业务入口使用真实 production lifecycle，并保持 P2 全量行为。
+- 范围内：dec-core-context、dec-core-model、dec-core-starter 的 value/result/production tests 和 Maven 全量回归。
+- 范围外：用户明确排除的 DEC-P2-R34-001/002/003；页面、HTTP、数据库、P3-P7、部署。
+- 环境与账号：JDK 17+、Maven Wrapper；根 POM 固定 `maven.compiler.release=8`，产物 class major version 必须为 52；进程内 fixture，无账号、网络或外部数据库。
+- 共用前置条件：immutable EngineContext、真实 RuntimeModelExecutionRoot、RuntimeModelLoadRequest、origin object；禁止反射 Scope、手工 Handle、预制 guarded/raw port。
 
-## 101 blocking oracles
+## 2. Case 索引
 
-For Case suffix `X`, fixture=`fx:x` and action=`a:x` (lowercase slug); each row freezes its observable Expected/Forbidden.
+| Case ID | 名称 | 功能/验收 | 页面/操作 | 流程/步骤 | 测试层级 | 自动化状态 |
+|---|---|---|---|---|---|---|
+| CASE-P2-R40-DECIMAL-KIND-001 | DECIMAL 保持 BigDecimal Kind 和数值 | Java 8 产物兼容/value exactness | 不适用：无 UI | DESIGN-R36 §4/§6 | 单元/集成 | PLANNED |
+| CASE-P2-R40-DENIAL-CONTEXT-001 | DENY 稳定关联适用定位字段 | BR-018、AC-009 | 不适用：无 UI | DESIGN-R36 §4/§11 | 单元/集成 | PLANNED |
+| CASE-P2-R40-PRODUCTION-CONSUMERS-001 | 三类入口贯穿真实生产链 | AC-006/007 | 不适用：无 UI | DESIGN-R36 §5/§8 | 生命周期集成 | PLANNED |
+| CASE-P2-R40-FULL-REGRESSION-001 | Java 8 兼容产物与 P2 全量回归 | AC-001～010 | 不适用：无 UI | DESIGN-R36 §13 | 回归 | AUTOMATED |
 
-`Case | ClassKey | Expected | Forbidden | Ref`
-`CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001 | API_CTX | index in CompiledModelSet equality/hash/digest; EngineContext delegates | no side index/digest omission | CURRENT-R32`
-`CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001 | PUB | missing/duplicate target descriptor blocks publish; old Context stays | no runtime repair/partial publish | CURRENT-R32`
-`CASE-P2-TD-ATOMIC-PUBLICATION-001 | PUB | complete candidate publishes atomically or old Context remains | no partial aggregate visibility | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-LOAD-REQUEST-001 | MATERIALIZE | request A -> plan validate -> descriptor -> ModelData A -> 3arg loader -> real Container -> Handle A/scope | no request authority/default Context/existing ModelData/caller Container | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-LOAD-PLAN-MISMATCH-001 | MATERIALIZE | Plan B absent in Context A -> PLAN_NOT_IN_CAPTURED_CONTEXT; creation/load/scope/Guard/effect=0 | no repair/fallback/partial handle | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001 | MATERIALIZE | factory A == loader A == Container A == Handle/session/effect A | no create/load A then freeze/effect B | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001 | MATERIALIZE | production(context,kind) -> MODEL ContainerFactory real Container | no production(context,fakeContainer)/fake evidence | CURRENT-R32`
-`CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001 | COMPOSE | same sealed session binds provider; foreign/unsealed/closed -> stable failure/no composition | no caller provider/port/preseal bind/fallback | CURRENT-R32`
-`CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001 | ADAPTER | resolved A + Guard A -> port rechecks same session/object/handle -> effect A | no STEP03 A -> STEP06 B | CURRENT-R32`
-`CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001 | ADAPTER | public production/consumer APIs expose no provider/port/Guard injection or getter | no business effect replacement/bypass | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001 | COMPOSE | A resolves/Guards/effects A; substitute B fails before protected effect | no A->B repair/first-match/rebind | CURRENT-R32`
-`CASE-P2-TD-REVISION-DAG-001 | DAG | authority REQ+R04->BM-R20->FLOW-R11->DESIGN-R30->TEST-R32; Impact R29 parallel | no stale authority/lifecycle rewrite | CURRENT-R32`
-`CASE-P2-TD-SYSTEM-DETERMINISM-001 | SYSTEM | source-order variants compile same SystemKey set/digest | no order-dependent identity | CURRENT-R32`
-`CASE-P2-TD-SYSTEM-DUPLICATE-001 | SYSTEM | duplicate System -> stable error; publish=0 | no first/last wins | CURRENT-R32`
-`CASE-P2-TD-SYSTEM-FORWARD-REF-001 | SYSTEM | legal forward ref resolves; missing/ambiguous -> stable error; publish=0 | no eager-order/global fallback | CURRENT-R32`
-`CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001 | SYSTEM | published ownership unaffected by later source mutation | no mutable source alias | CURRENT-R32`
-`CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001 | SYSTEM | version change changes exact identity/digest | no version elision/case folding | CURRENT-R32`
-`CASE-P2-TD-BM-CANONICAL-PAIR-001 | SYSTEM | human+canonical BM both BM-R20 with same target/path/RW/Guard semantics | no BM-R07/Design seam in BM | CURRENT-R32`
-`CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001 | RULEVIEW | RuleView without System -> compile error; publish=0 | no default/bare System | CURRENT-R32`
-`CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001 | RULEVIEW | same System+local RuleView duplicate -> stable error | no first/last duplicate | CURRENT-R32`
-`CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001 | RULEVIEW | same local name under two Systems -> two distinct composite keys | no cross-System collision | CURRENT-R32`
-`CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001 | RULEVIEW | exact owning System+View resolves; 0/N -> compile error | no bare View fallback | CURRENT-R32`
-`CASE-P2-TD-RULEKEY-CONTRACT-001 | RULEVIEW | RuleKey equality = owner RuleViewKey + local rule | no global/casefold alias | CURRENT-R32`
-`CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001 | RULEVIEW | lookup requires exact System-qualified key | no local-name-only first match | CURRENT-R32`
-`CASE-P2-TD-KEY-SOURCE-COMPAT-001 | RULEVIEW | P1 compatibility maps to same shared View/RuleView identities | no second identity namespace | CURRENT-R32`
-`CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001 | RULEVIEW | legacy bare name confined to P1 adapter boundary | no new P2 authority by bare name | CURRENT-R32`
-`CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001 | TARGET | sourceModel shared ViewKey -> TargetKey; owner System separate | no owner folded into target | CURRENT-R32`
-`CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001 | TARGET | TargetKey and canonical ModelPath independent immutable values | no path-in-target inference | CURRENT-R32`
-`CASE-P2-TD-MODEL-PATH-UNKNOWN-001 | TARGET | unknown segment -> compile error | no runtime/best-effort repair | CURRENT-R32`
-`CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001 | TARGET | supported wildcard -> finite deterministic exact paths at compile | no wildcard reaches runtime | CURRENT-R32`
-`CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001 | TARGET | Rule/Change/CustomAction get identical canonical path | no consumer-specific normalization | CURRENT-R32`
-`CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001 | TARGET | P1 path maps losslessly to READ/WRITE-only P2 | no EXECUTE synthesis/path loss | CURRENT-R32`
-`CASE-P2-TD-NESTED-OBJECT-PATH-001 | TARGET | user.authInfo compiles as canonical exact segments [user,authInfo] when both segments exist and user is composite | no flattening/root guessing/runtime repair | CURRENT-R32`
-`CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001 | TARGET | user.authInfo.role compiles as canonical exact segments [user,authInfo,role] when each intermediate is composite | no truncation/prefix fallback | CURRENT-R32`
-`CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001 | TARGET | user.id.value fails at compile time when id is a leaf/non-composite segment | no runtime/best-effort repair | CURRENT-R32`
-`CASE-P2-TD-NESTED-COLLECTION-PATH-001 | TARGET | payInfo.payDetailList.productId navigates the compiled object/collection path catalog to one canonical exact ModelPath | no wildcard/string-only fallback | CURRENT-R32`
-`CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001 | TARGET | with target-main=user, selector user.authInfo is not interpreted as target-main(user)+property(authInfo); target-main exact match and property-root traversal remain separate selectors | no target-main prefix consumption | CURRENT-R32`
-`CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001 | POLICY | READ user does not authorize READ user.authInfo unless the child exact ModelAccessRuleKey exists (or source READ wildcard was compile-time expanded to that exact path) | no parent/prefix/ancestor runtime permission fallback | CURRENT-R32`
-`CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001 | POLICY | READ and WRITE independently follow exact ModelAccessRuleKey | no implicit/EXECUTE permission | CURRENT-R32`
-`CASE-P2-TD-NO-EXECUTE-CONTRACT-001 | POLICY | AccessOperation exactly READ,WRITE; EXECUTE rejected | no hidden compatibility EXECUTE | CURRENT-R32`
-`CASE-P2-TD-STATIC-DENY-001 | POLICY | static unauthorized access rejected before Guard/capability/effect | no Guard widening static deny | CURRENT-R32`
-`CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001 | POLICY | only frozen valid static/dynamic tuples publish | no incomplete/mixed tuple | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001 | POLICY | dynamic selector compiles once to exact binding/plan used unchanged | no runtime selector parse | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-BINDING-PROOF-001 | POLICY | proof derives exact published plan + same Handle provenance | no caller text/metadata proof | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001 | POLICY | plan != Handle provenance -> deny before capability/Guard/effect | no plan repair/relabel | CURRENT-R32`
-`CASE-P2-TD-CONTEXT-API-SELF-CONTAINED-001 | API_CTX | CONTEXT public factories/materialization compile without MODEL/STARTER | no reverse dependency/reflection-only pass | CURRENT-R32`
-`CASE-P2-TD-MODEL-API-SELF-CONTAINED-001 | API_MODEL | MODEL direct request/root/scope/session/effect API compiles; token credential not current | no required token/replay/caller Container | CURRENT-R32`
-`CASE-P2-TD-STARTER-API-SELF-CONTAINED-001 | API_STARTER | STARTER composition/resolver/entry contracts compile via legal deps | no hidden factory/reverse dep | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001 | VALUE | value domain exactly NULL/BOOL/INTEGER/DECIMAL/STRING/LIST/OBJECT | no arbitrary live Object kind | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001 | VALUE | nested source mutation cannot change frozen value/json | no collection alias | CURRENT-R32`
-`CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001 | ID | IDs reject blank; exact case-sensitive structural equality | no authority/casefold/numeric inference | CURRENT-R32`
-`CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001 | INTENT | 0 intent -> WRITE_INTENT_NOT_FOUND before capability/Guard/effect | no fallback intent | CURRENT-R32`
-`CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001 | INTENT | N>1 intent -> WRITE_INTENT_AMBIGUOUS; select none | no first/random intent | CURRENT-R32`
-`CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001 | INTENT | one intent freezes target/path/stamp before Guard | no postfreeze reselection/version refresh | CURRENT-R32`
-`CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001 | INTENT | WRITE permission solely exact ModelAccessRuleKey | no RuleKey/consumer widening | CURRENT-R32`
-`CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001 | INTENT | WRITE intent/effect carry one exact rule ModelPath | no second path authority | CURRENT-R32`
-`CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001 | INTENT | invocation frame/owner/cursor typed IDs equal MODEL-minted facts | no raw/sentinel/caller frame authority | CURRENT-R32`
-`CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001 | INTENT | stamp session/object/path/version from same resolved object | no object/version substitution | CURRENT-R32`
-`CASE-P2-TD-REAL-READ-OPERATION-001 | ADAPTER | Guard ALLOW -> private port reads same registered handle/path/session | no preGuard/foreign read/caller port | CURRENT-R32`
-`CASE-P2-TD-REAL-WRITE-OPERATION-001 | ADAPTER | Guard ALLOW -> private port writes same handle/path once; matching receipt | no preGuard/alternate ModelData/second write | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001 | ADAPTER | real call -> request/root/real Container -> same Handle/Scope -> bind -> Guard -> operation | no fake/detached/token requirement/bypass | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001 | LOCATOR | locate only exact sealed-session registered objects | no global/name/foreign-session lookup | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001 | LOCATOR | missing -> NOT_FOUND; closed/stale -> STALE | no substitute/stale effect | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-TARGET-SELECTION-001 | LOCATOR | exact plan+scope gives 0 NOT_FOUND / 1 target / N AMBIGUOUS | no first/last match | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001 | TXN | mutation failure before success -> no receipt + RUNTIME_WRITE_FAILED | no requirement for excluded later postcopy POJO restore | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001 | COMPOSE | Rule/Change/CustomAction enter STARTER guarded entries only | no direct consumer MODEL effect/load | CURRENT-R32`
-`CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001 | COMPOSE | Context+active MODEL scope -> validate/register/seal/bind -> protected entries | no injected frame/session/Guard/port/Container | CURRENT-R32`
-`CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001 | COMPOSE | Rule entry DENY -> effect0; ALLOW -> same bound Handle | no direct MODEL import/widening | CURRENT-R32`
-`CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001 | COMPOSE | Change entry uses same resolver/capability/Guard/effect semantics | no Change-specific bypass/authority | CURRENT-R32`
-`CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001 | COMPOSE | CustomAction entry uses shared guarded composition | no direct port/consumer Guard | CURRENT-R32`
-`CASE-P2-TD-AC007-CONSUMER-PARITY-001 | COMPOSE | same key/frame/target -> equivalent Rule/Change/CustomAction outcome/effect | no consumer-specific path/permission | CURRENT-R32`
-`CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001 | COMPOSE | consumer classes depend STARTER+CONTEXT only | no MODEL root/effect imports | CURRENT-R32`
-`CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001 | COMPOSE | real config -> plan -> request/root -> real ModelData/Container -> Scope -> Guard -> effect -> writeback | no fake ModelData/Container/port/raw repair | CURRENT-R32`
-`CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001 | COMPOSE | invocation frame facts equal independent MODEL scope and Context contains plans | no self-asserted/global Context/relabel | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-RUNTIME-REGISTRATION-BINDING-001 | COMPOSE | register exactly MODEL-loaded trusted Handles; seal once before bind | no injected existing ModelData/foreign scope/duplicate success | CURRENT-R32`
-`CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001 | CONC | concurrent one capability -> at most one Guard/effect; losers consumed | no duplicate effect/reset | CURRENT-R32`
-`CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001 | CONC | same Handle/path/version share one coordination domain; stale loser | no independent locks/double commit | CURRENT-R32`
-`CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001 | CONC | same Handle conflicting second session -> OWNERSHIP_CONFLICT | no parallel ownership domains | CURRENT-R32`
-`CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001 | DEP | compiler->context; model->context; starter->context+model; consumer->starter+context | no consumer->MODEL/root/effect or reverse deps | CURRENT-R32`
-`CASE-P2-TD-CONTEXT-ISOLATION-001 | PUB | separate EngineContexts retain isolated immutable aggregates | no global mutable cross-context contamination | CURRENT-R32`
-`CASE-P2-TD-POLICY-INDEX-PUBLICATION-001 | POLICY | policy visible only with complete matching binding/materialization candidate | no partial/missing-plan policy | CURRENT-R32`
-`CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001 | DIAG | equivalent compile failure -> same source-aware code/message/order | no identity/hash-order/sensitive leak | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001 | DIAG | equivalent runtime denial -> same stable nonsensitive code/message | no ModelData/origin/JVM identity leak | CURRENT-R32`
-`CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001 | FIXTURE | real config -> RUNTIME_GUARD_REQUIRED + EXACT_RUNTIME_BINDING + exact plan | no fake STATIC_ALLOW/fabricated plan | CURRENT-R32`
-`CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001 | FIXTURE | real config+origin -> plan -> request/root -> same ModelData -> Scope -> Guard -> READ/WRITE | no sourceSnapshot/fake/global Context/bypass | CURRENT-R32`
-`CASE-P2-TD-DECLARATION-BOUNDARY-001 | COMPAT | P2 preserves active P1 compatibility; final convergence stays P7 | no retired authority/P7 pull-in | CURRENT-R32`
-`CASE-P2-TD-TRUSTED-MATERIALIZATION-INPUT-001 | MATERIALIZE | MODEL lifecycle request -> validated plan+origin -> internally created trusted ModelData | no request authority/STARTER creation/existing ModelData/default connection | CURRENT-R32`
-`CASE-P2-TD-TRUSTED-MATERIALIZATION-EXACT-VIEW-001 | MATERIALIZE | plan target ViewKey -> exact captured descriptor -> same loaded/frozen ModelData | no XML/YAML/ViewData/name/default Context repair | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-FRAME-HANDOFF-001 | COMPOSE | successful load -> root Scope/frame; STARTER validates; root close stales scope | no caller frame/scope/stale reuse | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-SESSION-HANDOFF-001 | COMPOSE | one scope session; exact Handles registered once; seal then same-scope bind | no alternate/injected/presealed session | CURRENT-R32`
-`CASE-P2-TD-COMPILED-VIEW-MATERIALIZATION-PLAN-001 | MATERIALIZE | one immutable typed descriptor per dynamic target View | no runtime config parsing/permission in descriptor | CURRENT-R32`
-`CASE-P2-TD-PRODUCTION-OBJECT-WRITEBACK-001 | MATERIALIZE | authorized success reaches same ModelData and existing successful origin writeback | no detached-only success; excluded late rollback not required | CURRENT-R32`
-`CASE-P2-TD-RUNTIME-SCOPE-PROVENANCE-001 | COMPOSE | scope/frame IDs MODEL-minted for exact trusted Handle set | no caller relabel/global/threadlocal scope | CURRENT-R32`
-`CASE-P2-TD-COMPILER-CONTEXT-CONSTRUCTIBILITY-001 | API_COMPILER | compiler constructs plans/policies/CompiledModelSet index via public contracts | no reflection/package-private side channel | CURRENT-R32`
-`CASE-P2-TD-CALLER-STARTER-CONSTRUCTIBILITY-001 | API_STARTER | legal STARTER constructs invocation/resolved/result and composition from Context+Scope | no operation injection/hidden factory | CURRENT-R32`
-`CASE-P2-TD-R26-FRESH-SNAPSHOT-SEAM-ABSENT-001 | MATERIALIZE | R26 sourceSnapshot/frameRequest/runtime.open types absent from current API | no second fresh-snapshot runtime | CURRENT-R32`
-`CASE-P2-TD-TRUSTED-FRAME-PRECONDITION-FAILURE-MATRIX-001 | MATERIALIZE | closed/invalid-plan/missing-desc/bad-origin/container reject -> exact load failure; scope0 | no partial frame/repair/fallback/preGuard effect | CURRENT-R32`
-`CASE-P2-TD-MODEL-EXECUTION-ROOT-LOAD-001 | MATERIALIZE | root request -> exact descriptor -> typed factory -> 3arg loader -> real Container -> same Handle | no token requirement/caller Container/2arg load/detach | CURRENT-R32`
-`CASE-P2-TD-MODEL-SCOPE-PRODUCER-001 | MATERIALIZE | scope unavailable before load; active after success; stale after root close | no public scope/global recovery | CURRENT-R32`
-`CASE-P2-TD-COMPOSITION-FAILURE-ALGEBRA-001 | COMPOSE | setup failure -> created=false, no composition, one exact code; downstream counts0 | no null/unchecked fallback | CURRENT-R32`
-`CASE-P2-TD-SESSION-FAILURE-ALGEBRA-001 | API_MODEL | session inactive/closed/sealed/duplicate/ownership -> exact stable code | no duplicate success/string-only error/alternate session | CURRENT-R32`
+<!-- TEST-CASE: CASE-P2-R40-DECIMAL-KIND-001 -->
+<a id="CASE-P2-R40-DECIMAL-KIND-001"></a>
+## CASE-P2-R40-DECIMAL-KIND-001 DECIMAL 保持 BigDecimal Kind 和数值
 
-## Mandatory assertions
+### 关联事实
 
-- Request is transport data, not authority; MODEL production lifecycle is its trusted formation/use boundary.
-- Invalid plan fails before ModelData/Container/scope; descriptor only from captured typed index.
-- Same ModelData A is created, loaded, frozen, registered, resolved and affected.
-- Container is MODEL-created; EffectProvider binds same sealed session; operation port stays private to STARTER.
-- `resolve A -> Guard A -> effect A`; business consumers have no MODEL load/effect bypass.
-- Opaque production invocation credential is `NOT_ADOPTED_IN_P2 / DEFERRED`.
-- Successful originData write-back remains; excluded later post-copy POJO/Map restoration is not a blocker.
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；Java 8；RuntimeFactValue exactness | [需求兼容](requirement.md#105-兼容与历史数据) |
+| 设计/契约 | DESIGN-P2-R36；DEC-P2-R36-001；BP-P2-R36-001/002 | [数据设计](../COMPILER/COMPILER_design.md#6-数据与持久化方案) |
+| 页面/操作 | 不适用：值对象和 ModelData 无页面 | [页面不适用](../COMPILER/COMPILER_design.md#71-页面业务行为) |
+| 流程/步骤 | RuntimeFactValue Kind → typed getter → MODEL codec | [主流程](../COMPILER/COMPILER_design.md#51-主流程) |
 
-Gate: `risk_detection.json=NOT_SCANNED`; execution Evidence none; same-revision specialist Reviews + risk Evidence required. Implementation Plan/TDD/Development remain BLOCKED.
+### 前置条件和具体输入
 
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| integral decimal | `decimalValue(new BigDecimal("1.0"))` | RuntimeFactValue factory | Kind=DECIMAL；规范化允许 scale 改变 |
+| large decimal | `decimalValue(new BigDecimal("9223372036854775808"))` | factory | 超过 Long.MAX_VALUE |
+| negative decimal | `decimalValue(new BigDecimal("-12.3400"))` | factory | 负数和尾零 |
+| nested decimal | list/object 内包含上述三个值 | listValue/objectValue | 递归转换 |
+| integer control | `integerValue(7L)` | factory | Kind=INTEGER |
 
-## R32 nested ModelPath clarification
+### 执行步骤
 
-R32 is a TestDesign-only increment over R31. It does not reopen P1, BM-R20, FLOW-R11 or DESIGN-P2-R30. It freezes the already-designed distinction that `target-main` is an exact root selector, not a prefix consumed from a dotted property path; nested object/collection paths are canonical segment sequences; non-composite intermediate segments fail closed; runtime authorization remains exact-only with no parent/prefix fallback. The six R32 oracles reuse existing `TARGET` / `POLICY` TestClasses, so the registry remains 23 exact TestClasses.
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 调用 scalar typed getter 和 MODEL codec | RuntimeFactValue/RuntimeFactValueCodec | 不解析 canonicalForm |
+| 2 | 经现有 protected WRITE 写入 scalar/nested 值 | MODEL operation port | 合法 DECIMAL 不触发 NumberFormatException |
+| 3 | 从 ModelData 读取实际 Java 类型和值 | ModelData fixture | DECIMAL leaf=BigDecimal；INTEGER=Long |
+
+### 预期输出与验证方式
+
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| scalar DECIMAL | Java class 为 BigDecimal | `assertInstanceOf` 或 Java 8 `instanceof` assertion | 三个 DECIMAL 均不是 Long |
+| numeric values | 分别与 1、9223372036854775808、-12.34 数值相等 | `BigDecimal.compareTo()==0` | 不使用 equals 要求原始 scale |
+| nested leaves | 每个 DECIMAL leaf 为 BigDecimal | 递归 exact assertions | 无类型降级 |
+| integer control | Java class 为 Long，值=7 | exact assertion | INTEGER 行为不变 |
+
+### 禁止副作用与清理
+
+- 禁止副作用：不得按 canonical 小数点猜类型，不得拒绝超 Long 的合法 DECIMAL。
+- Case 完成后的状态：成功 WRITE 沿用现有 version/effect 行为；不承诺保留输入 BigDecimal 原始 scale。
+- 清理要求：关闭 fixture；数据仅在测试进程内，无脚本。
+
+### 测试数据与自动化映射
+
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| Java 代码构造 BigDecimal/list/object；无需脚本 | fixture.close；无需脚本 | 扩展 `dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java#scalarTypedAccessorsPreserveKind`；`dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java#decimalKindSurvivesIntegralCanonicalAndLargeValue` | `./mvnw -pl dec-core-context -Dtest=RuntimeFactValueContractTest -Dsurefire.failIfNoSpecifiedTests=true test`；`./mvnw -pl dec-core-model -Dtest=ProtectedWriteTransactionIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test` | PLANNED |
+
+<!-- TEST-CASE: CASE-P2-R40-DENIAL-CONTEXT-001 -->
+<a id="CASE-P2-R40-DENIAL-CONTEXT-001"></a>
+## CASE-P2-R40-DENIAL-CONTEXT-001 DENY 稳定关联适用定位字段
+
+### 关联事实
+
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-018；AC-009 | [需求 AC-009](requirement.md#ac-p2-system-ruleview-009-diagnostic-可定位且确定) |
+| 设计/契约 | DESIGN-P2-R36；DEC-P2-R36-002；BP-P2-R36-003/004 | [接口映射](../COMPILER/COMPILER_design.md#112-字段端到端映射) |
+| 页面/操作 | 不适用：运行时拒绝 DTO 无页面 | [页面不适用](../COMPILER/COMPILER_design.md#71-页面业务行为) |
+| 流程/步骤 | invocation/rule source → decision context → denial | [失败路径](../COMPILER/COMPILER_design.md#52-关键失败路径) |
+
+### 前置条件和具体输入
+
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| call identity | System=`order`、RuleView=`order:submit`、operation=READ、path=`amount` | contextual ProtectedAccessInvocation | RuleView 仅作诊断，owner 必须为 order，不参与 Guard 授权 |
+| published source | `SourceRef("mix/order/access.xml",8,2,"/model-access/read")` | exact READ CompiledModelAccessRule | denial 中必须与 `rule.sourceRef()` 完全相同 |
+| failures | POLICY_NOT_FOUND、operation/path mismatch、runtime effect failure | protected entries | 每类重复执行两次 |
+| non-RuleView control | framework internal invocation，RuleView empty | explicit fixture | 只有此类场景 RuleView 可不适用 |
+| owner mismatch | System=`order`、RuleView=`inventory:submit` | contextual factory | 必须在构造时拒绝，不能进入 Guard |
+
+### 执行步骤
+
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 用不存在的 exact policy 或 operation/path mismatch 调用 | Rule entry | DENY source=Optional.empty，不模糊回查 |
+| 2 | 用 exact rule 命中后发生 runtime target/effect failure 调用 | change/custom action entry | DENY source=published source |
+| 3 | 重复每类失败并比较结果 | ProtectedAccessDenial | code/message/context 稳定 |
+| 4 | 构造 RuleView owner mismatch 并扫描 denial 文本和字段 | contextual factory/getters/toString | mismatch 被拒绝；denial 不含 write value、origin 或配置正文 |
+
+### 预期输出与验证方式
+
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| policy-not-found context | order/order:submit/READ/amount/SourceRef empty | exact getter assertions | System/RuleView/operation/path 存在，SourceRef 明确不适用 |
+| matched-rule context | System/RuleView/op/path + published SourceRef | exact assertions | published source 优先 |
+| non-RuleView context | RuleView Optional.empty，其余字段存在 | optional assertion | 只在明确框架场景为空 |
+| owner mismatch | IllegalArgumentException | exact exception assertion | 不产生可执行 invocation |
+| repeated denial | 两次 code/message/context 相等 | equals/hash assertions | 完全稳定 |
+| sensitive scan | 不含模型值/origin/配置正文 | negative assertions | 无敏感泄露 |
+
+### 禁止副作用与清理
+
+- 禁止副作用：不得 null-success、吞异常或只写日志；不得输出 write value。
+- Case 完成后的状态：所有 DENY 的 ModelData/effect/version 沿用现有无成功结果语义。
+- 清理要求：关闭 production fixture；无外部脚本。
+
+### 测试数据与自动化映射
+
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| Java builder 创建 keys/RuleView/published SourceRef；无需脚本 | fixture.close；无需脚本 | 扩展 `dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java#denialCarriesStableDecisionContext`；`dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java#productionDenialsUseOnlyExactPublishedSource` | `./mvnw -pl dec-core-context -Dtest=ProtectedAccessContextApiContractTest -Dsurefire.failIfNoSpecifiedTests=true test`；`./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test` | PLANNED |
+
+<!-- TEST-CASE: CASE-P2-R40-PRODUCTION-CONSUMERS-001 -->
+<a id="CASE-P2-R40-PRODUCTION-CONSUMERS-001"></a>
+## CASE-P2-R40-PRODUCTION-CONSUMERS-001 三类入口贯穿真实生产链
+
+### 关联事实
+
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；AC-006/007 | [需求 AC-007](requirement.md#ac-p2-system-ruleview-007-所有变更入口不可旁路) |
+| 设计/契约 | DESIGN-P2-R36；IMPL-DEC-P2-R36-005；BP-P2-R36-005 | [开发交接](../COMPILER/COMPILER_design.md#8-开发者交接摘要) |
+| 页面/操作 | 不适用：生产 Java API 无页面 | [页面不适用](../COMPILER/COMPILER_design.md#71-页面业务行为) |
+| 流程/步骤 | production→load→accessScope→create→consumer invoke→close | [目标结构](../COMPILER/COMPILER_design.md#41-目标结构) |
+
+### 前置条件和具体输入
+
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| EngineContext | READ amount policy + exact materialization plan | public context/compiler fixture | immutable published aggregate |
+| root/request | `production(context, SYNCHRONIZED)`；amount=10；exact plan/rule | public MODEL API | 不注入 Container/ModelData，不依赖数据库连接 |
+| invocation | contextual RuleView；同一个 READ amount 请求与同一个缺策略 READ 请求 | public context API | 不使用 null，不携带调用方 SourceRef |
+| entries | composition 的 `ruleEntry/changeEntry/customActionEntry` | public STARTER API | 不取得 fixture guarded/raw port |
+
+### 执行步骤
+
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | root.load(request) 后 accessScope | RuntimeModelExecutionRoot | load 成功，scope available |
+| 2 | `ProtectedAccessRuntimeFactory.production(context).create(scope)` | STARTER factory | composition created |
+| 3 | Rule、change、custom action 分别执行语义相同的允许 READ | 三个 public entry | 均得到相同 ALLOW value |
+| 4 | 三个入口分别执行语义相同的 policy absent READ DENY | 三个 public entry | DENY 的适用 context 字段一致，readValue/writeReceipt 均 empty，公开 origin/ModelData 状态不变 |
+| 5 | 关闭 root/session 后再次访问 | public lifecycle | 稳定 closed/stale failure |
+
+### 预期输出与验证方式
+
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| load/scope/composition | loaded/available/created 均为 true | exact result assertions | 完整链路每步成功 |
+| three ALLOW entries | READ=10；三类行为一致 | public result assertions | 三个入口使用同一 operation/path，不调用预制 port |
+| three DENY entries | stable code + applicable context；SourceRef、readValue、writeReceipt 均 empty；origin/ModelData 不变 | 每个入口分别执行 exact empty assertions + public state assertions | 三个入口使用同一缺策略 operation/path，均真实调用且无副作用 |
+| closed lifecycle | stable failure，不恢复旧 scope | exact code assertion | 无后续成功 |
+
+### 禁止副作用与清理
+
+- 禁止副作用：不得反射构造 Scope/Handle，不得预制 binding/guarded port，不得以 `read(null)/write(null)` 作为验收。
+- Case 完成后的状态：root/session 关闭，READ/DENY 不修改 origin/ModelData。
+- 清理要求：try/finally 关闭 root/session；无外部脚本。
+
+### 测试数据与自动化映射
+
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| Java production fixture 构造 Context/origin/request；无需脚本 | root/session close；无需脚本 | 扩展 `dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java#allConsumersTraverseRealProductionLifecycle` | `./mvnw -pl dec-core-starter -Dtest=SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test` | PLANNED |
+
+<!-- TEST-CASE: CASE-P2-R40-FULL-REGRESSION-001 -->
+<a id="CASE-P2-R40-FULL-REGRESSION-001"></a>
+## CASE-P2-R40-FULL-REGRESSION-001 Java 8 兼容产物与 P2 全量回归
+
+### 关联事实
+
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；AC-001～010；Java 8 产物兼容 | [需求验收](requirement.md#9-验收标准) |
+| 设计/契约 | DESIGN-P2-R36；范围裁剪与全量验证 | [验证计划](../COMPILER/COMPILER_design.md#132-验证计划) |
+| 页面/操作 | 不适用：核心模块无页面 | [页面不适用](../COMPILER/COMPILER_design.md#71-页面业务行为) |
+| 流程/步骤 | Java version → Maven reactor tests → summary | [兼容要求](../COMPILER/COMPILER_design.md#22-设计目标与非目标) |
+
+### 前置条件和具体输入
+
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| build JDK | JDK 17+ | `java -version` | 满足根 POM enforcer，Evidence 保存实际版本输出 |
+| compiler target | `maven.compiler.release=8` | 根 `pom.xml` | 不得被子模块覆盖为更高版本 |
+| repository | 当前工作区全部 modules/tests | Maven Wrapper | 不跳过测试 |
+| baseline | 原 HEAD 777 tests，0 failure/error | previous fresh run | 新总数必须不少于 baseline，差异需解释 |
+
+### 执行步骤
+
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 执行 `java -version` 并检查根 POM release | shell/POM | JDK≥17 且 release=8 |
+| 2 | 先安装依赖，再按模块执行 context/model/starter 精确 TestClass | Maven Wrapper | 每个指定测试被发现，0 failure/error |
+| 3 | 执行 `./mvnw test` | Maven reactor | 全部模块结束且退出码 0 |
+| 4 | 检查代表 production class 字节码版本并汇总 Surefire | `javap -verbose`/reports | major version=52；数量可审计 |
+
+### 预期输出与验证方式
+
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| build JDK | 17 或更高 | 保存命令 Evidence | 满足 Maven Enforcer |
+| Java target | POM release=8 且代表 class major version=52 | POM exact assertion + `javap -verbose` | 证明 Java 8-compatible output |
+| Maven exit | 0/BULD SUCCESS | shell exit + reactor summary | 所有模块完成 |
+| Surefire totals | tests≥777、failures=0、errors=0；skipped 明确登记 | 聚合 XML/report | skipped 不表述为通过 |
+| worktree | 仅预期 docs/tests/code 改动 | git status/diff | 未删除或禁用既有测试 |
+
+### 禁止副作用与清理
+
+- 禁止副作用：不得使用 `-DskipTests`、删除测试或只跑新 Case 代替全量。
+- Case 完成后的状态：测试输出注册为 exact revision Evidence。
+- 清理要求：fixture teardown；无数据库/服务脚本。
+
+### 测试数据与自动化映射
+
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| 现有 Maven fixtures；无需独立脚本 | 各测试 teardown；无需独立脚本 | `dec-core-*/src/test/java/**` 和 `dec-demo/src/test/java/**` | `source ~/.bash_profile && java -version`；`source ~/.bash_profile && ./mvnw -DskipTests install`；按模块 `-Dtest=... -Dsurefire.failIfNoSpecifiedTests=true test`；`source ~/.bash_profile && ./mvnw test`；`source ~/.bash_profile && javap -verbose dec-core-context/target/classes/dec/core/context/runtime/RuntimeFactValue.class` | AUTOMATED |
+
+## 4. 完成门禁
+
+- [x] 每个 Case 绑定当前 Requirement、Feature、Acceptance 和 DESIGN-P2-R36。
+- [x] 页面型 Case 不适用；每个 Case 记录无 UI 理由。
+- [x] 每个 Case 写明具体输入、输出位置、验证方式和通过标准。
+- [x] 全部使用进程内 fixture，不需要数据脚本；初始化和清理理由完整。
+- [x] 每个 Case 指定自动化测试文件、方法和命令。
+- [x] 测试代码在 TDD 阶段以 Case ID 注释反向引用本文件。
+- [x] 数值边界、权限拒绝、生命周期、兼容和禁止副作用已覆盖；排除项由用户明确授权。

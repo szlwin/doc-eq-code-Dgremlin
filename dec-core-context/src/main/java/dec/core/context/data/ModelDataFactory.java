@@ -11,6 +11,7 @@ import dec.core.context.config.model.view.ViewProperty;
 import dec.core.context.config.utils.ConfigContextUtil;
 import dec.core.context.model.CompiledMaterializationNode;
 import dec.core.context.model.CompiledViewMaterializationPlan;
+import dec.core.context.model.ViewKey;
 import javolution.util.FastMap;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -132,9 +134,23 @@ public class ModelDataFactory {
     }
 
     public ModelData createData(String name, Object object) throws DataNotDefineException {
-        ModelData baseData = new ModelData();
-
         ConfigInfo configInfo = ConfigContextUtil.getConfigInfo();
+        if (configInfo.hasEngineContext()) {
+            Optional<CompiledViewMaterializationPlan> compiledPlan = configInfo
+                    .getEngineContext()
+                    .viewMaterializationIndex()
+                    .find(new ViewKey(name));
+            if (compiledPlan.isPresent()) {
+                ModelData compiledData = createData(compiledPlan.get(), object);
+                ViewData legacyView = configInfo.getViewData(name);
+                if (legacyView != null) {
+                    compiledData.setViewInfo(legacyView);
+                }
+                return compiledData;
+            }
+        }
+
+        ModelData baseData = new ModelData();
         ViewData viewDataConfig = configInfo.getViewData(name);
 
         if (viewDataConfig == null)

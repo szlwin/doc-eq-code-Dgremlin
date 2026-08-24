@@ -1,17 +1,18 @@
 schema_version: 1
+implementation_strategy_contract_version: 1
 plan_id: "TP-FEATURE-DESC-3361AD2E54FC"
 target_id: "FEATURE-DESC-3361AD2E54FC"
 version: "V_1.0"
 status: "PASSED"
-revision: "TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c"
-revision_no: 6
-supersedes_revision: "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a"
-revision_reason: "Upstream lifecycle invalidation from DEC-P2-SINGLE-RUNTIME-CONTEXT-001 / DESIGN-P2-R33 / TESTDESIGN-P2-R37. Preserve R05 and historical Reviews; create a focused R06 remediation plan for four genuine P0 REDs, raw authority closure, RED→GREEN integrity, single-context lifecycle verification, and final P2 regression. P2-CR-002 RuntimeContextBinding implementation is retired."
+revision: "TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3"
+revision_no: 5
+supersedes_revision: "TP-FEATURE-DESC-3361AD2E54FC-R04@02dbc3b28ed6"
+revision_reason: "Address EngineeringStandardsReview R04 finding: require stable-ID and project-relative source comments near production API and non-obvious branches."
 input_revisions:
-  requirement_analysis: "REQAN-P2-R01@d08612768131"
+  requirement_analysis: "REQAN-P2-R01"
   business_model: "BM-R20"
-  design: "DESIGN-P2-R33"
-  test_design: "TESTDESIGN-P2-R37"
+  design: "DESIGN-P2-R36"
+  test_design: "TESTDESIGN-P2-R40"
 work_mode:
   minimal: false
   architecture_review: true
@@ -22,47 +23,55 @@ required_reviewers:
   - "ArchitectureReviewAgent"
   - "TestDesignAgent"
   - "DevelopAgent"
-review_round: 6
-created_at: "2026-08-10T13:03:50+00:00"
-updated_at: "2026-08-18T05:26:33+00:00"
-finalized_at: "2026-08-18T05:26:33+00:00"
+review_round: 5
+created_at: "2026-08-21T15:35:13+00:00"
+updated_at: "2026-08-21T16:10:35+00:00"
+finalized_at: "2026-08-21T16:10:35+00:00"
 tasks:
   -
-    task_id: "TASK-P2-DEV-SECURITY-RED-EVIDENCE"
-    title: "冻结四个 raw/proofless 权限绕过真实 RED Evidence"
-    goal: "在不修改任何 production source/runtime config 的前提下，为 TESTDESIGN-P2-R37 四个 MANDATORY_RED 建立可编译、可发现且因当前缺陷语义失败的测试，并冻结 exact pre-fix revision、测试源码 digest、命令和零副作用证据。"
+    task_id: "TASK-P2-R40-TDD-RED"
+    title: "冻结 DECIMAL、DENY context 与真实生产链 RED"
+    goal: "在不修改 production source 的前提下，为 TESTDESIGN-P2-R40 三个新增行为建立可编译、可发现且因目标缺口失败的 RED。"
     implementation:
-      owner_module: "dec-core-model / dec-core-context / dec-core-starter"
-      owner_component: "P2 security authority RED harness and immutable evidence"
+      owner_module: "dec-core-context / dec-core-model / dec-core-starter"
+      owner_component: "P2 R40 TDD harness"
+      implementation_decision_ref: "IMPL-DEC-P2-R36-005"
+      strategy: "MODIFY"
+      existing_code_refs:
+        - "dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java"
+        - "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java"
+      shared_logic_disposition: "KEEP_LOCAL"
+      shared_logic_owner: "dec-core-starter tests"
+      compatibility_verifications:
+        - "既有 P2 Case 保留且不删除；新增 Case 使用公开 production API。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R40-DECIMAL-KIND-001"
       steps:
-        - "先运行 scripts/auto_remediation.py preflight 并确认当前阶段只允许 test/evidence mutation，production source 保持不变。"
-        - "新增或扩展 security remediation test harness，分别复现 public raw operation-port seam、READ-only raw WRITE、proofless READ executable authority、proofless WRITE executable authority 四个当前缺陷。"
-        - "逐个运行精确 TestClass/Case，确认测试成功编译和发现，失败点是目标安全断言而不是缺类、语法、fixture 或环境错误。"
-        - "对 WRITE denial 相关 case 记录 write-count/value/version/origin 等 pre/post tuple；冻结 pre-fix production Git revision、test source SHA-256、精确命令和 semantic RED 输出。"
-        - "由 TestEvidenceReviewAgent 独立审查四个 RED 是否真实、fresh、与 TESTDESIGN-P2-R37 oracle 一致；任何假 RED 或 harness 依赖未来实现均返回返修。"
+        - "新增 scalar typed accessor、DECIMAL writeback、denial decision context 和真实三 consumer production lifecycle tests，并在测试方法注释引用 TESTDESIGN-P2-R40 Case ID 与 DESIGN-P2-R36。"
+        - "禁止反射 Scope、手工 Handle、预制 guarded/raw port 和 null 调用作为目标 oracle；production lifecycle 必须执行 root.load、accessScope、factory.create 和三个 public consumer entry。"
+        - "逐个运行精确 TestClass；编译/fixture/setup 失败标记 INVALID_RED，只有目标断言失败才冻结为 semantic RED。"
+        - "保存 pre-fix exact revision、production/test 源码 digest、Java 版本、完整命令与退出码、实际发现/执行的方法、Surefire tests/failures/errors/skipped 和唯一失败断言；必须证明 errors=0 且失败只来自目标 semantic oracle，再交由 TestEvidenceReviewAgent 独立复核。"
       affected_files:
-        - "dec-core-model/src/test/java/dec/core/model/runtime/**"
-        - "dec-core-context/src/test/java/dec/core/context/runtime/**"
-        - "dec-core-starter/src/test/java/dec/core/starter/access/**"
+        - "dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java"
+        - "dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java"
+        - "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java"
         - "dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java"
-        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**"
+        - "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java"
       forbidden_changes:
-        - "不得修改 dec-core-*/src/main/**、pom runtime dependency 或生产配置来制造 RED。"
-        - "不得把编译失败、测试未发现、fixture 构造失败当作 RED。"
-        - "不得新增 cross-context RuntimeContextBinding RED；相关场景已被 DEC-P2-SINGLE-RUNTIME-CONTEXT-001 supersede。"
+        - "不得修改 dec-core-*/src/main/**。"
+        - "不得实现或测试用户排除的 DEC-P2-R34-001/002/003。"
+        - "不得通过删除既有断言或接受额外结果制造 RED/GREEN。"
     acceptance_criteria:
       -
-        id: "AC-P2-R37-RED-RAW-SEAM"
-        assertion: "public raw MODEL port case 必须在当前 pre-fix production revision 上编译并被发现，并因普通调用方可绕过 Guard 执行 effect 而语义失败。"
+        id: "AC-P2-R40-RED-DECIMAL"
+        assertion: "1.0、超 Long、负数、nested DECIMAL 的 RED 必须因当前 codec 类型错误失败；INTEGER control 保持 Long。"
       -
-        id: "AC-P2-R37-RED-READONLY-WRITE"
-        assertion: "READ-only context 的 raw WRITE case 必须真实复现越权写入，并记录可判定的写入前后状态。"
+        id: "AC-P2-R40-RED-DENIAL"
+        assertion: "DENY context RED 必须因缺少 typed location fields/factory 失败，并冻结 exact published rule SourceRef/未命中 empty oracle。"
       -
-        id: "AC-P2-R37-RED-PROOFLESS-READ"
-        assertion: "proofless READ case 必须证明 proofless access 能参与可执行 raw READ，而不是只检测方法存在。"
-      -
-        id: "AC-P2-R37-RED-PROOFLESS-WRITE"
-        assertion: "proofless WRITE case 必须证明 proofless access 能参与可执行 raw WRITE，并冻结零副作用 GREEN oracle。"
+        id: "AC-P2-R40-RED-PRODUCTION"
+        assertion: "真实 root→load→scope→composition→三 consumer Case 必须可运行且不得调用预制 effect port。"
     depends_on: []
     owner_agent: "DevelopAgent"
     reviewer_agents:
@@ -70,310 +79,313 @@ tasks:
       - "ArchitectureReviewAgent"
       - "TestDesignAgent"
       - "DevelopAgent"
+      - "TDDReviewAgent"
+      - "TestEvidenceReviewAgent"
     validation_commands:
-      - "python3 /mnt/data/common-develop/scripts/auto_remediation.py preflight -g DevelopAgent --authority-current true --test-oracle-authoritative true --fixture-representative true --configuration-semantically-valid true --environment-stable true --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --json"
-      - "./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install"
-      - "./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "source ~/.bash_profile && java -version"
+      - "source ~/.bash_profile && ./mvnw -DskipTests install"
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-context -Dtest=RuntimeFactValueContractTest,ProtectedAccessContextApiContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-model -Dtest=ProtectedWriteTransactionIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest,SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test"
     expected_results:
-      - "四个 TESTDESIGN-P2-R37 MANDATORY_RED 均形成 genuine semantic RED，且 compile/discovery 成功。"
-      - "每个 RED 均绑定 exact pre-fix production revision、测试源码 digest、精确命令和失败输出。"
-      - "WRITE 相关 RED Evidence 能够证明 pre-fix 越权副作用，并冻结后续 GREEN 的 zero-side-effect tuple。"
-      - "TestEvidenceReviewAgent 对四个 RED Evidence 独立 PASSED，P0/P1=0。"
+      - "三个目标形成 genuine semantic RED，compile/discovery/setup 均成功。"
+      - "每个 RED 绑定 exact pre-fix revision、production/test source digest、命令/退出码、实际方法和 Surefire totals；errors=0 且每个 Case 只有目标 semantic assertion failure。"
     deliverables:
-      - "四个 security RED test cases"
-      - "RED evidence manifests / command outputs"
-      - "TestEvidenceReview result"
+      - "R40 RED tests"
+      - "含 revision/digest/method/exit/Surefire/唯一失败断言的 RED Evidence"
+      - "TestEvidence review"
     stop_conditions:
-      - "任一 case 不能在不修改 production source 的情况下复现当前缺陷。"
-      - "测试只能通过编译失败或 fixture 故障制造失败。"
-      - "发现 TESTDESIGN-P2-R37 oracle 与 DESIGN-P2-R33 冲突。"
+      - "Case 只能通过缺类、编译失败或 fixture 故障失败。"
+      - "发现剩余范围与 DESIGN-P2-R36 冲突。"
     trace_ids:
-      - "TR-P2-SYSTEM-RULEVIEW-004"
-      - "TR-P2-SYSTEM-RULEVIEW-007"
-      - "TR-P2-SYSTEM-RULEVIEW-009"
-    flow_refs:
-      - "FLOW-PROTECTED-ACCESS-EXECUTE"
-    flow_step_refs:
-      - "STEP-P2-ACCESS-GUARD"
-      - "STEP-P2-ACCESS-EFFECT"
-    risk_triggers: []
-    git_checkpoint_required: true
-  -
-    task_id: "TASK-P2-DEV-RAW-AUTHORITY-CLOSURE"
-    title: "关闭 raw MODEL effect 与 proofless executable authority surface"
-    goal: "在四个 genuine RED Evidence 冻结后，以删除、降为 package-private/internal、或不可执行 transport 的最小方式关闭普通调用方绕过 ExactModelAccessGuard 的 READ/WRITE effect 路径，并保持既有 session/mutationStamp/version 语义。"
-    implementation:
-      owner_module: "dec-core-context / dec-core-model / dec-core-starter"
-      owner_component: "ExactModelAccessGuard authority boundary and raw MODEL effect seam"
-      steps:
-        - "再次执行 scripts/auto_remediation.py preflight，确认四个 RED Evidence 与 Implementation Plan 门禁均满足后才允许 production mutation。"
-        - "枚举 RuntimeModelAccessScope.beginSession/effectProvider、RuntimeModelEffectProvider.bind、RuntimeModelEffectBindingResult.operationPort、RuntimeModelOperationPort 及 proofless ResolvedProtectedReadAccess/WriteAccess 工厂的 production/test caller。"
-        - "优先删除普通调用方不需要的 raw/proofless public executable API；必须保留的 seam 降为 package-private/internal，proofless value 最多保留为无法自行产生 effect 的 transport object。"
-        - "保持 ExactModelAccessGuard 为唯一 READ/WRITE policy authority；READ authorization 不得满足 WRITE，operation/target/path/session/WRITE state correctness 不得由 caller-supplied boolean/hash/version 替代。"
-        - "同步改造 STARTER 内部合法 composition 路径，使 Guard 成功后才能进入 MODEL effect；missing/mismatch/replay 必须在 effect 前 fail closed。"
-        - "保持 module dependency direction compiler->context, model->context, starter->context+model；不得引入 RuntimeContextBinding。"
-      affected_files:
-        - "dec-core-context/src/main/java/dec/core/context/runtime/ResolvedProtectedReadAccess.java"
-        - "dec-core-context/src/main/java/dec/core/context/runtime/ResolvedProtectedWriteAccess.java"
-        - "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java"
-        - "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectProvider.java"
-        - "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java"
-        - "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelOperationPort.java"
-        - "dec-core-starter/src/main/java/dec/core/starter/access/**"
-      forbidden_changes:
-        - "不得保留 ordinary caller 可直接调用的 proofless executable READ/WRITE authority。"
-        - "不得把 Guard authority 改成 caller 可构造的 boolean、enum、hash、version 或 public token。"
-        - "不得修改 Compiler parsing、RuleView ownership、P3/P4/P6 业务执行语义。"
-        - "不得实现 RuntimeContextBinding 或用 RuntimeBindingPlan.equals 推断权限。"
-    acceptance_criteria:
-      -
-        id: "AC-P2-R37-AUTHORITY-CLOSURE"
-        assertion: "普通调用方必须不存在无需 ExactModelAccessGuard 即可执行 MODEL READ/WRITE effect 的 public/proofless 路径。"
-      -
-        id: "AC-P2-R37-DEFAULT-DENY"
-        assertion: "缺少或不匹配的 authority 必须在 effect 前拒绝，WRITE 失败时值、版本、origin 与 write-count 必须保持不变。"
-      -
-        id: "AC-P2-R37-READ-WRITE-SEPARATION"
-        assertion: "READ authority 必须不能满足 WRITE，operation/target/path 的精确绑定必须保持。"
-    depends_on:
-      - "TASK-P2-DEV-SECURITY-RED-EVIDENCE"
-    owner_agent: "DevelopAgent"
-    reviewer_agents:
-      - "PlanReviewAgent"
-      - "ArchitectureReviewAgent"
-      - "TestDesignAgent"
-      - "DevelopAgent"
-    validation_commands:
-      - "python3 /mnt/data/common-develop/scripts/auto_remediation.py preflight -g DevelopAgent --authority-current true --test-oracle-authoritative true --fixture-representative true --configuration-semantically-valid true --environment-stable true --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --json"
-      - "./mvnw -pl dec-core-context,dec-core-model,dec-core-starter -am -Dmaven.test.skip=true install"
-      - "./mvnw -pl dec-core-context,dec-core-model,dec-core-starter test"
-    expected_results:
-      - "raw MODEL public/proofless executable bypass 不存在，或残留 internal primitive 在缺少 Guard authority 时 fail closed。"
-      - "现有合法 guarded READ/WRITE 与 WRITE mutationStamp/version/value 语义保持一致。"
-      - "模块依赖方向保持不变且未引入 RuntimeContextBinding。"
-    deliverables:
-      - "production authority closure"
-      - "updated internal composition seam"
-      - "module compile/test evidence"
-    stop_conditions:
-      - "需要扩大到 DESIGN-P2-R33 未授权模块才能关闭 bypass。"
-      - "合法 guarded consumer 无法在不改变 Requirement/BM/Flow 语义的情况下继续工作。"
-      - "发现新的 authority forging path 或 P0/P1 architecture conflict。"
-    trace_ids:
-      - "TR-P2-SYSTEM-RULEVIEW-004"
-      - "TR-P2-SYSTEM-RULEVIEW-007"
-      - "TR-P2-SYSTEM-RULEVIEW-009"
-    flow_refs:
-      - "FLOW-PROTECTED-ACCESS-EXECUTE"
-    flow_step_refs:
-      - "STEP-P2-ACCESS-GUARD"
-      - "STEP-P2-ACCESS-EFFECT"
-    risk_triggers: []
-    git_checkpoint_required: true
-  -
-    task_id: "TASK-P2-DEV-RED-GREEN-INTEGRITY"
-    title: "将四个冻结 RED 在整改后转为 GREEN 并保持 Evidence integrity"
-    goal: "在 raw authority closure 完成后，使用冻结的四个 RED test source 逐个验证 GREEN；只有设计授权的 API closure 导致原测试源码无法编译时，才按 R37 controlled harness adaptation 规则修改 harness 并独立复审。"
-    implementation:
-      owner_module: "dec-core-model / dec-core-context / dec-core-starter"
-      owner_component: "R37 RED-to-GREEN security verification"
-      steps:
-        - "对四个 case 优先运行与 RED 阶段完全相同的测试源码 digest 和精确命令，确认 semantic GREEN。"
-        - "若 API 删除/降可见性使冻结 RED 源码不再编译，保存原 caseId/digest/command/pre-fix revision，记录造成 reachability loss 的 production revision 与 exact test diff 后再做最小 harness adaptation。"
-        - "对 adapted harness 证明 oracle 未弱化：检查的是 executable authority 是否被关闭，而不是要求被设计允许删除的 API 继续 public。"
-        - "WRITE denial 必须验证 zero-side-effect tuple；READ/WRITE、target/path/operation binding 与 one-shot/replay 相关回归同时运行。"
-        - "由 TestEvidenceReviewAgent 独立确认 RED/GREEN revision、source digest、命令与结果 freshness 一致。"
-      affected_files:
-        - "dec-core-model/src/test/java/dec/core/model/runtime/**"
-        - "dec-core-context/src/test/java/dec/core/context/runtime/**"
-        - "dec-core-starter/src/test/java/dec/core/starter/access/**"
-        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**"
-      forbidden_changes:
-        - "不得仅修改断言、删除 case 或扩大允许结果集合来获得 GREEN。"
-        - "不得把 retired cross-context case 重新纳入 blocking GREEN。"
-        - "controlled adaptation 未经 TestEvidenceReviewAgent PASSED 不得计入 GREEN。"
-    acceptance_criteria:
-      -
-        id: "AC-P2-R37-FOUR-GREEN"
-        assertion: "四个冻结 MANDATORY_RED 必须在同一整改 production revision 上全部形成 semantic GREEN。"
-      -
-        id: "AC-P2-R37-ZERO-SIDE-EFFECT"
-        assertion: "所有 denied WRITE 结果必须保持冻结的 zero-side-effect tuple。"
-      -
-        id: "AC-P2-R37-HARNESS-INTEGRITY"
-        assertion: "发生 controlled harness adaptation 时必须保留原 RED Evidence、精确 test diff 与独立 TestEvidence PASSED。"
-    depends_on:
-      - "TASK-P2-DEV-RAW-AUTHORITY-CLOSURE"
-    owner_agent: "DevelopAgent"
-    reviewer_agents:
-      - "PlanReviewAgent"
-      - "ArchitectureReviewAgent"
-      - "TestDesignAgent"
-      - "DevelopAgent"
-    validation_commands:
-      - "./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test"
-      - "./mvnw -pl dec-core-starter -Dtest=ProtectedAccessProductionCompositionTest,ProtectedRuntimeModelAdapterIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
-    expected_results:
-      - "四个 R37 MANDATORY_RED 在整改 revision 上全部 GREEN，且每个结果与对应冻结 RED Evidence 一一关联。"
-      - "WRITE denial 的 zero-side-effect、READ/WRITE 分离和 exact binding oracles 全部通过。"
-      - "任何 harness adaptation 均有独立 TestEvidenceReviewAgent PASSED。"
-    deliverables:
-      - "four-case GREEN evidence"
-      - "controlled adaptation record when applicable"
-      - "TestEvidenceReview result"
-    stop_conditions:
-      - "存在一个冻结 case 只能通过弱化 oracle 才能 GREEN。"
-      - "整改后出现新的 WRITE 副作用、authorization replay 或 exact-binding 回归。"
-    trace_ids:
-      - "TR-P2-SYSTEM-RULEVIEW-004"
-      - "TR-P2-SYSTEM-RULEVIEW-007"
-      - "TR-P2-SYSTEM-RULEVIEW-009"
-    flow_refs:
-      - "FLOW-PROTECTED-ACCESS-EXECUTE"
-    flow_step_refs:
-      - "STEP-P2-ACCESS-GUARD"
-      - "STEP-P2-ACCESS-EFFECT"
-    risk_triggers: []
-    git_checkpoint_required: true
-  -
-    task_id: "TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE"
-    title: "验证单 runtime EngineContext bind-once 与 restart generation 生命周期"
-    goal: "按照 DEC-P2-SINGLE-RUNTIME-CONTEXT-001 验证 production runtime bootstrap 对 EngineContext 的一次绑定、运行中无 hot reload/rebind，并验证配置变化通过关闭旧 generation 后启动新 generation 获得新的 EngineContext。"
-    implementation:
-      owner_module: "dec-core-starter / dec-demo"
-      owner_component: "single EngineContext runtime lifecycle verification"
-      steps:
-        - "检查 ProtectedAccessRuntimeFactory、production composition/bootstrap 与 dec-demo 真实入口是否仅捕获 final EngineContext，并搜索 set/reload/replace/rebind Context 等 live mutation seam。"
-        - "实现 CASE-P2-TD-R37-SINGLE-RUNTIME-CONTEXT-BIND-ONCE-001 与 CASE-P2-TD-R37-NO-HOT-RELOAD-001；若当前代码已满足合同，以 test-only/contract evidence 固化，不做无必要 production 重构。"
-        - "实现 CASE-P2-TD-R37-RESTART-NEW-GENERATION-001：关闭旧 runtime artifacts 后重新编译/启动可产生独立新 EngineContext generation，旧 Scope/Handle 不作为新 generation 的 active runtime 输入。"
-        - "保留 Compiler/tests/offline compilation 可创建多个 candidate EngineContext 的能力，不建立 JVM 全局 singleton。"
-      affected_files:
-        - "dec-core-starter/src/main/java/dec/core/starter/**"
-        - "dec-core-starter/src/test/java/dec/core/starter/**"
-        - "dec-demo/src/test/java/dec/demo/p2/**"
-        - "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java"
-      forbidden_changes:
-        - "不得为了单 Context contract 修改 EngineContext.equals/hashCode 或引入 RuntimeContextBinding。"
-        - "不得禁止独立 runtime instance 或离线 compilation session 各自创建 EngineContext。"
-        - "不得实现 live reload/rebind API。"
-    acceptance_criteria:
-      -
-        id: "AC-P2-R37-SINGLE-BIND"
-        assertion: "一个 active production runtime generation 必须只绑定一次 EngineContext，运行期间不存在可调用的 Context replacement seam。"
-      -
-        id: "AC-P2-R37-NO-HOT-RELOAD"
-        assertion: "配置更新不得通过 live hot reload 修改当前 runtime 的 EngineContext。"
-      -
-        id: "AC-P2-R37-RESTART-GENERATION"
-        assertion: "restart 后必须能够创建新的 runtime generation 与新的 EngineContext，同时旧 runtime artifacts 已关闭。"
-    depends_on:
-      - "TASK-P2-DEV-RED-GREEN-INTEGRITY"
-    owner_agent: "DevelopAgent"
-    reviewer_agents:
-      - "PlanReviewAgent"
-      - "ArchitectureReviewAgent"
-      - "TestDesignAgent"
-      - "DevelopAgent"
-    validation_commands:
-      - "./mvnw -pl dec-core-starter -am -DskipTests install"
-      - "./mvnw -pl dec-core-starter -Dtest=SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test"
-      - "./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
-    expected_results:
-      - "bind-once 与 no-hot-reload 两个 GREEN_ONLY case 通过。"
-      - "restart-new-generation regression 通过，同时保留 Compiler 多 candidate 能力。"
-      - "未引入 RuntimeContextBinding、JVM global singleton 或 EngineContext equality 语义变化。"
-    deliverables:
-      - "single-context lifecycle tests"
-      - "restart generation regression evidence"
-      - "runtime seam audit"
-    stop_conditions:
-      - "当前 production runtime 存在必须保留的 live rebind/hot-reload 业务需求。"
-      - "满足单 Context contract 必须改变已冻结 Requirement/BM/Flow。"
-    trace_ids:
-      - "TR-P2-SYSTEM-RULEVIEW-008"
-      - "TR-P2-SYSTEM-RULEVIEW-009"
-    flow_refs:
-      - "FLOW-CONFIG-COMPILE"
-      - "FLOW-PROTECTED-ACCESS-EXECUTE"
-    flow_step_refs:
-      - "STEP-P2-COMPILE-04"
-      - "STEP-P2-ACCESS-GUARD"
-    risk_triggers: []
-    git_checkpoint_required: true
-  -
-    task_id: "TASK-P2-DEV-P2-REGRESSION-CLOSURE"
-    title: "执行 P2 authority、lifecycle 与真实 consumer 全量回归闭环"
-    goal: "在四个 security GREEN 和 single-context lifecycle case 通过后，运行 P2 相关 core、starter、compiler、dec-demo 与 MySQL 集成回归，证明 guarded READ/WRITE、default DENY、state correctness、production consumers 与兼容性均未退化。"
-    implementation:
-      owner_module: "dec-core-context / dec-core-model / dec-core-starter / dec-core-compiler / dec-demo"
-      owner_component: "P2 final development regression closure"
-      steps:
-        - "运行 protected access contract/model/session/starter composition/concurrency suites，覆盖 default DENY、READ!=WRITE、operation/target/path binding、one-shot/replay、session mismatch、mutationStamp/version/value 和 denial zero side effect。"
-        - "运行 Rule/change/custom-action representative production consumers，确认三类入口仍经 production composition -> Guard -> MODEL effect 合法链。"
-        - "运行 Compiler/Context publication 与 RuleView/System 既有 P2 regression，确保本轮安全整改未改变编译/发布 ownership。"
-        - "运行 dec-demo 真实 fixture 与 MySQL business integration，冻结最终 development revision 的命令、报告与 database effect Evidence。"
-        - "对实际 changed files 运行 risk_detect scan 和 sync-risk-reviewers，为后续 Final Code Review 生成准确专项 Reviewer 集合。"
-      affected_files:
-        - "dec-core-context/src/test/**"
-        - "dec-core-model/src/test/**"
-        - "dec-core-starter/src/test/**"
-        - "dec-core-compiler/src/test/**"
-        - "dec-demo/src/test/**"
-        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**"
-      forbidden_changes:
-        - "不得通过跳过失败 suite、降低 failIfNoSpecifiedTests 或删除 test 来形成 regression PASS。"
-        - "不得修改 Requirement/BM/Flow authority 来解释回归。"
-        - "不得在本任务引入 P3/P4/P6 新业务能力。"
-    acceptance_criteria:
-      -
-        id: "AC-P2-R37-REGRESSION-CORE"
-        assertion: "P2 core/starter/compiler 相关回归必须全部通过，并且不存在新的 P0/P1 security/architecture finding。"
-      -
-        id: "AC-P2-R37-REGRESSION-CONSUMERS"
-        assertion: "Rule、change、custom-action 三类 production consumer 必须继续通过同一 Guard authority 链。"
-      -
-        id: "AC-P2-R37-REGRESSION-DEMO"
-        assertion: "dec-demo 真实 fixture 与 MySQL business integration 必须通过并产生可审计 effect Evidence。"
-    depends_on:
-      - "TASK-P2-DEV-SINGLE-CONTEXT-LIFECYCLE"
-    owner_agent: "DevelopAgent"
-    reviewer_agents:
-      - "PlanReviewAgent"
-      - "ArchitectureReviewAgent"
-      - "TestDesignAgent"
-      - "DevelopAgent"
-    validation_commands:
-      - "./mvnw --batch-mode --no-transfer-progress clean verify"
-      - "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify"
-      - "python3 scripts/remediation/verify_dec_demo_mysql_it.py"
-    expected_results:
-      - "core/starter/compiler/dec-demo P2 regression 全部通过且测试报告与 exact development revision 绑定。"
-      - "Rule/change/custom-action production consumers 继续经唯一 Guard authority 路径执行。"
-      - "MySQL business integration 的 execution markers 与 database effects 可复核。"
-      - "risk detection 已覆盖最终 changed files，并为 Final Code Review 同步必要专项 Reviewer。"
-    deliverables:
-      - "full Maven regression reports"
-      - "MySQL business evidence"
-      - "risk detection and reviewer synchronization"
-    stop_conditions:
-      - "任一 P0/P1 regression 或独立 Review finding 未关闭。"
-      - "最终验证命令不能在当前 repository environment 中真实执行。"
-    trace_ids:
-      - "TR-P2-SYSTEM-RULEVIEW-001"
-      - "TR-P2-SYSTEM-RULEVIEW-002"
-      - "TR-P2-SYSTEM-RULEVIEW-003"
-      - "TR-P2-SYSTEM-RULEVIEW-004"
-      - "TR-P2-SYSTEM-RULEVIEW-005"
       - "TR-P2-SYSTEM-RULEVIEW-006"
       - "TR-P2-SYSTEM-RULEVIEW-007"
-      - "TR-P2-SYSTEM-RULEVIEW-008"
       - "TR-P2-SYSTEM-RULEVIEW-009"
-      - "TR-P2-SYSTEM-RULEVIEW-010"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-GUARD"
+      - "STEP-P2-ACCESS-EFFECT"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-R40-TYPED-GETTERS"
+    title: "实现 RuntimeFactValue scalar typed getter"
+    goal: "按 DESIGN-P2-R36 在 CONTEXT 值边界提供 Java 8-compatible scalar typed getter，并保持现有 factory 与值语义。"
+    implementation:
+      owner_module: "dec-core-context"
+      owner_component: "RuntimeFactValue"
+      implementation_decision_ref: "IMPL-DEC-P2-R36-001"
+      strategy: "COMPATIBLE_EXTEND"
+      existing_code_refs:
+        - "dec-core-context/src/main/java/dec/core/context/runtime/RuntimeFactValue.java"
+      shared_logic_disposition: "REUSE_SHARED"
+      shared_logic_owner: "dec-core-context"
+      compatibility_verifications:
+        - "factory、Kind、canonicalForm、equals/hashCode 不变；错误 Kind getter fail closed。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R40-DECIMAL-KIND-001"
+      steps:
+        - "运行 auto_remediation preflight，确认 RED/设计/TestDesign 和环境有效后才修改 production。"
+        - "按 IMPL-DEC-P2-R36-001 为 RuntimeFactValue 增加 Java 8-compatible scalar typed getter，Kind mismatch fail closed。"
+        - "在新增 scalar getter 的必要 Javadoc 附近引用稳定决策 DEC-P2-R36-001 与项目相对来源 project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions。"
+        - "运行 RuntimeFactValueContractTest，验证 BOOL/INTEGER/DECIMAL/STRING 的 exact type/value 与 Kind mismatch。"
+      affected_files:
+        - "dec-core-context/src/main/java/dec/core/context/runtime/RuntimeFactValue.java"
+      forbidden_changes:
+        - "不得改变 RuntimeFactValue factory、Kind enum、canonicalForm、equals/hashCode 语义。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-R40-TYPED-GETTERS-GREEN"
+        assertion: "BOOL/INTEGER/DECIMAL/STRING getter 必须返回 exact Java type/value；错误 Kind getter 必须抛 IllegalStateException；旧值语义必须不变。"
+    depends_on:
+      - "TASK-P2-R40-TDD-RED"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+      - "EngineeringStandardsReviewAgent"
+      - "SpecComplianceReviewAgent"
+    validation_commands:
+      - "source ~/.bash_profile && python3 /Users/shazhoulin/.codex/skills/common-develop/scripts/auto_remediation.py preflight -g DevelopAgent --authority-current true --test-oracle-authoritative true --fixture-representative true --configuration-semantically-valid true --environment-stable true --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --json"
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-context -Dtest=RuntimeFactValueContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "R40 typed getter RED 转 GREEN"
+      - "context test 0 failure/error"
+    deliverables:
+      - "typed value API"
+      - "绑定同 Case ID、exact post-fix revision、production/test digest、命令/退出码和 Surefire totals 的 GREEN Evidence"
+    stop_conditions:
+      - "必须改变 RuntimeFactValue Kind/canonical public semantics 才能实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-004"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-EFFECT"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-R40-KIND-CODEC"
+    title: "实现 RuntimeFactValue Kind 保真 MODEL codec"
+    goal: "按 DESIGN-P2-R36 在 MODEL adapter 按 Kind 转换值，修复 DECIMAL 类型和大数边界，同时保持 INTEGER 与嵌套值行为。"
+    implementation:
+      owner_module: "dec-core-model"
+      owner_component: "RuntimeFactValueCodec"
+      implementation_decision_ref: "IMPL-DEC-P2-R36-002"
+      strategy: "MODIFY"
+      existing_code_refs:
+        - "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java#RuntimeFactValueCodec"
+      shared_logic_disposition: "REUSE_SHARED"
+      shared_logic_owner: "dec-core-model"
+      compatibility_verifications:
+        - "七种 Kind 保持封闭转换；INTEGER 仍写回 Long；DECIMAL 始终写回 BigDecimal。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R40-DECIMAL-KIND-001"
+      steps:
+        - "按 IMPL-DEC-P2-R36-002 将 RuntimeFactValueCodec 改为 Kind switch 和递归转换，删除 canonical parser。"
+        - "在非显然的 Kind conversion 分支附近添加简短注释，引用稳定决策 DEC-P2-R36-001 与项目相对来源 project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions。"
+        - "安装包含最新 CONTEXT getter 与 MODEL codec 的 reactor artifacts，再运行 MODEL decimal integration test。"
+        - "使用 BigDecimal.compareTo 验证数值，不承诺原始 scale；验证 nested DECIMAL 与 INTEGER control。"
+      affected_files:
+        - "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java"
+      forbidden_changes:
+        - "不得调整 WRITE 顺序、锁或 Container contract。"
+        - "不得在 MODEL 重新解析 canonicalForm。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-R40-DECIMAL-GREEN"
+        assertion: "所有 DECIMAL 写回必须为 BigDecimal 且 compareTo 数值准确；超 Long 必须不失败；INTEGER 必须仍为 Long。"
+    depends_on:
+      - "TASK-P2-R40-TYPED-GETTERS"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+      - "EngineeringStandardsReviewAgent"
+      - "SpecComplianceReviewAgent"
+    validation_commands:
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-model -am -DskipTests install"
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-model -Dtest=ProtectedWriteTransactionIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "R40 DECIMAL RED 转 GREEN"
+      - "model test 0 failure/error"
+    deliverables:
+      - "Kind codec"
+      - "绑定同 Case ID、exact post-fix revision、production/test digest、命令/退出码和 Surefire totals 的 GREEN Evidence"
+    stop_conditions:
+      - "必须改变 RuntimeFactValue Kind/canonical public semantics 才能实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-004"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-EFFECT"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-R40-DENIAL-CONTEXT"
+    title: "实现 invocation 与 DENY 的稳定定位上下文"
+    goal: "按 AC-009 为 production DENY 提供 System、RuleView、operation、path、SourceRef，并保持旧 factory 源码兼容。"
+    implementation:
+      owner_module: "dec-core-context / dec-core-starter"
+      owner_component: "ProtectedAccessInvocation, ProtectedAccessDecisionContext, ProtectedAccessDenial, GuardedProtectedAccessPort"
+      implementation_decision_ref: "IMPL-DEC-P2-R36-003"
+      strategy: "CREATE"
+      existing_code_refs:
+        - "dec-core-context/src/main/java/dec/core/context/runtime/ProtectedAccessInvocation.java"
+        - "dec-core-context/src/main/java/dec/core/context/runtime/ProtectedAccessDenial.java"
+        - "dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java#deny"
+      shared_logic_disposition: "EXTRACT_NEW"
+      shared_logic_owner: "dec-core-context"
+      compatibility_verifications:
+        - "旧 invocation/denial factory 保留；DenialCode/message 不变；context 不含敏感值。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R40-DENIAL-CONTEXT-001"
+      steps:
+        - "按 IMPL-DEC-P2-R36-003 扩展 invocation contextual factory，只增加 optional RuleView 诊断字段；旧 factory 保持 empty，不合成 SourceRef。"
+        - "新增 immutable decision context，校验 RuleView owner，提供 Java 8-compatible getter/equals/hashCode；RuleView 不参与授权。"
+        - "扩展 denial factory/getter；按 IMPL-DEC-P2-R36-004 修改 production deny helper：exact rule 命中后的失败使用 rule.sourceRef，policy absent 或 operation/path mismatch 使用 Optional.empty。"
+        - "在 SourceRef 选择与 DENY 构造分支附近添加必要注释，引用稳定决策 DEC-P2-R36-002 与项目相对来源 project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions。"
+        - "确保三类 production consumer 通过 ruleEntry/changeEntry/customActionEntry 以相同 READ ALLOW 和相同缺策略 DENY 运行，并执行 denial/context/starter tests。"
+      affected_files:
+        - "dec-core-context/src/main/java/dec/core/context/runtime/ProtectedAccessInvocation.java"
+        - "dec-core-context/src/main/java/dec/core/context/runtime/ProtectedAccessDecisionContext.java"
+        - "dec-core-context/src/main/java/dec/core/context/runtime/ProtectedAccessDenial.java"
+        - "dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java"
+      forbidden_changes:
+        - "不得改变 DenialCode 或现有稳定 message。"
+        - "不得在 denial context 中保存 write value、originObject、ModelData 或配置正文。"
+        - "不得实现用户排除的三个 R34 问题。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-R40-DENIAL-GREEN"
+        assertion: "policy absent 与 operation/path mismatch 的 SourceRef 必须为空；exact READ rule 命中后的失败必须与该 rule.sourceRef 完全相同；RuleView owner mismatch 必须拒绝；三类入口适用字段完整、origin/ModelData 不变且重复结果稳定。"
+    depends_on:
+      - "TASK-P2-R40-KIND-CODEC"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+      - "SecurityReviewAgent"
+      - "SpecComplianceReviewAgent"
+    validation_commands:
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-starter -am -DskipTests install"
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-context -Dtest=ProtectedAccessContextApiContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "source ~/.bash_profile && ./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest,SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "R40 DENY RED 转 GREEN"
+      - "无敏感字段泄露"
+      - "三类真实入口通过"
+    deliverables:
+      - "invocation context"
+      - "decision context"
+      - "production denial integration"
+      - "绑定同 Case ID、exact post-fix revision、production/test digest、命令/退出码和 Surefire totals 的 GREEN Evidence"
+    stop_conditions:
+      - "exact rule 已命中但无法获得其 published SourceRef。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-006"
+      - "TR-P2-SYSTEM-RULEVIEW-007"
+      - "TR-P2-SYSTEM-RULEVIEW-009"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-GUARD"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-R40-REGRESSION-CLOSURE"
+    title: "完成真实生产链、Java 8 产物兼容、全量回归和追踪闭环"
+    goal: "在 R40 GREEN 后执行真实三入口与全量 Maven 回归，验证 Java 8-compatible 字节码，更新 canonical relation/trace evidence 并完成独立 Review。"
+    implementation:
+      owner_module: "all P2 modules"
+      owner_component: "P2 validation and traceability closure"
+      implementation_decision_ref: "IMPL-DEC-P2-R36-005"
+      strategy: "MODIFY"
+      existing_code_refs:
+        - "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java"
+        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"
+      shared_logic_disposition: "KEEP_LOCAL"
+      shared_logic_owner: "dec-core-starter tests / common-develop document-facts"
+      compatibility_verifications:
+        - "JDK 17+ 构建；maven.compiler.release=8；代表 class major version=52；全量 tests 不少于基线；不跳过或删除既有测试。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R40-FULL-REGRESSION-001"
+      steps:
+        - "运行真实 production lifecycle Case，确认 setup 没有 reflection/prebuilt/null shortcut。"
+        - "记录 java -version，并通过 Maven help:evaluate 的原始输出确认根 POM maven.compiler.release=8；安装依赖后按模块运行专项测试，再执行 ./mvnw test，聚合完整 Reactor 与 tests/failures/errors/skipped。"
+        - "保存 exact final revision、全部变更 production/test 源码 digest，以及每个 R40 Case 从 RED 到 GREEN 的 revision、digest、命令、退出码、实际方法和 Surefire totals 映射。"
+        - "使用 javap -verbose 检查并保存代表 production class 路径与 major version 52 原始输出，证明 Java 8-compatible output。"
+        - "运行 artifact_relations.py build 重建 engineering_graph.yaml、traceability_matrix.md、dependency_graph.md，再执行 validate；不手工维护第二套关系图。"
+        - "执行 Security、TestEvidence、EngineeringStandards、SpecCompliance 和 CompletionVerification 独立 Review。"
+      affected_files:
+        - "project_doc/docs/_relations/engineering_graph.yaml"
+        - "project_doc/docs/_relations/traceability_matrix.md"
+        - "project_doc/docs/_relations/dependency_graph.md"
+        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml"
+        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_task_reviews.jsonl"
+      forbidden_changes:
+        - "不得跳过、删除或禁用既有测试。"
+        - "不得在回归收口阶段修改未由 artifact_relations.py 生成的需求、设计、TestDesign 或生产代码。"
+        - "不得实现或重新测试用户排除的 DEC-P2-R34-001/002/003。"
+        - "不得手工伪造 Evidence、Review 或 trace relation。"
+        - "不得 Git push；当前用户未显式启用 wk -gp。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-R40-FULL-GREEN"
+        assertion: "java -version 必须输出 JDK 17+；Maven help:evaluate 的 maven.compiler.release 原始输出必须为 8；javap 必须记录代表 class 路径且原始输出 major version 52；./mvnw test 退出码必须为 0；完整 Reactor/Surefire 聚合必须显示 tests>=777、failures=0、errors=0，并输出 skipped 数量；Evidence 必须绑定 exact final revision 与源码 digest。"
+      -
+        id: "AC-P2-R40-TRACE-CURRENT"
+        assertion: "artifact relation 校验必须通过且输出 valid=true，canonical design/test/plan/trace 必须一致绑定 DESIGN-P2-R36、TESTDESIGN-P2-R40 和最终代码 revision。"
+    depends_on:
+      - "TASK-P2-R40-DENIAL-CONTEXT"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+      - "TestEvidenceReviewAgent"
+      - "SecurityReviewAgent"
+      - "EngineeringStandardsReviewAgent"
+      - "SpecComplianceReviewAgent"
+      - "CompletionVerificationAgent"
+    validation_commands:
+      - "source ~/.bash_profile && java -version"
+      - "source ~/.bash_profile && ./mvnw help:evaluate -Dexpression=maven.compiler.release -q -DforceStdout"
+      - "source ~/.bash_profile && ./mvnw test"
+      - "source ~/.bash_profile && javap -verbose dec-core-context/target/classes/dec/core/context/runtime/RuntimeFactValue.class"
+      - "source ~/.bash_profile && python3 /Users/shazhoulin/.codex/skills/common-develop/scripts/artifact_relations.py build -g ProjectManagerAgent --doc-root project_doc --json"
+      - "source ~/.bash_profile && python3 /Users/shazhoulin/.codex/skills/common-develop/scripts/artifact_relations.py validate -g ProjectManagerAgent --doc-root project_doc --json"
+    expected_results:
+      - "Java 8-compatible output and full regression GREEN"
+      - "current traceability"
+      - "independent Reviews PASSED"
+    deliverables:
+      - "full test Evidence"
+      - "review Evidence"
+      - "current relations/traceability"
+    stop_conditions:
+      - "任何 P0/P1 未关闭"
+      - "全量测试失败或 Evidence 不完整"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-001"
+      - "TR-P2-SYSTEM-RULEVIEW-009"
     flow_refs:
       - "FLOW-CONFIG-COMPILE"
       - "FLOW-PROTECTED-ACCESS-EXECUTE"
     flow_step_refs:
-      - "STEP-P2-COMPILE-01"
       - "STEP-P2-COMPILE-04"
       - "STEP-P2-ACCESS-GUARD"
       - "STEP-P2-ACCESS-EFFECT"

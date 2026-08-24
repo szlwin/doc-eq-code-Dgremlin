@@ -6,12 +6,15 @@ import dec.core.compiler.api.ModelCompiler;
 import dec.core.compiler.api.PublicationRequest;
 import dec.core.compiler.api.PublishedCompilationResult;
 import dec.core.context.CoreConfigProjection;
+import dec.core.context.config.manager.ConfigManager;
 import java.util.Objects;
 
 /**
  * 使用实例级 Compiler 完成单次编译发布，并暴露同源只读投影。
  *
- * <p>该入口不保存全局 current Context，也不修改旧 Config Registry。</p>
+ * <p>A successful publication associates the published EngineContext with the
+ * current ConfigInfo so existing DataUtil and ModelContainer callers can keep
+ * their simple API.</p>
  */
 public final class CompilerStarter {
     private final ModelCompiler compiler;
@@ -35,9 +38,14 @@ public final class CompilerStarter {
     public CompilationResult compileAndPublish(
             CompilationRequest request,
             PublicationRequest publicationRequest) {
-        return compiler.compileAndPublish(
+        CompilationResult result = compiler.compileAndPublish(
                 Objects.requireNonNull(request, "request"),
                 Objects.requireNonNull(publicationRequest, "publicationRequest"));
+        if (result instanceof PublishedCompilationResult) {
+            ConfigManager.getInstance().useEngineContext(
+                    ((PublishedCompilationResult) result).engineContext());
+        }
+        return result;
     }
 
     /**

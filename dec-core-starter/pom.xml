@@ -22,11 +22,6 @@
     </dependency>
 
     <dependency>
-      <groupId>doc.eq.code</groupId>
-      <artifactId>dec-core-model</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
       <version>1.5.37</version>
