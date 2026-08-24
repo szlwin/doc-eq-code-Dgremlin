@@ -133,9 +133,9 @@ class DeferredI002ReworkTest {
     private static DeferredClassificationInput.Builder validBuilder(int ordinal) {
         return DeferredClassificationInput.builder()
                 .ownerKey(new SystemKey("order"))
-                .kind(DeferredKind.MODEL_ACCESS)
+                .kind(DeferredKind.QUERY)
                 .ordinal(ordinal)
-                .reasonCode("model-access-selector-binding")
+                .reasonCode("query-planning")
                 .sourceRef(new SourceRef(
                         "systems.xml", ordinal + 1, 1,
                         "/systems/system/model-access-info/model-access["

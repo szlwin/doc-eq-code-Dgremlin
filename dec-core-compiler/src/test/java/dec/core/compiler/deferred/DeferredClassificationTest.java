@@ -29,11 +29,11 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
- * TASK-P1-T11：验证 P2-P7 Deferred 稳定分类与完整发布。
+ * TASK-P1-T11：验证 P3-P7 Deferred 稳定分类与完整发布。
  */
 class DeferredClassificationTest {
 
-    /** 八种后续语义必须完整覆盖 P2-P7。 */
+    /** 六种后续语义必须完整覆盖 P3-P7。 */
     @Test
     void classifiesEveryDeferredKindIntoFrozenStage() {
         List<DeferredClassificationInput> inputs = completeInputs();
@@ -47,8 +47,8 @@ class DeferredClassificationTest {
         assertTrue(result.diagnostics().isEmpty());
 
         DeferredRegistry registry = result.registry().get();
-        assertEquals(8, registry.size());
-        assertEquals(2, registry.requiredBy(RequiredStage.P2).size());
+        assertEquals(6, registry.size());
+        assertEquals(0, registry.requiredBy(RequiredStage.P2).size());
         assertEquals(1, registry.requiredBy(RequiredStage.P3).size());
         assertEquals(2, registry.requiredBy(RequiredStage.P4).size());
         assertEquals(1, registry.requiredBy(RequiredStage.P5).size());
@@ -114,9 +114,45 @@ class DeferredClassificationTest {
         Map<DeferredKind, String> reasons = expectedReasons();
 
         for (DeferredKind kind : DeferredKind.values()) {
+            if (!policy.isDeferred(kind)) {
+                assertThrows(IllegalArgumentException.class,
+                        () -> policy.requiredStage(kind));
+                assertThrows(IllegalArgumentException.class,
+                        () -> policy.reasonCode(kind));
+                continue;
+            }
             assertEquals(expected.get(kind), policy.requiredStage(kind));
             assertEquals(reasons.get(kind), policy.reasonCode(kind));
         }
+    }
+
+    /** 已退役权限类型不得再次进入 Deferred Registry。 */
+    @Test
+    void rejectsRetiredPermissionDeferredKinds() {
+        DeferredClassificationResult systemPermission =
+                new DeferredDefinitionBuilder().build(Collections.singletonList(
+                        input(new SystemKey("order"),
+                                DeferredKind.SYSTEM_PERMISSION,
+                                0,
+                                "system-permission-evaluation",
+                                Collections.<DefinitionKey>emptyList())));
+        DeferredClassificationResult modelAccess =
+                new DeferredDefinitionBuilder().build(Collections.singletonList(
+                        input(new SystemKey("payment"),
+                                DeferredKind.MODEL_ACCESS,
+                                0,
+                                "model-access-selector-binding",
+                                refs(new ViewKey("PaymentInfo")))));
+
+        assertEquals(DeferredClassificationStatus.FAILED,
+                systemPermission.status());
+        assertEquals(DeferredClassificationStatus.FAILED, modelAccess.status());
+        assertTrue(systemPermission.diagnostics().stream().anyMatch(diagnostic ->
+                "deferred.incomplete.kind-retired".equals(
+                        diagnostic.messageKey())));
+        assertTrue(modelAccess.diagnostics().stream().anyMatch(diagnostic ->
+                "deferred.incomplete.kind-retired".equals(
+                        diagnostic.messageKey())));
     }
 
     /** P1 分类只产生数据，不暴露 evaluate/execute/query/commit 等运行入口。 */
@@ -149,14 +185,7 @@ class DeferredClassificationTest {
         ActionKey action = new ActionKey(directory, "submit");
         ProduceKey produce = new ProduceKey(action, 7);
         RuleViewKey ruleView = new RuleViewKey(order, "submitRule");
-
         return Arrays.asList(
-                input(order, DeferredKind.SYSTEM_PERMISSION, 0,
-                        "system-permission-evaluation",
-                        refs(ruleView)),
-                input(payment, DeferredKind.MODEL_ACCESS, 0,
-                        "model-access-selector-binding",
-                        refs(new ViewKey("PaymentInfo"))),
                 input(information, DeferredKind.INFORMATION, 0,
                         "information-expression-evaluation",
                         refs(new InformationKey(payment, "success"))),
@@ -216,8 +245,6 @@ class DeferredClassificationTest {
     private static Map<DeferredKind, RequiredStage> expectedStages() {
         Map<DeferredKind, RequiredStage> result =
                 new EnumMap<DeferredKind, RequiredStage>(DeferredKind.class);
-        result.put(DeferredKind.SYSTEM_PERMISSION, RequiredStage.P2);
-        result.put(DeferredKind.MODEL_ACCESS, RequiredStage.P2);
         result.put(DeferredKind.INFORMATION, RequiredStage.P3);
         result.put(DeferredKind.ACTION, RequiredStage.P4);
         result.put(DeferredKind.PRODUCE, RequiredStage.P4);
@@ -230,10 +257,6 @@ class DeferredClassificationTest {
     private static Map<DeferredKind, String> expectedReasons() {
         Map<DeferredKind, String> result =
                 new EnumMap<DeferredKind, String>(DeferredKind.class);
-        result.put(DeferredKind.SYSTEM_PERMISSION,
-                "system-permission-evaluation");
-        result.put(DeferredKind.MODEL_ACCESS,
-                "model-access-selector-binding");
         result.put(DeferredKind.INFORMATION,
                 "information-expression-evaluation");
         result.put(DeferredKind.ACTION, "action-execution");

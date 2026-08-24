@@ -39,7 +39,7 @@ public class ConfigManager {
 		return configInfo;
 	}
 
-	public synchronized void setConfigInfo(ConfigInfo configInfo) {
+	public void setConfigInfo(ConfigInfo configInfo) {
 		this.configInfo = Objects.requireNonNull(configInfo, "configInfo");
 	}
 
@@ -47,7 +47,7 @@ public class ConfigManager {
 	 * 编译成功后一次发布配置和 EngineContext。
 	 * EngineContext 先写入候选对象，再通过 volatile 引用整体生效，读取方不会看到一半新一半旧的状态。
 	 */
-	public synchronized ConfigInfo install(
+	public ConfigInfo install(
 			ConfigInfo candidate,
 			EngineContext engineContext) {
 		ConfigInfo checked = Objects.requireNonNull(candidate, "candidate");

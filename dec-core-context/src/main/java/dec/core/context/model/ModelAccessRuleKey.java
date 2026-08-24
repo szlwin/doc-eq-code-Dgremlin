@@ -2,7 +2,7 @@ package dec.core.context.model;
 
 import java.util.Objects;
 
-/** P2 唯一授权身份：owner System + target + exact path + READ/WRITE。 */
+/** model-access 元数据身份：owner System + target + exact path + READ/WRITE。 */
 public final class ModelAccessRuleKey implements Comparable<ModelAccessRuleKey> {
     private final SystemKey owner;
     private final TargetKey target;
@@ -14,7 +14,7 @@ public final class ModelAccessRuleKey implements Comparable<ModelAccessRuleKey> 
         this.path = Objects.requireNonNull(path, "path");
         this.operation = Objects.requireNonNull(operation, "operation");
     }
-    /** 创建精确授权 Key；四个维度均不可省略或推断。 */
+    /** 创建精确元数据 Key；四个维度均不可省略或推断。 */
     public static ModelAccessRuleKey of(SystemKey owner, TargetKey target, ModelPath path, AccessOperation operation) { return new ModelAccessRuleKey(owner, target, path, operation); }
     public SystemKey owner() { return owner; }
     public TargetKey target() { return target; }

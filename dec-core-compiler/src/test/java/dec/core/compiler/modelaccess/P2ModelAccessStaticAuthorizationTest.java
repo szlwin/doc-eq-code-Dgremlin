@@ -3,6 +3,7 @@ package dec.core.compiler.modelaccess;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.compiler.raw.RawDefinition;
@@ -58,6 +59,26 @@ class P2ModelAccessStaticAuthorizationTest {
                         AccessOperation.READ)));
         assertEquals(Arrays.asList(AccessOperation.READ, AccessOperation.WRITE),
                 Arrays.asList(AccessOperation.values()));
+    }
+
+    @Test
+    void rejectsRetiredRuntimeGuardStatusForNewMetadata() {
+        TargetKey target = TargetKey.of(new ViewKey("OrderInfo"));
+        ModelAccessRuleKey key = ModelAccessRuleKey.of(
+                new SystemKey("order"),
+                target,
+                ModelPath.of("user"),
+                AccessOperation.READ);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CompiledModelAccessRule.of(
+                        key,
+                        AccessCompilationStatus.RUNTIME_GUARD_REQUIRED,
+                        RuntimeBindingPlan.exact(
+                                target,
+                                CompiledTargetBinding.propertyPath(
+                                        new ViewKey("OrderInfo"), "user")),
+                        new SourceRef("systems.xml", 1, 1, "/read")));
     }
 
     @Test
@@ -122,8 +143,8 @@ class P2ModelAccessStaticAuthorizationTest {
                 TargetKey.of(new ViewKey("OrderInfo")),
                 ModelPath.of("payInfo.payDetailList"),
                 AccessOperation.READ);
-        // P1 binding 指向运行时目标对象，静态授权成立但最终对象绑定必须由 Guard 复核。
-        assertEquals(AccessCompilationStatus.RUNTIME_GUARD_REQUIRED, index.classify(expected));
+        // 简化运行模型只保留已静态校验的兼容元数据，不再要求 Runtime Guard。
+        assertEquals(AccessCompilationStatus.STATIC_ALLOW, index.classify(expected));
         assertEquals(
                 CompiledTargetBinding.Kind.PROPERTY_PATH,
                 index.find(expected).get().runtimeBindingPlan().compiledTargetBinding().kind());

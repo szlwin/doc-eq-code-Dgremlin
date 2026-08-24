@@ -263,7 +263,7 @@ final class StandardCompilerPasses {
         }
     }
 
-    /** 第六阶段：编译 ModelAccess Binding 和其 P2 Deferred。 */
+    /** 第六阶段：编译 ModelAccess Binding 和静态兼容元数据索引。 */
     private static final class ModelAccessPass implements CompilerPass {
         private final ModelAccessCompiler compiler = new ModelAccessCompiler();
         private final ModelAccessPolicyCompiler policyCompiler =

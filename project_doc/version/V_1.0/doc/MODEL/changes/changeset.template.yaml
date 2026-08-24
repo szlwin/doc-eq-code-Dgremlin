@@ -1,0 +1,11 @@
+schemaVersion: 1
+changeSet:
+  id: "CHG-V_1.0-MODEL-FEATURE"
+  version: "V_1.0"
+  module: "MODEL"
+  featureCode: "FEATURE"
+  reason: "replace with the confirmed increment reason"
+  baseRevisions: {}
+  resultRevisions: {}
+  affectedTraceIds: []
+operations: []

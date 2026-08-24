@@ -3,8 +3,8 @@ package dec.core.context.model;
 import java.util.Objects;
 
 /**
- * 编译器发布给 Guard/Runtime 的单条精确授权事实。
- * STATIC_DENY 不进入本类型；缺失 exact key 本身就是静态拒绝。
+ * 编译器发布的单条精确 model-access 兼容元数据。
+ * 只有静态校验通过的规则进入本类型；缺失 exact key 表示未声明。
  */
 public final class CompiledModelAccessRule implements Comparable<CompiledModelAccessRule> {
     private final ModelAccessRuleKey key;
@@ -103,13 +103,13 @@ public final class CompiledModelAccessRule implements Comparable<CompiledModelAc
         return canonicalForm();
     }
 
-    /** 只有真正可授权的两类规则可以进入 immutable PolicyIndex。 */
+    /** 简化运行模型只允许静态校验通过的规则进入不可变索引。 */
     private static AccessCompilationStatus requirePublishedStatus(
             AccessCompilationStatus status) {
         AccessCompilationStatus checked = Objects.requireNonNull(status, "status");
-        if (checked == AccessCompilationStatus.STATIC_DENY) {
+        if (checked != AccessCompilationStatus.STATIC_ALLOW) {
             throw new IllegalArgumentException(
-                    "STATIC_DENY must not be published as an authorization rule");
+                    "only STATIC_ALLOW may be published as model-access metadata");
         }
         return checked;
     }

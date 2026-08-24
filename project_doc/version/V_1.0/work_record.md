@@ -1215,6 +1215,112 @@
 | 测试与验证 | 登记 Evidence 4 项；命令 Evidence 1 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","event_id":"WR-20260824-202002-FEATURE-DESC-3361AD2E54FC-PASSED","event_type":"CODE_REVISION_REGISTERED","evidence_ids":["EVD-000491"],"execution_mode":"lightweight","git_checkpoint_refs":["8b362d5dc5b324104585ac41db77f4c42544c5ee"],"input_revision":"DESIGN-P2-R37","next_action":"无 / 未登记","output_revision":"DEV-P2-SIMPLE-RUNTIME-R01@8b362d5dc5b324104585ac41db77f4c42544c5ee","phase":"development","record_id":"WR-20260824-202002-FEATURE-DESC-3361AD2E54FC-PASSED","render_digest":"0ecc9453e571030d1911d37ab7e63bfbe2d12caa5df534f542cbc7c9829510df","schema_version":4,"scope":"P2 simplified runtime model code baseline","source":"wk-wd","status":"PASSED","summary":"Registered the committed P2 simplified ConfigInfo/EngineContext and direct ModelContainer implementation baseline.","target_id":"FEATURE-DESC-3361AD2E54FC","task_type":"development","timestamp":"2026-08-24T20:20:02+08:00","validation_summary":"Exact Git member evidence registered; Java 8 test-compile passed previously; no tests were run in wk-ws/wk-wd.","version":"V_1.0"} -->
+## WR-20260824-202002-FEATURE-DESC-3361AD2E54FC-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-24T20:20:02+08:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | wk-wd |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | P2 simplified runtime model code baseline |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | CODE_REVISION_REGISTERED |
+| 执行模式 | lightweight |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Registered the committed P2 simplified ConfigInfo/EngineContext and direct ModelContainer implementation baseline. |
+| 状态 | PASSED |
+| 状态变更 | 未登记 |
+| Task | 无 / 未登记 |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | DESIGN-P2-R37 |
+| 输出 Revision | DEV-P2-SIMPLE-RUNTIME-R01@8b362d5dc5b324104585ac41db77f4c42544c5ee |
+| StageOutcome | 无 |
+| Evidence | EVD-000491 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 8b362d5dc5b324104585ac41db77f4c42544c5ee |
+| 下一 Agent | 未登记 |
+| 后续事项 | 无 / 未登记 |
+
+### 变更摘要
+
+- Registered the committed P2 simplified ConfigInfo/EngineContext and direct ModelContainer implementation baseline.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | Exact Git member evidence registered; Java 8 test-compile passed previously; no tests were run in wk-ws/wk-wd. |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","blockers":["FEATURE-DESC-3361AD2E54FC legacy task runtime is INVALID because retired protected-access evidence no longer resolves and EVD-000269 drifted; declared reconcile cannot repair semantic history."],"event_id":"WR-20260824-203822-FEATURE-DESC-3361AD2E54FC-PARTIAL","event_type":"DOCUMENT_ARCHIVE_PREVIEW","evidence_ids":["EVD-000491","EVD-000494","EVD-000495","EVD-000496","EVD-000497","EVD-000498"],"execution_mode":"lightweight","git_checkpoint_refs":["8b362d5dc5b324104585ac41db77f4c42544c5ee"],"input_revision":"REQAN-P2-R03+DESIGN-P2-R38+BM-R06+FLOW-R04+P2-IMPACT-R30","modified_files_summary":["project_doc/docs/COMPILER/COMPILER_design.md","project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md","project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml"],"next_action":"Migrate or retire the obsolete heavy-runtime task ledger through a dedicated append-only lifecycle migration, then complete archiveGate and run IncrementalArchiveAgent archive apply.","next_agent":"ProjectManagerAgent","output_revision":"WK-WD-P2-SIMPLE-RUNTIME-PREVIEW-R01@4cf565c2b1fb565067758362de1f58b7768ceccb9f85a9fefa1e8041bb1d1c0e","phase":"completion_verification","record_id":"WR-20260824-203822-FEATURE-DESC-3361AD2E54FC-PARTIAL","render_digest":"b4d9d9d760bb3bf768190e801c64a5b6df1debd5c46f07fbc878fb1179664500","schema_version":4,"scope":"P2 simplified runtime requirement/design formal cutover and archive preview","source":"wk-wd","status":"PARTIAL","summary":"P2 requirement and design now describe the simplified ConfigInfo/EngineContext and direct ModelContainer model; migration and atomic archive previews pass, while canonical apply remains blocked by the obsolete heavy-runtime task ledger.","target_id":"FEATURE-DESC-3361AD2E54FC","task_type":"document_archive","timestamp":"2026-08-24T20:38:22+08:00","validation_summary":"doc_migration archiveCutover READY with zero manual confirmations; wk -wd preview PASS; no tests run under wk -ws.","version":"V_1.0"} -->
+## WR-20260824-203822-FEATURE-DESC-3361AD2E54FC-PARTIAL
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-24T20:38:22+08:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | wk-wd |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | P2 simplified runtime requirement/design formal cutover and archive preview |
+| 阶段 | completion_verification |
+| 任务类型 | document_archive |
+| 事件类型 | DOCUMENT_ARCHIVE_PREVIEW |
+| 执行模式 | lightweight |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | P2 requirement and design now describe the simplified ConfigInfo/EngineContext and direct ModelContainer model; migration and atomic archive previews pass, while canonical apply remains blocked by the obsolete heavy-runtime task ledger. |
+| 状态 | PARTIAL |
+| 状态变更 | 未登记 |
+| Task | 无 / 未登记 |
+| Attempt | 无 / 未登记 |
+| Iteration | 无 / 0 |
+| 输入 Revision | REQAN-P2-R03+DESIGN-P2-R38+BM-R06+FLOW-R04+P2-IMPACT-R30 |
+| 输出 Revision | WK-WD-P2-SIMPLE-RUNTIME-PREVIEW-R01@4cf565c2b1fb565067758362de1f58b7768ceccb9f85a9fefa1e8041bb1d1c0e |
+| StageOutcome | 无 |
+| Evidence | EVD-000491、EVD-000494、EVD-000495、EVD-000496、EVD-000497、EVD-000498 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 8b362d5dc5b324104585ac41db77f4c42544c5ee |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Migrate or retire the obsolete heavy-runtime task ledger through a dedicated append-only lifecycle migration, then complete archiveGate and run IncrementalArchiveAgent archive apply. |
+
+### 变更摘要
+
+- P2 requirement and design now describe the simplified ConfigInfo/EngineContext and direct ModelContainer model; migration and atomic archive previews pass, while canonical apply remains blocked by the obsolete heavy-runtime task ledger.
+
+### 文件变更摘要
+
+- `project_doc/docs/COMPILER/COMPILER_design.md`
+- `project_doc/version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design.md`
+- `project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | doc_migration archiveCutover READY with zero manual confirmations; wk -wd preview PASS; no tests run under wk -ws. |
+| 问题与阻塞 | FEATURE-DESC-3361AD2E54FC legacy task runtime is INVALID because retired protected-access evidence no longer resolves and EVD-000269 drifted; declared reconcile cannot repair semantic history. |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

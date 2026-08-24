@@ -1,0 +1,22 @@
+schemaVersion: 1
+artifact: "dependency_impact_changeset"
+changeSet:
+  id: "DICHG-V_1.0-MODEL-FEATURE"
+  version: "V_1.0"
+  module: "MODEL"
+  reason: "说明本版本为何新增、调整或废弃跨模块关系"
+  baseRevision: "DI-R00@init"
+  resultRevision: "DI-R01@V_1.0"
+operations:
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "MODULE-MODEL"
+    reason: "登记参与本次跨模块实现的模块"
+    after:
+      id: "MODULE-MODEL"
+      type: "MODULE"
+      name: "MODEL"
+      module: "MODEL"
+      refs:
+        - "docs/MODEL/MODEL_desc.md"

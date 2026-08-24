@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * T10 全批成功后发布的不可变 Binding 与 P2 Deferred 快照。
+ * 全批成功后发布的不可变 Binding 快照。
  */
 public final class ModelAccessCompilation {
     private final List<ModelAccessBinding> bindings;
     private final DeferredRegistry deferredRegistry;
 
-    /** 冻结稳定排序 Binding 与 Deferred Registry。 */
+    /** 冻结稳定排序 Binding；Deferred 参数只允许传入兼容用空 Registry。 */
     public ModelAccessCompilation(
             List<ModelAccessBinding> bindings,
             DeferredRegistry deferredRegistry) {
@@ -21,9 +21,14 @@ public final class ModelAccessCompilation {
                 Objects.requireNonNull(bindings, "bindings"));
         Collections.sort(copy);
         this.bindings = Collections.unmodifiableList(copy);
-        this.deferredRegistry = Objects.requireNonNull(
+        DeferredRegistry checked = Objects.requireNonNull(
                 deferredRegistry,
                 "deferredRegistry");
+        if (checked.size() != 0) {
+            throw new IllegalArgumentException(
+                    "model-access must not publish deferred definitions");
+        }
+        this.deferredRegistry = checked;
     }
 
     /** 返回稳定排序且不可修改的 Binding。 */
@@ -31,7 +36,7 @@ public final class ModelAccessCompilation {
         return bindings;
     }
 
-    /** 返回本批 ModelAccess 的 P2 Deferred Registry。 */
+    /** 返回兼容旧 API 的空 Deferred Registry。 */
     public DeferredRegistry deferredRegistry() {
         return deferredRegistry;
     }

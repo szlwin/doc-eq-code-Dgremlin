@@ -5,30 +5,20 @@ import dec.core.compiler.raw.RawDefinitionKind;
 import dec.core.compiler.raw.RawDefinitionSet;
 import dec.core.compiler.raw.RawNodeBody;
 import dec.core.compiler.symbol.SymbolTable;
-import dec.core.context.model.DefinitionKey;
-import dec.core.context.model.DeferredDefinition;
-import dec.core.context.model.DeferredKey;
-import dec.core.context.model.DeferredKind;
 import dec.core.context.model.Diagnostic;
 import dec.core.context.model.ImmutableDeferredRegistry;
-import dec.core.context.model.NormalizedBody;
-import dec.core.context.model.RequiredStage;
 import dec.core.context.model.SystemKey;
 import dec.core.context.model.ViewKey;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
- * 将 T06 ModelAccess 结构事实编译为精确 Binding 与 P2 Deferred 的无状态协调器。
+ * 将 ModelAccess 结构事实编译为精确、可静态校验的 Binding。
  */
 public final class ModelAccessCompiler {
     private final ModelAccessSelectorResolver resolver;
@@ -46,7 +36,7 @@ public final class ModelAccessCompiler {
     }
 
     /**
-     * 编译完整 RawDefinitionSet；任一 ERROR 都不发布部分 Binding 或 Deferred。
+     * 编译完整 RawDefinitionSet；任一 ERROR 都不发布部分 Binding。
      */
     public ModelAccessCompilationResult compile(
             RawDefinitionSet definitions,
@@ -56,7 +46,7 @@ public final class ModelAccessCompiler {
                     Collections.singletonList(
                             ModelAccessDiagnostics.inputRequired()));
         }
-        // 完整快照门禁必须先于 owner、selector、resolver 和 Deferred 工作。
+        // 完整快照门禁必须先于 owner、selector 和 resolver 工作。
         if (!symbols.isBuiltFrom(definitions)) {
             return ModelAccessCompilationResult.failed(
                     Collections.singletonList(
@@ -67,10 +57,6 @@ public final class ModelAccessCompiler {
         List<ModelAccessBinding> bindings = new ArrayList<ModelAccessBinding>();
         Set<BindingIdentity> bindingIdentities =
                 new LinkedHashSet<BindingIdentity>();
-        Map<DeferredKey, DeferredDefinition> deferred =
-                new TreeMap<DeferredKey, DeferredDefinition>();
-        Map<SystemKey, Integer> ordinals = new LinkedHashMap<SystemKey, Integer>();
-
         for (RawDefinition definition
                 : definitions.definitions(RawDefinitionKind.MODEL_ACCESS)) {
             compileDefinition(
@@ -78,19 +64,18 @@ public final class ModelAccessCompiler {
                     symbols,
                     diagnostics,
                     bindings,
-                    bindingIdentities,
-                    deferred,
-                    ordinals);
+                    bindingIdentities);
         }
 
         if (!diagnostics.isEmpty()) {
             return ModelAccessCompilationResult.failed(
                     ModelAccessDiagnostics.sorted(diagnostics));
         }
-        return ModelAccessCompilationResult.compiled(
-                new ModelAccessCompilation(
-                        bindings,
-                        new ImmutableDeferredRegistry(deferred)));
+        // AC-P2-SYSTEM-RULEVIEW-008：权限运行模型已退役。保留空 Registry
+        // 兼容现有 API，但 model-access 不再制造 P2 Deferred。
+        return ModelAccessCompilationResult.compiled(new ModelAccessCompilation(
+                bindings,
+                new ImmutableDeferredRegistry(Collections.emptyMap())));
     }
 
     /** 编译单个 ModelAccess，并把阶段内临时事实写入批次累积器。 */
@@ -99,10 +84,8 @@ public final class ModelAccessCompiler {
             SymbolTable symbols,
             Set<Diagnostic> diagnostics,
             List<ModelAccessBinding> bindings,
-            Set<BindingIdentity> bindingIdentities,
-            Map<DeferredKey, DeferredDefinition> deferred,
-            Map<SystemKey, Integer> ordinals) {
-        // 根结构门禁必须先于 owner、source View、resolver 与 Deferred 工作。
+            Set<BindingIdentity> bindingIdentities) {
+        // 根结构门禁必须先于 owner、source View 与 resolver 工作。
         List<Diagnostic> structureDiagnostics =
                 structureValidator.validate(definition);
         if (!structureDiagnostics.isEmpty()) {
@@ -117,12 +100,6 @@ public final class ModelAccessCompiler {
         }
 
         WritePathOverlapIndex writePathIndex = new WritePathOverlapIndex();
-        Set<DefinitionKey> resolvedReferences = new TreeSet<DefinitionKey>();
-        resolvedReferences.add(sourceView);
-        StringBuilder normalized = new StringBuilder();
-        normalized.append("owner=").append(owner.name())
-                .append(";source=").append(sourceView.name());
-
         for (RawNodeBody access : definition.body().children()) {
             compileAccess(
                     definition,
@@ -133,26 +110,8 @@ public final class ModelAccessCompiler {
                     diagnostics,
                     bindings,
                     bindingIdentities,
-                    resolvedReferences,
-                    writePathIndex,
-                    normalized);
+                    writePathIndex);
         }
-
-        int ordinal = nextOrdinal(owner, ordinals);
-        DeferredKey key = new DeferredKey(
-                owner,
-                DeferredKind.MODEL_ACCESS,
-                ordinal);
-        DeferredDefinition value = new DeferredDefinition(
-                key,
-                RequiredStage.P2,
-                "model-access-selector-binding",
-                definition.sourceRef(),
-                new NormalizedBody(
-                        "model-access-binding/v1",
-                        normalized.toString()),
-                new ArrayList<DefinitionKey>(resolvedReferences));
-        deferred.put(key, value);
     }
 
     /** 编译单个 read/write 节点并解析其全部 ref。 */
@@ -165,9 +124,7 @@ public final class ModelAccessCompiler {
             Set<Diagnostic> diagnostics,
             List<ModelAccessBinding> bindings,
             Set<BindingIdentity> bindingIdentities,
-            Set<DefinitionKey> resolvedReferences,
-            WritePathOverlapIndex writePathIndex,
-            StringBuilder normalized) {
+            WritePathOverlapIndex writePathIndex) {
         AccessMode mode = accessMode(access, diagnostics);
         SharedModelPath sourcePath = sourcePath(access, diagnostics);
         if (mode == null || sourcePath == null) {
@@ -178,12 +135,6 @@ public final class ModelAccessCompiler {
                     definition.sourceRef()));
         }
 
-        normalized.append(';')
-                .append(mode.name().toLowerCase())
-                .append('(')
-                .append(sourcePath.value())
-                .append(")=[");
-        boolean first = true;
         for (RawNodeBody ref : access.children()) {
             if (!"ref".equals(ref.name())) {
                 diagnostics.add(ModelAccessDiagnostics.structureInvalid(
@@ -231,16 +182,7 @@ public final class ModelAccessCompiler {
                 continue;
             }
             bindings.add(binding);
-            resolvedReferences.add(targetView);
-            if (!first) {
-                normalized.append(',');
-            }
-            normalized.append(targetView.name())
-                    .append('#')
-                    .append(target.toString());
-            first = false;
         }
-        normalized.append(']');
     }
 
     /** 安全构造并校验当前 System owner。 */
@@ -354,16 +296,6 @@ public final class ModelAccessCompiler {
         } catch (IllegalArgumentException failure) {
             return null;
         }
-    }
-
-    /** 返回当前 owner 的稳定 Deferred ordinal，并递增下次值。 */
-    private static int nextOrdinal(
-            SystemKey owner,
-            Map<SystemKey, Integer> ordinals) {
-        Integer current = ordinals.get(owner);
-        int ordinal = current == null ? 0 : current;
-        ordinals.put(owner, ordinal + 1);
-        return ordinal;
     }
 
     /**

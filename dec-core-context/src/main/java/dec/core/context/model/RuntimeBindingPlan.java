@@ -3,8 +3,9 @@ package dec.core.context.model;
 import java.util.Objects;
 
 /**
- * P2 runtime 目标选择的编译期计划。
- * source TargetKey 与已解析 target binding 必须作为同一不可变事实传递。
+ * 已解析目标关系的编译期兼容值对象。
+ * 类型名为旧 API 保留；它只保存 source TargetKey 和 target binding，
+ * 不代表运行时必须执行 Guard 或权限证明。
  */
 public final class RuntimeBindingPlan implements Comparable<RuntimeBindingPlan> {
     private final TargetKey sourceTargetKey;
@@ -21,7 +22,7 @@ public final class RuntimeBindingPlan implements Comparable<RuntimeBindingPlan> 
                 "compiledTargetBinding");
     }
 
-    /** 使用已经编译的精确 target facts 创建运行计划。 */
+    /** 使用已经编译的精确 target facts 创建不可变绑定元数据。 */
     public static RuntimeBindingPlan exact(
             TargetKey source,
             CompiledTargetBinding binding) {

@@ -121,7 +121,10 @@ public class YamlConfigFileParser implements FileParser<ConfigInfo> {
                 }
                 dataSource.setConName(connection.getName());
                 connection.getDataSourceInfo().addDataSource(dataSource);
-                ConnectionInfo info = (ConnectionInfo) ConfigContextUtil.getConfigInfo().get(Config.CONNECTION_CONFIG, dataSource.getType());
+                // 与 XML 一致：Connection 的实现类型由已绑定 DataSource.type 决定。
+                ConnectionInfo<Object, Object, Object> info =
+                        new ConnectionInfo<Object, Object, Object>();
+                info.setName(dataSource.getType());
                 connection.setConnectionInfo(info);
             }
             Map<String, Object> properties = YamlSupport.map(YamlSupport.first(map, "properties", "property-info", "propertyInfo"), "properties");

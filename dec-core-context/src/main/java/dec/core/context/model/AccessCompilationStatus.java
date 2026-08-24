@@ -7,5 +7,7 @@ package dec.core.context.model;
 public enum AccessCompilationStatus {
     STATIC_DENY,
     STATIC_ALLOW,
+    /** 简化运行模型不再生成此状态，仅保留枚举值兼容旧调用方。 */
+    @Deprecated
     RUNTIME_GUARD_REQUIRED
 }

@@ -12,8 +12,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * P2 唯一 model-access 授权索引。
- * lookup 只接受完整 ModelAccessRuleKey，不提供 prefix/bare/path fallback。
+ * model-access 静态校验结果的兼容元数据索引。
+ * lookup 只接受完整 ModelAccessRuleKey，不提供 prefix/bare/path fallback；
+ * 该索引本身不要求或执行 Runtime Guard。
  */
 public final class ModelAccessPolicyIndex {
     private final Map<ModelAccessRuleKey, CompiledModelAccessRule> rules;
@@ -46,7 +47,7 @@ public final class ModelAccessPolicyIndex {
         return new ModelAccessPolicyIndex(rules);
     }
 
-    /** 创建合法的空授权索引；空索引意味着所有请求静态 DENY。 */
+    /** 创建合法的空索引；空索引中的任意查询都分类为 STATIC_DENY。 */
     public static ModelAccessPolicyIndex empty() {
         return new ModelAccessPolicyIndex(
                 Collections.<CompiledModelAccessRule>emptyList());

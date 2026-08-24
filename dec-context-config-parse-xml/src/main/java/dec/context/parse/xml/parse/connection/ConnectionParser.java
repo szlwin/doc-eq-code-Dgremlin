@@ -50,8 +50,12 @@ public class ConnectionParser implements ElementParser<Connection>{
 			dataSource.setConName(connection.getName());
 			connection.getDataSourceInfo().addDataSource(dataSource);
 			
-			connection.setConnectionInfo(
-					(ConnectionInfo) ConfigContextUtil.getConfigInfo().get(Config.CONNECTION_CONFIG, dataSource.getType()));
+			// Connection 已通过 data-source ref 完成绑定，连接实现类型直接继承
+			// DataSource.type，不要求调用方额外注册同名 ConnectionInfo。
+			ConnectionInfo<Object, Object, Object> connectionInfo =
+					new ConnectionInfo<Object, Object, Object>();
+			connectionInfo.setName(dataSource.getType());
+			connection.setConnectionInfo(connectionInfo);
 			
 		}
 		Element elementPro = element.element("property-info");

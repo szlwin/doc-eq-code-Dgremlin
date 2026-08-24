@@ -17,12 +17,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-/** DEV-03 静态授权分类与精确 RuntimeBindingPlan 编译器。 */
+/** 将 ModelAccess Binding 编译为静态校验后的兼容元数据索引。 */
 public final class ModelAccessPolicyCompiler {
     private final ModelPathCompiler pathCompiler = new ModelPathCompiler();
 
     /**
-     * 将 P1 结构 Binding 转成 P2 exact policy。任何路径/绑定错误都原子失败，不发布部分 Index。
+     * 将结构 Binding 转成 exact metadata。任何路径/绑定错误都原子失败，不发布部分 Index。
      */
     public ModelAccessPolicyCompilationResult compile(
             ModelAccessCompilation compilation,
@@ -60,7 +60,7 @@ public final class ModelAccessPolicyCompiler {
                         compiledTarget(binding));
                 rules.add(CompiledModelAccessRule.of(
                         key,
-                        AccessCompilationStatus.RUNTIME_GUARD_REQUIRED,
+                        AccessCompilationStatus.STATIC_ALLOW,
                         plan,
                         binding.sourceRef()));
             }
