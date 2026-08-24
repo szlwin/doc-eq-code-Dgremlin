@@ -4,28 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dec.core.compiler.api.CompilationOptions;
-import dec.core.compiler.api.CompilationResult;
-import dec.core.compiler.api.CompilationStatus;
-import dec.core.compiler.api.ContextPublisher;
-import dec.core.compiler.api.PublicationResult;
-import dec.core.compiler.api.PublicationStatus;
-import dec.core.compiler.api.PublishedCompilationResult;
-import dec.core.compiler.source.SourceReference;
-import dec.core.context.EngineContext;
 import dec.core.context.data.BaseData;
 import dec.core.context.data.ModelData;
+import dec.core.context.model.ActionKey;
+import dec.core.context.model.BusinessScopeKey;
 import dec.core.context.model.CompiledModelSet;
+import dec.core.context.model.DirectoryKey;
 import dec.core.context.model.InformationKey;
 import dec.core.context.model.RuleViewKey;
 import dec.core.context.model.SystemKey;
 import dec.core.model.utils.DataUtil;
-import dec.core.starter.CompilerBootstrap;
 import dec.core.starter.common.ConfigUtil;
 import dec.external.datasource.sql.datasource.DBDataSource;
 import java.io.File;
 import java.net.URLClassLoader;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -39,8 +31,7 @@ public class MixTest {
      */
     @Test
     void loadsMixConfigurationAndCreatesDeclaredModels() throws Exception {
-        ConfigUtil.addDataSourceConfig("MySQL", DBDataSource.class.getName());
-        ConfigUtil.parseConfigInfo("classpath:mix/orm-config.xml");
+        loadMixConfigurationFromTestResources();
 
         ModelData order = DataUtil.createViewData("OrderInfo");
         assertEquals("OrderInfo", order.getName());
@@ -66,29 +57,8 @@ public class MixTest {
      */
     @Test
     void loadsSystemsFileFromTestResources() throws Exception {
-        CompilationResult result;
-        // 隔离到 test 输出目录，避免 main/test 两套同名 mix 资源造成来源歧义。
-        try (URLClassLoader testResources = new URLClassLoader(
-                new java.net.URL[] {
-                        new File("target/test-classes").toURI().toURL()
-                },
-                null)) {
-            result = CompilerBootstrap.builder()
-                    .classLoader(testResources)
-                    .allowedRoot("classpath:mix/")
-                    .publisher(alwaysPublish())
-                    .build()
-                    .compileAndPublish(
-                            new SourceReference("classpath:mix/orm-config.xml"),
-                            new CompilationOptions("1.0", "mix-test-systems"),
-                            Optional.<EngineContext>empty());
-        }
-
-        assertEquals(
-                CompilationStatus.PUBLISHED,
-                result.status(),
-                result.diagnostics().toString());
-        CompiledModelSet model = ((PublishedCompilationResult) result).modelSet();
+        loadMixConfigurationFromTestResources();
+        CompiledModelSet model = DataUtil.getEngineContext().compiledModelSet();
         assertTrue(model.sourceManifest().sources().stream().anyMatch(source ->
                 source.sourceId().endsWith("mix/system/systems.xml")));
 
@@ -114,21 +84,30 @@ public class MixTest {
         assertTrue(model.typedRegistries().information()
                 .find(new InformationKey(common, "paySuccess"))
                 .isPresent());
+
+        BusinessScopeKey business = new BusinessScopeKey("order-payment");
+        DirectoryKey ordered = new DirectoryKey(business, "ordered");
+        assertTrue(model.typedRegistries().businessScopes().find(business).isPresent());
+        assertTrue(model.typedRegistries().directories().find(ordered).isPresent());
+        assertTrue(model.typedRegistries().actions()
+                .find(new ActionKey(ordered, "saveOrder"))
+                .isPresent());
+        assertTrue(model.typedRegistries().produces().size() > 0);
     }
 
-    private static ContextPublisher alwaysPublish() {
-        return new ContextPublisher() {
-            @Override
-            public PublicationResult publish(
-                    Optional<EngineContext> expectedCurrent,
-                    EngineContext candidate) {
-                return new PublicationResult() {
-                    @Override
-                    public PublicationStatus status() {
-                        return PublicationStatus.PUBLISHED;
-                    }
-                };
-            }
-        };
+    /** 只隔离测试资源来源，业务加载仍然只调用 ConfigUtil 公共入口。 */
+    private static void loadMixConfigurationFromTestResources() throws Exception {
+        ClassLoader thread = Thread.currentThread().getContextClassLoader();
+        try (URLClassLoader testResources = new URLClassLoader(
+                new java.net.URL[] {
+                        new File("target/test-classes").toURI().toURL()
+                },
+                null)) {
+            Thread.currentThread().setContextClassLoader(testResources);
+            ConfigUtil.addDataSourceConfig("MySQL", DBDataSource.class.getName());
+            ConfigUtil.parseConfigInfo("classpath:mix/orm-config.xml");
+        } finally {
+            Thread.currentThread().setContextClassLoader(thread);
+        }
     }
 }

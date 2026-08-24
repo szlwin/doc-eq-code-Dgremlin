@@ -179,8 +179,9 @@ public final class ClasspathDocumentSourceProvider
                     roots,
                     ((URLClassLoader) classLoader).getURLs());
         }
-        if (classLoader == ClassLoader.getSystemClassLoader()
-                || classLoader == Thread.currentThread().getContextClassLoader()) {
+        // 显式 URLClassLoader 已通过 getURLs() 给出完整 roots，不能再混入进程级
+        // java.class.path；否则隔离加载器会被错误地扩展成 main/test 重复来源。
+        if (classLoader == ClassLoader.getSystemClassLoader()) {
             String[] entries = System.getProperty("java.class.path", "")
                     .split(File.pathSeparator);
             for (String entry : entries) {
