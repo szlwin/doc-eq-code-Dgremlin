@@ -11,7 +11,6 @@ import dec.core.context.config.model.view.ViewProperty;
 import dec.core.context.config.utils.ConfigContextUtil;
 import dec.core.context.model.CompiledMaterializationNode;
 import dec.core.context.model.CompiledViewMaterializationPlan;
-import dec.core.context.model.ViewKey;
 import javolution.util.FastMap;
 
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -40,16 +38,8 @@ public class ModelDataFactory {
     }
 
     /**
-     * 根据编译期冻结的物化计划创建 ModelData，不再读取全局 ConfigContext。
-     *
-     * <p>DEV-04 / AC-P2-SYSTEM-RULEVIEW-008：运行时只能消费当前 EngineContext 已发布的
-     * {@link CompiledViewMaterializationPlan}。这里按 plan 中的精确 ModelPath 建立字段骨架，
-     * 然后把真实 originObject 映射到同一个 ModelData；后续 DEV-05 必须把这个实例原样冻结到 Handle。
-     *
-     * @param plan 当前捕获 Context 中的精确物化计划
-     * @param originObject 真实业务对象或 Map；不得传入已经构造好的 ModelData 作为 trusted 输入
-     * @return 与 plan 精确对应的新 ModelData
-     * @throws DataNotDefineException originObject 无法转换为对象字段时抛出
+     * 按指定物化计划创建局部 ModelData，保留给编译器内部和兼容调用。
+     * 普通业务创建必须使用 ViewData 全量字段，不能把访问计划误当成完整模型定义。
      */
     @SuppressWarnings("unchecked")
     public ModelData createData(
@@ -62,7 +52,7 @@ public class ModelDataFactory {
 
         ModelData modelData = new ModelData();
         modelData.setName(plan.viewKey().name());
-        // legacy ModelContainer 的成功写回路径要求 values 同时实现 FastJSON JSON；因此根对象必须用 JSONObject。
+        // ModelContainer 会把执行结果写回原对象，因此根 Map 需要保留 FastJSON 的对象语义。
         Map<String, Object> values = new JSONObject();
         for (CompiledMaterializationNode node : plan.fields()) {
             materializePath(values, node.path().segments());
@@ -88,7 +78,7 @@ public class ModelDataFactory {
         return modelData;
     }
 
-    /** 按编译期精确路径建立嵌套对象骨架；禁止运行时重新解释 selector。 */
+    /** 按物化计划建立嵌套字段骨架。 */
     @SuppressWarnings("unchecked")
     private static void materializePath(Map<String, Object> root, List<String> segments) {
         Map<String, Object> cursor = root;
@@ -103,7 +93,7 @@ public class ModelDataFactory {
             }
             Object current = cursor.get(segment);
             if (current == null) {
-                // 嵌套对象同样保持 JSON Map 语义，保证真实 originData 写回时可以安全递归转换。
+                // 嵌套对象也使用 JSONObject，保证结果可以递归写回业务对象。
                 Map<String, Object> child = new JSONObject();
                 cursor.put(segment, child);
                 cursor = child;
@@ -116,7 +106,7 @@ public class ModelDataFactory {
         }
     }
 
-    /** 只覆盖 plan 已声明的字段，避免 originObject 注入未编译字段。 */
+    /** 只把来源对象中已声明的字段合并到物化结果。 */
     @SuppressWarnings("unchecked")
     private static void mergeKnownValues(Map<String, Object> target, Map<String, Object> source) {
         for (Map.Entry<String, Object> entry : target.entrySet()) {
@@ -135,21 +125,6 @@ public class ModelDataFactory {
 
     public ModelData createData(String name, Object object) throws DataNotDefineException {
         ConfigInfo configInfo = ConfigContextUtil.getConfigInfo();
-        if (configInfo.hasEngineContext()) {
-            Optional<CompiledViewMaterializationPlan> compiledPlan = configInfo
-                    .getEngineContext()
-                    .viewMaterializationIndex()
-                    .find(new ViewKey(name));
-            if (compiledPlan.isPresent()) {
-                ModelData compiledData = createData(compiledPlan.get(), object);
-                ViewData legacyView = configInfo.getViewData(name);
-                if (legacyView != null) {
-                    compiledData.setViewInfo(legacyView);
-                }
-                return compiledData;
-            }
-        }
-
         ModelData baseData = new ModelData();
         ViewData viewDataConfig = configInfo.getViewData(name);
 
@@ -158,7 +133,7 @@ public class ModelDataFactory {
 
         baseData.setName(name);
 
-        //��ȡ����������Ϣ
+        // ViewData 是业务模型的完整定义，访问计划只负责编译期校验，不能在这里裁剪字段。
         Map<String, ViewProperty> map
                 = viewDataConfig.getViewPropertyInfo().getProperty();
 

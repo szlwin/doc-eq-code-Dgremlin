@@ -25,10 +25,35 @@ public class ConnectionInfoParser implements FileParser<ConfigInfo>{
 	private final static Logger log = LoggerFactory.getLogger(ConnectionInfoParser.class);
 	
 	public ConfigInfo parse(String filePath) throws XMLParseException {
-		Document doc = null;
+		ConfigInfo candidate = new ConfigInfo();
+		ConfigInfo parsed = parseInto(candidate, filePath);
+		// 兼容原有启动方式：只有整个文件解析成功后才替换当前配置。
+		ConfigManager.getInstance().setConfigInfo(parsed);
+		return parsed;
+	}
 
-		ConfigInfo configInfo = new ConfigInfo();
-		ConfigManager.getInstance().setConfigInfo(configInfo);
+	/** 把连接类型解析到候选配置，不提前影响正在运行的业务配置。 */
+	public ConfigInfo parseInto(final ConfigInfo candidate, final String filePath)
+			throws XMLParseException {
+		try {
+			return ConfigManager.getInstance().withConfigInfo(
+					candidate,
+					new ConfigManager.ConfigOperation<ConfigInfo>() {
+						@Override
+						public ConfigInfo execute() throws Exception {
+							return parseCurrent(candidate, filePath);
+						}
+					});
+		} catch (XMLParseException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new XMLParseException(e);
+		}
+	}
+
+	private ConfigInfo parseCurrent(ConfigInfo configInfo, String filePath)
+			throws XMLParseException {
+		Document doc = null;
 		
 		log.info("------Dec init Connection Start------");
 		

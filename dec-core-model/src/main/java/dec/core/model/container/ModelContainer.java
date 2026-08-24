@@ -46,6 +46,18 @@ public class ModelContainer implements Container {
     }
 
     public Container load(ModelLoader modelLoader) {
+		if (modelLoader == null) {
+			throw new IllegalArgumentException("ModelLoader 不能为空");
+		}
+		if (modelLoader.getRuleName() == null || modelLoader.getRuleName().trim().isEmpty()) {
+			throw new IllegalArgumentException("规则名称不能为空");
+		}
+		if (modelLoader.get() == null) {
+			throw new IllegalArgumentException("规则 " + modelLoader.getRuleName() + " 未提供 ModelData");
+		}
+		if (modelLoader.getConName() == null || modelLoader.getConName().trim().isEmpty()) {
+			throw new IllegalArgumentException("规则 " + modelLoader.getRuleName() + " 未指定连接名称");
+		}
 
         String conName = modelLoader.getConName();
 
@@ -62,6 +74,9 @@ public class ModelContainer implements Container {
     }
 
     public Container execute() throws ExecuteRuleException {
+		if (list.isEmpty()) {
+			throw new ExecuteRuleException("ModelContainer 尚未加载任何规则");
+		}
         boolean isOk = true;
         ResultInfo result = null;
         int i = 0;
@@ -88,9 +103,14 @@ public class ModelContainer implements Container {
 
         } catch (Exception e) {
             isOk = false;
-            log.error("Execute error,rule:{}", modelLoader.getRuleName(), e);
+			String ruleName = modelLoader == null ? null : modelLoader.getRuleName();
+			String conName = modelLoader == null ? null : modelLoader.getConName();
+            log.error("Execute error,rule:{}", ruleName, e);
 
-            throw new ExecuteRuleException(e, modelLoader.getRuleName(), modelLoader.getConName());
+			if (e instanceof ExecuteRuleException) {
+				throw (ExecuteRuleException) e;
+			}
+            throw new ExecuteRuleException(e, ruleName, conName);
         } finally {
             copy(result);
             boolean isSuccess = result != null && result.isSuccess() && isOk;
@@ -100,7 +120,9 @@ public class ModelContainer implements Container {
             } catch (ConectionException e) {
                 log.error(e.getMessage(), e);
                 if (isSuccess) {
-                    throw new ExecuteRuleException(e, modelLoader.getRuleName(), modelLoader.getConName());
+					String ruleName = modelLoader == null ? null : modelLoader.getRuleName();
+					String conName = modelLoader == null ? null : modelLoader.getConName();
+                    throw new ExecuteRuleException(e, ruleName, conName);
                 }
             }
         }

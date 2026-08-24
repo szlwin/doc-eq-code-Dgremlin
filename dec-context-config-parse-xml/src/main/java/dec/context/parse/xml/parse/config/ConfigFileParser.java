@@ -25,11 +25,32 @@ public class ConfigFileParser implements FileParser<ConfigInfo>{
 	private final static Logger log = LoggerFactory.getLogger(ConfigFileParser.class);
 	
 	public ConfigInfo parse(String filePath) throws XMLParseException{
-		
+		ConfigInfo configInfo = ConfigManager.getInstance().getInstalledConfigInfo();
+		return parseInto(configInfo, filePath);
+	}
+
+	/** 把模型、View 和 Rule 等内容解析到指定候选配置。 */
+	public ConfigInfo parseInto(final ConfigInfo candidate, final String filePath)
+			throws XMLParseException {
+		try {
+			return ConfigManager.getInstance().withConfigInfo(
+					candidate,
+					new ConfigManager.ConfigOperation<ConfigInfo>() {
+						@Override
+						public ConfigInfo execute() throws Exception {
+							return parseCurrent(candidate, filePath);
+						}
+					});
+		} catch (XMLParseException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new XMLParseException(e);
+		}
+	}
+
+	private ConfigInfo parseCurrent(ConfigInfo configInfo, String filePath)
+			throws XMLParseException {
 		log.info("------Dec init Start------");
-		
-		ConfigInfo configInfo = ConfigManager.getInstance().getConfigInfo();
-		//ConfigManager.getInstance().setConfigInfo(configInfo);
 		try {
 			
 			

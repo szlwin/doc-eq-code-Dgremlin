@@ -11,7 +11,6 @@ import dec.core.context.config.model.data.DataProperty;
 import dec.core.context.config.model.data.DataTable;
 import dec.core.context.config.model.data.PropertyInfo;
 import dec.core.context.config.model.data.TableInfo;
-import dec.core.context.config.model.datasource.config.DataSourceConfig;
 import dec.core.context.config.utils.ConfigContextUtil;
 
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class YamlDataFileParser implements FileParser<List<Data>> {
             DataTable table = new DataTable();
             table.setName(YamlSupport.requireStr(map, "table.name", "name"));
             String dataSourceName = YamlSupport.requireStr(map, "table.dataSource", "dataSource", "data-source", "data_source");
-            if (DataSourceConfig.getInstance().get(dataSourceName) == null) {
+            if (ConfigContextUtil.getConfigInfo().getDataSource(dataSourceName) == null) {
                 throw new YAMLParseException("The data source is not existed: " + dataSourceName);
             }
             table.setDataSourceName(dataSourceName);

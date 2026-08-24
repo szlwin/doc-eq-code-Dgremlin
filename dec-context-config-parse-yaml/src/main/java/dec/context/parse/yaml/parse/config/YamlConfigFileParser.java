@@ -30,12 +30,31 @@ public class YamlConfigFileParser implements FileParser<ConfigInfo> {
 
     @Override
     public ConfigInfo parse(String filePath) throws YAMLParseException {
-        log.info("------Dec yaml init Start------");
-        ConfigInfo configInfo = ConfigManager.getInstance().getConfigInfo();
-        if (configInfo == null) {
-            configInfo = new ConfigInfo();
-            ConfigManager.getInstance().setConfigInfo(configInfo);
+        return parseInto(ConfigManager.getInstance().getInstalledConfigInfo(), filePath);
+    }
+
+    /** 把 YAML 内容解析到指定候选配置，解析完成前不替换线上配置。 */
+    public ConfigInfo parseInto(final ConfigInfo candidate, final String filePath)
+            throws YAMLParseException {
+        try {
+            return ConfigManager.getInstance().withConfigInfo(
+                    candidate,
+                    new ConfigManager.ConfigOperation<ConfigInfo>() {
+                        @Override
+                        public ConfigInfo execute() throws Exception {
+                            return parseCurrent(candidate, filePath);
+                        }
+                    });
+        } catch (YAMLParseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new YAMLParseException(e);
         }
+    }
+
+    private ConfigInfo parseCurrent(ConfigInfo configInfo, String filePath)
+            throws YAMLParseException {
+        log.info("------Dec yaml init Start------");
         Map<String, Object> root = YamlSupport.loadMap(YamlSupport.findOne(filePath));
         parseDataSources(configInfo, root);
         parseConnections(configInfo, root);

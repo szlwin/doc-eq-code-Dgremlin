@@ -49,6 +49,15 @@ public class ModelLoader {
     }
 
     public ModelLoader load(String name, ModelData e, String conName) {
+		if (name == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException("规则名称不能为空");
+		}
+		if (e == null) {
+			throw new IllegalArgumentException("规则 " + name + " 未提供 ModelData");
+		}
+		if (conName == null || conName.trim().isEmpty()) {
+			throw new IllegalArgumentException("规则 " + name + " 未指定连接名称");
+		}
         this.ruleName = name;
         this.e = e;
         this.conName = conName;
@@ -57,6 +66,15 @@ public class ModelLoader {
     }
 
     public void addConnectionWithRule(String ruleName, String conName) {
+		if (ruleName == null || ruleName.trim().isEmpty()) {
+			throw new IllegalArgumentException("规则名称不能为空");
+		}
+		if (conName == null || conName.trim().isEmpty()) {
+			throw new IllegalArgumentException("规则 " + ruleName + " 未指定连接名称");
+		}
+		if (ruleConMap == null) {
+			ruleConMap = new HashMap<String, String>();
+		}
         ruleConMap.put(ruleName, conName);
     }
 

@@ -11,7 +11,6 @@ import dec.core.context.config.model.config.Config;
 import dec.core.context.config.model.connection.Connection;
 import dec.core.context.config.model.connection.ConnectionInfo;
 import dec.core.context.config.model.datasource.DataSource;
-import dec.core.context.config.model.datasource.config.DataSourceConfig;
 import dec.core.context.config.utils.ConfigContextUtil;
 
 //import com.orm.common.config.Config;
@@ -77,7 +76,7 @@ public class ConnectionParser implements ElementParser<Connection>{
 	
 	private DataSource<?> getDataSource(String name)
 	{
-		return DataSourceConfig.getInstance().get(name);
+		return ConfigContextUtil.getConfigInfo().getDataSource(name);
 		
 	}
 

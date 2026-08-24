@@ -7,14 +7,11 @@ import dec.core.compiler.api.PublicationRequest;
 import dec.core.compiler.api.PublishedCompilationResult;
 import dec.core.context.CoreConfigProjection;
 import dec.core.context.config.manager.ConfigManager;
+import dec.core.context.config.model.config.ConfigInfo;
 import java.util.Objects;
 
 /**
- * 使用实例级 Compiler 完成单次编译发布，并暴露同源只读投影。
- *
- * <p>A successful publication associates the published EngineContext with the
- * current ConfigInfo so existing DataUtil and ModelContainer callers can keep
- * their simple API.</p>
+ * 使用实例级 Compiler 完成单次编译发布，并把成功结果交给简单业务入口使用。
  */
 public final class CompilerStarter {
     private final ModelCompiler compiler;
@@ -38,11 +35,27 @@ public final class CompilerStarter {
     public CompilationResult compileAndPublish(
             CompilationRequest request,
             PublicationRequest publicationRequest) {
+        return compileAndInstall(
+                ConfigManager.getInstance().getInstalledConfigInfo(),
+                request,
+                publicationRequest);
+    }
+
+    /**
+     * 编译候选配置，并且只在发布成功后整体安装。
+     * 解析或编译失败时，ConfigManager 中原有配置保持不变。
+     */
+    public CompilationResult compileAndInstall(
+            ConfigInfo candidate,
+            CompilationRequest request,
+            PublicationRequest publicationRequest) {
+        ConfigInfo checkedCandidate = Objects.requireNonNull(candidate, "candidate");
         CompilationResult result = compiler.compileAndPublish(
                 Objects.requireNonNull(request, "request"),
                 Objects.requireNonNull(publicationRequest, "publicationRequest"));
         if (result instanceof PublishedCompilationResult) {
-            ConfigManager.getInstance().useEngineContext(
+            ConfigManager.getInstance().install(
+                    checkedCandidate,
                     ((PublishedCompilationResult) result).engineContext());
         }
         return result;

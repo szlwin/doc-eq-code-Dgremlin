@@ -19,7 +19,6 @@ import dec.core.context.config.model.data.DataProperty;
 import dec.core.context.config.model.data.DataTable;
 import dec.core.context.config.model.data.PropertyInfo;
 import dec.core.context.config.model.data.TableInfo;
-import dec.core.context.config.model.datasource.config.DataSourceConfig;
 import dec.core.context.config.utils.ConfigContextUtil;
 import javolution.util.FastMap;
 
@@ -145,7 +144,7 @@ public class DataParser extends AbstarctElementsParser{
 			//table.setDataSourceName(Util.getDataSourceByCon(table.getCon()).getName());
 			String dataSourceName = tableElement.attributeValue(DataTable.DATA_SOURCE);
 			
-			if(DataSourceConfig.getInstance().get(dataSourceName) == null){
+			if(ConfigContextUtil.getConfigInfo().getDataSource(dataSourceName) == null){
 				throw new XMLParseException("The data source:"+dataSourceName+" is not existed!");
 			}
 			

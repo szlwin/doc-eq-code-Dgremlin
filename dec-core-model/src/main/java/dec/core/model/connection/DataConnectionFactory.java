@@ -70,28 +70,58 @@ public class DataConnectionFactory {
 	}
 
 	public DataConnection<?,?> getConnection(String conName) throws ConectionException {
-		
+		if (conName == null || conName.trim().isEmpty()) {
+			throw new ConectionException("连接名称不能为空");
+		}
 		Connection connection = ConfigContextUtil.getConfigInfo().getConnection(conName);
-		
+		if (connection == null) {
+			throw new ConectionException("连接不存在: " + conName);
+		}
 		ConnectionInfo connectionInfo = connection.getConnectionInfo();
+		if (connectionInfo == null || connectionInfo.getName() == null) {
+			throw new ConectionException("连接未绑定连接类型: " + conName);
+		}
+		if (connection.getDataSourceInfo() == null
+				|| connection.getDataSourceInfo().getDataSource() == null) {
+			throw new ConectionException("连接未绑定数据源: " + conName);
+		}
+		Object[] factories = connectionMap.get(connectionInfo.getName());
+		if (factories == null) {
+			throw new ConectionException("连接类型尚未注册工厂: " + connectionInfo.getName());
+		}
 		DataConnection<?,?> dataConnection = null;
 		
 		String dataSource = connection.getDataSourceInfo().getDataSource().getName();
 		
 		try {
-			dataConnection = ((DBConectionFacory<?,?>) connectionMap.get(connectionInfo.getName())[0])
+			if (factories[0] == null) {
+				throw new ConectionException("连接工厂未注册: " + connectionInfo.getName());
+			}
+			dataConnection = ((DBConectionFacory<?,?>) factories[0])
 					.getDataConnection();
 			
 		} catch (Exception e) {
-			throw new ConectionException(e);
+			if (e instanceof ConectionException) {
+				throw (ConectionException) e;
+			}
+			throw new ConectionException("创建连接失败: " + conName, e);
+		}
+		if (dataConnection == null) {
+			throw new ConectionException("连接工厂未返回连接对象: " + connectionInfo.getName());
 		}
 		
 		dataConnection.setConName(conName);
 		dataConnection.setDataSource(dataSource);
 		
 		try {
-			ConvertContainer<?,?> convertContainer = ((ConvertContainerFacory<?,?>) connectionMap.get(connectionInfo.getName())[1])
+			if (factories[1] == null) {
+				throw new ConectionException("参数转换工厂未注册: " + connectionInfo.getName());
+			}
+			ConvertContainer<?,?> convertContainer = ((ConvertContainerFacory<?,?>) factories[1])
 					.getConvertContainer();
+			if (convertContainer == null) {
+				throw new ConectionException("参数转换工厂未返回转换器: " + connectionInfo.getName());
+			}
 					//(ConvertContainer) Class.forName(connectionInfo.getConvertClass()).newInstance();
 			
 			//convertContainer.init();
@@ -99,12 +129,21 @@ public class DataConnectionFactory {
 			dataConnection.setConvertContainer(convertContainer);
 			
 		} catch (Exception e) {
-			throw new ConectionException(e);
+			if (e instanceof ConectionException) {
+				throw (ConectionException) e;
+			}
+			throw new ConectionException("创建参数转换器失败: " + conName, e);
 		}
 		
 		try {
-			DataConvertContainer convertContainer = ((DataConvertContainerFacory) connectionMap.get(connectionInfo.getName())[2])
+			if (factories[2] == null) {
+				throw new ConectionException("数据类型转换工厂未注册: " + connectionInfo.getName());
+			}
+			DataConvertContainer convertContainer = ((DataConvertContainerFacory) factories[2])
 					.getDataConvertContainer();
+			if (convertContainer == null) {
+				throw new ConectionException("数据类型转换工厂未返回转换器: " + connectionInfo.getName());
+			}
 					//(DataConvertContainer) Class.forName(connectionInfo.getDataConvertClass()).newInstance();
 			
 			//convertContainer.init();
@@ -112,12 +151,21 @@ public class DataConnectionFactory {
 			connectionInfo.setDataConvertContainer(convertContainer);
 			
 		} catch (Exception e) {
-			throw new ConectionException(e);
+			if (e instanceof ConectionException) {
+				throw (ConectionException) e;
+			}
+			throw new ConectionException("创建数据类型转换器失败: " + conName, e);
 		}
 		
 		try {
-			ExecuteContainer<?,?> executeContainer = ((ExecuteContainerFacory<?,?>) connectionMap.get(connectionInfo.getName())[3])
+			if (factories[3] == null) {
+				throw new ConectionException("SQL 执行工厂未注册: " + connectionInfo.getName());
+			}
+			ExecuteContainer<?,?> executeContainer = ((ExecuteContainerFacory<?,?>) factories[3])
 					.getExecuteContainer();
+			if (executeContainer == null) {
+				throw new ConectionException("SQL 执行工厂未返回执行器: " + connectionInfo.getName());
+			}
 					//(ExecuteContainer) Class.forName(connectionInfo.getExecuteClass()).newInstance();
 			
 			//executeContainer.init();
@@ -125,7 +173,10 @@ public class DataConnectionFactory {
 			dataConnection.setExecuteContainer(executeContainer);
 			
 		} catch (Exception e) {
-			throw new ConectionException(e);
+			if (e instanceof ConectionException) {
+				throw (ConectionException) e;
+			}
+			throw new ConectionException("创建 SQL 执行器失败: " + conName, e);
 		}
 		
 		//dataConnection.setConvertContainer((ConvertContainer) connectionInfo.getConvertContainer());
