@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "source ~/.bash_profile && ./mvnw -q test",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T07:33:17+00:00",
+  "revision": "TESTDESIGN-P2-R41",
+  "output_digest": "c8997bf480f44a9c619d837cd1fb68549ee933b48ac63fda6be331b2564138c7",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "design",
+    "mutation_scope": "taskFacts"
+  },
+  "output_ref": "evidence/commands/EXEC-20260825T073355529287Z-ebabd5404a26.output.txt"
+}

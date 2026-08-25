@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "source ~/.bash_profile && find . -path '*/target/surefire-reports/*.txt' -type f -print0 | xargs -0 awk -F'[:, ]+' '/Tests run:/ {tests+=$3; failures+=$5; errors+=$7; skipped+=$9} END {printf \"tests=%d failures=%d errors=%d skipped=%d\\n\", tests, failures, errors, skipped}' | tee /dev/stderr | rg '^tests=705 failures=0 errors=0 skipped=0$'",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T07:36:27+00:00",
+  "revision": "TESTDESIGN-P2-R41",
+  "output_digest": "f62909966ff67419a3a4b2de1562540dc9c49635ecebc591cb831a9aa065fa25",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "design",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "tests=705 failures=0 errors=0 skipped=0\ntests=705 failures=0 errors=0 skipped=0\n"
+}

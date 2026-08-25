@@ -81,23 +81,22 @@ public class ModelContainer implements Container {
         ResultInfo result = null;
         int i = 0;
         ModelLoader modelLoader = null;
+        ExecuteRuleException failure = null;
         try {
             begain();
 
-            if (this.resultInfo != null && !this.resultInfo.isSuccess()) {
-                return this;
-            }
+            if (this.resultInfo == null || this.resultInfo.isSuccess()) {
+                for (; i < list.size(); i++) {
 
-            for (; i < list.size(); i++) {
+                    modelLoader = list.get(i);
 
-                modelLoader = list.get(i);
+                    result = execute(modelLoader);
 
-                result = execute(modelLoader);
-
-                if (!result.isSuccess()) {
-                    log.error("Execute the rule: {}--{}, error:{},{} false!", modelLoader.getRuleName(), result.getRuleName(),
-                            result.getErrorName(), result.getErrorMsg());
-                    break;
+                    if (!result.isSuccess()) {
+                        log.error("Execute the rule: {}--{}, error:{},{} false!", modelLoader.getRuleName(), result.getRuleName(),
+                                result.getErrorName(), result.getErrorMsg());
+                        break;
+                    }
                 }
             }
 
@@ -108,25 +107,33 @@ public class ModelContainer implements Container {
             log.error("Execute error,rule:{}", ruleName, e);
 
 			if (e instanceof ExecuteRuleException) {
-				throw (ExecuteRuleException) e;
+				failure = (ExecuteRuleException) e;
+			} else {
+                failure = new ExecuteRuleException(e, ruleName, conName);
 			}
-            throw new ExecuteRuleException(e, ruleName, conName);
         } finally {
-            copy(result);
-            boolean isSuccess = result != null && result.isSuccess() && isOk;
+            if (result != null) {
+                copy(result);
+            }
+            boolean isSuccess = result != null && result.isSuccess()
+                    && isOk && failure == null;
             try {
-
                 end(isSuccess);
             } catch (ConectionException e) {
                 log.error(e.getMessage(), e);
-                if (isSuccess) {
+                if (failure == null) {
 					String ruleName = modelLoader == null ? null : modelLoader.getRuleName();
 					String conName = modelLoader == null ? null : modelLoader.getConName();
-                    throw new ExecuteRuleException(e, ruleName, conName);
+                    failure = new ExecuteRuleException(e, ruleName, conName);
+                } else {
+                    failure.addSuppressed(e);
                 }
             }
         }
 
+        if (failure != null) {
+            throw failure;
+        }
         return this;
     }
 
@@ -195,15 +202,25 @@ public class ModelContainer implements Container {
     }
 
     protected void end(boolean isSuccess) throws ConectionException {
-        boolean isOK = true;
-        try {
-            if (isSuccess)
-                commit();
-        } catch (ConectionException e) {
-            isOK = false;
-            throw e;
-        } finally {
+        ConectionException failure = null;
 
+        if (isSuccess) {
+            try {
+                commit();
+            } catch (ConectionException e) {
+                failure = appendFailure(failure, e);
+            }
+        }
+
+        if (!isSuccess || failure != null) {
+            try {
+                roolback();
+            } catch (ConectionException e) {
+                failure = appendFailure(failure, e);
+            }
+        }
+
+        try {
             if (listener != null) {
                 ContainerEvent containerEvent = new ContainerEvent();
                 containerEvent.setLoaderList(list);
@@ -211,19 +228,21 @@ public class ModelContainer implements Container {
                 containerEvent.setResultInfo(resultInfo);
                 listener.notify(containerEvent);
             }
+        } catch (RuntimeException e) {
+            failure = appendFailure(failure,
+                    new ConectionException("容器结束监听器执行失败", e));
+        }
 
-            try {
-                if (!isOK || !isSuccess)
-                    roolback();
+        try {
+            close();
+        } catch (ConectionException e) {
+            failure = appendFailure(failure, e);
+        } finally {
+            clear();
+        }
 
-            } catch (ConectionException e) {
-                throw e;
-            } finally {
-                close();
-
-                clear();
-            }
-
+        if (failure != null) {
+            throw failure;
         }
     }
 
@@ -243,6 +262,7 @@ public class ModelContainer implements Container {
 
         Collection<DataConnection<?, ?>> conCollection = conMap.values();
         Iterator<DataConnection<?, ?>> it = conCollection.iterator();
+        ConectionException failure = null;
 
         while (it.hasNext()) {
             DataConnection<?, ?> con = it.next();
@@ -250,28 +270,42 @@ public class ModelContainer implements Container {
             if (con == null)
                 continue;
 
-            switch (type) {
-                case 0:
-                    con.commit();
-                    break;
-                case 1:
-                    try {
+            try {
+                switch (type) {
+                    case 0:
+                        con.commit();
+                        break;
+                    case 1:
                         con.close();
-                    } catch (ConectionException e) {
-                        log.error("Close connection error", e);
-                    }
-                    break;
-                case 2:
-                    try {
+                        break;
+                    case 2:
                         con.rollback();
-                    } catch (ConectionException e) {
-                        log.error("Close connection error", e);
-                    }
-                    break;
-                default:
-                    con.close();
+                        break;
+                    default:
+                        con.close();
+                }
+            } catch (ConectionException e) {
+                failure = appendFailure(failure, e);
+            } catch (RuntimeException e) {
+                failure = appendFailure(failure,
+                        new ConectionException("连接事务收尾失败", e));
             }
         }
+
+        if (failure != null) {
+            throw failure;
+        }
+    }
+
+    /** 保留第一个失败作为主异常，其余失败作为 suppressed，便于定位完整清理过程。 */
+    private ConectionException appendFailure(
+            ConectionException primary,
+            ConectionException next) {
+        if (primary == null) {
+            return next;
+        }
+        primary.addSuppressed(next);
+        return primary;
     }
 
     private void clear() {

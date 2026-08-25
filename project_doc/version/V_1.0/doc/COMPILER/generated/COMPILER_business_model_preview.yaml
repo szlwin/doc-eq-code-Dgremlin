@@ -3,8 +3,8 @@ artifact: "business_model"
 module:
   code: "COMPILER"
   name: "dec-core-compiler"
-revision: "BM-R06"
-baseRevision: "BM-R05@4ecb1f8c09f4"
+revision: "BM-R05@4ecb1f8c09f4"
+baseRevision: "BM-R00@init"
 terms:
   -
     id: "TERM-COMPILATION-SESSION"
@@ -96,13 +96,12 @@ terms:
   -
     id: "TERM-ENGINE-CONTEXT"
     name: "EngineContext"
-    definition: "Immutable compiler result associated with the ConfigInfo candidate compiled in the same load; business callers do not pass or manage it explicitly."
+    definition: "实例级不可变运行时读取入口；不同 Context 不共享可变 Registry，且不存在全局 current。"
     forbiddenSynonyms:
-      - "mutable runtime registry"
-      - "business caller credential"
+      - "singleton context"
+      - "global current context"
     sourceRefs:
       - "BR-P1-011"
-      - "REQAN-P2-R02"
   -
     id: "TERM-DIAGNOSTIC"
     name: "Diagnostic"
@@ -138,24 +137,6 @@ terms:
       - "compatibility runtime"
     sourceRefs:
       - "BR-P1-012"
-  -
-    id: "TERM-CONFIG-INFO"
-    name: "ConfigInfo"
-    definition: "Per-load configuration owner that contains parsed definitions and the EngineContext compiled from the same candidate."
-    forbiddenSynonyms:
-      - "shared mutable candidate"
-      - "runtime access scope"
-    sourceRefs:
-      - "REQAN-P2-R02"
-  -
-    id: "TERM-SIMPLE-MODEL-EXECUTION"
-    name: "Simple model execution"
-    definition: "Business execution through DataUtil, ModelData, ModelLoader and ModelContainer without runtime scope, session, handle, owner identity or capability arguments."
-    forbiddenSynonyms:
-      - "guarded capability execution"
-      - "runtime session API"
-    sourceRefs:
-      - "REQAN-P2-R02"
 scenarios:
   -
     id: "SCN-COMPILER-SUCCESS"
@@ -263,47 +244,6 @@ scenarios:
     traceIds:
       - "TR-P1-COMPILER-001"
       - "TR-P1-COMPILER-002"
-  -
-    id: "SCN-P2-CONFIG-PUBLISH"
-    given:
-      - "an isolated candidate ConfigInfo populated by the XML or YAML parser"
-      - "the previous installed ConfigInfo remains available"
-    when: "Compiler validates and publishes an EngineContext for the candidate."
-    then:
-      - "ConfigInfo binds the exact published EngineContext"
-      - "ConfigManager installs ConfigInfo plus EngineContext through one whole-object replacement"
-      - "parse, compile or publication failure leaves the previous installed object unchanged"
-    traceIds:
-      - "TR-P2-001"
-      - "TR-P2-002"
-      - "TR-P2-003"
-      - "TR-P2-004"
-      - "TR-P2-009"
-  -
-    id: "SCN-P2-SIMPLE-EXECUTE"
-    given:
-      - "the installed ConfigInfo contains the requested View, Rule and Connection"
-      - "business ModelData was created through DataUtil"
-    when: "ModelContainer executes a ModelLoader task."
-    then:
-      - "the named rule runs without runtime scope, session, handle or capability arguments"
-      - "successful participating connections commit"
-      - "failed participating connections roll back"
-      - "all opened connections close"
-    traceIds:
-      - "TR-P2-005"
-      - "TR-P2-006"
-      - "TR-P2-007"
-  -
-    id: "SCN-P2-DEFINITION-NOT-FOUND"
-    given:
-      - "a requested View, Rule or Connection name is absent"
-    when: "business code creates ModelData or loads a rule task."
-    then:
-      - "failure identifies the missing definition type and requested name"
-      - "no corresponding database side effect occurs"
-    traceIds:
-      - "TR-P2-006"
 entities:
   -
     id: "ENT-COMPILATION-SESSION"
@@ -535,54 +475,6 @@ entities:
     traceIds:
       - "TR-P1-COMPILER-006"
     lifecycle: "与来源 EngineContext 同生命周期，不单独注册事实"
-  -
-    id: "ENT-P2-CONFIG-INFO"
-    name: "ConfigInfo"
-    identity: "object identity per configuration load"
-    attributes:
-      -
-        name: "definitions"
-        type: "instance configuration maps"
-        required: true
-      -
-        name: "engineContext"
-        type: "EngineContext"
-        required: false
-    behaviors:
-      - "receive XML or YAML definitions as a candidate"
-      - "bind the exact successfully published EngineContext"
-      - "expose clear failure before EngineContext is available"
-    traceIds:
-      - "TR-P2-001"
-      - "TR-P2-002"
-      - "TR-P2-003"
-      - "TR-P2-004"
-  -
-    id: "ENT-P2-MODEL-EXECUTION"
-    name: "Model execution"
-    identity: "one ModelContainer execution instance"
-    attributes:
-      -
-        name: "modelData"
-        type: "ModelData"
-        required: true
-      -
-        name: "ruleName"
-        type: "String"
-        required: true
-      -
-        name: "connectionName"
-        type: "String"
-        required: true
-    behaviors:
-      - "load a named rule for business ModelData"
-      - "commit successful participating connections"
-      - "roll back failed participating connections"
-      - "close all opened connections"
-    traceIds:
-      - "TR-P2-005"
-      - "TR-P2-006"
-      - "TR-P2-007"
 valueObjects:
   -
     id: "VO-DOCUMENT-SOURCE"
@@ -863,26 +755,6 @@ valueObjects:
       - "requireNoPartialPublication"
     traceIds:
       - "TR-P1-COMPILER-005"
-  -
-    id: "VO-P2-INSTALLED-CONFIG"
-    name: "Installed configuration"
-    identity: "ConfigInfo object identity plus exact EngineContext object identity"
-    attributes:
-      -
-        name: "configInfo"
-        type: "ConfigInfo"
-        required: true
-      -
-        name: "engineContext"
-        type: "EngineContext"
-        required: true
-    behaviors:
-      - "become visible through one ConfigManager current reference"
-      - "preserve the previous value when candidate publication fails"
-    traceIds:
-      - "TR-P2-003"
-      - "TR-P2-004"
-      - "TR-P2-009"
 aggregates:
   -
     id: "AGG-COMPILATION-SESSION"
@@ -946,39 +818,6 @@ aggregates:
     traceIds:
       - "TR-P1-COMPILER-005"
       - "TR-P1-COMPILER-006"
-  -
-    id: "AGG-P2-CONFIG-PUBLICATION"
-    name: "Simplified configuration publication"
-    root: "ENT-P2-CONFIG-INFO"
-    members:
-      - "ENT-ENGINE-CONTEXT"
-      - "VO-P2-INSTALLED-CONFIG"
-    invariantIds:
-      - "INV-COMPILER-016"
-      - "INV-COMPILER-017"
-      - "INV-COMPILER-018"
-    transactionBoundary: "parse and compile a candidate; install ConfigInfo plus EngineContext as one current object"
-    traceIds:
-      - "TR-P2-001"
-      - "TR-P2-002"
-      - "TR-P2-003"
-      - "TR-P2-004"
-      - "TR-P2-009"
-  -
-    id: "AGG-P2-SIMPLE-EXECUTION"
-    name: "Simple model execution"
-    root: "ENT-P2-MODEL-EXECUTION"
-    members:
-      - "ENT-P2-CONFIG-INFO"
-    invariantIds:
-      - "INV-COMPILER-019"
-      - "INV-COMPILER-020"
-      - "INV-COMPILER-021"
-    transactionBoundary: "one ModelContainer execution with commit or rollback and final connection close"
-    traceIds:
-      - "TR-P2-005"
-      - "TR-P2-006"
-      - "TR-P2-007"
 invariants:
   -
     id: "INV-COMPILER-001"
@@ -1098,52 +937,6 @@ invariants:
     traceIds:
       - "TR-P1-COMPILER-003"
       - "TR-P1-COMPILER-008"
-  -
-    id: "INV-COMPILER-016"
-    statement: "XML and YAML parsers MUST write to the supplied candidate ConfigInfo and MUST NOT mutate the installed configuration during parsing."
-    trigger: "configuration parsing"
-    failure: "CONFIG_CANDIDATE_PARSE_FAILED"
-    traceIds:
-      - "TR-P2-001"
-      - "TR-P2-002"
-  -
-    id: "INV-COMPILER-017"
-    statement: "ConfigInfo and its exact published EngineContext MUST become current together; any parse, compile or publication failure MUST leave the previous installed object unchanged."
-    trigger: "configuration installation"
-    failure: "CONFIG_INSTALL_REJECTED"
-    traceIds:
-      - "TR-P2-003"
-      - "TR-P2-004"
-      - "TR-P2-009"
-  -
-    id: "INV-COMPILER-018"
-    statement: "ConfigInfo.getEngineContext MUST fail clearly until the candidate has bound a successfully published EngineContext."
-    trigger: "EngineContext access"
-    failure: "ENGINE_CONTEXT_NOT_AVAILABLE"
-    traceIds:
-      - "TR-P2-003"
-      - "TR-P2-004"
-  -
-    id: "INV-COMPILER-019"
-    statement: "Business callers MUST be able to create ModelData and execute a named rule without runtime scope, session, handle, owner identity or capability arguments."
-    trigger: "business rule execution"
-    failure: "SIMPLE_EXECUTION_CONTRACT_BROKEN"
-    traceIds:
-      - "TR-P2-005"
-  -
-    id: "INV-COMPILER-020"
-    statement: "A missing View, Rule or Connection MUST fail with its type and requested name before the corresponding database side effect."
-    trigger: "model creation or rule loading"
-    failure: "CONFIG_DEFINITION_NOT_FOUND"
-    traceIds:
-      - "TR-P2-006"
-  -
-    id: "INV-COMPILER-021"
-    statement: "ModelContainer MUST commit successful participating connections, roll back on execution failure and close every opened connection on both paths."
-    trigger: "ModelContainer execution"
-    failure: "MODEL_EXECUTION_FAILED"
-    traceIds:
-      - "TR-P2-007"
 stateMachines:
   -
     id: "SM-COMPILATION-SESSION"
@@ -1266,47 +1059,6 @@ stateMachines:
       - "TR-P1-COMPILER-005"
       - "TR-P1-COMPILER-008"
       - "TR-P1-COMPILER-009"
-  -
-    id: "SM-P2-CONFIG-CANDIDATE"
-    name: "Configuration candidate"
-    initialState: "CREATED"
-    states:
-      - "CREATED"
-      - "PARSED"
-      - "COMPILED"
-      - "INSTALLED"
-      - "REJECTED"
-    transitions:
-      -
-        id: "TRANS-P2-CONFIG-PARSE"
-        from: "CREATED"
-        command: "parseInto"
-        to: "PARSED"
-        preconditions:
-          - "candidate and configuration source are available"
-        failure: "CONFIG_CANDIDATE_PARSE_FAILED"
-      -
-        id: "TRANS-P2-CONFIG-COMPILE"
-        from: "PARSED"
-        command: "compile"
-        to: "COMPILED"
-        preconditions:
-          - "candidate definitions are valid"
-        failure: "CONFIG_CANDIDATE_COMPILE_FAILED"
-      -
-        id: "TRANS-P2-CONFIG-INSTALL"
-        from: "COMPILED"
-        command: "install"
-        to: "INSTALLED"
-        preconditions:
-          - "exact published EngineContext is bound"
-        failure: "CONFIG_INSTALL_REJECTED"
-    traceIds:
-      - "TR-P2-001"
-      - "TR-P2-002"
-      - "TR-P2-003"
-      - "TR-P2-004"
-      - "TR-P2-009"
 services:
   -
     id: "SVC-SOURCE-DISCOVERY"
@@ -1732,47 +1484,6 @@ businessErrors:
     traceIds:
       - "TR-P1-COMPILER-007"
     diagnosticCode: "MIX-RETIREMENT-RESIDUE"
-  -
-    id: "ERR-P2-CONFIG-COMPILE-FAILED"
-    condition: "candidate configuration cannot compile or publish"
-    meaning: "candidate rejected and installed configuration unchanged"
-    retryable: false
-    stateChanged: false
-    traceIds:
-      - "TR-P2-003"
-      - "TR-P2-004"
-  -
-    id: "ERR-P2-VIEW-NOT-FOUND"
-    condition: "requested View name is not defined"
-    meaning: "ModelData cannot be created"
-    retryable: false
-    stateChanged: false
-    traceIds:
-      - "TR-P2-006"
-  -
-    id: "ERR-P2-RULE-NOT-FOUND"
-    condition: "requested Rule name is not defined"
-    meaning: "rule task cannot be loaded or executed"
-    retryable: false
-    stateChanged: false
-    traceIds:
-      - "TR-P2-006"
-  -
-    id: "ERR-P2-CONNECTION-NOT-FOUND"
-    condition: "requested Connection name is not defined"
-    meaning: "no database operation starts"
-    retryable: false
-    stateChanged: false
-    traceIds:
-      - "TR-P2-006"
-  -
-    id: "ERR-P2-MODEL-EXECUTION-FAILED"
-    condition: "rule or database execution fails"
-    meaning: "participating connections roll back and all opened connections close"
-    retryable: false
-    stateChanged: true
-    traceIds:
-      - "TR-P2-007"
 traceability:
   -
     traceId: "TR-P1-COMPILER-001"
@@ -1869,72 +1580,3 @@ traceability:
       - "ERR-MIX-MODEL-ACCESS-NOT-FOUND"
       - "ERR-MIX-MODEL-ACCESS-AMBIGUOUS"
       - "ERR-MIX-MODEL-ACCESS-NON-COMPOSITE"
-  -
-    traceId: "TR-P2-001"
-    modelRefs:
-      - "SCN-P2-CONFIG-PUBLISH"
-      - "ENT-P2-CONFIG-INFO"
-      - "INV-COMPILER-016"
-  -
-    traceId: "TR-P2-002"
-    modelRefs:
-      - "SCN-P2-CONFIG-PUBLISH"
-      - "ENT-P2-CONFIG-INFO"
-      - "INV-COMPILER-016"
-  -
-    traceId: "TR-P2-003"
-    modelRefs:
-      - "SCN-P2-CONFIG-PUBLISH"
-      - "AGG-P2-CONFIG-PUBLICATION"
-      - "VO-P2-INSTALLED-CONFIG"
-      - "INV-COMPILER-017"
-      - "INV-COMPILER-018"
-  -
-    traceId: "TR-P2-004"
-    modelRefs:
-      - "SCN-P2-CONFIG-PUBLISH"
-      - "ERR-P2-CONFIG-COMPILE-FAILED"
-      - "INV-COMPILER-017"
-      - "INV-COMPILER-018"
-  -
-    traceId: "TR-P2-005"
-    modelRefs:
-      - "SCN-P2-SIMPLE-EXECUTE"
-      - "ENT-P2-MODEL-EXECUTION"
-      - "AGG-P2-SIMPLE-EXECUTION"
-      - "INV-COMPILER-019"
-  -
-    traceId: "TR-P2-006"
-    modelRefs:
-      - "SCN-P2-DEFINITION-NOT-FOUND"
-      - "INV-COMPILER-020"
-      - "ERR-P2-VIEW-NOT-FOUND"
-      - "ERR-P2-RULE-NOT-FOUND"
-      - "ERR-P2-CONNECTION-NOT-FOUND"
-  -
-    traceId: "TR-P2-007"
-    modelRefs:
-      - "SCN-P2-SIMPLE-EXECUTE"
-      - "ENT-P2-MODEL-EXECUTION"
-      - "AGG-P2-SIMPLE-EXECUTION"
-      - "INV-COMPILER-021"
-      - "ERR-P2-MODEL-EXECUTION-FAILED"
-  -
-    traceId: "TR-P2-008"
-    modelRefs:
-      - "TERM-SIMPLE-MODEL-EXECUTION"
-      - "ENT-P2-MODEL-EXECUTION"
-      - "INV-COMPILER-019"
-  -
-    traceId: "TR-P2-009"
-    modelRefs:
-      - "AGG-P2-CONFIG-PUBLICATION"
-      - "VO-P2-INSTALLED-CONFIG"
-      - "INV-COMPILER-017"
-  -
-    traceId: "TR-P2-010"
-    modelRefs:
-      - "TERM-CONFIG-INFO"
-      - "TERM-SIMPLE-MODEL-EXECUTION"
-      - "ENT-P2-CONFIG-INFO"
-      - "ENT-P2-MODEL-EXECUTION"

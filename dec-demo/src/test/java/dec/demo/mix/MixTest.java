@@ -2,8 +2,14 @@ package dec.demo.mix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dec.context.parse.xml.exception.XMLParseException;
+import dec.core.context.EngineContext;
+import dec.core.context.config.manager.ConfigManager;
+import dec.core.context.config.model.config.ConfigInfo;
 import dec.core.context.data.BaseData;
 import dec.core.context.data.ModelData;
 import dec.core.context.model.ActionKey;
@@ -58,7 +64,11 @@ public class MixTest {
     @Test
     void loadsSystemsFileFromTestResources() throws Exception {
         loadMixConfigurationFromTestResources();
-        CompiledModelSet model = DataUtil.getEngineContext().compiledModelSet();
+        EngineContext engineContext = DataUtil.getEngineContext();
+        assertSame(engineContext,
+                ConfigManager.getInstance().getInstalledConfigInfo()
+                        .getEngineContext());
+        CompiledModelSet model = engineContext.compiledModelSet();
         assertTrue(model.sourceManifest().sources().stream().anyMatch(source ->
                 source.sourceId().endsWith("mix/system/systems.xml")));
 
@@ -95,8 +105,57 @@ public class MixTest {
         assertTrue(model.typedRegistries().produces().size() > 0);
     }
 
+    /**
+     * AC-P2-SYSTEM-RULEVIEW-003：多个 system-file 必须经 ConfigUtil 公共入口统一编译。
+     * 来源：project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md#9-验收标准。
+     */
+    @Test
+    void loadsMultipleSystemFilesThroughPublicConfigEntry() throws Exception {
+        loadConfigurationFromTestResources(
+                "classpath:mix/orm-config-multi-system.xml");
+
+        CompiledModelSet model = DataUtil.getEngineContext().compiledModelSet();
+        assertTrue(model.sourceManifest().sources().stream().anyMatch(source ->
+                source.sourceId().endsWith("mix/system/systems.xml")));
+        assertTrue(model.sourceManifest().sources().stream().anyMatch(source ->
+                source.sourceId().endsWith("mix/system/extra-systems.xml")));
+        assertEquals(5, model.typedRegistries().systems().size());
+        assertTrue(model.typedRegistries().systems()
+                .find(new SystemKey("audit"))
+                .isPresent());
+        assertTrue(model.typedRegistries().businessScopes()
+                .find(new BusinessScopeKey("order-payment"))
+                .isPresent());
+    }
+
+    /**
+     * AC-P2-SYSTEM-RULEVIEW-004：候选配置编译失败时不得替换已安装对象。
+     * 来源：project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#53-失败路径。
+     */
+    @Test
+    void failedCompilationKeepsInstalledConfigAndEngineContext() throws Exception {
+        loadMixConfigurationFromTestResources();
+        ConfigInfo installedConfig = ConfigManager.getInstance().getInstalledConfigInfo();
+        EngineContext installedContext = DataUtil.getEngineContext();
+
+        XMLParseException failure = assertThrows(
+                XMLParseException.class,
+                () -> loadConfigurationFromTestResources(
+                        "classpath:mix/orm-config-invalid-duplicate-system-file.xml"));
+
+        assertTrue(failure.getMessage().contains("配置编译失败"));
+        assertSame(installedConfig, ConfigManager.getInstance().getInstalledConfigInfo());
+        assertSame(installedContext, DataUtil.getEngineContext());
+    }
+
     /** 只隔离测试资源来源，业务加载仍然只调用 ConfigUtil 公共入口。 */
     private static void loadMixConfigurationFromTestResources() throws Exception {
+        loadConfigurationFromTestResources("classpath:mix/orm-config.xml");
+    }
+
+    /** 在测试资源 ClassLoader 中通过唯一公共入口加载指定配置。 */
+    private static void loadConfigurationFromTestResources(String configPath)
+            throws Exception {
         ClassLoader thread = Thread.currentThread().getContextClassLoader();
         try (URLClassLoader testResources = new URLClassLoader(
                 new java.net.URL[] {
@@ -105,7 +164,7 @@ public class MixTest {
                 null)) {
             Thread.currentThread().setContextClassLoader(testResources);
             ConfigUtil.addDataSourceConfig("MySQL", DBDataSource.class.getName());
-            ConfigUtil.parseConfigInfo("classpath:mix/orm-config.xml");
+            ConfigUtil.parseConfigInfo(configPath);
         } finally {
             Thread.currentThread().setContextClassLoader(thread);
         }

@@ -56,8 +56,8 @@ flowchart LR
 | IMP-P2-CONTEXT-PUBLICATION-R29 | FLOW-CONFIG-COMPILE.publish exact policy/binding/materialization aggregate | COMP<br>CTX | REJECT_OPERATION | dynamic target lacks exactly one materialization descriptor<br>candidate aggregate/digest incomplete | ATOMIC | compile/publication ERROR; previous Context remains visible; 补偿: discard unpublished candidate | CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001<br>CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001<br>CASE-P2-TD-ATOMIC-PUBLICATION-001 |
 | IMP-P2-DIRECT-LOAD-R29 | FLOW-PROTECTED-ACCESS-EXECUTE.MODEL production lifecycle establishes trusted frame from RuntimeModelLoadRequest before FLOW STEP-01 | MODEL<br>CTX<br>LOAD_REQ | REJECT_OPERATION | root closed<br>plan absent from captured Context<br>materialization descriptor missing<br>origin not materializable<br>production Container load rejected | ATOMIC | stable RuntimeModelLoadFailure; no handle/scope reaches STARTER; 补偿: discard unexposed association | CASE-P2-TD-PRODUCTION-LOAD-REQUEST-001<br>CASE-P2-TD-PRODUCTION-LOAD-PLAN-MISMATCH-001<br>CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001<br>CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001 |
 | IMP-P2-EFFECT-BINDING-R29 | FLOW-PROTECTED-ACCESS-EXECUTE.bind MODEL effect port to same sealed scope/session then execute only after Guard ALLOW | STARTER<br>MODEL<br>EFFECT | REJECT_OPERATION | scope/session mismatch<br>session unsealed/closed<br>resolved object not registered in bound session<br>Guard DENY<br>MODEL operation failure | ATOMIC | stable composition/operation denial; no unauthorized effect or success receipt; 补偿: close failed partial composition/session; no fallback provider | CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001<br>CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001<br>CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001<br>CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001 |
-| IMP-P2-SIMPLE-CONFIG-R30 | FLOW-CONFIG-COMPILE.parse candidate, compile EngineContext and install the complete ConfigInfo | COMP<br>CTX | REJECT_OPERATION | source is malformed<br>candidate validation reports ERROR<br>EngineContext publication fails | ATOMIC | discard the candidate and keep the previously installed ConfigInfo unchanged; 补偿: no business data compensation; previous configuration remains current | CASE-NOT-APPLICABLE-WK-WS |
-| IMP-P2-SIMPLE-EXECUTE-R30 | FLOW-SIMPLE-MODEL-EXECUTE.create ModelData, load a named rule and execute ModelContainer | MODEL<br>CTX | REJECT_OPERATION | View is missing<br>Rule is missing<br>Connection is missing<br>database operation fails | ATOMIC | fail before the missing-definition side effect, or rollback opened connections on execution failure; 补偿: rollback participating connections and close all opened resources | CASE-NOT-APPLICABLE-WK-WS |
+| IMP-P2-SIMPLE-CONFIG-R30 | FLOW-CONFIG-COMPILE.parse candidate, compile EngineContext and install the complete ConfigInfo | COMP<br>CTX | REJECT_OPERATION | source is malformed<br>duplicate system-file or duplicate static definition is detected<br>a static reference cannot be resolved after all declared system-file inputs are collected<br>modern YAML declares System or Business Source Graph before P8 support is available<br>candidate validation reports ERROR<br>EngineContext publication fails | ATOMIC | discard the candidate and keep the previously installed ConfigInfo unchanged; 补偿: no business data compensation; previous configuration remains current | CASE-P2-R41-UNIFIED-LOAD-001<br>CASE-P2-R41-SOURCE-GRAPH-002<br>CASE-P2-R41-ATOMIC-COMPAT-003 |
+| IMP-P2-SIMPLE-EXECUTE-R30 | FLOW-SIMPLE-MODEL-EXECUTE.create ModelData, load a named rule and execute ModelContainer | MODEL<br>CTX | REJECT_OPERATION | View is missing<br>Rule is missing<br>Connection is missing<br>database operation fails | ATOMIC | fail before the missing-definition side effect, or rollback opened connections on execution failure; 补偿: rollback participating connections and close all opened resources | CASE-P2-R41-SIMPLE-EXECUTE-004 |
 
 # 跨模块实现映射
 
@@ -138,9 +138,9 @@ sequenceDiagram
   participant P_7dc7996397 as dec-context-config-parse-xml/yaml: populate the isolated candidate without touching current configuration
   P_26810ce410->>P_e853510b3d: CMSTEP-P2-SIMPLE-CONFIG-01 / create an empty ConfigInfo candidate for this load
   Note over P_26810ce410,P_e853510b3d: 失败: abort before parsing
-  P_7dc7996397->>P_e853510b3d: CMSTEP-P2-SIMPLE-CONFIG-02 / parse XML or YAML definitions into the candidate
+  P_7dc7996397->>P_e853510b3d: CMSTEP-P2-SIMPLE-CONFIG-02 / parse legacy XML/YAML definitions or modern XML Data, View, Rule, Connection and source-file declarations into the candidate
   Note over P_7dc7996397,P_e853510b3d: 失败: report parse failure and keep current configuration
-  P_26810ce410->>P_ba56892e1e: CMSTEP-P2-SIMPLE-CONFIG-03 / validate and publish EngineContext into the same candidate
+  P_26810ce410->>P_ba56892e1e: CMSTEP-P2-SIMPLE-CONFIG-03 / collect all declared system-file inputs, resolve forward references independent of input order, compile System, RuleView, Information, Business, Directory, Action and Produce, then publish EngineContext into the same candidate
   Note over P_26810ce410,P_ba56892e1e: 失败: return diagnostics and do not install candidate
   P_26810ce410->>P_e853510b3d: CMSTEP-P2-SIMPLE-CONFIG-04 / replace ConfigManager current reference with the complete candidate
   Note over P_26810ce410,P_e853510b3d: 失败: keep the previous current reference
@@ -149,12 +149,16 @@ sequenceDiagram
 ### 成功条件
 
 - failed candidates never become current
-- XML and YAML use the same candidate semantics
+- multiple system-file declarations are collected before duplicate and forward-reference validation
+- modern XML publishes System, RuleView, Information, Business, Directory, Action and Produce as one compiled model
+- legacy XML/YAML use the same isolated-candidate and whole-install semantics
+- modern YAML with System or Business Source Graph is rejected before installation and explicitly deferred to P8
 - ConfigInfo and EngineContext are observed as one installed object
 
 ### 失败与补偿
 
-- `CMFAIL-P2-SIMPLE-CONFIG-01` @ `CMSTEP-P2-SIMPLE-CONFIG-03`：candidate validation or publication fails → diagnostics are returned and current ConfigInfo is unchanged；补偿：discard the candidate；人工恢复：correct the configuration source and load a new candidate
+- `CMFAIL-P2-SIMPLE-CONFIG-00` @ `CMSTEP-P2-SIMPLE-CONFIG-02`：source is malformed or modern YAML declares a System or Business Source Graph → parsing fails with a source-aware error; P8 is named for unsupported modern YAML; current ConfigInfo is unchanged；补偿：discard the candidate；人工恢复：correct legacy syntax, use modern XML in P2, or complete YAML Source Graph support in P8
+- `CMFAIL-P2-SIMPLE-CONFIG-01` @ `CMSTEP-P2-SIMPLE-CONFIG-03`：duplicate system-file, duplicate definition, unresolved reference, candidate validation or publication fails → diagnostics are returned and current ConfigInfo is unchanged；补偿：discard the candidate；人工恢复：correct the configuration source and load a new candidate
 
 ## CMI-P2-SIMPLE-EXECUTE-R30 Direct ModelContainer business execution
 

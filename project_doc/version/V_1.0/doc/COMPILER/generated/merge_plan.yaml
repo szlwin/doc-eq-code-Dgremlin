@@ -3,24 +3,19 @@ mergeMode: "VERSION_DELTA_ARCHIVE"
 version: "V_1.0"
 module: "COMPILER"
 changeSetIds:
-  - "CHG-V_1.0-COMPILER-P2-SIMPLE-RUNTIME-R06"
   - "DICHG-P2-SIMPLE-RUNTIME-R30"
   - "FLOW-CHG-P2-SIMPLE-R04"
 baseRevisions:
-  business_model: "BM-R05@4ecb1f8c09f4"
   dependency_impact: "P2-IMPACT-R29"
   business_flow__COMPILER: "FLOW-R02@compiler-owned-discovery"
 resultRevisions:
-  business_model: "BM-R06"
   dependency_impact: "P2-IMPACT-R30"
   business_flow__COMPILER: "FLOW-R04@p2-simple-runtime-model"
 structuredArtifacts:
   - "business_flow"
-  - "business_model"
   - "dependency_impact"
 projectFactArtifacts:
   - "business_flow"
-  - "business_model"
   - "dependency_impact"
 versionDeltaArtifacts: []
 documentArtifacts:
@@ -35,23 +30,26 @@ artifactMerges:
     sourceRef: "version/V_1.0/doc/COMPILER/COMPILER_design.md"
     targetRef: "docs/COMPILER/design/p2-simple-runtime.md"
     baseRevision: "DESIGN-R00@init"
-    sourceRevision: "DESIGN-P2-R38"
-    resultRevision: "DESIGN-P2-R38"
-    sourceDigest: "868f8be29759ea8860943eeade6e1a379b8b73fd337e96f434c1e013950e2b93"
+    sourceRevision: "DESIGN-P2-R40"
+    resultRevision: "DESIGN-P2-R40"
+    sourceDigest: "605aac8b0f1c0c8963059ec6c6c911cf56b6d3765471c0e5f7af223e26fb47e1"
     targetDigest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    resultDigest: "7fd99a55151bdfd1c248be1e94221b2d698cace0705944f39e79eee9520c382d"
+    resultDigest: "4ce3f438335372f0decfe048333e69f4a426b6c88e6ce02520cb5d6b9acc5058"
     affectedStableIds:
       - "AC-001"
       - "AC-002"
       - "AC-003"
       - "AC-005"
       - "AC-008"
+      - "AC-009"
       - "AC-P2-SYSTEM-RULEVIEW-001"
+      - "AC-P2-SYSTEM-RULEVIEW-002"
       - "AC-P2-SYSTEM-RULEVIEW-003"
       - "AC-P2-SYSTEM-RULEVIEW-005"
       - "AC-P2-SYSTEM-RULEVIEW-006"
       - "AC-P2-SYSTEM-RULEVIEW-007"
       - "AC-P2-SYSTEM-RULEVIEW-008"
+      - "AC-P2-SYSTEM-RULEVIEW-009"
       - "DESIGN-API-CHANGES"
       - "DESIGN-CHANGE-INVENTORY"
       - "DESIGN-CODE-BLUEPRINT"
@@ -70,6 +68,7 @@ artifactMerges:
       - "DESIGN-NARRATIVE-TARGET"
       - "DESIGN-P2-R36"
       - "DESIGN-P2-R38"
+      - "DESIGN-P2-R40"
       - "DESIGN-R00"
       - "DESIGN-TABLE-CHANGES"
       - "DESIGN-VERIFICATION"
@@ -83,6 +82,7 @@ artifactMerges:
       - "TR-P2-008"
       - "TR-P2-009"
       - "TR-P2-010"
+      - "TR-P2-011"
     status: "READY"
     evidenceRefs:
       - "project_doc/version/V_1.0/doc/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md"
@@ -175,7 +175,7 @@ workMode:
     - "testing"
   workRef: "version/V_1.0/work.md"
   workDigest: "b9ba27c1816710c5696e85c050fe9c2e691bc0916973d88a45034bbb11599756"
-resultDigest: "4cf565c2b1fb565067758362de1f58b7768ceccb9f85a9fefa1e8041bb1d1c0e"
+resultDigest: "a652b8e839f7a72b10409f04de3c0311a9137522cb95df842cfe1e07a0526895"
 archiveGate:
   status: "DRAFT"
   gates:
@@ -194,12 +194,12 @@ archiveGate:
       reviewerAgents: []
       reason: ""
     businessModel:
-      status: "PENDING"
+      status: "NOT_APPLICABLE"
       revision: ""
       stageOutcomeRefs: []
       evidenceIds: []
       reviewerAgents: []
-      reason: ""
+      reason: "本次 merge plan 不包含 business_model 增量。"
     design:
       status: "PENDING"
       revision: ""
@@ -255,4 +255,4 @@ archiveGate:
   decisionRef: ""
   userConfirmed: false
   notes: "用于 wk -d 将当前版本已确认事实归档；API/DB 只保留版本增量引用，不生成项目级全量文档；不是发布审批。"
-generatedAt: "2026-08-24T20:32:42+08:00"
+generatedAt: "2026-08-25T16:21:00+08:00"

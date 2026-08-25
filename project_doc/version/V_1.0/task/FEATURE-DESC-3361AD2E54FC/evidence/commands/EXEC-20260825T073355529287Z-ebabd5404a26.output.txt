@@ -1,0 +1,300 @@
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:model/orm-config.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data2 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con2 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:model/orm-config.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:model/test-data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Product.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:product start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:product success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Product.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-view Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:model/test-view
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-view End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-rule Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:model/test-rule
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-rule/orm-rule.xml Start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-Order start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-Order success!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:get-user start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:get-user success!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:back-Order start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:back-Order success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-rule/orm-rule.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-rule End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:model/orm-config.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data2 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con2 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:model/orm-config.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:model/test-data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Product.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:product start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:product success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Product.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-view Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:model/test-view
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-view End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-rule Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:model/test-rule
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-rule/orm-rule.xml Start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-Order start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:save-Order success!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:get-user start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:get-user success!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:back-Order start!
+[main] INFO dec.context.parse.xml.parse.rule.RuleParser - Load the rule:back-Order success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/model/test-rule/orm-rule.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:model/test-rule End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------
+[main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init Start------
+[main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml data source:data1 success!
+[main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml data source:data2 success!
+[main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml connection:con1 success!
+[main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - Load yaml connection:con2 success!
+[main] INFO dec.context.parse.yaml.parse.config.YamlConfigFileParser - ------Dec yaml init End------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/view/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo success!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/view/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo success!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config-invalid-duplicate-system-file.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config-invalid-duplicate-system-file.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/view/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo success!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config-multi-system.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config-multi-system.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/view/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo success!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init Start------
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config.xml Start
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource:data1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the DataSource End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection Start!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection:con1 success!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the Connection End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the classpath:mix/orm-config.xml End
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file Start!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/data/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:order success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:orderDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Order.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:user success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/User.xml End!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml Start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:pay success!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail start!
+[main] INFO dec.context.parse.xml.parse.data.DataParser - Load the data:payDetail success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/data/Pay.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/data/ End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ Start!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Start parse filePath:classpath:mix/view/
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml Start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:UserInfo success!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo start!
+[main] INFO dec.context.parse.xml.parse.view.ViewParser - Load the view:OrderInfo success!
+[main] INFO dec.context.parse.xml.parse.AbstractFileParser - Load the file:/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/test-classes/mix/view/orm-view.xml End!
+[main] INFO dec.context.parse.xml.parse.config.CommonParser - Load the filePath:classpath:mix/view/ End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - Load the other config file End!
+[main] INFO dec.context.parse.xml.parse.config.ConfigFileParser - ------Dec init End------

@@ -34,6 +34,24 @@ public class ConfigManager {
 		return loading == null ? configInfo : loading;
 	}
 
+	/**
+	 * 返回当前线程正在组装的候选配置；没有候选时创建一个新实例。
+	 * 数据源类型登记和后续文件解析使用同一个对象，但不会提前修改已安装配置。
+	 */
+	public ConfigInfo getOrCreateLoadingConfigInfo() {
+		ConfigInfo loading = loadingConfigInfo.get();
+		if (loading == null) {
+			loading = new ConfigInfo();
+			loadingConfigInfo.set(loading);
+		}
+		return loading;
+	}
+
+	/** 当前加载完成或失败后清除线程内候选，避免下一次加载复用半成品。 */
+	public void clearLoadingConfigInfo() {
+		loadingConfigInfo.remove();
+	}
+
 	/** 返回已经对业务代码生效的配置，不受当前线程候选解析影响。 */
 	public ConfigInfo getInstalledConfigInfo() {
 		return configInfo;
@@ -43,11 +61,18 @@ public class ConfigManager {
 		this.configInfo = Objects.requireNonNull(configInfo, "configInfo");
 	}
 
+	/** 完整解析旧格式配置后，以单一引用替换当前配置。 */
+	public synchronized ConfigInfo install(ConfigInfo candidate) {
+		ConfigInfo checked = Objects.requireNonNull(candidate, "candidate");
+		this.configInfo = checked;
+		return checked;
+	}
+
 	/**
 	 * 编译成功后一次发布配置和 EngineContext。
 	 * EngineContext 先写入候选对象，再通过 volatile 引用整体生效，读取方不会看到一半新一半旧的状态。
 	 */
-	public ConfigInfo install(
+	public synchronized ConfigInfo install(
 			ConfigInfo candidate,
 			EngineContext engineContext) {
 		ConfigInfo checked = Objects.requireNonNull(candidate, "candidate");

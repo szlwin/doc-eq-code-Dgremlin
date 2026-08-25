@@ -25,8 +25,14 @@ public class ConfigFileParser implements FileParser<ConfigInfo>{
 	private final static Logger log = LoggerFactory.getLogger(ConfigFileParser.class);
 	
 	public ConfigInfo parse(String filePath) throws XMLParseException{
-		ConfigInfo configInfo = ConfigManager.getInstance().getInstalledConfigInfo();
-		return parseInto(configInfo, filePath);
+		ConfigManager manager = ConfigManager.getInstance();
+		ConfigInfo candidate = manager.getOrCreateLoadingConfigInfo();
+		try {
+			ConfigInfo parsed = parseInto(candidate, filePath);
+			return manager.install(parsed);
+		} finally {
+			manager.clearLoadingConfigInfo();
+		}
 	}
 
 	/**

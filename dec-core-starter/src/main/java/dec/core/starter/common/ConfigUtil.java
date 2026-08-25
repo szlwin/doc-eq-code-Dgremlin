@@ -3,6 +3,8 @@ package dec.core.starter.common;
 import dec.context.parse.xml.exception.XMLParseException;
 import dec.context.parse.xml.parse.config.ConfigFileParser;
 import dec.context.parse.xml.parse.config.ConnectionInfoParser;
+import dec.context.parse.yaml.exception.YAMLParseException;
+import dec.context.parse.yaml.parse.config.YamlConfigFileParser;
 import dec.core.compiler.api.CompilationOptions;
 import dec.core.compiler.api.CompilationResult;
 import dec.core.compiler.api.CompilationStatus;
@@ -16,6 +18,7 @@ import dec.core.context.config.model.config.Config;
 import dec.core.context.config.model.config.ConfigInfo;
 import dec.core.context.config.model.datasource.DataSourceConfigInfo;
 import dec.core.starter.CompilerBootstrap;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -31,9 +34,6 @@ import java.util.Optional;
 public final class ConfigUtil {
     private static final String CONFIG_SCHEMA_VERSION = "1.0";
     private static final String CONFIG_OPTIONS_VERSION = "config-util-p2";
-    private static final ThreadLocal<ConfigInfo> CANDIDATE =
-            new ThreadLocal<ConfigInfo>();
-
     private ConfigUtil() {
     }
 
@@ -54,28 +54,62 @@ public final class ConfigUtil {
     }
 
     /**
-     * 加载完整配置文件。现代配置会继续编译 System、Business 及其引用，
-     * 成功后一次安装 ConfigInfo 和 EngineContext；旧配置保持兼容加载方式。
+     * 加载完整 XML/YAML 配置。现代 XML 会继续编译 System、Business，
+     * 旧格式保持兼容；P2 尚不支持的现代 YAML 会在安装前明确失败。
      */
     public static synchronized void parseConfigInfo(String filePath)
             throws XMLParseException {
         ConfigInfo candidate = candidate();
         try {
             String checkedPath = requireText(filePath, "配置文件路径");
-            ConfigFileParser parser = new ConfigFileParser();
-            boolean requiresCompiler = parser.requiresCompiler(checkedPath);
-            ConfigInfo parsed = parser.parseInto(
-                    candidate,
-                    checkedPath);
-            if (requiresCompiler) {
-                compileAndInstall(parsed, checkedPath);
-            } else {
-                // P2 保留旧配置入口到 P7；旧格式没有可绑定的 EngineContext。
-                ConfigManager.getInstance().setConfigInfo(parsed);
+            if (isYaml(checkedPath)) {
+                parseYaml(candidate, checkedPath);
+                return;
             }
+            parseXml(candidate, checkedPath);
         } finally {
-            CANDIDATE.remove();
+            ConfigManager.getInstance().clearLoadingConfigInfo();
         }
+    }
+
+    /** XML 保持旧配置兼容，并为现代配置继续执行 Compiler。 */
+    private static void parseXml(ConfigInfo candidate, String filePath)
+            throws XMLParseException {
+        ConfigFileParser parser = new ConfigFileParser();
+        boolean requiresCompiler = parser.requiresCompiler(filePath);
+        ConfigInfo parsed = parser.parseInto(candidate, filePath);
+        if (requiresCompiler) {
+            compileAndInstall(parsed, filePath);
+        } else {
+            // P2 保留旧配置入口到 P7；旧格式没有可绑定的 EngineContext。
+            ConfigManager.getInstance().install(parsed);
+        }
+    }
+
+    /**
+     * YAML 在 P2 支持旧 Data/View/Rule/Connection 配置。
+     * System/Business Source Graph 的格式对等属于 P8，必须在安装前明确失败。
+     */
+    private static void parseYaml(ConfigInfo candidate, String filePath)
+            throws XMLParseException {
+        try {
+            YamlConfigFileParser parser = new YamlConfigFileParser();
+            if (parser.requiresCompiler(filePath)) {
+                throw new YAMLParseException(
+                        "P2不支持YAML中的System/Business编译；该格式对等能力属于P8: "
+                                + filePath);
+            }
+            ConfigInfo parsed = parser.parseInto(candidate, filePath);
+            ConfigManager.getInstance().install(parsed);
+        } catch (YAMLParseException e) {
+            throw new XMLParseException(e);
+        }
+    }
+
+    /** 统一门面通过扩展名选择 YAML，其余路径保持 XML 兼容。 */
+    private static boolean isYaml(String filePath) {
+        String lower = filePath.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".yaml") || lower.endsWith(".yml");
     }
 
     /**
@@ -87,19 +121,14 @@ public final class ConfigUtil {
             ConfigInfo parsed = new ConnectionInfoParser().parseInto(
                     candidate,
                     requireText(filePath, "连接配置文件路径"));
-            ConfigManager.getInstance().setConfigInfo(parsed);
+            ConfigManager.getInstance().install(parsed);
         } finally {
-            CANDIDATE.remove();
+            ConfigManager.getInstance().clearLoadingConfigInfo();
         }
     }
 
     private static ConfigInfo candidate() {
-        ConfigInfo value = CANDIDATE.get();
-        if (value == null) {
-            value = new ConfigInfo();
-            CANDIDATE.set(value);
-        }
-        return value;
+        return ConfigManager.getInstance().getOrCreateLoadingConfigInfo();
     }
 
     /**

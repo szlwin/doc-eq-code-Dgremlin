@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orm-config name="mix-multiple-systems">
+    <orm-datasource-info default="data1">
+        <orm-datasource name="data1">
+            <name>MySQL</name>
+        </orm-datasource>
+    </orm-datasource-info>
+    <orm-data-file-info>
+        <orm-file path="classpath:mix/data/"/>
+    </orm-data-file-info>
+    <orm-view-file-info>
+        <orm-file path="classpath:mix/view/"/>
+    </orm-view-file-info>
+    <system-file-info>
+        <system-file path="classpath:mix/system/systems.xml"/>
+        <system-file path="classpath:mix/system/extra-systems.xml"/>
+    </system-file-info>
+    <business-file-info>
+        <business-file path="classpath:mix/business/order-business.xml"/>
+    </business-file-info>
+    <orm-connection-info default="con1">
+        <orm-connection name="con1">
+            <data-source-info>
+                <data-source ref="data1"/>
+            </data-source-info>
+        </orm-connection>
+    </orm-connection-info>
+</orm-config>

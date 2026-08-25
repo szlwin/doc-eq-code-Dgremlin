@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "git diff --check",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T11:19:50+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3",
+  "output_digest": "c5a826c6f3c3f855101e4475ea886346aac326152a95b2c3a5659799a47a160e",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "implementation_plan",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "warning: in the working copy of 'dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java', CRLF will be replaced by LF the next time Git touches it\n"
+}

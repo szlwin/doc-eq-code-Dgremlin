@@ -586,6 +586,259 @@
       "verified_by_agent": "TestDesignAgent",
       "verified_at": "2026-08-17T03:44:00+00:00",
       "reason": "PASSED: current-profile criteria revalidated from exact-revision registered Evidence; legacy ReviewResult remains audit history."
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I008-ARCH-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "ArchitectureReviewAgent 独立确认 DESIGN-P2-R40 的模块边界、依赖方向、原子安装、事务一致性、Java 8 与兼容设计完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R40",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ArchitectureReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000547",
+        "EVD-000506",
+        "EVD-000534",
+        "EVD-000533",
+        "EVD-000535",
+        "EVD-000508",
+        "EVD-000536",
+        "EVD-000507"
+      ],
+      "verified_by_agent": "ArchitectureReviewAgent",
+      "verified_at": "2026-08-25T18:57:48+08:00",
+      "reason": "DESIGN-P2-R40 Architecture Review PASSED；无 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I008-REQ-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "RequirementReviewAgent 独立确认 DESIGN-P2-R40 覆盖需求范围、验收语义、失败副作用和业务模型不变量。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R40",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000547",
+        "EVD-000533",
+        "EVD-000535",
+        "EVD-000507",
+        "EVD-000506",
+        "EVD-000534",
+        "EVD-000536"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-25T18:58:01+08:00",
+      "reason": "DESIGN-P2-R40 Requirement Review PASSED。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I008-TEST-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "TestDesignAgent 独立确认 DESIGN-P2-R40 具备稳定测试接缝、失败语义、实现输入和验收追踪。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R40",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000547",
+        "EVD-000506",
+        "EVD-000536",
+        "EVD-000534",
+        "EVD-000507",
+        "EVD-000508"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-25T18:58:14+08:00",
+      "reason": "DESIGN-P2-R40 TestDesign Review PASSED；无 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I009-IMPACT-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "ImpactAnalysisReviewAgent 独立确认 DESIGN-P2-R40 在 Design I009 的影响传播、退役边界和测试映射完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R40",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000547",
+        "EVD-000533",
+        "EVD-000535",
+        "EVD-000506",
+        "EVD-000507",
+        "EVD-000534",
+        "EVD-000536"
+      ],
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-08-25T19:02:42+08:00",
+      "reason": "DESIGN-P2-R40 Design I009 Impact Review PASSED；无 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-DESIGN-I009-XMOD-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "CrossModuleIntegrationReviewAgent 独立确认 DESIGN-P2-R40 在 Design I009 的跨模块边界、失败恢复和实现映射完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "design",
+      "revision": "DESIGN-P2-R40",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000547",
+        "EVD-000534",
+        "EVD-000506",
+        "EVD-000533",
+        "EVD-000535",
+        "EVD-000536"
+      ],
+      "verified_by_agent": "CrossModuleIntegrationReviewAgent",
+      "verified_at": "2026-08-25T19:02:55+08:00",
+      "reason": "DESIGN-P2-R40 Design I009 CrossModule Review PASSED；无 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-TESTDESIGN-I012-REQ-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "RequirementReviewAgent 独立确认 TESTDESIGN-P2-R41 覆盖 R40 需求语义、验收标准和失败约束。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R41",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "RequirementReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000561",
+        "EVD-000564",
+        "EVD-000559"
+      ],
+      "verified_by_agent": "RequirementReviewAgent",
+      "verified_at": "2026-08-25T19:13:21+08:00",
+      "reason": "TESTDESIGN-P2-R41 Requirement Review PASSED；无 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-TESTDESIGN-I012-EVID-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "TestEvidenceReviewAgent 独立确认 TESTDESIGN-P2-R41 的 Case、测试 Evidence 和执行命令可追溯且有效。",
+      "type": "MANUAL_REVIEW",
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R41",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestEvidenceReviewAgent",
+        "review_phase": "test_design"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000561",
+        "EVD-000560",
+        "EVD-000562",
+        "EVD-000563"
+      ],
+      "verified_by_agent": "TestEvidenceReviewAgent",
+      "verified_at": "2026-08-25T19:11:46+08:00",
+      "reason": "TESTDESIGN-P2-R41 TestEvidence Review PASSED；无 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-PLAN-I016-DEV-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "DevelopAgent 独立确认当前 R05 Implementation Plan 可在既有代码范围内执行，任务、命令和依赖可实现。",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000568",
+        "EVD-000570",
+        "EVD-000571",
+        "EVD-000565",
+        "EVD-000566",
+        "EVD-000567",
+        "EVD-000569"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-25T19:24:48+08:00",
+      "reason": "当前 R05 Implementation Plan Develop Review PASSED；无 P0/P1。"
+    },
+    {
+      "assertion_id": "ASRT-P2-PLAN-I016-PLAN-001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "PlanReviewAgent 独立确认当前 R05 Implementation Plan 的范围、顺序、验收、追踪和架构约束完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PlanReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/2"
+      ],
+      "evidence_ids": [
+        "EVD-000568",
+        "EVD-000569",
+        "EVD-000570",
+        "EVD-000571",
+        "EVD-000565",
+        "EVD-000566",
+        "EVD-000567"
+      ],
+      "verified_by_agent": "PlanReviewAgent",
+      "verified_at": "2026-08-25T19:25:04+08:00",
+      "reason": "当前 R05 Implementation Plan Plan Review PASSED；无 P0/P1。"
     }
   ]
 }

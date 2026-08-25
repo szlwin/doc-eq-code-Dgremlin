@@ -16,7 +16,7 @@ operations:
       name: ConfigInfo candidate compilation and atomic installation
       refs:
         - FLOW-R04@p2-simple-runtime-model
-        - DESIGN-P2-R38
+        - DESIGN-P2-R40
       traceIds:
         - TR-P2-001
         - TR-P2-002
@@ -35,7 +35,7 @@ operations:
       module: MODEL
       refs:
         - FLOW-R04@p2-simple-runtime-model
-        - DESIGN-P2-R38
+        - DESIGN-P2-R40
       traceIds:
         - TR-P2-005
         - TR-P2-006
@@ -53,7 +53,7 @@ operations:
     reason: Context owns ConfigInfo and its associated EngineContext.
     after:
       refs:
-        - DESIGN-P2-R38#configinfo-enginecontext
+        - DESIGN-P2-R40#configinfo-enginecontext
       traceIds:
         - TR-P2-001
         - TR-P2-003
@@ -66,7 +66,7 @@ operations:
     reason: Compiler validates and publishes the candidate EngineContext.
     after:
       refs:
-        - DESIGN-P2-R38#compiler-publication
+        - DESIGN-P2-R40#compiler-publication
       traceIds:
         - TR-P2-002
         - TR-P2-003
@@ -78,7 +78,7 @@ operations:
     reason: MODEL owns direct ModelData and ModelContainer execution.
     after:
       refs:
-        - DESIGN-P2-R38#simple-model-execution
+        - DESIGN-P2-R40#simple-model-execution
       traceIds:
         - TR-P2-005
         - TR-P2-006
@@ -91,7 +91,7 @@ operations:
     reason: Starter coordinates candidate compilation and installation without an access authority layer.
     after:
       refs:
-        - DESIGN-P2-R38#compilerstarter
+        - DESIGN-P2-R40#compilerstarter
       traceIds:
         - TR-P2-002
         - TR-P2-003
@@ -216,6 +216,9 @@ operations:
       policy: REJECT_OPERATION
       conditions:
         - source is malformed
+        - duplicate system-file or duplicate static definition is detected
+        - a static reference cannot be resolved after all declared system-file inputs are collected
+        - modern YAML declares System or Business Source Graph before P8 support is available
         - candidate validation reports ERROR
         - EngineContext publication fails
       consistency: ATOMIC
@@ -230,7 +233,9 @@ operations:
         - TR-P2-004
         - TR-P2-009
       testCaseIds:
-        - CASE-NOT-APPLICABLE-WK-WS
+        - CASE-P2-R41-UNIFIED-LOAD-001
+        - CASE-P2-R41-SOURCE-GRAPH-002
+        - CASE-P2-R41-ATOMIC-COMPAT-003
       status: ACTIVE
   - operation: add
     collection: impactPolicies
@@ -260,7 +265,7 @@ operations:
         - TR-P2-007
         - TR-P2-010
       testCaseIds:
-        - CASE-NOT-APPLICABLE-WK-WS
+        - CASE-P2-R41-SIMPLE-EXECUTE-004
       status: ACTIVE
 
   - operation: deprecate
@@ -312,24 +317,28 @@ operations:
           from: CMPART-P2-SIMPLE-CONFIG-PARSER
           to: CMPART-P2-SIMPLE-CONFIG-CONTEXT
           interactionType: DATA_WRITE
-          action: parse XML or YAML definitions into the candidate
+          action: parse legacy XML/YAML definitions or modern XML Data, View, Rule, Connection and source-file declarations into the candidate
           preconditions:
             - candidate exists
           postconditions:
-            - candidate contains View, Rule and Connection definitions
+            - candidate contains Data, View, Rule and Connection definitions
+            - modern XML declarations expose every system-file and business-file source to Compiler
+            - legacy XML/YAML without source graph remains compatible and does not invent an EngineContext
           idempotency: a fresh candidate avoids duplicate accumulation across loads
           failureHandling: report parse failure and keep current configuration
           compensation: discard candidate
           traceIds:
             - TR-P2-002
+            - TR-P2-011
         - id: CMSTEP-P2-SIMPLE-CONFIG-03
           order: 3
           from: CMPART-P2-SIMPLE-CONFIG-STARTER
           to: CMPART-P2-SIMPLE-CONFIG-COMPILER
           interactionType: SYNC_API
-          action: validate and publish EngineContext into the same candidate
+          action: collect all declared system-file inputs, resolve forward references independent of input order, compile System, RuleView, Information, Business, Directory, Action and Produce, then publish EngineContext into the same candidate
           preconditions:
             - parsing completed
+            - modern XML declares a System or Business Source Graph
           postconditions:
             - candidate contains its exact compiled EngineContext
           idempotency: equivalent candidate facts produce equivalent compiler output
@@ -355,12 +364,26 @@ operations:
             - TR-P2-009
       successCriteria:
         - failed candidates never become current
-        - XML and YAML use the same candidate semantics
+        - multiple system-file declarations are collected before duplicate and forward-reference validation
+        - modern XML publishes System, RuleView, Information, Business, Directory, Action and Produce as one compiled model
+        - legacy XML/YAML use the same isolated-candidate and whole-install semantics
+        - modern YAML with System or Business Source Graph is rejected before installation and explicitly deferred to P8
         - ConfigInfo and EngineContext are observed as one installed object
       failurePaths:
+        - id: CMFAIL-P2-SIMPLE-CONFIG-00
+          atStep: CMSTEP-P2-SIMPLE-CONFIG-02
+          condition: source is malformed or modern YAML declares a System or Business Source Graph
+          result: parsing fails with a source-aware error; P8 is named for unsupported modern YAML; current ConfigInfo is unchanged
+          compensationSteps:
+            - discard the candidate
+          manualRecovery: correct legacy syntax, use modern XML in P2, or complete YAML Source Graph support in P8
+          traceIds:
+            - TR-P2-002
+            - TR-P2-004
+            - TR-P2-011
         - id: CMFAIL-P2-SIMPLE-CONFIG-01
           atStep: CMSTEP-P2-SIMPLE-CONFIG-03
-          condition: candidate validation or publication fails
+          condition: duplicate system-file, duplicate definition, unresolved reference, candidate validation or publication fails
           result: diagnostics are returned and current ConfigInfo is unchanged
           compensationSteps:
             - discard the candidate
@@ -374,7 +397,9 @@ operations:
         - TR-P2-004
         - TR-P2-009
       testCaseIds:
-        - CASE-NOT-APPLICABLE-WK-WS
+        - CASE-P2-R41-UNIFIED-LOAD-001
+        - CASE-P2-R41-SOURCE-GRAPH-002
+        - CASE-P2-R41-ATOMIC-COMPAT-003
       status: ACTIVE
       businessFlowRef: FLOW-CONFIG-COMPILE
       businessStepRefs:
@@ -474,7 +499,7 @@ operations:
         - TR-P2-007
         - TR-P2-010
       testCaseIds:
-        - CASE-NOT-APPLICABLE-WK-WS
+        - CASE-P2-R41-SIMPLE-EXECUTE-004
       status: ACTIVE
       businessFlowRef: FLOW-SIMPLE-MODEL-EXECUTE
       businessStepRefs:

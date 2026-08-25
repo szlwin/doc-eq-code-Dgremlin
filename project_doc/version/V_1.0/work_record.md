@@ -1321,6 +1321,256 @@
 | 测试与验证 | doc_migration archiveCutover READY with zero manual confirmations; wk -wd preview PASS; no tests run under wk -ws. |
 | 问题与阻塞 | FEATURE-DESC-3361AD2E54FC legacy task runtime is INVALID because retired protected-access evidence no longer resolves and EVD-000269 drifted; declared reconcile cannot repair semantic history. |
 
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I007-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I007-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000500","EVD-000501","EVD-000502"],"execution_mode":"lightweight","input_revision":"BM-R20","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-007","iteration_no":7,"next_action":"由 RequirementReviewAgent、ArchitectureReviewAgent、TestDesignAgent 对 DESIGN-P2-R39 进行独立 Review。","next_agent":"RequirementReviewAgent","output_revision":"DESIGN-P2-R39","phase":"design","record_id":"WR-20260824-230248-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED","render_digest":"03e366499f1234e24495980ec079eb64a11c402a568b659edeb80e64f8d7b917","schema_version":4,"scope":"冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"完成简化运行模型 Design I007 候选：ConfigUtil 统一 XML/YAML 入口、ConfigInfo 对用户隐藏、现代 YAML 编译语义明确延后到 P8 且安装前失败。规范文档内容由 Evidence 快照绑定。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION","task_type":"design","timestamp":"2026-08-24T23:02:48+08:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260824-230248-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-24T23:02:48+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | lightweight |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成简化运行模型 Design I007 候选：ConfigUtil 统一 XML/YAML 入口、ConfigInfo 对用户隐藏、现代 YAML 编译语义明确延后到 P8 且安装前失败。规范文档内容由 Evidence 快照绑定。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I007-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-007 / 7 |
+| 输入 Revision | BM-R20 |
+| 输出 Revision | DESIGN-P2-R39 |
+| StageOutcome | 无 |
+| Evidence | EVD-000500、EVD-000501、EVD-000502 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementReviewAgent |
+| 后续事项 | 由 RequirementReviewAgent、ArchitectureReviewAgent、TestDesignAgent 对 DESIGN-P2-R39 进行独立 Review。 |
+
+### 变更摘要
+
+- 完成简化运行模型 Design I007 候选：ConfigUtil 统一 XML/YAML 入口、ConfigInfo 对用户隐藏、现代 YAML 编译语义明确延后到 P8 且安装前失败。规范文档内容由 Evidence 快照绑定。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I008-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I008-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000506","EVD-000507","EVD-000508"],"execution_mode":"lightweight","input_revision":"BM-R20","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-008","iteration_no":8,"next_action":"由独立 Review Agent 审查 DESIGN-P2-R40。","next_agent":"ImpactAnalysisReviewAgent","output_revision":"DESIGN-P2-R40","phase":"design","record_id":"WR-20260824-230944-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED","render_digest":"b2b3088ce93e1ae263b55a185fda4f8c728dcfd604c3435d5549bb70a4b6b687","schema_version":4,"scope":"冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"完成 Design I008：YamlConfigUtil 明确按 REMOVE 退役；ConfigUtil 统一 XML/YAML 门面、ConfigInfo 隐藏和现代 YAML P8 边界与代码一致。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION","task_type":"design","timestamp":"2026-08-24T23:09:44+08:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260824-230944-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-24T23:09:44+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | lightweight |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成 Design I008：YamlConfigUtil 明确按 REMOVE 退役；ConfigUtil 统一 XML/YAML 门面、ConfigInfo 隐藏和现代 YAML P8 边界与代码一致。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I008-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-008 / 8 |
+| 输入 Revision | BM-R20 |
+| 输出 Revision | DESIGN-P2-R40 |
+| StageOutcome | 无 |
+| Evidence | EVD-000506、EVD-000507、EVD-000508 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ImpactAnalysisReviewAgent |
+| 后续事项 | 由独立 Review Agent 审查 DESIGN-P2-R40。 |
+
+### 变更摘要
+
+- 完成 Design I008：YamlConfigUtil 明确按 REMOVE 退役；ConfigUtil 统一 XML/YAML 门面、ConfigInfo 隐藏和现代 YAML P8 边界与代码一致。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I009-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I009-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000506","EVD-000507","EVD-000508"],"execution_mode":"standard / sequential","input_revision":"BM-R20","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-009","iteration_no":9,"next_action":"Architecture、Requirement、TestDesign Review","next_agent":"ArchitectureReviewAgent","output_revision":"DESIGN-P2-R40","phase":"design","record_id":"WR-20260825-185321-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED","render_digest":"6535ba302553471d4febece68df5db0ad2e6ec25fb50fbdfba78debbfdb330e0","schema_version":4,"scope":"冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"DESIGN-P2-R40 已在标准 Design I009 重新绑定；实现与设计文件未变化，进入当前迭代协作 Review。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION","task_type":"design","timestamp":"2026-08-25T18:53:21+08:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260825-185321-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T18:53:21+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | DESIGN-P2-R40 已在标准 Design I009 重新绑定；实现与设计文件未变化，进入当前迭代协作 Review。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION-I009-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-009 / 9 |
+| 输入 Revision | BM-R20 |
+| 输出 Revision | DESIGN-P2-R40 |
+| StageOutcome | 无 |
+| Evidence | EVD-000506、EVD-000507、EVD-000508 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ArchitectureReviewAgent |
+| 后续事项 | Architecture、Requirement、TestDesign Review |
+
+### 变更摘要
+
+- DESIGN-P2-R40 已在标准 Design I009 重新绑定；实现与设计文件未变化，进入当前迭代协作 Review。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I012-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I012-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000559","EVD-000561"],"execution_mode":"standard / sequential","input_revision":"DESIGN-P2-R40","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-012","iteration_no":12,"next_action":"发布 TestDesign Artifact 并登记 Requirement/TestEvidence Review","next_agent":"RequirementReviewAgent","output_revision":"TESTDESIGN-P2-R41","phase":"test_design","record_id":"WR-20260825-190850-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED","render_digest":"afb274438be6acf54c815bc6bfbb0fbf3f34d7b108b25c21086a043b974d1406","schema_version":4,"scope":"形成 P2 raw-authority remediation TestDesign 与 single-runtime lifecycle 验证","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"TESTDESIGN-P2-R41 已在标准 TestDesign I012 重新绑定；当前测试设计覆盖 ConfigUtil 统一加载、多个 system-file、顺序/重复/前向引用、失败旧对象和 YAML 范围。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION","task_type":"test_design","timestamp":"2026-08-25T19:08:50+08:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260825-190850-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T19:08:50+08:00 |
+| 执行 Agent | TestDesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 形成 P2 raw-authority remediation TestDesign 与 single-runtime lifecycle 验证 |
+| 阶段 | test_design |
+| 任务类型 | test_design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | TESTDESIGN-P2-R41 已在标准 TestDesign I012 重新绑定；当前测试设计覆盖 ConfigUtil 统一加载、多个 system-file、顺序/重复/前向引用、失败旧对象和 YAML 范围。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION-I012-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-012 / 12 |
+| 输入 Revision | DESIGN-P2-R40 |
+| 输出 Revision | TESTDESIGN-P2-R41 |
+| StageOutcome | 无 |
+| Evidence | EVD-000559、EVD-000561 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | RequirementReviewAgent |
+| 后续事项 | 发布 TestDesign Artifact 并登记 Requirement/TestEvidence Review |
+
+### 变更摘要
+
+- TESTDESIGN-P2-R41 已在标准 TestDesign I012 重新绑定；当前测试设计覆盖 ConfigUtil 统一加载、多个 system-file、顺序/重复/前向引用、失败旧对象和 YAML 范围。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 3 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ImplementationPlanAgent","attempt_id":"ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I016-A001","event_id":"EVENT-ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I016-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000565","EVD-000566","EVD-000567"],"execution_mode":"standard / sequential","input_revision":"DESIGN-P2-R40","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-016","iteration_no":16,"next_action":"发布 Implementation Plan Artifact，复用已通过 R05 Review","next_agent":"PlanReviewAgent","output_revision":"TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3","phase":"implementation_plan","record_id":"WR-20260825-192055-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-PASSED","render_digest":"6fa41f9bd6313ac5a83578e35b097e1a073bd11cf9e6968d76b25f28e384b19a","schema_version":4,"scope":"冻结 P2 R40 简化运行模型 Implementation Plan","source":"long_task.py finish-attempt","state_change":"TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION: RUNNING → PASSED","status":"PASSED","summary":"既有 R05 Task Plan 通过官方 validate，绑定当前 Design/TestDesign 输入；未重新生成空计划。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION","task_type":"implementation_plan","timestamp":"2026-08-25T19:20:55+08:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 3 项","version":"V_1.0"} -->
+## WR-20260825-192055-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T19:20:55+08:00 |
+| 执行 Agent | ImplementationPlanAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 冻结 P2 R40 简化运行模型 Implementation Plan |
+| 阶段 | implementation_plan |
+| 任务类型 | implementation_plan |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 既有 R05 Task Plan 通过官方 validate，绑定当前 Design/TestDesign 输入；未重新生成空计划。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION: RUNNING → PASSED |
+| Task | TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION |
+| Attempt | ATTEMPT-TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION-I016-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-016 / 16 |
+| 输入 Revision | DESIGN-P2-R40 |
+| 输出 Revision | TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3 |
+| StageOutcome | 无 |
+| Evidence | EVD-000565、EVD-000566、EVD-000567 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | PlanReviewAgent |
+| 后续事项 | 发布 Implementation Plan Artifact，复用已通过 R05 Review |
+
+### 变更摘要
+
+- 既有 R05 Task Plan 通过官方 validate，绑定当前 Design/TestDesign 输入；未重新生成空计划。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 3 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则
