@@ -783,41 +783,12 @@
       "reason": "TESTDESIGN-P2-R41 TestEvidence Review PASSED；无 P0/P1。"
     },
     {
-      "assertion_id": "ASRT-P2-PLAN-I016-DEV-001",
-      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
-      "statement": "DevelopAgent 独立确认当前 R05 Implementation Plan 可在既有代码范围内执行，任务、命令和依赖可实现。",
+      "assertion_id": "ASRT-P2-PLAN-R03-PR",
+      "acceptance_id": "AC-P2-SIMPLE-PLAN-REVIEW",
+      "statement": "PlanReviewAgent 独立确认 R03 将不存在的 CompilerStarterBehaviorT15Test 替换为仓库实际存在的 ConfigUtilCompatibilityTest，且测试语义与 P2 原子安装/失败保持一致。",
       "type": "MANUAL_REVIEW",
       "phase": "implementation_plan",
-      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "DevelopAgent",
-        "review_phase": "implementation_plan"
-      },
-      "source_refs": [
-        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/2"
-      ],
-      "evidence_ids": [
-        "EVD-000568",
-        "EVD-000570",
-        "EVD-000571",
-        "EVD-000565",
-        "EVD-000566",
-        "EVD-000567",
-        "EVD-000569"
-      ],
-      "verified_by_agent": "DevelopAgent",
-      "verified_at": "2026-08-25T19:24:48+08:00",
-      "reason": "当前 R05 Implementation Plan Develop Review PASSED；无 P0/P1。"
-    },
-    {
-      "assertion_id": "ASRT-P2-PLAN-I016-PLAN-001",
-      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
-      "statement": "PlanReviewAgent 独立确认当前 R05 Implementation Plan 的范围、顺序、验收、追踪和架构约束完整。",
-      "type": "MANUAL_REVIEW",
-      "phase": "implementation_plan",
-      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@0a6415a979a3",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
@@ -825,20 +796,56 @@
         "review_phase": "implementation_plan"
       },
       "source_refs": [
-        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/2"
+        "development_tasks.yaml#TP-FEATURE-DESC-3361AD2E54FC-R03",
+        "dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java"
       ],
       "evidence_ids": [
-        "EVD-000568",
-        "EVD-000569",
-        "EVD-000570",
-        "EVD-000571",
-        "EVD-000565",
-        "EVD-000566",
-        "EVD-000567"
+        "EVD-000603",
+        "EVD-000608",
+        "EVD-000607",
+        "EVD-000606",
+        "EVD-000609",
+        "EVD-000604",
+        "EVD-000605",
+        "EVD-000610",
+        "EVD-000611",
+        "EVD-000612"
       ],
       "verified_by_agent": "PlanReviewAgent",
-      "verified_at": "2026-08-25T19:25:04+08:00",
-      "reason": "当前 R05 Implementation Plan Plan Review PASSED；无 P0/P1。"
+      "verified_at": "2026-08-25T22:25:46+08:00",
+      "reason": "PASSED：R03 是对 R02 验证命令的最小、可解释修订，未降低门禁或引入新架构。"
+    },
+    {
+      "assertion_id": "ASRT-P2-PLAN-R03-DEV",
+      "acceptance_id": "AC-P2-SIMPLE-PLAN-REVIEW",
+      "statement": "DevelopAgent 独立确认 R03 的替代测试真实存在、命令保持 failIfNoSpecifiedTests=true，且覆盖统一入口、现代 YAML 边界和失败原子性。",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "development_tasks.yaml#TP-FEATURE-DESC-3361AD2E54FC-R03",
+        "dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java"
+      ],
+      "evidence_ids": [
+        "EVD-000603",
+        "EVD-000606",
+        "EVD-000604",
+        "EVD-000605",
+        "EVD-000610",
+        "EVD-000611",
+        "EVD-000612",
+        "EVD-000607",
+        "EVD-000608"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-25T22:26:37+08:00",
+      "reason": "PASSED：R03 的替代测试真实存在且语义等价，满足 Development 前置条件。"
     }
   ]
 }
