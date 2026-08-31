@@ -129,6 +129,59 @@
       "supersedes_iteration_id": "",
       "revision_reason": "需求分析阶段通过后补登记当前 business_model 阶段任务。",
       "risk_triggers": []
+    },
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-DESIGN",
+      "title": "设计 P3 Information Engine 技术方案",
+      "objective": "基于 BM-P3-R01 设计 Information 编译、实时识别、DAG 求值、模型路径解析和 change-data 物化接口及模块边界。",
+      "phase": "design",
+      "depends_on": [
+        "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL"
+      ],
+      "owner_agent": "DesignAgent",
+      "reviewer_agents": [
+        "ArchitectureReviewAgent",
+        "BusinessModelReviewAgent",
+        "TestDesignAgent"
+      ],
+      "input_revisions": {
+        "business_model": "BM-P3-R01"
+      },
+      "allowed_files": [
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_api_contract.md",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_test_seams.md",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
+      ],
+      "acceptance_trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-IDENTIFY",
+        "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+      ],
+      "validation_commands": [],
+      "expected_results": [
+        "明确三类 Information 的编译与识别接口、限定 Key、DAG 拓扑和实时 read-set。",
+        "明确 target-main 基础字段、relation Data 路径解析、普通 null/非法路径 ERROR、every 空集合和订单明细非空规则。",
+        "明确 change-data 仅写入声明值、写入失败抛异常并沿用现有回滚，不实现 MutationSet、并发或独立事务。"
+      ],
+      "stop_conditions": [
+        "设计引入未授权的 UNRESOLVED、缓存失效、并发或事务语义。",
+        "试图修改生产代码、测试代码、XML fixture 或 P2 文档。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-DESIGN",
+      "feature_id": "FEATURE-DESC-4AB41AC241A1",
+      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-004",
+      "iteration_no": 4,
+      "supersedes_iteration_id": "",
+      "revision_reason": "business_model 阶段通过后补登记当前 design 阶段任务。",
+      "risk_triggers": []
     }
   ]
 }
