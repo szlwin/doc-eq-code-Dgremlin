@@ -24,6 +24,7 @@
 
 - [业务流程索引](_flows/flow_index.md)
 - [跨模块关联图](_relations/dependency_graph.md)
+- [追踪矩阵](_relations/traceability_matrix.md)
 
 ## 版本历史
 

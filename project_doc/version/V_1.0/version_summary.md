@@ -16,6 +16,7 @@
 | 目标 | 需求文档 |
 | --- | --- |
 | FEATURE-DESC-3361AD2E54FC | [需求正文](doc/FEATURE-DESC-3361AD2E54FC/requirement.md) / [测试设计](doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
+| FEATURE-DESC-4AB41AC241A1 | [需求正文](doc/FEATURE-DESC-4AB41AC241A1/requirement.md) |
 | P1-COMPILER-CR01 | [需求正文](doc/P1-COMPILER-CR01/requirement.md) |
 | P1-COMPILER-CR02 | [需求正文](doc/P1-COMPILER-CR02/requirement.md) |
 | P1-COMPILER-CR03 | [需求正文](doc/P1-COMPILER-CR03/requirement.md) |
@@ -28,6 +29,7 @@
 | COMPILER | [模块说明](doc/COMPILER/COMPILER_desc.md) / [设计](doc/COMPILER/COMPILER_design.md) / [业务模型事实](doc/COMPILER/COMPILER_business_model.yaml) |
 | DEC_COMPILER | [设计](doc/DEC_COMPILER/DEC_COMPILER_design.md) / [业务模型事实](doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml) |
 | FEATURE-DESC-3361AD2E54FC | 暂无可读文档 |
+| FEATURE-DESC-4AB41AC241A1 | 暂无可读文档 |
 | MODEL | [模块说明](doc/MODEL/MODEL_desc.md) |
 | P1-COMPILER-CR01 | 暂无可读文档 |
 | P1-COMPILER-CR02 | 暂无可读文档 |
@@ -46,6 +48,7 @@
 - [doc/COMPILER/changes/p2-business-model-unified-protected-access-remediation-r12.yaml](doc/COMPILER/changes/p2-business-model-unified-protected-access-remediation-r12.yaml)
 - [doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml](doc/COMPILER/changes/p2-independent-review-remediation-r08.yaml)
 - [doc/COMPILER/changes/p2-simple-runtime-model-r06.yaml](doc/COMPILER/changes/p2-simple-runtime-model-r06.yaml)
+- [doc/COMPILER/changes/p2-simple-runtime-model.dependency-impact.changeset.yaml](doc/COMPILER/changes/p2-simple-runtime-model.dependency-impact.changeset.yaml)
 - [doc/COMPILER/changes/p2-system-ruleview-business-model.yaml](doc/COMPILER/changes/p2-system-ruleview-business-model.yaml)
 - [doc/MODEL/changes/changeset.template.yaml](doc/MODEL/changes/changeset.template.yaml)
 - [doc/MODEL/changes/dependency-impact.changeset.template.yaml](doc/MODEL/changes/dependency-impact.changeset.template.yaml)
@@ -54,10 +57,7 @@
 
 ## 长任务摘要
 
-| 任务 | 阅读入口 |
-| --- | --- |
-| FEATURE-DESC-3361AD2E54FC | [任务摘要](task/FEATURE-DESC-3361AD2E54FC/task_summary.md) / [任务计划](task/FEATURE-DESC-3361AD2E54FC/task_plan.md) |
-| P1-COMPILER-F01 | [任务计划](task/P1-COMPILER-F01/task_plan.md) |
+暂无。
 
 ## 归档说明
 

@@ -1,9 +1,9 @@
-<!-- common-develop-work-mode: model_code=false page_design=false minimal=false auto=false architecture_review=false git_checkpoint=false git_push=false lightweight=false -->
+<!-- common-develop-work-mode: model_code=false page_design=false minimal=false auto=false architecture_review=false git_checkpoint=true git_push=false lightweight=false -->
 <!-- template: common-develop/work-v4 -->
 <!-- common-develop-mutation-policy: review_only=false -->
 # V_1.0 工作分工
 
-> 工作模式（wk）：前后端伪代码=关闭；页面设计=关闭；最小流程=关闭；自动执行=关闭；两阶段开发Review=关闭；Git阶段提交=关闭；Git自动推送=关闭；只Review写入边界=关闭；轻量对话开发=关闭。
+> 工作模式（wk）：前后端伪代码=关闭；页面设计=关闭；最小流程=关闭；自动执行=关闭；两阶段开发Review=关闭；Git阶段提交=启用；Git自动推送=关闭；只Review写入边界=关闭；轻量对话开发=关闭。
 
 > 当前事实：P1 Stage Completion 已 PASSED；PR #31 已合并至 `dev_all@7f001bb0d7e529f49344a8b38224bde8e3b9d28e`；`common-develop -d` 增量归档已完成。
 

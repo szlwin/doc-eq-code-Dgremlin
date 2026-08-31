@@ -1,0 +1,85 @@
+{
+  "tasks": [
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION",
+      "title": "确认 P3 Information Engine 需求范围",
+      "objective": "确认 Information Engine 的目标、可观察结果、范围排除、约束和未决事项，形成可审查的需求 revision。",
+      "phase": "requirement_confirmation",
+      "depends_on": [],
+      "owner_agent": "RequirementConfirmationAgent",
+      "reviewer_agents": [
+        "RequirementAnalysisAgent"
+      ],
+      "input_revisions": {},
+      "allowed_files": [
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/handoff.md"
+      ],
+      "acceptance_trace_ids": [],
+      "flow_step_refs": [],
+      "flow_refs": [],
+      "validation_commands": [],
+      "expected_results": [
+        "形成唯一当前 P3 需求文档，明确三类 Information、两套表达式语言、DAG、识别、物化、增量失效及下游边界。",
+        "记录排除项、约束、依赖、验收观察方式和未决问题；不得提前进入实现。",
+        "RequirementAnalysisAgent 对同一需求 revision 完成独立 Review。"
+      ],
+      "stop_conditions": [
+        "需求范围或验收语义仍存在未授权歧义。",
+        "试图修改生产代码、测试代码或 P2 任务事实。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION",
+      "feature_id": "FEATURE-DESC-4AB41AC241A1",
+      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-CONFIRMATION-001",
+      "iteration_no": 1,
+      "supersedes_iteration_id": "",
+      "revision_reason": "首次启动 P3 Information Engine 需求确认。",
+      "risk_triggers": []
+    },
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS",
+      "title": "分析 P3 Information Engine 需求与追踪边界",
+      "objective": "在已确认的 P3 需求基础上完成业务规则、验收、异常、流程、影响和稳定追踪关系分析，不提前进入设计或实现。",
+      "phase": "requirement_analysis",
+      "depends_on": ["TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION"],
+      "owner_agent": "RequirementAnalysisAgent",
+      "reviewer_agents": ["BusinessModelAgent", "TestDesignAgent"],
+      "input_revisions": {"requirement_confirmation": "REQCONF-P3-R04@646001a72756"},
+      "allowed_files": [
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/handoff.md"
+      ],
+      "acceptance_trace_ids": ["TR-P3-INFORMATION-ENGINE-001"],
+      "flow_step_refs": [],
+      "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/requirement_doc.py validate -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --stage analysis --json",
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/requirement_doc.py sync-traceability -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1 --json"
+      ],
+      "expected_results": [
+        "每个功能、业务规则、跨功能规则和验收标准均有合法追踪引用。",
+        "实时读取、普通 null ERROR、显式 Information null 比较、every(emptyCollection)=TRUE、订单明细非空、target-main 与 relation Data 归属及物化失败语义均可观察。",
+        "测试 Case/test_ref 明确延期至 test_design/development，不作为本阶段的已执行测试证据。"
+      ],
+      "stop_conditions": [
+        "需求语义、范围或验收标准出现新的未授权歧义。",
+        "试图修改生产代码、测试代码、XML 或 P2 事实。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS",
+      "feature_id": "FEATURE-DESC-4AB41AC241A1",
+      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-004",
+      "iteration_no": 4,
+      "supersedes_iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-003",
+      "revision_reason": "Skill 修复需求确认阶段错误要求 test_ref 后，补齐需求分析阶段 Task 并继续 P3 生命周期。",
+      "risk_triggers": []
+    }
+  ]
+}

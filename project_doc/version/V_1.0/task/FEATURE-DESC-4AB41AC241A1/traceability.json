@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-4AB41AC241A1",
+  "items": [
+    {
+      "id": "TR-P3-INFORMATION-ENGINE-001",
+      "description": "Information Engine 需求基线: BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, CR-P3-INFORMATION-ENGINE-001 -> AC-P3-INFORMATION-ENGINE-001",
+      "status": "COVERED",
+      "acceptance_criteria": [
+        "AC-P3-INFORMATION-ENGINE-001"
+      ],
+      "requirement_refs": [
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#P3-INFORMATION-ENGINE-F01",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#BR-P3-INFORMATION-ENGINE-001",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#BR-P3-INFORMATION-ENGINE-002",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#BR-P3-INFORMATION-ENGINE-003",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#CR-P3-INFORMATION-ENGINE-001",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#AC-P3-INFORMATION-ENGINE-001",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "impact_required": false,
+      "dependency_impact_refs": [],
+      "business_flow_required": true,
+      "business_flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "cross_module_implementation_required": false,
+      "cross_module_implementation_refs": [],
+      "business_model_refs": [],
+      "design_refs": [],
+      "test_case_ids": [],
+      "plan_task_ids": [],
+      "contract_refs": [],
+      "implementation_refs": [],
+      "verification_evidence_ids": [],
+      "verified_by_agents": [],
+      "notes": "业务追踪已覆盖；Information 专项测试 Case 与 Evidence 按 DEC-P3-INFORMATION-ENGINE-008 延后至测试设计/开发阶段，不在需求确认阶段虚构验证证据。\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation."
+    }
+  ]
+}

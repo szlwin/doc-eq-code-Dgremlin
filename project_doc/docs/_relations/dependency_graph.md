@@ -3,11 +3,13 @@
 
 > 导航：[项目文档首页](../README.md) · [全量追踪矩阵](traceability_matrix.md)
 
-- Revision：`AR-R01@ee8518042632`
+- Revision：`AR-R01@9eefdf349987`
 
 ```mermaid
 flowchart LR
   N8e7d97a738["A001<br/>requirement"]
+  N4d2dd6d6ba["A002<br/>requirement"]
+  Na0e3ed09b3["A003<br/>requirement"]
   N082fcd20f8["AC-001<br/>validation"]
   N51afd1f000["AC-002<br/>validation"]
   N51e084a622["AC-003<br/>validation"]
@@ -34,6 +36,8 @@ flowchart LR
   Nc7da1bca37["AC-P2-SYSTEM-RULEVIEW-007<br/>validation"]
   N5358e38b8d["AC-P2-SYSTEM-RULEVIEW-008<br/>validation"]
   N1bdc6bd494["AC-P2-SYSTEM-RULEVIEW-009<br/>validation"]
+  N72aa95c491["AC-P3-INFORMATION-ENGINE<br/>validation"]
+  Nb9e4d7b243["AC-P3-INFORMATION-ENGINE-001<br/>validation"]
   Nfddaf8dea0["AC001<br/>requirement"]
   N54ff97cda6["AC007<br/>requirement"]
   N34cc8b1e9a["AGG-COMPILATION-SESSION<br/>business_model"]
@@ -326,6 +330,15 @@ flowchart LR
   N591e919b24["I013<br/>requirement"]
   Nf5758fc65e["I014<br/>requirement"]
   N23c6f5f63d["I016<br/>requirement"]
+  N35e068951e["I017<br/>requirement"]
+  N74740b13b7["I018<br/>requirement"]
+  N9dc8bbcc73["I019<br/>requirement"]
+  Nfe4219e243["I021<br/>requirement"]
+  Nd00ee5cdd7["I022<br/>requirement"]
+  Neaa5f5d946["I023<br/>requirement"]
+  N1a5df5ec06["I024<br/>requirement"]
+  N204b7ecd0b["I025<br/>requirement"]
+  N70eb354ca1["I026<br/>requirement"]
   Nd394838b74["INV-COMPILER-001<br/>business_model"]
   N1a36081728["INV-COMPILER-002<br/>business_model"]
   N588d4e5456["INV-COMPILER-003<br/>business_model"]
@@ -369,6 +382,13 @@ flowchart LR
   N4f666ea652["MODULE-STARTER<br/>module"]
   Nc365f4a0f8["MODULE-XML<br/>module"]
   N8c94bcc0a3["MODULE-YAML<br/>module"]
+  N1f637cbabb["N0048929770<br/>requirement"]
+  N62c0f9efd2["N1955785184<br/>requirement"]
+  N38362142b2["N4896424638<br/>requirement"]
+  Nc132555067["N5600132213<br/>requirement"]
+  Ncd37f40010["N6327336026<br/>requirement"]
+  N56225c23b6["N8019294392<br/>requirement"]
+  N4df42bdf12["N8441358746<br/>requirement"]
   Nf27d079467["P1-COMPILER-F01<br/>feature"]
   N5369e1d9be["P2-SYSTEM-RULEVIEW-F01<br/>feature"]
   Nb7b98009fd["P2-SYSTEM-RULEVIEW-F02<br/>feature"]
@@ -376,6 +396,7 @@ flowchart LR
   Nee8e5bb382["P2-SYSTEM-RULEVIEW-F04<br/>feature"]
   N294adb223a["P2-SYSTEM-RULEVIEW-F05<br/>feature"]
   Nf5188b27cf["P2CR002<br/>requirement"]
+  N20a44bfb2f["P3-INFORMATION-ENGINE-F01<br/>feature"]
   N0fbb969a7e["POL-DEFERRED-BOUNDARY<br/>business_model"]
   Nd290423143["POL-INFORMATION-OWNERSHIP<br/>business_model"]
   N3fd75820d9["POL-MODEL-ACCESS-SELECTOR<br/>business_model"]
@@ -448,7 +469,33 @@ flowchart LR
   N0f42d47c54["VO-SOURCE-REF<br/>business_model"]
   Nae0f493e0c["VO-TARGET-KEY<br/>business_model"]
   Nc736971286["VO-TYPED-KEY<br/>business_model"]
+  N8e7d97a738 -->|CONTAINS| N5c0e71be91
+  N8e7d97a738 -->|CONTAINS| Nf27d079467
+  N8e7d97a738 -->|CONTAINS| N5369e1d9be
+  N8e7d97a738 -->|CONTAINS| Nb7b98009fd
+  N8e7d97a738 -->|CONTAINS| N5caff167be
+  N8e7d97a738 -->|CONTAINS| Nee8e5bb382
+  N8e7d97a738 -->|CONTAINS| N294adb223a
+  N8e7d97a738 -->|CONTAINS| N1708bd61fb
+  N8e7d97a738 -->|CONTAINS| N02b0b6ab4c
+  Nfddaf8dea0 -->|CONTAINS| N5c0e71be91
   Nfddaf8dea0 -->|CONTAINS| Nf27d079467
+  Nfddaf8dea0 -->|CONTAINS| N5369e1d9be
+  Nfddaf8dea0 -->|CONTAINS| Nb7b98009fd
+  Nfddaf8dea0 -->|CONTAINS| N5caff167be
+  Nfddaf8dea0 -->|CONTAINS| Nee8e5bb382
+  Nfddaf8dea0 -->|CONTAINS| N294adb223a
+  Nfddaf8dea0 -->|CONTAINS| N1708bd61fb
+  Nfddaf8dea0 -->|CONTAINS| N02b0b6ab4c
+  N54ff97cda6 -->|CONTAINS| N5c0e71be91
+  N54ff97cda6 -->|CONTAINS| Nf27d079467
+  N54ff97cda6 -->|CONTAINS| N5369e1d9be
+  N54ff97cda6 -->|CONTAINS| Nb7b98009fd
+  N54ff97cda6 -->|CONTAINS| N5caff167be
+  N54ff97cda6 -->|CONTAINS| Nee8e5bb382
+  N54ff97cda6 -->|CONTAINS| N294adb223a
+  N54ff97cda6 -->|CONTAINS| N1708bd61fb
+  N54ff97cda6 -->|CONTAINS| N02b0b6ab4c
   Ne1175274c8 -->|CONTAINS| N409504d49f
   Ne1175274c8 -->|CONTAINS| N38f8d0c13e
   Nddae84dfe4 -->|CONTAINS| N6323c9d0fb
@@ -459,10 +506,37 @@ flowchart LR
   Nddae84dfe4 -->|CONTAINS| Nd0347c472a
   Nddae84dfe4 -->|CONTAINS| N654e430b01
   Nc1cf93fb1a -->|DEPENDS_ON| N696d0447f4
+  N5c82ee6911 -->|CONTAINS| N5c0e71be91
+  N5c82ee6911 -->|CONTAINS| Nf27d079467
+  N5c82ee6911 -->|CONTAINS| N5369e1d9be
+  N5c82ee6911 -->|CONTAINS| Nb7b98009fd
+  N5c82ee6911 -->|CONTAINS| N5caff167be
+  N5c82ee6911 -->|CONTAINS| Nee8e5bb382
+  N5c82ee6911 -->|CONTAINS| N294adb223a
+  N5c82ee6911 -->|CONTAINS| N1708bd61fb
+  N5c82ee6911 -->|CONTAINS| N02b0b6ab4c
+  Nd3a9871bd9 -->|CONTAINS| N5c0e71be91
+  Nd3a9871bd9 -->|CONTAINS| Nf27d079467
+  Nd3a9871bd9 -->|CONTAINS| N5369e1d9be
+  Nd3a9871bd9 -->|CONTAINS| Nb7b98009fd
+  Nd3a9871bd9 -->|CONTAINS| N5caff167be
+  Nd3a9871bd9 -->|CONTAINS| Nee8e5bb382
+  Nd3a9871bd9 -->|CONTAINS| N294adb223a
+  Nd3a9871bd9 -->|CONTAINS| N1708bd61fb
+  Nd3a9871bd9 -->|CONTAINS| N02b0b6ab4c
   Nf0e42bcc95 -->|VERIFIED_BY| N97c20ed6b9
   Nf0e42bcc95 -->|VERIFIED_BY| N692507a1e6
   Nf0e42bcc95 -->|VERIFIED_BY| N26021e25f8
   Nf0e42bcc95 -->|VERIFIED_BY| N47ad4d6899
+  N42feb26e87 -->|CONTAINS| N5c0e71be91
+  N42feb26e87 -->|CONTAINS| Nf27d079467
+  N42feb26e87 -->|CONTAINS| N5369e1d9be
+  N42feb26e87 -->|CONTAINS| Nb7b98009fd
+  N42feb26e87 -->|CONTAINS| N5caff167be
+  N42feb26e87 -->|CONTAINS| Nee8e5bb382
+  N42feb26e87 -->|CONTAINS| N294adb223a
+  N42feb26e87 -->|CONTAINS| N1708bd61fb
+  N42feb26e87 -->|CONTAINS| N02b0b6ab4c
   N0d99ce993a -->|MODELED_BY| N34cc8b1e9a
   N0d99ce993a -->|VERIFIED_BY| N5e7c6caa69
   N0d99ce993a -->|VERIFIED_BY| Nbbd8a45a31
@@ -475,33 +549,220 @@ flowchart LR
   N0d99ce993a -->|CONTAINS| Ndd9b34e812
   N0d99ce993a -->|CONTAINS| N536de3f549
   N0d99ce993a -->|CONTAINS| N6cb4431ce5
+  Nd6a923a106 -->|CONTAINS| N5c0e71be91
+  Nd6a923a106 -->|CONTAINS| Nf27d079467
+  Nd6a923a106 -->|CONTAINS| N5369e1d9be
+  Nd6a923a106 -->|CONTAINS| Nb7b98009fd
+  Nd6a923a106 -->|CONTAINS| N5caff167be
+  Nd6a923a106 -->|CONTAINS| Nee8e5bb382
+  Nd6a923a106 -->|CONTAINS| N294adb223a
+  Nd6a923a106 -->|CONTAINS| N1708bd61fb
   Nd6a923a106 -->|CONTAINS| N02b0b6ab4c
+  Nf4ba297774 -->|CONTAINS| N5c0e71be91
   Nf4ba297774 -->|CONTAINS| Nf27d079467
+  Nf4ba297774 -->|CONTAINS| N5369e1d9be
+  Nf4ba297774 -->|CONTAINS| Nb7b98009fd
+  Nf4ba297774 -->|CONTAINS| N5caff167be
+  Nf4ba297774 -->|CONTAINS| Nee8e5bb382
+  Nf4ba297774 -->|CONTAINS| N294adb223a
+  Nf4ba297774 -->|CONTAINS| N1708bd61fb
   Nf4ba297774 -->|CONTAINS| N02b0b6ab4c
+  N01340c3d06 -->|CONTAINS| N5c0e71be91
   N01340c3d06 -->|CONTAINS| Nf27d079467
+  N01340c3d06 -->|CONTAINS| N5369e1d9be
+  N01340c3d06 -->|CONTAINS| Nb7b98009fd
+  N01340c3d06 -->|CONTAINS| N5caff167be
+  N01340c3d06 -->|CONTAINS| Nee8e5bb382
+  N01340c3d06 -->|CONTAINS| N294adb223a
+  N01340c3d06 -->|CONTAINS| N1708bd61fb
   N01340c3d06 -->|CONTAINS| N02b0b6ab4c
+  N8bea1b06b9 -->|CONTAINS| N5c0e71be91
   N8bea1b06b9 -->|CONTAINS| Nf27d079467
+  N8bea1b06b9 -->|CONTAINS| N5369e1d9be
+  N8bea1b06b9 -->|CONTAINS| Nb7b98009fd
+  N8bea1b06b9 -->|CONTAINS| N5caff167be
+  N8bea1b06b9 -->|CONTAINS| Nee8e5bb382
+  N8bea1b06b9 -->|CONTAINS| N294adb223a
   N8bea1b06b9 -->|CONTAINS| N1708bd61fb
   N8bea1b06b9 -->|CONTAINS| N02b0b6ab4c
   N8869854d3c -->|CONTAINS| N5c0e71be91
   N8869854d3c -->|CONTAINS| Nf27d079467
+  N8869854d3c -->|CONTAINS| N5369e1d9be
+  N8869854d3c -->|CONTAINS| Nb7b98009fd
+  N8869854d3c -->|CONTAINS| N5caff167be
+  N8869854d3c -->|CONTAINS| Nee8e5bb382
+  N8869854d3c -->|CONTAINS| N294adb223a
+  N8869854d3c -->|CONTAINS| N1708bd61fb
   N8869854d3c -->|CONTAINS| N02b0b6ab4c
+  N7b930b2eaa -->|CONTAINS| N5c0e71be91
+  N7b930b2eaa -->|CONTAINS| Nf27d079467
+  N7b930b2eaa -->|CONTAINS| N5369e1d9be
+  N7b930b2eaa -->|CONTAINS| Nb7b98009fd
+  N7b930b2eaa -->|CONTAINS| N5caff167be
+  N7b930b2eaa -->|CONTAINS| Nee8e5bb382
+  N7b930b2eaa -->|CONTAINS| N294adb223a
+  N7b930b2eaa -->|CONTAINS| N1708bd61fb
   N7b930b2eaa -->|CONTAINS| N02b0b6ab4c
   Nddc4d9ab38 -->|CONTAINS| N5c0e71be91
   Nddc4d9ab38 -->|CONTAINS| Nf27d079467
+  Nddc4d9ab38 -->|CONTAINS| N5369e1d9be
+  Nddc4d9ab38 -->|CONTAINS| Nb7b98009fd
+  Nddc4d9ab38 -->|CONTAINS| N5caff167be
+  Nddc4d9ab38 -->|CONTAINS| Nee8e5bb382
+  Nddc4d9ab38 -->|CONTAINS| N294adb223a
+  Nddc4d9ab38 -->|CONTAINS| N1708bd61fb
   Nddc4d9ab38 -->|CONTAINS| N02b0b6ab4c
+  N4a8d4daa3a -->|CONTAINS| N5c0e71be91
   N4a8d4daa3a -->|CONTAINS| Nf27d079467
+  N4a8d4daa3a -->|CONTAINS| N5369e1d9be
+  N4a8d4daa3a -->|CONTAINS| Nb7b98009fd
+  N4a8d4daa3a -->|CONTAINS| N5caff167be
+  N4a8d4daa3a -->|CONTAINS| Nee8e5bb382
+  N4a8d4daa3a -->|CONTAINS| N294adb223a
+  N4a8d4daa3a -->|CONTAINS| N1708bd61fb
   N4a8d4daa3a -->|CONTAINS| N02b0b6ab4c
+  N65598bae8f -->|CONTAINS| N5c0e71be91
   N65598bae8f -->|CONTAINS| Nf27d079467
+  N65598bae8f -->|CONTAINS| N5369e1d9be
+  N65598bae8f -->|CONTAINS| Nb7b98009fd
+  N65598bae8f -->|CONTAINS| N5caff167be
+  N65598bae8f -->|CONTAINS| Nee8e5bb382
+  N65598bae8f -->|CONTAINS| N294adb223a
+  N65598bae8f -->|CONTAINS| N1708bd61fb
   N65598bae8f -->|CONTAINS| N02b0b6ab4c
+  N48325eb589 -->|CONTAINS| N5c0e71be91
+  N48325eb589 -->|CONTAINS| Nf27d079467
+  N48325eb589 -->|CONTAINS| N5369e1d9be
+  N48325eb589 -->|CONTAINS| Nb7b98009fd
+  N48325eb589 -->|CONTAINS| N5caff167be
+  N48325eb589 -->|CONTAINS| Nee8e5bb382
+  N48325eb589 -->|CONTAINS| N294adb223a
+  N48325eb589 -->|CONTAINS| N1708bd61fb
   N48325eb589 -->|CONTAINS| N02b0b6ab4c
+  Nbea5328a45 -->|CONTAINS| N5c0e71be91
+  Nbea5328a45 -->|CONTAINS| Nf27d079467
+  Nbea5328a45 -->|CONTAINS| N5369e1d9be
+  Nbea5328a45 -->|CONTAINS| Nb7b98009fd
+  Nbea5328a45 -->|CONTAINS| N5caff167be
+  Nbea5328a45 -->|CONTAINS| Nee8e5bb382
+  Nbea5328a45 -->|CONTAINS| N294adb223a
+  Nbea5328a45 -->|CONTAINS| N1708bd61fb
+  Nbea5328a45 -->|CONTAINS| N02b0b6ab4c
+  N4d1c02530e -->|CONTAINS| N5c0e71be91
+  N4d1c02530e -->|CONTAINS| Nf27d079467
+  N4d1c02530e -->|CONTAINS| N5369e1d9be
+  N4d1c02530e -->|CONTAINS| Nb7b98009fd
+  N4d1c02530e -->|CONTAINS| N5caff167be
+  N4d1c02530e -->|CONTAINS| Nee8e5bb382
+  N4d1c02530e -->|CONTAINS| N294adb223a
+  N4d1c02530e -->|CONTAINS| N1708bd61fb
+  N4d1c02530e -->|CONTAINS| N02b0b6ab4c
+  N591e919b24 -->|CONTAINS| N5c0e71be91
+  N591e919b24 -->|CONTAINS| Nf27d079467
+  N591e919b24 -->|CONTAINS| N5369e1d9be
+  N591e919b24 -->|CONTAINS| Nb7b98009fd
+  N591e919b24 -->|CONTAINS| N5caff167be
+  N591e919b24 -->|CONTAINS| Nee8e5bb382
+  N591e919b24 -->|CONTAINS| N294adb223a
+  N591e919b24 -->|CONTAINS| N1708bd61fb
+  N591e919b24 -->|CONTAINS| N02b0b6ab4c
+  Nf5758fc65e -->|CONTAINS| N5c0e71be91
+  Nf5758fc65e -->|CONTAINS| Nf27d079467
+  Nf5758fc65e -->|CONTAINS| N5369e1d9be
+  Nf5758fc65e -->|CONTAINS| Nb7b98009fd
+  Nf5758fc65e -->|CONTAINS| N5caff167be
+  Nf5758fc65e -->|CONTAINS| Nee8e5bb382
+  Nf5758fc65e -->|CONTAINS| N294adb223a
+  Nf5758fc65e -->|CONTAINS| N1708bd61fb
+  Nf5758fc65e -->|CONTAINS| N02b0b6ab4c
+  N23c6f5f63d -->|CONTAINS| N5c0e71be91
+  N23c6f5f63d -->|CONTAINS| Nf27d079467
+  N23c6f5f63d -->|CONTAINS| N5369e1d9be
+  N23c6f5f63d -->|CONTAINS| Nb7b98009fd
+  N23c6f5f63d -->|CONTAINS| N5caff167be
+  N23c6f5f63d -->|CONTAINS| Nee8e5bb382
+  N23c6f5f63d -->|CONTAINS| N294adb223a
+  N23c6f5f63d -->|CONTAINS| N1708bd61fb
+  N23c6f5f63d -->|CONTAINS| N02b0b6ab4c
   Nc8b6c094bb -->|DEPENDS_ON| N696d0447f4
   Nc8b6c094bb -->|IMPLEMENTED_BY| Nd7baf549df
   Nc8b6c094bb -->|IMPLEMENTED_BY| N0cc0b3d8ce
   Nc287759497 -->|CONTAINS| Nf27d079467
   Nc287759497 -->|CONTAINS| N5369e1d9be
   N3c501a500f -->|CONTAINS| N5caff167be
+  N1f637cbabb -->|CONTAINS| N5c0e71be91
+  N1f637cbabb -->|CONTAINS| Nf27d079467
+  N1f637cbabb -->|CONTAINS| N5369e1d9be
+  N1f637cbabb -->|CONTAINS| Nb7b98009fd
+  N1f637cbabb -->|CONTAINS| N5caff167be
+  N1f637cbabb -->|CONTAINS| Nee8e5bb382
+  N1f637cbabb -->|CONTAINS| N294adb223a
+  N1f637cbabb -->|CONTAINS| N1708bd61fb
+  N1f637cbabb -->|CONTAINS| N02b0b6ab4c
+  N62c0f9efd2 -->|CONTAINS| N5c0e71be91
+  N62c0f9efd2 -->|CONTAINS| Nf27d079467
+  N62c0f9efd2 -->|CONTAINS| N5369e1d9be
+  N62c0f9efd2 -->|CONTAINS| Nb7b98009fd
+  N62c0f9efd2 -->|CONTAINS| N5caff167be
+  N62c0f9efd2 -->|CONTAINS| Nee8e5bb382
+  N62c0f9efd2 -->|CONTAINS| N294adb223a
+  N62c0f9efd2 -->|CONTAINS| N1708bd61fb
+  N62c0f9efd2 -->|CONTAINS| N02b0b6ab4c
+  N38362142b2 -->|CONTAINS| N5c0e71be91
+  N38362142b2 -->|CONTAINS| Nf27d079467
+  N38362142b2 -->|CONTAINS| N5369e1d9be
+  N38362142b2 -->|CONTAINS| Nb7b98009fd
+  N38362142b2 -->|CONTAINS| N5caff167be
+  N38362142b2 -->|CONTAINS| Nee8e5bb382
+  N38362142b2 -->|CONTAINS| N294adb223a
+  N38362142b2 -->|CONTAINS| N1708bd61fb
+  N38362142b2 -->|CONTAINS| N02b0b6ab4c
+  Nc132555067 -->|CONTAINS| N5c0e71be91
+  Nc132555067 -->|CONTAINS| Nf27d079467
+  Nc132555067 -->|CONTAINS| N5369e1d9be
+  Nc132555067 -->|CONTAINS| Nb7b98009fd
+  Nc132555067 -->|CONTAINS| N5caff167be
+  Nc132555067 -->|CONTAINS| Nee8e5bb382
+  Nc132555067 -->|CONTAINS| N294adb223a
+  Nc132555067 -->|CONTAINS| N1708bd61fb
+  Nc132555067 -->|CONTAINS| N02b0b6ab4c
+  Ncd37f40010 -->|CONTAINS| N5c0e71be91
+  Ncd37f40010 -->|CONTAINS| Nf27d079467
+  Ncd37f40010 -->|CONTAINS| N5369e1d9be
+  Ncd37f40010 -->|CONTAINS| Nb7b98009fd
+  Ncd37f40010 -->|CONTAINS| N5caff167be
+  Ncd37f40010 -->|CONTAINS| Nee8e5bb382
+  Ncd37f40010 -->|CONTAINS| N294adb223a
+  Ncd37f40010 -->|CONTAINS| N1708bd61fb
+  Ncd37f40010 -->|CONTAINS| N02b0b6ab4c
+  N56225c23b6 -->|CONTAINS| N5c0e71be91
+  N56225c23b6 -->|CONTAINS| Nf27d079467
+  N56225c23b6 -->|CONTAINS| N5369e1d9be
+  N56225c23b6 -->|CONTAINS| Nb7b98009fd
+  N56225c23b6 -->|CONTAINS| N5caff167be
+  N56225c23b6 -->|CONTAINS| Nee8e5bb382
+  N56225c23b6 -->|CONTAINS| N294adb223a
+  N56225c23b6 -->|CONTAINS| N1708bd61fb
+  N56225c23b6 -->|CONTAINS| N02b0b6ab4c
+  N4df42bdf12 -->|CONTAINS| N5c0e71be91
+  N4df42bdf12 -->|CONTAINS| Nf27d079467
+  N4df42bdf12 -->|CONTAINS| N5369e1d9be
+  N4df42bdf12 -->|CONTAINS| Nb7b98009fd
+  N4df42bdf12 -->|CONTAINS| N5caff167be
+  N4df42bdf12 -->|CONTAINS| Nee8e5bb382
+  N4df42bdf12 -->|CONTAINS| N294adb223a
+  N4df42bdf12 -->|CONTAINS| N1708bd61fb
+  N4df42bdf12 -->|CONTAINS| N02b0b6ab4c
   Nf27d079467 -->|PARTICIPATES_IN| N0d99ce993a
+  Nf5188b27cf -->|CONTAINS| N5c0e71be91
+  Nf5188b27cf -->|CONTAINS| Nf27d079467
+  Nf5188b27cf -->|CONTAINS| N5369e1d9be
+  Nf5188b27cf -->|CONTAINS| Nb7b98009fd
+  Nf5188b27cf -->|CONTAINS| N5caff167be
+  Nf5188b27cf -->|CONTAINS| Nee8e5bb382
+  Nf5188b27cf -->|CONTAINS| N294adb223a
+  Nf5188b27cf -->|CONTAINS| N1708bd61fb
+  Nf5188b27cf -->|CONTAINS| N02b0b6ab4c
   N546a424e1f -->|DEPENDS_ON| Nc8b6c094bb
   N94ee059335 -->|VERIFIED_BY| N0cc0b3d8ce
 ```
@@ -510,21 +771,74 @@ flowchart LR
 
 | 来源 | 关系 | 目标 | 事实来源 |
 | --- | --- | --- | --- |
-| [AC001](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md) |
-| [CMI-P2-COMPILE-005](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-COMPILE-R29-01](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-COMPILE-005](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-COMPILE-R29-02](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-00](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-01](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-02](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-03](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-04](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-05](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-06](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
+| [A001](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [A001](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC001](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [AC007](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [CMI-P2-COMPILE-005](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-COMPILE-R29-01](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-COMPILE-005](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-COMPILE-R29-02](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-00](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-01](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-02](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-03](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-04](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-05](dependency_graph.md) | [来源](dependency_impact.yaml) |
+| [CMI-P2-PROTECTED-ACCESS-009](dependency_graph.md) | `CONTAINS` | [CMSTEP-P2-ACCESS-R29-06](dependency_graph.md) | [来源](dependency_impact.yaml) |
 | [COMP](dependency_impact.yaml) | `DEPENDS_ON` | [CTX](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
-| [DESIGN-P2-R40](../../version/V_1.0/doc/COMPILER/COMPILER_design.md) | `VERIFIED_BY` | [CASE-P2-R41-ATOMIC-COMPAT-003](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
-| [DESIGN-P2-R40](../../version/V_1.0/doc/COMPILER/COMPILER_design.md) | `VERIFIED_BY` | [CASE-P2-R41-JAVA8-RETIRE-005](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
-| [DESIGN-P2-R40](../../version/V_1.0/doc/COMPILER/COMPILER_design.md) | `VERIFIED_BY` | [CASE-P2-R41-SOURCE-GRAPH-002](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
-| [DESIGN-P2-R40](../../version/V_1.0/doc/COMPILER/COMPILER_design.md) | `VERIFIED_BY` | [CASE-P2-R41-UNIFIED-LOAD-001](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D800](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [D801](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [DESIGN-P2-R40](dependency_graph.md) | `VERIFIED_BY` | [CASE-P2-R41-ATOMIC-COMPAT-003](dependency_graph.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
+| [DESIGN-P2-R40](dependency_graph.md) | `VERIFIED_BY` | [CASE-P2-R41-JAVA8-RETIRE-005](dependency_graph.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
+| [DESIGN-P2-R40](dependency_graph.md) | `VERIFIED_BY` | [CASE-P2-R41-SOURCE-GRAPH-002](dependency_graph.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
+| [DESIGN-P2-R40](dependency_graph.md) | `VERIFIED_BY` | [CASE-P2-R41-UNIFIED-LOAD-001](dependency_graph.md) | [来源](../../version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [E000](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
 | [FLOW-CONFIG-COMPILE](../COMPILER/COMPILER_desc.md) | `MODELED_BY` | [AGG-COMPILATION-SESSION](../COMPILER/COMPILER_business_model.md) | [来源](../_flows/COMPILER_flow.yaml) |
 | [FLOW-CONFIG-COMPILE](../COMPILER/COMPILER_desc.md) | `VERIFIED_BY` | [CASE-P1-CANONICAL-001](../_flows/COMPILER_flow.md) | [来源](../_flows/COMPILER_flow.yaml) |
 | [FLOW-CONFIG-COMPILE](../COMPILER/COMPILER_desc.md) | `VERIFIED_BY` | [CASE-P1-CONTEXT-001](../_flows/COMPILER_flow.md) | [来源](../_flows/COMPILER_flow.yaml) |
@@ -537,32 +851,219 @@ flowchart LR
 | [FLOW-CONFIG-COMPILE](../COMPILER/COMPILER_desc.md) | `CONTAINS` | [STEP-CONFIG-COMPILE-05](../_flows/COMPILER_flow.md) | [来源](../_flows/COMPILER_flow.yaml) |
 | [FLOW-CONFIG-COMPILE](../COMPILER/COMPILER_desc.md) | `CONTAINS` | [STEP-CONFIG-COMPILE-06](../_flows/COMPILER_flow.md) | [来源](../_flows/COMPILER_flow.yaml) |
 | [FLOW-CONFIG-COMPILE](../COMPILER/COMPILER_desc.md) | `CONTAINS` | [STEP-CONFIG-COMPILE-07](../_flows/COMPILER_flow.md) | [来源](../_flows/COMPILER_flow.yaml) |
-| [I001](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R20_t05_yaml_canonical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R09_t03_source_graph.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R14_t04_secure_xml_canonical_frontend.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R15_t04_xml_resource_limits_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R16_t05_yaml_canonical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R17_t05_yaml_source_facts_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R19_t06_raw_definition_set.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R20_t06_raw_invariants_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R23_t07_symbol_registration.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R25_t08_reference_resolution.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R26_t08_reference_resolution_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R27_t09_information_expression.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R28_t09_rework_input_identity.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R29_t10_model_access_selector.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R30_t10_rework_boundaries.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R31_t10_typedkey_lexical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R32_t11_deferred_classification.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R33_t11_rework_input_snapshot.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R34_t12_compiler_pipeline.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R35_t12_publication_atomicity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R36_t12_prepare_commit_integrity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R37_t12_artifact_snapshot_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R38_t12_artifact_query_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R39_t12_comparison_operation_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R40_t12_canonical_collision_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R41_t13_semantic_digest_observer.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R42_t13_strict_unicode_observer_failure_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R44_t14_candidate_context_builder.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R46_t14_tdd_evidence_repair.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R47_t15_projection_and_declaration_retirement.md) |
-| [I002](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R09_t02_rework.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R05_t02_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R06_t02_full_api_rework.md) |
-| [I002](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R09_t02_rework.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R10_t03_reference_identity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R15_t04_xml_resource_limits_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R17_t05_yaml_source_facts_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R18_t05_yaml_scalar_budget_resolver_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R20_t06_raw_invariants_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R22_t06_snapshot_budget_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R24_t07_owner_identity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R26_t08_reference_resolution_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R28_t09_rework_input_identity.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R30_t10_rework_boundaries.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R31_t10_typedkey_lexical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R33_t11_rework_input_snapshot.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R35_t12_publication_atomicity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R36_t12_prepare_commit_integrity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R42_t13_strict_unicode_observer_failure_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R45_t14_provenance_bound_candidate.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R46_t14_tdd_evidence_repair.md) |
-| [I003](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R10_t02_full_api_rework.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R06_t02_full_api_rework.md) |
-| [I003](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R10_t02_full_api_rework.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R11_t03_canonical_edge_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R18_t05_yaml_scalar_budget_resolver_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R21_t06_input_snapshot_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R22_t06_snapshot_budget_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R31_t10_typedkey_lexical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R36_t12_prepare_commit_integrity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R37_t12_artifact_snapshot_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R43_t13_failed_observer_oracle_hardening.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R46_t14_tdd_evidence_repair.md) |
-| [I004](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R11_t02_source_frontend_closure.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../../version/V_1.0/doc/P1-COMPILER-F01/requirement.md)<br>[来源](../../version/V_1.0/storage_model_v5_validation.md) |
-| [I004](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R11_t02_source_frontend_closure.md) | `CONTAINS` | [SO-P1-COMPILER-F01](../../version/V_1.0/storage_model_v5_validation.md) | [来源](../../version/V_1.0/storage_model_v5_validation.md) |
-| [I004](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R11_t02_source_frontend_closure.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R08_t02_source_policy_closure.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R12_t03_relative_reference_category_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R22_t06_snapshot_budget_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R37_t12_artifact_snapshot_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R38_t12_artifact_query_resource_rework.md) |
-| [I005](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R12_t02_source_policy_closure.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](../../version/V_1.0/doc/P1-COMPILER-F01/test_case.md) | [来源](../../version/V_1.0/storage_model_v4_validation.md) |
-| [I005](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R12_t02_source_policy_closure.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../../version/V_1.0/storage_model_v4_validation.md) |
-| [I005](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R12_t02_source_policy_closure.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R08_t02_source_policy_closure.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R13_t03_exact_declaration_path_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R38_t12_artifact_query_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R39_t12_comparison_operation_resource_rework.md) |
-| [I006](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R43_t12_comparison_operation_resource_rework.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R39_t12_comparison_operation_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R40_t12_canonical_collision_rework.md) |
-| [I007](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](../../version/V_1.0/doc/P1-COMPILER-F01/test_case.md) | [来源](../../version/V_1.0/doc/P1-COMPILER-F01/test_case.md) |
-| [I007](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md)<br>[来源](../../version/V_1.0/doc/P1-COMPILER-F01/test_case.md)<br>[来源](../../version/V_1.0/p1_fact_integrity_repair.md) |
-| [I007](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_api_contract.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R40_t12_canonical_collision_rework.md) |
-| [I008](../requirement_list.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../requirement_list.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R02_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/requirement_list.md) |
-| [I008](../requirement_list.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R02_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R04_rework.md) |
-| [I009](../requirement_list.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../requirement_list.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/requirement_list.md) |
-| [I009](../requirement_list.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R04_rework.md) |
-| [I010](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R08_rework.md) | `CONTAINS` | [TP-P1-COMPILER-F01](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md) | [来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R04_rework.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I001](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R13_t03_source_graph.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_design_R20_t05_yaml_canonical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R09_t03_source_graph.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R14_t04_secure_xml_canonical_frontend.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R15_t04_xml_resource_limits_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R16_t05_yaml_canonical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R17_t05_yaml_source_facts_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R19_t06_raw_definition_set.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R20_t06_raw_invariants_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R23_t07_symbol_registration.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R25_t08_reference_resolution.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R26_t08_reference_resolution_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R27_t09_information_expression.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R28_t09_rework_input_identity.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R29_t10_model_access_selector.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R30_t10_rework_boundaries.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R31_t10_typedkey_lexical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R32_t11_deferred_classification.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R33_t11_rework_input_snapshot.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R34_t12_compiler_pipeline.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R35_t12_publication_atomicity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R36_t12_prepare_commit_integrity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R37_t12_artifact_snapshot_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R38_t12_artifact_query_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R39_t12_comparison_operation_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R40_t12_canonical_collision_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R41_t13_semantic_digest_observer.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R42_t13_strict_unicode_observer_failure_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R44_t14_candidate_context_builder.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R46_t14_tdd_evidence_repair.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R47_t15_projection_and_declaration_retirement.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R05_t02_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R06_t02_full_api_rework.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I002](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R10_t03_reference_identity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R15_t04_xml_resource_limits_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R17_t05_yaml_source_facts_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R18_t05_yaml_scalar_budget_resolver_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R20_t06_raw_invariants_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R22_t06_snapshot_budget_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R24_t07_owner_identity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R26_t08_reference_resolution_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R28_t09_rework_input_identity.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R30_t10_rework_boundaries.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R31_t10_typedkey_lexical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R33_t11_rework_input_snapshot.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R35_t12_publication_atomicity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R36_t12_prepare_commit_integrity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R42_t13_strict_unicode_observer_failure_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R45_t14_provenance_bound_candidate.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R46_t14_tdd_evidence_repair.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R06_t02_full_api_rework.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I003](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R11_t03_canonical_edge_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R18_t05_yaml_scalar_budget_resolver_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R21_t06_input_snapshot_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R22_t06_snapshot_budget_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R31_t10_typedkey_lexical.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R36_t12_prepare_commit_integrity_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R37_t12_artifact_snapshot_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R43_t13_failed_observer_oracle_hardening.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R46_t14_tdd_evidence_repair.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/P1-COMPILER-F01/requirement.md)<br>[来源](../../version/V_1.0/storage_model_v5_validation.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/storage_model_v5_validation.md) |
+| [I004](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R08_t02_source_policy_closure.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R12_t03_relative_reference_category_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R22_t06_snapshot_budget_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R37_t12_artifact_snapshot_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R38_t12_artifact_query_resource_rework.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/storage_model_v4_validation.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/storage_model_v4_validation.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I005](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R08_t02_source_policy_closure.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R13_t03_exact_declaration_path_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R38_t12_artifact_query_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R39_t12_comparison_operation_resource_rework.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I006](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R39_t12_comparison_operation_resource_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R40_t12_canonical_collision_rework.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/P1-COMPILER-F01/test_case.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_test_seams.md)<br>[来源](../../version/V_1.0/doc/P1-COMPILER-F01/test_case.md)<br>[来源](../../version/V_1.0/p1_fact_integrity_repair.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I007](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R40_t12_canonical_collision_rework.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../requirement_list.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R02_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/requirement_list.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I008](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R02_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R04_rework.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../requirement_list.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/requirement_list.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I009](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R03_rework.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R04_rework.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I010](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md)<br>[来源](../../version/V_1.0/doc/DEC_COMPILER/DEC_COMPILER_implementation_plan_R04_rework.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I011](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I012](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I013](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I014](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [I016](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
 | [MODEL](dependency_impact.yaml) | `DEPENDS_ON` | [CTX](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
 | [MODEL](dependency_impact.yaml) | `IMPLEMENTED_BY` | [EFFECT](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
 | [MODEL](dependency_impact.yaml) | `IMPLEMENTED_BY` | [LOAD_REQ](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
 | [MODULE-COMPILER](../COMPILER/COMPILER_desc.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](../COMPILER/COMPILER_desc.md)<br>[来源](../../version/V_1.0/doc/COMPILER/COMPILER_desc.md) |
-| [MODULE-COMPILER](../COMPILER/COMPILER_desc.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](../../version/V_1.0/doc/COMPILER/COMPILER_desc.md#模块功能) | [来源](../../version/V_1.0/doc/COMPILER/COMPILER_desc.md) |
-| [MODULE-MODEL](../../version/V_1.0/doc/MODEL/MODEL_desc.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](../../version/V_1.0/doc/MODEL/MODEL_desc.md#模块功能) | [来源](../../version/V_1.0/doc/MODEL/MODEL_desc.md) |
+| [MODULE-COMPILER](../COMPILER/COMPILER_desc.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](../../version/V_1.0/doc/COMPILER/COMPILER_desc.md) |
+| [MODULE-MODEL](../../version/V_1.0/doc/MODEL/MODEL_desc.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](../../version/V_1.0/doc/MODEL/MODEL_desc.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N0048929770](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N1955785184](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N4896424638](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N5600132213](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N6327336026](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8019294392](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
+| [N8441358746](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md) |
 | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | `PARTICIPATES_IN` | [FLOW-CONFIG-COMPILE](../COMPILER/COMPILER_desc.md) | [来源](../_flows/COMPILER_flow.yaml) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [ITER-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md#模块功能) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F02](dependency_graph.md) | [来源](dependency_graph.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F03](dependency_graph.md) | [来源](dependency_graph.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F04](dependency_graph.md) | [来源](dependency_graph.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [P2-SYSTEM-RULEVIEW-F05](dependency_graph.md) | [来源](dependency_graph.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [SO-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
+| [P2CR002](dependency_graph.md) | `CONTAINS` | [TP-P1-COMPILER-F01](dependency_graph.md) | [来源](dependency_graph.md)<br>[来源](traceability_matrix.md) |
 | [STARTER](dependency_impact.yaml) | `DEPENDS_ON` | [MODEL](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
 | [TEST](dependency_impact.yaml) | `VERIFIED_BY` | [LOAD_REQ](dependency_impact.yaml) | [来源](dependency_impact.yaml) |
