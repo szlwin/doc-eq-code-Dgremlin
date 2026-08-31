@@ -65,14 +65,8 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
       "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -134,14 +128,8 @@
       "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -201,14 +189,8 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -293,14 +275,8 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/modelaccess/P2ModelAccessStaticAuthorizationTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. TEST_DESIGN-I007 adds TESTDESIGN-P2-R34 authority/provenance remediation cases; mandatory RED execution remains a Development pre-production gate. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -368,14 +344,8 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/modelaccess/P2ModelAccessStaticAuthorizationTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -438,14 +408,8 @@
       "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java",
       "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -538,14 +502,8 @@
       "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java",
       "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. TEST_DESIGN-I007 adds TESTDESIGN-P2-R34 authority/provenance remediation cases; mandatory RED execution remains a Development pre-production gate. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -608,14 +566,8 @@
       "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java",
       "dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -677,14 +629,8 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java",
       "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -740,14 +686,8 @@
       "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java",
       "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
     ],
-    "verification_evidence_ids": [
-      "EVD-000478",
-      "EVD-000485"
-    ],
-    "verified_by_agents": [
-      "TestAgent",
-      "TestEvidenceReviewAgent"
-    ],
+    "verification_evidence_ids": [],
+    "verified_by_agents": [],
     "notes": "RC9 machine-state migration projection; current authority chain REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R32; P2-IMPACT-R29 is parallel/non-authoritative. Stable trace ID preserved from historical machine ledger. Testing I009 fresh P0 #1832 core/mysql Evidence: EVD-000305..EVD-000311; TestEvidenceReviewAgent REV-000108 PASSED. DESIGN-I005 reopen invalidated prior Testing-I009 verification bindings; coverage remains, verification must be re-established downstream. Testing I014 current verification rebound to exact-head TESTING-P2-R37-FINALHEAD-R01@647a02301618 using EVD-000478/EVD-000480/EVD-000485; TestEvidenceReviewAgent REV-000139 PASSED.\nTrace is no longer present in version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md; preserved for audit and marked NOT_APPLICABLE."
   },
   {
@@ -778,8 +718,8 @@
     "plan_task_ids": ["TASK-P2-SIMPLE-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java", "dec-core-context/src/main/java/dec/core/context/config/manager/ConfigManager.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -810,8 +750,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java", "dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigFileParser.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -842,8 +782,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java", "dec-core-context/src/main/java/dec/core/context/config/manager/ConfigManager.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -874,8 +814,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java", "dec-demo/src/test/java/dec/demo/mix/MixTest.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -907,8 +847,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java", "dec-demo/src/test/java/dec/demo/model/DirectModelDataContainerDemoTest.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -938,8 +878,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java", "dec-core-model/src/test/java/dec/core/model/container/ModelContainerLifecycleTest.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -969,8 +909,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java", "dec-core-model/src/test/java/dec/core/model/container/ModelContainerLifecycleTest.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -1002,8 +942,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["pom.xml", "dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java", "dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -1034,8 +974,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-context/src/main/java/dec/core/context/config/manager/ConfigManager.java", "dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -1067,8 +1007,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java", "dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   },
   {
@@ -1099,8 +1039,8 @@
     "plan_task_ids": ["TASK-P2-R40-REGRESSION-CLOSURE"],
     "contract_refs": [],
     "implementation_refs": ["dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigFileParser.java", "dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java"],
-    "verification_evidence_ids": [],
-    "verified_by_agents": [],
+    "verification_evidence_ids": ["EVD-000668"],
+    "verified_by_agents": ["TestAgent", "TestEvidenceReviewAgent"],
     "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md by requirement_doc.py"
   }
 ]

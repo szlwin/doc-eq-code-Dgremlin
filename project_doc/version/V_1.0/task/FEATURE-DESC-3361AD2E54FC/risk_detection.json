@@ -2,12 +2,12 @@
   "schema_version": 1,
   "target_id": "FEATURE-DESC-3361AD2E54FC",
   "version": "V_1.0",
-  "input_revision": "DEV-P2-SIMPLE-R43@a5ecf75d5169",
+  "input_revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
   "input_files": [],
   "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "status": "SCANNED",
   "scanned_by_agent": "ProjectManagerAgent",
-  "scanned_at": "2026-08-25T21:04:38+08:00",
+  "scanned_at": "2026-08-26T00:33:44+08:00",
   "detections": [
     {
       "detection_id": "DET-F038F2449065",
@@ -16,7 +16,7 @@
       "confidence": 9,
       "required_reviewer": "ImpactAnalysisReviewAgent",
       "evidence_ids": [
-        "EVD-000580"
+        "EVD-000656"
       ],
       "status": "DETECTED",
       "reason": "traceability impact_required=true: TR-P2-001, TR-P2-002, TR-P2-003, TR-P2-004, TR-P2-005, TR-P2-006, TR-P2-007, TR-P2-008, TR-P2-009, TR-P2-010, TR-P2-011",
@@ -29,7 +29,7 @@
       "confidence": 9,
       "required_reviewer": "CrossModuleIntegrationReviewAgent",
       "evidence_ids": [
-        "EVD-000580"
+        "EVD-000656"
       ],
       "status": "DETECTED",
       "reason": "traceability cross_module_implementation_required=true: TR-P2-001, TR-P2-002, TR-P2-003, TR-P2-004, TR-P2-005, TR-P2-006, TR-P2-007, TR-P2-008, TR-P2-009, TR-P2-010, TR-P2-011",

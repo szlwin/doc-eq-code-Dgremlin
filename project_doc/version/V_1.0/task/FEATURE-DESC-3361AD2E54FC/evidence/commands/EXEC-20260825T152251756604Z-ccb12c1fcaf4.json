@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 scripts/remediation/verify_dec_demo_mysql_it.py",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T15:22:51+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "output_digest": "2a3887fdadcdcdccfe536daf3d5e03f268d255369fcac6fdccd8ec85b808dfd7",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "tests"
+  },
+  "output": "{\n  \"status\": \"PASSED\",\n  \"requiredClasses\": [\n    \"dec.demo.directory.DirectoryTest\",\n    \"dec.demo.model.RuleTests\",\n    \"dec.demo.system.OrderTest\"\n  ],\n  \"discovered\": {\n    \"dec.demo.directory.DirectoryTest\": {\n      \"tests\": 1,\n      \"failures\": 0,\n      \"errors\": 0,\n      \"skipped\": 0\n    },\n    \"dec.demo.model.RuleTests\": {\n      \"tests\": 1,\n      \"failures\": 0,\n      \"errors\": 0,\n      \"skipped\": 0\n    },\n    \"dec.demo.system.OrderTest\": {\n      \"tests\": 1,\n      \"failures\": 0,\n      \"errors\": 0,\n      \"skipped\": 0\n    }\n  },\n  \"missingClasses\": [],\n  \"totals\": {\n    \"tests\": 3,\n    \"failures\": 0,\n    \"errors\": 0,\n    \"skipped\": 0\n  }\n}\n"
+}

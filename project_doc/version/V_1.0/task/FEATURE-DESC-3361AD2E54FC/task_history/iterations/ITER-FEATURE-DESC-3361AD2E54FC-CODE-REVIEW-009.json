@@ -1,0 +1,73 @@
+{
+  "kind": "TASK_PLAN_HISTORY_ITERATION",
+  "authority": "DERIVED",
+  "classification": "HISTORICAL",
+  "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009",
+  "source": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "sha256": "0b4ddd1cb789dc737a24077358db42324e748e9b74ecfc6a6c5c6e4ca1a1b769",
+    "eventSeq": 571,
+    "eventDigest": "28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8"
+  },
+  "tasks": [
+    {
+      "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+      "supersedes_iteration_id": "",
+      "acceptance_trace_ids": [],
+      "flow_refs": [],
+      "flow_step_refs": [],
+      "risk_triggers": [
+        "architecture_change",
+        "concurrency",
+        "cross_module_integration",
+        "impact_analysis",
+        "performance",
+        "security"
+      ],
+      "max_attempts": 3,
+      "id": "TASK-P2-PHASE-FINAL-CODE-REVIEW",
+      "logical_task_id": "LOGICAL-P2-PHASE-FINAL-CODE-REVIEW",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009",
+      "iteration_no": 9,
+      "revision_reason": "RC23 preserves the existing lifecycle boundary: phase-final code review follows formal development closure.",
+      "title": "执行 P2 Phase Final Code Review",
+      "objective": "对冻结后的 development exact revision 执行 Spec Compliance 与 Engineering Standards 独立 Review；只读审查代码，Review 记录写入 project_doc。",
+      "phase": "code_review",
+      "depends_on": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION"
+      ],
+      "owner_agent": "ProjectManagerAgent",
+      "reviewer_agents": [
+        "ArchitectureReviewAgent",
+        "ConcurrencyReviewAgent",
+        "CrossModuleIntegrationReviewAgent",
+        "EngineeringStandardsReviewAgent",
+        "ImpactAnalysisReviewAgent",
+        "PerformanceReviewAgent",
+        "SecurityReviewAgent",
+        "SpecComplianceReviewAgent"
+      ],
+      "input_revisions": {
+        "development": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba"
+      },
+      "allowed_files": [
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/**",
+        "project_doc/version/V_1.0/work_record.md",
+        "project_doc/README.md",
+        "project_doc/version/V_1.0/project_process.md"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC"
+      ],
+      "expected_results": [
+        "SpecComplianceReviewAgent 对 exact development revision PASSED",
+        "EngineeringStandardsReviewAgent 对 exact development revision PASSED",
+        "任何 P0/P1 均 fail-closed，不通过文档改写绕过"
+      ],
+      "stop_conditions": [
+        "出现 P0/P1 Review finding",
+        "Review 需要改变已冻结 Design/TestDesign/Implementation Plan authority"
+      ]
+    }
+  ]
+}

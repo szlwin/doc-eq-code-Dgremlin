@@ -1,0 +1,58 @@
+{
+  "kind": "TASK_PLAN_HISTORY_ITERATION",
+  "authority": "DERIVED",
+  "classification": "SUPERSEDED",
+  "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-009",
+  "source": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "sha256": "0b4ddd1cb789dc737a24077358db42324e748e9b74ecfc6a6c5c6e4ca1a1b769",
+    "eventSeq": 571,
+    "eventDigest": "28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8"
+  },
+  "tasks": [
+    {
+      "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+      "supersedes_iteration_id": "",
+      "acceptance_trace_ids": [],
+      "flow_refs": [],
+      "flow_step_refs": [],
+      "risk_triggers": [],
+      "max_attempts": 3,
+      "id": "TASK-P2-PHASE-COMPLETION-VERIFICATION",
+      "logical_task_id": "LOGICAL-P2-PHASE-COMPLETION-VERIFICATION",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-009",
+      "iteration_no": 9,
+      "revision_reason": "Completion verification remains the final P2 lifecycle phase under RC23.",
+      "title": "执行 P2 Completion Verification",
+      "objective": "验证 P2 acceptance/traceability/evidence/lifecycle 全部闭合；不得把开发任务完成误报为整个 P2 完成。",
+      "phase": "completion_verification",
+      "depends_on": [
+        "TASK-P2-PHASE-TESTING"
+      ],
+      "owner_agent": "CompletionVerificationAgent",
+      "reviewer_agents": [],
+      "input_revisions": {
+        "testing": ""
+      },
+      "allowed_files": [
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/**",
+        "project_doc/version/V_1.0/work_record.md",
+        "project_doc/README.md",
+        "project_doc/version/V_1.0/project_process.md"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/long_task.py validate -g CompletionVerificationAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC"
+      ],
+      "expected_results": [
+        "Completion Verification PASSED 前不得宣告 P2 complete",
+        "所有 blocking acceptance assertions VERIFIED",
+        "最终 exact HEAD P0 与完成事实一致"
+      ],
+      "stop_conditions": [
+        "存在未验证 acceptance assertion",
+        "存在开放 P0/P1",
+        "最终 HEAD 验证失败"
+      ]
+    }
+  ]
+}

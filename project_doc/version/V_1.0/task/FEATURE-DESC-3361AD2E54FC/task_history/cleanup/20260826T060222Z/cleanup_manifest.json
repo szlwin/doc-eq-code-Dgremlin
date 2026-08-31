@@ -1,0 +1,848 @@
+{
+  "kind": "TASK_CLEANUP_MANIFEST",
+  "schemaVersion": 1,
+  "authority": "DERIVED",
+  "taskDir": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "createdAt": "2026-08-26T06:02:22.927362+00:00",
+  "operation": "MOVE_TO_QUARANTINE",
+  "permanentDeletion": false,
+  "registryRewrite": false,
+  "duplicateDeduplication": false,
+  "moves": [
+    {
+      "from": "design_r31_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r31_arch_review_20260814.json"
+    },
+    {
+      "from": "design_r31_business_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r31_business_review_20260814.json"
+    },
+    {
+      "from": "design_r31_develop_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r31_develop_review_20260814.json"
+    },
+    {
+      "from": "design_r31_finalization_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r31_finalization_20260814.json"
+    },
+    {
+      "from": "design_r31_impact_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r31_impact_review_20260814.json"
+    },
+    {
+      "from": "design_r31_requirement_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r31_requirement_review_20260814.json"
+    },
+    {
+      "from": "design_r31_testdesign_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r31_testdesign_review_20260814.json"
+    },
+    {
+      "from": "design_r40_arch_review_draft.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r40_arch_review_draft.json"
+    },
+    {
+      "from": "design_r40_arch_review_rerun.md",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r40_arch_review_rerun.md"
+    },
+    {
+      "from": "design_r40_impact_review_rerun.md",
+      "to": "task_history/cleanup/20260826T060222Z/root/design_r40_impact_review_rerun.md"
+    },
+    {
+      "from": "dev04r_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_arch_review_20260814.json"
+    },
+    {
+      "from": "dev04r_closure_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_closure_20260814.json"
+    },
+    {
+      "from": "dev04r_closure_20260814_r02.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_closure_20260814_r02.json"
+    },
+    {
+      "from": "dev04r_closure_20260814_r03.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_closure_20260814_r03.json"
+    },
+    {
+      "from": "dev04r_eng_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_eng_review_20260814.json"
+    },
+    {
+      "from": "dev04r_r02_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_r02_arch_review_20260814.json"
+    },
+    {
+      "from": "dev04r_r02_eng_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_r02_eng_review_20260814.json"
+    },
+    {
+      "from": "dev04r_r02_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_r02_spec_review_20260814.json"
+    },
+    {
+      "from": "dev04r_r03_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_r03_arch_review_20260814.json"
+    },
+    {
+      "from": "dev04r_r03_eng_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_r03_eng_review_20260814.json"
+    },
+    {
+      "from": "dev04r_r03_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_r03_spec_review_20260814.json"
+    },
+    {
+      "from": "dev04r_skeleton_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_skeleton_arch_review_20260814.json"
+    },
+    {
+      "from": "dev04r_skeleton_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_skeleton_spec_review_20260814.json"
+    },
+    {
+      "from": "dev04r_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev04r_spec_review_20260814.json"
+    },
+    {
+      "from": "dev05_dev06_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev05_dev06_arch_review_20260814.json"
+    },
+    {
+      "from": "dev05_dev06_eng_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev05_dev06_eng_review_20260814.json"
+    },
+    {
+      "from": "dev05_dev06_spec_review_20260814_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev05_dev06_spec_review_20260814_r01.json"
+    },
+    {
+      "from": "dev07_closure_20260814_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_closure_20260814_r01.json"
+    },
+    {
+      "from": "dev07_concrete_gate_20260814_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_concrete_gate_20260814_r01.json"
+    },
+    {
+      "from": "dev07_r01_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_r01_arch_review_20260814.json"
+    },
+    {
+      "from": "dev07_r01_eng_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_r01_eng_review_20260814.json"
+    },
+    {
+      "from": "dev07_r01_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_r01_spec_review_20260814.json"
+    },
+    {
+      "from": "dev07_skeleton_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_skeleton_arch_review_20260814.json"
+    },
+    {
+      "from": "dev07_skeleton_r02_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_skeleton_r02_arch_review_20260814.json"
+    },
+    {
+      "from": "dev07_skeleton_r02_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_skeleton_r02_spec_review_20260814.json"
+    },
+    {
+      "from": "dev07_skeleton_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev07_skeleton_spec_review_20260814.json"
+    },
+    {
+      "from": "dev08_closure_20260814_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev08_closure_20260814_r01.json"
+    },
+    {
+      "from": "dev08_r01_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev08_r01_arch_review_20260814.json"
+    },
+    {
+      "from": "dev08_r01_eng_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev08_r01_eng_review_20260814.json"
+    },
+    {
+      "from": "dev08_r01_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev08_r01_spec_review_20260814.json"
+    },
+    {
+      "from": "dev08_skeleton_r01_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev08_skeleton_r01_arch_review_20260814.json"
+    },
+    {
+      "from": "dev08_skeleton_r01_spec_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev08_skeleton_r01_spec_review_20260814.json"
+    },
+    {
+      "from": "dev09_closure_20260815_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev09_closure_20260815_r01.json"
+    },
+    {
+      "from": "dev09_r09_arch_review_20260815.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev09_r09_arch_review_20260815.json"
+    },
+    {
+      "from": "dev09_r09_eng_review_20260815.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev09_r09_eng_review_20260815.json"
+    },
+    {
+      "from": "dev09_r09_spec_review_20260815.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev09_r09_spec_review_20260815.json"
+    },
+    {
+      "from": "dev09_r09_tdd_review_audit_20260816_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/dev09_r09_tdd_review_audit_20260816_r01.json"
+    },
+    {
+      "from": "implementation_plan_scope_remediation_20260814_r06.yaml",
+      "to": "task_history/cleanup/20260826T060222Z/root/implementation_plan_scope_remediation_20260814_r06.yaml"
+    },
+    {
+      "from": "implementation_plan_scope_remediation_20260814_r06_finalization.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/implementation_plan_scope_remediation_20260814_r06_finalization.json"
+    },
+    {
+      "from": "implementation_plan_write_value_rebind_r07_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/implementation_plan_write_value_rebind_r07_20260814.json"
+    },
+    {
+      "from": "p2_code_preservation_decision_20260816_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_code_preservation_decision_20260816_r01.json"
+    },
+    {
+      "from": "p2_completion_verification_20260817_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_completion_verification_20260817_r01.json"
+    },
+    {
+      "from": "p2_design_r33_independent_reviews_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_design_r33_independent_reviews_20260818_r01.json"
+    },
+    {
+      "from": "p2_design_testdesign_r33_r37_lifecycle_reconciliation_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_design_testdesign_r33_r37_lifecycle_reconciliation_20260818_r01.json"
+    },
+    {
+      "from": "p2_dev04r_dev07_reconciliation_20260814_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_dev04r_dev07_reconciliation_20260814_r01.json"
+    },
+    {
+      "from": "p2_dev05_dev06_reconciliation_20260813_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_dev05_dev06_reconciliation_20260813_r01.json"
+    },
+    {
+      "from": "p2_dev05_dev06_reconciliation_20260813_r02.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_dev05_dev06_reconciliation_20260813_r02.json"
+    },
+    {
+      "from": "p2_dev05_dev06_reconciliation_20260814_r03.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_dev05_dev06_reconciliation_20260814_r03.json"
+    },
+    {
+      "from": "p2_final_code_review_20260816_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_final_code_review_20260816_r01.json"
+    },
+    {
+      "from": "p2_independent_review_semantic_pass_20260810_r04.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_independent_review_semantic_pass_20260810_r04.json"
+    },
+    {
+      "from": "p2_independent_review_state_correction_20260808.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_independent_review_state_correction_20260808.json"
+    },
+    {
+      "from": "p2_independent_review_state_correction_20260808_r02.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_independent_review_state_correction_20260808_r02.json"
+    },
+    {
+      "from": "p2_independent_review_state_correction_20260808_r03.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_independent_review_state_correction_20260808_r03.json"
+    },
+    {
+      "from": "p2_machine_lifecycle_closure_audit_20260810_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_machine_lifecycle_closure_audit_20260810_r01.json"
+    },
+    {
+      "from": "p2_risk_specialist_reviews_545456_20260810_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_risk_specialist_reviews_545456_20260810_r01.json"
+    },
+    {
+      "from": "p2_testdesign_independent_review_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_testdesign_independent_review_20260818_r01.json"
+    },
+    {
+      "from": "p2_testdesign_r35_independent_review_20260818_r02.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_testdesign_r35_independent_review_20260818_r02.json"
+    },
+    {
+      "from": "p2_testdesign_r35_independent_reviews_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_testdesign_r35_independent_reviews_20260818_r01.json"
+    },
+    {
+      "from": "p2_testdesign_r35_lifecycle_reconciliation_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_testdesign_r35_lifecycle_reconciliation_20260818_r01.json"
+    },
+    {
+      "from": "p2_testdesign_r36_independent_reviews_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_testdesign_r36_independent_reviews_20260818_r01.json"
+    },
+    {
+      "from": "p2_testdesign_r36_lifecycle_reconciliation_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_testdesign_r36_lifecycle_reconciliation_20260818_r01.json"
+    },
+    {
+      "from": "p2_testdesign_r37_independent_reviews_20260818_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/p2_testdesign_r37_independent_reviews_20260818_r01.json"
+    },
+    {
+      "from": "plan_r06_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r06_arch_review_20260814.json"
+    },
+    {
+      "from": "plan_r06_develop_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r06_develop_review_20260814.json"
+    },
+    {
+      "from": "plan_r06_plan_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r06_plan_review_20260814.json"
+    },
+    {
+      "from": "plan_r06_testdesign_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r06_testdesign_review_20260814.json"
+    },
+    {
+      "from": "plan_r07_arch_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r07_arch_review_20260814.json"
+    },
+    {
+      "from": "plan_r07_develop_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r07_develop_review_20260814.json"
+    },
+    {
+      "from": "plan_r07_finalization_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r07_finalization_20260814.json"
+    },
+    {
+      "from": "plan_r07_plan_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r07_plan_review_20260814.json"
+    },
+    {
+      "from": "plan_r07_testdesign_review_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/plan_r07_testdesign_review_20260814.json"
+    },
+    {
+      "from": "r33_historical_red_evidence_search_20260816_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/r33_historical_red_evidence_search_20260816_r01.json"
+    },
+    {
+      "from": "rc21_code_review_formalization_20260817_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc21_code_review_formalization_20260817_r01.json"
+    },
+    {
+      "from": "rc21_completion_acceptance_reconciliation_20260817_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc21_completion_acceptance_reconciliation_20260817_r01.json"
+    },
+    {
+      "from": "rc21_completion_stage_outcome_reconciliation_20260817_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc21_completion_stage_outcome_reconciliation_20260817_r01.json"
+    },
+    {
+      "from": "rc23_development_formalization_20260816_r02.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc23_development_formalization_20260816_r02.json"
+    },
+    {
+      "from": "rc23_development_formalization_20260816_r03.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc23_development_formalization_20260816_r03.json"
+    },
+    {
+      "from": "rc23_development_formalization_20260816_r04.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc23_development_formalization_20260816_r04.json"
+    },
+    {
+      "from": "rc23_development_formalization_20260816_r05.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc23_development_formalization_20260816_r05.json"
+    },
+    {
+      "from": "rc23_development_formalization_20260816_r06.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/rc23_development_formalization_20260816_r06.json"
+    },
+    {
+      "from": "risk_detection_design_p2_r05_local_rc9_observation_20260808.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/risk_detection_design_p2_r05_local_rc9_observation_20260808.json"
+    },
+    {
+      "from": "risk_detection_p2_r30_exact_545456_local_rc9_observation_20260810.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/risk_detection_p2_r30_exact_545456_local_rc9_observation_20260810.json"
+    },
+    {
+      "from": "testdesign_r33_current_profile_audit_20260816_r01.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/testdesign_r33_current_profile_audit_20260816_r01.json"
+    },
+    {
+      "from": "testdesign_r33_finalization_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/testdesign_r33_finalization_20260814.json"
+    },
+    {
+      "from": "testdesign_r33_review_arch_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/testdesign_r33_review_arch_20260814.json"
+    },
+    {
+      "from": "testdesign_r33_review_develop_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/testdesign_r33_review_develop_20260814.json"
+    },
+    {
+      "from": "testdesign_r33_review_requirement_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/testdesign_r33_review_requirement_20260814.json"
+    },
+    {
+      "from": "testdesign_r33_review_testdesign_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/testdesign_r33_review_testdesign_20260814.json"
+    },
+    {
+      "from": "testdesign_r33_write_value_cases_20260814.json",
+      "to": "task_history/cleanup/20260826T060222Z/root/testdesign_r33_write_value_cases_20260814.json"
+    },
+    {
+      "from": "traceability_p2_runtime_single_context_r37_delta.md",
+      "to": "task_history/cleanup/20260826T060222Z/root/traceability_p2_runtime_single_context_r37_delta.md"
+    },
+    {
+      "from": "traceability_p2_testdesign_r35_delta.md",
+      "to": "task_history/cleanup/20260826T060222Z/root/traceability_p2_testdesign_r35_delta.md"
+    },
+    {
+      "from": "traceability_p2_testdesign_r36_delta.md",
+      "to": "task_history/cleanup/20260826T060222Z/root/traceability_p2_testdesign_r36_delta.md"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T073355529287Z-ebabd5404a26.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T073355529287Z-ebabd5404a26.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T141220606869Z-030318ff04b4.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T141220606869Z-030318ff04b4.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T144618943349Z-823fedb0dea1.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T144618943349Z-823fedb0dea1.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T144712967915Z-b9309660f8fd.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T144712967915Z-b9309660f8fd.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T144733010409Z-205e56c0aeab.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T144733010409Z-205e56c0aeab.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T144805706524Z-dc45ac9e431e.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T144805706524Z-dc45ac9e431e.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T145443845494Z-fc7fe8782abe.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T145443845494Z-fc7fe8782abe.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T145450471199Z-813a54668678.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T145450471199Z-813a54668678.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T145452257684Z-e0d6e441818c.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T145452257684Z-e0d6e441818c.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T145510133631Z-be5072416178.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T145510133631Z-be5072416178.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T145537197795Z-6d8c97867283.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T145537197795Z-6d8c97867283.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150114828137Z-ae0edd1fb3f1.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150114828137Z-ae0edd1fb3f1.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150121831230Z-031267041bcd.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150121831230Z-031267041bcd.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150124888887Z-0148c18ae0fa.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150124888887Z-0148c18ae0fa.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150143588751Z-d764202932d7.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150143588751Z-d764202932d7.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150146018159Z-a44d520ffda5.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150146018159Z-a44d520ffda5.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150430307582Z-853bc1ba81e4.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150430307582Z-853bc1ba81e4.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150437044045Z-bedfc767b5c5.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150437044045Z-bedfc767b5c5.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150439026956Z-33d57975526c.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150439026956Z-33d57975526c.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150456909847Z-4830382eef15.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150456909847Z-4830382eef15.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150459137570Z-8deac4fed2f5.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150459137570Z-8deac4fed2f5.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T150611139175Z-f2b938bf163d.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T150611139175Z-f2b938bf163d.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T151110162343Z-0796608819ec.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T151110162343Z-0796608819ec.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T151509493246Z-829b7cf3c076.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T151509493246Z-829b7cf3c076.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T152242915627Z-8f35e69c1c53.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T152242915627Z-8f35e69c1c53.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T153516146560Z-0da982e9bece.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T153516146560Z-0da982e9bece.output.txt"
+    },
+    {
+      "from": "evidence/commands/EXEC-20260825T165808050377Z-eec4ad735082.output.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/EXEC-20260825T165808050377Z-eec4ad735082.output.txt"
+    },
+    {
+      "from": "evidence/commands/bm-p2-r06/business-model-schema.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/business-model-schema.out"
+    },
+    {
+      "from": "evidence/commands/bm-p2-r06/changeset-schema.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/changeset-schema.out"
+    },
+    {
+      "from": "evidence/commands/bm-p2-r06/dependency-impact-check.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/dependency-impact-check.out"
+    },
+    {
+      "from": "evidence/commands/bm-p2-r06/git-diff-check.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/git-diff-check.out"
+    },
+    {
+      "from": "evidence/commands/bm-p2-r06/long-task-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/long-task-validate.out"
+    },
+    {
+      "from": "evidence/commands/bm-p2-r06/plan-business-model-schema.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/plan-business-model-schema.out"
+    },
+    {
+      "from": "evidence/commands/bm-p2-r06/plan-long-task-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/plan-long-task-validate.out"
+    },
+    {
+      "from": "evidence/commands/code-review-i009/long-task-validate-final.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/code-review-i009/long-task-validate-final.out"
+    },
+    {
+      "from": "evidence/commands/code-review-i009/long-task-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/code-review-i009/long-task-validate.out"
+    },
+    {
+      "from": "evidence/commands/code-review-i009/p0-1832-focused-metrics.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/code-review-i009/p0-1832-focused-metrics.json"
+    },
+    {
+      "from": "evidence/commands/current-dev-r03-fixed-diff.patch",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/current-dev-r03-fixed-diff.patch"
+    },
+    {
+      "from": "evidence/commands/design-p2-r33/01.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/01.out"
+    },
+    {
+      "from": "evidence/commands/design-p2-r33/02.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/02.out"
+    },
+    {
+      "from": "evidence/commands/design-p2-r33/git-diff-check.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/git-diff-check.out"
+    },
+    {
+      "from": "evidence/commands/design-p2-r33/long-task-validate.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/long-task-validate.json"
+    },
+    {
+      "from": "evidence/commands/dev01-task-closure.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/dev01-task-closure.json"
+    },
+    {
+      "from": "evidence/commands/dev09-p0-1825/mysql-it.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/dev09-p0-1825/mysql-it.out"
+    },
+    {
+      "from": "evidence/commands/dev09-review-diff-manifest.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/dev09-review-diff-manifest.json"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-bm-r20/01.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/01.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-bm-r20/02.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/02.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-bm-r20/03.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/03.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-bm-r20/04.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/04.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-bm-r20/05.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/05.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-bm-r20/06.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/06.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-design-r30/01.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/01.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-design-r30/02.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/02.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-design-r30/03.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/03.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-design-r30/04.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/04.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-testdesign-r31/01.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/01.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-testdesign-r31/02.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/02.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-testdesign-r31/03.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/03.out"
+    },
+    {
+      "from": "evidence/commands/rc9-machine-testdesign-r31/04.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/04.out"
+    },
+    {
+      "from": "evidence/commands/reqan-p2-r01/business-flow-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/business-flow-validate.out"
+    },
+    {
+      "from": "evidence/commands/reqan-p2-r01/finalize-requirement-analysis.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/finalize-requirement-analysis.out"
+    },
+    {
+      "from": "evidence/commands/reqan-p2-r01/long-task-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/long-task-validate.out"
+    },
+    {
+      "from": "evidence/commands/reqan-p2-r01/requirement-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/requirement-validate.out"
+    },
+    {
+      "from": "evidence/commands/reqconf-p2-r01/long-task-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r01/long-task-validate.out"
+    },
+    {
+      "from": "evidence/commands/reqconf-p2-r01/requirement-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r01/requirement-validate.out"
+    },
+    {
+      "from": "evidence/commands/reqconf-p2-r02/long-task-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r02/long-task-validate.out"
+    },
+    {
+      "from": "evidence/commands/reqconf-p2-r02/requirement-validate.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r02/requirement-validate.out"
+    },
+    {
+      "from": "evidence/commands/tdd-p2-r01/mapping.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/tdd-p2-r01/mapping.json"
+    },
+    {
+      "from": "evidence/commands/tdd-p2-r01/validate_tdd_red.py",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/tdd-p2-r01/validate_tdd_red.py"
+    },
+    {
+      "from": "evidence/commands/testdesign-p2-r37/01.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testdesign-p2-r37/01.out"
+    },
+    {
+      "from": "evidence/commands/testdesign-p2-r37/02.out",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testdesign-p2-r37/02.out"
+    },
+    {
+      "from": "evidence/commands/testing-p2-i014-final-head/code-binding.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/code-binding.json"
+    },
+    {
+      "from": "evidence/commands/testing-p2-i014-final-head/database-evidence.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/database-evidence.txt"
+    },
+    {
+      "from": "evidence/commands/testing-p2-i014-final-head/mysql-summary.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/mysql-summary.json"
+    },
+    {
+      "from": "evidence/commands/testing-p2-i014-final-head/p0-run.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/p0-run.json"
+    },
+    {
+      "from": "evidence/commands/testing-p2-i014-final-head/test-report-manifest.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/test-report-manifest.json"
+    },
+    {
+      "from": "evidence/commands/testing-p2-stage-closure-i009/code-equivalence.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/code-equivalence.json"
+    },
+    {
+      "from": "evidence/commands/testing-p2-stage-closure-i009/database-evidence.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/database-evidence.txt"
+    },
+    {
+      "from": "evidence/commands/testing-p2-stage-closure-i009/intentional-failure-gate.txt",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/intentional-failure-gate.txt"
+    },
+    {
+      "from": "evidence/commands/testing-p2-stage-closure-i009/mysql-summary.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/mysql-summary.json"
+    },
+    {
+      "from": "evidence/commands/testing-p2-stage-closure-i009/p0-run.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/p0-run.json"
+    },
+    {
+      "from": "evidence/commands/testing-p2-stage-closure-i009/test-report-manifest.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/test-report-manifest.json"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/architecture.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/architecture.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/concurrency.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/concurrency.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/cross-module.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/cross-module.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/engineering.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/engineering.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/impact.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/impact.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/performance.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/performance.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/security.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/security.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/code-review-i009/spec.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/code-review-i009/spec.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/design-i008-impact-needs-changes.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/design-i008-impact-needs-changes.md"
+    },
+    {
+      "from": "evidence/manual-reviews/design-i008-impact-r02-passed.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/design-i008-impact-r02-passed.md"
+    },
+    {
+      "from": "evidence/manual-reviews/design-i008-impact-r02-rerun.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/design-i008-impact-r02-rerun.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-COVERAGE-001.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-COVERAGE-001.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-COVERAGE-001.prepare.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-COVERAGE-001.prepare.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-EXEC-001.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-EXEC-001.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-EXEC-001.prepare.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-EXEC-001.prepare.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-REVIEWS-001.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-REVIEWS-001.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-REVIEWS-001.prepare.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-REVIEWS-001.prepare.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-SCOPE-001.draft.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-SCOPE-001.draft.md"
+    },
+    {
+      "from": "evidence/manual-reviews/r03/ASRT-P2-TP-R03-SCOPE-001.prepare.md",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/manual-reviews/r03/ASRT-P2-TP-R03-SCOPE-001.prepare.md"
+    },
+    {
+      "from": "evidence/migrations/20260808-pr34-flattened-checkpoint-gitref-repair.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/migrations/20260808-pr34-flattened-checkpoint-gitref-repair.json"
+    },
+    {
+      "from": "evidence/migrations/20260808-testdesign-r01-eof-freeze.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/migrations/20260808-testdesign-r01-eof-freeze.json"
+    },
+    {
+      "from": "evidence/migrations/20260808-testdesign-r01-normalized-pre-r02-freeze.json",
+      "to": "evidence/quarantine/20260826T060222Z/evidence/migrations/20260808-testdesign-r01-normalized-pre-r02-freeze.json"
+    },
+    {
+      "from": "cache/verification",
+      "to": "task_history/cleanup/20260826T060222Z/cache/cache/verification"
+    },
+    {
+      "from": "cache/development_tasks.md",
+      "to": "task_history/cleanup/20260826T060222Z/cache/cache/development_tasks.md"
+    }
+  ],
+  "counts": {
+    "moved": 208
+  }
+}

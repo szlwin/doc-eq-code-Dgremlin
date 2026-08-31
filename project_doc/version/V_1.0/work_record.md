@@ -1871,6 +1871,606 @@
 | 测试与验证 | 登记 Evidence 5 项；命令 Evidence 3 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A001","blockers":["VALIDATION_COMMAND_FAILED","R03 validation reached the existing dec-core-starter targeted command, but ProtectedAccessProductionCompositionTest and ProtectedRuntimeModelAdapterIntegrationTest are absent; Surefire reported no tests matching pattern with failIfNoSpecifiedTests=true. No source or test files were modified."],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A001-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-022","iteration_no":22,"next_action":"修订当前 Development 计划为仓库实际存在且语义等价的 Starter 测试，或由用户明确授权调整范围；不得关闭 failIfNoSpecifiedTests。","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-224918-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED","render_digest":"8b89235075d909dbe33e845b1e1cb027fc6717cce3634eec8e9c51c86a94a7a5","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK","status":"FAILED","summary":"R03 preflight, installs, ConfigUtilCompatibilityTest and core module tests passed. Development stopped at the declared Starter targeted tests because both classes are unavailable.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T22:49:18+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 6 项","version":"V_1.0"} -->
+## WR-20260825-224918-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T22:49:18+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_FAILED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | R03 preflight, installs, ConfigUtilCompatibilityTest and core module tests passed. Development stopped at the declared Starter targeted tests because both classes are unavailable. |
+| 状态 | FAILED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-022 / 22 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 修订当前 Development 计划为仓库实际存在且语义等价的 Starter 测试，或由用户明确授权调整范围；不得关闭 failIfNoSpecifiedTests。 |
+
+### 变更摘要
+
+- R03 preflight, installs, ConfigUtilCompatibilityTest and core module tests passed. Development stopped at the declared Starter targeted tests because both classes are unavailable.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 0 项；命令 Evidence 6 项 |
+| 问题与阻塞 | VALIDATION_COMMAND_FAILED、R03 validation reached the existing dec-core-starter targeted command, but ProtectedAccessProductionCompositionTest and ProtectedRuntimeModelAdapterIntegrationTest are absent; Surefire reported no tests matching pattern with failIfNoSpecifiedTests=true. No source or test files were modified. |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A002","blockers":["VALIDATION_COMMAND_FAILED","After removing the two requested unavailable Starter test classes, the next declared command SingleEngineContextRuntimeLifecycleTest is also absent; Surefire reported no tests matching pattern with failIfNoSpecifiedTests=true. No source or test files were modified."],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A002-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-022","iteration_no":22,"next_action":"确认是否将 SingleEngineContextRuntimeLifecycleTest 也从当前执行规格移除，或指定仓库中语义等价的实际测试；不得关闭 failIfNoSpecifiedTests。","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-225619-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED","render_digest":"738c1111cc79ee8164c7ebbe9f1f4f0b9897c0ef013da4d901ec6134c594b678","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK","status":"FAILED","summary":"R03 commands through Starter install passed. Development stopped at the next unavailable lifecycle test; remaining commands were not executed.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T22:56:19+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 7 项","version":"V_1.0"} -->
+## WR-20260825-225619-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T22:56:19+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_FAILED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | R03 commands through Starter install passed. Development stopped at the next unavailable lifecycle test; remaining commands were not executed. |
+| 状态 | FAILED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A002 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-022 / 22 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 确认是否将 SingleEngineContextRuntimeLifecycleTest 也从当前执行规格移除，或指定仓库中语义等价的实际测试；不得关闭 failIfNoSpecifiedTests。 |
+
+### 变更摘要
+
+- R03 commands through Starter install passed. Development stopped at the next unavailable lifecycle test; remaining commands were not executed.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 0 项；命令 Evidence 7 项 |
+| 问题与阻塞 | VALIDATION_COMMAND_FAILED、After removing the two requested unavailable Starter test classes, the next declared command SingleEngineContextRuntimeLifecycleTest is also absent; Surefire reported no tests matching pattern with failIfNoSpecifiedTests=true. No source or test files were modified. |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A003","blockers":["VALIDATION_COMMAND_FAILED","After replacing unavailable lifecycle test with existing CompilerBootstrapStageClosureTest, the next declared P2RealFixtureIntegrationTest is also absent; Surefire reported no tests matching pattern with failIfNoSpecifiedTests=true. No source or test files were modified."],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A003-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-022","iteration_no":22,"next_action":"Replace P2RealFixtureIntegrationTest with existing MixCompilerRegressionTest, reopen development iteration, and rerun declared validations.","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-230302-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED","render_digest":"c8a44a17fa1be1db72d50e1431995865f6f3537f1a3c78397a799d0477fc5307","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → BLOCKED","status":"FAILED","summary":"Existing preflight, installs, ConfigUtilCompatibilityTest, core tests, Starter install and CompilerBootstrapStageClosureTest passed. Development stopped at unavailable P2RealFixtureIntegrationTest.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T23:03:02+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 8 项","version":"V_1.0"} -->
+## WR-20260825-230302-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T23:03:02+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_FAILED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Existing preflight, installs, ConfigUtilCompatibilityTest, core tests, Starter install and CompilerBootstrapStageClosureTest passed. Development stopped at unavailable P2RealFixtureIntegrationTest. |
+| 状态 | FAILED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → BLOCKED |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I022-A003 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-022 / 22 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Replace P2RealFixtureIntegrationTest with existing MixCompilerRegressionTest, reopen development iteration, and rerun declared validations. |
+
+### 变更摘要
+
+- Existing preflight, installs, ConfigUtilCompatibilityTest, core tests, Starter install and CompilerBootstrapStageClosureTest passed. Development stopped at unavailable P2RealFixtureIntegrationTest.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 0 项；命令 Evidence 8 项 |
+| 问题与阻塞 | VALIDATION_COMMAND_FAILED、After replacing unavailable lifecycle test with existing CompilerBootstrapStageClosureTest, the next declared P2RealFixtureIntegrationTest is also absent; Surefire reported no tests matching pattern with failIfNoSpecifiedTests=true. No source or test files were modified. |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A001","blockers":["VALIDATION_COMMAND_FAILED","All targeted existing tests through MixCompilerRegressionTest passed. The declared clean verify then failed in project test-discovery validation because dec.demo.directory.DirectoryTest, dec.demo.model.RuleTests, and dec.demo.system.OrderTest are absent; discovered 0 tests. No source or test files were modified."],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A001-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-023","iteration_no":23,"next_action":"更新当前回归验证命令或其项目测试发现配置，改为仓库中实际存在的测试类后再继续；不得设置 failIfNoSpecifiedTests=false。","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-230717-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED","render_digest":"ecb5097a5dcd6fe16948bd92e7f915bce085d9b3aee9b373cb4be66f5ebc899e","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK","status":"FAILED","summary":"Development-023 used only repository-present tests and passed all targeted checks. Full clean verify is blocked by stale required test class names in project validation configuration.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T23:07:17+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 9 项","version":"V_1.0"} -->
+## WR-20260825-230717-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T23:07:17+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_FAILED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Development-023 used only repository-present tests and passed all targeted checks. Full clean verify is blocked by stale required test class names in project validation configuration. |
+| 状态 | FAILED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-023 / 23 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 更新当前回归验证命令或其项目测试发现配置，改为仓库中实际存在的测试类后再继续；不得设置 failIfNoSpecifiedTests=false。 |
+
+### 变更摘要
+
+- Development-023 used only repository-present tests and passed all targeted checks. Full clean verify is blocked by stale required test class names in project validation configuration.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 0 项；命令 Evidence 9 项 |
+| 问题与阻塞 | VALIDATION_COMMAND_FAILED、All targeted existing tests through MixCompilerRegressionTest passed. The declared clean verify then failed in project test-discovery validation because dec.demo.directory.DirectoryTest, dec.demo.model.RuleTests, and dec.demo.system.OrderTest are absent; discovered 0 tests. No source or test files were modified. |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A002","blockers":["VALIDATION_COMMAND_FAILED","DirectoryTest, RuleTests and OrderTest are present and pass when invoked directly by Maven (EVD-000644), but clean verify still reports them missing with discovered={} and totals.tests=0. This indicates a project-level discovery/aggregation issue in clean verify, not missing test source. No source or test files were modified."],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A002-FAILED","event_type":"TASK_ATTEMPT_FAILED","execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-023","iteration_no":23,"next_action":"修复或调整 clean verify 的项目级测试发现/汇总配置，使其消费 dec-demo 已编译测试类；不得伪造通过。","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-231205-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED","render_digest":"a02741a5fc212a9828efdb684f4c2b71c9fa1da0e6d9ecf3d0f30d5e7aec4a0b","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK","status":"FAILED","summary":"Direct existing test execution passed; clean verify discovery remains inconsistent and blocks full regression.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T23:12:05+08:00","validation_summary":"登记 Evidence 0 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260825-231205-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T23:12:05+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_FAILED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Direct existing test execution passed; clean verify discovery remains inconsistent and blocks full regression. |
+| 状态 | FAILED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A002 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-023 / 23 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | 无 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 修复或调整 clean verify 的项目级测试发现/汇总配置，使其消费 dec-demo 已编译测试类；不得伪造通过。 |
+
+### 变更摘要
+
+- Direct existing test execution passed; clean verify discovery remains inconsistent and blocks full regression.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 0 项；命令 Evidence 2 项 |
+| 问题与阻塞 | VALIDATION_COMMAND_FAILED、DirectoryTest, RuleTests and OrderTest are present and pass when invoked directly by Maven (EVD-000644), but clean verify still reports them missing with discovered={} and totals.tests=0. This indicates a project-level discovery/aggregation issue in clean verify, not missing test source. No source or test files were modified. |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A003","blockers":["VALIDATION_COMMAND_FAILED","mysql-it verify 在 dec-core-compiler 完成 560 个测试且 0 failures/0 errors 后，Surefire fork JVM 未正常退出并以 exit code 1 结束；后续 dec-demo MySQL 测试未执行。已有非 MySQL 测试和默认 clean verify 通过，未修改源码或测试源码。"],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A003-FAILED","event_type":"TASK_ATTEMPT_FAILED","evidence_ids":["EVD-000647"],"execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-023","iteration_no":23,"next_action":"保留 Development 为 REWORK；仅在能稳定完成 mysql-it verify 并运行汇总脚本后重新开始新的 Development attempt。","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-232036-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED","render_digest":"dd980f11dcae4fec62d52f1161f6ddbc2eb2228b5714bb16eeb50db63a702da6","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → BLOCKED","status":"FAILED","summary":"Development-023 仅使用仓库现有测试；非 MySQL 精确测试与 clean verify 通过，但 mysql-it profile 被 Surefire fork JVM 异常阻断，不能生成 Development revision。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T23:20:36+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260825-232036-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-FAILED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T23:20:36+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_FAILED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Development-023 仅使用仓库现有测试；非 MySQL 精确测试与 clean verify 通过，但 mysql-it profile 被 Surefire fork JVM 异常阻断，不能生成 Development revision。 |
+| 状态 | FAILED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → BLOCKED |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I023-A003 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-023 / 23 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | EVD-000647 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 保留 Development 为 REWORK；仅在能稳定完成 mysql-it verify 并运行汇总脚本后重新开始新的 Development attempt。 |
+
+### 变更摘要
+
+- Development-023 仅使用仓库现有测试；非 MySQL 精确测试与 clean verify 通过，但 mysql-it profile 被 Surefire fork JVM 异常阻断，不能生成 Development revision。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
+| 问题与阻塞 | VALIDATION_COMMAND_FAILED、mysql-it verify 在 dec-core-compiler 完成 560 个测试且 0 failures/0 errors 后，Surefire fork JVM 未正常退出并以 exit code 1 结束；后续 dec-demo MySQL 测试未执行。已有非 MySQL 测试和默认 clean verify 通过，未修改源码或测试源码。 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I024-A001","blockers":["VALIDATION_INCOMPLETE","dec-demo 既有 mysql-it 三个测试已在缩小范围命令中全部通过并由汇总脚本确认；但任务计划要求的根工程 ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify 已在 EVD-000647 因 dec-core-compiler Surefire fork JVM 异常失败，故本 Attempt 不具备完整 Development closure 条件。"],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I024-A001-PARTIAL","event_type":"TASK_ATTEMPT_PARTIAL","evidence_ids":["EVD-000649","EVD-000650","EVD-000647"],"execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-024","iteration_no":24,"next_action":"保持 Development 为 REWORK；排查并修复可重复的根工程 Surefire fork/环境阻断后，再执行原计划全量 mysql-it verify；不得用缩小范围结果替代全量门禁。","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-232323-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PARTIAL","render_digest":"20835acfa02bf4e0e3dd263ae2bd977abd227ed30dca4d156d6a5b70a83944e1","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK","status":"PARTIAL","summary":"I024 使用仓库现有测试完成 dec-demo MySQL 场景的真实执行与汇总；根工程 mysql-it 全量门禁仍被 Surefire fork 异常阻断，未修改源码/测试源码，未生成 Development revision。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T23:23:23+08:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260825-232323-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PARTIAL
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T23:23:23+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_PARTIAL |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | I024 使用仓库现有测试完成 dec-demo MySQL 场景的真实执行与汇总；根工程 mysql-it 全量门禁仍被 Surefire fork 异常阻断，未修改源码/测试源码，未生成 Development revision。 |
+| 状态 | PARTIAL |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I024-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-024 / 24 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | EVD-000649、EVD-000650、EVD-000647 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 保持 Development 为 REWORK；排查并修复可重复的根工程 Surefire fork/环境阻断后，再执行原计划全量 mysql-it verify；不得用缩小范围结果替代全量门禁。 |
+
+### 变更摘要
+
+- I024 使用仓库现有测试完成 dec-demo MySQL 场景的真实执行与汇总；根工程 mysql-it 全量门禁仍被 Surefire fork 异常阻断，未修改源码/测试源码，未生成 Development revision。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 2 项 |
+| 问题与阻塞 | VALIDATION_INCOMPLETE、dec-demo 既有 mysql-it 三个测试已在缩小范围命令中全部通过并由汇总脚本确认；但任务计划要求的根工程 ./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify 已在 EVD-000647 因 dec-core-compiler Surefire fork JVM 异常失败，故本 Attempt 不具备完整 Development closure 条件。 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I025-A001","blockers":["EVIDENCE_GATE_BLOCKED","用户确认手动执行根工程 -Pmysql-it verify 成功，但该执行未通过当前 Evidence 采集器登记。任务计划的 11 个 validation_commands 仍缺少绑定新 Development revision 的 command-result Evidence，旧 revision Evidence 不可复用；因此不能合法生成 PASSED Development artifact。"],"event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I025-A001-PARTIAL","event_type":"TASK_ATTEMPT_PARTIAL","evidence_ids":["EVD-000651","EVD-000652"],"execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-025","iteration_no":25,"next_action":"提供或重新采集根工程 mysql-it verify 的当前 revision command-result Evidence，并补齐任务计划其余 validation_commands 后，再完成 Development。","next_agent":"ProjectManagerAgent","phase":"development","record_id":"WR-20260825-233928-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PARTIAL","render_digest":"bad11e5dc543fd93da27f4956a8561ad472f0df75b87b1d8cb7a0d4a93441cf1","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK","status":"PARTIAL","summary":"当前代码 HEAD 上仓库现有 MySQL 测试与汇总通过；用户报告根工程 mysql-it verify 成功，但缺少当前 revision 的机器 Evidence。未修改源码/测试源码，未生成 Development revision。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T23:39:28+08:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260825-233928-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PARTIAL
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T23:39:28+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_PARTIAL |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 当前代码 HEAD 上仓库现有 MySQL 测试与汇总通过；用户报告根工程 mysql-it verify 成功，但缺少当前 revision 的机器 Evidence。未修改源码/测试源码，未生成 Development revision。 |
+| 状态 | PARTIAL |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → REWORK |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I025-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-025 / 25 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | 无 / 未登记 |
+| StageOutcome | 无 |
+| Evidence | EVD-000651、EVD-000652 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 提供或重新采集根工程 mysql-it verify 的当前 revision command-result Evidence，并补齐任务计划其余 validation_commands 后，再完成 Development。 |
+
+### 变更摘要
+
+- 当前代码 HEAD 上仓库现有 MySQL 测试与汇总通过；用户报告根工程 mysql-it verify 成功，但缺少当前 revision 的机器 Evidence。未修改源码/测试源码，未生成 Development revision。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 2 项 |
+| 问题与阻塞 | EVIDENCE_GATE_BLOCKED、用户确认手动执行根工程 -Pmysql-it verify 成功，但该执行未通过当前 Evidence 采集器登记。任务计划的 11 个 validation_commands 仍缺少绑定新 Development revision 的 command-result Evidence，旧 revision Evidence 不可复用；因此不能合法生成 PASSED Development artifact。 |
+
+<!-- work-record-meta: {"agent":"DevelopAgent","attempt_id":"ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I026-A001","event_id":"EVENT-ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I026-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000653","EVD-000650"],"execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-026","iteration_no":26,"next_action":"发布 Development artifact，并执行当前 revision 的独立 Development Review。","next_agent":"ProjectManagerAgent","output_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","phase":"development","record_id":"WR-20260825-235602-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED","render_digest":"74193258c6efb7868859baa1e7dd618f04cd2a29f45ecc4487106fdd68974240","schema_version":4,"scope":"执行 TP R03 五项 P2 simplified configuration development 子任务","source":"long_task.py finish-attempt","state_change":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED","status":"PASSED","summary":"Development-026 依据 doc/test 完整终端捕获登记根工程 -Pmysql-it verify 成功：全 reactor SUCCESS、Tests run 4/0 failures/0 errors/0 skipped、BUILD SUCCESS；其余计划 validation commands 均由同一计划 revision 的成功 Evidence 覆盖。未修改源码或测试源码。","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION","task_type":"development","timestamp":"2026-08-25T23:56:02+08:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 11 项","version":"V_1.0"} -->
+## WR-20260825-235602-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-25T23:56:02+08:00 |
+| 执行 Agent | DevelopAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 TP R03 五项 P2 simplified configuration development 子任务 |
+| 阶段 | development |
+| 任务类型 | development |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Development-026 依据 doc/test 完整终端捕获登记根工程 -Pmysql-it verify 成功：全 reactor SUCCESS、Tests run 4/0 failures/0 errors/0 skipped、BUILD SUCCESS；其余计划 validation commands 均由同一计划 revision 的成功 Evidence 覆盖。未修改源码或测试源码。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION: RUNNING → PASSED |
+| Task | TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION |
+| Attempt | ATTEMPT-TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION-I026-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-026 / 26 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| StageOutcome | 无 |
+| Evidence | EVD-000653、EVD-000650 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 发布 Development artifact，并执行当前 revision 的独立 Development Review。 |
+
+### 变更摘要
+
+- Development-026 依据 doc/test 完整终端捕获登记根工程 -Pmysql-it verify 成功：全 reactor SUCCESS、Tests run 4/0 failures/0 errors/0 skipped、BUILD SUCCESS；其余计划 validation commands 均由同一计划 revision 的成功 Evidence 覆盖。未修改源码或测试源码。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 11 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"ProjectManagerAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I026-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I026-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000657","EVD-000658","EVD-000659"],"execution_mode":"standard / sequential","input_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-026","iteration_no":26,"next_action":"Publish Code Review-026 artifact and complete all required and risk-triggered independent Reviews.","next_agent":"ProjectManagerAgent","output_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","phase":"code_review","record_id":"WR-20260826-004544-TASK-P2-PHASE-FINAL-CODE-REVIEW-PASSED","render_digest":"1d84ffbbcb88b902f47bdd2f6e2a9f8d485245c6d9a7fc39df9142b37a18ef76","schema_version":4,"scope":"执行 P2 Phase Final Code Review","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-FINAL-CODE-REVIEW: RUNNING → PASSED","status":"PASSED","summary":"Code Review-026 attempt completed on the fixed Development R03 revision; global validation command passed after installing the current common-develop Skill.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-FINAL-CODE-REVIEW","task_type":"code_review","timestamp":"2026-08-26T00:45:44+08:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260826-004544-TASK-P2-PHASE-FINAL-CODE-REVIEW-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-26T00:45:44+08:00 |
+| 执行 Agent | ProjectManagerAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Phase Final Code Review |
+| 阶段 | code_review |
+| 任务类型 | code_review |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Code Review-026 attempt completed on the fixed Development R03 revision; global validation command passed after installing the current common-develop Skill. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-FINAL-CODE-REVIEW: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-FINAL-CODE-REVIEW |
+| Attempt | ATTEMPT-TASK-P2-PHASE-FINAL-CODE-REVIEW-I026-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-026 / 26 |
+| 输入 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| 输出 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| StageOutcome | 无 |
+| Evidence | EVD-000657、EVD-000658、EVD-000659 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | Publish Code Review-026 artifact and complete all required and risk-triggered independent Reviews. |
+
+### 变更摘要
+
+- Code Review-026 attempt completed on the fixed Development R03 revision; global validation command passed after installing the current common-develop Skill.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"TestAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-TESTING-I026-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-TESTING-I026-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000662","EVD-000663","EVD-000666"],"execution_mode":"standard / sequential","input_revision":"512fc7a274b9d263796aba3f31f81021874e15128f3fe6674d1f9863b872960e","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-TESTING-026","iteration_no":26,"next_action":"Publish Testing artifact and complete TestEvidenceReviewAgent independent Review.","next_agent":"TestEvidenceReviewAgent","output_revision":"TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5","phase":"testing","record_id":"WR-20260826-010625-TASK-P2-PHASE-TESTING-PASSED","render_digest":"9017cd24a04b745db2953f51bf75244fe86d52a02ac32c9f9d30097a1d632b33","schema_version":4,"scope":"执行 P2 Testing","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-TESTING: RUNNING → PASSED","status":"PASSED","summary":"Testing-026 passed for fixed R03. clean verify is current command Evidence EVD-000662; mysql-it verify and test result details are reconciled from user-confirmed doc/test snapshot EVD-000663. No production or test source changed.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-TESTING","task_type":"testing","timestamp":"2026-08-26T01:06:25+08:00","validation_summary":"登记 Evidence 3 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260826-010625-TASK-P2-PHASE-TESTING-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-26T01:06:25+08:00 |
+| 执行 Agent | TestAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Testing |
+| 阶段 | testing |
+| 任务类型 | testing |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Testing-026 passed for fixed R03. clean verify is current command Evidence EVD-000662; mysql-it verify and test result details are reconciled from user-confirmed doc/test snapshot EVD-000663. No production or test source changed. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-TESTING: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-TESTING |
+| Attempt | ATTEMPT-TASK-P2-PHASE-TESTING-I026-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-TESTING-026 / 26 |
+| 输入 Revision | 512fc7a274b9d263796aba3f31f81021874e15128f3fe6674d1f9863b872960e |
+| 输出 Revision | TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5 |
+| StageOutcome | 无 |
+| Evidence | EVD-000662、EVD-000663、EVD-000666 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | TestEvidenceReviewAgent |
+| 后续事项 | Publish Testing artifact and complete TestEvidenceReviewAgent independent Review. |
+
+### 变更摘要
+
+- Testing-026 passed for fixed R03. clean verify is current command Evidence EVD-000662; mysql-it verify and test result details are reconciled from user-confirmed doc/test snapshot EVD-000663. No production or test source changed.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 3 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"CompletionVerificationAgent","attempt_id":"ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I026-A001","event_id":"EVENT-ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I026-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000671"],"execution_mode":"standard / sequential","input_revision":"346bf2b5307e12931fc32cb78dd1380133fc428bf619510e6205cb72de2d4441","iteration_id":"ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-026","iteration_no":26,"next_action":"Publish Completion Verification artifact and complete CompletionVerificationAgent independent Review.","next_agent":"CompletionVerificationAgent","output_revision":"COMPLETION-P2-R03@121eac16a9d5","phase":"completion_verification","record_id":"WR-20260826-012144-TASK-P2-PHASE-COMPLETION-VERIFICATION-PASSED","render_digest":"d9bf4f36ffee6b36cab4fe3ea34ffbedc99b53a76e2c649437e0a90dfe3074a8","schema_version":4,"scope":"执行 P2 Completion Verification","source":"long_task.py finish-attempt","state_change":"TASK-P2-PHASE-COMPLETION-VERIFICATION: RUNNING → PASSED","status":"PASSED","summary":"Completion Verification-026 passed: current R03 Development, Code Review, Testing, acceptance assertions, traceability and no-open-P0/P1 state validated. No production or test source changed.","target_id":"FEATURE-DESC-3361AD2E54FC","task_id":"TASK-P2-PHASE-COMPLETION-VERIFICATION","task_type":"completion_verification","timestamp":"2026-08-26T01:21:44+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260826-012144-TASK-P2-PHASE-COMPLETION-VERIFICATION-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-26T01:21:44+08:00 |
+| 执行 Agent | CompletionVerificationAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-3361AD2E54FC |
+| 范围 | 执行 P2 Completion Verification |
+| 阶段 | completion_verification |
+| 任务类型 | completion_verification |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | standard / sequential |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | Completion Verification-026 passed: current R03 Development, Code Review, Testing, acceptance assertions, traceability and no-open-P0/P1 state validated. No production or test source changed. |
+| 状态 | PASSED |
+| 状态变更 | TASK-P2-PHASE-COMPLETION-VERIFICATION: RUNNING → PASSED |
+| Task | TASK-P2-PHASE-COMPLETION-VERIFICATION |
+| Attempt | ATTEMPT-TASK-P2-PHASE-COMPLETION-VERIFICATION-I026-A001 |
+| Iteration | ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-026 / 26 |
+| 输入 Revision | 346bf2b5307e12931fc32cb78dd1380133fc428bf619510e6205cb72de2d4441 |
+| 输出 Revision | COMPLETION-P2-R03@121eac16a9d5 |
+| StageOutcome | 无 |
+| Evidence | EVD-000671 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | CompletionVerificationAgent |
+| 后续事项 | Publish Completion Verification artifact and complete CompletionVerificationAgent independent Review. |
+
+### 变更摘要
+
+- Completion Verification-026 passed: current R03 Development, Code Review, Testing, acceptance assertions, traceability and no-open-P0/P1 state validated. No production or test source changed.
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

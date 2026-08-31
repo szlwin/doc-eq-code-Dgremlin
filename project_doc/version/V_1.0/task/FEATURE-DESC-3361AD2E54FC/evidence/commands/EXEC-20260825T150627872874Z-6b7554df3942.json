@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 scripts/remediation/verify_dec_demo_mysql_it.py",
+  "exit_code": 1,
+  "executed_at": "2026-08-25T15:06:27+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "output_digest": "ca4c6ed547eda929f22aa4174a68790f2f01a59d604131c55d584b92513fc2e0",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "tests"
+  },
+  "output": "{\n  \"status\": \"FAILED\",\n  \"requiredClasses\": [\n    \"dec.demo.directory.DirectoryTest\",\n    \"dec.demo.model.RuleTests\",\n    \"dec.demo.system.OrderTest\"\n  ],\n  \"discovered\": {},\n  \"missingClasses\": [\n    \"dec.demo.directory.DirectoryTest\",\n    \"dec.demo.model.RuleTests\",\n    \"dec.demo.system.OrderTest\"\n  ],\n  \"totals\": {\n    \"tests\": 0,\n    \"failures\": 0,\n    \"errors\": 0,\n    \"skipped\": 0\n  }\n}\n"
+}

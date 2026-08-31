@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-demo -Dtest=ConfigUtilCompatibilityTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T15:04:30+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "output_digest": "bda3c3d8765775d6735fabd8aaeefd63691dbd87dff0aa85b2519a338059f4b1",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "tests"
+  },
+  "output_ref": "evidence/commands/EXEC-20260825T150437044045Z-bedfc767b5c5.output.txt"
+}

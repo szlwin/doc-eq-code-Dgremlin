@@ -1,0 +1,371 @@
+diff --git a/dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/config/ConfigFileParser.java b/dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/config/ConfigFileParser.java
+index 4a26e77a..d3dc28c8 100644
+--- a/dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/config/ConfigFileParser.java
++++ b/dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/config/ConfigFileParser.java
+@@ -29,6 +29,23 @@ public class ConfigFileParser implements FileParser<ConfigInfo>{
+ 		return parseInto(configInfo, filePath);
+ 	}
+ 
++	/**
++	 * 判断根配置是否声明了由 Compiler 负责的 System 或 Business 文件。
++	 * 旧配置没有这些节点时继续使用原有 ConfigInfo 加载链路。
++	 */
++	public boolean requiresCompiler(String filePath) throws XMLParseException {
++		try {
++			Element root = readDocument(filePath).getRootElement();
++			return root.element("system-file-info") != null
++					|| root.element("business-file-info") != null;
++		} catch (Exception e) {
++			if (e instanceof XMLParseException) {
++				throw (XMLParseException) e;
++			}
++			throw new XMLParseException(e);
++		}
++	}
++
+ 	/** 把模型、View 和 Rule 等内容解析到指定候选配置。 */
+ 	public ConfigInfo parseInto(final ConfigInfo candidate, final String filePath)
+ 			throws XMLParseException {
+@@ -54,24 +71,7 @@ public class ConfigFileParser implements FileParser<ConfigInfo>{
+ 		try {
+ 			
+ 			
+-			SAXReader saxReader = new SAXReader();
+-			Document doc = null;
+-
+-			
+-			if(filePath.startsWith("classpath:")){
+-				filePath = filePath.substring("classpath:".length());
+-				
+-				InputStream fileStream 											
+-					= ConfigFileParser.class
+-					.getClassLoader()
+-					.getResourceAsStream(filePath);
+-				 
+-				 doc = saxReader.read(fileStream); 
+-				 
+-			}else{
+-				
+-				doc = saxReader.read(new File(filePath)); 
+-			}
++			Document doc = readDocument(filePath);
+ 			
+ 			log.info("Load the "+filePath+" Start");
+ 			
+@@ -102,6 +102,26 @@ public class ConfigFileParser implements FileParser<ConfigInfo>{
+ 		log.info("------Dec init End------");
+ 		return configInfo;
+ 	}
++
++	/** 统一读取 classpath 或文件系统中的根配置文档。 */
++	private Document readDocument(String filePath) throws Exception {
++		SAXReader saxReader = new SAXReader();
++		if (filePath.startsWith("classpath:")) {
++			String resource = filePath.substring("classpath:".length());
++			InputStream fileStream = ConfigFileParser.class
++					.getClassLoader()
++					.getResourceAsStream(resource);
++			if (fileStream == null) {
++				throw new XMLParseException("配置资源不存在: " + filePath);
++			}
++			try {
++				return saxReader.read(fileStream);
++			} finally {
++				fileStream.close();
++			}
++		}
++		return saxReader.read(new File(filePath));
++	}
+ 	
+ 	@SuppressWarnings("rawtypes")
+ 	private void parseConnection(ConfigInfo configInfo,Document doc) throws XMLParseException
+diff --git a/dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java b/dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java
+index c983dc15..6be6b2e3 100644
+--- a/dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java
++++ b/dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java
+@@ -3,11 +3,21 @@ package dec.core.starter.common;
+ import dec.context.parse.xml.exception.XMLParseException;
+ import dec.context.parse.xml.parse.config.ConfigFileParser;
+ import dec.context.parse.xml.parse.config.ConnectionInfoParser;
++import dec.core.compiler.api.CompilationOptions;
++import dec.core.compiler.api.CompilationResult;
++import dec.core.compiler.api.CompilationStatus;
++import dec.core.compiler.api.ContextPublisher;
++import dec.core.compiler.api.PublicationResult;
++import dec.core.compiler.api.PublicationStatus;
++import dec.core.compiler.source.SourceReference;
++import dec.core.context.EngineContext;
+ import dec.core.context.config.manager.ConfigManager;
+ import dec.core.context.config.model.config.Config;
+ import dec.core.context.config.model.config.ConfigInfo;
+ import dec.core.context.config.model.datasource.DataSourceConfigInfo;
++import dec.core.starter.CompilerBootstrap;
+ import java.util.Objects;
++import java.util.Optional;
+ 
+ /**
+  * 提供不暴露 ConfigInfo 的简洁配置入口。
+@@ -19,6 +29,8 @@ import java.util.Objects;
+  * BR-P2-SYSTEM-RULEVIEW-001、BR-P2-SYSTEM-RULEVIEW-008。</p>
+  */
+ public final class ConfigUtil {
++    private static final String CONFIG_SCHEMA_VERSION = "1.0";
++    private static final String CONFIG_OPTIONS_VERSION = "config-util-p2";
+     private static final ThreadLocal<ConfigInfo> CANDIDATE =
+             new ThreadLocal<ConfigInfo>();
+ 
+@@ -42,15 +54,25 @@ public final class ConfigUtil {
+     }
+ 
+     /**
+-     * 加载完整配置文件。解析失败时，当前正在使用的配置保持不变。
++     * 加载完整配置文件。现代配置会继续编译 System、Business 及其引用，
++     * 成功后一次安装 ConfigInfo 和 EngineContext；旧配置保持兼容加载方式。
+      */
+-    public static void parseConfigInfo(String filePath) throws XMLParseException {
++    public static synchronized void parseConfigInfo(String filePath)
++            throws XMLParseException {
+         ConfigInfo candidate = candidate();
+         try {
+-            ConfigInfo parsed = new ConfigFileParser().parseInto(
++            String checkedPath = requireText(filePath, "配置文件路径");
++            ConfigFileParser parser = new ConfigFileParser();
++            boolean requiresCompiler = parser.requiresCompiler(checkedPath);
++            ConfigInfo parsed = parser.parseInto(
+                     candidate,
+-                    requireText(filePath, "配置文件路径"));
+-            ConfigManager.getInstance().setConfigInfo(parsed);
++                    checkedPath);
++            if (requiresCompiler) {
++                compileAndInstall(parsed, checkedPath);
++            } else {
++                // P2 保留旧配置入口到 P7；旧格式没有可绑定的 EngineContext。
++                ConfigManager.getInstance().setConfigInfo(parsed);
++            }
+         } finally {
+             CANDIDATE.remove();
+         }
+@@ -80,6 +102,68 @@ public final class ConfigUtil {
+         return value;
+     }
+ 
++    /**
++     * 编译现代配置并整体安装候选对象。编译失败结果不包含可发布模型，
++     * 因而不会替换 ConfigManager 中仍在使用的旧配置。
++     */
++    private static void compileAndInstall(ConfigInfo candidate, String filePath)
++            throws XMLParseException {
++        try {
++            CompilationResult result = CompilerBootstrap.builder()
++                    .allowedRoot(classpathRoot(filePath))
++                    .publisher(acceptPublication())
++                    .build()
++                    .compileAndInstall(
++                            candidate,
++                            new SourceReference(filePath),
++                            new CompilationOptions(
++                                    CONFIG_SCHEMA_VERSION,
++                                    CONFIG_OPTIONS_VERSION),
++                            Optional.<EngineContext>empty());
++            if (result.status() != CompilationStatus.PUBLISHED) {
++                throw new XMLParseException(
++                        "配置编译失败: " + result.diagnostics());
++            }
++        } catch (XMLParseException e) {
++            throw e;
++        } catch (Exception e) {
++            throw new XMLParseException(e);
++        }
++    }
++
++    /** 从 classpath 根配置路径推导 Compiler 允许访问的最小目录。 */
++    private static String classpathRoot(String filePath) throws XMLParseException {
++        if (!filePath.startsWith("classpath:")) {
++            throw new XMLParseException(
++                    "包含 System 或 Business 的配置必须使用 classpath 路径: " + filePath);
++        }
++        int separator = filePath.lastIndexOf('/');
++        if (separator < "classpath:".length()) {
++            return "classpath:/";
++        }
++        return filePath.substring(0, separator + 1);
++    }
++
++    /**
++     * CompilerStarter 在返回 PUBLISHED 后负责把候选 ConfigInfo 与 EngineContext 整体安装。
++     * 这里仅确认当前单次配置加载允许进入该安装步骤。
++     */
++    private static ContextPublisher acceptPublication() {
++        return new ContextPublisher() {
++            @Override
++            public PublicationResult publish(
++                    Optional<EngineContext> expectedCurrent,
++                    EngineContext candidate) {
++                return new PublicationResult() {
++                    @Override
++                    public PublicationStatus status() {
++                        return PublicationStatus.PUBLISHED;
++                    }
++                };
++            }
++        };
++    }
++
+     private static String requireText(String value, String label) {
+         String checked = Objects.requireNonNull(value, label + "不能为空").trim();
+         if (checked.isEmpty()) {
+diff --git a/dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java b/dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java
+new file mode 100644
+index 00000000..87e23622
+--- /dev/null
++++ b/dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java
+@@ -0,0 +1,26 @@
++package dec.demo.config;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++import static org.junit.jupiter.api.Assertions.assertTrue;
++
++import dec.core.context.data.ModelData;
++import dec.core.model.utils.DataUtil;
++import dec.core.starter.common.ConfigUtil;
++import dec.external.datasource.sql.datasource.DBDataSource;
++import org.junit.jupiter.api.Test;
++
++/** 验证 P2 统一入口继续兼容没有 System/Business 声明的旧配置。 */
++class ConfigUtilCompatibilityTest {
++
++    /** P2 到 P7 的迁移边界：旧配置只加载 ConfigInfo，不强制进入现代 Compiler。 */
++    @Test
++    void loadsLegacyConfigurationWithoutSystemDeclarations() throws Exception {
++        ConfigUtil.addDataSourceConfig("MySQL", DBDataSource.class.getName());
++        ConfigUtil.parseConfigInfo("classpath:model/orm-config.xml");
++
++        ModelData order = DataUtil.createViewData("OrderInfo");
++        assertEquals("OrderInfo", order.getName());
++        assertTrue(order.getValues().containsKey("totalPrice"));
++        assertTrue(order.getValues().containsKey("productList"));
++    }
++}
+diff --git a/dec-demo/src/test/java/dec/demo/mix/MixTest.java b/dec-demo/src/test/java/dec/demo/mix/MixTest.java
+index 0a12ca00..a6840ac8 100644
+--- a/dec-demo/src/test/java/dec/demo/mix/MixTest.java
++++ b/dec-demo/src/test/java/dec/demo/mix/MixTest.java
+@@ -4,28 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertNotNull;
+ import static org.junit.jupiter.api.Assertions.assertTrue;
+ 
+-import dec.core.compiler.api.CompilationOptions;
+-import dec.core.compiler.api.CompilationResult;
+-import dec.core.compiler.api.CompilationStatus;
+-import dec.core.compiler.api.ContextPublisher;
+-import dec.core.compiler.api.PublicationResult;
+-import dec.core.compiler.api.PublicationStatus;
+-import dec.core.compiler.api.PublishedCompilationResult;
+-import dec.core.compiler.source.SourceReference;
+-import dec.core.context.EngineContext;
+ import dec.core.context.data.BaseData;
+ import dec.core.context.data.ModelData;
++import dec.core.context.model.ActionKey;
++import dec.core.context.model.BusinessScopeKey;
+ import dec.core.context.model.CompiledModelSet;
++import dec.core.context.model.DirectoryKey;
+ import dec.core.context.model.InformationKey;
+ import dec.core.context.model.RuleViewKey;
+ import dec.core.context.model.SystemKey;
+ import dec.core.model.utils.DataUtil;
+-import dec.core.starter.CompilerBootstrap;
+ import dec.core.starter.common.ConfigUtil;
+ import dec.external.datasource.sql.datasource.DBDataSource;
+ import java.io.File;
+ import java.net.URLClassLoader;
+-import java.util.Optional;
+ import org.junit.jupiter.api.Test;
+ 
+ /**
+@@ -39,8 +31,7 @@ public class MixTest {
+      */
+     @Test
+     void loadsMixConfigurationAndCreatesDeclaredModels() throws Exception {
+-        ConfigUtil.addDataSourceConfig("MySQL", DBDataSource.class.getName());
+-        ConfigUtil.parseConfigInfo("classpath:mix/orm-config.xml");
++        loadMixConfigurationFromTestResources();
+ 
+         ModelData order = DataUtil.createViewData("OrderInfo");
+         assertEquals("OrderInfo", order.getName());
+@@ -66,29 +57,8 @@ public class MixTest {
+      */
+     @Test
+     void loadsSystemsFileFromTestResources() throws Exception {
+-        CompilationResult result;
+-        // 隔离到 test 输出目录，避免 main/test 两套同名 mix 资源造成来源歧义。
+-        try (URLClassLoader testResources = new URLClassLoader(
+-                new java.net.URL[] {
+-                        new File("target/test-classes").toURI().toURL()
+-                },
+-                null)) {
+-            result = CompilerBootstrap.builder()
+-                    .classLoader(testResources)
+-                    .allowedRoot("classpath:mix/")
+-                    .publisher(alwaysPublish())
+-                    .build()
+-                    .compileAndPublish(
+-                            new SourceReference("classpath:mix/orm-config.xml"),
+-                            new CompilationOptions("1.0", "mix-test-systems"),
+-                            Optional.<EngineContext>empty());
+-        }
+-
+-        assertEquals(
+-                CompilationStatus.PUBLISHED,
+-                result.status(),
+-                result.diagnostics().toString());
+-        CompiledModelSet model = ((PublishedCompilationResult) result).modelSet();
++        loadMixConfigurationFromTestResources();
++        CompiledModelSet model = DataUtil.getEngineContext().compiledModelSet();
+         assertTrue(model.sourceManifest().sources().stream().anyMatch(source ->
+                 source.sourceId().endsWith("mix/system/systems.xml")));
+ 
+@@ -114,21 +84,30 @@ public class MixTest {
+         assertTrue(model.typedRegistries().information()
+                 .find(new InformationKey(common, "paySuccess"))
+                 .isPresent());
++
++        BusinessScopeKey business = new BusinessScopeKey("order-payment");
++        DirectoryKey ordered = new DirectoryKey(business, "ordered");
++        assertTrue(model.typedRegistries().businessScopes().find(business).isPresent());
++        assertTrue(model.typedRegistries().directories().find(ordered).isPresent());
++        assertTrue(model.typedRegistries().actions()
++                .find(new ActionKey(ordered, "saveOrder"))
++                .isPresent());
++        assertTrue(model.typedRegistries().produces().size() > 0);
+     }
+ 
+-    private static ContextPublisher alwaysPublish() {
+-        return new ContextPublisher() {
+-            @Override
+-            public PublicationResult publish(
+-                    Optional<EngineContext> expectedCurrent,
+-                    EngineContext candidate) {
+-                return new PublicationResult() {
+-                    @Override
+-                    public PublicationStatus status() {
+-                        return PublicationStatus.PUBLISHED;
+-                    }
+-                };
+-            }
+-        };
++    /** 只隔离测试资源来源，业务加载仍然只调用 ConfigUtil 公共入口。 */
++    private static void loadMixConfigurationFromTestResources() throws Exception {
++        ClassLoader thread = Thread.currentThread().getContextClassLoader();
++        try (URLClassLoader testResources = new URLClassLoader(
++                new java.net.URL[] {
++                        new File("target/test-classes").toURI().toURL()
++                },
++                null)) {
++            Thread.currentThread().setContextClassLoader(testResources);
++            ConfigUtil.addDataSourceConfig("MySQL", DBDataSource.class.getName());
++            ConfigUtil.parseConfigInfo("classpath:mix/orm-config.xml");
++        } finally {
++            Thread.currentThread().setContextClassLoader(thread);
++        }
+     }
+ }
