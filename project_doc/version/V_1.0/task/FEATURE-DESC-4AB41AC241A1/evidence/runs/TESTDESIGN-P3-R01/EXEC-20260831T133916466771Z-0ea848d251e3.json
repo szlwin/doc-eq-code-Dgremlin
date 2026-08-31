@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "status": "FAILED",
+  "error_code": "COMMAND_EXIT_NONZERO",
+  "command": "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/case_doc.py validate -g TestDesignAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md --stage ready --json",
+  "exit_code": 2,
+  "executed_at": "2026-08-31T13:39:16.388+00:00",
+  "completed_at": "2026-08-31T13:39:16.466+00:00",
+  "timeout_seconds": 300,
+  "duration_ms": 79,
+  "revision": "TESTDESIGN-P3-R01",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "test_design",
+    "mutation_scope": "taskFacts",
+    "timed_out": false,
+    "attempt_id": "ATTEMPT-TASK-P3-INFORMATION-ENGINE-TEST-DESIGN-I005-A001"
+  },
+  "output": "",
+  "stderr": "usage: case_doc.py validate [-h]\n                            [-g {ApiContractReviewAgent,ArchitectureReviewAgent,BusinessModelAgent,BusinessModelReviewAgent,CompletionVerificationAgent,ConcurrencyReviewAgent,CrossModuleIntegrationReviewAgent,DataMigrationReviewAgent,DebugAgent,DesignAgent,DesignReviewAgent,DevelopAgent,DocumentRenderAgent,EngineeringStandardsReviewAgent,ImpactAnalysisReviewAgent,ImplementationPlanAgent,IncrementalArchiveAgent,MaintainabilityReviewAgent,PerformanceReviewAgent,PlanReviewAgent,ProjectManagerAgent,RequirementAnalysisAgent,RequirementConfirmationAgent,RequirementReviewAgent,SecurityReviewAgent,SpecComplianceReviewAgent,TDDReviewAgent,TddAgent,TestAgent,TestDesignAgent,TestEvidenceReviewAgent}]\n                            --doc-root DOC_ROOT --file FILE\n                            [--stage {structure,ready}] [--json]\ncase_doc.py validate: error: the following arguments are required: --doc-root\n",
+  "stderr_digest": "12066d7051af3e8ce828eac4ea129da83616086e9b8374e0e87a244740794b7c"
+}

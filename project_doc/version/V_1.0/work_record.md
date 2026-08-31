@@ -2907,6 +2907,56 @@
 | 测试与验证 | 登记 Evidence 1 项；命令 Evidence 0 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"TestDesignAgent","attempt_id":"ATTEMPT-TASK-P3-INFORMATION-ENGINE-TEST-DESIGN-I005-A001","event_id":"EVENT-ATTEMPT-TASK-P3-INFORMATION-ENGINE-TEST-DESIGN-I005-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000030"],"execution_mode":"git_checkpoint","input_revision":"DESIGN-P3-R02","iteration_id":"ITER-FEATURE-DESC-4AB41AC241A1-TEST-DESIGN-005","iteration_no":5,"next_action":"发布 TESTDESIGN-P3-R01 并启动独立 TestDesign Review","next_agent":"TestEvidenceReviewAgent","output_revision":"TESTDESIGN-P3-R01","phase":"test_design","record_id":"WR-20260831-213943-TASK-P3-INFORMATION-ENGINE-TEST-DESIGN-PASSED","render_digest":"f87b0f9733165eef7d2d28778bcaae4a15b2f5c32c2a8143b361dac4885ce1fe","schema_version":4,"scope":"设计 P3 Information Engine 测试矩阵","source":"long_task.py finish-attempt","state_change":"TASK-P3-INFORMATION-ENGINE-TEST-DESIGN: RUNNING → PASSED","status":"PASSED","summary":"完成 6 个 Information Engine 测试 Case 和验收断言映射；case_doc ready 校验通过。","target_id":"FEATURE-DESC-4AB41AC241A1","task_id":"TASK-P3-INFORMATION-ENGINE-TEST-DESIGN","task_type":"test_design","timestamp":"2026-08-31T21:39:43+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260831-213943-TASK-P3-INFORMATION-ENGINE-TEST-DESIGN-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-08-31T21:39:43+08:00 |
+| 执行 Agent | TestDesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-4AB41AC241A1 |
+| 范围 | 设计 P3 Information Engine 测试矩阵 |
+| 阶段 | test_design |
+| 任务类型 | test_design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成 6 个 Information Engine 测试 Case 和验收断言映射；case_doc ready 校验通过。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P3-INFORMATION-ENGINE-TEST-DESIGN: RUNNING → PASSED |
+| Task | TASK-P3-INFORMATION-ENGINE-TEST-DESIGN |
+| Attempt | ATTEMPT-TASK-P3-INFORMATION-ENGINE-TEST-DESIGN-I005-A001 |
+| Iteration | ITER-FEATURE-DESC-4AB41AC241A1-TEST-DESIGN-005 / 5 |
+| 输入 Revision | DESIGN-P3-R02 |
+| 输出 Revision | TESTDESIGN-P3-R01 |
+| StageOutcome | 无 |
+| Evidence | EVD-000030 |
+| Review | 无 |
+| 开放问题 | 无 |
+| Git 检查点 | 无 |
+| 下一 Agent | TestEvidenceReviewAgent |
+| 后续事项 | 发布 TESTDESIGN-P3-R01 并启动独立 TestDesign Review |
+
+### 变更摘要
+
+- 完成 6 个 Information Engine 测试 Case 和验收断言映射；case_doc ready 校验通过。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

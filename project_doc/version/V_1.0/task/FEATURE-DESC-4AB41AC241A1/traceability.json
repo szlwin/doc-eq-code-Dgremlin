@@ -34,10 +34,18 @@
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#P3 Information Engine 技术设计",
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#实施策略决策"
       ],
-      "test_case_ids": [],
+      "test_case_ids": [
+        "CASE-FEATURE-DESC-4AB41AC241A1-001",
+        "CASE-FEATURE-DESC-4AB41AC241A1-002",
+        "CASE-FEATURE-DESC-4AB41AC241A1-003",
+        "CASE-FEATURE-DESC-4AB41AC241A1-004",
+        "CASE-FEATURE-DESC-4AB41AC241A1-005",
+        "CASE-FEATURE-DESC-4AB41AC241A1-006"
+      ],
       "plan_task_ids": [
         "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL",
-        "TASK-P3-INFORMATION-ENGINE-DESIGN"
+        "TASK-P3-INFORMATION-ENGINE-DESIGN",
+        "TASK-P3-INFORMATION-ENGINE-TEST-DESIGN"
       ],
       "contract_refs": [],
       "implementation_refs": [],

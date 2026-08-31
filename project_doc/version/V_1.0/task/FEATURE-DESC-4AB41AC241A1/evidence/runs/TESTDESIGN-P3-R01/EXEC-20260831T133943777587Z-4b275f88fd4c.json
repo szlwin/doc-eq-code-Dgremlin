@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "status": "PASSED",
+  "error_code": "",
+  "command": "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/case_doc.py validate -g TestDesignAgent --doc-root project_doc --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md --stage ready --json",
+  "exit_code": 0,
+  "executed_at": "2026-08-31T13:39:43.699+00:00",
+  "completed_at": "2026-08-31T13:39:43.777+00:00",
+  "timeout_seconds": 300,
+  "duration_ms": 77,
+  "revision": "TESTDESIGN-P3-R01",
+  "output_digest": "4b69e11aad82a4e1eee5c20c57e8b85a7e482de9a5898c90e2add62c0c080898",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "test_design",
+    "mutation_scope": "taskFacts",
+    "timed_out": false,
+    "attempt_id": "ATTEMPT-TASK-P3-INFORMATION-ENGINE-TEST-DESIGN-I005-A001"
+  },
+  "output": "{\n  \"valid\": true,\n  \"path\": \"project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md\",\n  \"stage\": \"ready\",\n  \"errors\": [],\n  \"warnings\": [],\n  \"counts\": {\n    \"cases\": 6,\n    \"tableRows\": 82,\n    \"unresolvedPlaceholders\": 0,\n    \"checkedCompletionGates\": 7,\n    \"uncheckedCompletionGates\": 0\n  }\n}\n",
+  "stderr": "",
+  "stderr_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

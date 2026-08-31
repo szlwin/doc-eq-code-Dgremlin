@@ -182,6 +182,52 @@
       "supersedes_iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-004",
       "revision_reason": "设计文档发布后补齐契约矩阵，重开 iteration 以冻结一致的设计 revision。",
       "risk_triggers": []
+    },
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-TEST-DESIGN",
+      "title": "设计 P3 Information Engine 测试矩阵",
+      "objective": "基于 REQAN-P3-R01、BM-P3-R01 和 DESIGN-P3-R02 建立 Information Engine 的可执行测试 Case、验收断言与追踪关系，不实现测试代码。",
+      "phase": "test_design",
+      "depends_on": ["TASK-P3-INFORMATION-ENGINE-DESIGN"],
+      "owner_agent": "TestDesignAgent",
+      "reviewer_agents": ["TestEvidenceReviewAgent", "RequirementReviewAgent"],
+      "input_revisions": {
+        "design": "DESIGN-P3-R02"
+      },
+      "allowed_files": [
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/handoff.md"
+      ],
+      "acceptance_trace_ids": ["TR-P3-INFORMATION-ENGINE-001"],
+      "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-IDENTIFY",
+        "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/case_doc.py validate -g TestDesignAgent --doc-root project_doc --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md --stage ready --json"
+      ],
+      "expected_results": [
+        "16 个 mix Information、三类 Information、两套表达式、DAG/复合表达式和实时读取均有具体 Case。",
+        "普通 null、显式 InformationKey=null、非法模型路径、every(emptyCollection)=TRUE、订单明细非空、target-main 基础字段优先及 orderDetail 独立归属均有边界 Case。",
+        "change-data 写入值、写入异常抛错、既有回滚且不继续下游均有物化 Case；不引入 MutationSet、并发或幂等测试。",
+        "Acceptance Assertions 与 TR-P3-INFORMATION-ENGINE-001 绑定，测试代码和执行证据延后至 testing 阶段。"
+      ],
+      "stop_conditions": [
+        "测试预期无法从当前需求、业务模型或设计推导。",
+        "试图修改生产代码、测试代码、XML fixture 或 P2 事实。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-TEST-DESIGN",
+      "feature_id": "FEATURE-DESC-4AB41AC241A1",
+      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-TEST-DESIGN-005",
+      "iteration_no": 5,
+      "supersedes_iteration_id": "",
+      "revision_reason": "设计阶段通过后登记测试设计阶段任务。",
+      "risk_triggers": []
     }
   ]
 }
