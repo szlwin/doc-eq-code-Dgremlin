@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"import json; from pathlib import Path; t=Path('project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md').read_text(); s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); marker=chr(96)*3+'json traceability'+chr(10); i=s.index(marker)+len(marker); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); assert len(a)==10 and all(x.get('status')=='COVERED' and x.get('test_case_ids') and all(c in t for c in x['test_case_ids']) for x in a)\"",
+  "executed_at": "2026-08-10T12:16:39+00:00",
+  "revision": "TESTDESIGN-P2-R31",
+  "exit_code": 0,
+  "output_ref": "evidence/commands/rc9-machine-testdesign-r31/02.out",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

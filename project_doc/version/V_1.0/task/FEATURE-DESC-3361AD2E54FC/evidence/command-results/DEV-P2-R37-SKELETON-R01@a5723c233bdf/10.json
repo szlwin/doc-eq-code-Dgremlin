@@ -1,0 +1,17 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "./mvnw --batch-mode --no-transfer-progress clean verify",
+  "executed_at": "2026-08-19T01:34:46+00:00",
+  "revision": "DEV-P2-R37-SKELETON-R01@a5723c233bdf",
+  "exit_code": 0,
+  "output_ref": "evidence/imports/task8-run-32205252873/r06-cmd10.log",
+  "output_digest": "5ab14df94d3cf0b4d1be81ffa977c4ad8dcd7d871ac464ecd69183cea81f87c5",
+  "provenance": {
+    "mode": "REBIND_BY_EXECUTABLE_SOURCE_EQUIVALENCE",
+    "original_workflow_run_id": 32205252873,
+    "current_canonical_head": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
+    "equivalence_evidence": "evidence/imports/development-skeleton-i013/skeleton-executable-equivalence.json",
+    "rebound_from_revision": "DEV-P2-R37-CLOSURE-R01@1a936fdd2a45"
+  }
+}

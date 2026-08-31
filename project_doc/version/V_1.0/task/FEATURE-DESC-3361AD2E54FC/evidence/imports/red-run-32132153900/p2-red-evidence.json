@@ -1,0 +1,31 @@
+{
+  "productionBaseSha": "6f02e0855612a5aac9abfe8175b050add7809979",
+  "compileCommand": "./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install",
+  "redCommand": "./mvnw -pl dec-core-starter -Dtest=P2SecurityAuthorityRemediationTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "tests": 4,
+  "failures": 4,
+  "errors": 0,
+  "skipped": 0,
+  "caseIds": [
+    "CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001",
+    "CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001",
+    "CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001",
+    "CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001"
+  ],
+  "observedWriteBypassTuples": {
+    "readOnlyRawWrite": {
+      "receipt": "NON_NULL",
+      "effectCount": "0->1",
+      "value": "10->77",
+      "mutationVersion": "0->1"
+    },
+    "prooflessRawWrite": {
+      "receipt": "NON_NULL",
+      "effectCount": "0->1",
+      "value": "10->88",
+      "mutationVersion": "0->1"
+    }
+  },
+  "observedProoflessReadValue": 10,
+  "observedPublicRawPortSeam": true
+}

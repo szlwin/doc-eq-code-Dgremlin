@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"import json,yaml,jsonschema; d=yaml.safe_load(open('project_doc/docs/_relations/dependency_impact.yaml',encoding='utf-8')); assert d.get('revision')=='P2-IMPACT-R29'; jsonschema.validate(d,json.load(open('/home/oai/skills/common-develop/assets/structured-docs/dependency-impact.schema.json',encoding='utf-8')))\"",
+  "executed_at": "2026-08-10T12:07:37+00:00",
+  "revision": "BM-R20",
+  "exit_code": 0,
+  "output_ref": "evidence/commands/rc9-machine-bm-r20/04.out",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

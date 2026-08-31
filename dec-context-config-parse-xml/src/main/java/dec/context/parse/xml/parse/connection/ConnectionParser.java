@@ -11,7 +11,6 @@ import dec.core.context.config.model.config.Config;
 import dec.core.context.config.model.connection.Connection;
 import dec.core.context.config.model.connection.ConnectionInfo;
 import dec.core.context.config.model.datasource.DataSource;
-import dec.core.context.config.model.datasource.config.DataSourceConfig;
 import dec.core.context.config.utils.ConfigContextUtil;
 
 //import com.orm.common.config.Config;
@@ -51,8 +50,12 @@ public class ConnectionParser implements ElementParser<Connection>{
 			dataSource.setConName(connection.getName());
 			connection.getDataSourceInfo().addDataSource(dataSource);
 			
-			connection.setConnectionInfo(
-					(ConnectionInfo) ConfigContextUtil.getConfigInfo().get(Config.CONNECTION_CONFIG, dataSource.getType()));
+			// Connection 已通过 data-source ref 完成绑定，连接实现类型直接继承
+			// DataSource.type，不要求调用方额外注册同名 ConnectionInfo。
+			ConnectionInfo<Object, Object, Object> connectionInfo =
+					new ConnectionInfo<Object, Object, Object>();
+			connectionInfo.setName(dataSource.getType());
+			connection.setConnectionInfo(connectionInfo);
 			
 		}
 		Element elementPro = element.element("property-info");
@@ -77,7 +80,7 @@ public class ConnectionParser implements ElementParser<Connection>{
 	
 	private DataSource<?> getDataSource(String name)
 	{
-		return DataSourceConfig.getInstance().get(name);
+		return ConfigContextUtil.getConfigInfo().getDataSource(name);
 		
 	}
 

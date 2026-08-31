@@ -91,9 +91,9 @@ class DeferredCompletenessTest {
     void rejectsMissingResolvedReferencesContainer() {
         DeferredClassificationInput input = DeferredClassificationInput.builder()
                 .ownerKey(new SystemKey("order"))
-                .kind(DeferredKind.MODEL_ACCESS)
+                .kind(DeferredKind.QUERY)
                 .ordinal(0)
-                .reasonCode("model-access-selector-binding")
+                .reasonCode("query-planning")
                 .sourceRef(source())
                 .body(body())
                 .build();
@@ -198,9 +198,9 @@ class DeferredCompletenessTest {
     private static DeferredClassificationInput.Builder validBuilder() {
         return DeferredClassificationInput.builder()
                 .ownerKey(new SystemKey("order"))
-                .kind(DeferredKind.MODEL_ACCESS)
+                .kind(DeferredKind.QUERY)
                 .ordinal(0)
-                .reasonCode("model-access-selector-binding")
+                .reasonCode("query-planning")
                 .sourceRef(source())
                 .body(body())
                 .resolvedReferences(Arrays.<DefinitionKey>asList(

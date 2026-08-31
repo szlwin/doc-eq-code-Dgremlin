@@ -1,0 +1,277 @@
+schemaVersion: 1
+changeSet:
+  id: CHG-V_1.0-COMPILER-P2-BM-R12
+  version: V_1.0
+  module: COMPILER
+  featureCode: P2-SYSTEM-RULEVIEW
+  reason: >-
+    Complete the candidate remediation for FND-P2-REV-001 without creating a duplicate
+    finding. BM-R11 made ResolvedProtectedAccess depend on a required RuntimeBindingPlan,
+    which left STATIC_BOUND -> STATIC_ALLOW with no legal path into the mandatory Guard.
+    R12 generalizes the framework capability and gateway to every protected READ/WRITE/EXECUTE;
+    runtime binding proof remains conditional on the exact selected rule status.
+  baseRevisions:
+    business_model: BM-R11
+  resultRevisions:
+    business_model: BM-R12
+  affectedTraceIds:
+    - TR-P2-SYSTEM-RULEVIEW-004
+    - TR-P2-SYSTEM-RULEVIEW-005
+    - TR-P2-SYSTEM-RULEVIEW-006
+    - TR-P2-SYSTEM-RULEVIEW-007
+    - TR-P2-SYSTEM-RULEVIEW-008
+operations:
+  - artifact: business_model
+    collection: terms
+    operation: update
+    targetId: TERM-RESOLVED-PROTECTED-ACCESS
+    beforeRef: changes/p2-business-model-operation-bound-capability-remediation-r11.yaml#TERM-RESOLVED-PROTECTED-ACCESS
+    after:
+      id: TERM-RESOLVED-PROTECTED-ACCESS
+      name: ResolvedProtectedAccess
+      definition: >-
+        Framework-owned one-shot protected-operation capability used for every protected
+        READ/WRITE/EXECUTE. It is created while the actual target and exact operation intent
+        are resolved and binds one EngineContext, one exact ModelAccessRuleKey request key,
+        one framework execution frame, one hidden actual target identity and one AccessOperation.
+        It does not require a RuntimeBindingPlan to exist. After the Guard performs the single
+        exact PolicyIndex lookup, STATIC_ALLOW takes an internal fast path with no runtime plan;
+        RUNTIME_GUARD_REQUIRED additionally validates the compiler-published runtime plan and
+        runtime membership/provenance against the same capability. The caller cannot detach
+        ALLOW from the bound target or combine authorization for A with operation on B.
+      forbiddenSynonyms:
+        - runtime-plan-only capability
+        - detached authorization token
+        - caller-side static fast path
+        - reusable proof plus arbitrary target
+      sourceRefs:
+        - REQAN-P2-R01
+        - FND-P2-REV-001
+        - FND-P2-REV-019
+
+  - artifact: business_model
+    collection: valueObjects
+    operation: update
+    targetId: VO-RESOLVED-PROTECTED-ACCESS
+    beforeRef: changes/p2-business-model-operation-bound-capability-remediation-r11.yaml#VO-RESOLVED-PROTECTED-ACCESS
+    after:
+      id: VO-RESOLVED-PROTECTED-ACCESS
+      name: ResolvedProtectedAccess
+      identity: opaqueCapabilityId
+      attributes:
+        - name: opaqueCapabilityId
+          type: OpaqueCapabilityId
+          required: true
+        - name: engineContextId
+          type: EngineContextId
+          required: true
+        - name: requestedRuleKey
+          type: ModelAccessRuleKey
+          required: true
+        - name: operation
+          type: AccessOperation
+          required: true
+        - name: executionFrameId
+          type: RuntimeExecutionFrameId
+          required: true
+        - name: resolutionId
+          type: OpaqueResolutionId
+          required: true
+      hiddenBindings:
+        - actualTargetIdentity
+        - operationPayloadOrActionIdentity
+        - resolutionOwnerIdentity
+        - optionalCollectionCursorIdentity
+        - optionalRuntimeMembershipProvenance
+        - oneShotLifecycleState
+      behaviors:
+        - issuedOnlyByFrameworkProtectedAccessResolver
+        - bindActualTargetInternally
+        - bindProtectedOperationInternally
+        - enterGuardForEveryProtectedOperation
+        - consumeOnce
+        - rejectTargetSubstitution
+      constraints:
+        - RuntimeBindingPlanKey is not a mandatory capability attribute
+        - caller cannot provide selected status, runtime plan, proof result, raw target or bypass flag
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: services
+    operation: add
+    targetId: SVC-PROTECTED-ACCESS-RESOLUTION
+    after:
+      id: SVC-PROTECTED-ACCESS-RESOLUTION
+      name: ProtectedAccessResolutionService
+      reason: >-
+        Capability creation must be independent of whether the selected rule later proves
+        STATIC_ALLOW or RUNTIME_GUARD_REQUIRED. The framework resolves the actual target and
+        operation intent first; policy status is selected only inside Guard by one exact lookup.
+      inputs:
+        - CurrentEngineContext
+        - FrameworkOwnedProtectedAccessResolutionContext
+        - FrameworkOwnedProtectedOperationIntent
+      outputs:
+        - ResolvedProtectedAccess
+        - DiagnosticOrRuntimeDenial
+      constraints:
+        - no RuntimeBindingPlan input is required to create a generic protected-access capability
+        - actual target and operation are bound in one framework resolution step
+        - business caller cannot mint capability or replace target after creation
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: services
+    operation: update
+    targetId: SVC-RUNTIME-BINDING-RESOLUTION
+    beforeRef: changes/p2-business-model-operation-bound-capability-remediation-r11.yaml#SVC-RUNTIME-BINDING-RESOLUTION
+    after:
+      id: SVC-RUNTIME-BINDING-RESOLUTION
+      name: RuntimeBindingVerificationService
+      reason: >-
+        Runtime binding is a conditional verification step after Guard has selected an exact
+        RUNTIME_GUARD_REQUIRED rule; it is not the universal capability-creation service.
+      inputs:
+        - ResolvedProtectedAccess
+        - SelectedCompiledModelAccessRule
+        - RuntimeBindingPlan
+        - CurrentEngineContext
+      outputs:
+        - RuntimeBindingVerification
+        - RuntimeDenial
+      constraints:
+        - invoked only when selected rule status is RUNTIME_GUARD_REQUIRED
+        - verifier observes hidden framework resolution/provenance and never accepts caller raw object or boolean proof
+        - STATIC_ALLOW invokes this service zero times
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: services
+    operation: update
+    targetId: SVC-PROTECTED-ACCESS-GATEWAY
+    beforeRef: changes/p2-business-model-operation-bound-capability-remediation-r11.yaml#SVC-PROTECTED-ACCESS-GATEWAY
+    after:
+      id: SVC-PROTECTED-ACCESS-GATEWAY
+      name: ProtectedAccessGateway
+      reason: >-
+        Every protected READ/WRITE/EXECUTE, including STATIC_ALLOW, must enter the same gateway
+        and Guard. STATIC_ALLOW is permitted only as a Guard-internal fast path after exact
+        rule selection, never as a caller-side direct-operation bypass.
+      inputs:
+        - ResolvedProtectedAccess
+        - CurrentEngineContext
+      outputs:
+        - ProtectedAccessResult
+        - ModelAccessDecision
+      constraints:
+        - invoke ModelAccessGuard exactly once for every protected operation
+        - Guard performs exactly one exact PolicyIndex lookup using capability requestedRuleKey
+        - selected STATIC_ALLOW requires no RuntimeBindingPlan and no RuntimeBindingVerificationService call
+        - selected RUNTIME_GUARD_REQUIRED requires its compiler-published plan/requirement and runtime verification
+        - execute only the target and operation already hidden-bound in the same capability
+        - expose no caller-side direct static executor and no second target/raw object/callback substitution API
+        - consume capability after successful operation or terminal DENY
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: scenarios
+    operation: update
+    targetId: SCN-P2-MODEL-ACCESS-STATIC
+    beforeRef: COMPILER_business_model.yaml#SCN-P2-MODEL-ACCESS-STATIC
+    after:
+      id: SCN-P2-MODEL-ACCESS-STATIC
+      given:
+        - ModelAccessRule System/target/exact ModelPath/operation are statically valid and DIRECT_EXACT
+        - production classifier emits STATIC_BOUND and compiled rule status STATIC_ALLOW with no RuntimeBindingPlan
+      when: framework performs the protected READ/WRITE/EXECUTE
+      then:
+        - framework resolves actual target plus operation into one ResolvedProtectedAccess without a RuntimeBindingPlan
+        - ProtectedAccessGateway invokes Guard exactly once
+        - Guard performs one exact PolicyIndex lookup and selects STATIC_ALLOW
+        - runtime binding verifier/evaluator invocation count is zero
+        - only the same capability-bound target and operation execute exactly once
+        - no supported caller-side path may execute the protected operation without gateway/Guard
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-005
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: scenarios
+    operation: update
+    targetId: SCN-P2-MODEL-ACCESS-RUNTIME
+    beforeRef: changes/p2-business-model-operation-bound-capability-remediation-r11.yaml#SCN-P2-MODEL-ACCESS-RUNTIME
+    after:
+      id: SCN-P2-MODEL-ACCESS-RUNTIME
+      given:
+        - static System/target/exact path/operation authorization is valid
+        - production classifier emitted RUNTIME_GUARD_REQUIRED with RuntimeBindingPlan
+        - framework execution frame identifies actual collection element A
+      when: framework performs the protected operation
+      then:
+        - generic ProtectedAccessResolutionService first produces one capability bound to actual A and operation without caller-provided plan/proof
+        - ProtectedAccessGateway invokes Guard exactly once
+        - Guard exact lookup selects the runtime rule and then invokes RuntimeBindingVerificationService against that rule's exact plan
+        - Guard verification and final operation use the same capability hidden target identity
+        - proof/capability A cannot authorize element B; changed membership/stale context/wrong plan/replay DENY before operation
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: invariants
+    operation: add
+    targetId: INV-COMPILER-026
+    after:
+      id: INV-COMPILER-026
+      statement: >-
+        Every protected READ/WRITE/EXECUTE MUST be represented by a framework-issued
+        ResolvedProtectedAccess and executed only through ProtectedAccessGateway -> ModelAccessGuard.
+        STATIC_ALLOW is only a Guard-internal post-lookup fast path and MUST NOT require or fabricate
+        a RuntimeBindingPlan. RUNTIME_GUARD_REQUIRED alone requires runtime plan/proof verification.
+      trigger: every runtime protected model access
+      failure: MODEL_ACCESS_GUARD_BYPASS
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+  - artifact: business_model
+    collection: invariants
+    operation: update
+    targetId: INV-COMPILER-025
+    beforeRef: changes/p2-business-model-operation-bound-capability-remediation-r11.yaml#INV-COMPILER-025
+    after:
+      id: INV-COMPILER-025
+      statement: >-
+        For every protected access, the actual object identity bound when the generic capability
+        is resolved and the object identity actually read/written/executed must be the same
+        framework identity. For RUNTIME_GUARD_REQUIRED, Guard additionally verifies runtime
+        membership/provenance against the exact selected rule's plan. Detached ALLOW, capability A
+        plus arbitrary object B, or caller replacement of the target after Guard is forbidden.
+      trigger: protected access after actual target resolution and before protected operation
+      failure: RUNTIME_BINDING_OPERATION_TARGET_MISMATCH
+      traceIds:
+        - TR-P2-SYSTEM-RULEVIEW-004
+        - TR-P2-SYSTEM-RULEVIEW-006
+        - TR-P2-SYSTEM-RULEVIEW-007
+
+acceptance:
+  - DIRECT_EXACT -> STATIC_BOUND -> STATIC_ALLOW has a legal generic capability path with no RuntimeBindingPlan.
+  - STATIC_ALLOW protected access invokes ProtectedAccessGateway and Guard exactly once, PolicyIndex exact lookup once, runtime binding verifier/evaluator zero times, and executes only the capability-bound target once.
+  - Caller-side STATIC_ALLOW direct-operation bypass is absent from the supported architecture/API.
+  - RUNTIME_GUARD_REQUIRED uses the same generic capability/gateway but additionally verifies the compiler-published runtime plan/provenance before same-target execution.
+  - FND-P2-REV-001 is only PARTIAL_FIX_PROPOSED until exact independent review and machine Evidence prove the candidate path; no new FND-020 is created.
+  - No finding is CLOSED until BM-R12 is materialized through formal RC9 lifecycle and exact-revision Review.

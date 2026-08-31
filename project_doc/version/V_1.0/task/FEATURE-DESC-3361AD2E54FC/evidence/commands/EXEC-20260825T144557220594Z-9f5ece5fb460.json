@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /Users/shazhoulin/work/zhu/code/codex-env/skills/common-develop/scripts/auto_remediation.py preflight -g DevelopAgent --authority-current true --test-oracle-authoritative true --fixture-representative true --configuration-semantically-valid true --environment-stable true --task-dir /Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --json",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T14:45:57+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "output_digest": "a6fe62feb48ec5fe8c8db5be33737a330ca73999b3dd2c67bb7399d394bd967f",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "projectDocs"
+  },
+  "output": "{\n  \"checkOrder\": [\n    \"authority_current\",\n    \"test_oracle_authoritative\",\n    \"fixture_representative\",\n    \"configuration_semantically_valid\",\n    \"environment_stable\"\n  ],\n  \"results\": {\n    \"authority_current\": true,\n    \"test_oracle_authoritative\": true,\n    \"fixture_representative\": true,\n    \"configuration_semantically_valid\": true,\n    \"environment_stable\": true\n  },\n  \"productionMutationAllowed\": true,\n  \"firstBlockingCheck\": \"\",\n  \"blockingChecks\": [],\n  \"mutationPolicy\": {\n    \"phase\": \"development\",\n    \"scope\": \"productionCode\",\n    \"allowed\": true,\n    \"decision\": \"ALLOW\",\n    \"mode\": \"STANDARD\",\n    \"policy\": {\n      \"taskFacts\": \"ALLOW\",\n      \"projectDocs\": \"ALLOW\",\n      \"tests\": \"ALLOW\",\n      \"config\": \"ALLOW\",\n      \"productionCode\": \"ALLOW\"\n    }\n  }\n}\n"
+}

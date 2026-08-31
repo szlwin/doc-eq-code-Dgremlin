@@ -1,0 +1,36 @@
+{
+  "review_object_revision": "7925ec4f218c167240fc12571336244e1f7849ad",
+  "requirement_authority": [
+    "REQAN-P2-R01@d08612768131",
+    "REQAN-P2-R01+DEC-OVERLAY-20260809-R04"
+  ],
+  "design_baseline": [
+    "DESIGN-P2-R30",
+    "DESIGN-P2-R31 WRITE Value Transport Overlay"
+  ],
+  "operation_scope": "READ_WRITE_ONLY; EXECUTE=N/A",
+  "conclusion": "NEEDS_CHANGES",
+  "open_p0": 1,
+  "open_p1": 1,
+  "findings": [
+    {
+      "id": "P2-CR-001",
+      "severity": "P0",
+      "title": "raw MODEL effect API bypasses Guard",
+      "fact": "RuntimeModelAccessScope exposes frame/beginSession/effectProvider; RuntimeModelEffectBindingResult exposes operationPort; proofless ResolvedProtectedReadAccess/WriteAccess factories permit raw MODEL READ/WRITE without ExactModelAccessGuard."
+    },
+    {
+      "id": "P2-CR-002",
+      "severity": "P1",
+      "title": "same-plan cross-context permission reuse",
+      "fact": "ProductionCompositionCoordinator.belongsToCapturedContext uses RuntimeBindingPlan.equals; RuntimeBindingPlan equality is structural only and RuntimeModelProvenance carries no exact EngineContext identity."
+    }
+  ],
+  "reopen_from": "design",
+  "required_remediation": [
+    "Guard-minted non-forgeable effect authority",
+    "close raw public effect acquisition",
+    "exact EngineContext/runtime-context identity provenance",
+    "test RED before production mutation"
+  ]
+}

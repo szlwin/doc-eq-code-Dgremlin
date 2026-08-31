@@ -3,19 +3,20 @@ package dec.core.starter;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.compiler.api.ModelCompiler;
+import dec.core.context.config.model.config.ConfigInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * TASK-P1-T15 行为合同：Starter 必须只保留实例级 Compiler 入口并退役旧全局配置路径。
+ * TASK-P1-T15 行为合同：Compiler 保持实例边界，简洁配置门面不得暴露 ConfigInfo。
  */
 class StarterRetirementT15Test {
 
@@ -47,27 +48,31 @@ class StarterRetirementT15Test {
         assertTrue(Modifier.isFinal(contractFields.get(0).getModifiers()));
     }
 
-    /** 旧 Starter 的全局 Config 写入口必须从发布 Artifact 中消失。 */
+    /** 简洁配置门面可以恢复，但业务调用者不得创建或传递 ConfigInfo。 */
     @Test
-    void legacyGlobalStarterEntryPointsAreRetired() {
-        assertThrows(
-                ClassNotFoundException.class,
+    void simpleConfigurationFacadesHideConfigInfo() {
+        Class<?> configUtil = assertDoesNotThrow(
                 () -> Class.forName("dec.core.starter.common.ConfigUtil"));
-        assertThrows(
-                ClassNotFoundException.class,
+        Class<?> dataSourceManager = assertDoesNotThrow(
                 () -> Class.forName("dec.core.starter.common.DataSourceManager"));
+
+        assertPublicMethodsHideConfigInfo(configUtil);
+        assertPublicMethodsHideConfigInfo(dataSourceManager);
     }
 
-    /** Starter 发布依赖中不得继续携带旧 XML/YAML 配置 Parser。 */
-    @Test
-    void legacyParserTypesAreNotVisibleFromStarterRuntime() {
-        assertThrows(
-                ClassNotFoundException.class,
-                () -> Class.forName(
-                        "dec.context.parse.xml.parse.config.ConfigFileParser"));
-        assertThrows(
-                ClassNotFoundException.class,
-                () -> Class.forName(
-                        "dec.context.parse.yaml.YamlConfigParser"));
+    private static void assertPublicMethodsHideConfigInfo(Class<?> facade) {
+        for (Method method : facade.getMethods()) {
+            if (method.getDeclaringClass() != facade) {
+                continue;
+            }
+            assertFalse(
+                    ConfigInfo.class.isAssignableFrom(method.getReturnType()),
+                    method + " 不得返回 ConfigInfo");
+            for (Class<?> parameterType : method.getParameterTypes()) {
+                assertFalse(
+                        ConfigInfo.class.isAssignableFrom(parameterType),
+                        method + " 不得接收 ConfigInfo");
+            }
+        }
     }
 }

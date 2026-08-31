@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
  * 验证固定 mix 入口的精确 SourceManifest、声明边和确定性。
  */
 class MixSourceResolverContractTest {
+    private static final String EXTRA_SYSTEMS =
+            "classpath:mix/system/common-systems.xml";
     @Test
     void resolvesExactManifestAndEdges() {
         SourceTestFixture.InMemoryProvider provider = SourceTestFixture.provider(
@@ -69,6 +71,18 @@ class MixSourceResolverContractTest {
     }
 
     @Test
+    void resolvesMultipleSystemFilesIndependentlyOfDeclarationOrder() {
+        MixSourceGraph forward = resolve(multipleSystemProvider(false));
+        MixSourceGraph reversed = resolve(multipleSystemProvider(true));
+
+        assertEquals(11, forward.manifest().sources().size());
+        assertEquals(8, forward.edges().size());
+        assertEquals(forward.manifest().sourceIds(), reversed.manifest().sourceIds());
+        assertEquals(edgeKeys(forward), edgeKeys(reversed));
+        assertTrue(forward.manifest().sourceIds().contains(EXTRA_SYSTEMS));
+    }
+
+    @Test
     void independentlyResolvesEquivalentMainAndTestMirrors() {
         MixSourceGraph mainGraph = resolve(SourceTestFixture.providerFromClasspath(
                 "main-fixture/",
@@ -104,5 +118,43 @@ class MixSourceResolverContractTest {
                 result.diagnostics().toString());
         assertTrue(result.graph().isPresent());
         return result.graph().get();
+    }
+
+    private static SourceTestFixture.InMemoryProvider multipleSystemProvider(
+            boolean reverseDeclarations) {
+        SourceTestFixture.InMemoryProvider provider = SourceTestFixture.provider(
+                SourceTestFixture.FileSetOrder.FORWARD);
+        provider.putSingle(SourceTestFixture.source(
+                SourceTestFixture.ROOT,
+                rootWithMultipleSystems(reverseDeclarations)));
+        provider.putSingle(SourceTestFixture.source(
+                EXTRA_SYSTEMS,
+                "<systems><system name=\"common\"/></systems>"));
+        return provider;
+    }
+
+    private static String rootWithMultipleSystems(boolean reverseDeclarations) {
+        String first = reverseDeclarations
+                ? EXTRA_SYSTEMS : SourceTestFixture.SYSTEMS;
+        String second = reverseDeclarations
+                ? SourceTestFixture.SYSTEMS : EXTRA_SYSTEMS;
+        return "<orm-config>"
+                + "<orm-data-file-info><orm-file path=\""
+                + SourceTestFixture.DATA_ROOT + "\"/></orm-data-file-info>"
+                + "<orm-view-file-info><orm-file path=\""
+                + SourceTestFixture.VIEW_ROOT + "\"/></orm-view-file-info>"
+                + "<system-file-info>"
+                + "<system-file path=\"" + first + "\"/>"
+                + "<system-file path=\"" + second + "\"/>"
+                + "</system-file-info>"
+                + "<business-file-info><business-file path=\""
+                + SourceTestFixture.BUSINESS + "\"/></business-file-info>"
+                + "</orm-config>";
+    }
+
+    private static Set<String> edgeKeys(MixSourceGraph graph) {
+        return graph.edges().stream()
+                .map(SourceTestFixture::key)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }

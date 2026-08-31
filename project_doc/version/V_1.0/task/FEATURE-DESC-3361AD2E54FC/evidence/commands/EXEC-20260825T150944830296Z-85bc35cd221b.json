@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-demo -Dtest=DirectoryTest,RuleTests,OrderTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T15:09:35+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "output_digest": "d3f939b56f876ec5d72497557d12a913b39bbe683cf9d3e50e7e704943a494cb",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "tests"
+  },
+  "output": "[INFO] Scanning for projects...\n[INFO] \n[INFO] ------------------------< doc.eq.code:dec-demo >------------------------\n[INFO] Building dec-demo 1.0\n[INFO]   from pom.xml\n[INFO] --------------------------------[ jar ]---------------------------------\n[INFO] \n[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-demo ---\n[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed\n[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed\n[INFO] \n[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-demo ---\n[INFO] argLine set to -javaagent:/Users/shazhoulin/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/dec-demo/target/jacoco.exec\n[INFO] \n[INFO] --- resources:3.4.0:resources (default-resources) @ dec-demo ---\n[INFO] Copying 50 resources from src/main/resources to target/classes\n[INFO] \n[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-demo ---\n[INFO] Nothing to compile - all classes are up to date.\n[INFO] \n[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-demo ---\n[INFO] Copying 58 resources from src/test/resources to target/test-classes\n[INFO] \n[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-demo ---\n[INFO] Nothing to compile - all classes are up to date.\n[INFO] \n[INFO] --- surefire:3.2.5:test (default-test) @ dec-demo ---\n[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider\n[INFO] \n[INFO] -------------------------------------------------------\n[INFO]  T E S T S\n[INFO] -------------------------------------------------------\n[INFO] \n[INFO] Results:\n[INFO] \n[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0\n[INFO] \n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time:  5.872 s\n[INFO] Finished at: 2026-08-25T23:09:44+08:00\n[INFO] ------------------------------------------------------------------------\n"
+}

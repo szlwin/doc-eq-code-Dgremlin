@@ -1,0 +1,248 @@
+{
+  "kind": "TASK_CLEANUP_RESTORE_MANIFEST",
+  "schemaVersion": 1,
+  "authority": "DERIVED",
+  "status": "APPLIED",
+  "taskDir": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "createdAt": "2026-08-26T06:13:09.022594+00:00",
+  "sourceManifest": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_history/cleanup/20260826T060222Z/cleanup_manifest.json",
+  "reason": "RESTORE_EVIDENCE_REFERENCED_ARTIFACTS",
+  "permanentDeletion": false,
+  "restores": [
+    {
+      "from": "task_history/cleanup/20260826T060222Z/root/dev09_closure_20260815_r01.json",
+      "to": "dev09_closure_20260815_r01.json"
+    },
+    {
+      "from": "task_history/cleanup/20260826T060222Z/root/dev09_r09_tdd_review_audit_20260816_r01.json",
+      "to": "dev09_r09_tdd_review_audit_20260816_r01.json"
+    },
+    {
+      "from": "task_history/cleanup/20260826T060222Z/root/p2_completion_verification_20260817_r01.json",
+      "to": "p2_completion_verification_20260817_r01.json"
+    },
+    {
+      "from": "task_history/cleanup/20260826T060222Z/root/p2_independent_review_semantic_pass_20260810_r04.json",
+      "to": "p2_independent_review_semantic_pass_20260810_r04.json"
+    },
+    {
+      "from": "task_history/cleanup/20260826T060222Z/root/rc21_code_review_formalization_20260817_r01.json",
+      "to": "rc21_code_review_formalization_20260817_r01.json"
+    },
+    {
+      "from": "task_history/cleanup/20260826T060222Z/root/rc21_completion_acceptance_reconciliation_20260817_r01.json",
+      "to": "rc21_completion_acceptance_reconciliation_20260817_r01.json"
+    },
+    {
+      "from": "task_history/cleanup/20260826T060222Z/root/rc21_completion_stage_outcome_reconciliation_20260817_r01.json",
+      "to": "rc21_completion_stage_outcome_reconciliation_20260817_r01.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/business-model-schema.out",
+      "to": "evidence/commands/bm-p2-r06/business-model-schema.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/changeset-schema.out",
+      "to": "evidence/commands/bm-p2-r06/changeset-schema.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/dependency-impact-check.out",
+      "to": "evidence/commands/bm-p2-r06/dependency-impact-check.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/git-diff-check.out",
+      "to": "evidence/commands/bm-p2-r06/git-diff-check.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/long-task-validate.out",
+      "to": "evidence/commands/bm-p2-r06/long-task-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/plan-business-model-schema.out",
+      "to": "evidence/commands/bm-p2-r06/plan-business-model-schema.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/bm-p2-r06/plan-long-task-validate.out",
+      "to": "evidence/commands/bm-p2-r06/plan-long-task-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/code-review-i009/long-task-validate-final.out",
+      "to": "evidence/commands/code-review-i009/long-task-validate-final.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/code-review-i009/long-task-validate.out",
+      "to": "evidence/commands/code-review-i009/long-task-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/code-review-i009/p0-1832-focused-metrics.json",
+      "to": "evidence/commands/code-review-i009/p0-1832-focused-metrics.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/01.out",
+      "to": "evidence/commands/design-p2-r33/01.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/02.out",
+      "to": "evidence/commands/design-p2-r33/02.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/git-diff-check.out",
+      "to": "evidence/commands/design-p2-r33/git-diff-check.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/design-p2-r33/long-task-validate.json",
+      "to": "evidence/commands/design-p2-r33/long-task-validate.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/dev09-p0-1825/mysql-it.out",
+      "to": "evidence/commands/dev09-p0-1825/mysql-it.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/dev09-review-diff-manifest.json",
+      "to": "evidence/commands/dev09-review-diff-manifest.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/01.out",
+      "to": "evidence/commands/rc9-machine-bm-r20/01.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/02.out",
+      "to": "evidence/commands/rc9-machine-bm-r20/02.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/03.out",
+      "to": "evidence/commands/rc9-machine-bm-r20/03.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/04.out",
+      "to": "evidence/commands/rc9-machine-bm-r20/04.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/05.out",
+      "to": "evidence/commands/rc9-machine-bm-r20/05.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-bm-r20/06.out",
+      "to": "evidence/commands/rc9-machine-bm-r20/06.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/01.out",
+      "to": "evidence/commands/rc9-machine-design-r30/01.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/02.out",
+      "to": "evidence/commands/rc9-machine-design-r30/02.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/03.out",
+      "to": "evidence/commands/rc9-machine-design-r30/03.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-design-r30/04.out",
+      "to": "evidence/commands/rc9-machine-design-r30/04.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/01.out",
+      "to": "evidence/commands/rc9-machine-testdesign-r31/01.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/02.out",
+      "to": "evidence/commands/rc9-machine-testdesign-r31/02.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/03.out",
+      "to": "evidence/commands/rc9-machine-testdesign-r31/03.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/rc9-machine-testdesign-r31/04.out",
+      "to": "evidence/commands/rc9-machine-testdesign-r31/04.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/business-flow-validate.out",
+      "to": "evidence/commands/reqan-p2-r01/business-flow-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/finalize-requirement-analysis.out",
+      "to": "evidence/commands/reqan-p2-r01/finalize-requirement-analysis.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/long-task-validate.out",
+      "to": "evidence/commands/reqan-p2-r01/long-task-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqan-p2-r01/requirement-validate.out",
+      "to": "evidence/commands/reqan-p2-r01/requirement-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r01/long-task-validate.out",
+      "to": "evidence/commands/reqconf-p2-r01/long-task-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r01/requirement-validate.out",
+      "to": "evidence/commands/reqconf-p2-r01/requirement-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r02/long-task-validate.out",
+      "to": "evidence/commands/reqconf-p2-r02/long-task-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/reqconf-p2-r02/requirement-validate.out",
+      "to": "evidence/commands/reqconf-p2-r02/requirement-validate.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testdesign-p2-r37/01.out",
+      "to": "evidence/commands/testdesign-p2-r37/01.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testdesign-p2-r37/02.out",
+      "to": "evidence/commands/testdesign-p2-r37/02.out"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/code-binding.json",
+      "to": "evidence/commands/testing-p2-i014-final-head/code-binding.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/database-evidence.txt",
+      "to": "evidence/commands/testing-p2-i014-final-head/database-evidence.txt"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/mysql-summary.json",
+      "to": "evidence/commands/testing-p2-i014-final-head/mysql-summary.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/p0-run.json",
+      "to": "evidence/commands/testing-p2-i014-final-head/p0-run.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-i014-final-head/test-report-manifest.json",
+      "to": "evidence/commands/testing-p2-i014-final-head/test-report-manifest.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/code-equivalence.json",
+      "to": "evidence/commands/testing-p2-stage-closure-i009/code-equivalence.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/database-evidence.txt",
+      "to": "evidence/commands/testing-p2-stage-closure-i009/database-evidence.txt"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/intentional-failure-gate.txt",
+      "to": "evidence/commands/testing-p2-stage-closure-i009/intentional-failure-gate.txt"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/mysql-summary.json",
+      "to": "evidence/commands/testing-p2-stage-closure-i009/mysql-summary.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/p0-run.json",
+      "to": "evidence/commands/testing-p2-stage-closure-i009/p0-run.json"
+    },
+    {
+      "from": "evidence/quarantine/20260826T060222Z/evidence/commands/testing-p2-stage-closure-i009/test-report-manifest.json",
+      "to": "evidence/commands/testing-p2-stage-closure-i009/test-report-manifest.json"
+    }
+  ],
+  "counts": {
+    "restored": 58
+  }
+}

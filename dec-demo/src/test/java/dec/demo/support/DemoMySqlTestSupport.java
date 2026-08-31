@@ -2,14 +2,8 @@ package dec.demo.support;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import dec.context.parse.xml.parse.config.ConfigFileParser;
-import dec.core.context.config.manager.ConfigManager;
-import dec.core.context.config.model.config.Config;
-import dec.core.context.config.model.config.ConfigInfo;
-import dec.core.context.config.model.connection.ConnectionInfo;
-import dec.core.context.config.model.datasource.DataSourceConfigInfo;
-import dec.core.context.config.utils.ConfigContextUtil;
-import dec.core.model.connection.DataConnectionFactory;
+import dec.core.starter.common.ConfigUtil;
+import dec.core.starter.common.DataSourceManager;
 import dec.external.datasource.sql.datasource.DBDataSource;
 import dec.external.datasource.sql.mysql.connection.factory.MySQLDBConnectionFactory;
 import dec.external.datasource.sql.mysql.convert.container.factory.MySQLConvertContainerFactory;
@@ -23,8 +17,7 @@ import java.sql.SQLException;
 /**
  * 为 dec-demo 的遗留业务执行测试组装隔离的 MySQL 运行环境。
  *
- * <p>该夹具只存在于测试源码中，直接使用仍保留的底层 Parser、Config 和数据源工厂，
- * 不重新引入 T15 已删除的 Starter 全局写入口。</p>
+ * <p>初始化过程只使用 Starter 的简洁门面，业务测试不创建、传递或安装 ConfigInfo。</p>
  */
 public final class DemoMySqlTestSupport implements AutoCloseable {
     private static final String MYSQL_TYPE = "MySQL";
@@ -52,25 +45,32 @@ public final class DemoMySqlTestSupport implements AutoCloseable {
      * @return 已完成 Parser、工厂和数据源装配的测试夹具
      */
     public static DemoMySqlTestSupport load(String configResource) throws Exception {
-        ConfigInfo configInfo = new ConfigInfo();
-        ConfigManager.getInstance().setConfigInfo(configInfo);
-        registerMySqlType(configInfo);
-        new ConfigFileParser().parse("classpath:" + configResource);
+        // 1. 添加 MySQL 数据源类型；候选 ConfigInfo 由框架内部维护。
+        ConfigUtil.addDataSourceConfig(MYSQL_TYPE, DBDataSource.class.getName());
+        // 2. 加载配置文件；业务代码只提供路径。
+        ConfigUtil.parseConfigInfo("classpath:" + configResource);
+        // 3. 注册数据库连接、转换和执行实现。
         registerFactories();
+        // 4. 绑定两个实际数据库连接池。
+        return addDataSources();
+    }
 
-        HikariDataSource primary = createDataSource(
-                "dec-demo-primary",
-                env("DEC_MYSQL_URL", PRIMARY_DEFAULT));
-        HikariDataSource secondary = createDataSource(
-                "dec-demo-secondary",
-                env("DEC_MYSQL_URL_SECONDARY", SECONDARY_DEFAULT));
+    private static DemoMySqlTestSupport addDataSources() throws Exception {
+        HikariDataSource primary = null;
+        HikariDataSource secondary = null;
         try {
-            bindDataSource("data1", primary);
-            bindDataSource("data2", secondary);
+            primary = createDataSource(
+                    "dec-demo-primary",
+                    env("DEC_MYSQL_URL", PRIMARY_DEFAULT));
+            secondary = createDataSource(
+                    "dec-demo-secondary",
+                    env("DEC_MYSQL_URL_SECONDARY", SECONDARY_DEFAULT));
+            DataSourceManager.addDataSource("data1", primary);
+            DataSourceManager.addDataSource("data2", secondary);
             return new DemoMySqlTestSupport(primary, secondary);
         } catch (Exception failure) {
-            primary.close();
-            secondary.close();
+            closeQuietly(secondary);
+            closeQuietly(primary);
             throw failure;
         }
     }
@@ -105,39 +105,23 @@ public final class DemoMySqlTestSupport implements AutoCloseable {
         }
     }
 
-    private static void registerMySqlType(ConfigInfo configInfo) {
-        DataSourceConfigInfo dataSourceConfig = new DataSourceConfigInfo();
-        dataSourceConfig.setName(MYSQL_TYPE);
-        dataSourceConfig.setDataSource(DBDataSource.class.getName());
-        configInfo.add(Config.DATASOURCE_CONFIG, dataSourceConfig);
-
-        ConnectionInfo<?, ?, ?> connectionInfo = new ConnectionInfo<Object, Object, Object>();
-        connectionInfo.setName(MYSQL_TYPE);
-        configInfo.add(Config.CONNECTION_CONFIG, connectionInfo);
-    }
-
     private static void registerFactories() {
-        DataConnectionFactory factory = DataConnectionFactory.getInstance();
-        factory.addConnectionFactory(MYSQL_TYPE, new MySQLDBConnectionFactory());
-        factory.addConvertContainerFactory(MYSQL_TYPE, new MySQLConvertContainerFactory());
-        factory.addDataConvertContainerFacory(
+        DataSourceManager.addConnectionFactory(MYSQL_TYPE, new MySQLDBConnectionFactory());
+        DataSourceManager.addConvertContainerFactory(
+                MYSQL_TYPE,
+                new MySQLConvertContainerFactory());
+        DataSourceManager.addDataConvertContainerFacory(
                 MYSQL_TYPE,
                 new MySQLDataConvertContainerFactory());
-        factory.addExecuteContainerFacory(MYSQL_TYPE, new MySQLExecuteContainerFactory());
+        DataSourceManager.addExecuteContainerFacory(
+                MYSQL_TYPE,
+                new MySQLExecuteContainerFactory());
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private static void bindDataSource(
-            String logicalName,
-            javax.sql.DataSource jdbcDataSource) {
-        dec.core.context.config.model.datasource.DataSource model =
-                ConfigContextUtil.getConfigInfo().getDataSource(logicalName);
-        if (model == null) {
-            throw new IllegalStateException("Missing data source model: " + logicalName);
+    private static void closeQuietly(HikariDataSource dataSource) {
+        if (dataSource != null) {
+            dataSource.close();
         }
-        DBDataSource container = new DBDataSource();
-        container.setDataSource(jdbcDataSource);
-        model.setDataSource(container);
     }
 
     private static HikariDataSource createDataSource(String poolName, String jdbcUrl) {

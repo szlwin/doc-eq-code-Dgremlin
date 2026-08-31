@@ -1,0 +1,19 @@
+schemaVersion: 1
+artifact: "business_model"
+module:
+  code: "MODEL"
+  name: "MODEL"
+revision: "BM-R00@init"
+baseRevision: ""
+terms: []
+scenarios: []
+entities: []
+valueObjects: []
+aggregates: []
+invariants: []
+stateMachines: []
+services: []
+policies: []
+events: []
+businessErrors: []
+traceability: []

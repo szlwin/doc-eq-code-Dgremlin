@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"import yaml; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); b={t['task_id']:t for t in p['tasks']}; d4=b['TASK-P2-DEV-04-CONTEXT-MATERIALIZATION']; d7=b['TASK-P2-DEV-07-STARTER-GUARDED-ACCESS']; d8=b['TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY']; assert 'dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java' in d4['implementation']['affected_files']; assert any('CompiledModelSetBuilder' in x and 'mandatory' in x for x in d4['implementation']['steps']); assert 'dec-core-starter/pom.xml' in d7['implementation']['affected_files']; assert any('dec-core-model dependency' in x and '不得推迟到 DEV-08' in x for x in d7['implementation']['steps']); assert any('不得承担首次 dec-core-model dependency wiring' in x for x in d8['implementation']['steps']); print('R04 bounded-slice P1 closure 2/2 PASSED')\"",
+  "executed_at": "2026-08-10T15:30:04+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25",
+  "exit_code": 0,
+  "output": "R04 bounded-slice P1 closure 2/2 PASSED\n",
+  "output_digest": "168fcfc990d1941d6cb65831c9906c49a678ca7e985d9d36501ad5f3a45baab5"
+}

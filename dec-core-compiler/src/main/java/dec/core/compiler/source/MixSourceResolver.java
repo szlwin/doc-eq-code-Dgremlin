@@ -114,9 +114,7 @@ public final class MixSourceResolver {
             this.parser = parser;
         }
 
-        /**
-         * 按 root 声明顺序完成文件集、system/rule 和 business 发现。
-         */
+        /** 按规范化声明顺序完成文件集、system/rule 和 business 发现。 */
         private SourceGraphResolutionResult resolve() {
             SourceRef rootRef = new SourceRef(root.value(), 0, 0, "/root");
             DocumentSource rootSource = resolveSingle(
@@ -148,36 +146,41 @@ public final class MixSourceResolver {
                     rootSource.sourceId(),
                     rootAncestorReferences);
 
-            SourceGraphEdge systemEdge = rootDeclarations.systemFile();
-            DocumentSource systemsSource = resolveSingle(
-                    systemEdge.targetReference(),
-                    systemEdge.declarationSourceRef(),
-                    1,
-                    Optional.of(rootSource.sourceId()),
-                    rootAncestorReferences);
-            registerSource(
-                    systemsSource,
-                    1,
-                    systemEdge.declarationSourceRef());
-
-            List<SourceGraphEdge> ruleEdges = parseSystems(systemsSource);
-            for (SourceGraphEdge edge : ruleEdges) {
-                registerEdge(edge);
-            }
-            Set<String> ruleAncestorReferences = new LinkedHashSet<String>();
-            ruleAncestorReferences.add(root.value());
-            ruleAncestorReferences.add(systemEdge.targetReference().value());
-            for (SourceGraphEdge ruleEdge : ruleEdges) {
-                DocumentSource ruleSource = resolveSingle(
-                        ruleEdge.targetReference(),
-                        ruleEdge.declarationSourceRef(),
-                        2,
-                        Optional.of(systemsSource.sourceId()),
-                        ruleAncestorReferences);
+            // system-file-info 允许声明多个文件。每个文件独立形成父节点，
+            // Raw/Symbol 阶段再统一合并定义并处理前向引用和重复身份。
+            for (SourceGraphEdge systemEdge : rootDeclarations.systemFiles()) {
+                DocumentSource systemsSource = resolveSingle(
+                        systemEdge.targetReference(),
+                        systemEdge.declarationSourceRef(),
+                        1,
+                        Optional.of(rootSource.sourceId()),
+                        rootAncestorReferences);
                 registerSource(
-                        ruleSource,
-                        2,
-                        ruleEdge.declarationSourceRef());
+                        systemsSource,
+                        1,
+                        systemEdge.declarationSourceRef());
+
+                List<SourceGraphEdge> ruleEdges = parseSystems(systemsSource);
+                for (SourceGraphEdge edge : ruleEdges) {
+                    registerEdge(edge);
+                }
+                Set<String> ruleAncestorReferences =
+                        new LinkedHashSet<String>();
+                ruleAncestorReferences.add(root.value());
+                ruleAncestorReferences.add(
+                        systemEdge.targetReference().value());
+                for (SourceGraphEdge ruleEdge : ruleEdges) {
+                    DocumentSource ruleSource = resolveSingle(
+                            ruleEdge.targetReference(),
+                            ruleEdge.declarationSourceRef(),
+                            2,
+                            Optional.of(systemsSource.sourceId()),
+                            ruleAncestorReferences);
+                    registerSource(
+                            ruleSource,
+                            2,
+                            ruleEdge.declarationSourceRef());
+                }
             }
 
             SourceGraphEdge businessEdge = rootDeclarations.businessFile();
@@ -494,22 +497,23 @@ public final class MixSourceResolver {
     }
 
     /**
-     * root 必须恰好提供四类阻断声明；缺失或重复均不能产生部分图。
+     * root 必须提供四类阻断声明；system 至少一个且可有多个，其余恰好一个。
      */
     private static final class RootDeclarations {
         private final SourceGraphEdge dataFileSet;
         private final SourceGraphEdge viewFileSet;
-        private final SourceGraphEdge systemFile;
+        private final List<SourceGraphEdge> systemFiles;
         private final SourceGraphEdge businessFile;
 
         private RootDeclarations(
                 SourceGraphEdge dataFileSet,
                 SourceGraphEdge viewFileSet,
-                SourceGraphEdge systemFile,
+                List<SourceGraphEdge> systemFiles,
                 SourceGraphEdge businessFile) {
             this.dataFileSet = dataFileSet;
             this.viewFileSet = viewFileSet;
-            this.systemFile = systemFile;
+            this.systemFiles = Collections.unmodifiableList(
+                    new ArrayList<SourceGraphEdge>(systemFiles));
             this.businessFile = businessFile;
         }
 
@@ -519,7 +523,10 @@ public final class MixSourceResolver {
             return new RootDeclarations(
                     requireSingle(edges, SourceEdgeType.ROOT_DATA_FILESET, rootRef),
                     requireSingle(edges, SourceEdgeType.ROOT_VIEW_FILESET, rootRef),
-                    requireSingle(edges, SourceEdgeType.ROOT_SYSTEM_FILE, rootRef),
+                    requireAtLeastOne(
+                            edges,
+                            SourceEdgeType.ROOT_SYSTEM_FILE,
+                            rootRef),
                     requireSingle(edges, SourceEdgeType.ROOT_BUSINESS_FILE, rootRef));
         }
 
@@ -548,6 +555,26 @@ public final class MixSourceResolver {
             return result;
         }
 
+        private static List<SourceGraphEdge> requireAtLeastOne(
+                List<SourceGraphEdge> edges,
+                SourceEdgeType type,
+                SourceRef rootRef) {
+            List<SourceGraphEdge> result = new ArrayList<SourceGraphEdge>();
+            for (SourceGraphEdge edge : edges) {
+                if (edge.edgeType() == type) {
+                    result.add(edge);
+                }
+            }
+            if (result.isEmpty()) {
+                throw failure(policyDiagnostic(
+                        "source.root.declaration.missing",
+                        rootRef,
+                        "补齐 root 的 data、view、system 和 business 声明"));
+            }
+            Collections.sort(result);
+            return result;
+        }
+
         private SourceGraphEdge dataFileSet() {
             return dataFileSet;
         }
@@ -556,8 +583,8 @@ public final class MixSourceResolver {
             return viewFileSet;
         }
 
-        private SourceGraphEdge systemFile() {
-            return systemFile;
+        private List<SourceGraphEdge> systemFiles() {
+            return systemFiles;
         }
 
         private SourceGraphEdge businessFile() {

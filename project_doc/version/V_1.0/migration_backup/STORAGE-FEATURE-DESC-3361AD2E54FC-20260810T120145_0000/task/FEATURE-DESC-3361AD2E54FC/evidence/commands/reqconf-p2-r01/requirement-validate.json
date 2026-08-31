@@ -1,0 +1,11 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /mnt/data/common-develop/scripts/requirement_doc.py validate -g RequirementConfirmationAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md --stage confirmation --json",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:04:33+00:00",
+  "revision": "REQCONF-P2-R01@001604ced8af",
+  "result": "PASSED",
+  "output_ref": "evidence/commands/reqconf-p2-r01/requirement-validate.out",
+  "output_digest": "7fea0531202c75a0ce316320125a518ed625159fdd602d9f749f8417f962fcca"
+}

@@ -1,0 +1,81 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] doc-eq-code-parent                                                 [pom]
+[INFO] dec-core-context                                                   [jar]
+[INFO]
+[INFO] -------------------< doc.eq.code:doc-eq-code-parent >-------------------
+[INFO] Building doc-eq-code-parent 1.0                                    [1/2]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ doc-eq-code-parent ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ doc-eq-code-parent ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/target/jacoco.exec
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ doc-eq-code-parent ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ doc-eq-code-parent ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ doc-eq-code-parent ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ doc-eq-code-parent ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/pom.xml to /home/runner/.m2/repository/doc/eq/code/doc-eq-code-parent/1.0/doc-eq-code-parent-1.0.pom
+[INFO]
+[INFO] --------------------< doc.eq.code:dec-core-context >--------------------
+[INFO] Building dec-core-context 1.0                                      [2/2]
+[INFO]   from dec-core-context/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- enforcer:3.5.0:enforce (enforce-build-toolchain) @ dec-core-context ---
+[INFO]
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ dec-core-context ---
+[INFO] argLine set to -javaagent:/home/runner/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.4.0:resources (default-resources) @ dec-core-context ---
+[INFO] skip non existing resourceDirectory /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dec-core-context ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ dec-core-context ---
+[INFO] Not copying test resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ dec-core-context ---
+[INFO] Not compiling test sources
+[INFO]
+[INFO] --- surefire:3.2.5:test (default-test) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jar:3.5.0:jar (default-jar) @ dec-core-context ---
+[INFO]
+[INFO] --- failsafe:3.2.5:integration-test (default) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- failsafe:3.2.5:verify (default) @ dec-core-context ---
+[INFO] Tests are skipped.
+[INFO]
+[INFO] --- jacoco:0.8.12:report (report) @ dec-core-context ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO]
+[INFO] --- install:3.1.4:install (default-install) @ dec-core-context ---
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/pom.xml to /home/runner/.m2/repository/doc/eq/code/dec-core-context/1.0/dec-core-context-1.0.pom
+[INFO] Installing /home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-core-context/target/dec-core-context-1.0.jar to /home/runner/.m2/repository/doc/eq/code/dec-core-context/1.0/dec-core-context-1.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for doc-eq-code-parent 1.0:
+[INFO]
+[INFO] doc-eq-code-parent ................................. SUCCESS [  0.642 s]
+[INFO] dec-core-context ................................... SUCCESS [  0.490 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.258 s
+[INFO] Finished at: 2026-08-11T05:29:28Z
+[INFO] ------------------------------------------------------------------------

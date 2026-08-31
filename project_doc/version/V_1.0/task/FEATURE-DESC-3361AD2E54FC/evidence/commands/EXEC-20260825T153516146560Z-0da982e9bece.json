@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw --batch-mode --no-transfer-progress -pl dec-demo -Pmysql-it -Dtest=DirectoryTest,RuleTests,OrderTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T15:34:54+00:00",
+  "revision": "DEV-P2-DEV25-R01@6c48246852cbfb5d7e0980ae387062e38ebe56a1",
+  "output_digest": "d973c0b8f60dbf2519e439a0f18917943263f64d985eb0e0b443ffb0ca121c34",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "tests"
+  },
+  "output_ref": "evidence/commands/EXEC-20260825T153516146560Z-0da982e9bece.output.txt"
+}

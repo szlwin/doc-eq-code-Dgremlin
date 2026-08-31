@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "event": "P2_MACHINE_LIFECYCLE_CLOSURE_AUDIT",
+  "common_develop": {
+    "package_version": "2.44",
+    "release_stage": "RC9",
+    "long_task_schema_version": 2,
+    "audit_source": "/mnt/data/pr36_governance_audit/common-develop",
+    "protected_directory_modified": false,
+    "protected_skill_sha256": {
+      "SKILL.md": "a480f2e89c071733399bd315748b875e5f68221def8ebdadcfca9bcca290d4b5",
+      "CHANGELOG.md": "2d2f2343c5b1ad6d18d32ec316981fde5fb1e489c91dd9db87c47a12f052fd4e"
+    }
+  },
+  "pr36": {
+    "branch": "feature/p2-design-testdesign-20260808",
+    "head_at_audit": "46d324b5a9f17b0542dc1bc3dba6bf440e1d39c3",
+    "semantic_candidate_git_revision": "54545677040fdb2fe3539423fd6ef5a0a56d6a9a",
+    "candidate_chain": "REQAN-P2-R01@d08612768131 + Overlay R04 -> BM-R20 -> FLOW-R11 -> DESIGN-P2-R30 -> TESTDESIGN-P2-R31; parallel P2-IMPACT-R29",
+    "p0_build_gate": {
+      "run_number": 1559,
+      "status": "completed",
+      "conclusion": "success",
+      "classification": "BUILD_SIGNAL_ONLY"
+    }
+  },
+  "semantic_status": {
+    "requirement_overlay": "SEMANTIC_PASS",
+    "business_model": "SEMANTIC_PASS",
+    "business_flow": "SEMANTIC_PASS",
+    "impact": "SEMANTIC_PASS",
+    "design": "SEMANTIC_PASS",
+    "test_design": "SEMANTIC_PASS",
+    "risk_specialists": {
+      "ArchitectureReviewAgent": "SEMANTIC_PASS",
+      "ConcurrencyReviewAgent": "SEMANTIC_PASS",
+      "DataMigrationReviewAgent": "SEMANTIC_NOT_APPLICABLE",
+      "ImpactAnalysisReviewAgent": "SEMANTIC_PASS",
+      "SecurityReviewAgent": "SEMANTIC_PASS"
+    },
+    "new_semantic_p0": 0,
+    "new_semantic_p1": 0
+  },
+  "machine_contract_findings": {
+    "canonical_risk_timing": {
+      "status": "NOT_A_PRE_IMPLEMENTATION_GATE",
+      "contract": "RC9 task-plan requires canonical risk_detection after development completes and before/during code_review risk-trigger synchronization.",
+      "sync_risk_reviewers_precondition": "risk_detection.input_revision must equal task_state.artifact_revisions.development.revision",
+      "current_development_revision": "",
+      "current_canonical_risk_status": "NOT_SCANNED",
+      "consequence": "The exact 545456 documentation scan is valid governance/risk observation but MUST NOT be registered as canonical post-development code-review risk Evidence. sync-risk-reviewers is not legal yet."
+    },
+    "lifecycle_revision_drift": {
+      "status": "BLOCKING_MACHINE_REOPEN_REQUIRED",
+      "historical_machine_revisions": {
+        "business_model": "BM-R07@7d7bf504ca9d",
+        "design": "DESIGN-P2-R01@8875f042898c",
+        "test_design": "TESTDESIGN-P2-R02@d0514b9ac591"
+      },
+      "current_semantic_candidates": {
+        "business_model": "BM-R20",
+        "design": "DESIGN-P2-R30",
+        "test_design": "TESTDESIGN-P2-R31"
+      },
+      "required_transition": "Use RC9 reopen-phase from business_model; preserve old PASSED revisions in history and create new iterations. Do not rewrite historical PASSED revisions."
+    },
+    "review_issue_schema": {
+      "status": "BLOCKING_SCHEMA_DRIFT",
+      "current_issue_count": 20,
+      "current_invalid_count_under_rc9": 20,
+      "current_compact_fields": ["id", "severity", "status", "phase", "title", "decision", "resolution_revision", "resolution_evidence", "defer_reason"],
+      "rc9_required_or_validated_fields_missing_from_current_records": [
+        "issue_type", "axis", "confidence", "artifact_revision", "raised_by_agent", "owner_agent", "description", "impact", "motivating_evidence", "question", "question_to", "responses", "recommendation"
+      ],
+      "additional_invalidity": "FND-P2-REV-013 currently uses phase=governance, which is not an RC9 long-task phase.",
+      "historical_recovery": {
+        "FND-P2-REV-001_to_007": "Original detailed fields recoverable from f0e01ac05d4bf4e1cace81ed120556b51876a80b history.",
+        "FND-P2-REV-008": "Original detailed fields recoverable from 2afe20432365f02fae5e90815511f2a70866df90 history.",
+        "FND-P2-REV-009_to_012": "Original detailed fields recoverable from eda894c8c8c54d4000e98fbabdbe47a5d649eb72 history.",
+        "FND-P2-REV-013_to_016": "Original detailed fields recoverable from 852a05899757bc217759f85a2aa472a9b5ec9fee history.",
+        "FND-P2-REV-017_to_018": "Original detailed fields recoverable from 2bdbbc9ec6bc946418f2d7a9ea128c221bf55fcf history.",
+        "FND-P2-REV-019": "Original detailed fields recoverable from 6f78f0fa4b69610c9f7ba0169f67c31a7ef9c197 history.",
+        "FND-P2-REV-020": "Raised against the BM-R17 candidate and first remediated by BM-R18 at 7b559fdb01c5def328160b467427bd767fdc4dae; detailed semantic facts are recoverable, but historical machine attribution/question fields were never recorded."
+      },
+      "non_inferable_fields": {
+        "scope": "The old IndependentReview records predate the current RC9 question/known-Agent record contract.",
+        "examples": ["question", "question_to", "responses", "a contract-valid known-Agent replacement for historical raised_by_agent=IndependentReview", "FND-P2-REV-020 historical owner/reviewer attribution"],
+        "policy": "Do not fabricate these fields merely to make long_task validate pass."
+      },
+      "consequence": "RC9 long_task validate/start-attempt/reopen-phase cannot legally run on the current ledger until a provenance-preserving schema migration decision is available."
+    },
+    "traceability_schema": {
+      "status": "BLOCKING_SCHEMA_DRIFT",
+      "current_file": "traceability.md contains a human-readable Current candidate table but no fenced JSON traceability block.",
+      "rc9_validation_result": "missing fenced JSON block 'traceability'",
+      "last_known_machine_formatted_baseline": {
+        "git_revision": "cdf4c5813a1c386612cd48a5dbe68ee66d71ca6c",
+        "blob_sha": "29e86b487fb669f99e9b54416fe2379750ea45d0",
+        "note": "Contains stable structured traceability items but references historical BM/Design/TestDesign facts; it cannot simply replace current R20/R30/R31 trace semantics without an explicit migration."
+      }
+    },
+    "working_tree_availability": {
+      "status": "NO_FULL_TRANSACTIONAL_GITHUB_CHECKOUT",
+      "github_connector": "Can read/write Git objects and files but does not expose a complete mounted source checkout.",
+      "zipball_attempt": "GitHub connector zipball endpoint did not provide mounted archive bytes.",
+      "ci_artifact_probe": "P0 #1559 surefire-and-jacoco artifact was mounted successfully but contains reports, not the project_doc task working tree.",
+      "consequence": "Even after schema decisions, multi-file RC9 commands must be run in a complete transactional working tree before their output is published."
+    }
+  },
+  "machine_gate_conclusion": {
+    "formal_lifecycle_pass": false,
+    "canonical_risk_closed": false,
+    "implementation_plan_allowed": false,
+    "tdd_allowed": false,
+    "development_allowed": false,
+    "blocking_reasons": [
+      "review_issues RC9 schema drift with non-inferable historical attribution/question fields",
+      "traceability fenced JSON machine block missing",
+      "current BM-R20/DESIGN-P2-R30/TESTDESIGN-P2-R31 are not bound to new RC9 lifecycle iterations",
+      "no complete transactional GitHub working tree is mounted for reopen/publish/review/finalize"
+    ]
+  },
+  "correct_next_machine_sequence": [
+    "Restore/migrate review_issues to RC9 schema without deleting FND-001..020 and without inventing historical facts.",
+    "Restore structured traceability and map the current R20/R30/R31 candidate chain while preserving stable historical trace IDs.",
+    "Run long_task.py validate on a complete repository working tree.",
+    "Run long_task.py reopen-phase --from-phase business_model with a reason that binds the current P2 replacement chain.",
+    "Execute current business_model tasks, publish BM-R20, register same-revision required Reviews/Evidence, and finalize business_model.",
+    "Advance to design, publish DESIGN-P2-R30 with P2-IMPACT-R29, register same-revision required Reviews/Evidence, and finalize design.",
+    "Advance to test_design, publish TESTDESIGN-P2-R31, register same-revision required Reviews/Evidence, and finalize test_design.",
+    "Only after formal TestDesign PASS and applicable finding closure may Implementation Plan begin.",
+    "Canonical risk_detect/sync-risk-reviewers remains deferred until a real Development revision exists; then allocate repository Evidence from the current canonical maximum EVD ID."
+  ],
+  "history_policy": {
+    "historical_passed_revisions_rewritten": false,
+    "historical_findings_deleted": false,
+    "new_fnd_021_created": false,
+    "fabricated_machine_evidence": false,
+    "fabricated_reviewer_identity": false
+  },
+  "audited_at": "2026-08-10T06:00:00+00:00"
+}

@@ -1,0 +1,14 @@
+{
+  "repository": "szlwin/doc-eq-code-Dgremlin",
+  "temporaryPr": 44,
+  "workflowRunId": 32132153900,
+  "workflowName": "P2 temporary genuine RED evidence",
+  "headBranch": "agent/p2-red-final-head-20260818",
+  "headSha": "a37723e720f865d41882097cb9e5f519107974a7",
+  "artifactId": 9322599688,
+  "artifactName": "p2-genuine-red-evidence-final",
+  "artifactDigest": "sha256:5a990cdf0fea4c59163a1f26884281844b0b33c34fd2ce3c4d7e699e28837a7d",
+  "productionBaseSha": "6f02e0855612a5aac9abfe8175b050add7809979",
+  "transportOnly": true,
+  "merged": false
+}

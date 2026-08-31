@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "repair_id": "GOV-REPAIR-P2-TESTDESIGN-R01-NORMALIZED-FREEZE-20260808",
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "reason": "Freeze normalized TESTDESIGN-P2-R01 canonical bytes as immutable historical Evidence immediately before I004 creates R02 with only revision/iteration header normalization. No test semantics are changed.",
+  "invariant": "Evidence ID/type/phase/revision/content bytes/SHA-256 remain unchanged; only DIRECT mutable provenance is converted to immutable SNAPSHOT before the canonical path moves to R02.",
+  "entries": [
+    {
+      "kind": "FREEZE_DIRECT_TO_SNAPSHOT",
+      "evidence_id": "EVD-000103",
+      "source_path": "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md",
+      "snapshot_ref": "evidence/snapshots/sha256/31/31e7535cd4dea39719584cab43e0a5c7f326dd17b0af9a2da10ff6e769295d4b.md",
+      "digest": "31e7535cd4dea39719584cab43e0a5c7f326dd17b0af9a2da10ff6e769295d4b",
+      "size": 37484
+    }
+  ],
+  "created_at": "2026-08-08T05:58:49.847907+00:00"
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "exact_head_code_binding",
+  "revision": "TESTING-P2-R37-FINALHEAD-R01@647a02301618",
+  "development_checkpoint": "8298cde932dfd0f8f60eb31a09e8666d1184dcce",
+  "tested_final_code_review_head": "647a023016181aafdabdfb8318e849bf352ab010",
+  "tested_tree": "60a19d6559760e0902d5851a1cc155c1a09a6eee",
+  "changed_paths": [
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/acceptance_assertions.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/commands/EXEC-20260819T154603759110Z-88569de18403.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/commands/EXEC-20260819T160310606701Z-3fa4a1b83018.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/evidence_index.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/imports/code-review-i014/impact-model.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/imports/code-review-i014/integration-impact-flow.md",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/imports/code-review-i014/performance-rebind.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/reviews.jsonl",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/snapshots/sha256/72/722a574949cd033d8d663ad6e2f03cc715508c8228953e68c941ae761e65984b.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/snapshots/sha256/95/95751e0e8593ccad5448eca75c90351b40c0dd77166b6205475ce631fe203e97.md",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/snapshots/sha256/f0/f0482c5f62a78eaf454cc9048b6933b13ba0cb55bd03dd309c7ceaf7c111ed3a.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/snapshots/sha256/f2/f24bda7ec641badf8162a1b95bb1e790fb35595abdd0e3f1eaf21c6953761b4e.md",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/snapshots/sha256/fb/fbed267def3ee1cde4f6928f670128588d58fb6249a89289ee5c03369b2fadd5.json",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/git_checkpoints.yaml",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_events.jsonl",
+    "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "project_doc/version/V_1.0/work_record.md"
+  ],
+  "non_project_doc_changes": [],
+  "executable_source_equivalent": true,
+  "claim": "Testing executed the true PR36 Code Review checkpoint itself; equivalence only proves intervening Code Review checkpoint changed project_doc, not executable source."
+}

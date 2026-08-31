@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "git diff --check",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:47:17+00:00",
+  "revision": "BM-R06@6a0bce4fa0ae",
+  "output_ref": "evidence/commands/bm-p2-r06/git-diff-check.out",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

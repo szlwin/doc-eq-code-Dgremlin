@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "phase": "development",
+  "iteration": "DEVELOPMENT-I013",
+  "architecture_step": "SKELETON",
+  "authority_chain": [
+    "DEC-P2-SINGLE-RUNTIME-CONTEXT-001",
+    "DESIGN-P2-R33",
+    "TESTDESIGN-P2-R37",
+    "TP-FEATURE-DESC-3361AD2E54FC-R06@eff2e717933c"
+  ],
+  "scope_statement": "Lifecycle-review evidence only. No production/test/config source is replaced or mutated by this skeleton.",
+  "boundaries": [
+    {
+      "skeleton": "ExactModelAccessGuardPort.exactRule/denial/authorizeRead/authorizeWrite",
+      "production": "dec-core-starter/src/main/java/dec/core/starter/access/ExactModelAccessGuard.java",
+      "contract": "ExactModelAccessGuard remains the sole READ/WRITE policy authority; operation/target/path/session proof must match exactly."
+    },
+    {
+      "skeleton": "ReadAuthorization/WriteAuthorization + ReadClaim/WriteClaim",
+      "production": "dec-core-starter/src/main/java/dec/core/starter/access/ModelEffectAuthorization.java",
+      "contract": "Guard-minted authority is one-shot and READ cannot satisfy WRITE."
+    },
+    {
+      "skeleton": "GuardAuthorizedModelEffectPort.read/write",
+      "production": "dec-core-starter/src/main/java/dec/core/starter/access/GuardAuthorizedModelEffectPort.java",
+      "contract": "No ordinary raw/proofless executable MODEL effect overload is available to the orchestration caller."
+    },
+    {
+      "skeleton": "GuardedProtectedAccessOrchestrator.invoke/read/write",
+      "production": "dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java",
+      "contract": "Call order is rule lookup -> target resolution -> exact Guard denial -> operation branch -> Guard authorization -> effect; all denial branches occur before effect."
+    },
+    {
+      "skeleton": "ProtectedAccessRuntimeFactorySkeleton.production/create/capturedContext",
+      "production": "dec-core-starter/src/main/java/dec/core/starter/access/ProtectedAccessRuntimeFactory.java",
+      "contract": "Production factory captures one final EngineContext for the runtime generation."
+    },
+    {
+      "skeleton": "RuntimeGenerationSkeleton.bootstrap/restartAfterClose/close",
+      "production": "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelExecutionRoots.java + RuntimeModelExecutionRoot.java",
+      "contract": "One active runtime generation binds one Context; no hot reload/rebind; a new Context belongs to a new generation after old artifacts close."
+    }
+  ],
+  "testdesign_cases": [
+    "CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001",
+    "CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001",
+    "CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001",
+    "CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001",
+    "CASE-P2-TD-R37-SINGLE-RUNTIME-CONTEXT-BIND-ONCE-001",
+    "CASE-P2-TD-R37-NO-HOT-RELOAD-001",
+    "CASE-P2-TD-R37-RESTART-NEW-GENERATION-001"
+  ],
+  "forbidden_design_drift": [
+    "RuntimeContextBinding",
+    "live EngineContext replacement/rebind/hot reload",
+    "caller-forgeable boolean/enum/hash/version public authority token",
+    "RuntimeBindingPlan.equals used as authorization",
+    "raw/proofless ordinary-caller READ/WRITE effect execution"
+  ],
+  "resource_failure_boundaries": {
+    "denial": "fail closed before effect",
+    "write_denial": "zero effect invocation, therefore zero write side effects",
+    "authorization": "one-shot claim consumption is owned below this skeleton boundary",
+    "runtime_close": "old generation becomes CLOSED before a new generation may capture a new Context",
+    "transaction_retry_compensation": "not introduced by P2; MODEL effect transaction behavior remains owned by existing lower-level implementation and is not redesigned here"
+  },
+  "implementation_deferred": [
+    "compiled policy index storage/lookup implementation",
+    "runtime target resolution implementation",
+    "authorization mint/consume mechanics",
+    "MODEL read/write effect implementation",
+    "container/model materialization implementation",
+    "compiler publication and process bootstrap implementation"
+  ]
+}

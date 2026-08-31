@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "event": "SECOND_INDEPENDENT_REVIEW_INVALIDATION_AND_REMEDIATION",
+  "reviewed_pr": 36,
+  "reviewed_head": "d91a20088e57f8d62280799529c1153eec7d5038",
+  "reviewed_tree": "502c154835b9410506849e9b2e9561091c007fa0",
+  "review_contract": "common-develop 2.44 RC9",
+  "baseline_guard": {
+    "status": "INVALID_BASELINE",
+    "reason": "missing Git tag common-develop-v2.44-rc9",
+    "fabricated_fix": false
+  },
+  "effective_findings": {
+    "p0": 0,
+    "p1": 8,
+    "open_ids": [
+      "FND-P2-REV-001",
+      "FND-P2-REV-002",
+      "FND-P2-REV-003",
+      "FND-P2-REV-004",
+      "FND-P2-REV-005",
+      "FND-P2-REV-006",
+      "FND-P2-REV-007",
+      "FND-P2-REV-008"
+    ]
+  },
+  "reviewed_remediation_status": [
+    {
+      "artifact": "business_model",
+      "revision": "BM-R08",
+      "effective_status": "NEEDS_REVIEW",
+      "content_assessment": "FND-001..003 candidate fixed; not independently closed"
+    },
+    {
+      "artifact": "design",
+      "revision": "DESIGN-P2-R02",
+      "previous_effective_status": "NEEDS_REVIEW",
+      "effective_status": "NEEDS_CHANGES",
+      "invalidated_by": ["FND-P2-REV-008"]
+    },
+    {
+      "artifact": "test_design",
+      "revision": "TESTDESIGN-P2-R03",
+      "previous_effective_status": "NEEDS_REVIEW",
+      "effective_status": "BLOCKED_BY_DESIGN",
+      "reason": "input DESIGN-P2-R02 is NEEDS_CHANGES; R03 cannot be promoted under revision binding"
+    }
+  ],
+  "new_remediation_revisions": [
+    {
+      "artifact": "design",
+      "revision": "DESIGN-P2-R03",
+      "status": "NEEDS_REVIEW",
+      "ref": "project_doc/version/V_1.0/doc/COMPILER/changes/p2-design-java8-api-compat-remediation-r03.md",
+      "addresses": ["FND-P2-REV-004", "FND-P2-REV-008"],
+      "notes": "Java 8 final-class contracts; preserves existing EngineContext final class; deep immutable RuntimeFacts; monotonic Duration budget; observable unavailable-Guard sentinel"
+    },
+    {
+      "artifact": "test_design",
+      "revision": "TESTDESIGN-P2-R04",
+      "status": "BLOCKED_BY_DESIGN_REVIEW / NEEDS_REVIEW",
+      "ref": "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case_p2_r04_api_compat_remediation.md",
+      "inputs": ["BM-R08", "DESIGN-P2-R03"],
+      "addresses": ["FND-P2-REV-006", "FND-P2-REV-007", "FND-P2-REV-008"]
+    }
+  ],
+  "effective_artifact_gate": {
+    "business_model": "NEEDS_REVIEW",
+    "design": "NEEDS_REVIEW",
+    "test_design": "BLOCKED_BY_DESIGN_REVIEW / NEEDS_REVIEW",
+    "implementation_plan": "BLOCKED",
+    "tdd": "BLOCKED",
+    "development": "BLOCKED"
+  },
+  "required_next_reviews": {
+    "business_model_exact_revision": "BM-R08",
+    "business_model_reviewers": [
+      "BusinessModelReviewAgent",
+      "RequirementReviewAgent",
+      "DesignReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent"
+    ],
+    "design_exact_revision": "DESIGN-P2-R03",
+    "design_reviewers": [
+      "ArchitectureReviewAgent",
+      "BusinessModelReviewAgent",
+      "DevelopAgent",
+      "RequirementReviewAgent",
+      "TestDesignAgent",
+      "ImpactAnalysisReviewAgent",
+      "CrossModuleIntegrationReviewAgent",
+      "ConcurrencyReviewAgent",
+      "ApiContractReviewAgent"
+    ],
+    "design_conditional": {
+      "DataMigrationReviewAgent": "required unless a contract-valid waiver proves detector hit is P7 wording only"
+    },
+    "test_design_exact_revision": "TESTDESIGN-P2-R04",
+    "test_design_prerequisite": "DESIGN-P2-R03 valid exact-revision conclusion",
+    "test_design_reviewers": [
+      "RequirementReviewAgent",
+      "DesignReviewAgent",
+      "TDDReviewAgent",
+      "TestEvidenceReviewAgent"
+    ]
+  },
+  "history_policy": {
+    "task_state_history_preserved": true,
+    "historical_reviews_preserved": true,
+    "manual_rewrite_of_historical_passed": false,
+    "fabricated_review_results": false
+  },
+  "production_code_changed_by_remediation": false,
+  "implementation_started": false
+}

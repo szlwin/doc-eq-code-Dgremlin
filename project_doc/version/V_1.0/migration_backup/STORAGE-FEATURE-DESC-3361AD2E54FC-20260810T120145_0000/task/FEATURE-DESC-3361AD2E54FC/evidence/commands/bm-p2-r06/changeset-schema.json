@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 jsonschema validate p2-system-ruleview-business-model.yaml against changeset.schema.json",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:47:17+00:00",
+  "revision": "BM-R06@6a0bce4fa0ae",
+  "output_ref": "evidence/commands/bm-p2-r06/changeset-schema.out",
+  "output_digest": "dcce02f6f8d7ab2d45870b3969dba461bb59fc7dba6f4f0c8bdb7179b41f0aa1"
+}

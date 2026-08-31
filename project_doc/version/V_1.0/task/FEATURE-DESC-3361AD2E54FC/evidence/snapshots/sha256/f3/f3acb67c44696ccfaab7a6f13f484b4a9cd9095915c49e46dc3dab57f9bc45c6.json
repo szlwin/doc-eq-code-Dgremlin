@@ -1,0 +1,484 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "version": "V_1.0",
+  "input_revision": "DEV-P2-R37-REGRESSION-R01@fbe16820eb84",
+  "input_files": [
+    "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java",
+    "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java",
+    "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelExecutionRoots.java",
+    "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelGuardedOperationPort.java",
+    "dec-core-starter/src/main/java/dec/core/model/runtime/RuntimeModelStarterEffectBridge.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/ExactModelAccessGuard.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/GuardAuthorizedModelEffectPort.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/GuardedProtectedAccessPort.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/ModelEffectAuthorization.java",
+    "dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationFixture.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java",
+    "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java"
+  ],
+  "input_digest": "fcdb21b67d38229ab96e7bb6a52d58fc1c1f38e2d74f9c213d4cf5cdb1c39f6f",
+  "status": "SCANNED",
+  "scanned_by_agent": "ProjectManagerAgent",
+  "scanned_at": "2026-08-19T12:34:41+00:00",
+  "detections": [
+    {
+      "detection_id": "DET-13CD2A50BF59",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000390"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-23B3508028DB",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000397"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-26EC9601D829",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000391"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-2C3C839D1697",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000384"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-3096EAA5356D",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000385"
+      ],
+      "status": "DETECTED",
+      "reason": "content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-338753A426AC",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000397"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-386B43779F7A",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000394"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-3D9C33C3929C",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000386"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-4101E0148F79",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000393"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-46212D794809",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000387"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-4BD392915B9D",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000389"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-4BFC62260824",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000392"
+      ],
+      "status": "DETECTED",
+      "reason": "content:module, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-58A85122AF3F",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000391"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-59FF28732548",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000393"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-5F2BADD65AC8",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000388"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-65312BF2679E",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000392"
+      ],
+      "status": "DETECTED",
+      "reason": "content:atomic, content:compareandset",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-7BB3062EC576",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000395"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-8318B606E62A",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000397"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-90BA6A48F063",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000391"
+      ],
+      "status": "DETECTED",
+      "reason": "content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-9296C0343936",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000384"
+      ],
+      "status": "DETECTED",
+      "reason": "content:synchronized, content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-99334B43AF48",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000384"
+      ],
+      "status": "DETECTED",
+      "reason": "content:module, content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-9D6E960F4E3E",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000387"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-A2D9DC769312",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000388"
+      ],
+      "status": "DETECTED",
+      "reason": "content:dependency, content:adapter, content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-A7C0850FD17A",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000386"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-AF3DF85EA774",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000390"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-C741643EC1D6",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000396"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-C8659B159F08",
+      "rule_id": "RISK-PERF-001",
+      "risk_type": "performance",
+      "confidence": 7,
+      "required_reviewer": "PerformanceReviewAgent",
+      "evidence_ids": [
+        "EVD-000384"
+      ],
+      "status": "DETECTED",
+      "reason": "content:for (, content:while (",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-CDBEC9A594BA",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000394"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-D72E9E7B2912",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000389"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-E7C33D00B956",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000386"
+      ],
+      "status": "DETECTED",
+      "reason": "content:synchronized, content:atomic",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F038F2449065",
+      "rule_id": "RISK-IMP-TRACE-001",
+      "risk_type": "impact_analysis",
+      "confidence": 9,
+      "required_reviewer": "ImpactAnalysisReviewAgent",
+      "evidence_ids": [
+        "EVD-000398"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability impact_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F21221EBEFA7",
+      "rule_id": "RISK-ARCH-001",
+      "risk_type": "architecture_change",
+      "confidence": 8,
+      "required_reviewer": "ArchitectureReviewAgent",
+      "evidence_ids": [
+        "EVD-000396"
+      ],
+      "status": "DETECTED",
+      "reason": "content:port",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F2488B1FB689",
+      "rule_id": "RISK-SEC-001",
+      "risk_type": "security",
+      "confidence": 9,
+      "required_reviewer": "SecurityReviewAgent",
+      "evidence_ids": [
+        "EVD-000393"
+      ],
+      "status": "DETECTED",
+      "reason": "content:authorize",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-F4CBBE25096D",
+      "rule_id": "RISK-CON-001",
+      "risk_type": "concurrency",
+      "confidence": 8,
+      "required_reviewer": "ConcurrencyReviewAgent",
+      "evidence_ids": [
+        "EVD-000397"
+      ],
+      "status": "DETECTED",
+      "reason": "content:synchronized",
+      "source": "DETECTOR"
+    },
+    {
+      "detection_id": "DET-FE4B1454B988",
+      "rule_id": "RISK-XMOD-TRACE-001",
+      "risk_type": "cross_module_integration",
+      "confidence": 9,
+      "required_reviewer": "CrossModuleIntegrationReviewAgent",
+      "evidence_ids": [
+        "EVD-000398"
+      ],
+      "status": "DETECTED",
+      "reason": "traceability cross_module_implementation_required=true: TR-P2-SYSTEM-RULEVIEW-001, TR-P2-SYSTEM-RULEVIEW-002, TR-P2-SYSTEM-RULEVIEW-003, TR-P2-SYSTEM-RULEVIEW-004, TR-P2-SYSTEM-RULEVIEW-005, TR-P2-SYSTEM-RULEVIEW-006, TR-P2-SYSTEM-RULEVIEW-007, TR-P2-SYSTEM-RULEVIEW-008, TR-P2-SYSTEM-RULEVIEW-009, TR-P2-SYSTEM-RULEVIEW-010",
+      "source": "DETECTOR"
+    }
+  ],
+  "waivers": []
+}

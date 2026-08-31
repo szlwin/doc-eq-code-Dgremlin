@@ -1,0 +1,80 @@
+{
+  "kind": "TASK_PLAN_HISTORY_ITERATION",
+  "authority": "DERIVED",
+  "classification": "HISTORICAL",
+  "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-010",
+  "source": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "sha256": "0b4ddd1cb789dc737a24077358db42324e748e9b74ecfc6a6c5c6e4ca1a1b769",
+    "eventSeq": 571,
+    "eventDigest": "28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8"
+  },
+  "tasks": [
+    {
+      "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+      "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-009",
+      "acceptance_trace_ids": [
+        "TR-P2-SYSTEM-RULEVIEW-004",
+        "TR-P2-SYSTEM-RULEVIEW-007",
+        "TR-P2-SYSTEM-RULEVIEW-008",
+        "TR-P2-SYSTEM-RULEVIEW-009"
+      ],
+      "flow_refs": [
+        "FLOW-PROTECTED-ACCESS-EXECUTE",
+        "FLOW-CONFIG-COMPILE"
+      ],
+      "flow_step_refs": [
+        "STEP-P2-ACCESS-GUARD",
+        "STEP-P2-ACCESS-EFFECT",
+        "STEP-P2-COMPILE-04"
+      ],
+      "risk_triggers": [],
+      "max_attempts": 3,
+      "id": "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION",
+      "logical_task_id": "LOGICAL-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-010",
+      "iteration_no": 10,
+      "revision_reason": "Refresh stale implementation plan against current DESIGN-P2-R40; test_design is intentionally skipped by the active wk -ws workflow.",
+      "title": "冻结 P2 R40 简化运行模型 Implementation Plan",
+      "objective": "生成只覆盖当前增量配置加载与简化运行边界的可执行计划；保留历史 R05/R06 计划，不重新引入已退役的 RuntimeContextBinding。",
+      "phase": "implementation_plan",
+      "depends_on": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION"
+      ],
+      "owner_agent": "ImplementationPlanAgent",
+      "reviewer_agents": [
+        "DevelopAgent",
+        "PlanReviewAgent"
+      ],
+      "input_revisions": {
+        "design": "DESIGN-P2-R40"
+      },
+      "allowed_files": [
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_task_reviews.jsonl",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/cache/development_tasks.md",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/acceptance_assertions.json",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**",
+        "project_doc/version/V_1.0/work_record.md"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --require-revision",
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+        "git diff --check"
+      ],
+      "expected_results": [
+        "R06 精确绑定 DESIGN-P2-R33 / TESTDESIGN-P2-R37，并保留 R05 与历史 Review。",
+        "R06 仅规划四个 genuine RED 与 P2-CR-001 authority closure，不规划 RuntimeContextBinding。",
+        "五个开发任务形成无环 SEQUENTIAL DAG，并为每项给出明确文件、命令、验收、Evidence 与 stop conditions。",
+        "PlanReviewAgent、ArchitectureReviewAgent、TestDesignAgent、DevelopAgent 对同一 R06 revision 全部 PASSED，P0/P1=0。"
+      ],
+      "stop_conditions": [
+        "R33/R37 存在未解决语义歧义",
+        "计划需要实现已 superseded 的 cross-context RuntimeContextBinding",
+        "任一 Reviewer 对当前 R06 提出 P0/P1 finding"
+      ]
+    }
+  ]
+}

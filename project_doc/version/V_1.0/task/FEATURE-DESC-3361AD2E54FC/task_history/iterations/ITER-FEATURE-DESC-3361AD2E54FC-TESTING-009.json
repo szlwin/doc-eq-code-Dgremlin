@@ -1,0 +1,57 @@
+{
+  "kind": "TASK_PLAN_HISTORY_ITERATION",
+  "authority": "DERIVED",
+  "classification": "HISTORICAL",
+  "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-009",
+  "source": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "sha256": "0b4ddd1cb789dc737a24077358db42324e748e9b74ecfc6a6c5c6e4ca1a1b769",
+    "eventSeq": 571,
+    "eventDigest": "28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8"
+  },
+  "tasks": [
+    {
+      "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+      "supersedes_iteration_id": "",
+      "acceptance_trace_ids": [],
+      "flow_refs": [],
+      "flow_step_refs": [],
+      "risk_triggers": [],
+      "max_attempts": 3,
+      "id": "TASK-P2-PHASE-TESTING",
+      "logical_task_id": "LOGICAL-P2-PHASE-TESTING",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-009",
+      "iteration_no": 9,
+      "revision_reason": "Testing remains downstream of phase-final code review under RC23.",
+      "title": "执行 P2 Testing",
+      "objective": "在 code_review 通过后执行并冻结 P2 测试结果与 TestEvidenceReview。",
+      "phase": "testing",
+      "depends_on": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ],
+      "owner_agent": "TestAgent",
+      "reviewer_agents": [
+        "TestEvidenceReviewAgent"
+      ],
+      "input_revisions": {
+        "code_review": "DEV-P2-DEV09-R09@4a82335fbdce7a56b58fd6626af0ec67a7cbebba"
+      },
+      "allowed_files": [
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/**",
+        "project_doc/version/V_1.0/work_record.md"
+      ],
+      "validation_commands": [
+        "P0 #1832 Testing freshness: core-verify attempt 2 + mysql-it attempt 3"
+      ],
+      "expected_results": [
+        "Testing artifact 与 exact code_review revision 绑定",
+        "TestEvidenceReviewAgent PASSED",
+        "失败不修改业务代码而是回到相应 remediation 生命周期"
+      ],
+      "stop_conditions": [
+        "测试发现 P0/P1",
+        "测试结果无法绑定 exact revision"
+      ]
+    }
+  ]
+}

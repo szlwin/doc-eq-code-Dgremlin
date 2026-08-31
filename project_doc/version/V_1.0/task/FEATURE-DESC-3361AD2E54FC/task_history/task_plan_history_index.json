@@ -1,0 +1,74 @@
+{
+  "kind": "TASK_PLAN_HISTORY_INDEX",
+  "authority": "DERIVED",
+  "source": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "sha256": "0b4ddd1cb789dc737a24077358db42324e748e9b74ecfc6a6c5c6e4ca1a1b769",
+    "eventSeq": 571,
+    "eventDigest": "28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8"
+  },
+  "current": {
+    "phase": "completion_verification",
+    "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-026",
+    "taskIds": [],
+    "terminalStatus": "COMPLETED"
+  },
+  "groups": [
+    {
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009",
+      "classification": "HISTORICAL",
+      "path": "iterations/ITER-FEATURE-DESC-3361AD2E54FC-CODE-REVIEW-009.json",
+      "taskIds": [
+        "TASK-P2-PHASE-FINAL-CODE-REVIEW"
+      ]
+    },
+    {
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-009",
+      "classification": "SUPERSEDED",
+      "path": "iterations/ITER-FEATURE-DESC-3361AD2E54FC-COMPLETION-VERIFICATION-009.json",
+      "taskIds": [
+        "TASK-P2-PHASE-COMPLETION-VERIFICATION"
+      ]
+    },
+    {
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-006",
+      "classification": "HISTORICAL",
+      "path": "iterations/ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-006.json",
+      "taskIds": [
+        "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION"
+      ]
+    },
+    {
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012",
+      "classification": "HISTORICAL",
+      "path": "iterations/ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012.json",
+      "taskIds": [
+        "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION"
+      ]
+    },
+    {
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-010",
+      "classification": "HISTORICAL",
+      "path": "iterations/ITER-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION-PLAN-010.json",
+      "taskIds": [
+        "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION"
+      ]
+    },
+    {
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-008",
+      "classification": "HISTORICAL",
+      "path": "iterations/ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-008.json",
+      "taskIds": [
+        "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION"
+      ]
+    },
+    {
+      "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-TESTING-009",
+      "classification": "HISTORICAL",
+      "path": "iterations/ITER-FEATURE-DESC-3361AD2E54FC-TESTING-009.json",
+      "taskIds": [
+        "TASK-P2-PHASE-TESTING"
+      ]
+    }
+  ]
+}

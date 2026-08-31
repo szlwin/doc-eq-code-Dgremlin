@@ -1,0 +1,20 @@
+{
+  "valid": true,
+  "stage": "analysis",
+  "path": "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md",
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "features": 1,
+    "businessRules": 20,
+    "crossFeatureRules": 4,
+    "acceptanceCriteria": 10,
+    "traceItems": 10,
+    "exceptionScenarios": 12,
+    "unresolvedPlaceholders": 0,
+    "tracedFeatures": 1,
+    "tracedRules": 24,
+    "tracedAcceptanceCriteria": 10,
+    "businessFlowRefs": 1
+  }
+}

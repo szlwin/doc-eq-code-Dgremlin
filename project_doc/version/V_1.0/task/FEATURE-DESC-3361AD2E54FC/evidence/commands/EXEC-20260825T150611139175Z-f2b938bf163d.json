@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw --batch-mode --no-transfer-progress clean verify",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T15:05:27+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "output_digest": "d985ebe4af6adbb1c46a0e2feecbb4f5d07fe23f579400df799345375a271342",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "tests"
+  },
+  "output_ref": "evidence/commands/EXEC-20260825T150611139175Z-f2b938bf163d.output.txt"
+}

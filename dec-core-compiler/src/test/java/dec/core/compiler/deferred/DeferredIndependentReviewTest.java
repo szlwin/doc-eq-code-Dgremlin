@@ -148,13 +148,13 @@ class DeferredIndependentReviewTest {
         assertEquals(4096, result.registry().get().size());
     }
 
-    /** 构造字段完整的 ModelAccess 分类输入。 */
+    /** 构造字段完整的 Query 分类输入。 */
     private static DeferredClassificationInput.Builder baseBuilder() {
         return DeferredClassificationInput.builder()
                 .ownerKey(new SystemKey("order"))
-                .kind(DeferredKind.MODEL_ACCESS)
+                .kind(DeferredKind.QUERY)
                 .ordinal(0)
-                .reasonCode("model-access-selector-binding")
+                .reasonCode("query-planning")
                 .sourceRef(new SourceRef(
                         "systems.xml", 1, 1,
                         "/systems/system/model-access-info/model-access"))

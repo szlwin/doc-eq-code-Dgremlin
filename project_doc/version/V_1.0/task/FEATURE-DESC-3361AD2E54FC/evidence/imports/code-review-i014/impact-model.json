@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "kind": "FINAL_CODE_REVIEW_I014_IMPACT_MODEL",
+  "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "nodes": [
+    {"id":"CONTEXT","owner":"dec-core-context","disposition":"UNCHANGED_CONTRACT_AUTHORITY"},
+    {"id":"MODEL_SCOPE_SESSION","owner":"dec-core-model","disposition":"SECURITY_SEAM_HARDENED"},
+    {"id":"MODEL_EFFECT_BINDING","owner":"dec-core-model","disposition":"RAW_PORT_HIDDEN_FOR_PRODUCTION"},
+    {"id":"STARTER_GUARD","owner":"dec-core-starter","disposition":"SOLE_READ_WRITE_AUTHORITY"},
+    {"id":"STARTER_COMPOSITION","owner":"dec-core-starter","disposition":"GUARD_AUTHORIZED_EFFECT_ONLY"},
+    {"id":"RUNTIME_GENERATION","owner":"starter/model lifecycle","disposition":"SINGLE_CONTEXT_BIND_ONCE"},
+    {"id":"DB_SCHEMA_DATA","owner":"N/A","disposition":"NO_CHANGE"},
+    {"id":"COMPILER_GRAMMAR","owner":"dec-core-compiler","disposition":"NO_CHANGE"}
+  ],
+  "edges": [
+    ["CONTEXT","STARTER_GUARD","policy lookup"],
+    ["CONTEXT","RUNTIME_GENERATION","bootstrap capture"],
+    ["MODEL_SCOPE_SESSION","MODEL_EFFECT_BINDING","sealed same-scope session"],
+    ["STARTER_COMPOSITION","MODEL_SCOPE_SESSION","session/register/seal"],
+    ["STARTER_GUARD","STARTER_COMPOSITION","one-shot exact authorization"],
+    ["STARTER_COMPOSITION","MODEL_EFFECT_BINDING","friend bridge guarded effect"],
+    ["RUNTIME_GENERATION","MODEL_SCOPE_SESSION","lifecycle ownership"]
+  ],
+  "history_and_inflight_data": "No persistent schema/data representation changes. Existing runtime objects are lifecycle-scoped; configuration changes close the old generation before starting a new generation.",
+  "propagation": "No P3/P4/P6 expansion; no new external system or DB dependency. Downstream impact is limited to security/concurrency/lifecycle regression and final review/testing evidence.",
+  "test_mapping": [
+    "P2SecurityAuthorityRemediationTest",
+    "ProtectedAccessConcurrencyTest",
+    "ProtectedAccessProductionCompositionTest",
+    "ProtectedRuntimeModelAdapterIntegrationTest",
+    "ProtectedWriteTransactionIntegrationTest",
+    "SingleEngineContextRuntimeLifecycleTest",
+    "P2RealFixtureIntegrationTest"
+  ]
+}

@@ -1,0 +1,302 @@
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java
+new file mode 100644
+index 00000000..b658e450
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityGreenFixture.java
+@@ -0,0 +1,146 @@
++package dec.core.starter.access;
++
++import dec.core.context.EngineContext;
++import dec.core.context.data.ModelData;
++import dec.core.context.model.AccessCompilationStatus;
++import dec.core.context.model.AccessOperation;
++import dec.core.context.model.CompiledDefinition;
++import dec.core.context.model.CompiledMaterializationNode;
++import dec.core.context.model.CompiledModelAccessRule;
++import dec.core.context.model.CompiledModelSet;
++import dec.core.context.model.CompiledTargetBinding;
++import dec.core.context.model.CompiledViewMaterializationIndex;
++import dec.core.context.model.CompiledViewMaterializationPlan;
++import dec.core.context.model.DeferredDefinition;
++import dec.core.context.model.DeferredKey;
++import dec.core.context.model.DefinitionKey;
++import dec.core.context.model.DigestPair;
++import dec.core.context.model.ImmutableDeferredRegistry;
++import dec.core.context.model.ImmutableRegistry;
++import dec.core.context.model.ModelAccessPolicyIndex;
++import dec.core.context.model.ModelAccessRuleKey;
++import dec.core.context.model.ModelPath;
++import dec.core.context.model.PublishedSourceManifest;
++import dec.core.context.model.RuntimeBindingPlan;
++import dec.core.context.model.SourceRef;
++import dec.core.context.model.SystemKey;
++import dec.core.context.model.TargetKey;
++import dec.core.context.model.ViewKey;
++import dec.core.context.runtime.ResolvedRuntimeTarget;
++import dec.core.context.runtime.RuntimeBindingProof;
++import dec.core.context.runtime.RuntimeCollectionCursorId;
++import dec.core.context.runtime.RuntimeExecutionFrameId;
++import dec.core.context.runtime.RuntimeObjectId;
++import dec.core.context.runtime.RuntimeResolutionOwnerId;
++import dec.core.model.container.Container;
++import dec.core.model.container.ModelLoader;
++import dec.core.model.container.ResultInfo;
++import dec.core.model.container.listener.ContainerListener;
++import dec.core.model.execute.rule.exception.ExecuteRuleException;
++import dec.core.model.runtime.RuntimeModelAccessScope;
++import dec.core.model.runtime.RuntimeModelEffectBindingResult;
++import dec.core.model.runtime.RuntimeModelFrame;
++import dec.core.model.runtime.RuntimeModelHandle;
++import dec.core.model.runtime.RuntimeModelProvenance;
++import dec.core.model.runtime.RuntimeModelSession;
++import dec.core.model.runtime.RuntimeModelStarterEffectBridge;
++import java.lang.reflect.Constructor;
++import java.util.Arrays;
++import java.util.Collections;
++import java.util.Optional;
++
++/** Controlled R37 GREEN fixture: same real MODEL objects, but production raw-port exposure is disabled. */
++final class P2SecurityAuthorityGreenFixture implements AutoCloseable {
++    final ViewKey view = new ViewKey("OrderInfo");
++    final TargetKey targetKey = TargetKey.of(view);
++    final ModelPath path = ModelPath.of("amount");
++    final SystemKey owner = new SystemKey("sales");
++    final RuntimeBindingPlan plan = RuntimeBindingPlan.exact(
++            targetKey, CompiledTargetBinding.propertyPath(view, "amount"));
++    final ModelAccessRuleKey readKey = ModelAccessRuleKey.of(owner, targetKey, path, AccessOperation.READ);
++    final ModelAccessRuleKey writeKey = ModelAccessRuleKey.of(owner, targetKey, path, AccessOperation.WRITE);
++    final RuntimeExecutionFrameId frameId = RuntimeExecutionFrameId.of("green-frame");
++    final RuntimeResolutionOwnerId ownerId = RuntimeResolutionOwnerId.of("green-owner");
++    final Data data = new Data();
++    final Effect effect = new Effect();
++    final EngineContext context;
++    final RuntimeModelAccessScope scope;
++    final RuntimeModelSession session;
++    final ResolvedRuntimeTarget target;
++    final RuntimeModelEffectBindingResult binding;
++    final GuardAuthorizedModelEffectPort guardedEffectPort;
++
++    P2SecurityAuthorityGreenFixture() throws Exception { this(true); }
++
++    P2SecurityAuthorityGreenFixture(boolean includeWriteRule) throws Exception {
++        data.put("amount", Long.valueOf(10L));
++        CompiledViewMaterializationPlan materialization = CompiledViewMaterializationPlan.of(
++                view, Collections.singletonList(CompiledMaterializationNode.of(path)));
++        CompiledModelAccessRule readRule = rule(readKey, 1);
++        CompiledModelAccessRule writeRule = rule(writeKey, 2);
++        context = new EngineContext(new CompiledModelSet(
++                PublishedSourceManifest.empty(),
++                CompiledViewMaterializationIndex.of(Collections.singletonList(materialization)),
++                ModelAccessPolicyIndex.of(includeWriteRule
++                        ? Arrays.asList(readRule, writeRule)
++                        : Collections.singletonList(readRule)),
++                new ImmutableRegistry<DefinitionKey, CompiledDefinition>(Collections.<DefinitionKey, CompiledDefinition>emptyMap()),
++                new ImmutableDeferredRegistry(Collections.<DeferredKey, DeferredDefinition>emptyMap()),
++                Collections.emptyList(),
++                new DigestPair("green-source", "green-semantic"),
++                "green-compiler", "green-schema", "green-options"));
++        RuntimeModelProvenance provenance = construct(
++                RuntimeModelProvenance.class,
++                new Class<?>[] {RuntimeBindingPlan.class, ViewKey.class},
++                new Object[] {plan, view});
++        RuntimeModelHandle handle = construct(
++                RuntimeModelHandle.class,
++                new Class<?>[] {RuntimeModelProvenance.class, ModelData.class, Container.class},
++                new Object[] {provenance, data, effect});
++        RuntimeModelFrame frame = construct(
++                RuntimeModelFrame.class,
++                new Class<?>[] {RuntimeExecutionFrameId.class, RuntimeResolutionOwnerId.class,
++                    RuntimeCollectionCursorId.class, java.util.List.class},
++                new Object[] {frameId, ownerId, null, Collections.singletonList(handle)});
++        scope = construct(RuntimeModelAccessScope.class,
++                new Class<?>[] {RuntimeModelFrame.class, boolean.class},
++                new Object[] {frame, Boolean.FALSE});
++        session = scope.beginSession();
++        RuntimeObjectId objectId = session.register(handle);
++        session.seal();
++        target = ResolvedRuntimeTarget.of(
++                session.sessionId(), objectId, targetKey, plan.compiledTargetBinding(),
++                frameId, ownerId, Optional.<RuntimeCollectionCursorId>empty(), RuntimeBindingProof.exact(plan));
++        binding = scope.effectProvider().bind(session);
++        if (!binding.bound()) throw new IllegalStateException("production-mode MODEL effect binding failed: " + binding.failure());
++        guardedEffectPort = RuntimeModelStarterEffectBridge.guardedEffectPort(binding);
++    }
++
++    @Override public void close() { session.close(); }
++
++    private CompiledModelAccessRule rule(ModelAccessRuleKey key, int line) {
++        return CompiledModelAccessRule.of(key, AccessCompilationStatus.RUNTIME_GUARD_REQUIRED, plan,
++                new SourceRef("test:p2-green", line, 1, "model-access"));
++    }
++
++    private static <T> T construct(Class<T> type, Class<?>[] parameterTypes, Object[] values) throws Exception {
++        Constructor<T> constructor = type.getDeclaredConstructor(parameterTypes);
++        constructor.setAccessible(true);
++        return constructor.newInstance(values);
++    }
++
++    static final class Data extends ModelData {
++        private static final long serialVersionUID = 1L;
++        Data() { super(); }
++        void put(String key, Object value) { addKey(key); addData(key, value); }
++    }
++
++    static final class Effect implements Container {
++        boolean success = true;
++        int executeCount;
++        @Override public Container load(ModelLoader loader) { return this; }
++        @Override public Container execute() throws ExecuteRuleException { executeCount++; return this; }
++        @Override public Container addListener(ContainerListener listener) { return this; }
++        @Override public ResultInfo getResult() { return success ? ResultInfo.success() : ResultInfo.fail("TEST", "rejected"); }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java
+index f1b4982d..541d67f2 100644
+--- a/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/P2SecurityAuthorityRemediationTest.java
+@@ -3,6 +3,7 @@ package dec.core.starter.access;
+ import static org.junit.jupiter.api.Assertions.assertAll;
+ import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertFalse;
++import static org.junit.jupiter.api.Assertions.assertNotNull;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+ 
+ import dec.core.context.runtime.ProtectedWriteReceipt;
+@@ -11,62 +12,38 @@ import dec.core.context.runtime.ResolvedProtectedWriteAccess;
+ import dec.core.context.runtime.RuntimeFactValue;
+ import dec.core.context.runtime.RuntimeMutationStamp;
+ import dec.core.context.runtime.RuntimeMutationVersion;
+-import dec.core.model.runtime.RuntimeModelAccessScope;
+-import dec.core.model.runtime.RuntimeModelEffectBindingResult;
+-import java.lang.reflect.Modifier;
+-import java.util.Arrays;
+ import org.junit.jupiter.api.DisplayName;
+ import org.junit.jupiter.api.Test;
+ 
+-/**
+- * TESTDESIGN-P2-R37 genuine RED harness for P2-CR-001.
+- *
+- * <p>These tests intentionally assert the frozen secure oracle against the current pre-fix
+- * production implementation. They must compile and be discovered; current failures must be
+- * semantic authority failures, never fixture/compilation failures.
+- */
++/** TESTDESIGN-P2-R37 controlled RED-to-GREEN adaptation for P2-CR-001. */
+ class P2SecurityAuthorityRemediationTest {
+-
+     @Test
+     @DisplayName("CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001")
+-    void ordinaryCallerCannotObtainRawModelOperationPort() {
+-        boolean publicEffectProvider = Arrays.stream(RuntimeModelAccessScope.class.getMethods())
+-                .filter(method -> method.getName().equals("effectProvider"))
+-                .anyMatch(method -> Modifier.isPublic(method.getModifiers()));
+-        boolean publicOperationPort = Arrays.stream(RuntimeModelEffectBindingResult.class.getMethods())
+-                .filter(method -> method.getName().equals("operationPort"))
+-                .anyMatch(method -> Modifier.isPublic(method.getModifiers()));
+-
+-        assertFalse(
+-                publicEffectProvider && publicOperationPort,
+-                "ordinary external callers must not have a public Scope -> EffectProvider -> raw operationPort seam");
++    void ordinaryCallerCannotObtainRawModelOperationPort() throws Exception {
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture()) {
++            assertFalse(fixture.binding.operationPort().isPresent(),
++                    "production scope must never expose a usable raw RuntimeModelOperationPort");
++        }
+     }
+ 
+     @Test
+     @DisplayName("CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001")
+     void readOnlyPolicyCannotWriteThroughRawModelPort() throws Exception {
+-        try (P2SecurityAuthorityRemediationFixture fixture = new P2SecurityAuthorityRemediationFixture(false)) {
+-            assertFalse(
+-                    fixture.context.modelAccessPolicyIndex().find(fixture.writeKey).isPresent(),
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture(false)) {
++            assertFalse(fixture.context.modelAccessPolicyIndex().find(fixture.writeKey).isPresent(),
+                     "fixture must contain READ policy only");
+             RuntimeMutationVersion beforeVersion = fixture.session.currentVersion(fixture.target, fixture.path);
+             Long beforeValue = (Long) fixture.data.getValue("amount");
+             int beforeEffects = fixture.effect.executeCount;
+             RuntimeMutationStamp stamp = RuntimeMutationStamp.of(
+-                    fixture.session.sessionId(),
+-                    fixture.target.runtimeObjectId(),
+-                    fixture.path,
+-                    beforeVersion);
+-
+-            ProtectedWriteReceipt receipt = fixture.operationPort.write(ResolvedProtectedWriteAccess.of(
+-                    fixture.target,
+-                    fixture.path,
+-                    RuntimeFactValue.integerValue(77L),
+-                    stamp));
+-
+-            assertAll(
+-                    "READ-only raw WRITE must be denied before effect",
+-                    () -> assertNull(receipt, "raw WRITE must not return a receipt without Guard WRITE authorization"),
++                    fixture.session.sessionId(), fixture.target.runtimeObjectId(), fixture.path, beforeVersion);
++            ResolvedProtectedWriteAccess proofless = ResolvedProtectedWriteAccess.of(
++                    fixture.target, fixture.path, RuntimeFactValue.integerValue(77L), stamp);
++            assertNotNull(proofless, "proofless transport may exist but must not itself grant authority");
++            assertFalse(fixture.binding.operationPort().isPresent(), "production binding must hide raw WRITE port");
++            ProtectedWriteReceipt receipt = fixture.guardedEffectPort.write(null);
++            assertAll("READ-only WRITE must be denied before effect without Guard authorization",
++                    () -> assertNull(receipt, "missing Guard WRITE authorization must not return a receipt"),
+                     () -> assertEquals(beforeEffects, fixture.effect.executeCount, "effectCount must remain unchanged"),
+                     () -> assertEquals(beforeValue, fixture.data.getValue("amount"), "model value must remain unchanged"),
+                     () -> assertEquals(beforeVersion, fixture.session.currentVersion(fixture.target, fixture.path),
+@@ -77,38 +54,36 @@ class P2SecurityAuthorityRemediationTest {
+     @Test
+     @DisplayName("CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001")
+     void prooflessReadAccessCannotAuthorizeRawRead() throws Exception {
+-        try (P2SecurityAuthorityRemediationFixture fixture = new P2SecurityAuthorityRemediationFixture()) {
+-            RuntimeFactValue rawRead = fixture.operationPort.read(
+-                    ResolvedProtectedReadAccess.of(fixture.target, fixture.path));
+-
+-            assertNull(
+-                    rawRead,
+-                    "proofless ResolvedProtectedReadAccess transport object must not authorize a raw READ effect");
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture()) {
++            ResolvedProtectedReadAccess proofless = ResolvedProtectedReadAccess.of(fixture.target, fixture.path);
++            int beforeEffects = fixture.effect.executeCount;
++            Long beforeValue = (Long) fixture.data.getValue("amount");
++            assertNotNull(proofless, "proofless READ transport may exist but must not itself grant authority");
++            assertFalse(fixture.binding.operationPort().isPresent(), "production binding must hide raw READ port");
++            RuntimeFactValue rawRead = fixture.guardedEffectPort.read(null);
++            assertAll("proofless READ cannot reach MODEL effect without Guard authorization",
++                    () -> assertNull(rawRead, "missing Guard READ authorization must return no value"),
++                    () -> assertEquals(beforeEffects, fixture.effect.executeCount, "effectCount must remain unchanged"),
++                    () -> assertEquals(beforeValue, fixture.data.getValue("amount"), "model value must remain unchanged"));
+         }
+     }
+ 
+     @Test
+     @DisplayName("CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001")
+     void prooflessWriteAccessCannotAuthorizeRawWrite() throws Exception {
+-        try (P2SecurityAuthorityRemediationFixture fixture = new P2SecurityAuthorityRemediationFixture()) {
++        try (P2SecurityAuthorityGreenFixture fixture = new P2SecurityAuthorityGreenFixture()) {
+             RuntimeMutationVersion beforeVersion = fixture.session.currentVersion(fixture.target, fixture.path);
+             Long beforeValue = (Long) fixture.data.getValue("amount");
+             int beforeEffects = fixture.effect.executeCount;
+             RuntimeMutationStamp stamp = RuntimeMutationStamp.of(
+-                    fixture.session.sessionId(),
+-                    fixture.target.runtimeObjectId(),
+-                    fixture.path,
+-                    beforeVersion);
+-
+-            ProtectedWriteReceipt receipt = fixture.operationPort.write(ResolvedProtectedWriteAccess.of(
+-                    fixture.target,
+-                    fixture.path,
+-                    RuntimeFactValue.integerValue(88L),
+-                    stamp));
+-
+-            assertAll(
+-                    "proofless raw WRITE must be denied before effect",
+-                    () -> assertNull(receipt, "proofless transport object must not return a write receipt"),
++                    fixture.session.sessionId(), fixture.target.runtimeObjectId(), fixture.path, beforeVersion);
++            ResolvedProtectedWriteAccess proofless = ResolvedProtectedWriteAccess.of(
++                    fixture.target, fixture.path, RuntimeFactValue.integerValue(88L), stamp);
++            assertNotNull(proofless, "proofless WRITE transport may exist but must not itself grant authority");
++            assertFalse(fixture.binding.operationPort().isPresent(), "production binding must hide raw WRITE port");
++            ProtectedWriteReceipt receipt = fixture.guardedEffectPort.write(null);
++            assertAll("proofless WRITE cannot reach MODEL effect without Guard authorization",
++                    () -> assertNull(receipt, "missing Guard WRITE authorization must not return a receipt"),
+                     () -> assertEquals(beforeEffects, fixture.effect.executeCount, "effectCount must remain unchanged"),
+                     () -> assertEquals(beforeValue, fixture.data.getValue("amount"), "model value must remain unchanged"),
+                     () -> assertEquals(beforeVersion, fixture.session.currentVersion(fixture.target, fixture.path),

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "reviewerAgent": "TestEvidenceReviewAgent",
+  "reviewKind": "R06_TASK6_CONTROLLED_RED_TO_GREEN_INTEGRITY",
+  "revision": "DEV-P2-R37-RED-GREEN-R01@aa99a6bd4081",
+  "testDesignRevision": "TESTDESIGN-P2-R37",
+  "productionClosureRevision": "DEV-P2-R37-AUTHORITY-R01@544155ef6a5b",
+  "productionClosureCommit": "8b2faf836fe15f80df8ddb8895c35dbc53326d94",
+  "result": "PASSED",
+  "checks": {
+    "frozen_red_fixture_unchanged": true,
+    "old_red_source_digest_preserved_in_evidence": true,
+    "new_source_digest_frozen": true,
+    "same_four_case_ids": true,
+    "controlled_adaptation_reason_design_authorized": true,
+    "semantic_oracle_not_weakened": true,
+    "four_green": true,
+    "write_zero_side_effect_oracle_preserved": true,
+    "proofless_transport_not_executable_authority": true,
+    "existing_authority_regressions_passed": true,
+    "production_mutation_during_task6": false
+  },
+  "caseIds": [
+    "CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001",
+    "CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001",
+    "CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001",
+    "CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001"
+  ],
+  "redEvidenceIds": ["EVD-000368","EVD-000369","EVD-000370","EVD-000371","EVD-000372","EVD-000373"],
+  "greenEvidenceIds": ["EVD-000376","EVD-000377","EVD-000378"],
+  "greenSummary": {"tests":4,"failures":0,"errors":0,"skipped":0},
+  "authorityRegressionSummary": {"tests":17,"failures":0,"errors":0,"skipped":0},
+  "summary": "PASSED: task4 legitimately closed production raw reachability; task6 preserves all four case IDs and the frozen RED evidence, adapts only the harness to production-mode reachability, proves 4/4 GREEN with zero-side-effect denial, and retains existing operation/target/one-shot authority regressions.",
+  "reviewedAt": "2026-08-18T14:00:00+00:00"
+}

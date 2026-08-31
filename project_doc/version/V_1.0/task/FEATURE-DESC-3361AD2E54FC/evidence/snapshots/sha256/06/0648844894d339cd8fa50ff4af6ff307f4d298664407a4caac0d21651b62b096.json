@@ -1,0 +1,629 @@
+{
+  "schema_version": 1,
+  "phase": "completion_verification",
+  "revision": "COMPLETION-P2-R37-R01@48e929ecb564",
+  "purpose": "Deterministic structured-assertion compilation for Completion Verification; no new business semantics.",
+  "acceptance_criteria": {
+    "AC001": {
+      "key": "AC001",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-001",
+      "statement": "Given 当前真实 `systems.xml` 以及语义等价的多文件/重排输入 When 通过统一配置编译流程发现并编译 System 定义 Then 当前 fixture 的显式 System 均形成稳定一等身份，多文件和输入顺序变化不改变合法结果或 semantic digest And 重复/冲突 System 会产生稳定 ERROR，且失败不发布任何部分候选 Context。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-001",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC002": {
+      "key": "AC002",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-002",
+      "statement": "Given 两个不同 System 均声明同名 RuleView，并另有同一 System 内重复同名的失败 fixture When 执行符号注册、引用解析和 Registry 发布 Then 跨 System 同名项以各自 `(system,name)` 同时存在且互不污染，同 System 重复项被拒绝 And 新 RuleView 缺失 System 时不会回退为裸名称全局注册。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-002",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC003": {
+      "key": "AC003",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-003",
+      "statement": "Given 已发布的不同 System 同名 RuleView 和包含 `system-ref + rule-ref` 的调用事实 When 以正确/错误 System、正确/错误 RuleView 以及裸名称分别发起解析 Then 只有完整且存在的复合身份解析到目标 RuleView，错误或缺失身份得到稳定失败 And 不发生跨 System 同名搜索、裸名称 fallback 或错误 RuleView 执行。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-003",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC004": {
+      "key": "AC004",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-004",
+      "statement": "Given 对同一模型/View/path 分别声明 READ、WRITE、EXECUTE 的允许与未声明组合 When 编译权限事实并对各访问类型执行判定 Then 每种访问意图仅在自身明确授权时允许，未声明共享 WRITE 默认拒绝，权限类型互不隐含 And 拒绝路径不会修改模型、推进状态或触发外部副作用。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-004",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC005": {
+      "key": "AC005",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-005",
+      "statement": "Given rule/change/query 等消费者引用同一组合法路径、未知路径、穿越非法结构或目标不匹配路径 When 路径进入统一规范化和静态校验 Then 合法路径得到一致规范化身份，静态非法路径/目标在编译期产生 source-aware ERROR 并阻断发布 And 不使用模糊匹配、跨 View 搜索或不同消费者各自解释同一路径。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-005",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC006": {
+      "key": "AC006",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-006",
+      "statement": "Given 一条静态结构合法但最终对象依赖运行时值的访问，以及允许和拒绝两种运行态 When 该访问到达受保护读取/写入/执行边界 Then 编译结果明确要求 runtime check，Guard 对允许态放行、对拒绝态在副作用前 DENY And “静态不可完全判定”不会被当作默认允许，Guard 不可用时也不会 fail-open。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-006",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC007": {
+      "key": "AC007",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-007",
+      "statement": "Given Rule、change、custom action 三类入口尝试访问相同受保护模型路径 When 分别执行允许和未授权场景 Then 三类入口遵循同一 System、路径和访问类型权限结果，未授权场景全部被阻断 And 不存在跳过 Guard 的可执行分支、兼容入口或二次 fallback。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-007",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC008": {
+      "key": "AC008",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-008",
+      "statement": "Given 一个已发布有效 Context、一个成功新编译、一个含 System/RuleView/access ERROR 的失败编译以及两个并行独立 Context When 执行编译和发布 Then 成功候选全量发布，失败候选完全不发布且旧 Context 保持可用，并行 Context 的 Registry/权限事实互不污染 And 不创建新的全局 current Context 或共享可变 Registry。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-008",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC009": {
+      "key": "AC009",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-009",
+      "statement": "Given 重复 System、缺失 RuleView System、未知复合引用、非法路径和越权访问样例 When 连续重复执行编译或运行时拒绝 Then Diagnostic/拒绝结果稳定关联 System、RuleView、访问类型、规范化路径和 SourceRef 中适用字段，排序/错误码可重复 And 不以 null-success、吞异常或仅控制台日志替代失败结果，也不泄露不必要敏感配置。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-009",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "AC010": {
+      "key": "AC010",
+      "acceptance_id": "AC-P2-SYSTEM-RULEVIEW-010",
+      "statement": "Given 当前 declaration System 旧入口和 P2 新 System 编译模型 When 完成 P2 并执行兼容/残留检查 Then 旧入口仅作为明确迁移边界保留，其映射/差异和 P7 删除条件可追踪，P2 新代码不依赖第二套 declaration runtime And P2 不提前删除旧入口、不复制旧实现，也不实现 P3～P7 完整业务执行语义。",
+      "source_ref": "acceptance:AC-P2-SYSTEM-RULEVIEW-010",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    }
+  },
+  "expected_results": {
+    "ER001": {
+      "key": "ER001",
+      "acceptance_id": "AC-P2-CV-EXPECTED-001",
+      "statement": "四个 TESTDESIGN-P2-R37 MANDATORY_RED 均形成 genuine semantic RED，且 compile/discovery 成功。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/0",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER002": {
+      "key": "ER002",
+      "acceptance_id": "AC-P2-CV-EXPECTED-002",
+      "statement": "每个 RED 均绑定 exact pre-fix production revision、测试源码 digest、精确命令和失败输出。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/1",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER003": {
+      "key": "ER003",
+      "acceptance_id": "AC-P2-CV-EXPECTED-003",
+      "statement": "WRITE 相关 RED Evidence 能够证明 pre-fix 越权副作用，并冻结后续 GREEN 的 zero-side-effect tuple。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/2",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER004": {
+      "key": "ER004",
+      "acceptance_id": "AC-P2-CV-EXPECTED-004",
+      "statement": "TestEvidenceReviewAgent 对四个 RED Evidence 独立 PASSED，P0/P1=0。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/3",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER005": {
+      "key": "ER005",
+      "acceptance_id": "AC-P2-CV-EXPECTED-005",
+      "statement": "raw MODEL public/proofless executable bypass 不存在，或残留 internal primitive 在缺少 Guard authority 时 fail closed。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/4",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER006": {
+      "key": "ER006",
+      "acceptance_id": "AC-P2-CV-EXPECTED-006",
+      "statement": "现有合法 guarded READ/WRITE 与 WRITE mutationStamp/version/value 语义保持一致。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/5",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER007": {
+      "key": "ER007",
+      "acceptance_id": "AC-P2-CV-EXPECTED-007",
+      "statement": "模块依赖方向保持不变且未引入 RuntimeContextBinding。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/6",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER008": {
+      "key": "ER008",
+      "acceptance_id": "AC-P2-CV-EXPECTED-008",
+      "statement": "四个 R37 MANDATORY_RED 在整改 revision 上全部 GREEN，且每个结果与对应冻结 RED Evidence 一一关联。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/7",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER009": {
+      "key": "ER009",
+      "acceptance_id": "AC-P2-CV-EXPECTED-009",
+      "statement": "WRITE denial 的 zero-side-effect、READ/WRITE 分离和 exact binding oracles 全部通过。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/8",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER010": {
+      "key": "ER010",
+      "acceptance_id": "AC-P2-CV-EXPECTED-010",
+      "statement": "任何 harness adaptation 均有独立 TestEvidenceReviewAgent PASSED。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/9",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER011": {
+      "key": "ER011",
+      "acceptance_id": "AC-P2-CV-EXPECTED-011",
+      "statement": "bind-once 与 no-hot-reload 两个 GREEN_ONLY case 通过。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/10",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER012": {
+      "key": "ER012",
+      "acceptance_id": "AC-P2-CV-EXPECTED-012",
+      "statement": "restart-new-generation regression 通过，同时保留 Compiler 多 candidate 能力。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/11",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER013": {
+      "key": "ER013",
+      "acceptance_id": "AC-P2-CV-EXPECTED-013",
+      "statement": "未引入 RuntimeContextBinding、JVM global singleton 或 EngineContext equality 语义变化。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/12",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER014": {
+      "key": "ER014",
+      "acceptance_id": "AC-P2-CV-EXPECTED-014",
+      "statement": "core/starter/compiler/dec-demo P2 regression 全部通过且测试报告与 exact development revision 绑定。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/13",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER015": {
+      "key": "ER015",
+      "acceptance_id": "AC-P2-CV-EXPECTED-015",
+      "statement": "Rule/change/custom-action production consumers 继续经唯一 Guard authority 路径执行。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/14",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER016": {
+      "key": "ER016",
+      "acceptance_id": "AC-P2-CV-EXPECTED-016",
+      "statement": "MySQL business integration 的 execution markers 与 database effects 可复核。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/15",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER017": {
+      "key": "ER017",
+      "acceptance_id": "AC-P2-CV-EXPECTED-017",
+      "statement": "risk detection 已覆盖最终 changed files，并为 Final Code Review 同步必要专项 Reviewer。",
+      "source_ref": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION#expected_results/16",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER018": {
+      "key": "ER018",
+      "acceptance_id": "AC-P2-CV-EXPECTED-018",
+      "statement": "SpecComplianceReviewAgent 对 exact development revision PASSED",
+      "source_ref": "TASK-P2-PHASE-FINAL-CODE-REVIEW#expected_results/0",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER019": {
+      "key": "ER019",
+      "acceptance_id": "AC-P2-CV-EXPECTED-019",
+      "statement": "EngineeringStandardsReviewAgent 对 exact development revision PASSED",
+      "source_ref": "TASK-P2-PHASE-FINAL-CODE-REVIEW#expected_results/1",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER020": {
+      "key": "ER020",
+      "acceptance_id": "AC-P2-CV-EXPECTED-020",
+      "statement": "任何 P0/P1 均 fail-closed，不通过文档改写绕过",
+      "source_ref": "TASK-P2-PHASE-FINAL-CODE-REVIEW#expected_results/2",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER021": {
+      "key": "ER021",
+      "acceptance_id": "AC-P2-CV-EXPECTED-021",
+      "statement": "Testing artifact 与 exact code_review revision 绑定",
+      "source_ref": "TASK-P2-PHASE-TESTING#expected_results/0",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER022": {
+      "key": "ER022",
+      "acceptance_id": "AC-P2-CV-EXPECTED-022",
+      "statement": "TestEvidenceReviewAgent PASSED",
+      "source_ref": "TASK-P2-PHASE-TESTING#expected_results/1",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER023": {
+      "key": "ER023",
+      "acceptance_id": "AC-P2-CV-EXPECTED-023",
+      "statement": "失败不修改业务代码而是回到相应 remediation 生命周期",
+      "source_ref": "TASK-P2-PHASE-TESTING#expected_results/2",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER024": {
+      "key": "ER024",
+      "acceptance_id": "AC-P2-CV-EXPECTED-024",
+      "statement": "Completion Verification PASSED 前不得宣告 P2 complete",
+      "source_ref": "TASK-P2-PHASE-COMPLETION-VERIFICATION#expected_results/0",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER025": {
+      "key": "ER025",
+      "acceptance_id": "AC-P2-CV-EXPECTED-025",
+      "statement": "所有 blocking acceptance assertions VERIFIED",
+      "source_ref": "TASK-P2-PHASE-COMPLETION-VERIFICATION#expected_results/1",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER026": {
+      "key": "ER026",
+      "acceptance_id": "AC-P2-CV-EXPECTED-026",
+      "statement": "最终 exact HEAD P0 与完成事实一致",
+      "source_ref": "TASK-P2-PHASE-COMPLETION-VERIFICATION#expected_results/2",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER027": {
+      "key": "ER027",
+      "acceptance_id": "AC-P2-CV-EXPECTED-027",
+      "statement": "DESIGN-P2-R33 keeps P2-CR-001 Guard/raw authority closure blocking",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/0",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER028": {
+      "key": "ER028",
+      "acceptance_id": "AC-P2-CV-EXPECTED-028",
+      "statement": "one active runtime generation binds exactly one EngineContext and exposes no hot reload/rebind",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/1",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER029": {
+      "key": "ER029",
+      "acceptance_id": "AC-P2-CV-EXPECTED-029",
+      "statement": "RuntimeContextBinding is not introduced; RuntimeBindingPlan.equals remains structural only",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/2",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER030": {
+      "key": "ER030",
+      "acceptance_id": "AC-P2-CV-EXPECTED-030",
+      "statement": "READ/WRITE only and default DENY remain unchanged",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION#expected_results/3",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER031": {
+      "key": "ER031",
+      "acceptance_id": "AC-P2-CV-EXPECTED-031",
+      "statement": "TESTDESIGN-P2-R37 defines exactly four genuine P0 MANDATORY_RED cases",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/0",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER032": {
+      "key": "ER032",
+      "acceptance_id": "AC-P2-CV-EXPECTED-032",
+      "statement": "cross-context identity cases are RETIRED_SUPERSEDED rather than fake GREEN",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/1",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER033": {
+      "key": "ER033",
+      "acceptance_id": "AC-P2-CV-EXPECTED-033",
+      "statement": "single-runtime bind-once/no-hot-reload/restart contracts are observable",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/2",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER034": {
+      "key": "ER034",
+      "acceptance_id": "AC-P2-CV-EXPECTED-034",
+      "statement": "R36 source-digest and controlled harness adaptation integrity remains active",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-TESTDESIGN-REMEDIATION#expected_results/3",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER035": {
+      "key": "ER035",
+      "acceptance_id": "AC-P2-CV-EXPECTED-035",
+      "statement": "R06 精确绑定 DESIGN-P2-R33 / TESTDESIGN-P2-R37，并保留 R05 与历史 Review。",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/0",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER036": {
+      "key": "ER036",
+      "acceptance_id": "AC-P2-CV-EXPECTED-036",
+      "statement": "R06 仅规划四个 genuine RED 与 P2-CR-001 authority closure，不规划 RuntimeContextBinding。",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/1",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    },
+    "ER037": {
+      "key": "ER037",
+      "acceptance_id": "AC-P2-CV-EXPECTED-037",
+      "statement": "五个开发任务形成无环 SEQUENTIAL DAG，并为每项给出明确文件、命令、验收、Evidence 与 stop conditions。",
+      "source_ref": "TASK-P2-SECURITY-BOUNDARY-IMPLEMENTATION-PLAN-REMEDIATION#expected_results/2",
+      "status": "VERIFIED",
+      "basis_evidence_ids": [
+        "EVD-000486",
+        "EVD-000487",
+        "EVD-000488",
+        "EVD-000489"
+      ]
+    }
+  },
+  "basis": {
+    "true_final_pr_head": "1547f4fff2375798d1faa2a80ad77518a73bfdc8",
+    "true_final_pr_tree": "ca833077c720711558a75f179c5e3c0ed148956e",
+    "p0_run_id": 32284575526,
+    "acceptance_validate": "PASSED",
+    "evidence_validate": "PASSED",
+    "lifecycle_validate": "PASSED"
+  }
+}

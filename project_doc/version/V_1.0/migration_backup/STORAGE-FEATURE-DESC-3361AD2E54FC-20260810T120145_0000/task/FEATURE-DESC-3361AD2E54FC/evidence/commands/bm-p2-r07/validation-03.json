@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 -c \"import json,yaml,jsonschema; jsonschema.validate(yaml.safe_load(open('project_doc/version/V_1.0/doc/COMPILER/changes/p2-business-model-lineage-readability.yaml',encoding='utf-8')),json.load(open('/home/oai/skills/common-develop/assets/structured-docs/changeset.schema.json',encoding='utf-8')))\"",
+  "exit_code": 0,
+  "executed_at": "2026-08-08T04:11:36.683089+00:00",
+  "revision": "BM-R07@7d7bf504ca9d",
+  "output": "",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

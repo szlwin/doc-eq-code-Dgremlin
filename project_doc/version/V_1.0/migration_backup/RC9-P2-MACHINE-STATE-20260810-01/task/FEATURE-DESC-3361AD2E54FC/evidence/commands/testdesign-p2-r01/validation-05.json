@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "local P2 Test Design cross-document semantic audit",
+  "exit_code": 0,
+  "executed_at": "2026-08-08T05:45:19.396864+00:00",
+  "revision": "TESTDESIGN-P2-R01@a9b12b4e15fa",
+  "output": "TEST_DESIGN_SEMANTIC_AUDIT=PASSED\ndesign_input_bound=true\nformal_case_count=true\ntrace_coverage=true\nac_coverage=true\ntask_coverage=true\noperations_independent=true\nguard_fail_closed=true\ndeny_no_side_effect=true\nno_bare_fallback=true\natomic_publication=true\ncontext_isolation=true\np7_boundary=true\nvalid_red_contract=true\nno_test_execution_claim=true\n",
+  "output_digest": "09e5a2e956bae10148888d10f973ae02798abdf85af5cc0967c5a25465d6e899"
+}

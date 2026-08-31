@@ -1,0 +1,143 @@
+schemaVersion: 1
+mergeMode: "VERSION_DELTA_ARCHIVE"
+version: "V_1.0"
+module: "MODEL"
+changeSetIds: []
+baseRevisions: {}
+resultRevisions: {}
+structuredArtifacts: []
+projectFactArtifacts: []
+versionDeltaArtifacts: []
+documentArtifacts:
+  - "module_desc"
+  - "requirement_list"
+artifactMerges:
+  -
+    artifactType: "module_desc"
+    sourceRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/MODEL/MODEL_desc.md"
+    targetRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/docs/MODEL/MODEL_desc.md"
+    mergeMode: "MODULE_DESC_MERGE"
+    sourceRevision: "MODULE_DESC@60a41671639c"
+    resultRevision: "MODULE_DESC@e98edc7ff302"
+    status: "READY"
+    sourceDigest: "60a41671639c9ea7a2c3f6ec1ec3ee9db67865a51354db1fd3bbf655052c1de0"
+    targetDigest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    resultDigest: "e98edc7ff302bed0be7a688314cd6d213f9fea330d13c88689f73106841d0010"
+    reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+    evidenceRefs:
+      - "project_doc/version/V_1.0/doc/MODEL/generated/MODEL_desc_preview.md"
+  -
+    artifactType: "requirement_list"
+    sourceRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/requirement_list.md"
+    targetRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/docs/requirement_list.md"
+    mergeMode: "TABLE_UPSERT"
+    sourceRevision: "REQUIREMENT_LIST@c989fd7bbef5"
+    resultRevision: "REQUIREMENT_LIST@f2a6f5250f92"
+    status: "READY"
+    sourceDigest: "c989fd7bbef57a054e095441e2bd2360a1c5dd175d2d90cd48e1a2a16f582cf2"
+    targetDigest: "82f9cc0de0667f6759f6f53c30d6d80ade1576b07111f0ad1484400f139b7a8e"
+    resultDigest: "f2a6f5250f92ff57d101249ac45edb60a5117d4dd28e7542d9501fa6ab54060d"
+    reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
+    evidenceRefs:
+      - "project_doc/version/V_1.0/doc/MODEL/generated/requirement_list_preview.md"
+conflictDecisions: []
+businessFlowMerges: []
+affectedTraceIds: []
+workMode:
+  modelCode: false
+  pageDesign: false
+  minimal: false
+  auto: false
+  architectureReview: false
+  gitCheckpoint: false
+  gitPush: false
+  reviewOnly: false
+  lightweight: true
+  skippedPhases:
+    - "test_design"
+    - "tdd"
+    - "code_review"
+    - "testing"
+  workRef: "version/V_1.0/work.md"
+  workDigest: "b9ba27c1816710c5696e85c050fe9c2e691bc0916973d88a45034bbb11599756"
+resultDigest: "72911320e011aed05b9a6df38d29ebe855ac8b41c8877847bd878e8f0b30147b"
+archiveGate:
+  status: "DRAFT"
+  gates:
+    requirementConfirmation:
+      status: "PENDING"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: ""
+    requirementAnalysis:
+      status: "PENDING"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: ""
+    businessModel:
+      status: "NOT_APPLICABLE"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: "本次 merge plan 不包含 business_model 增量。"
+    design:
+      status: "PENDING"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: ""
+    testDesign:
+      status: "NOT_APPLICABLE"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: "当前版本使用 wk -ws：采用对话式结对开发；除非用户明确要求，不创建 TDD、测试设计、Review、测试代码、测试用例或测试产物。"
+    implementationPlan:
+      status: "PENDING"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: ""
+    development:
+      status: "PENDING"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: ""
+    codeReview:
+      status: "NOT_APPLICABLE"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: "当前版本使用 wk -ws：采用对话式结对开发；除非用户明确要求，不创建 TDD、测试设计、Review、测试代码、测试用例或测试产物。"
+    testing:
+      status: "NOT_APPLICABLE"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: "当前版本使用 wk -ws：采用对话式结对开发；除非用户明确要求，不创建 TDD、测试设计、Review、测试代码、测试用例或测试产物。"
+    completionVerification:
+      status: "PENDING"
+      revision: ""
+      stageOutcomeRefs: []
+      evidenceIds: []
+      reviewerAgents: []
+      reason: ""
+  openIssueIds: []
+  authorizedBy: ""
+  authorizedAt: ""
+  decisionRef: ""
+  userConfirmed: false
+  notes: "用于 wk -d 将当前版本已确认事实归档；API/DB 只保留版本增量引用，不生成项目级全量文档；不是发布审批。"
+generatedAt: "2026-08-24T20:17:27+08:00"

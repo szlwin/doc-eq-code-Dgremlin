@@ -1,0 +1,70 @@
+{
+  "kind": "TASK_PLAN_HISTORY_ITERATION",
+  "authority": "DERIVED",
+  "classification": "HISTORICAL",
+  "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-006",
+  "source": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "sha256": "0b4ddd1cb789dc737a24077358db42324e748e9b74ecfc6a6c5c6e4ca1a1b769",
+    "eventSeq": 571,
+    "eventDigest": "28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8"
+  },
+  "tasks": [
+    {
+      "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+      "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-005",
+      "acceptance_trace_ids": [],
+      "flow_refs": [],
+      "flow_step_refs": [],
+      "risk_triggers": [
+        "cross_module_integration",
+        "impact_analysis",
+        "security"
+      ],
+      "max_attempts": 3,
+      "id": "TASK-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION",
+      "logical_task_id": "LOGICAL-P2-SECURITY-BOUNDARY-DESIGN-REMEDIATION",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DESIGN-006",
+      "iteration_no": 6,
+      "revision_reason": "DEC-P2-SINGLE-RUNTIME-CONTEXT-001 supersedes the multi-context runtime premise in R32 while preserving P2-CR-001 raw MODEL authority closure.",
+      "title": "冻结 P2 MODEL authority boundary 与 single EngineContext runtime lifecycle Design",
+      "objective": "保持 Requirement/BM/FLOW 语义不变；保留 Guard 唯一 READ/WRITE authority 与 raw/proofless effect closure；冻结一个 runtime generation 只绑定一个 EngineContext、配置更新必须 restart、不支持 hot reload；不引入 RuntimeContextBinding。",
+      "phase": "design",
+      "depends_on": [],
+      "owner_agent": "DesignAgent",
+      "reviewer_agents": [
+        "ArchitectureReviewAgent",
+        "RequirementReviewAgent",
+        "TestDesignAgent"
+      ],
+      "input_revisions": {
+        "business_model": "BM-R20"
+      },
+      "allowed_files": [
+        "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design_security_authority_single_runtime_context_overlay_r33.md",
+        "project_doc/version/V_1.0/doc/COMPILER/COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/**",
+        "project_doc/version/V_1.0/work_record.md",
+        "project_doc/README.md",
+        "project_doc/version/V_1.0/project_process.md",
+        "project_doc/version/V_1.0/work.md"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+        "git diff --check"
+      ],
+      "expected_results": [
+        "DESIGN-P2-R33 keeps P2-CR-001 Guard/raw authority closure blocking",
+        "one active runtime generation binds exactly one EngineContext and exposes no hot reload/rebind",
+        "RuntimeContextBinding is not introduced; RuntimeBindingPlan.equals remains structural only",
+        "READ/WRITE only and default DENY remain unchanged",
+        "required Design reviewers PASS with open P0/P1=0"
+      ],
+      "stop_conditions": [
+        "Requirement/BM/FLOW semantic change required",
+        "authority can be forged by ordinary callers",
+        "single-runtime lifecycle cannot be enforced without a new ambiguous architecture decision"
+      ]
+    }
+  ]
+}

@@ -3,13 +3,10 @@ package dec.core.compiler.modelaccess;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dec.core.compiler.raw.RawDefinitionSet;
-import dec.core.context.model.DeferredDefinition;
-import dec.core.context.model.DeferredKind;
 import dec.core.context.model.DeferredRegistry;
-import dec.core.context.model.RequiredStage;
-import dec.core.context.model.ViewKey;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -62,25 +59,19 @@ class ModelAccessSelectorTest {
     void keepsDirectAccessWithoutSyntheticBinding() {
         Object compilation = compile(ModelAccessTestFixture.multiBinding());
         assertEquals(2, ModelAccessTestFixture.bindings(compilation).size());
-        assertEquals(1, ((Number) ModelAccessTestFixture.call(
+        assertEquals(0, ((Number) ModelAccessTestFixture.call(
                 ModelAccessTestFixture.call(compilation, "deferredRegistry"),
                 "size")).intValue());
     }
 
-    /** 成功 ModelAccess 必须生成字段完整的 P2 Deferred。 */
+    /** 成功 ModelAccess 只发布 Binding，不再生成 P2 Deferred。 */
     @Test
-    void publishesCompleteP2Deferred() {
+    void doesNotPublishRetiredP2Deferred() {
         Object compilation = compile(ModelAccessTestFixture.multiBinding());
         DeferredRegistry registry = (DeferredRegistry) ModelAccessTestFixture.call(
                 compilation, "deferredRegistry");
-        assertEquals(1, registry.size());
-        DeferredDefinition deferred = registry.find(registry.keys().get(0)).get();
-        assertEquals(DeferredKind.MODEL_ACCESS, deferred.kind());
-        assertEquals(RequiredStage.P2, deferred.requiredStage());
-        assertEquals("model-access-selector-binding", deferred.reasonCode());
-        assertEquals("model-access-binding/v1", deferred.body().format());
-        assertEquals(2, deferred.resolvedReferences().size());
-        assertEquals(new ViewKey("OrderInfo"), deferred.resolvedReferences().get(0));
+        assertEquals(0, registry.size());
+        assertTrue(registry.keys().isEmpty());
     }
 
     /** Binding 与发布集合必须不可修改。 */
@@ -93,7 +84,7 @@ class ModelAccessSelectorTest {
         DeferredRegistry registry = (DeferredRegistry) ModelAccessTestFixture.call(
                 compilation, "deferredRegistry");
         assertThrows(UnsupportedOperationException.class,
-                () -> registry.keys().add(registry.keys().get(0)));
+                () -> registry.keys().clear());
     }
 
     /** Matching Raw/Symbol 快照必须正常发布。 */

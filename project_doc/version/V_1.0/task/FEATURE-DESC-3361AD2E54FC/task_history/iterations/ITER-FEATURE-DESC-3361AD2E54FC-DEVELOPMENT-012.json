@@ -1,0 +1,130 @@
+{
+  "kind": "TASK_PLAN_HISTORY_ITERATION",
+  "authority": "DERIVED",
+  "classification": "HISTORICAL",
+  "iterationId": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012",
+  "source": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/task_plan.md",
+    "sha256": "0b4ddd1cb789dc737a24077358db42324e748e9b74ecfc6a6c5c6e4ca1a1b769",
+    "eventSeq": 571,
+    "eventDigest": "28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8"
+  },
+  "tasks": [
+    {
+      "feature_id": "P2-SYSTEM-RULEVIEW-F01",
+      "supersedes_iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-009",
+      "acceptance_trace_ids": [
+        "TR-P2-SYSTEM-RULEVIEW-004",
+        "TR-P2-SYSTEM-RULEVIEW-007",
+        "TR-P2-SYSTEM-RULEVIEW-009",
+        "TR-P2-SYSTEM-RULEVIEW-008",
+        "TR-P2-SYSTEM-RULEVIEW-001",
+        "TR-P2-SYSTEM-RULEVIEW-002",
+        "TR-P2-SYSTEM-RULEVIEW-003",
+        "TR-P2-SYSTEM-RULEVIEW-005",
+        "TR-P2-SYSTEM-RULEVIEW-006",
+        "TR-P2-SYSTEM-RULEVIEW-010"
+      ],
+      "flow_refs": [
+        "FLOW-PROTECTED-ACCESS-EXECUTE",
+        "FLOW-CONFIG-COMPILE"
+      ],
+      "flow_step_refs": [
+        "STEP-P2-ACCESS-GUARD",
+        "STEP-P2-ACCESS-EFFECT",
+        "STEP-P2-COMPILE-04",
+        "STEP-P2-COMPILE-01"
+      ],
+      "risk_triggers": [],
+      "max_attempts": 3,
+      "id": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION",
+      "logical_task_id": "LOGICAL-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION",
+      "iteration_id": "ITER-FEATURE-DESC-3361AD2E54FC-DEVELOPMENT-012",
+      "iteration_no": 12,
+      "revision_reason": "R03 execution correction: use only repository-present tests; replace unavailable lifecycle and P2 fixture names with CompilerBootstrapStageClosureTest and MixCompilerRegressionTest.",
+      "title": "执行 TP R03 五项 P2 simplified configuration development 子任务",
+      "objective": "以 development_tasks.yaml 为唯一细粒度事实源，严格串行执行 genuine RED Evidence、raw authority closure、RED→GREEN integrity、single EngineContext lifecycle verification 与 full regression closure；每个子项完成后形成独立 Git checkpoint/push，禁止 RuntimeContextBinding 与已 superseded cross-context remediation。",
+      "phase": "development",
+      "depends_on": [],
+      "owner_agent": "DevelopAgent",
+      "reviewer_agents": [
+        "TDDReviewAgent",
+        "SpecComplianceReviewAgent"
+      ],
+      "input_revisions": {
+        "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+        "test_design": "TESTDESIGN-P2-R41"
+      },
+      "allowed_files": [
+        "dec-core-model/src/test/java/dec/core/model/runtime/**",
+        "dec-core-context/src/test/java/dec/core/context/runtime/**",
+        "dec-core-starter/src/test/java/dec/core/starter/access/**",
+        "dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**",
+        "dec-core-context/src/main/java/dec/core/context/runtime/ResolvedProtectedReadAccess.java",
+        "dec-core-context/src/main/java/dec/core/context/runtime/ResolvedProtectedWriteAccess.java",
+        "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java",
+        "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectProvider.java",
+        "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java",
+        "dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelOperationPort.java",
+        "dec-core-starter/src/main/java/dec/core/starter/access/**",
+        "dec-core-starter/src/main/java/dec/core/starter/**",
+        "dec-core-starter/src/test/java/dec/core/starter/**",
+        "dec-demo/src/test/java/dec/demo/p2/**",
+        "dec-core-context/src/test/**",
+        "dec-core-model/src/test/**",
+        "dec-core-starter/src/test/**",
+        "dec-core-compiler/src/test/**",
+        "dec-demo/src/test/**",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/**",
+        "project_doc/version/V_1.0/work_record.md"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/auto_remediation.py preflight -g DevelopAgent --authority-current true --test-oracle-authoritative true --fixture-representative true --configuration-semantically-valid true --environment-stable true --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --json",
+        "./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install",
+        "./mvnw -pl dec-demo -Dtest=ConfigUtilCompatibilityTest -Dsurefire.failIfNoSpecifiedTests=true test",
+        "./mvnw -pl dec-core-context,dec-core-model,dec-core-starter -am -Dmaven.test.skip=true install",
+        "./mvnw -pl dec-core-context,dec-core-model,dec-core-starter test",
+        "./mvnw -pl dec-core-starter -am -DskipTests install",
+        "./mvnw -pl dec-core-starter -Dtest=CompilerBootstrapStageClosureTest -Dsurefire.failIfNoSpecifiedTests=true test",
+        "./mvnw -pl dec-demo -Dtest=MixCompilerRegressionTest -Dsurefire.failIfNoSpecifiedTests=true test",
+        "./mvnw --batch-mode --no-transfer-progress clean verify",
+        "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify",
+        "python3 scripts/remediation/verify_dec_demo_mysql_it.py"
+      ],
+      "expected_results": [
+        "四个 TESTDESIGN-P2-R37 MANDATORY_RED 均形成 genuine semantic RED，且 compile/discovery 成功。",
+        "每个 RED 均绑定 exact pre-fix production revision、测试源码 digest、精确命令和失败输出。",
+        "WRITE 相关 RED Evidence 能够证明 pre-fix 越权副作用，并冻结后续 GREEN 的 zero-side-effect tuple。",
+        "TestEvidenceReviewAgent 对四个 RED Evidence 独立 PASSED，P0/P1=0。",
+        "raw MODEL public/proofless executable bypass 不存在，或残留 internal primitive 在缺少 Guard authority 时 fail closed。",
+        "现有合法 guarded READ/WRITE 与 WRITE mutationStamp/version/value 语义保持一致。",
+        "模块依赖方向保持不变且未引入 RuntimeContextBinding。",
+        "四个 R37 MANDATORY_RED 在整改 revision 上全部 GREEN，且每个结果与对应冻结 RED Evidence 一一关联。",
+        "WRITE denial 的 zero-side-effect、READ/WRITE 分离和 exact binding oracles 全部通过。",
+        "任何 harness adaptation 均有独立 TestEvidenceReviewAgent PASSED。",
+        "bind-once 与 no-hot-reload 两个 GREEN_ONLY case 通过。",
+        "现有 CompilerBootstrapStageClosureTest 覆盖真实 mix 编译发布、同一 EngineContext 身份和失败重编译不覆盖已发布 Context。",
+        "未引入 RuntimeContextBinding、JVM global singleton 或 EngineContext equality 语义变化。",
+        "现有 MixCompilerRegressionTest 覆盖真实 mix fixture 编译发布、系统/规则/信息注册表和 P2 deferred 边界。",
+        "Rule/change/custom-action production consumers 继续经唯一 Guard authority 路径执行。",
+        "MySQL business integration 的 execution markers 与 database effects 可复核。",
+        "risk detection 已覆盖最终 changed files，并为 Final Code Review 同步必要专项 Reviewer。"
+      ],
+      "stop_conditions": [
+        "任一 case 不能在不修改 production source 的情况下复现当前缺陷。",
+        "测试只能通过编译失败或 fixture 故障制造失败。",
+        "发现 TESTDESIGN-P2-R37 oracle 与 DESIGN-P2-R33 冲突。",
+        "需要扩大到 DESIGN-P2-R33 未授权模块才能关闭 bypass。",
+        "合法 guarded consumer 无法在不改变 Requirement/BM/Flow 语义的情况下继续工作。",
+        "发现新的 authority forging path 或 P0/P1 architecture conflict。",
+        "存在一个冻结 case 只能通过弱化 oracle 才能 GREEN。",
+        "整改后出现新的 WRITE 副作用、authorization replay 或 exact-binding 回归。",
+        "当前 production runtime 存在必须保留的 live rebind/hot-reload 业务需求。",
+        "满足单 Context contract 必须改变已冻结 Requirement/BM/Flow。",
+        "任一 P0/P1 regression 或独立 Review finding 未关闭。",
+        "最终验证命令不能在当前 repository environment 中真实执行。"
+      ]
+    }
+  ]
+}

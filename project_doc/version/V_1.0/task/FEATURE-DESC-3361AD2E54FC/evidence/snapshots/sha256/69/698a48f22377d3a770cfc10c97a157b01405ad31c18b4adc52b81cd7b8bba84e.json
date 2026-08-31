@@ -1,0 +1,42 @@
+{
+  "ancestry": {
+    "green_before_current": true,
+    "implementation_before_green": true,
+    "red_before_implementation": true
+  },
+  "current": {
+    "commit": "437b8547d0b660cfa912d9e3333452fc6f248f3e",
+    "guard_blob": "c3bb7880c65fb5714cefaf62215ce576649d529c",
+    "test_blob": "541d67f2110e4c12b1260c3cd9a0720ad6875aa3"
+  },
+  "green": {
+    "artifact_path": "evidence/imports/task6-run-32145323918/task6-green.log",
+    "commit": "e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e",
+    "green_bundle": "EVD-000378",
+    "guard_blob": "c3bb7880c65fb5714cefaf62215ce576649d529c",
+    "message": "test(p2): turn four frozen security REDs GREEN",
+    "test_blob": "541d67f2110e4c12b1260c3cd9a0720ad6875aa3",
+    "test_evidence_review": "EVD-000379"
+  },
+  "implementation": {
+    "commit": "8b2faf83",
+    "evidence_bundle": "EVD-000374",
+    "guard_blob": "c3bb7880c65fb5714cefaf62215ce576649d529c",
+    "message": "fix(p2): close raw MODEL authority bypass"
+  },
+  "interpretation": {
+    "note": "RED failure evidence predates production authority remediation. GREEN adaptation/test evidence follows the production change, and current source retains the GREEN production/test blobs. Current I014 does not replay RED; it preserves and re-reviews the immutable historical RED→fix→GREEN lineage.",
+    "status": "PROVEN"
+  },
+  "red": {
+    "artifact_path": "evidence/imports/red-run-32132153900/p2-red-evidence.json",
+    "commit": "ee4c77a5e3aeb1b5f081d79eef21627c2c092481",
+    "evidence_bundle": "EVD-000371",
+    "guard_blob": "c7f27a227b0a39ff374b8b1b76352c7d598aaa6f",
+    "message": "test(p2): freeze four genuine security REDs",
+    "test_blob": "f1b4982d3742c9cc2e3716be91bbe7848339f1e2",
+    "test_evidence_review": "EVD-000373"
+  },
+  "review_revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "schema_version": 1
+}

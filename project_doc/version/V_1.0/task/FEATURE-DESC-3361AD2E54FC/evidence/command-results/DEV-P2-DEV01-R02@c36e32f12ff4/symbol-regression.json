@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-compiler -Dtest=SymbolOwnerIdentityReworkTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 0,
+  "executed_at": "2026-08-11T17:32:41.700054+00:00",
+  "revision": "DEV-P2-DEV01-R02@c36e32f12ff4",
+  "output_ref": "evidence/command-results/DEV-P2-DEV01-R02@c36e32f12ff4/symbol-regression.out",
+  "output_digest": "99b2b33b2f8d7a539770fbbb26f90ec2dc435d2922e86167b38406ec224fbfa2"
+}

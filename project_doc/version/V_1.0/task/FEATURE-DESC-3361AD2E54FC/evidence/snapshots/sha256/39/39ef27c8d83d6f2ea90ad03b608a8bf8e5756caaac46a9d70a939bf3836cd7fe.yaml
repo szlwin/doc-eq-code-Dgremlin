@@ -1,0 +1,286 @@
+schemaVersion: 1
+artifact: business_flow_changeset
+changeSet:
+  id: FLOW-CHG-P2-SIMPLE-R04
+  version: V_1.0
+  module: COMPILER
+  flowGroup: COMPILER
+  flowGroupName: Configuration compilation and simple model execution
+  reason: Replace the unarchived heavy protected-access candidate with isolated ConfigInfo publication and direct ModelContainer execution.
+  baseRevision: FLOW-R02@compiler-owned-discovery
+  resultRevision: FLOW-R04@p2-simple-runtime-model
+  affectedTraceIds:
+    - TR-P2-001
+    - TR-P2-002
+    - TR-P2-003
+    - TR-P2-004
+    - TR-P2-005
+    - TR-P2-006
+    - TR-P2-007
+    - TR-P2-008
+    - TR-P2-009
+    - TR-P2-010
+operations:
+  - operation: update
+    targetId: FLOW-CONFIG-COMPILE
+    reason: Compile an isolated ConfigInfo candidate and install it only after successful EngineContext publication.
+    after:
+      id: FLOW-CONFIG-COMPILE
+      name: Configuration candidate compilation and publication
+      level: L0
+      type: MAIN
+      ownerModule: COMPILER
+      participantModules:
+        - CONTEXT
+        - COMPILER
+        - XML
+        - YAML
+        - STARTER
+      goal: Parse XML or YAML into an isolated ConfigInfo, compile an immutable EngineContext and install both as one current object; failures keep the previous installed configuration.
+      trigger: starter receives a configuration source to load.
+      requirementRefs:
+        - id: P1-COMPILER
+          documentRef: version/V_1.0/doc/P1-COMPILER-F01/requirement.md
+        - id: P2-SYSTEM-RULEVIEW
+          documentRef: version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md
+      featureRefs:
+        - id: P1-COMPILER-F01
+          module: COMPILER
+        - id: P2-SYSTEM-RULEVIEW-F01
+          module: COMPILER
+      ruleRefs:
+        - BR-P1-004
+        - BR-P1-006
+        - BR-P1-011
+        - BR-P2-SYSTEM-RULEVIEW-001
+        - BR-P2-SYSTEM-RULEVIEW-002
+        - BR-P2-SYSTEM-RULEVIEW-003
+        - BR-P2-SYSTEM-RULEVIEW-004
+        - BR-P2-SYSTEM-RULEVIEW-005
+      acceptanceRefs:
+        - AC-P1-COMPILER-001
+        - AC-P1-COMPILER-002
+        - AC-P1-COMPILER-003
+        - AC-P1-COMPILER-004
+        - AC-P2-SYSTEM-RULEVIEW-001
+        - AC-P2-SYSTEM-RULEVIEW-002
+        - AC-P2-SYSTEM-RULEVIEW-003
+        - AC-P2-SYSTEM-RULEVIEW-004
+      traceIds:
+        - TR-P1-COMPILER-001
+        - TR-P1-COMPILER-002
+        - TR-P1-COMPILER-003
+        - TR-P1-COMPILER-004
+        - TR-P2-001
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+        - TR-P2-009
+      preconditions:
+        - parser, compiler and publisher are assembled
+        - the configuration source has a stable location
+      steps:
+        - id: STEP-CONFIG-COMPILE-01
+          order: 1
+          name: Create isolated ConfigInfo candidate
+          ownerModule: COMPILER
+          featureRef: P2-SYSTEM-RULEVIEW-F01
+          preconditions:
+            - no candidate is active on the current thread
+          postconditions:
+            - an empty per-load ConfigInfo is available
+        - id: STEP-CONFIG-COMPILE-02
+          order: 2
+          name: Parse XML or YAML into candidate
+          ownerModule: COMPILER
+          featureRef: P2-SYSTEM-RULEVIEW-F01
+          preconditions:
+            - candidate and source are available
+          postconditions:
+            - View, Rule, Connection and other definitions belong to the candidate
+            - the installed ConfigInfo has not changed
+        - id: STEP-CONFIG-COMPILE-03
+          order: 3
+          name: Compile and publish EngineContext
+          ownerModule: COMPILER
+          featureRef: P2-SYSTEM-RULEVIEW-F01
+          preconditions:
+            - candidate parsing completed
+          postconditions:
+            - a valid candidate has the exact published EngineContext
+            - an invalid candidate has diagnostics and is not installed
+        - id: STEP-CONFIG-COMPILE-04
+          order: 4
+          name: Install whole configuration
+          ownerModule: COMPILER
+          featureRef: P2-SYSTEM-RULEVIEW-F01
+          preconditions:
+            - compile and publication succeeded
+          postconditions:
+            - ConfigManager current reference exposes ConfigInfo plus the same EngineContext
+        - id: STEP-CONFIG-COMPILE-05
+          order: 5
+          name: Resolve candidate references
+          ownerModule: COMPILER
+          featureRef: P2-SYSTEM-RULEVIEW-F01
+          preconditions:
+            - candidate definitions are registered
+          postconditions:
+            - valid references are ready for immutable compilation
+            - invalid references produce diagnostics
+        - id: STEP-CONFIG-COMPILE-06
+          order: 6
+          name: Build immutable EngineContext
+          ownerModule: COMPILER
+          featureRef: P2-SYSTEM-RULEVIEW-F01
+          preconditions:
+            - candidate validation has no error
+          postconditions:
+            - the exact candidate EngineContext is ready to publish
+        - id: STEP-CONFIG-COMPILE-07
+          order: 7
+          name: Install ConfigInfo and EngineContext
+          ownerModule: COMPILER
+          featureRef: P2-SYSTEM-RULEVIEW-F01
+          preconditions:
+            - EngineContext publication succeeded
+          postconditions:
+            - ConfigManager exposes the complete new ConfigInfo
+            - publication failure leaves the old ConfigInfo unchanged
+      variants:
+        - id: FVAR-CONFIG-FORMAT-XML
+          name: XML candidate
+          condition: configuration format is XML
+          differences:
+            - ConfigFileParser.parseInto populates the candidate
+          ruleRefs:
+            - BR-P2-SYSTEM-RULEVIEW-005
+        - id: FVAR-CONFIG-FORMAT-YAML
+          name: YAML candidate
+          condition: configuration format is YAML
+          differences:
+            - YamlConfigFileParser.parseInto populates the candidate
+          ruleRefs:
+            - BR-P2-SYSTEM-RULEVIEW-005
+      failurePaths:
+        - id: FAIL-P2-CONFIG-PARSE
+          atStep: STEP-CONFIG-COMPILE-02
+          condition: source is missing or malformed
+          result: candidate is rejected and installed ConfigInfo is unchanged
+          compensation: discard the candidate
+          blocking: true
+          acceptanceRefs:
+            - AC-P2-SYSTEM-RULEVIEW-002
+        - id: FAIL-P2-CONFIG-COMPILE
+          atStep: STEP-CONFIG-COMPILE-03
+          condition: candidate contains an invalid definition or reference
+          result: diagnostics are returned and installed ConfigInfo plus EngineContext remain unchanged
+          compensation: discard the candidate
+          blocking: true
+          acceptanceRefs:
+            - AC-P2-SYSTEM-RULEVIEW-004
+      successCriteria:
+        - XML and YAML obey the same candidate isolation semantics
+        - ConfigInfo and its exact EngineContext become current together
+        - failed candidates never partially replace the installed configuration
+      status: PROPOSED
+      createdVersion: V_1.0
+      lastChangedVersion: FLOW-R04
+
+  - operation: add
+    targetId: FLOW-SIMPLE-MODEL-EXECUTE
+    reason: Add the user-facing DataUtil to ModelContainer execution flow without heavy runtime access objects.
+    after:
+      id: FLOW-SIMPLE-MODEL-EXECUTE
+      name: Simple model rule execution
+      level: L1
+      type: MAIN
+      ownerModule: MODEL
+      participantModules:
+        - COMPILER
+        - CONTEXT
+        - MODEL
+        - DEMO
+      goal: Create business ModelData, load a named rule and execute it with clear definition failures and reliable connection cleanup.
+      trigger: business code calls DataUtil, ModelLoader and ModelContainer.
+      requirementRefs:
+        - id: P2-SYSTEM-RULEVIEW
+          documentRef: version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md
+      featureRefs:
+        - id: P2-SYSTEM-RULEVIEW-F03
+          module: MODEL
+      ruleRefs:
+        - BR-P2-SYSTEM-RULEVIEW-006
+        - BR-P2-SYSTEM-RULEVIEW-007
+        - BR-P2-SYSTEM-RULEVIEW-008
+        - BR-P2-SYSTEM-RULEVIEW-009
+        - BR-P2-SYSTEM-RULEVIEW-010
+      acceptanceRefs:
+        - AC-P2-SYSTEM-RULEVIEW-005
+        - AC-P2-SYSTEM-RULEVIEW-006
+        - AC-P2-SYSTEM-RULEVIEW-007
+        - AC-P2-SYSTEM-RULEVIEW-008
+      traceIds:
+        - TR-P2-005
+        - TR-P2-006
+        - TR-P2-007
+        - TR-P2-008
+        - TR-P2-010
+      preconditions:
+        - a compiled ConfigInfo is installed
+        - requested View, Rule and Connection definitions exist
+      steps:
+        - id: STEP-P2-EXECUTE-01
+          order: 1
+          name: Create complete ModelData
+          ownerModule: MODEL
+          featureRef: P2-SYSTEM-RULEVIEW-F03
+          preconditions:
+            - requested View exists
+          postconditions:
+            - DataUtil returns mutable business ViewData
+        - id: STEP-P2-EXECUTE-02
+          order: 2
+          name: Load named rule task
+          ownerModule: MODEL
+          featureRef: P2-SYSTEM-RULEVIEW-F03
+          preconditions:
+            - requested Rule and Connection exist
+          postconditions:
+            - ModelLoader contains one executable task
+        - id: STEP-P2-EXECUTE-03
+          order: 3
+          name: Execute and finish connections
+          ownerModule: MODEL
+          featureRef: P2-SYSTEM-RULEVIEW-F03
+          preconditions:
+            - ModelContainer has loaded tasks
+          postconditions:
+            - success commits participating connections
+            - failure rolls back participating connections
+            - all opened connections close
+      variants: []
+      failurePaths:
+        - id: FAIL-P2-EXECUTE-DEFINITION
+          atStep: STEP-P2-EXECUTE-01
+          condition: View, Rule or Connection is absent
+          result: failure identifies the missing type and name before database side effects
+          compensation: no database compensation is required
+          blocking: true
+          acceptanceRefs:
+            - AC-P2-SYSTEM-RULEVIEW-006
+        - id: FAIL-P2-EXECUTE-RULE
+          atStep: STEP-P2-EXECUTE-03
+          condition: rule or database execution fails
+          result: participating connections roll back and all opened connections close
+          compensation: ModelContainer performs rollback and close
+          blocking: true
+          acceptanceRefs:
+            - AC-P2-SYSTEM-RULEVIEW-007
+      successCriteria:
+        - business callers pass no runtime scope, session, handle, owner identity or capability
+        - rule names such as save-Order remain valid
+        - connection commit, rollback and close behavior remains visible
+      status: PROPOSED
+      createdVersion: V_1.0
+      lastChangedVersion: FLOW-R04

@@ -86,10 +86,6 @@ final class SourceDeclarationParser {
                 throw new SourceDeclarationException(
                         "Source declaration document must contain a root element");
             }
-            if (!rootDocument && edges.isEmpty()) {
-                throw new SourceDeclarationException(
-                        "Systems declaration must contain at least one rule-file");
-            }
         } catch (XMLStreamException parseFailure) {
             throw new SourceDeclarationException(
                     "Unable to parse source declarations",

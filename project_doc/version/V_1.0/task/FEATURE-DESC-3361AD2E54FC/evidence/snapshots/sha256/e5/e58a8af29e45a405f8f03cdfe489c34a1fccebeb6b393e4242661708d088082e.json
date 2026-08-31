@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-P2-RC21-DEVELOPMENT-CLOSURE-FORMALIZATION",
+  "iteration": "DEVELOPMENT-I013",
+  "skeleton_revision": "DEV-P2-R37-SKELETON-R01@a5723c233bdf",
+  "canonical_executable_head": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
+  "prior_closure_revision": "DEV-P2-R37-CLOSURE-R01@1a936fdd2a45",
+  "prior_regression_revision": "DEV-P2-R37-REGRESSION-R01@fbe16820eb84",
+  "non_project_doc_worktree_changes": [],
+  "executable_source_equivalence": {
+    "status": "PROVEN",
+    "reason": "I013 changes are confined to project_doc task facts/evidence. No src/main, src/test, build/runtime config, SQL, or executable repository path differs from canonical HEAD 1a936fdd2a45; therefore the already-passed R06 command results remain applicable to the same executable source while the current skeleton revision adds only no-side-effect review evidence."
+  }
+}

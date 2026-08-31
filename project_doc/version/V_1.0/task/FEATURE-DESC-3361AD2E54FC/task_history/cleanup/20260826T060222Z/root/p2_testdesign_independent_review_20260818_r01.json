@@ -1,0 +1,64 @@
+{
+  "schema": "P2_TESTDESIGN_INDEPENDENT_REVIEW_V1",
+  "targetId": "FEATURE-DESC-3361AD2E54FC",
+  "reviewedHead": "632c145299ebfc7b44a4c440853744c9672b837b",
+  "reviewedAt": "2026-08-17T16:10:00+00:00",
+  "scope": {
+    "designRevision": "DESIGN-P2-R32",
+    "testDesignRevision": "TESTDESIGN-P2-R34",
+    "productionMutation": false,
+    "testSourceMutation": false,
+    "runtimeConfigMutation": false
+  },
+  "conclusions": {
+    "design": {
+      "conclusion": "PASSED",
+      "openP0": 0,
+      "openP1": 0,
+      "reason": "R32 correctly closes the raw MODEL authority bypass at the design boundary and replaces structural RuntimeBindingPlan equality with exact runtime/context identity provenance. No new blocking Design defect was found."
+    },
+    "testDesign": {
+      "conclusion": "NEEDS_CHANGES",
+      "openP0": 0,
+      "openP1": 1
+    },
+    "overall": "NEEDS_CHANGES"
+  },
+  "findings": [
+    {
+      "id": "P2-TD-REV-001",
+      "severity": "P1",
+      "title": "R34 conflates genuine pre-fix RED defects with future remediation-mechanism GREEN contracts",
+      "fact": "R34 requires every MANDATORY_RED to compile and be discovered on the pre-fix revision and rejects compile/setup/missing-class failure as INVALID_RED, while AUTHORITY-OPERATION-BINDING, AUTHORITY-TARGET-PATH-BINDING and CONTEXT-BINDING-LIFETIME describe R32 remediation mechanisms that may not exist on the pre-fix code object or may already be GREEN through existing guarded/lifecycle paths.",
+      "risk": "Development would receive an unsatisfiable or dishonest TDD gate and could be incentivized to manufacture non-semantic RED evidence.",
+      "requiredRemediation": "Reclassify the three future-mechanism contracts to GREEN_ONLY; retain only current-defect reproductions as MANDATORY_RED."
+    }
+  ],
+  "mandatoryRedAfterRemediation": [
+    "CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001",
+    "CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001",
+    "CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001",
+    "CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001",
+    "CASE-P2-TD-R34-SAME-PLAN-CROSS-CONTEXT-001",
+    "CASE-P2-TD-R34-STRUCTURALLY-IDENTICAL-CONTEXT-IDENTITY-001"
+  ],
+  "greenOnlyAfterRemediation": [
+    "CASE-P2-TD-R34-AUTHORITY-OPERATION-BINDING-001",
+    "CASE-P2-TD-R34-AUTHORITY-TARGET-PATH-BINDING-001",
+    "CASE-P2-TD-R34-CONTEXT-BINDING-LIFETIME-001"
+  ],
+  "regressionRequired": [
+    "CASE-P2-TD-R34-AUTHORITY-ONE-SHOT-001"
+  ],
+  "lifecycleDecision": {
+    "reopenFrom": "test_design",
+    "doNotReopen": [
+      "requirement_confirmation",
+      "requirement_analysis",
+      "business_model",
+      "design"
+    ],
+    "nextRevision": "TESTDESIGN-P2-R35",
+    "downstreamUntilR35Passes": "BLOCKED"
+  }
+}

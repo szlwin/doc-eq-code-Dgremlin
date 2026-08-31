@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "kind": "P2_CODE_PRESERVATION_DECISION",
+  "targetId": "FEATURE-DESC-3361AD2E54FC",
+  "version": "V_1.0",
+  "decidedAt": "2026-08-16T10:08:00Z",
+  "formalReleaseContract": "2.44 RC21",
+  "projectReconciliationLabel": "RC23",
+  "sourceHead": "5629e2b60f0a03fb16bb0fe67b75ab8c0b27f92f",
+  "sourceHeadP0": {
+    "runNumber": 1831,
+    "runId": 31940608244,
+    "conclusion": "SUCCESS"
+  },
+  "workMode": {
+    "reviewOnly": true,
+    "mutationPolicyRef": "project_doc/version/V_1.0/work.md",
+    "allowed": ["taskFacts", "projectDocs"],
+    "denied": ["tests", "config", "productionCode"]
+  },
+  "decision": {
+    "id": "P2_CODE_PRESERVATION_LOCK",
+    "status": "ACTIVE",
+    "preserveExistingP2ProductionCode": true,
+    "preserveExistingP2Tests": true,
+    "preserveExistingP2Config": true,
+    "historicalTddGapIsFunctionalDefect": false,
+    "historicalTddGapIsLifecycleBlocker": true,
+    "blockerCode": "R33_TDD_EVIDENCE_REQUIRED",
+    "secondaryFact": "HISTORICAL_TARGET_RED_NOT_FOUND"
+  },
+  "rationale": [
+    "DEV-01 through DEV-09 implementation remains complete and current post-implementation validation is GREEN; exact PR36 source HEAD passed P0 #1831.",
+    "The unresolved R33 issue is missing target-specific pre-development RED provenance, not evidence of a current P2 functional failure.",
+    "common-develop review_only policy forbids tests, config and production-code writes during this formalization scope.",
+    "Reverting, deleting or deliberately breaking correct production behavior solely to manufacture a historical RED would violate TDD and immutable-Evidence rules."
+  ],
+  "prohibitedActions": [
+    "Do not change existing P2 production code solely to remediate the historical R33 TDD Evidence gap.",
+    "Do not change existing P2 tests/config solely to create an artificial RED.",
+    "Do not reclassify post-implementation GREEN as pre-development RED.",
+    "Do not create a document-only TestDesign/TDD revision and treat it as satisfying RC-TDD-001.",
+    "Do not close development or enter code_review while the mandatory R33 TDD/TestEvidence gates remain BLOCKED."
+  ],
+  "unlockConditions": [
+    "A genuinely unmet/new P2 behavior is explicitly authorized, or a current P2 functional defect is independently verified.",
+    "ProjectManagerAgent exits review_only through the authorized work-mode workflow before any test/config/production mutation.",
+    "A new semantic TestDesign/TDD revision defines the new/unmet behavior and obtains a real target-specific RED before the corresponding production change."
+  ],
+  "lifecycleEffect": {
+    "taskEventAppended": false,
+    "canonicalRegistryChanged": false,
+    "phaseMutationApplied": false,
+    "currentPhase": "development",
+    "developmentStageOutcome": "NOT_FINALIZED",
+    "phaseAdvanced": false
+  }
+}

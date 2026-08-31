@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "local design cross-document semantic audit",
+  "exit_code": 0,
+  "executed_at": "2026-08-08T05:30:54.413082+00:00",
+  "revision": "DESIGN-P2-R01@8875f042898c",
+  "output": "DESIGN_SEMANTIC_AUDIT=PASSED\nbm_revision_is_r07=true\ndesign_inputs_bind_r07=true\nreuses_ruleview_key=true\nno_second_registry_decision=true\naccess_ops_closed=true\nruntime_guard_fail_closed=true\natomic_publication_preserved=true\np7_boundary_preserved=true\napi_contract_present=true\narchitecture_direction_present=true\ntest_seams_present=true\ntask_map_complete=true\ntrace_map_complete=true\n",
+  "output_digest": "947e94ffb571a944e6d89aeea56c09edb9443756c1a8437deffcb51e5a3fb413"
+}

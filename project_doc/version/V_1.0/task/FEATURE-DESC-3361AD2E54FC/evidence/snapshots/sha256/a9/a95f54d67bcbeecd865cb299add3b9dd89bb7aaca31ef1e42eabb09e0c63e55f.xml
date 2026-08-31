@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>doc.eq.code</groupId>
+    <artifactId>doc-eq-code-parent</artifactId>
+    <version>1.0</version>
+  </parent>
+  <artifactId>dec-core-starter</artifactId>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-core-compiler</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>doc.eq.code</groupId>
+      <artifactId>dec-core-frontends</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.5.37</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.5.37</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

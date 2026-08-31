@@ -1,0 +1,7 @@
+system-file-info:
+  system-file:
+    - path: classpath:yaml/modern/system/systems.yaml
+
+business-file-info:
+  business-file:
+    - path: classpath:yaml/modern/business/order-business.yaml

@@ -1,0 +1,77 @@
+{
+  "schema": "RC21_STAGE_OUTCOME_RECONCILIATION_V1",
+  "timestamp": "2026-08-17T08:26:55+00:00",
+  "outcomes": [
+    {
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-P2-R02@ef30059b327d",
+      "outcome_id": "SO-FEATURE-DESC-3361AD2E54FC-REQUIREMENT_CONFIRMATION-I002-RC21-RECONCILED",
+      "evidence_ids": [
+        "EVD-000009",
+        "EVD-000014"
+      ]
+    },
+    {
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P2-R01@d08612768131",
+      "outcome_id": "SO-FEATURE-DESC-3361AD2E54FC-REQUIREMENT_ANALYSIS-I002-RC21-RECONCILED",
+      "evidence_ids": [
+        "EVD-000015",
+        "EVD-000016",
+        "EVD-000017",
+        "EVD-000024",
+        "EVD-000025",
+        "EVD-000026",
+        "EVD-000027"
+      ]
+    },
+    {
+      "phase": "business_model",
+      "revision": "BM-R20",
+      "outcome_id": "SO-FEATURE-DESC-3361AD2E54FC-BUSINESS_MODEL-I004-RC21-RECONCILED",
+      "evidence_ids": [
+        "EVD-000122",
+        "EVD-000123",
+        "EVD-000124",
+        "EVD-000125",
+        "EVD-000126",
+        "EVD-000127"
+      ]
+    },
+    {
+      "phase": "design",
+      "revision": "DESIGN-P2-R30",
+      "outcome_id": "SO-FEATURE-DESC-3361AD2E54FC-DESIGN-I004-RC21-RECONCILED",
+      "evidence_ids": [
+        "EVD-000133",
+        "EVD-000134",
+        "EVD-000135",
+        "EVD-000136",
+        "EVD-000137",
+        "EVD-000138",
+        "EVD-000140"
+      ]
+    },
+    {
+      "phase": "test_design",
+      "revision": "TESTDESIGN-P2-R32",
+      "outcome_id": "SO-FEATURE-DESC-3361AD2E54FC-TEST_DESIGN-I006-RC21-RECONCILED",
+      "evidence_ids": [
+        "EVD-000193",
+        "EVD-000195",
+        "EVD-000196"
+      ]
+    },
+    {
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+      "outcome_id": "SO-FEATURE-DESC-3361AD2E54FC-IMPLEMENTATION_PLAN-I008-RC21-RECONCILED",
+      "evidence_ids": [
+        "EVD-000200",
+        "EVD-000201",
+        "EVD-000202",
+        "EVD-000203"
+      ]
+    }
+  ]
+}

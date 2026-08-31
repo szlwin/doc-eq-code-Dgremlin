@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "reviewerAgent": "TestEvidenceReviewAgent",
+  "reviewKind": "R06_TASK3_GENUINE_RED_EVIDENCE",
+  "revision": "DEV-P2-R37-RED-R01@1b271dcae13a",
+  "testDesignRevision": "TESTDESIGN-P2-R37",
+  "productionBaseSha": "6f02e0855612a5aac9abfe8175b050add7809979",
+  "result": "PASSED",
+  "checks": {
+    "production_base_exact": true,
+    "exact_compile_command": true,
+    "exact_red_command": true,
+    "four_semantic_reds": true,
+    "case_id_method_mapping_exact": true,
+    "source_digest_frozen": true,
+    "no_production_mutation": true,
+    "readonly_write_side_effect_observed": true,
+    "proofless_write_side_effect_observed": true,
+    "proofless_read_effect_observed": true,
+    "public_raw_seam_observed": true
+  },
+  "caseToMethod": {
+    "CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001": "ordinaryCallerCannotObtainRawModelOperationPort",
+    "CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001": "readOnlyPolicyCannotWriteThroughRawModelPort",
+    "CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001": "prooflessReadAccessCannotAuthorizeRawRead",
+    "CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001": "prooflessWriteAccessCannotAuthorizeRawWrite"
+  },
+  "evidenceIds": [
+    "EVD-000368",
+    "EVD-000369",
+    "EVD-000370",
+    "EVD-000371",
+    "EVD-000372"
+  ],
+  "greenOracle": {
+    "readOnlyRawWrite": {
+      "receipt": "NULL",
+      "effectCount": "UNCHANGED",
+      "value": "UNCHANGED",
+      "mutationVersion": "UNCHANGED"
+    },
+    "prooflessRawWrite": {
+      "receipt": "NULL",
+      "effectCount": "UNCHANGED",
+      "value": "UNCHANGED",
+      "mutationVersion": "UNCHANGED"
+    },
+    "prooflessRead": "NO_EXECUTABLE_AUTHORITY",
+    "publicRawPortSeam": "NOT_ORDINARY_CALLER_REACHABLE"
+  },
+  "summary": "PASSED: exact pre-fix production revision, source digests, exact commands and four semantic failures are fresh; WRITE REDs demonstrate unauthorized side effects and freeze zero-side-effect GREEN oracles.",
+  "reviewedAt": "2026-08-18T11:38:09+00:00"
+}

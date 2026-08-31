@@ -1,0 +1,11 @@
+COMMAND: python3 /home/oai/skills/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC --require-revision
+{
+  "status": "PASSED",
+  "planRevision": "TP-FEATURE-DESC-3361AD2E54FC-R02@ff0f7abd971c",
+  "planStatus": "PASSED",
+  "taskCount": 9,
+  "reviewCount": 5,
+  "errors": []
+}
+
+EXIT_CODE: 0

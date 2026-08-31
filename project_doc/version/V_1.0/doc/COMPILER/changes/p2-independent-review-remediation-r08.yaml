@@ -1,0 +1,79 @@
+schemaVersion: 1
+changeId: P2-INDEPENDENT-REVIEW-REMEDIATION-R08
+module: COMPILER
+revision: BM-R08
+baseRevision: BM-R07@7d7bf504ca9d
+status: NEEDS_REVIEW
+sourceReview:
+  head: cdf4c5813a1c386612cd48a5dbe68ee66d71ca6c
+  pr: 36
+  findings:
+    - FND-P2-REV-001
+    - FND-P2-REV-002
+    - FND-P2-REV-003
+
+normativeOverrides:
+  - id: INV-COMPILER-020
+    replaces: "所有 Rule、change 与 custom action 的 mutation 路径在需要动态判定时必须先经过同一访问 Guard"
+    text: >-
+      所有受保护的运行时模型 READ、WRITE、EXECUTE 入口都必须先调用同一个
+      ModelAccessGuard，包括 Rule、change、custom action、query/read 等入口；不存在
+      STATIC_ALLOW 绕过 Guard 的特权路径。STATIC_ALLOW 只表示 Guard 在校验 Context、
+      owner-qualified key、operation 与静态 policy 后可直接返回 ALLOW，而不调用
+      RuntimeFactEvaluator。Guard 不可用、Context identity 不匹配、rule/policy 缺失、
+      权限无法确定或任何运行时授权异常时必须 fail-closed 返回 DENY；DENY 必须发生在
+      read/mutation/execute、状态推进或外部副作用之前。
+    traces:
+      - TR-P2-SYSTEM-RULEVIEW-004
+      - TR-P2-SYSTEM-RULEVIEW-006
+      - TR-P2-SYSTEM-RULEVIEW-007
+
+  - id: CMI-P2-MODEL-ACCESS-STEP-04
+    text: >-
+      对每一个 protected READ/WRITE/EXECUTE request，无条件调用 ModelAccessGuard.authorize。
+      Guard 内部先完成 Context/policy identity 校验和精确 policy lookup；STATIC_ALLOW 在
+      Guard 内快速 ALLOW 且 evaluator 调用次数必须为 0；RUNTIME_GUARD_REQUIRED 才调用
+      RuntimeFactEvaluator。只有 Guard 返回 ALLOW 后才允许执行目标操作。
+
+businessErrors:
+  add:
+    - id: ERR-MIX-RULEVIEW-SYSTEM-REQUIRED
+      diagnosticCode: MIX-RULEVIEW-SYSTEM-REQUIRED
+      severity: ERROR
+      phase: compile
+      condition: 新 RuleView 缺少显式 owner System
+      behavior: 阻断候选 CompiledModelSet/EngineContext 发布，不允许裸名称 fallback
+      traces:
+        - TR-P2-SYSTEM-RULEVIEW-002
+        - TR-P2-SYSTEM-RULEVIEW-003
+
+legacyDeclarationBoundary:
+  retiredHistoricalNode:
+    id: DEC-EXPAND-DECLARATION
+    lifecycle: RETIRED_SUPERSEDED
+    restore: FORBIDDEN
+    note: P1 CASCADE_HARD_DELETE 的历史事实保持不变，不得在 P2 以 RETAIN_UNCHANGED 重新引入。
+  survivingBoundary:
+    id: LEGACY-DECLARATION-SYSTEM-COMPAT
+    lifecycle: SURVIVING_READ_ONLY_COMPATIBILITY
+    ownerStage: P7_RETIREMENT
+    surfaces:
+      - ConfigInfo.getRuleViewInfo(String)
+      - DataUtil.getRuleViewInfo(String)
+    constraints:
+      - 仅允许历史只读兼容；不得注册新的 RuleView/System/ModelAccess 事实
+      - 不得形成第二 Registry、第二 EngineContext 或 declaration runtime authority
+      - 新业务调用链不得依赖裸 RuleView name fallback
+  impactRedirect:
+    relationId: REL-P2-SYSTEM-RULEVIEW-DECLARATION
+    from: DEC-EXPAND-DECLARATION
+    to: LEGACY-DECLARATION-SYSTEM-COMPAT
+    action: REDIRECT_TO_SURVIVING_BOUNDARY
+    impactId: IMP-P2-DECLARATION-BOUNDARY
+    lifecycleAction: RETAIN_READ_ONLY_COMPATIBILITY_UNTIL_P7
+
+acceptance:
+  - 所有 protected READ/WRITE/EXECUTE 都经过 Guard，STATIC_ALLOW 也不得旁路 Guard。
+  - ERR-MIX-RULEVIEW-SYSTEM-REQUIRED 与 MIX-RULEVIEW-SYSTEM-REQUIRED 建立一一映射。
+  - P2 dependency/impact 不得再把 DEC-EXPAND-DECLARATION 当作 surviving 模块。
+  - 本 change pack 形成新 BM Revision 输入；BM-R07 的 PASSED 记录不得继续作为当前有效结论。

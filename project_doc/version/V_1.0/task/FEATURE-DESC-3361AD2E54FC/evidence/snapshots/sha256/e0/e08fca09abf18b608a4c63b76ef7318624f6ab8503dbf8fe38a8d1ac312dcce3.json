@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"import yaml; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); b={t['task_id']:t for t in p['tasks']}; d4=b['TASK-P2-DEV-04-CONTEXT-MATERIALIZATION']; d7=b['TASK-P2-DEV-07-STARTER-GUARDED-ACCESS']; d8=b['TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY']; assert 'dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java' in d4['implementation']['affected_files']; assert 'dec-core-starter/pom.xml' in d7['implementation']['affected_files']; assert any('不得承担首次 dec-core-model dependency wiring' in x for x in d8['implementation']['steps']); print('R04 bounded-slice P1 closure preserved')\"",
+  "executed_at": "2026-08-11T04:28:06+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+  "exit_code": 0,
+  "output": "R04 bounded-slice P1 closure preserved\n",
+  "output_digest": "a652cc273a822e10b591670a224e774b2d6d6e98276452f46fae1b62b6e7252f"
+}

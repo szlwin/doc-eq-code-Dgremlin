@@ -1,0 +1,8 @@
+{
+  "migration_id": "RC9-P2-MACHINE-STATE-20260810-01",
+  "purpose": "Repair RC9 machine lifecycle storage and bind already-completed P2 artifacts without rewriting historical PASSED revisions.",
+  "source_head": "91faf6eeca180155afa48e2f680a79f792134dfb",
+  "protected_history_policy": "Preserve full pre-migration task directory and Git history; no historical PASSED revision, finding ID, Review ID, or Evidence ID is deleted or fabricated.",
+  "temporary_checkout_export_workflow": ".github/workflows/pr36-checkout-export.yml",
+  "temporary_workflow_policy": "Removed from final PR diff after repair validation."
+}

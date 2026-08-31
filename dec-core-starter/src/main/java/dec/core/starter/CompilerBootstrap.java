@@ -23,6 +23,7 @@ import dec.core.compiler.source.SourcePolicy;
 import dec.core.compiler.source.SourceReference;
 import dec.core.context.CoreConfigProjection;
 import dec.core.context.EngineContext;
+import dec.core.context.config.model.config.ConfigInfo;
 import java.net.URI;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -80,6 +81,26 @@ public final class CompilerBootstrap {
             SourceReference root,
             CompilationOptions options,
             Optional<EngineContext> expectedCurrent) {
+        return starter.compileAndPublish(
+                createRequest(root, options),
+                createPublicationRequest(expectedCurrent));
+    }
+
+    /** 编译候选配置，并在成功发布后一次替换 ConfigInfo 与 EngineContext。 */
+    public CompilationResult compileAndInstall(
+            ConfigInfo candidate,
+            SourceReference root,
+            CompilationOptions options,
+            Optional<EngineContext> expectedCurrent) {
+        return starter.compileAndInstall(
+                Objects.requireNonNull(candidate, "candidate"),
+                createRequest(root, options),
+                createPublicationRequest(expectedCurrent));
+    }
+
+    private CompilationRequest createRequest(
+            SourceReference root,
+            CompilationOptions options) {
         CompilationRequest request = new CompilationRequest(
                 Objects.requireNonNull(root, "root"),
                 sourceProvider,
@@ -89,10 +110,14 @@ public final class CompilerBootstrap {
                 cancellationToken,
                 clock,
                 observer);
-        PublicationRequest publicationRequest = new PublicationRequest(
+        return request;
+    }
+
+    private PublicationRequest createPublicationRequest(
+            Optional<EngineContext> expectedCurrent) {
+        return new PublicationRequest(
                 Objects.requireNonNull(expectedCurrent, "expectedCurrent"),
                 publisher);
-        return starter.compileAndPublish(request, publicationRequest);
     }
 
     /** 从同一个 Published EngineContext 获取只读 Projection。 */

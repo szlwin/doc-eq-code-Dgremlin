@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 1,
+  "executed_at": "2026-08-11T05:31:03.202650+00:00",
+  "revision": "TDD-P2-R01@3f282bb4e1f6",
+  "output_ref": "evidence/command-results/TDD-P2-R01@3f282bb4e1f6/FIXTURE.out",
+  "output_digest": "000970f60ac206925a861be2aa8facf202104a8f120012eaf60d6dddbf3fec65"
+}

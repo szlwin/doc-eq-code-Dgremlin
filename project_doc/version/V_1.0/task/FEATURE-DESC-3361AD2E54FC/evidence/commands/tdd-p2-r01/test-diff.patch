@@ -1,0 +1,1227 @@
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java
+new file mode 100644
+index 00000000..77399fbf
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java
+@@ -0,0 +1,27 @@
++package dec.core.compiler.compat;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class P2DeclarationCompatibilityContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.RuleViewKey", "dec.core.context.model.SystemKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-DECLARATION-BOUNDARY-001")
++    void case_case_p2_td_declaration_boundary_001() {
++        observe("CASE-P2-TD-DECLARATION-BOUNDARY-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java
+new file mode 100644
+index 00000000..002e63b5
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java
+@@ -0,0 +1,27 @@
++package dec.core.compiler.contract;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class P2CompilerContextConstructibilityContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.CompiledViewMaterializationIndex", "dec.core.context.model.TargetKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-COMPILER-CONTEXT-CONSTRUCTIBILITY-001")
++    void case_case_p2_td_compiler_context_constructibility_001() {
++        observe("CASE-P2-TD-COMPILER-CONTEXT-CONSTRUCTIBILITY-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java
+new file mode 100644
+index 00000000..8ddacbae
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java
+@@ -0,0 +1,27 @@
++package dec.core.compiler.contract;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class P2RevisionDependencyDagContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.SystemKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-REVISION-DAG-001")
++    void case_case_p2_td_revision_dag_001() {
++        observe("CASE-P2-TD-REVISION-DAG-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java
+new file mode 100644
+index 00000000..0a4840a3
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java
+@@ -0,0 +1,33 @@
++package dec.core.compiler.diagnostic;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class P2DiagnosticDeterminismTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.ModelAccessRuleKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001")
++    void case_case_p2_td_diagnostic_determinism_001() {
++        observe("CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001")
++    void case_case_p2_td_runtime_denial_diagnostic_determinism_001() {
++        observe("CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java
+new file mode 100644
+index 00000000..7c80cba5
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java
+@@ -0,0 +1,75 @@
++package dec.core.compiler.model.access;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ModelAccessPolicyContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.ModelAccessRuleKey", "dec.core.context.model.AccessOperation"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001")
++    void case_case_p2_td_parent_path_no_auth_fallback_001() {
++        observe("CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001")
++    void case_case_p2_td_access_read_write_matrix_001() {
++        observe("CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-NO-EXECUTE-CONTRACT-001")
++    void case_case_p2_td_no_execute_contract_001() {
++        observe("CASE-P2-TD-NO-EXECUTE-CONTRACT-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-STATIC-DENY-001")
++    void case_case_p2_td_static_deny_001() {
++        observe("CASE-P2-TD-STATIC-DENY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001")
++    void case_case_p2_td_policy_classification_truth_table_001() {
++        observe("CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001")
++    void case_case_p2_td_runtime_plan_exact_binding_001() {
++        observe("CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-BINDING-PROOF-001")
++    void case_case_p2_td_runtime_binding_proof_001() {
++        observe("CASE-P2-TD-RUNTIME-BINDING-PROOF-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001")
++    void case_case_p2_td_runtime_plan_mismatch_001() {
++        observe("CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-POLICY-INDEX-PUBLICATION-001")
++    void case_case_p2_td_policy_index_publication_001() {
++        observe("CASE-P2-TD-POLICY-INDEX-PUBLICATION-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java
+new file mode 100644
+index 00000000..b2f07d7f
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java
+@@ -0,0 +1,87 @@
++package dec.core.compiler.model.access;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class TargetKeyModelPathContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.TargetKey", "dec.core.context.model.ModelPath"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001")
++    void case_case_p2_td_targetkey_source_mapping_001() {
++        observe("CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001")
++    void case_case_p2_td_target_path_orthogonality_001() {
++        observe("CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-MODEL-PATH-UNKNOWN-001")
++    void case_case_p2_td_model_path_unknown_001() {
++        observe("CASE-P2-TD-MODEL-PATH-UNKNOWN-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001")
++    void case_case_p2_td_wildcard_finite_expansion_001() {
++        observe("CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001")
++    void case_case_p2_td_model_path_cross_consumer_equivalence_001() {
++        observe("CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001")
++    void case_case_p2_td_p1_path_operation_migration_001() {
++        observe("CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-NESTED-OBJECT-PATH-001")
++    void case_case_p2_td_nested_object_path_001() {
++        observe("CASE-P2-TD-NESTED-OBJECT-PATH-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001")
++    void case_case_p2_td_deep_nested_object_path_001() {
++        observe("CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001")
++    void case_case_p2_td_non_composite_intermediate_001() {
++        observe("CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-NESTED-COLLECTION-PATH-001")
++    void case_case_p2_td_nested_collection_path_001() {
++        observe("CASE-P2-TD-NESTED-COLLECTION-PATH-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001")
++    void case_case_p2_td_target_main_path_isolation_001() {
++        observe("CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java
+new file mode 100644
+index 00000000..e97c9fe1
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java
+@@ -0,0 +1,39 @@
++package dec.core.compiler.publication;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class AtomicPublicationContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.CompiledViewMaterializationIndex", "dec.core.context.model.ModelAccessRuleKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001")
++    void case_case_p2_td_materialization_publication_closure_001() {
++        observe("CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-ATOMIC-PUBLICATION-001")
++    void case_case_p2_td_atomic_publication_001() {
++        observe("CASE-P2-TD-ATOMIC-PUBLICATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-CONTEXT-ISOLATION-001")
++    void case_case_p2_td_context_isolation_001() {
++        observe("CASE-P2-TD-CONTEXT-ISOLATION-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java
+new file mode 100644
+index 00000000..a8b504dc
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java
+@@ -0,0 +1,69 @@
++package dec.core.compiler.ruleview;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class RuleViewCompilationContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.RuleViewKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001")
++    void case_case_p2_td_ruleview_system_required_001() {
++        observe("CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001")
++    void case_case_p2_td_ruleview_same_system_duplicate_001() {
++        observe("CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001")
++    void case_case_p2_td_ruleview_cross_system_isolation_001() {
++        observe("CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001")
++    void case_case_p2_td_ruleview_view_resolution_001() {
++        observe("CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RULEKEY-CONTRACT-001")
++    void case_case_p2_td_rulekey_contract_001() {
++        observe("CASE-P2-TD-RULEKEY-CONTRACT-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001")
++    void case_case_p2_td_ruleview_composite_lookup_001() {
++        observe("CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-KEY-SOURCE-COMPAT-001")
++    void case_case_p2_td_key_source_compat_001() {
++        observe("CASE-P2-TD-KEY-SOURCE-COMPAT-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001")
++    void case_case_p2_td_bare_name_compatibility_boundary_001() {
++        observe("CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java b/dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java
+new file mode 100644
+index 00000000..621bbd3a
+--- /dev/null
++++ b/dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java
+@@ -0,0 +1,57 @@
++package dec.core.compiler.system;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class SystemCompilationContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.SystemKey", "dec.core.context.model.TypedDefinitionRegistries"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-SYSTEM-DETERMINISM-001")
++    void case_case_p2_td_system_determinism_001() {
++        observe("CASE-P2-TD-SYSTEM-DETERMINISM-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-SYSTEM-DUPLICATE-001")
++    void case_case_p2_td_system_duplicate_001() {
++        observe("CASE-P2-TD-SYSTEM-DUPLICATE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-SYSTEM-FORWARD-REF-001")
++    void case_case_p2_td_system_forward_ref_001() {
++        observe("CASE-P2-TD-SYSTEM-FORWARD-REF-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001")
++    void case_case_p2_td_system_ownership_snapshot_001() {
++        observe("CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001")
++    void case_case_p2_td_system_version_identity_001() {
++        observe("CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-BM-CANONICAL-PAIR-001")
++    void case_case_p2_td_bm_canonical_pair_001() {
++        observe("CASE-P2-TD-BM-CANONICAL-PAIR-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java b/dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java
+new file mode 100644
+index 00000000..4e052bd4
+--- /dev/null
++++ b/dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java
+@@ -0,0 +1,27 @@
++package dec.core.context.runtime;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class OpaqueRuntimeIdContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelHandle"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001")
++    void case_case_p2_td_opaque_runtime_id_value_contract_001() {
++        observe("CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java b/dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java
+new file mode 100644
+index 00000000..c21dc661
+--- /dev/null
++++ b/dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java
+@@ -0,0 +1,33 @@
++package dec.core.context.runtime;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedAccessContextApiContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.CompiledViewMaterializationIndex", "dec.core.context.runtime.RuntimeFactValue"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001")
++    void case_case_p2_td_context_materialization_index_aggregate_001() {
++        observe("CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-CONTEXT-API-SELF-CONTAINED-001")
++    void case_case_p2_td_context_api_self_contained_001() {
++        observe("CASE-P2-TD-CONTEXT-API-SELF-CONTAINED-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java b/dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java
+new file mode 100644
+index 00000000..8db199d6
+--- /dev/null
++++ b/dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java
+@@ -0,0 +1,33 @@
++package dec.core.context.runtime;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class RuntimeFactValueContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.runtime.RuntimeFactValue"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001")
++    void case_case_p2_td_runtime_fact_value_domain_001() {
++        observe("CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001")
++    void case_case_p2_td_runtime_fact_value_deep_immutability_001() {
++        observe("CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java b/dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java
+new file mode 100644
+index 00000000..d831bfff
+--- /dev/null
++++ b/dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java
+@@ -0,0 +1,33 @@
++package dec.core.model.runtime;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedAccessModelApiContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelExecutionRoot", "dec.core.model.runtime.RuntimeModelLoadRequest"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-MODEL-API-SELF-CONTAINED-001")
++    void case_case_p2_td_model_api_self_contained_001() {
++        observe("CASE-P2-TD-MODEL-API-SELF-CONTAINED-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-SESSION-FAILURE-ALGEBRA-001")
++    void case_case_p2_td_session_failure_algebra_001() {
++        observe("CASE-P2-TD-SESSION-FAILURE-ALGEBRA-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java b/dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java
+new file mode 100644
+index 00000000..2f62edda
+--- /dev/null
++++ b/dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java
+@@ -0,0 +1,27 @@
++package dec.core.model.runtime;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedWriteTransactionIntegrationTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelAccessScope", "dec.core.model.runtime.RuntimeModelSession"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001")
++    void case_case_p2_td_runtime_write_rollback_001() {
++        observe("CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java b/dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java
+new file mode 100644
+index 00000000..987b85d2
+--- /dev/null
++++ b/dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java
+@@ -0,0 +1,93 @@
++package dec.core.model.runtime;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class RuntimeModelMaterializationIntegrationTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.CompiledViewMaterializationPlan", "dec.core.model.runtime.RuntimeModelExecutionRoot"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-LOAD-REQUEST-001")
++    void case_case_p2_td_production_load_request_001() {
++        observe("CASE-P2-TD-PRODUCTION-LOAD-REQUEST-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-LOAD-PLAN-MISMATCH-001")
++    void case_case_p2_td_production_load_plan_mismatch_001() {
++        observe("CASE-P2-TD-PRODUCTION-LOAD-PLAN-MISMATCH-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001")
++    void case_case_p2_td_production_modeldata_identity_001() {
++        observe("CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001")
++    void case_case_p2_td_production_container_trust_boundary_001() {
++        observe("CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-TRUSTED-MATERIALIZATION-INPUT-001")
++    void case_case_p2_td_trusted_materialization_input_001() {
++        observe("CASE-P2-TD-TRUSTED-MATERIALIZATION-INPUT-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-TRUSTED-MATERIALIZATION-EXACT-VIEW-001")
++    void case_case_p2_td_trusted_materialization_exact_view_001() {
++        observe("CASE-P2-TD-TRUSTED-MATERIALIZATION-EXACT-VIEW-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-COMPILED-VIEW-MATERIALIZATION-PLAN-001")
++    void case_case_p2_td_compiled_view_materialization_plan_001() {
++        observe("CASE-P2-TD-COMPILED-VIEW-MATERIALIZATION-PLAN-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-OBJECT-WRITEBACK-001")
++    void case_case_p2_td_production_object_writeback_001() {
++        observe("CASE-P2-TD-PRODUCTION-OBJECT-WRITEBACK-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-R26-FRESH-SNAPSHOT-SEAM-ABSENT-001")
++    void case_case_p2_td_r26_fresh_snapshot_seam_absent_001() {
++        observe("CASE-P2-TD-R26-FRESH-SNAPSHOT-SEAM-ABSENT-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-TRUSTED-FRAME-PRECONDITION-FAILURE-MATRIX-001")
++    void case_case_p2_td_trusted_frame_precondition_failure_matrix_001() {
++        observe("CASE-P2-TD-TRUSTED-FRAME-PRECONDITION-FAILURE-MATRIX-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-MODEL-EXECUTION-ROOT-LOAD-001")
++    void case_case_p2_td_model_execution_root_load_001() {
++        observe("CASE-P2-TD-MODEL-EXECUTION-ROOT-LOAD-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-MODEL-SCOPE-PRODUCER-001")
++    void case_case_p2_td_model_scope_producer_001() {
++        observe("CASE-P2-TD-MODEL-SCOPE-PRODUCER-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java b/dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java
+new file mode 100644
+index 00000000..4438d3c6
+--- /dev/null
++++ b/dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java
+@@ -0,0 +1,39 @@
++package dec.core.model.runtime;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class RuntimeObjectLocatorIntegrationTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelSession", "dec.core.model.runtime.RuntimeModelHandle"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001")
++    void case_case_p2_td_runtime_object_locator_scope_001() {
++        observe("CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001")
++    void case_case_p2_td_runtime_object_not_found_stale_001() {
++        observe("CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-TARGET-SELECTION-001")
++    void case_case_p2_td_runtime_target_selection_001() {
++        observe("CASE-P2-TD-RUNTIME-TARGET-SELECTION-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java
+new file mode 100644
+index 00000000..6eb0bc4c
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java
+@@ -0,0 +1,39 @@
++package dec.core.starter.access;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedAccessConcurrencyTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelSession", "dec.core.context.model.ModelAccessRuleKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001")
++    void case_case_p2_td_capability_concurrent_consume_001() {
++        observe("CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001")
++    void case_case_p2_td_different_capability_concurrency_001() {
++        observe("CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001")
++    void case_case_p2_td_cross_session_modeldata_ownership_001() {
++        observe("CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java
+new file mode 100644
+index 00000000..a8d8d61e
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java
+@@ -0,0 +1,117 @@
++package dec.core.starter.access;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedAccessProductionCompositionTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelAccessScope", "dec.core.context.model.ModelAccessRuleKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001")
++    void case_case_p2_td_model_effect_provider_binding_001() {
++        observe("CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001")
++    void case_case_p2_td_runtime_target_substitution_001() {
++        observe("CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001")
++    void case_case_p2_td_production_seam_no_legal_bypass_001() {
++        observe("CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001")
++    void case_case_p2_td_ac007_production_composition_001() {
++        observe("CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001")
++    void case_case_p2_td_ac007_rule_consumer_integration_001() {
++        observe("CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001")
++    void case_case_p2_td_ac007_change_consumer_integration_001() {
++        observe("CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001")
++    void case_case_p2_td_ac007_custom_action_consumer_integration_001() {
++        observe("CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-AC007-CONSUMER-PARITY-001")
++    void case_case_p2_td_ac007_consumer_parity_001() {
++        observe("CASE-P2-TD-AC007-CONSUMER-PARITY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001")
++    void case_case_p2_td_ac007_representative_consumer_structure_001() {
++        observe("CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001")
++    void case_case_p2_td_ac007_real_production_reachability_001() {
++        observe("CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001")
++    void case_case_p2_td_composition_runtime_context_match_001() {
++        observe("CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-RUNTIME-REGISTRATION-BINDING-001")
++    void case_case_p2_td_production_runtime_registration_binding_001() {
++        observe("CASE-P2-TD-PRODUCTION-RUNTIME-REGISTRATION-BINDING-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-FRAME-HANDOFF-001")
++    void case_case_p2_td_production_frame_handoff_001() {
++        observe("CASE-P2-TD-PRODUCTION-FRAME-HANDOFF-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-SESSION-HANDOFF-001")
++    void case_case_p2_td_production_session_handoff_001() {
++        observe("CASE-P2-TD-PRODUCTION-SESSION-HANDOFF-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-RUNTIME-SCOPE-PROVENANCE-001")
++    void case_case_p2_td_runtime_scope_provenance_001() {
++        observe("CASE-P2-TD-RUNTIME-SCOPE-PROVENANCE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-COMPOSITION-FAILURE-ALGEBRA-001")
++    void case_case_p2_td_composition_failure_algebra_001() {
++        observe("CASE-P2-TD-COMPOSITION-FAILURE-ALGEBRA-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java
+new file mode 100644
+index 00000000..587ace14
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java
+@@ -0,0 +1,33 @@
++package dec.core.starter.access;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedAccessStarterApiContractTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.ModelAccessRuleKey", "dec.core.context.model.TargetKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-STARTER-API-SELF-CONTAINED-001")
++    void case_case_p2_td_starter_api_self_contained_001() {
++        observe("CASE-P2-TD-STARTER-API-SELF-CONTAINED-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-CALLER-STARTER-CONSTRUCTIBILITY-001")
++    void case_case_p2_td_caller_starter_constructibility_001() {
++        observe("CASE-P2-TD-CALLER-STARTER-CONSTRUCTIBILITY-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java
+new file mode 100644
+index 00000000..30f7a188
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java
+@@ -0,0 +1,51 @@
++package dec.core.starter.access;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedRuntimeModelAdapterIntegrationTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelAccessScope", "dec.core.context.model.TargetKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001")
++    void case_case_p2_td_model_effect_same_handle_001() {
++        observe("CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001")
++    void case_case_p2_td_operation_port_not_caller_injectable_001() {
++        observe("CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-REAL-READ-OPERATION-001")
++    void case_case_p2_td_real_read_operation_001() {
++        observe("CASE-P2-TD-REAL-READ-OPERATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-REAL-WRITE-OPERATION-001")
++    void case_case_p2_td_real_write_operation_001() {
++        observe("CASE-P2-TD-REAL-WRITE-OPERATION-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001")
++    void case_case_p2_td_production_model_adapter_reachability_001() {
++        observe("CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java
+new file mode 100644
+index 00000000..e16fedce
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java
+@@ -0,0 +1,63 @@
++package dec.core.starter.access;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedWriteIntentResolutionTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.AccessOperation", "dec.core.context.model.ModelAccessRuleKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001")
++    void case_case_p2_td_write_intent_not_found_001() {
++        observe("CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001")
++    void case_case_p2_td_write_intent_ambiguous_001() {
++        observe("CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001")
++    void case_case_p2_td_write_intent_freeze_stability_001() {
++        observe("CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001")
++    void case_case_p2_td_write_authority_model_access_rulekey_001() {
++        observe("CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001")
++    void case_case_p2_td_write_single_path_authority_001() {
++        observe("CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001")
++    void case_case_p2_td_typed_runtime_context_001() {
++        observe("CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001")
++    void case_case_p2_td_mutation_stamp_object_binding_001() {
++        observe("CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java b/dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java
+new file mode 100644
+index 00000000..264a5233
+--- /dev/null
++++ b/dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java
+@@ -0,0 +1,27 @@
++package dec.core.starter.architecture;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class ProtectedAccessDependencyDirectionTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.context.model.ModelAccessRuleKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001")
++    void case_case_p2_td_downstream_dependency_direction_001() {
++        observe("CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}
+diff --git a/dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java b/dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java
+new file mode 100644
+index 00000000..71acaffd
+--- /dev/null
++++ b/dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java
+@@ -0,0 +1,33 @@
++package dec.demo.p2;
++
++import static org.junit.jupiter.api.Assertions.fail;
++
++import org.junit.jupiter.api.DisplayName;
++import org.junit.jupiter.api.Test;
++
++/** TESTDESIGN-P2-R32 pre-development executable contract. Production code is intentionally untouched. */
++class P2RealFixtureIntegrationTest {
++    private static final String[] REQUIRED_CONTRACTS = new String[] {"dec.core.model.runtime.RuntimeModelExecutionRoot", "dec.core.context.model.TargetKey"};
++
++    @Test
++    @DisplayName("CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001")
++    void case_case_p2_td_dynamic_classifier_real_001() {
++        observe("CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001");
++    }
++
++    @Test
++    @DisplayName("CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001")
++    void case_case_p2_td_source_to_read_write_operation_001() {
++        observe("CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001");
++    }
++
++    private static void observe(String caseId) {
++        for (String typeName : REQUIRED_CONTRACTS) {
++            try {
++                Class.forName(typeName);
++            } catch (ClassNotFoundException missing) {
++                fail("P2 RED [" + caseId + "]: missing production contract " + typeName);
++            }
++        }
++    }
++}

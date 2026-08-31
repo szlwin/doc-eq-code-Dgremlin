@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-model,dec-core-context,dec-core-starter -am -DskipTests install",
+  "exit_code": 0,
+  "executed_at": "2026-08-25T15:04:25+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "output_digest": "162f0574f15cb789cf03c9d795bb136abf43c083c8fe5c6156a587becd4e8bb6",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "development",
+    "mutation_scope": "productionCode"
+  },
+  "output_ref": "evidence/commands/EXEC-20260825T150430307582Z-853bc1ba81e4.output.txt"
+}

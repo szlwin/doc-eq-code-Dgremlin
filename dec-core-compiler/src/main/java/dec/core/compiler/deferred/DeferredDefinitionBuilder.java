@@ -105,6 +105,9 @@ public final class DeferredDefinitionBuilder {
         }
         if (!input.kind().isPresent()) {
             diagnostics.add(DeferredDiagnostics.incomplete(input, "kind"));
+        } else if (!policy.isDeferred(input.kind().get())) {
+            diagnostics.add(DeferredDiagnostics.incomplete(
+                    input, "kind-retired"));
         }
         if (!input.ordinal().isPresent() || input.ordinal().get() < 0) {
             diagnostics.add(DeferredDiagnostics.incomplete(input, "ordinal"));
@@ -115,6 +118,7 @@ public final class DeferredDefinitionBuilder {
         if (!reasonPresent) {
             diagnostics.add(DeferredDiagnostics.incomplete(input, "reason"));
         } else if (input.kind().isPresent()
+                && policy.isDeferred(input.kind().get())
                 && !policy.reasonCode(input.kind().get()).equals(
                         input.reasonCode().get())) {
             diagnostics.add(DeferredDiagnostics.incomplete(

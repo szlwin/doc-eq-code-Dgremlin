@@ -577,14 +577,12 @@ public final class ReferenceResolver {
                     "请先声明可解析的 Action system-ref"));
             return;
         }
-        final SystemKey resolvedSystem = systemKey;
-        final String resolvedRuleName = ruleName;
-        RuleViewKey expected = safeTypedKey(
-                sourceKey,
-                ruleReference.sourceRef(),
-                () -> new RuleViewKey(resolvedSystem, resolvedRuleName),
-                state);
+        // P2 新引用路径只通过显式 System owner 构造完整 RuleViewKey，禁止 bare-name 成功回退。
+        RuleViewKey expected = ReferenceTargetParser.parseRuleViewKey(
+                systemKey,
+                ruleName);
         if (expected == null) {
+            addOwnerDiagnostic(sourceKey, ruleReference.sourceRef(), state);
             return;
         }
         if (state.symbolTable.find(expected).isPresent()) {

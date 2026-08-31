@@ -1,0 +1,46 @@
+{
+  "task_id": "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS",
+  "gate_revision": "DEV-P2-DEV07-GATE-R01",
+  "status": "BLOCKED",
+  "severity": "P1",
+  "skeleton": {
+    "revision": "DEV-P2-DEV07-SKEL-R01@de57fbaa6b94385789264f0f4b19581e567d060b",
+    "ArchitectureReviewAgent": "PASSED",
+    "SpecComplianceReviewAgent": "PASSED",
+    "p0_run": 31766158343,
+    "core_build_and_tests": "SUCCESS"
+  },
+  "prerequisite": {
+    "task": "TASK-P2-DEV-04R-CONTEXT-PROTECTED-ACCESS-CONTRACTS",
+    "revision": "DEV-P2-DEV04R-R02@002c4a10edd7f34d868c46e023c06b647a392fb5",
+    "status": "PASSED",
+    "supersedes": "DEV-P2-DEV04R-R01"
+  },
+  "finding": {
+    "id": "P1-P2-DEV07-WRITE-VALUE-CONTRACT-GAP-001",
+    "summary": "The frozen protected-access invocation/intent API cannot carry the RuntimeFactValue required by the already-PASSED MODEL write operation.",
+    "design_evidence": [
+      "DESIGN-P2-R30 preserves R29 ProtectedAccessInvocation.of(id,key,frameId,ownerId,cursorId) and ProtectedAccessPort.invoke(invocation).",
+      "DESIGN-P2-R30 preserves R29 ResolvedWriteIntent.of(id,key,provenance,target,stamp) and ResolvedProtectedWriteAccess.of(invocationId,intent).",
+      "None of those frozen public inputs carries a RuntimeFactValue replacement value."
+    ],
+    "production_evidence": [
+      "dec-core-model RuntimeModelAccessScope.BoundOperationPort.write consumes ResolvedProtectedWriteAccess.value() and converts it through RuntimeFactValueCodec before the real Container effect.",
+      "Without a value source, ProtectedAccessPort.invoke(ProtectedAccessInvocation) cannot represent a real WRITE while preserving Guard-before-effect and same-target/stamp semantics."
+    ],
+    "why_not_fixed_inside_dev07": [
+      "Adding RuntimeFactValue to a public cross-module invocation/intent factory changes DESIGN-P2-R30 and TESTDESIGN ownership; it is not an allowed leaf implementation change under the passed DEV-07 skeleton.",
+      "Inventing a hidden default/current value would fabricate write semantics and make CASE-P2-TD-REAL-WRITE-OPERATION-001 non-representative.",
+      "Exposing an operation port/value injection seam to callers is explicitly forbidden by R05/R06."
+    ]
+  },
+  "concrete_implementation": "NOT_STARTED_AFTER_GATE",
+  "dev07_final_review": "NOT_ENTERED",
+  "development_overall": "PARTIAL",
+  "next_legal_action": [
+    "Reopen DESIGN from DESIGN-P2-R30 with an incremental revision that explicitly defines neutral WRITE-value transport while preserving ModelAccessRuleKey as the sole authority and caller isolation from MODEL ports/ModelData.",
+    "Independently review that exact Design revision.",
+    "Rebind TESTDESIGN and Implementation Plan to the approved contract.",
+    "Reopen DEV-07 skeleton only if the public/internal boundary changes, then continue concrete implementation."
+  ]
+}

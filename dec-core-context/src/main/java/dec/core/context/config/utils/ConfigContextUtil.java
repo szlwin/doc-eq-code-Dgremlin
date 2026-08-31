@@ -2,6 +2,7 @@ package dec.core.context.config.utils;
 
 import java.util.Map;
 
+import dec.core.context.EngineContext;
 import dec.core.context.config.manager.ConfigManager;
 import dec.core.context.config.model.config.ConfigInfo;
 import dec.core.context.config.model.data.Column;
@@ -31,6 +32,10 @@ public class ConfigContextUtil {
 	
 	public static ConfigInfo getConfigInfo(){
 		return ConfigManager.getInstance().getConfigInfo();
+	}
+
+	public static EngineContext getEngineContext(){
+		return ConfigManager.getInstance().getEngineContext();
 	}
 
 	public static DataTable getTableInfo(String name,String dataSourceName){

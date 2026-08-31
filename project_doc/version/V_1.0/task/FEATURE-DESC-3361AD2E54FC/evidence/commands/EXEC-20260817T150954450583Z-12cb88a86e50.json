@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "git diff --check",
+  "exit_code": 0,
+  "executed_at": "2026-08-17T15:09:54+00:00",
+  "revision": "DESIGN-P2-R32",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "metadata": {
+    "cwd": "/mnt/data/p2-remediation-work",
+    "phase": "design",
+    "mutation_scope": "taskFacts"
+  },
+  "output": ""
+}

@@ -14,4 +14,8 @@ public class ConectionException extends Exception{
 	public ConectionException(Exception e){
 		super(e);
 	}
+
+	public ConectionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

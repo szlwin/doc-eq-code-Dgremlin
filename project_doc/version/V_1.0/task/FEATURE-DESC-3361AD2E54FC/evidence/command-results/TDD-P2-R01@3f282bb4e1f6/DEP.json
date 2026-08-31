@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-starter -Dtest=ProtectedAccessDependencyDirectionTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 1,
+  "executed_at": "2026-08-11T05:30:52.316103+00:00",
+  "revision": "TDD-P2-R01@3f282bb4e1f6",
+  "output_ref": "evidence/command-results/TDD-P2-R01@3f282bb4e1f6/DEP.out",
+  "output_digest": "7043b78ff565ce640e88ebeddd3af9a815dc3858466d6b0649b241a955975b07"
+}

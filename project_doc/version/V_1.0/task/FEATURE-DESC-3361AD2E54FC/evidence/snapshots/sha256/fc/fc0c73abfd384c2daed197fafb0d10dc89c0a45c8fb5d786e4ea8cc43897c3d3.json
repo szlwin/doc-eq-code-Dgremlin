@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "true_final_head_p0_summary",
+  "repository": "szlwin/doc-eq-code-Dgremlin",
+  "pr_number": 36,
+  "target_sha": "1547f4fff2375798d1faa2a80ad77518a73bfdc8",
+  "target_tree": "ca833077c720711558a75f179c5e3c0ed148956e",
+  "runner_pr": 61,
+  "runner_head": "17d601f5f5f99cf8c12c34a5c54318fa67abdfeb",
+  "workflow_run_id": 32284575526,
+  "workflow_conclusion": "success",
+  "jobs": {
+    "core-p0": {
+      "id": 96170993668,
+      "conclusion": "success"
+    },
+    "mysql-p0": {
+      "id": 96170994140,
+      "conclusion": "success"
+    }
+  },
+  "artifacts": {
+    "core": {
+      "id": 9377219403,
+      "name": "p2-finalhead-p0-core",
+      "digest": "sha256:6865bfd72e38a2d31cd573a9992d6ba3bcc9af88e8acf5ed22b45a45d8787fc8"
+    },
+    "mysql": {
+      "id": 9377221147,
+      "name": "p2-finalhead-p0-mysql",
+      "digest": "sha256:6627f6be4ec1a39f18ee84508db51686e973df515257292730356b4d37cda89e"
+    }
+  },
+  "core_reports_excluding_intentional_failure_gate": {
+    "tests": 777,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "intentional_failure_gate_report": {
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  "focused": {
+    "security": "4/4 PASS",
+    "single_context_lifecycle": "3/3 PASS",
+    "real_fixture": "1/1 PASS",
+    "clean_verify": "BUILD SUCCESS",
+    "failure_blocks_build": "status=1 as expected",
+    "t14": "PASS",
+    "t15": "PASS"
+  },
+  "mysql_required_suites": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "mysql_execution_markers": 3,
+  "database_counts": {
+    "order_count": 1,
+    "order_detail_count": 1,
+    "pay_count": 1,
+    "pay_detail_count": 1,
+    "product_count": 1,
+    "user_count": 1
+  },
+  "result": "PASSED"
+}

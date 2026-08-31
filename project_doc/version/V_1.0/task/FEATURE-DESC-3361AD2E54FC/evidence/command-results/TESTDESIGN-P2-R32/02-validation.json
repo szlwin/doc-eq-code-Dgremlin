@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"import json,re; from pathlib import Path; s=Path('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md').read_text(); marker=chr(96)*3+'json traceability'+chr(10); i=s.index(marker)+len(marker); j=s.index(chr(10)+chr(96)*3,i); a=json.loads(s[i:j]); by={x['id']:x for x in a}; req=['CASE-P2-TD-NESTED-OBJECT-PATH-001','CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001','CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001','CASE-P2-TD-NESTED-COLLECTION-PATH-001','CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001','CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001']; assert len(a)==10; assert all(x in by['TR-P2-SYSTEM-RULEVIEW-005']['test_case_ids'] for x in req); assert req[-1] in by['TR-P2-SYSTEM-RULEVIEW-004']['test_case_ids']\"",
+  "executed_at": "2026-08-11T03:11:02+00:00",
+  "revision": "TESTDESIGN-P2-R32",
+  "exit_code": 0,
+  "output": "",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

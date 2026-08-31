@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 -c \"from pathlib import Path; p=Path('project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md'); s=p.read_text(); assert 'DESIGN-P2-R01@8875f042898c' in s; assert all(x in s for x in ['#p2-system','#p2-ruleview','#p2-model-path','#p2-model-access','#p2-runtime-guard','#p2-traceability'])\"",
+  "exit_code": 0,
+  "executed_at": "2026-08-08T05:30:33.661043+00:00",
+  "revision": "DESIGN-P2-R01@8875f042898c",
+  "output": "",
+  "output_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

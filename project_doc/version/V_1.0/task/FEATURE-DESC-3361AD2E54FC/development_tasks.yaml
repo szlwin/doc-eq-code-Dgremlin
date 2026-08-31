@@ -1,0 +1,368 @@
+schema_version: 1
+implementation_strategy_contract_version: 1
+plan_id: "TP-FEATURE-DESC-3361AD2E54FC"
+target_id: "FEATURE-DESC-3361AD2E54FC"
+version: "V_1.0"
+status: "PASSED"
+revision: "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5"
+revision_no: 3
+supersedes_revision: "TP-FEATURE-DESC-3361AD2E54FC-R02@2e1280efa77b"
+revision_reason: "Replace the unavailable CompilerStarterBehaviorT15Test with the existing MixTest, whose multi-system compilation, registry publication, and failed-install identity assertions cover the same approved P2 compiler-install semantics."
+input_revisions:
+  requirement_analysis: "REQAN-P2-R01@d08612768131"
+  business_model: "BM-R20"
+  design: "DESIGN-P2-R40"
+  test_design: "TESTDESIGN-P2-R41"
+work_mode:
+  minimal: false
+  architecture_review: false
+execution_mode: "SEQUENTIAL"
+generated_by_agent: "ImplementationPlanAgent"
+required_reviewers:
+  - "PlanReviewAgent"
+  - "ArchitectureReviewAgent"
+  - "TestDesignAgent"
+  - "DevelopAgent"
+review_round: 3
+created_at: "2026-08-25T20:30:00+08:00"
+updated_at: "2026-08-25T13:40:15+00:00"
+finalized_at: "2026-08-25T13:40:15+00:00"
+tasks:
+  -
+    task_id: "TASK-P2-SIMPLE-CONFIG-UNIFIED-LOAD"
+    title: "统一 XML/YAML 候选配置加载入口"
+    goal: "通过 ConfigUtil 隐藏 ConfigInfo，统一解析 XML/YAML 到独立候选对象，并保持解析失败时当前配置不变。"
+    implementation:
+      owner_module: "dec-core-starter / dec-context-config-parse-xml / dec-context-config-parse-yaml"
+      owner_component: "ConfigUtil.parseConfigInfo and parser parseInto"
+      implementation_decision_ref: "IMPL-DEC-P2-R40-006"
+      strategy: "COMPATIBLE_EXTEND"
+      existing_code_refs:
+        - "dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java#parseConfigInfo"
+        - "dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/config/ConfigFileParser.java#parseInto"
+        - "dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigFileParser.java#parseInto"
+      shared_logic_disposition: "REUSE_SHARED"
+      shared_logic_owner: "ConfigUtil"
+      compatibility_verifications:
+        - "保留单参数 XML 调用签名；XML 与旧 YAML 均通过同一门面加载。"
+        - "候选解析失败不得替换已安装 ConfigInfo。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R41-UNIFIED-LOAD-001"
+      steps:
+        - "按扩展名选择 XML/YAML parser，所有 parser 只写调用方候选 ConfigInfo。"
+        - "通过 ConfigUtil 执行串行候选加载，成功后交给后续编译或兼容安装。"
+        - "验证公开入口不返回 ConfigInfo，旧独立 YAML 门面不形成第二套业务入口。"
+      affected_files:
+        - "dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java"
+        - "dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/config/ConfigFileParser.java"
+        - "dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigFileParser.java"
+        - "dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java"
+      forbidden_changes:
+        - "不得恢复旧 runtime/access 权限模型或暴露 ConfigInfo 的公共入口。"
+        - "不得在 parser 未完成时写入当前配置。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SIMPLE-UNIFIED-LOAD"
+        assertion: "XML、旧 YAML 和 malformed input 均经 ConfigUtil 统一处理；失败时已安装 ConfigInfo 与 EngineContext 对象身份保持不变。"
+    depends_on: []
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-demo -Dtest=ConfigUtilCompatibilityTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "统一入口正向加载 XML/旧 YAML，malformed input 只产生明确异常。"
+      - "测试绑定 exact development revision 和当前 TestDesign Case。"
+    deliverables:
+      - "统一加载实现与候选隔离证据"
+      - "ConfigUtil compatibility test evidence"
+    stop_conditions:
+      - "需要改变已批准 XML/YAML 业务语义。"
+      - "解析失败会污染当前安装对象。"
+    trace_ids:
+      - "TR-P2-001"
+      - "TR-P2-002"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-01"
+    risk_triggers:
+      - "cross_module_integration"
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-SIMPLE-CONFIG-COMPILER-INSTALL"
+    title: "完成现代 XML 编译与原子配置安装"
+    goal: "将现代 XML 候选编译为 EngineContext，并只在编译发布成功后由 ConfigManager 整体安装。"
+    implementation:
+      owner_module: "dec-core-context / dec-core-compiler / dec-core-starter"
+      owner_component: "ConfigInfo, ConfigManager, CompilerStarter"
+      implementation_decision_ref: "IMPL-DEC-P2-R37-004"
+      strategy: "MODIFY"
+      existing_code_refs:
+        - "dec-core-context/src/main/java/dec/core/context/config/model/config/ConfigInfo.java"
+        - "dec-core-context/src/main/java/dec/core/context/config/manager/ConfigManager.java#install"
+        - "dec-core-starter/src/main/java/dec/core/starter/CompilerStarter.java#compileAndInstall"
+      shared_logic_disposition: "REUSE_SHARED"
+      shared_logic_owner: "ConfigManager"
+      compatibility_verifications:
+        - "EngineContext 与 ConfigInfo 使用同一候选对象绑定；旧配置失败时保持原对象身份。"
+        - "ConfigManager 不发布半成品或仅替换 Context 的中间状态。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R41-ATOMIC-COMPAT-003"
+      steps:
+        - "编译候选 XML 的 System/Business Source Graph 并绑定返回的同一 EngineContext。"
+        - "通过 ConfigManager.install 原子替换 ConfigInfo；编译或发布失败丢弃候选。"
+        - "覆盖多个 system-file、顺序无关、重复定义和前向引用。"
+      affected_files:
+        - "dec-core-context/src/main/java/dec/core/context/config/model/config/ConfigInfo.java"
+        - "dec-core-context/src/main/java/dec/core/context/config/manager/ConfigManager.java"
+        - "dec-core-starter/src/main/java/dec/core/starter/CompilerStarter.java"
+        - "dec-demo/src/test/java/dec/demo/mix/MixTest.java"
+      forbidden_changes:
+        - "不得将编译失败降级为旧配置部分安装。"
+        - "不得引入 runtime/access 或 Context identity 绑定协议。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SIMPLE-ATOMIC-INSTALL"
+        assertion: "现代 XML 编译成功才整体安装候选 ConfigInfo+EngineContext；编译失败、重复定义和前向引用错误均保留旧对象身份。"
+    depends_on:
+      - "TASK-P2-SIMPLE-CONFIG-UNIFIED-LOAD"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-demo -Dtest=ConfigUtilCompatibilityTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "./mvnw -pl dec-demo -Dtest=MixTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "多个 system-file 通过公共 ConfigUtil 入口完成确定性编译。"
+      - "失败路径不替换旧 ConfigInfo 或 EngineContext。"
+    deliverables:
+      - "原子安装实现和失败保留证据"
+      - "多文件编译集成测试证据"
+    stop_conditions:
+      - "必须改变 EngineContext 不可变或整体安装语义。"
+      - "候选与当前配置无法保持对象隔离。"
+    trace_ids:
+      - "TR-P2-003"
+      - "TR-P2-004"
+      - "TR-P2-009"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-04"
+    risk_triggers:
+      - "cross_module_integration"
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-SIMPLE-YAML-BOUNDARY"
+    title: "收口旧 YAML 兼容与 P8 现代声明边界"
+    goal: "让 YAML 复用统一入口，保留旧格式兼容加载，并在 P2 明确拒绝 System/Business 现代声明而不安装部分配置。"
+    implementation:
+      owner_module: "dec-context-config-parse-yaml / dec-core-starter"
+      owner_component: "YamlConfigFileParser and ConfigUtil YAML dispatch"
+      implementation_decision_ref: "IMPL-DEC-P2-R40-007"
+      strategy: "MODIFY"
+      existing_code_refs:
+        - "dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigFileParser.java"
+        - "dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java"
+        - "dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigUtil.java"
+      shared_logic_disposition: "REUSE_SHARED"
+      shared_logic_owner: "dec-context-config-parse-yaml"
+      compatibility_verifications:
+        - "legacy YAML 继续加载；现代 YAML System/Business 在安装前稳定失败并指向 P8。"
+        - "不保留独立公开 ConfigInfo 返回入口，不在 Starter 复制第二套 YAML compiler。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R41-YAML-BOUNDARY-004"
+      steps:
+        - "在 YAML parser 中检测 system-file-info/business-file-info 等现代声明。"
+        - "检测到现代声明时在 install 前抛出稳定边界异常，current ConfigInfo 与 EngineContext 不变。"
+        - "保留旧 YAML 候选解析，并以 ConfigUtil 作为唯一公开加载门面。"
+      affected_files:
+        - "dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigFileParser.java"
+        - "dec-context-config-parse-yaml/src/main/java/dec/context/parse/yaml/parse/config/YamlConfigUtil.java"
+        - "dec-core-starter/src/main/java/dec/core/starter/common/ConfigUtil.java"
+        - "dec-demo/src/test/java/dec/demo/config/ConfigUtilCompatibilityTest.java"
+      forbidden_changes:
+        - "不得在 P2 实现 YAML System/Business Source Graph 编译。"
+        - "不得静默安装现代 YAML 的部分结果或恢复独立 ConfigInfo 门面。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SIMPLE-YAML-BOUNDARY"
+        assertion: "旧 YAML 通过 ConfigUtil 成功加载；现代 YAML System/Business 在安装前明确失败，旧 ConfigInfo 与 EngineContext 身份不变。"
+    depends_on:
+      - "TASK-P2-SIMPLE-CONFIG-UNIFIED-LOAD"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-demo -Dtest=ConfigUtilCompatibilityTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "legacy YAML positive case passes and modern YAML boundary case fails before install."
+      - "P8 scope is recorded as deferred without weakening P2 acceptance."
+    deliverables:
+      - "YAML compatibility and P8-boundary evidence"
+      - "public API/source scan evidence"
+    stop_conditions:
+      - "旧 YAML 兼容性只能通过改变配置语义实现。"
+      - "现代 YAML 需要在 P2 新建第二套 compiler。"
+    trace_ids:
+      - "TR-P2-002"
+      - "TR-P2-011"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-01"
+    risk_triggers:
+      - "cross_module_integration"
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-SIMPLE-MODEL-EXECUTION"
+    title: "验证直接 ModelContainer 业务执行与事务收尾"
+    goal: "沿用 DataUtil、ModelLoader 和 ModelContainer 的简单业务链，验证缺失定义失败、提交回滚和资源关闭。"
+    implementation:
+      owner_module: "dec-core-context / dec-core-model / dec-demo"
+      owner_component: "DataUtil, ModelLoader, ModelContainer"
+      implementation_decision_ref: "IMPL-DEC-P2-R37-001"
+      strategy: "REUSE"
+      existing_code_refs:
+        - "dec-core-context/src/main/java/dec/core/context/data/ModelDataFactory.java"
+        - "dec-core-model/src/main/java/dec/core/model/container/ModelLoader.java"
+        - "dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java"
+      shared_logic_disposition: "REUSE_SHARED"
+      shared_logic_owner: "dec-core-model"
+      compatibility_verifications:
+        - "业务调用方不传递 ConfigInfo、EngineContext 或权限证明。"
+        - "成功提交、失败回滚和 finally close 保持既有 RuleTests 调用方式。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R41-SIMPLE-EXECUTE-004"
+      steps:
+        - "从已安装配置创建 ModelData 并通过 ModelLoader 加载定义。"
+        - "调用 ModelContainer.execute 覆盖成功提交、定义缺失、业务异常回滚和连接关闭。"
+        - "确认配置发布与数据库事务不混合，且无旧 runtime/access 入口残留。"
+      affected_files:
+        - "dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java"
+        - "dec-core-model/src/main/java/dec/core/model/container/ModelLoader.java"
+        - "dec-core-model/src/test/java/dec/core/model/container/ModelContainerLifecycleTest.java"
+        - "dec-demo/src/test/java/dec/demo/model/DirectModelDataContainerDemoTest.java"
+      forbidden_changes:
+        - "不得恢复 Guard、Scope、Session、Handle 或 runtime/access 业务 API。"
+        - "不得把配置安装与业务数据库事务合并为一个不可回滚步骤。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SIMPLE-MODEL-EXECUTE"
+        assertion: "简单业务链可执行；缺失定义在数据库副作用前失败，成功提交、失败回滚和所有连接关闭均可观察。"
+    depends_on:
+      - "TASK-P2-SIMPLE-CONFIG-COMPILER-INSTALL"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-model -Dtest=ModelContainerLifecycleTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "./mvnw -pl dec-demo -Dtest=DirectModelDataContainerDemoTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "业务入口保持直接且不暴露配置或权限上下文。"
+      - "事务测试无失败、错误或资源泄漏。"
+    deliverables:
+      - "ModelContainer lifecycle evidence"
+    stop_conditions:
+      - "必须改变既有业务调用协议或数据库事务语义。"
+    trace_ids:
+      - "TR-P2-005"
+      - "TR-P2-006"
+      - "TR-P2-007"
+    flow_refs:
+      - "FLOW-SIMPLE-MODEL-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-MODEL-EXECUTE"
+    risk_triggers:
+      - "cross_module_integration"
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-SIMPLE-REGRESSION-CLOSURE"
+    title: "完成 P2 简化模型回归、Java 8 与退役目录闭环"
+    goal: "冻结 DEV-P2-SIMPLE-R43 的验证结果，完成针对性回归、Java 8 门禁、退役目录扫描和追踪证据闭环。"
+    implementation:
+      owner_module: "all P2 modules / project_doc"
+      owner_component: "P2 regression and traceability closure"
+      implementation_decision_ref: "IMPL-DEC-P2-R40-006"
+      strategy: "MODIFY"
+      existing_code_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/test_case.md"
+        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"
+      shared_logic_disposition: "KEEP_LOCAL"
+      shared_logic_owner: "common-develop document-facts"
+      compatibility_verifications:
+        - "全部 Evidence、Review 和测试绑定 exact DEV-P2-SIMPLE-R43@a5ecf75d5169。"
+        - "maven.compiler.release=8，代表 class major version=52，退役 runtime/access 目录无源码。"
+      source_doc_refs:
+        - "project_doc/version/V_1.0/doc/COMPILER/COMPILER_design.md#implementation-strategy-decisions"
+        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/test_case.md#CASE-P2-R41-JAVA8-RETIRE-005"
+      steps:
+        - "运行针对性 ConfigUtil、Compiler、ModelContainer 和 demo 测试，登记命令 Evidence。"
+        - "执行完整 Maven verify、Java 8 release/help:evaluate、javap major-version 和退役目录检查。"
+        - "重建并校验 artifact relations/traceability，提交当前 revision 的独立 Review 输入。"
+      affected_files:
+        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/**"
+        - "project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/traceability.md"
+        - "project_doc/version/V_1.0/work_record.md"
+      forbidden_changes:
+        - "不得以跳过测试、旧 R37 Evidence 或历史 Review 冒充当前结果。"
+        - "不得修改生产代码或测试代码来制造验证通过。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SIMPLE-REGRESSION"
+        assertion: "针对性与完整 Maven 测试、Java 8 编译门禁、退役目录扫描和追踪校验均绑定 DEV-P2-SIMPLE-R43，且失败不会被表述为通过。"
+    depends_on:
+      - "TASK-P2-SIMPLE-YAML-BOUNDARY"
+      - "TASK-P2-SIMPLE-MODEL-EXECUTION"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw --batch-mode --no-transfer-progress clean verify"
+      - "./mvnw help:evaluate -Dexpression=maven.compiler.release -q -DforceStdout"
+      - "./mvnw -q -DskipTests test-compile"
+      - "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/artifact_relations.py validate -g ProjectManagerAgent --doc-root project_doc --json"
+    expected_results:
+      - "完整 Maven 测试退出码为 0，且 Evidence 记录 tests/failures/errors/skipped。"
+      - "Java 8 release 与退役目录检查通过，traceability valid=true。"
+    deliverables:
+      - "当前 revision 的测试 Evidence 与 source digest"
+      - "Review-ready regression closure record"
+    stop_conditions:
+      - "任一 P0/P1、Evidence revision 漂移或追踪断链。"
+      - "完整测试无法在当前环境真实执行。"
+    trace_ids:
+      - "TR-P2-008"
+      - "TR-P2-010"
+      - "TR-P2-011"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+      - "FLOW-SIMPLE-MODEL-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-04"
+      - "STEP-P2-MODEL-EXECUTE"
+    risk_triggers:
+      - "cross_module_integration"
+      - "impact_analysis"
+    git_checkpoint_required: true

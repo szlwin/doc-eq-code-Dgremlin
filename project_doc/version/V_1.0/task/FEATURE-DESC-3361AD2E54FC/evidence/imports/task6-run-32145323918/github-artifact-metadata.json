@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "workflowRunId": 32145323918,
+  "artifactId": 9327553578,
+  "artifactName": "p2-task6-red-green-integrity",
+  "artifactDigest": "sha256:e9ddb7f0cfc5790980f84a89c8d5475cd4e9ac0234db89043ad8d2f479f780db",
+  "baseCheckpoint": "71126eb02c2015781112154911299c7762c3c255",
+  "productionClosureCheckpoint": "8b2faf836fe15f80df8ddb8895c35dbc53326d94",
+  "workflowConclusion": "success"
+}

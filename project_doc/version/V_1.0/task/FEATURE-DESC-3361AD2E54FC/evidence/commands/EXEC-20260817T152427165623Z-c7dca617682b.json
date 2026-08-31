@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 -c \"from pathlib import Path; a=Path('dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java').read_text(); b=Path('dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java').read_text(); c=Path('dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelSessionEffectBehaviorTest.java').read_text(); d=Path('dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java').read_text(); assert 'public RuntimeModelEffectProvider effectProvider()' in a; assert 'public Optional<RuntimeModelOperationPort> operationPort()' in b; assert '.operationPort()' in c and 'ResolvedProtectedReadAccess.of(' in c and 'ResolvedProtectedWriteAccess.of(' in c; assert 'runtimeBindingPlan().equals(handlePlan)' in d or '.runtimeBindingPlan().equals(' in d; print('P2-CR-001/P2-CR-002 current seams reproducible')\"",
+  "exit_code": 1,
+  "executed_at": "2026-08-17T15:24:26+00:00",
+  "revision": "TESTDESIGN-P2-R34",
+  "output_digest": "2ebff86e882296375a49c8ae7dee8de5b765999b726ccbbd50e4383cb6cad379",
+  "metadata": {
+    "cwd": "/mnt/data/p2-remediation-work",
+    "phase": "test_design",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    from pathlib import Path; a=Path('dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelAccessScope.java').read_text(); b=Path('dec-core-model/src/main/java/dec/core/model/runtime/RuntimeModelEffectBindingResult.java').read_text(); c=Path('dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelSessionEffectBehaviorTest.java').read_text(); d=Path('dec-core-starter/src/main/java/dec/core/starter/access/ProductionCompositionCoordinator.java').read_text(); assert 'public RuntimeModelEffectProvider effectProvider()' in a; assert 'public Optional<RuntimeModelOperationPort> operationPort()' in b; assert '.operationPort()' in c and 'ResolvedProtectedReadAccess.of(' in c and 'ResolvedProtectedWriteAccess.of(' in c; assert 'runtimeBindingPlan().equals(handlePlan)' in d or '.runtimeBindingPlan().equals(' in d; print('P2-CR-001/P2-CR-002 current seams reproducible')\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+}

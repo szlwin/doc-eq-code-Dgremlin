@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "repository": "szlwin/doc-eq-code-Dgremlin",
+  "workflow_run_id": 32203570492,
+  "workflow_name": "P2 task7 lifecycle verification v3",
+  "conclusion": "success",
+  "artifact_id": 9348358587,
+  "artifact_name": "p2-task7-lifecycle-evidence-v3",
+  "runner_head_sha": "adf264e7f2bc222bab84315895d3128ef250f5d9",
+  "production_base_sha": "e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e",
+  "test_git_blob": "8b3200201546d4fd333cca768b049ab5036176e6",
+  "test_sha256": "c76532d452f73578954e4480177e4e4f7bb31edad9349eaa2cca887f36f59550",
+  "verified_scope": "single Task7 test file only; no src/main drift from production base"
+}

@@ -173,18 +173,43 @@
 
         </information-info>
 
+        <!--
+            P2 ModelAccess 只有带显式 ref 的 read/write 才会形成 Binding 并进入 exact policy。
+            order System 直接操作共享模型 OrderInfo，因此全部访问都绑定到 OrderInfo.target-main="order"；
+            path 仍决定精确 READ/WRITE 权限，ref 只冻结 runtime target binding，不扩大 path 权限。
+        -->
         <model-access-info>
             <model-access model-ref="OrderInfo">
-                <read path="*"/>
-                <write path="id"/>
-                <write path="userId"/>
-                <write path="productCount"/>
-                <write path="totalPrice"/>
-                <write path="totalAmount"/>
-                <write path="status"/>
-                <write path="dateTime"/>
-                <write path="payId"/>
-                <write path="orderDetailList"/>
+                <read path="*">
+                    <ref view="OrderInfo" property="order"/>
+                </read>
+                <write path="id">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="userId">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="productCount">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="totalPrice">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="totalAmount">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="status">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="dateTime">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="payId">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
+                <write path="orderDetailList">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
             </model-access>
         </model-access-info>
 
@@ -237,10 +262,19 @@
 
         </information-info>
 
+        <!--
+            payment System 仍通过同一 OrderInfo trusted root 读取共享模型，并只授予 payInfo WRITE path。
+            READ 与 WRITE 共享同一 target-main binding，便于同一 trusted model handle 上执行精确访问；
+            WRITE 权限仍严格限制在 payInfo，不获得 order.status 等其它写权限。
+        -->
         <model-access-info>
             <model-access model-ref="OrderInfo">
-                <read path="*"/>
-                <write path="payInfo"/>
+                <read path="*">
+                    <ref view="OrderInfo" property="order"/>
+                </read>
+                <write path="payInfo">
+                    <ref view="OrderInfo" property="order"/>
+                </write>
             </model-access>
         </model-access-info>
 

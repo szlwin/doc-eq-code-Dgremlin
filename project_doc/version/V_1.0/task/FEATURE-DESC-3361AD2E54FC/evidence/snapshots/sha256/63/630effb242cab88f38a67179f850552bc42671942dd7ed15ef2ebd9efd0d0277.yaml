@@ -1,0 +1,483 @@
+schemaVersion: 1
+artifact: dependency_impact_changeset
+changeSet:
+  id: DICHG-P2-SIMPLE-RUNTIME-R30
+  version: V_1.0
+  module: COMPILER
+  reason: Replace the archived protected-access dependency projection with the user-confirmed ConfigInfo publication and direct ModelContainer execution model.
+  baseRevision: P2-IMPACT-R29
+  resultRevision: P2-IMPACT-R30
+operations:
+  - operation: update
+    collection: nodes
+    targetId: FLOW-CONFIG-COMPILE
+    reason: Align configuration publication with the simplified flow.
+    after:
+      name: ConfigInfo candidate compilation and atomic installation
+      refs:
+        - FLOW-R04@p2-simple-runtime-model
+        - DESIGN-P2-R38
+      traceIds:
+        - TR-P2-001
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+        - TR-P2-009
+      status: ACTIVE
+  - operation: add
+    collection: nodes
+    targetId: FLOW-SIMPLE-MODEL-EXECUTE
+    reason: Add the direct business execution process.
+    after:
+      id: FLOW-SIMPLE-MODEL-EXECUTE
+      type: PROCESS
+      name: DataUtil to ModelContainer direct execution
+      module: MODEL
+      refs:
+        - FLOW-R04@p2-simple-runtime-model
+        - DESIGN-P2-R38
+      traceIds:
+        - TR-P2-005
+        - TR-P2-006
+        - TR-P2-007
+        - TR-P2-008
+        - TR-P2-010
+      status: ACTIVE
+  - operation: deprecate
+    collection: nodes
+    targetId: FLOW-PROTECTED-ACCESS-EXECUTE
+    reason: Scope, Session, Handle, Guard and Capability execution is no longer a P2 requirement.
+  - operation: update
+    collection: nodes
+    targetId: CTX
+    reason: Context owns ConfigInfo and its associated EngineContext.
+    after:
+      refs:
+        - DESIGN-P2-R38#configinfo-enginecontext
+      traceIds:
+        - TR-P2-001
+        - TR-P2-003
+        - TR-P2-004
+        - TR-P2-009
+      status: ACTIVE
+  - operation: update
+    collection: nodes
+    targetId: COMP
+    reason: Compiler validates and publishes the candidate EngineContext.
+    after:
+      refs:
+        - DESIGN-P2-R38#compiler-publication
+      traceIds:
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+      status: ACTIVE
+  - operation: update
+    collection: nodes
+    targetId: MODEL
+    reason: MODEL owns direct ModelData and ModelContainer execution.
+    after:
+      refs:
+        - DESIGN-P2-R38#simple-model-execution
+      traceIds:
+        - TR-P2-005
+        - TR-P2-006
+        - TR-P2-007
+        - TR-P2-010
+      status: ACTIVE
+  - operation: update
+    collection: nodes
+    targetId: STARTER
+    reason: Starter coordinates candidate compilation and installation without an access authority layer.
+    after:
+      refs:
+        - DESIGN-P2-R38#compilerstarter
+      traceIds:
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+      status: ACTIVE
+  - operation: deprecate
+    collection: nodes
+    targetId: LOAD_REQ
+    reason: RuntimeModelLoadRequest belonged only to the retired protected-access model.
+  - operation: deprecate
+    collection: nodes
+    targetId: EFFECT
+    reason: RuntimeModelEffectProvider belonged only to the retired protected-access model.
+  - operation: deprecate
+    collection: nodes
+    targetId: TEST
+    reason: The old TestDesign node validates the retired model and is not reused as simplified-model evidence.
+
+  - operation: deprecate
+    collection: relationships
+    targetId: REL-P2-R29-1
+    reason: Superseded by the ConfigInfo publication relationship.
+  - operation: deprecate
+    collection: relationships
+    targetId: REL-P2-R29-2
+    reason: Superseded by direct MODEL configuration consumption.
+  - operation: deprecate
+    collection: relationships
+    targetId: REL-P2-R29-3
+    reason: RuntimeModelLoadRequest is retired.
+  - operation: deprecate
+    collection: relationships
+    targetId: REL-P2-R29-4
+    reason: RuntimeModelEffectProvider is retired.
+  - operation: deprecate
+    collection: relationships
+    targetId: REL-P2-R29-5
+    reason: STARTER no longer composes protected model access.
+  - operation: deprecate
+    collection: relationships
+    targetId: REL-P2-R29-6
+    reason: Old protected-access TestDesign is not current verification evidence.
+  - operation: add
+    collection: relationships
+    targetId: REL-P2-SIMPLE-001
+    reason: Compiler publishes EngineContext to the same ConfigInfo candidate owned by CONTEXT.
+    after:
+      id: REL-P2-SIMPLE-001
+      from: COMP
+      to: CTX
+      type: PROVIDES_TO
+      direction: DIRECTED
+      rationale: CompilerStarter publishes a valid EngineContext into the isolated ConfigInfo before ConfigManager installs the whole object.
+      conditions:
+        - candidate validation has no ERROR
+      traceIds:
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+        - TR-P2-009
+      status: ACTIVE
+  - operation: add
+    collection: relationships
+    targetId: REL-P2-SIMPLE-002
+    reason: MODEL consumes current configuration definitions without explicit EngineContext plumbing.
+    after:
+      id: REL-P2-SIMPLE-002
+      from: MODEL
+      to: CTX
+      type: CONSUMES_FROM
+      direction: DIRECTED
+      rationale: DataUtil, ModelLoader and ModelContainer resolve View, Rule and Connection through the current ConfigInfo.
+      conditions:
+        - a complete ConfigInfo is installed
+      traceIds:
+        - TR-P2-005
+        - TR-P2-006
+        - TR-P2-010
+      status: ACTIVE
+  - operation: add
+    collection: relationships
+    targetId: REL-P2-SIMPLE-003
+    reason: Starter coordinates compiler publication without owning runtime authorization.
+    after:
+      id: REL-P2-SIMPLE-003
+      from: STARTER
+      to: COMP
+      type: DEPENDS_ON
+      direction: DIRECTED
+      rationale: Starter delegates candidate validation and EngineContext publication to compiler services.
+      conditions:
+        - XML or YAML parsing completed
+      traceIds:
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+      status: ACTIVE
+
+  - operation: deprecate
+    collection: impactPolicies
+    targetId: IMP-P2-CONTEXT-PUBLICATION-R29
+    reason: Replaced by whole ConfigInfo and EngineContext installation semantics.
+  - operation: deprecate
+    collection: impactPolicies
+    targetId: IMP-P2-DIRECT-LOAD-R29
+    reason: RuntimeModelLoadRequest validation is retired.
+  - operation: deprecate
+    collection: impactPolicies
+    targetId: IMP-P2-EFFECT-BINDING-R29
+    reason: Bound effect and Guard semantics are retired.
+  - operation: add
+    collection: impactPolicies
+    targetId: IMP-P2-SIMPLE-CONFIG-R30
+    reason: Define failure and consistency behavior for whole configuration installation.
+    after:
+      id: IMP-P2-SIMPLE-CONFIG-R30
+      sourceRef: FLOW-CONFIG-COMPILE
+      sourceAction: parse candidate, compile EngineContext and install the complete ConfigInfo
+      targetRefs:
+        - COMP
+        - CTX
+      policy: REJECT_OPERATION
+      conditions:
+        - source is malformed
+        - candidate validation reports ERROR
+        - EngineContext publication fails
+      consistency: ATOMIC
+      transactionBoundary: one ConfigInfo candidate load and install
+      idempotency: repeating the same valid source produces an equivalent installed configuration
+      failureHandling: discard the candidate and keep the previously installed ConfigInfo unchanged
+      compensation: no business data compensation; previous configuration remains current
+      traceIds:
+        - TR-P2-001
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+        - TR-P2-009
+      testCaseIds:
+        - CASE-NOT-APPLICABLE-WK-WS
+      status: ACTIVE
+  - operation: add
+    collection: impactPolicies
+    targetId: IMP-P2-SIMPLE-EXECUTE-R30
+    reason: Define fail-fast and resource cleanup behavior for direct model execution.
+    after:
+      id: IMP-P2-SIMPLE-EXECUTE-R30
+      sourceRef: FLOW-SIMPLE-MODEL-EXECUTE
+      sourceAction: create ModelData, load a named rule and execute ModelContainer
+      targetRefs:
+        - MODEL
+        - CTX
+      policy: REJECT_OPERATION
+      conditions:
+        - View is missing
+        - Rule is missing
+        - Connection is missing
+        - database operation fails
+      consistency: ATOMIC
+      transactionBoundary: one ModelContainer execute batch and its participating connections
+      idempotency: determined by the called rule and existing data connection contract
+      failureHandling: fail before the missing-definition side effect, or rollback opened connections on execution failure
+      compensation: rollback participating connections and close all opened resources
+      traceIds:
+        - TR-P2-005
+        - TR-P2-006
+        - TR-P2-007
+        - TR-P2-010
+      testCaseIds:
+        - CASE-NOT-APPLICABLE-WK-WS
+      status: ACTIVE
+
+  - operation: deprecate
+    collection: crossModuleImplementations
+    targetId: CMI-P2-COMPILE-005
+    reason: Typed materialization publication details are superseded by ConfigInfo candidate installation.
+  - operation: deprecate
+    collection: crossModuleImplementations
+    targetId: CMI-P2-PROTECTED-ACCESS-009
+    reason: Protected access composition is retired.
+  - operation: add
+    collection: crossModuleImplementations
+    targetId: CMI-P2-SIMPLE-CONFIG-R30
+    reason: Record the parser, compiler and context handoff for the simplified candidate.
+    after:
+      id: CMI-P2-SIMPLE-CONFIG-R30
+      name: ConfigInfo candidate compilation and installation
+      trigger: FLOW-CONFIG-COMPILE
+      participants:
+        - id: CMPART-P2-SIMPLE-CONFIG-STARTER
+          module: dec-core-starter
+          responsibility: coordinate parse, compile and install
+        - id: CMPART-P2-SIMPLE-CONFIG-CONTEXT
+          module: dec-core-context
+          responsibility: own candidate ConfigInfo and current ConfigManager reference
+        - id: CMPART-P2-SIMPLE-CONFIG-COMPILER
+          module: dec-core-compiler
+          responsibility: validate candidate definitions and publish EngineContext
+        - id: CMPART-P2-SIMPLE-CONFIG-PARSER
+          module: dec-context-config-parse-xml/yaml
+          responsibility: populate the isolated candidate without touching current configuration
+      steps:
+        - id: CMSTEP-P2-SIMPLE-CONFIG-01
+          order: 1
+          from: CMPART-P2-SIMPLE-CONFIG-STARTER
+          to: CMPART-P2-SIMPLE-CONFIG-CONTEXT
+          interactionType: COMMAND
+          action: create an empty ConfigInfo candidate for this load
+          preconditions: []
+          postconditions:
+            - candidate is isolated from ConfigManager current
+          idempotency: each load owns one new candidate
+          failureHandling: abort before parsing
+          compensation: discard candidate
+          traceIds:
+            - TR-P2-001
+        - id: CMSTEP-P2-SIMPLE-CONFIG-02
+          order: 2
+          from: CMPART-P2-SIMPLE-CONFIG-PARSER
+          to: CMPART-P2-SIMPLE-CONFIG-CONTEXT
+          interactionType: DATA_WRITE
+          action: parse XML or YAML definitions into the candidate
+          preconditions:
+            - candidate exists
+          postconditions:
+            - candidate contains View, Rule and Connection definitions
+          idempotency: a fresh candidate avoids duplicate accumulation across loads
+          failureHandling: report parse failure and keep current configuration
+          compensation: discard candidate
+          traceIds:
+            - TR-P2-002
+        - id: CMSTEP-P2-SIMPLE-CONFIG-03
+          order: 3
+          from: CMPART-P2-SIMPLE-CONFIG-STARTER
+          to: CMPART-P2-SIMPLE-CONFIG-COMPILER
+          interactionType: SYNC_API
+          action: validate and publish EngineContext into the same candidate
+          preconditions:
+            - parsing completed
+          postconditions:
+            - candidate contains its exact compiled EngineContext
+          idempotency: equivalent candidate facts produce equivalent compiler output
+          failureHandling: return diagnostics and do not install candidate
+          compensation: discard candidate
+          traceIds:
+            - TR-P2-003
+            - TR-P2-004
+        - id: CMSTEP-P2-SIMPLE-CONFIG-04
+          order: 4
+          from: CMPART-P2-SIMPLE-CONFIG-STARTER
+          to: CMPART-P2-SIMPLE-CONFIG-CONTEXT
+          interactionType: COMMAND
+          action: replace ConfigManager current reference with the complete candidate
+          preconditions:
+            - EngineContext publication succeeded
+          postconditions:
+            - readers observe ConfigInfo and EngineContext from the same load
+          idempotency: installing the same complete candidate does not create a mixed pair
+          failureHandling: keep the previous current reference
+          compensation: no partial install
+          traceIds:
+            - TR-P2-009
+      successCriteria:
+        - failed candidates never become current
+        - XML and YAML use the same candidate semantics
+        - ConfigInfo and EngineContext are observed as one installed object
+      failurePaths:
+        - id: CMFAIL-P2-SIMPLE-CONFIG-01
+          atStep: CMSTEP-P2-SIMPLE-CONFIG-03
+          condition: candidate validation or publication fails
+          result: diagnostics are returned and current ConfigInfo is unchanged
+          compensationSteps:
+            - discard the candidate
+          manualRecovery: correct the configuration source and load a new candidate
+          traceIds:
+            - TR-P2-004
+      traceIds:
+        - TR-P2-001
+        - TR-P2-002
+        - TR-P2-003
+        - TR-P2-004
+        - TR-P2-009
+      testCaseIds:
+        - CASE-NOT-APPLICABLE-WK-WS
+      status: ACTIVE
+      businessFlowRef: FLOW-CONFIG-COMPILE
+      businessStepRefs:
+        - STEP-CONFIG-COMPILE-01
+        - STEP-CONFIG-COMPILE-02
+        - STEP-CONFIG-COMPILE-03
+        - STEP-CONFIG-COMPILE-04
+  - operation: add
+    collection: crossModuleImplementations
+    targetId: CMI-P2-SIMPLE-EXECUTE-R30
+    reason: Record direct model definition lookup, rule execution and connection cleanup.
+    after:
+      id: CMI-P2-SIMPLE-EXECUTE-R30
+      name: Direct ModelContainer business execution
+      trigger: FLOW-SIMPLE-MODEL-EXECUTE
+      participants:
+        - id: CMPART-P2-SIMPLE-EXECUTE-CONTEXT
+          module: dec-core-context
+          responsibility: expose current View, Rule and Connection definitions
+        - id: CMPART-P2-SIMPLE-EXECUTE-MODEL
+          module: dec-core-model
+          responsibility: create ModelData, load the named rule and finish connection transactions
+      steps:
+        - id: CMSTEP-P2-SIMPLE-EXECUTE-01
+          order: 1
+          from: CMPART-P2-SIMPLE-EXECUTE-MODEL
+          to: CMPART-P2-SIMPLE-EXECUTE-CONTEXT
+          interactionType: QUERY
+          action: resolve View and create complete mutable ModelData
+          preconditions:
+            - current ConfigInfo exists
+          postconditions:
+            - business code receives complete ModelData
+          idempotency: each call creates an independent business data object
+          failureHandling: report missing View before rule execution
+          compensation: none
+          traceIds:
+            - TR-P2-005
+            - TR-P2-006
+        - id: CMSTEP-P2-SIMPLE-EXECUTE-02
+          order: 2
+          from: CMPART-P2-SIMPLE-EXECUTE-MODEL
+          to: CMPART-P2-SIMPLE-EXECUTE-CONTEXT
+          interactionType: QUERY
+          action: resolve the named Rule and Connection and load the model task
+          preconditions:
+            - ModelData exists
+          postconditions:
+            - ModelLoader contains an executable task
+          idempotency: repeated load requests create separate task entries
+          failureHandling: report missing Rule or Connection before database work
+          compensation: none
+          traceIds:
+            - TR-P2-005
+            - TR-P2-006
+        - id: CMSTEP-P2-SIMPLE-EXECUTE-03
+          order: 3
+          from: CMPART-P2-SIMPLE-EXECUTE-MODEL
+          to: CMPART-P2-SIMPLE-EXECUTE-MODEL
+          interactionType: COMMAND
+          action: execute loaded tasks, commit on success, rollback on failure and close connections
+          preconditions:
+            - ModelContainer has loaded tasks
+          postconditions:
+            - every opened connection is committed or rolled back and then closed
+          idempotency: determined by the named business rule
+          failureHandling: rollback opened connections and rethrow a clear execution failure
+          compensation: close all participating resources in finally
+          traceIds:
+            - TR-P2-007
+      successCriteria:
+        - business callers use DataUtil, ModelLoader and ModelContainer directly
+        - missing definitions fail before their corresponding side effect
+        - all opened connections are finished and closed
+      failurePaths:
+        - id: CMFAIL-P2-SIMPLE-EXECUTE-01
+          atStep: CMSTEP-P2-SIMPLE-EXECUTE-02
+          condition: Rule or Connection is missing
+          result: execution does not start and no database write occurs
+          compensationSteps: []
+          manualRecovery: install a configuration containing the named definition
+          traceIds:
+            - TR-P2-006
+        - id: CMFAIL-P2-SIMPLE-EXECUTE-02
+          atStep: CMSTEP-P2-SIMPLE-EXECUTE-03
+          condition: model or database execution fails
+          result: participating connections are rolled back and closed
+          compensationSteps:
+            - rollback opened connections
+            - close opened connections
+          manualRecovery: correct the business data or external database failure, then retry according to rule semantics
+          traceIds:
+            - TR-P2-007
+      traceIds:
+        - TR-P2-005
+        - TR-P2-006
+        - TR-P2-007
+        - TR-P2-010
+      testCaseIds:
+        - CASE-NOT-APPLICABLE-WK-WS
+      status: ACTIVE
+      businessFlowRef: FLOW-SIMPLE-MODEL-EXECUTE
+      businessStepRefs:
+        - STEP-P2-EXECUTE-01
+        - STEP-P2-EXECUTE-02
+        - STEP-P2-EXECUTE-03

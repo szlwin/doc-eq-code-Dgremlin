@@ -30,12 +30,56 @@ public class YamlConfigFileParser implements FileParser<ConfigInfo> {
 
     @Override
     public ConfigInfo parse(String filePath) throws YAMLParseException {
-        log.info("------Dec yaml init Start------");
-        ConfigInfo configInfo = ConfigManager.getInstance().getConfigInfo();
-        if (configInfo == null) {
-            configInfo = new ConfigInfo();
-            ConfigManager.getInstance().setConfigInfo(configInfo);
+        ConfigManager manager = ConfigManager.getInstance();
+        ConfigInfo candidate = manager.getOrCreateLoadingConfigInfo();
+        try {
+            ConfigInfo parsed = parseInto(candidate, filePath);
+            return manager.install(parsed);
+        } finally {
+            manager.clearLoadingConfigInfo();
         }
+    }
+
+    /**
+     * 判断 YAML 根配置是否声明了 P8 才提供的 System/Business Source Graph。
+     * P2 只做前置识别，不能把现代 YAML 当作旧配置部分安装。
+     */
+    public boolean requiresCompiler(String filePath) throws YAMLParseException {
+        Map<String, Object> root = YamlSupport.loadMap(YamlSupport.findOne(filePath));
+        return YamlSupport.first(
+                root,
+                "system-file-info",
+                "systemFileInfo",
+                "systemFiles") != null
+                || YamlSupport.first(
+                root,
+                "business-file-info",
+                "businessFileInfo",
+                "businessFiles") != null;
+    }
+
+    /** 把 YAML 内容解析到指定候选配置，解析完成前不替换线上配置。 */
+    public ConfigInfo parseInto(final ConfigInfo candidate, final String filePath)
+            throws YAMLParseException {
+        try {
+            return ConfigManager.getInstance().withConfigInfo(
+                    candidate,
+                    new ConfigManager.ConfigOperation<ConfigInfo>() {
+                        @Override
+                        public ConfigInfo execute() throws Exception {
+                            return parseCurrent(candidate, filePath);
+                        }
+                    });
+        } catch (YAMLParseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new YAMLParseException(e);
+        }
+    }
+
+    private ConfigInfo parseCurrent(ConfigInfo configInfo, String filePath)
+            throws YAMLParseException {
+        log.info("------Dec yaml init Start------");
         Map<String, Object> root = YamlSupport.loadMap(YamlSupport.findOne(filePath));
         parseDataSources(configInfo, root);
         parseConnections(configInfo, root);
@@ -102,7 +146,10 @@ public class YamlConfigFileParser implements FileParser<ConfigInfo> {
                 }
                 dataSource.setConName(connection.getName());
                 connection.getDataSourceInfo().addDataSource(dataSource);
-                ConnectionInfo info = (ConnectionInfo) ConfigContextUtil.getConfigInfo().get(Config.CONNECTION_CONFIG, dataSource.getType());
+                // 与 XML 一致：Connection 的实现类型由已绑定 DataSource.type 决定。
+                ConnectionInfo<Object, Object, Object> info =
+                        new ConnectionInfo<Object, Object, Object>();
+                info.setName(dataSource.getType());
                 connection.setConnectionInfo(info);
             }
             Map<String, Object> properties = YamlSupport.map(YamlSupport.first(map, "properties", "property-info", "propertyInfo"), "properties");

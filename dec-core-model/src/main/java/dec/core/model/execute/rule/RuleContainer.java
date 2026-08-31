@@ -107,6 +107,9 @@ public class RuleContainer {
         ResultInfo resultInfo = null;
 
         List<RuleDefineInfo> ruleList = ruleViewInfo.getRules();
+		if (ruleList == null || ruleList.isEmpty()) {
+			throw new ExecuteRuleException("规则未定义执行步骤: " + ruleViewInfo.getName());
+		}
 
         int startIndex = this.startRule == null ? 0 : ruleViewInfo.getRuleIndex(this.startRule);
         int endIndex = this.endRule == null ? ruleList.size() : ruleViewInfo.getRuleIndex(this.endRule);
@@ -217,9 +220,19 @@ public class RuleContainer {
         return resultInfo;
     }
 
-    private RuleViewInfo getRuleInfo() {
-
-        return DataUtil.getRuleViewInfo(modelLoader.getRuleName());
+    private RuleViewInfo getRuleInfo() throws ExecuteRuleException {
+        if (modelLoader == null) {
+            throw new ExecuteRuleException("尚未加载规则执行参数");
+        }
+        String ruleName = modelLoader.getRuleName();
+        if (ruleName == null || ruleName.trim().isEmpty()) {
+            throw new ExecuteRuleException("规则名称不能为空");
+        }
+        RuleViewInfo ruleInfo = DataUtil.getRuleViewInfo(ruleName);
+        if (ruleInfo == null) {
+            throw new ExecuteRuleException("规则不存在: " + ruleName);
+        }
+        return ruleInfo;
     }
 
     private Object convert(String property, String type) {

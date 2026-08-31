@@ -1,0 +1,16 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify",
+  "executed_at": "2026-08-19T01:34:46+00:00",
+  "revision": "DEV-P2-R37-CLOSURE-R01@1a936fdd2a45",
+  "exit_code": 0,
+  "output_ref": "evidence/imports/task8-run-32205252873/r06-cmd11.log",
+  "output_digest": "0ddad74d991783a51d584e22e63d2e92e16eb00f814f7a4e889be5b01bb34233",
+  "provenance": {
+    "mode": "REBIND_BY_EXECUTABLE_SOURCE_EQUIVALENCE",
+    "original_workflow_run_id": 32205252873,
+    "current_canonical_head": "1a936fdd2a4559178518dce3ab1214a058c5e2ab",
+    "equivalence_evidence": "evidence/imports/development-closure-i012/closure-revision-binding.json"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "checkOrder": [
+    "authority_current",
+    "test_oracle_authoritative",
+    "fixture_representative",
+    "configuration_semantically_valid",
+    "environment_stable"
+  ],
+  "results": {
+    "authority_current": true,
+    "test_oracle_authoritative": true,
+    "fixture_representative": true,
+    "configuration_semantically_valid": true,
+    "environment_stable": true
+  },
+  "productionMutationAllowed": true,
+  "firstBlockingCheck": "",
+  "blockingChecks": [],
+  "mutationPolicy": {
+    "phase": "development",
+    "scope": "productionCode",
+    "allowed": true,
+    "decision": "ALLOW",
+    "mode": "STANDARD",
+    "policy": {
+      "taskFacts": "ALLOW",
+      "projectDocs": "ALLOW",
+      "tests": "ALLOW",
+      "config": "ALLOW",
+      "productionCode": "ALLOW"
+    }
+  }
+}

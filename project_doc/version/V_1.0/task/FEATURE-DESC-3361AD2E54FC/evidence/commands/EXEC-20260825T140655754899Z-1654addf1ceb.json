@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/long_task.py validate -g ProjectManagerAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC",
+  "exit_code": 1,
+  "executed_at": "2026-08-25T14:06:43+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R02@2e1280efa77b",
+  "output_digest": "49a0617cf3127e4b9cf4dfadecdbdf3b1e035846757cdc8d3bd5e398fcdab355",
+  "metadata": {
+    "cwd": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin",
+    "phase": "implementation_plan",
+    "mutation_scope": "projectDocs"
+  },
+  "output": "ERROR: stage-outcomes[35] evidence is not ACTIVE: EVD-000572\n"
+}

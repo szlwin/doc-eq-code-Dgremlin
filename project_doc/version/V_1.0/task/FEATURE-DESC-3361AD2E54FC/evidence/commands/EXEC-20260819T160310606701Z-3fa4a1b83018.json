@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-starter -am -Dtest=P2SecurityAuthorityRemediationTest,ProtectedAccessConcurrencyTest,ProtectedAccessProductionCompositionTest,SingleEngineContextRuntimeLifecycleTest -Dsurefire.failIfNoSpecifiedTests=false test",
+  "exit_code": 6,
+  "executed_at": "2026-08-19T16:03:10+00:00",
+  "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "output_digest": "dd492c866392879ec757710e2ec3ad7d3def7184832bddd19888c36611ff720a",
+  "metadata": {
+    "cwd": "/mnt/data/project_doc",
+    "phase": "code_review",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "curl: (6) Could not resolve host: maven.aliyun.com\n"
+}

@@ -1,0 +1,18 @@
+{
+  "command": "./mvnw -pl dec-core-starter -Dtest=ProtectedAccessProductionCompositionTest,ProtectedRuntimeModelAdapterIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "executed_at": "2026-08-19T01:34:46+00:00",
+  "exit_code": 0,
+  "kind": "command_result",
+  "output_digest": "dad6b882538ca34081c4a13a3794b31c8c4f9126f8e4f997def986a7988602a3",
+  "output_ref": "evidence/imports/task8-run-32205252873/r06-cmd06.log",
+  "provenance": {
+    "current_canonical_head": "437b8547d0b660cfa912d9e3333452fc6f248f3e",
+    "equivalence_evidence": "evidence/imports/development-implementation-i014/concrete-implementation-binding.json",
+    "mode": "REBIND_BY_EXECUTABLE_SOURCE_EQUIVALENCE",
+    "note": "Not re-executed in I014; Task8 result is rebound because all executable source/test blobs remain identical and I013/I014 changes are project_doc-only.",
+    "original_workflow_run_id": 32205252873,
+    "rebound_from_revision": "DEV-P2-R37-SKELETON-R01@a5723c233bdf"
+  },
+  "revision": "DEV-P2-R37-IMPLEMENTATION-R01@55c0269b69f5",
+  "schema_version": 2
+}

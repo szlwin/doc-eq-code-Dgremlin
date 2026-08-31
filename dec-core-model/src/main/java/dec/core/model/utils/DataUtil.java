@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import dec.core.context.EngineContext;
 import dec.core.context.config.exception.DataNotDefineException;
 import dec.core.context.config.manager.ConfigManager;
 import dec.core.context.config.model.config.ConfigInfo;
@@ -184,6 +185,10 @@ public class DataUtil {
 	
 	public static ConfigInfo getConfigInfo(){
 		return ConfigManager.getInstance().getConfigInfo();
+	}
+
+	public static EngineContext getEngineContext(){
+		return getConfigInfo().getEngineContext();
 	}
 	
 	public static ViewData getViewInfo(ModelData modelData){

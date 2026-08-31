@@ -1,0 +1,46 @@
+{
+  "schema": "P2_TESTDESIGN_R35_LIFECYCLE_RECONCILIATION_V1",
+  "targetId": "FEATURE-DESC-3361AD2E54FC",
+  "reasonFinding": "P2-TD-REV-001",
+  "previousCurrent": {
+    "phase": "test_design",
+    "iteration": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-007",
+    "revision": "TESTDESIGN-P2-R34",
+    "stageOutcome": "SO-FEATURE-DESC-3361AD2E54FC-TEST_DESIGN-I007",
+    "status": "PASSED"
+  },
+  "requiredCanonicalTransition": {
+    "reopenFrom": "test_design",
+    "preservePassed": {
+      "requirement_confirmation": true,
+      "requirement_analysis": true,
+      "business_model": true,
+      "design": "DESIGN-P2-R32"
+    },
+    "newTestDesignIteration": "ITER-FEATURE-DESC-3361AD2E54FC-TEST-DESIGN-008",
+    "newTestDesignRevision": "TESTDESIGN-P2-R35",
+    "testDesignReviews": [
+      "REV-000116",
+      "REV-000117"
+    ],
+    "expectedTestDesignConclusion": "PASSED",
+    "downstreamInvalidation": [
+      "implementation_plan",
+      "development",
+      "code_review",
+      "testing",
+      "completion_verification"
+    ],
+    "nextPhaseAfterFinalization": "implementation_plan"
+  },
+  "safety": {
+    "productionMutation": false,
+    "testSourceMutation": false,
+    "runtimeConfigMutation": false,
+    "merge": false,
+    "release": false,
+    "deployment": false
+  },
+  "canonicalLedgerWriteStatus": "PENDING_SAFE_APPEND",
+  "note": "This file records the exact reconciliation required by common-develop. It does not pretend that task_events.jsonl has been changed. The append-only machine ledger must be updated through the lifecycle writer/reducer; rewriting the existing ledger by hand is intentionally prohibited."
+}

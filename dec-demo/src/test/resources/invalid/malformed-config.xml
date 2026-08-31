@@ -1,0 +1,3 @@
+<orm-config>
+    <orm-datasource-info default="data1">
+</orm-config>

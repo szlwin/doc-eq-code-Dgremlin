@@ -1,0 +1,756 @@
+schema_version: 1
+plan_id: "TP-FEATURE-DESC-3361AD2E54FC"
+target_id: "FEATURE-DESC-3361AD2E54FC"
+version: "V_1.0"
+status: "PASSED"
+revision: "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a"
+revision_no: 5
+supersedes_revision: "TP-FEATURE-DESC-3361AD2E54FC-R04@c92d68822e25"
+revision_reason: "Rebind unchanged nine-slice plan to TESTDESIGN-P2-R32 and explicitly map six nested ModelPath oracles to DEV-03; no DAG/task/module/architecture change."
+input_revisions:
+  requirement_analysis: "REQAN-P2-R01@d08612768131"
+  business_model: "BM-R20"
+  design: "DESIGN-P2-R30"
+  test_design: "TESTDESIGN-P2-R32"
+work_mode:
+  minimal: false
+  architecture_review: true
+execution_mode: "SEQUENTIAL"
+generated_by_agent: "ImplementationPlanAgent"
+required_reviewers:
+  - "PlanReviewAgent"
+  - "ArchitectureReviewAgent"
+  - "TestDesignAgent"
+  - "DevelopAgent"
+review_round: 5
+created_at: "2026-08-10T13:03:50+00:00"
+updated_at: "2026-08-11T04:28:06+00:00"
+finalized_at: "2026-08-11T04:28:06+00:00"
+tasks:
+  -
+    task_id: "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION"
+    title: "System 与 RuleView 复合身份编译闭环"
+    goal: "让 System 显式身份和 RuleView (system,name) 复合身份在编译注册、解析和确定性诊断中形成同一可发布事实。"
+    implementation:
+      owner_module: "dec-core-compiler"
+      owner_component: "system/ruleview symbol compilation"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T01-PRIMARY, SRC-P2-T02-COMPILER, SRC-P2-T05-PRIMARY, SRC-P2-T10-COMPILER"
+        - "先以 SystemCompilationContractTest 与 RuleViewCompilationContractTest 建立有效 RED，覆盖多源顺序、重复 System、前向引用、缺失 System 与跨 System 同名隔离。"
+        - "进入 development 后先为 dec-core-compiler/system/ruleview symbol compilation 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "复用现有 raw/symbol/pass 编译管线和 CONTEXT 的 SystemKey/RuleViewKey，完成显式 owner 注册、复合身份解析与 source-aware 冲突诊断。"
+        - "保持编译输入顺序无关和不可变快照，运行两组 TestClass 及 compiler 模块回归。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-context/src/main/java/dec/core/context/model/SystemKey.java"
+        - "dec-core-context/src/main/java/dec/core/context/model/RuleViewKey.java"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/raw/**"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/symbol/**"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/pass/**"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
+      forbidden_changes:
+        - "不得通过目录、文件位置、包名或裸 RuleView 名称推断 System。"
+        - "不得建立第二套全局可变 System/RuleView Registry。"
+        - "不得删除 declaration 旧入口。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-001"
+        assertion: "多文件与前向引用能够得到确定一致的 System 身份集合，重复或冲突 System 必须失败且不得发布。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-002"
+        assertion: "不同 System 下同名 RuleView 能够同时存在并精确解析，同 System 同名或缺失 System 必须拒绝。"
+      -
+        id: "SRC-P2-T01-PRIMARY"
+        assertion: "P2-T01 的 System Raw/Compiled 一等身份、来源与所属配置关系由本任务实现，并由 SystemCompilationContractTest 直接验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T02-COMPILER"
+        assertion: "P2-T02 的 system-file-info 多文件加载、重复检测、前向引用与输入顺序无关由本任务的 compiler pipeline 实现；真实 systems.xml fixture 在 DEV-09 组合验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T05-PRIMARY"
+        assertion: "P2-T05 的 RuleView system 归属、RuleViewKey 复合身份与新配置禁止裸名称回退由本任务实现；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T10-COMPILER"
+        assertion: "P2-T10 的跨 System 同名 RuleView 注册/解析隔离由本任务在 compiler contract 层验证；真实 fixture 隔离在 DEV-09 再验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on: []
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-compiler -am -Dmaven.test.skip=true install"
+      - "./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest,RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "SystemCompilationContractTest 与 RuleViewCompilationContractTest 通过，且不存在裸名称回退。"
+      - "相同规范化输入的 System/RuleView 身份与诊断保持确定一致。"
+    deliverables:
+      - "System/RuleView compiler changes"
+      - "SystemCompilationContractTest"
+      - "RuleViewCompilationContractTest"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "任何实现要求改变 BM-R20 的 System 或 RuleView 身份语义时停止。"
+      - "RED 在目标断言前因编译/缺类失败时停止并先修复测试 seam。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-001"
+      - "TR-P2-SYSTEM-RULEVIEW-002"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-01"
+      - "STEP-P2-COMPILE-02"
+      - "STEP-P2-COMPILE-03"
+      - "STEP-P2-COMPILE-04"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"
+    title: "Context 物化聚合与中立运行契约"
+    goal: "先在 CONTEXT 建立 TargetKey/ModelPath/ModelAccessRuleKey、物化聚合与中立运行契约，使 compiler、MODEL、STARTER 只消费捕获的不可变 Context。"
+    implementation:
+      owner_module: "dec-core-context"
+      owner_component: "compiled aggregate and runtime neutral contracts"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T03-CONTRACT, SRC-P2-T04-CONTRACT"
+        - "以 ProtectedAccessContextApiContractTest、P2CompilerContextConstructibilityContractTest、RuntimeFactValueContractTest、OpaqueRuntimeIdContractTest 建立 RED。"
+        - "进入 development 后先为 dec-core-context/compiled aggregate and runtime neutral contracts 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "实现 API Contract 定义的 materialization plan/index，并把它作为 CompiledModelSet 强制成员参与 equality/hash/digest；EngineContext 只代理捕获聚合。"
+        - "在同一个 DEV-04 revision 中同步适配 production CompiledModelSetBuilder 构造点，使 mandatory CompiledViewMaterializationIndex constructor 切换后 dec-core-compiler main source 仍可编译；这里只完成 aggregate construction adaptation，不提前实现 DEV-03 的 model-access/materialization descriptor 业务生成，也不得保留绕过 mandatory index 的 legacy production constructor。"
+        - "实现 RuntimeFactValue、opaque runtime IDs、ModelAccessRuleKey/TargetKey/ModelPath 等中立不可变类型的精确值语义，并运行 CONTEXT/COMPILER 构造性测试。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-context/src/main/java/dec/core/context/model/CompiledModelSet.java"
+        - "dec-core-context/src/main/java/dec/core/context/EngineContext.java"
+        - "dec-core-context/src/main/java/dec/core/context/data/ModelDataFactory.java"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/pass/CompiledModelSetBuilder.java"
+        - "dec-core-context/src/main/java/dec/core/context/runtime/**"
+        - "dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java"
+        - "dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java"
+        - "dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java"
+      forbidden_changes:
+        - "不得在 CONTEXT 中引入 MODEL/STARTER 反向依赖。"
+        - "不得保留可变集合别名或任意 live Object 作为 RuntimeFactValue kind。"
+        - "不得用 global/thread-local/default Context 修复缺失物化描述。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-008"
+        assertion: "CompiledViewMaterializationIndex 必须随 CompiledModelSet 原子发布并参与值语义，EngineContext 精确暴露捕获聚合。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-004"
+        assertion: "受保护访问的 key、ID、value/result 类型必须保持精确、不可变且大小写敏感。"
+      -
+        id: "SRC-P2-T03-CONTRACT"
+        assertion: "P2-T03 的 ModelAccessRule/RuleKey 中立不可变契约、主体/目标/路径/READ-WRITE 身份和值语义由本任务提供；policy 编译在 DEV-03 完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T04-CONTRACT"
+        assertion: "P2-T04 的 ModelPath 强类型中立表示、大小写敏感和值语义由本任务提供；路径编译与越界校验在 DEV-03 完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install"
+      - "./mvnw -pl dec-core-context -Dtest=ProtectedAccessContextApiContractTest,RuntimeFactValueContractTest,OpaqueRuntimeIdContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "./mvnw -pl dec-core-compiler -Dtest=P2CompilerContextConstructibilityContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "CONTEXT API 可由 compiler 合法构造且无反射/包私有旁路。"
+      - "materialization/index 和 runtime values 深度不可变，跨 EngineContext 不污染。"
+      - "CompiledModelSet mandatory index contract 与 production CompiledModelSetBuilder 构造点在 DEV-04 同一 slice 原子切换，compiler reactor 不依赖后续 DEV-03 修复临时编译破坏。"
+    deliverables:
+      - "CompiledViewMaterializationPlan/Index"
+      - "CompiledModelSet and EngineContext aggregate changes"
+      - "neutral runtime value/id contracts"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "发现必须暴露 ModelData 或 operation capability 给 CONTEXT 公共 API 时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-004"
+      - "TR-P2-SYSTEM-RULEVIEW-008"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-03"
+      - "STEP-P2-COMPILE-04"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-02-RULEVIEW-REFERENCE"
+    title: "RuleView 完整引用与目标解析"
+    goal: "让新调用路径只通过完整 System + RuleView 身份解析，并把未知 System、未知 RuleView 和目标类型错误稳定地阻断在编译期。"
+    implementation:
+      owner_module: "dec-core-compiler"
+      owner_component: "reference resolution"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T06-PRIMARY, SRC-P2-T09-PRIMARY"
+        - "以 RuleViewCompilationContractTest 和 TargetKeyModelPathContractTest 中完整引用、缺失 owner 与 unknown target 场景建立 RED。"
+        - "进入 development 后先为 dec-core-compiler/reference resolution 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "在现有 symbol/reference resolver 上强制复合 RuleViewKey，并将目标解析结果绑定稳定 SourceRef/Diagnostic。"
+        - "运行目标 TestClass 与 compiler reference/symbol 回归，确认无 bare-name Adapter 写入新 Registry。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-compiler/src/main/java/dec/core/compiler/symbol/ReferenceResolver.java"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/symbol/ReferenceTargetParser.java"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/symbol/**"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java"
+      forbidden_changes:
+        - "不得让兼容 Adapter 成为新注册入口。"
+        - "不得用 first/last match 或名称猜测修复未知/歧义引用。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-003"
+        assertion: "system-ref + rule-ref 能够精确解析；未知或归属不一致引用必须失败并包含来源定位。"
+      -
+        id: "SRC-P2-T06-PRIMARY"
+        assertion: "P2-T06 的 RuleParser/引用解析必须读取 system 并校验 system/view/rule 归属与来源诊断，由本任务实现。"
+      -
+        id: "SRC-P2-T09-PRIMARY"
+        assertion: "P2-T09 的 system-ref + rule-ref 完整引用编译与 CompiledRuleView 精确目标解析由本任务实现，禁止裸名称查找；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION"
+      - "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-compiler -Dtest=RuleViewCompilationContractTest,TargetKeyModelPathContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "所有新 RuleView 引用使用完整复合身份，unknown/mismatch 不产生 null-success 或全局 fallback。"
+    deliverables:
+      - "composite RuleView reference resolver"
+      - "reference diagnostics"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "发现需要改变 P1 SourceRef 或 TypedKey 公共语义时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-003"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-01"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-03-MODEL-ACCESS-POLICY"
+    title: "model-access 路径、权限与原子发布"
+    goal: "把 TargetKey、ModelPath、READ/WRITE ModelAccessRuleKey、静态分类与完整候选发布绑定为一个 fail-closed 编译切片。"
+    implementation:
+      owner_module: "dec-core-compiler"
+      owner_component: "modelaccess compilation and publication"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T03-POLICY, SRC-P2-T04-COMPILER, SRC-P2-T07-PRIMARY, SRC-P2-T11-STATIC"
+        - "TESTDESIGN-P2-R32 nested ModelPath oracle mapping - CASE-P2-TD-NESTED-OBJECT-PATH-001, CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001, CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001, CASE-P2-TD-NESTED-COLLECTION-PATH-001, CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001, CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001"
+        - "以 TargetKeyModelPathContractTest、ModelAccessPolicyContractTest、AtomicPublicationContractTest、P2DiagnosticDeterminismTest 建立目标 RED。"
+        - "进入 development 后先为 dec-core-compiler/modelaccess compilation and publication 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "扩展现有 modelaccess 编译器，统一规范化路径、READ/WRITE 独立权限、STATIC_DENY/STATIC_ALLOW/RUNTIME_GUARD_REQUIRED 分类和 exact binding。"
+        - "将 policy/binding/materialization 完整性接入既有 publication gate，任一 ERROR 保留旧 EngineContext 并保持诊断排序确定。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-compiler/src/main/java/dec/core/compiler/modelaccess/**"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/pass/**"
+        - "dec-core-compiler/src/main/java/dec/core/compiler/api/ContextPublisher.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java"
+      forbidden_changes:
+        - "不得把未声明 WRITE 当作允许。"
+        - "不得让 READ 权限隐含 WRITE 或反向扩大。"
+        - "不得在候选不完整时部分发布 policy、binding 或 materialization。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-004"
+        assertion: "READ 与 WRITE 权限必须独立精确判定，未声明共享 WRITE 必须拒绝。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-005"
+        assertion: "模型路径必须规范化且非法或越界路径必须失败，动态路径只能形成运行时 Guard 约束。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-008"
+        assertion: "候选存在错误或缺失绑定/物化描述时必须保持旧 Context，不得出现部分发布。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-009"
+        assertion: "等价静态失败必须生成稳定且不泄露敏感值的诊断。"
+      -
+        id: "SRC-P2-T03-POLICY"
+        assertion: "P2-T03 的默认最小权限、READ/WRITE 独立判定、未声明共享 WRITE 默认拒绝由本任务编译为静态 policy/binding；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T04-COMPILER"
+        assertion: "P2-T04 的 ModelPathCompiler 规范化、属性/集合导航校验以及 rule/change/query 共用路径契约由本任务完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T07-PRIMARY"
+        assertion: "P2-T07 的可静态判定 model-access 越权必须在编译阶段 fail-closed，由本任务实现。"
+      -
+        id: "SRC-P2-T11-STATIC"
+        assertion: "P2-T11 越权矩阵中的未声明 READ/WRITE、只读路径写入、父路径/集合/未知路径等静态可判定部分由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-02-RULEVIEW-REFERENCE"
+      - "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-compiler -Dtest=TargetKeyModelPathContractTest,ModelAccessPolicyContractTest,AtomicPublicationContractTest,P2DiagnosticDeterminismTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "静态越权、非法路径和候选不完整全部在发布前失败。"
+      - "完整候选原子发布，旧 Context 在失败路径保持不变。"
+    deliverables:
+      - "compiled model-access policy/binding"
+      - "atomic publication integration"
+      - "deterministic P2 diagnostics"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "需要引入 EXECUTE 作为 P2 当前 AccessOperation 时停止；Overlay R04 当前只允许 READ/WRITE。"
+      - "需要依赖全局 default/current Context 时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-004"
+      - "TR-P2-SYSTEM-RULEVIEW-005"
+      - "TR-P2-SYSTEM-RULEVIEW-008"
+      - "TR-P2-SYSTEM-RULEVIEW-009"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-02"
+      - "STEP-P2-COMPILE-03"
+      - "STEP-P2-COMPILE-04"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-05-MODEL-TRUSTED-LOAD"
+    title: "MODEL trusted load 与 Scope 生产边界"
+    goal: "让 MODEL 通过 captured EngineContext、真实 origin 和 MODEL 自建 Container 完成精确物化，并只在成功后 mint 同一 ModelData 的 Handle/Scope。"
+    implementation:
+      owner_module: "dec-core-model"
+      owner_component: "runtime model execution root"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T11-RUNTIME-LOAD"
+        - "以 ProtectedAccessModelApiContractTest 与 RuntimeModelMaterializationIntegrationTest 建立 direct-load RED，覆盖 L01-L07 失败矩阵、same-ModelData identity 和 production Container 边界。"
+        - "进入 development 后先为 dec-core-model/runtime model execution root 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "实现 RuntimeModelLoadRequest/Result、ExecutionRoot/Roots、ProductionContainerKind 和 Scope 生产；严格按 L01-L07 顺序使用 typed ModelDataFactory、3-arg ModelLoader 与 ContainerFactory。"
+        - "确认所有 pre-scope failure 的 handle/scope/Guard/effect 计数为零，并运行 MODEL 模块目标测试。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-model/src/main/java/dec/core/model/runtime/**"
+        - "dec-core-model/src/main/java/dec/core/model/container/ContainerFactory.java"
+        - "dec-core-model/src/main/java/dec/core/model/container/ModelLoader.java"
+        - "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java"
+        - "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java"
+      forbidden_changes:
+        - "不得添加 production(context, Container/ModelData/Guard/operationPort) 等调用方注入重载。"
+        - "不得使用两参数默认 connection load。"
+        - "RuntimeModelLoadRequest 不得成为权限 credential。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-006"
+        assertion: "合法动态目标必须由捕获 Context 精确物化；错误 plan/descriptor/origin/container 必须在 Scope 前失败。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-007"
+        assertion: "生产加载必须冻结同一个真实 ModelData 到 Handle/Scope，不得发生 A-load/B-handle 替换。"
+      -
+        id: "SRC-P2-T11-RUNTIME-LOAD"
+        assertion: "P2-T11 越权矩阵中动态目标物化、错误 descriptor/origin/container 与 pre-scope failure 的运行时拒绝部分由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-04-CONTEXT-MATERIALIZATION"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-model -am -Dmaven.test.skip=true install"
+      - "./mvnw -pl dec-core-model -Dtest=ProtectedAccessModelApiContractTest,RuntimeModelMaterializationIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "L01-L07 失败码与零副作用矩阵精确通过。"
+      - "成功路径中 factory、loader、Container、Handle 与后续 scope 持有同一 ModelData 身份。"
+    deliverables:
+      - "MODEL runtime load API"
+      - "trusted Handle/Scope production"
+      - "RuntimeModelMaterializationIntegrationTest"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "需要引入 R29 已 DEFERRED 的 opaque production invocation token 时停止。"
+      - "需要把 P7 事务/资源生命周期提前纳入 P2 时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-006"
+      - "TR-P2-SYSTEM-RULEVIEW-007"
+      - "TR-P2-SYSTEM-RULEVIEW-008"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-01"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-06-MODEL-SESSION-EFFECT"
+    title: "MODEL Session、Locator 与 EffectProvider 完整性"
+    goal: "让 Scope 只能创建同源 Session，精确注册 trusted Handle、seal 后绑定 EffectProvider，并由私有 operation port 在 effect 前复核 session/object/handle。"
+    implementation:
+      owner_module: "dec-core-model"
+      owner_component: "runtime session locator effect provider"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T08-EFFECT-BOUNDARY, SRC-P2-T11-RUNTIME-OBJECT"
+        - "以 RuntimeObjectLocatorIntegrationTest、ProtectedWriteTransactionIntegrationTest 和 ProtectedAccessModelApiContractTest 的 session/effect algebra 建立 RED。"
+        - "进入 development 后先为 dec-core-model/runtime session locator effect provider 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "实现 session register/seal/locate/currentVersion、ownership/stale/duplicate 错误，以及同 scope sealed-session EffectProvider 绑定。"
+        - "实现 MODEL 私有 read/write port 的 same-object 校验和写失败无 receipt 语义；不扩大 legacy post-copy rollback 范围。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-model/src/main/java/dec/core/model/runtime/**"
+        - "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java"
+        - "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java"
+        - "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java"
+      forbidden_changes:
+        - "不得允许 foreign/unsealed/closed session 成功绑定 effect provider。"
+        - "不得以 first/last match 选择 runtime object。"
+        - "不得把 P7 的后提交 POJO/Map 恢复定义为 P2 blocking oracle。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-006"
+        assertion: "运行时对象只能从同一 sealed session 的已注册 Handle 精确定位，missing/stale/ownership 冲突必须拒绝。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-009"
+        assertion: "MODEL operation 失败必须返回稳定拒绝且无成功 receipt，诊断不得泄露 ModelData/origin 身份。"
+      -
+        id: "SRC-P2-T08-EFFECT-BOUNDARY"
+        assertion: "P2-T08 禁止 Guard 后绕过统一模型效果边界的要求，由本任务通过 sealed Session、trusted Handle 与私有 operation port 约束 effect；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T11-RUNTIME-OBJECT"
+        assertion: "P2-T11 越权矩阵中 missing/stale/ownership 冲突与失败无成功 receipt 的对象级运行时拒绝由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-05-MODEL-TRUSTED-LOAD"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-model -Dtest=ProtectedAccessModelApiContractTest,RuntimeObjectLocatorIntegrationTest,ProtectedWriteTransactionIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "Provider 只绑定同 Scope 的 exact sealed Session。"
+      - "runtime target 0/N、stale、ownership conflict 和 write failure 全部 fail closed。"
+    deliverables:
+      - "RuntimeModelSession implementation"
+      - "runtime object locator"
+      - "same-session effect provider/operation port"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "出现需要跨 Session 共享可变 ownership domain 的设计要求时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-006"
+      - "TR-P2-SYSTEM-RULEVIEW-007"
+      - "TR-P2-SYSTEM-RULEVIEW-009"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-02"
+      - "STEP-P2-ACCESS-03"
+      - "STEP-P2-ACCESS-06"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS"
+    title: "STARTER 目标解析、Intent、Capability 与 Guard"
+    goal: "在 STARTER 中把 exact runtime target、READ/WRITE intent、one-shot capability 与 ModelAccessRuleKey Guard 串成 Guard-before-effect 的同一证明链。"
+    implementation:
+      owner_module: "dec-core-starter"
+      owner_component: "protected access resolver and guard"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T08-GUARD-PRIMARY, SRC-P2-T11-RUNTIME-GUARD"
+        - "以 ProtectedAccessStarterApiContractTest、ProtectedWriteIntentResolutionTest、ProtectedRuntimeModelAdapterIntegrationTest 建立 RED。"
+        - "DEV-07 的首个 architecture-skeleton revision 必须同时在 dec-core-starter/pom.xml 建立显式 doc.eq.code:dec-core-model dependency（starter -> context + model），并在任何 STARTER production source import/use RuntimeModelAccessScope、RuntimeModelSession、RuntimeModelEffectProvider 等 MODEL API 前完成该 wiring；不得推迟到 DEV-08。"
+        - "进入 development 后先为 dec-core-starter/protected access resolver and guard 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "实现 RuntimeTargetResolver、write-intent 0/1/N 解析、mutation stamp freeze、one-shot capability 和 exact ModelAccessRuleKey Guard 判定。"
+        - "将 Guard ALLOW 仅委托给 composition 私有的同 session operation port；DENY、stale 或 A->B substitution 全部 effect=0。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-starter/pom.xml"
+        - "dec-core-starter/src/main/java/dec/core/starter/access/**"
+        - "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java"
+        - "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java"
+        - "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java"
+      forbidden_changes:
+        - "不得允许 caller 注入 Guard、effect provider 或 operation port。"
+        - "不得让 RuleKey/consumer 类型替代 ModelAccessRuleKey 取得 WRITE authority。"
+        - "不得在 capability freeze 后重新选择 target/path/version。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-004"
+        assertion: "READ/WRITE Guard 必须只依据 exact ModelAccessRuleKey，权限类型不得互相隐含。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-005"
+        assertion: "WRITE intent 必须冻结一个 exact target/path/version；0 或 N 个 intent 必须拒绝。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-006"
+        assertion: "Guard DENY 或 stale proof 必须在真实模型副作用前返回。"
+      -
+        id: "SRC-P2-T08-GUARD-PRIMARY"
+        assertion: "P2-T08 的 ModelAccessGuard 主实现由本任务完成：exact target/path/operation 必须 Guard-before-effect，DENY/stale proof 在真实副作用前返回。"
+      -
+        id: "SRC-P2-T11-RUNTIME-GUARD"
+        assertion: "P2-T11 越权矩阵中动态 grammar/path、READ/WRITE 不互相隐含以及 one-shot capability 运行时拒绝由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-03-MODEL-ACCESS-POLICY"
+      - "TASK-P2-DEV-06-MODEL-SESSION-EFFECT"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-starter -am -Dmaven.test.skip=true install"
+      - "./mvnw -pl dec-core-starter -Dtest=ProtectedAccessStarterApiContractTest,ProtectedWriteIntentResolutionTest,ProtectedRuntimeModelAdapterIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "resolve A -> Guard A -> effect A invariant 通过，A->B substitution 在 effect 前失败。"
+      - "WRITE intent 0/N/stale 和 capability 重放均稳定拒绝。"
+      - "DEV-07 自身完成 STARTER -> MODEL Maven wiring 并通过 dec-core-starter reactor install；不得依赖 DEV-08 才补齐 MODEL compile classpath。"
+    deliverables:
+      - "STARTER protected access core"
+      - "intent/capability/guard integration"
+      - "adapter integration tests"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "任何实现需要 consumer 自己持有 MODEL operation port 或直接写 ModelData 时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-004"
+      - "TR-P2-SYSTEM-RULEVIEW-005"
+      - "TR-P2-SYSTEM-RULEVIEW-006"
+      - "TR-P2-SYSTEM-RULEVIEW-007"
+      - "TR-P2-SYSTEM-RULEVIEW-009"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-03"
+      - "STEP-P2-ACCESS-04"
+      - "STEP-P2-ACCESS-05"
+      - "STEP-P2-ACCESS-06"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY"
+    title: "生产 Composition、消费者边界与并发闭环"
+    goal: "让 Rule/Change/CustomAction 只经 STARTER protected entries 使用同一 Scope/Session/Guard/effect 组合，并在并发 capability/ownership 冲突下最多产生一次合法效果。"
+    implementation:
+      owner_module: "dec-core-starter"
+      owner_component: "production composition and concurrency coordination"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T08-CONSUMER-CLOSURE, SRC-P2-T11-CONCURRENCY"
+        - "以 ProtectedAccessProductionCompositionTest、ProtectedAccessConcurrencyTest、ProtectedAccessDependencyDirectionTest 建立 RED。"
+        - "进入 development 后先为 dec-core-starter/production composition and concurrency coordination 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "实现 ProtectedAccessRuntimeFactory/Composition、Rule/Change/CustomAction entry parity、same-scope session/effect binding 和 close/stale 语义。"
+        - "建立 capability one-shot 与同 Handle/path/version 协调域；用结构测试验证 DEV-07 已建立的 starter -> model 依赖只服务 STARTER composition，并禁止 business consumer 直连 MODEL root/effect/ModelData；本任务不得承担首次 dec-core-model dependency wiring。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-core-starter/src/main/java/dec/core/starter/access/**"
+        - "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java"
+        - "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java"
+        - "dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java"
+        - "dec-core-starter/pom.xml"
+      forbidden_changes:
+        - "不得新增 business consumer -> MODEL root/effect/ModelData 依赖。"
+        - "不得为同一 mutable target 建立彼此独立且可双写的并发协调域。"
+        - "不得把 caller frame/scope 重新标记为 trusted。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-007"
+        assertion: "Rule、Change、CustomAction 必须使用同一 guarded composition，DENY 为 effect0，ALLOW 作用于同一 bound Handle。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-008"
+        assertion: "并发 capability/ownership 冲突必须保持 Context/Session 隔离且最多一次合法写入。"
+      -
+        id: "SRC-P2-T08-CONSUMER-CLOSURE"
+        assertion: "P2-T08 对 Rule、change、custom action 禁止绕过统一 Guard/写入效果链的消费者闭环由本任务完成；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T11-CONCURRENCY"
+        assertion: "P2-T11 越权矩阵中的并发 capability/ownership 冲突、Context/Session 隔离与最多一次合法效果由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-07-STARTER-GUARDED-ACCESS"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-core-starter -Dtest=ProtectedAccessProductionCompositionTest,ProtectedAccessConcurrencyTest,ProtectedAccessDependencyDirectionTest -Dsurefire.failIfNoSpecifiedTests=true test"
+    expected_results:
+      - "三类 consumer 结果/效果语义一致且不存在 MODEL bypass。"
+      - "同 capability 并发最多一个 Guard/effect，冲突 ownership 失败关闭。"
+    deliverables:
+      - "production protected composition"
+      - "consumer entry interfaces"
+      - "concurrency and dependency architecture tests"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "发现必须提前实现 P4 Action/Produce 状态机或 P7 Session 事务生命周期时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-007"
+      - "TR-P2-SYSTEM-RULEVIEW-008"
+      - "TR-P2-SYSTEM-RULEVIEW-009"
+    flow_refs:
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-ACCESS-01"
+      - "STEP-P2-ACCESS-02"
+      - "STEP-P2-ACCESS-03"
+      - "STEP-P2-ACCESS-04"
+      - "STEP-P2-ACCESS-05"
+      - "STEP-P2-ACCESS-06"
+    risk_triggers: []
+    git_checkpoint_required: true
+  -
+    task_id: "TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY"
+    title: "真实 fixture 端到端与 declaration 兼容边界"
+    goal: "用真实 systems.xml 与 originData 跑通 compile -> Context -> MODEL load -> STARTER Guard -> READ/WRITE，并证明 declaration 只保留 P2 兼容边界。"
+    implementation:
+      owner_module: "dec-demo"
+      owner_component: "P2 real fixture integration and compatibility"
+      steps:
+        - "P2 source-scope mapping - SRC-P2-T02-FIXTURE, SRC-P2-T10-E2E, SRC-P2-T11-E2E, SRC-P2-T12-PRIMARY"
+        - "以 P2RealFixtureIntegrationTest、P2DeclarationCompatibilityContractTest、P2RevisionDependencyDagContractTest 建立最终 RED/回归基线。"
+        - "进入 development 后先为 dec-demo/P2 real fixture integration and compatibility 提交 ARCHITECTURE_SKELETON：真实声明方法/类型契约、顶层调用顺序、主要分支、失败与副作用边界；具体业务算法、数据读写和外部副作用保持显式未实现，不得伪造成功。"
+        - "同一 skeleton revision 必须依次由 ArchitectureReviewAgent 与 SpecComplianceReviewAgent 独立 PASSED；未双通过前禁止具体实现。双通过后仅由 ProjectManagerAgent 执行 long_task.py advance-development-step，进入 CONCRETE_IMPLEMENTATION。"
+        - "使用真实 mix/system/systems.xml 和当前 RuleView/model-access 配置验证 source-order determinism、dynamic classifier、exact binding、real Container、same ModelData effect 与成功 write-back。"
+        - "运行 23 个 R31 TestClass 的全清单和相关 reactor 测试，确认 R29 token API 不存在、declaration runtime 未删除、P3-P7 语义未被拉入。"
+        - "具体实现只补齐已通过 skeleton 的方法内部逻辑并完成 GREEN→REFACTOR；若证明 skeleton 边界不成立，停止并从 development reopen 回 SKELETON，不得偷偷改已冻结契约。"
+        - "具体实现 finalize 后进入 code_review，至少由 SpecComplianceReviewAgent、EngineeringStandardsReviewAgent、ArchitectureReviewAgent 完成第二轮 Review；ArchitectureReviewAgent 必须核对实现未偏离已通过 skeleton。"
+      affected_files:
+        - "dec-demo/src/main/resources/mix/system/systems.xml"
+        - "dec-demo/src/main/resources/mix/**"
+        - "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java"
+        - "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java"
+        - "dec-core-compiler/src/test/**"
+        - "dec-core-context/src/test/**"
+        - "dec-core-model/src/test/**"
+        - "dec-core-starter/src/test/**"
+      forbidden_changes:
+        - "不得硬编码 demo 路径、固定 System 数量或 fixture 专用生产分支。"
+        - "不得删除 declaration System runtime；最终收敛仍属于 P7。"
+        - "不得重新引入 R29 opaque production invocation token。"
+    acceptance_criteria:
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-001"
+        assertion: "真实 systems.xml 能够通过统一加载/编译路径形成稳定不可变结果。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-006"
+        assertion: "真实动态路径必须分类为运行时 Guard 并在同一 trusted runtime object 上执行。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-007"
+        assertion: "真实生产路径能够经 real Container 和 STARTER guarded composition 完成 READ/WRITE 且无 bypass。"
+      -
+        id: "AC-P2-SYSTEM-RULEVIEW-010"
+        assertion: "declaration 旧入口必须保持兼容边界且 P2 不提前执行 P7 删除。"
+      -
+        id: "SRC-P2-T02-FIXTURE"
+        assertion: "P2-T02 的真实 mix/system/systems.xml fixture 必须走统一加载/编译路径并保持顺序无关，由本任务端到端复验。"
+      -
+        id: "SRC-P2-T10-E2E"
+        assertion: "P2-T10 的 order.validate/payment.validate 等跨 System 同名 RuleView 在真实 fixture 下注册、查找、执行不覆盖，由本任务端到端复验；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T11-E2E"
+        assertion: "P2-T11 合法/非法访问矩阵由本任务通过真实 compile -> Context -> MODEL -> STARTER 路径执行组合闭环，且不得出现 bypass；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+      -
+        id: "SRC-P2-T12-PRIMARY"
+        assertion: "P2-T12 的 declaration System 只保留迁移边界、记录可映射/不可映射能力且 P2 不删除旧入口，由本任务验证；该归宿必须由本任务列出的 validation/TestClass 精确验证。"
+    depends_on:
+      - "TASK-P2-DEV-03-MODEL-ACCESS-POLICY"
+      - "TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY"
+    owner_agent: "DevelopAgent"
+    reviewer_agents:
+      - "PlanReviewAgent"
+      - "ArchitectureReviewAgent"
+      - "TestDesignAgent"
+      - "DevelopAgent"
+    validation_commands:
+      - "./mvnw -pl dec-demo -am -Dmaven.test.skip=true install"
+      - "./mvnw -pl dec-demo -Dtest=P2RealFixtureIntegrationTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "./mvnw -pl dec-core-compiler -Dtest=P2DeclarationCompatibilityContractTest,P2RevisionDependencyDagContractTest -Dsurefire.failIfNoSpecifiedTests=true test"
+      - "./mvnw -pl dec-core-compiler,dec-core-context,dec-core-model,dec-core-starter,dec-demo test"
+    expected_results:
+      - "真实 fixture 完成 compile-to-effect 闭环且未使用 fake ModelData/Container/port。"
+      - "R31 的 23 个 TestClass 全部可执行通过，declaration 与阶段边界保持。"
+    deliverables:
+      - "P2 real fixture integration"
+      - "declaration compatibility contract"
+      - "revision DAG contract"
+      - "P2 reactor verification"
+      - "architecture skeleton revision + first-round review evidence"
+      - "concrete implementation revision + final code-review evidence"
+    stop_conditions:
+      - "真实 fixture 暴露需要改变已冻结 BM-R20/DESIGN-R30 语义的问题时停止并重开上游。"
+      - "需要删除 declaration runtime 或引入 P3-P7 完整执行语义时停止。"
+      - "ArchitectureReviewAgent 与 SpecComplianceReviewAgent 未对同一 skeleton revision 双 PASSED，或 ProjectManagerAgent 尚未 advance-development-step 时，禁止进入具体实现。"
+    trace_ids:
+      - "TR-P2-SYSTEM-RULEVIEW-001"
+      - "TR-P2-SYSTEM-RULEVIEW-002"
+      - "TR-P2-SYSTEM-RULEVIEW-003"
+      - "TR-P2-SYSTEM-RULEVIEW-004"
+      - "TR-P2-SYSTEM-RULEVIEW-005"
+      - "TR-P2-SYSTEM-RULEVIEW-006"
+      - "TR-P2-SYSTEM-RULEVIEW-007"
+      - "TR-P2-SYSTEM-RULEVIEW-008"
+      - "TR-P2-SYSTEM-RULEVIEW-009"
+      - "TR-P2-SYSTEM-RULEVIEW-010"
+    flow_refs:
+      - "FLOW-CONFIG-COMPILE"
+      - "FLOW-PROTECTED-ACCESS-EXECUTE"
+    flow_step_refs:
+      - "STEP-P2-COMPILE-01"
+      - "STEP-P2-COMPILE-02"
+      - "STEP-P2-COMPILE-03"
+      - "STEP-P2-COMPILE-04"
+      - "STEP-P2-ACCESS-01"
+      - "STEP-P2-ACCESS-02"
+      - "STEP-P2-ACCESS-03"
+      - "STEP-P2-ACCESS-04"
+      - "STEP-P2-ACCESS-05"
+      - "STEP-P2-ACCESS-06"
+    risk_triggers: []
+    git_checkpoint_required: true

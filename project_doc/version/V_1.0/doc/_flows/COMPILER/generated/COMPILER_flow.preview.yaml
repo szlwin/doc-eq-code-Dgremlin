@@ -2,14 +2,14 @@ schemaVersion: 1
 artifact: "business_flow"
 flowGroup:
   code: "COMPILER"
-  name: "配置编译与上下文发布"
+  name: "Configuration compilation and simple model execution"
   description: ""
-revision: "FLOW-R02@compiler-owned-discovery"
-baseRevision: "FLOW-R00@init"
+revision: "FLOW-R04@p2-simple-runtime-model"
+baseRevision: "FLOW-R02@compiler-owned-discovery"
 flows:
   -
     id: "FLOW-CONFIG-COMPILE"
-    name: "配置编译与上下文发布"
+    name: "Configuration candidate compilation and publication"
     level: "L0"
     type: "MAIN"
     ownerModule: "COMPILER"
@@ -19,124 +19,148 @@ flows:
       - "XML"
       - "YAML"
       - "STARTER"
-      - "DEMO"
-    goal: "把 XML/YAML 文档集合确定性编译为可发布的不可变 EngineContext，失败时保持既有 Context 不变。"
-    trigger: "starter 或测试调用者提交根 SourceReference、编译请求和显式发布请求。"
+    goal: "Parse XML or YAML into an isolated ConfigInfo, compile an immutable EngineContext and install both as one current object; failures keep the previous installed configuration."
+    trigger: "starter receives a configuration source to load."
     requirementRefs:
       -
         id: "P1-COMPILER"
         documentRef: "version/V_1.0/doc/P1-COMPILER-F01/requirement.md"
+      -
+        id: "P2-SYSTEM-RULEVIEW"
+        documentRef: "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md"
     featureRefs:
       -
         id: "P1-COMPILER-F01"
+        module: "COMPILER"
+      -
+        id: "P2-SYSTEM-RULEVIEW-F01"
         module: "COMPILER"
     ruleRefs:
       - "BR-P1-004"
       - "BR-P1-006"
       - "BR-P1-011"
+      - "BR-P2-SYSTEM-RULEVIEW-001"
+      - "BR-P2-SYSTEM-RULEVIEW-002"
+      - "BR-P2-SYSTEM-RULEVIEW-003"
+      - "BR-P2-SYSTEM-RULEVIEW-004"
+      - "BR-P2-SYSTEM-RULEVIEW-005"
     acceptanceRefs:
       - "AC-P1-COMPILER-001"
       - "AC-P1-COMPILER-002"
       - "AC-P1-COMPILER-003"
       - "AC-P1-COMPILER-004"
+      - "AC-P2-SYSTEM-RULEVIEW-001"
+      - "AC-P2-SYSTEM-RULEVIEW-002"
+      - "AC-P2-SYSTEM-RULEVIEW-003"
+      - "AC-P2-SYSTEM-RULEVIEW-004"
     traceIds:
       - "TR-P1-COMPILER-001"
       - "TR-P1-COMPILER-002"
       - "TR-P1-COMPILER-003"
       - "TR-P1-COMPILER-004"
+      - "TR-P2-001"
+      - "TR-P2-002"
+      - "TR-P2-003"
+      - "TR-P2-004"
+      - "TR-P2-009"
     preconditions:
-      - "DocumentFrontend 与编译选项已装配；输入源具有稳定 sourceId。"
+      - "parser, compiler and publisher are assembled"
+      - "the configuration source has a stable location"
     steps:
       -
         id: "STEP-CONFIG-COMPILE-01"
         order: 1
-        name: "发现并排序文档源"
+        name: "Create isolated ConfigInfo candidate"
         ownerModule: "COMPILER"
-        featureRef: "P1-COMPILER-F01"
+        featureRef: "P2-SYSTEM-RULEVIEW-F01"
         preconditions:
-          - "调用方提供显式根路径或资源集合。"
+          - "no candidate is active on the current thread"
         postconditions:
-          - "得到按 sourceId 稳定排序的 DocumentSource 集合。"
+          - "an empty per-load ConfigInfo is available"
         notes: "由 COMPILER 的 MixSourceResolver 执行发现；STARTER 只注入 SourceProvider 与根引用。"
       -
         id: "STEP-CONFIG-COMPILE-02"
         order: 2
-        name: "前端解析为 Canonical 节点"
+        name: "Parse XML or YAML into candidate"
         ownerModule: "COMPILER"
-        featureRef: "P1-COMPILER-F01"
+        featureRef: "P2-SYSTEM-RULEVIEW-F01"
         preconditions:
-          - "每个源的格式可识别。"
+          - "candidate and source are available"
         postconditions:
-          - "得到有序 CanonicalDocumentNode 或格式 Diagnostic。"
+          - "View, Rule, Connection and other definitions belong to the candidate"
+          - "the installed ConfigInfo has not changed"
         notes: "由 XML/YAML 前端实现，详细技术 owner 见 CMI-P1-COMPILER-001。"
       -
         id: "STEP-CONFIG-COMPILE-03"
         order: 3
-        name: "构建 Raw AST 并结构校验"
+        name: "Compile and publish EngineContext"
         ownerModule: "COMPILER"
-        featureRef: "P1-COMPILER-F01"
+        featureRef: "P2-SYSTEM-RULEVIEW-F01"
         preconditions:
-          - "Canonical 节点可用。"
+          - "candidate parsing completed"
         postconditions:
-          - "Raw 声明保留来源、顺序和未解析引用。"
+          - "a valid candidate has the exact published EngineContext"
+          - "an invalid candidate has diagnostics and is not installed"
       -
         id: "STEP-CONFIG-COMPILE-04"
         order: 4
-        name: "注册强类型符号"
+        name: "Install whole configuration"
         ownerModule: "COMPILER"
-        featureRef: "P1-COMPILER-F01"
+        featureRef: "P2-SYSTEM-RULEVIEW-F01"
         preconditions:
-          - "结构满足最小声明约束。"
+          - "compile and publication succeeded"
         postconditions:
-          - "重复定义被诊断，合法符号进入构建期 SymbolTable。"
+          - "ConfigManager current reference exposes ConfigInfo plus the same EngineContext"
       -
         id: "STEP-CONFIG-COMPILE-05"
         order: 5
-        name: "解析引用并准备图"
+        name: "Resolve candidate references"
         ownerModule: "COMPILER"
-        featureRef: "P1-COMPILER-F01"
+        featureRef: "P2-SYSTEM-RULEVIEW-F01"
         preconditions:
-          - "全部符号完成注册。"
+          - "candidate definitions are registered"
         postconditions:
-          - "合法引用解析为强类型对象，未知/类型错形成 Diagnostic。"
+          - "valid references are ready for immutable compilation"
+          - "invalid references produce diagnostics"
       -
         id: "STEP-CONFIG-COMPILE-06"
         order: 6
-        name: "执行语义校验并生成摘要"
+        name: "Build immutable EngineContext"
         ownerModule: "COMPILER"
-        featureRef: "P1-COMPILER-F01"
+        featureRef: "P2-SYSTEM-RULEVIEW-F01"
         preconditions:
-          - "可解析引用已完成。"
+          - "candidate validation has no error"
         postconditions:
-          - "Diagnostics 稳定排序，计算 source/semantic digest。"
+          - "the exact candidate EngineContext is ready to publish"
       -
         id: "STEP-CONFIG-COMPILE-07"
         order: 7
-        name: "发布或拒绝 EngineContext"
+        name: "Install ConfigInfo and EngineContext"
         ownerModule: "COMPILER"
-        featureRef: "P1-COMPILER-F01"
+        featureRef: "P2-SYSTEM-RULEVIEW-F01"
         preconditions:
-          - "编译结果已形成。"
+          - "EngineContext publication succeeded"
         postconditions:
-          - "无 ERROR 且 caller-injected CAS 成功时返回 PUBLISHED；其它路径返回 FAILED 并保持现有 Context 不变。"
+          - "ConfigManager exposes the complete new ConfigInfo"
+          - "publication failure leaves the old ConfigInfo unchanged"
         notes: "COMPILER 在 compileAndPublish 内调用 Publisher 一次；STARTER 只返回结果，不二次发布。"
     variants:
       -
         id: "FVAR-CONFIG-FORMAT-XML"
-        name: "XML 前端"
-        condition: "DocumentFormat=XML"
+        name: "XML candidate"
+        condition: "configuration format is XML"
         differences:
-          - "使用安全 XML 解析并捕获行列位置。"
+          - "ConfigFileParser.parseInto populates the candidate"
         ruleRefs:
-          - "BR-P1-001"
+          - "BR-P2-SYSTEM-RULEVIEW-005"
       -
         id: "FVAR-CONFIG-FORMAT-YAML"
-        name: "YAML 前端"
-        condition: "DocumentFormat=YAML"
+        name: "YAML candidate"
+        condition: "configuration format is YAML"
         differences:
-          - "使用受控 YAML Node 并捕获 Mark；P1 仅最小等价路径。"
+          - "YamlConfigFileParser.parseInto populates the candidate"
         ruleRefs:
-          - "BR-P1-001"
+          - "BR-P2-SYSTEM-RULEVIEW-005"
     failurePaths:
       -
         id: "FAIL-CONFIG-COMPILE-001"
@@ -167,10 +191,28 @@ flows:
         blocking: true
         acceptanceRefs:
           - "AC-P1-COMPILER-002"
+      -
+        id: "FAIL-P2-CONFIG-PARSE"
+        atStep: "STEP-CONFIG-COMPILE-02"
+        condition: "source is missing or malformed"
+        result: "candidate is rejected and installed ConfigInfo is unchanged"
+        compensation: "discard the candidate"
+        blocking: true
+        acceptanceRefs:
+          - "AC-P2-SYSTEM-RULEVIEW-002"
+      -
+        id: "FAIL-P2-CONFIG-COMPILE"
+        atStep: "STEP-CONFIG-COMPILE-03"
+        condition: "candidate contains an invalid definition or reference"
+        result: "diagnostics are returned and installed ConfigInfo plus EngineContext remain unchanged"
+        compensation: "discard the candidate"
+        blocking: true
+        acceptanceRefs:
+          - "AC-P2-SYSTEM-RULEVIEW-004"
     successCriteria:
-      - "Data/View/Rule 进入不可变 Registry。"
-      - "两个 Context 可同时存在且无污染。"
-      - "语义 digest 与诊断顺序可重复。"
+      - "XML and YAML obey the same candidate isolation semantics"
+      - "ConfigInfo and its exact EngineContext become current together"
+      - "failed candidates never partially replace the installed configuration"
     businessModelRefs:
       - "AGG-COMPILATION-SESSION"
     dependencyImpactRefs:
@@ -181,7 +223,108 @@ flows:
       - "CASE-P1-DIAGNOSTIC-001"
       - "CASE-P1-SYMBOL-001"
       - "CASE-P1-CONTEXT-001"
-    status: "ACTIVE"
+    status: "PROPOSED"
     createdVersion: "V_1.0"
-    lastChangedVersion: "V_1.0"
+    lastChangedVersion: "FLOW-R04"
     supersedes: []
+  -
+    id: "FLOW-SIMPLE-MODEL-EXECUTE"
+    name: "Simple model rule execution"
+    level: "L1"
+    type: "MAIN"
+    ownerModule: "MODEL"
+    participantModules:
+      - "COMPILER"
+      - "CONTEXT"
+      - "MODEL"
+      - "DEMO"
+    goal: "Create business ModelData, load a named rule and execute it with clear definition failures and reliable connection cleanup."
+    trigger: "business code calls DataUtil, ModelLoader and ModelContainer."
+    requirementRefs:
+      -
+        id: "P2-SYSTEM-RULEVIEW"
+        documentRef: "version/V_1.0/doc/FEATURE-DESC-3361AD2E54FC/requirement.md"
+    featureRefs:
+      -
+        id: "P2-SYSTEM-RULEVIEW-F03"
+        module: "MODEL"
+    ruleRefs:
+      - "BR-P2-SYSTEM-RULEVIEW-006"
+      - "BR-P2-SYSTEM-RULEVIEW-007"
+      - "BR-P2-SYSTEM-RULEVIEW-008"
+      - "BR-P2-SYSTEM-RULEVIEW-009"
+      - "BR-P2-SYSTEM-RULEVIEW-010"
+    acceptanceRefs:
+      - "AC-P2-SYSTEM-RULEVIEW-005"
+      - "AC-P2-SYSTEM-RULEVIEW-006"
+      - "AC-P2-SYSTEM-RULEVIEW-007"
+      - "AC-P2-SYSTEM-RULEVIEW-008"
+    traceIds:
+      - "TR-P2-005"
+      - "TR-P2-006"
+      - "TR-P2-007"
+      - "TR-P2-008"
+      - "TR-P2-010"
+    preconditions:
+      - "a compiled ConfigInfo is installed"
+      - "requested View, Rule and Connection definitions exist"
+    steps:
+      -
+        id: "STEP-P2-EXECUTE-01"
+        order: 1
+        name: "Create complete ModelData"
+        ownerModule: "MODEL"
+        featureRef: "P2-SYSTEM-RULEVIEW-F03"
+        preconditions:
+          - "requested View exists"
+        postconditions:
+          - "DataUtil returns mutable business ViewData"
+      -
+        id: "STEP-P2-EXECUTE-02"
+        order: 2
+        name: "Load named rule task"
+        ownerModule: "MODEL"
+        featureRef: "P2-SYSTEM-RULEVIEW-F03"
+        preconditions:
+          - "requested Rule and Connection exist"
+        postconditions:
+          - "ModelLoader contains one executable task"
+      -
+        id: "STEP-P2-EXECUTE-03"
+        order: 3
+        name: "Execute and finish connections"
+        ownerModule: "MODEL"
+        featureRef: "P2-SYSTEM-RULEVIEW-F03"
+        preconditions:
+          - "ModelContainer has loaded tasks"
+        postconditions:
+          - "success commits participating connections"
+          - "failure rolls back participating connections"
+          - "all opened connections close"
+    variants: []
+    failurePaths:
+      -
+        id: "FAIL-P2-EXECUTE-DEFINITION"
+        atStep: "STEP-P2-EXECUTE-01"
+        condition: "View, Rule or Connection is absent"
+        result: "failure identifies the missing type and name before database side effects"
+        compensation: "no database compensation is required"
+        blocking: true
+        acceptanceRefs:
+          - "AC-P2-SYSTEM-RULEVIEW-006"
+      -
+        id: "FAIL-P2-EXECUTE-RULE"
+        atStep: "STEP-P2-EXECUTE-03"
+        condition: "rule or database execution fails"
+        result: "participating connections roll back and all opened connections close"
+        compensation: "ModelContainer performs rollback and close"
+        blocking: true
+        acceptanceRefs:
+          - "AC-P2-SYSTEM-RULEVIEW-007"
+    successCriteria:
+      - "business callers pass no runtime scope, session, handle, owner identity or capability"
+      - "rule names such as save-Order remain valid"
+      - "connection commit, rollback and close behavior remains visible"
+    status: "PROPOSED"
+    createdVersion: "V_1.0"
+    lastChangedVersion: "FLOW-R04"

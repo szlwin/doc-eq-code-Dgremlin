@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "./mvnw -pl dec-core-compiler -Dtest=SystemCompilationContractTest,RuleViewCompilationContractTest -Dsurefire.failIfNoSpecifiedTests=true test",
+  "exit_code": 1,
+  "executed_at": "2026-08-11T15:51:45.729716+00:00",
+  "revision": "DEV-P2-DEV01-RED@9d94e9f7822d",
+  "output_ref": "evidence/command-results/DEV-P2-DEV01-RED@9d94e9f7822d/red.out",
+  "output_digest": "bdca3ac9727f21f596cfddd600239292ac0c98fa52bac89c92c6ef606ad7c0a4"
+}

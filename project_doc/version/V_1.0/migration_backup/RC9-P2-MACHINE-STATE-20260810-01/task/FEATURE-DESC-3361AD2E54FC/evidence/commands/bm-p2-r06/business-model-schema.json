@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "python3 jsonschema validate COMPILER_business_model.yaml against business-model.schema.json",
+  "exit_code": 0,
+  "executed_at": "2026-08-07T16:47:17+00:00",
+  "revision": "BM-R06@6a0bce4fa0ae",
+  "output_ref": "evidence/commands/bm-p2-r06/business-model-schema.out",
+  "output_digest": "737b0b28c80c39074ee6062947d9034dee43fcba5126fe720f06c0f869420d14"
+}

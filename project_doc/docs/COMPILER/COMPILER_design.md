@@ -1,5 +1,10 @@
 # DEC_COMPILER 详细设计
 
+| 项目 | 内容 |
+|---|---|
+| Design topic | DESIGN-COMPILER-P1-COMPILATION-PIPELINE |
+| 文档定位 | P1 编译流水线项目级兼容基线 |
+
 > 候选 Revision：`DESIGN-R05@0b37a9b4dd48`。`DESIGN-R04@1c14c8e89779` 已被 `REV-000038` 退回；当前为 DESIGN I007 返修候选，不复用旧 Review/Evidence。
 > 输入：`REQAN-R05@7de35e8dc15b`、`BM-R05@4ecb1f8c09f4`。稳定模型 ID、错误码和 9 条 TR 在本文中保持可追踪。
 

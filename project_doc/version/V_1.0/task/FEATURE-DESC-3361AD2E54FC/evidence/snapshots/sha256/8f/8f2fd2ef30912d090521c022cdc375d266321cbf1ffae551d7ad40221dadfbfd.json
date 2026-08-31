@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "mysql_summary",
+  "revision": "TESTING-P2-R37-FINALHEAD-R01@647a02301618",
+  "required_suites": [
+    {
+      "suite": "dec.demo.directory.DirectoryTest",
+      "report": "TEST-dec.demo.directory.DirectoryTest.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.directory.DirectoryTest.xml"
+    },
+    {
+      "suite": "dec.demo.model.RuleTests",
+      "report": "TEST-dec.demo.model.RuleTests.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.model.RuleTests.xml"
+    },
+    {
+      "suite": "dec.demo.p2.P2RealFixtureIntegrationTest",
+      "report": "TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.p2.P2RealFixtureIntegrationTest.xml"
+    },
+    {
+      "suite": "dec.demo.system.OrderTest",
+      "report": "TEST-dec.demo.system.OrderTest.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "evidence/imports/testing-i014-run-32278778894/mysql/home/runner/work/doc-eq-code-Dgremlin/doc-eq-code-Dgremlin/dec-demo/target/surefire-reports/TEST-dec.demo.system.OrderTest.xml"
+    }
+  ],
+  "totals": {
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "database_final_state": {
+    "execution_markers": 3,
+    "order_count": 1,
+    "order_detail_count": 1,
+    "pay_count": 1,
+    "pay_detail_count": 1,
+    "product_count": 1,
+    "user_count": 1
+  },
+  "verification": "PASSED"
+}

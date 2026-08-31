@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "set -euo pipefail; SKEL=\"project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/evidence/imports/development-skeleton-i013/P2AuthorityRuntimeArchitectureSkeleton.java\"; tmp=$(mktemp -d); trap 'rm -rf \"$tmp\"' EXIT; javac -d \"$tmp\" \"$SKEL\"; grep -q \"interface ExactModelAccessGuardPort\" \"$SKEL\"; grep -q \"interface GuardAuthorizedModelEffectPort\" \"$SKEL\"; grep -q \"final EngineContextRef context\" \"$SKEL\"; grep -q \"restartAfterClose\" \"$SKEL\"; ! grep -Eq \"(setContext|replaceContext|reloadContext|rebindContext|swapContext|updateContext)[[:space:]]*\\\\(\" \"$SKEL\"; ! grep -Eq \"java\\\\.(sql|net)\\\\.|Files\\\\.|FileOutputStream|Socket\\\\(\" \"$SKEL\"; test ! -e src/main/java/p2/architecture/skeleton/P2AuthorityRuntimeArchitectureSkeleton.java; echo SKELETON_STATIC_VALIDATION=PASSED",
+  "exit_code": 0,
+  "executed_at": "2026-08-19T13:58:34+00:00",
+  "revision": "DEV-P2-R37-SKELETON-R01@a5723c233bdf",
+  "output_digest": "72c9b9d83d31c270b2e869821d3157038dffaf1819fcfa0668a31c514f453b6b",
+  "metadata": {
+    "cwd": "/mnt/data/project_doc",
+    "phase": "development",
+    "mutation_scope": "taskFacts"
+  },
+  "output": "SKELETON_STATIC_VALIDATION=PASSED\n"
+}

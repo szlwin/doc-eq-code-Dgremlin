@@ -1,0 +1,103 @@
+schema_version: 1
+plan_id: TP-FEATURE-DESC-3361AD2E54FC
+target_id: FEATURE-DESC-3361AD2E54FC
+version: V_1.0
+revision: TP-FEATURE-DESC-3361AD2E54FC-R06
+revision_no: 6
+supersedes_revision: TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a
+status: REVIEW
+reason: >-
+  Remediate the P1 DEV-07 entry-gate inconsistency without changing DESIGN-P2-R30 or
+  TESTDESIGN-P2-R32. R05 assigned CONTEXT neutral runtime contracts to DEV-04 but the
+  completed branch does not expose the complete preserved public surface required by
+  DESIGN-P2-R30 STARTER signatures. Add one bounded DEV-04 remediation prerequisite and
+  make DEV-07 depend on it; all other completed slices and DEV-07 STARTER scope remain unchanged.
+inputs:
+  requirement_analysis: REQAN-P2-R01@d08612768131+Overlay-R04
+  business_model: BM-R20
+  flow: FLOW-R11
+  design: DESIGN-P2-R30
+  test_design: TESTDESIGN-P2-R32
+  previous_plan: TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a
+execution_mode: SEQUENTIAL
+work_mode:
+  auto: true
+  architecture_review: true
+required_plan_reviewers:
+  - PlanReviewAgent
+  - ArchitectureReviewAgent
+  - TestDesignAgent
+  - DevelopAgent
+scope_change:
+  add_task:
+    task_id: TASK-P2-DEV-04R-CONTEXT-PROTECTED-ACCESS-CONTRACTS
+    title: CONTEXT protected-access neutral contract remediation
+    owner_agent: DevelopAgent
+    owner_module: dec-core-context
+    owner_component: protected-access neutral runtime contracts
+    depends_on:
+      - TASK-P2-DEV-06-MODEL-SESSION-EFFECT
+    goal: >-
+      Restore the DESIGN-P2-R30 preserved, immutable and exact/case-sensitive CONTEXT
+      construction/result surface required by DEV-07 without exposing MODEL capabilities or
+      introducing a CONTEXT -> MODEL/STARTER dependency.
+    affected_files:
+      - dec-core-context/src/main/java/dec/core/context/runtime/**
+      - dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java
+    required_surface:
+      - ProtectedInvocationId.of(String)
+      - RuntimeWriteIntentId.of(String)
+      - ProtectedAccessInvocation.of(...)
+      - ProtectedAccessPort.invoke(ProtectedAccessInvocation)
+      - ResolvedWriteIntent.of(...)
+      - ProtectedReadValue.of(...)
+      - ProtectedAccessDenial.of(...)
+      - ProtectedAccessResult.allowRead/allowWrite/deny
+      - RuntimeTargetResolutionStatus
+      - RuntimeTargetResolution.resolved/denied
+      - DenialCode
+    compatibility_rule: >-
+      Existing GREEN DEV-06 MODEL operation behavior is preserved. Existing CONTEXT DTOs may
+      receive additive compatibility factories/getters only when an exact R30/R29 preserved
+      signature is required; destructive signature replacement is forbidden in this remediation.
+    forbidden_changes:
+      - No dec-core-context dependency on dec-core-model or dec-core-starter.
+      - No caller-injectable Guard, RuntimeModelEffectProvider or RuntimeModelOperationPort.
+      - No ModelData or live mutable Object in public neutral values.
+      - No wildcard, parent-path, owner or operation fallback.
+      - No destructive rewrite of DEV-05/DEV-06 trusted MODEL behavior.
+    architecture_review: true
+    skeleton_reviewers:
+      - ArchitectureReviewAgent
+      - SpecComplianceReviewAgent
+    concrete_reviewers:
+      - SpecComplianceReviewAgent
+      - EngineeringStandardsReviewAgent
+      - ArchitectureReviewAgent
+    validation_commands:
+      - ./mvnw -pl dec-core-context -am -Dmaven.test.skip=true install
+      - ./mvnw -pl dec-core-context -Dtest=ProtectedAccessContextApiContractTest,RuntimeFactValueContractTest,OpaqueRuntimeIdContractTest -Dsurefire.failIfNoSpecifiedTests=true test
+    stop_conditions:
+      - Any need to change BM-R20/FLOW-R11/DESIGN-P2-R30 semantics.
+      - Any CONTEXT -> MODEL/STARTER dependency.
+      - Any P0/P1 finding on the exact skeleton or concrete revision.
+  amend_dependency:
+    task_id: TASK-P2-DEV-07-STARTER-GUARDED-ACCESS
+    add_depends_on:
+      - TASK-P2-DEV-04R-CONTEXT-PROTECTED-ACCESS-CONTRACTS
+    preserve_r05_starter_scope: true
+    preserve_first_skeleton_model_dependency_rule: true
+    preserve_forbidden_changes: true
+unchanged_tasks:
+  - TASK-P2-DEV-01-SYSTEM-RULEVIEW-COMPILATION
+  - TASK-P2-DEV-04-CONTEXT-MATERIALIZATION
+  - TASK-P2-DEV-02-RULEVIEW-REFERENCE
+  - TASK-P2-DEV-03-MODEL-ACCESS-POLICY
+  - TASK-P2-DEV-05-MODEL-TRUSTED-LOAD
+  - TASK-P2-DEV-06-MODEL-SESSION-EFFECT
+  - TASK-P2-DEV-08-PRODUCTION-COMPOSITION-CONCURRENCY
+  - TASK-P2-DEV-09-REAL-FIXTURE-COMPATIBILITY
+entry_gate:
+  current_task: TASK-P2-DEV-04R-CONTEXT-PROTECTED-ACCESS-CONTRACTS
+  dev07: BLOCKED_UNTIL_PREREQUISITE_PASSED
+  development_overall: PARTIAL

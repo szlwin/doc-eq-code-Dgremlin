@@ -1,0 +1,10 @@
+{
+  "kind": "command_result",
+  "schema_version": 2,
+  "command": "python3 -c \"import yaml,re,collections; p=yaml.safe_load(open('project_doc/version/V_1.0/task/FEATURE-DESC-3361AD2E54FC/development_tasks.yaml')); c=collections.defaultdict(list); [c[re.match(r'SRC-(P2-T\\\\d{2})(?:-|$)',a['id']).group(1)].append(t['task_id']) for t in p['tasks'] for a in t['acceptance_criteria'] if re.match(r'SRC-(P2-T\\\\d{2})(?:-|$)',a['id'])]; e={f'P2-T{i:02d}' for i in range(1,13)}; assert set(c)==e and all(c[x] for x in e); print('P2 source-scope mapping 12/12 PASSED')\"",
+  "executed_at": "2026-08-11T04:28:06+00:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+  "exit_code": 0,
+  "output": "P2 source-scope mapping 12/12 PASSED\n",
+  "output_digest": "64b3752800d1794f0a200c716e02ee2c28902c851c6de6be28487b5710db6019"
+}

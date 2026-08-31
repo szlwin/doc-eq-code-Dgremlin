@@ -1,0 +1,291 @@
+<!-- template: common-develop/test-case-v1 -->
+# FEATURE-DESC-3361AD2E54FC P2 简化运行模型测试设计
+
+> Test revision：`TESTDESIGN-P2-R41`
+> Requirement：`FEATURE-DESC-3361AD2E54FC`
+> Requirement revision：`REQAN-P2-R04`
+> Design revision：`DESIGN-P2-R40`
+> Implementation revision：`DEV-P2-SIMPLE-R43@a5ecf75d5169`
+> 状态：测试设计完成
+
+> 文档导航：[项目文档首页](../../../../docs/README.md) · [版本摘要](../../version_summary.md) · [需求文档](requirement.md) · [关联设计](../COMPILER/COMPILER_design.md) · 页面设计不适用（Java 配置与执行框架，无 UI）
+
+## 1. 测试范围与环境
+
+- 目标：验证 `ConfigUtil.parseConfigInfo(path)` 统一加载、候选隔离、静态编译和简单 `ModelContainer` 执行链。
+- 范围内：现代 XML、旧 XML/YAML、多 `system-file`、重复与前向引用、失败保持旧对象、简单 Rule、缺失定义、提交/回滚/关闭、Java 8 和退役目录。
+- 范围外：Information 求值（P3）、Action/Produce 执行（P4）、Directory 流程（P5）、现代 YAML Source Graph 编译（P8）。
+- 环境：Maven Wrapper；根 POM `maven.compiler.release=8`；普通加载测试无数据库，`mysql-it` 使用项目声明的本机 MySQL fixture。
+- 公共入口约束：业务加载测试只调用 `ConfigUtil.addDataSourceConfig(...)` 和 `ConfigUtil.parseConfigInfo(...)`，不创建或传递 `ConfigInfo`；AC-001 的框架单元测试可直接构造两个实例验证隔离。
+
+## 2. Case 索引
+
+| Case ID | 名称 | 功能/验收 | 页面/操作 | 测试层级 | 自动化状态 |
+|---|---|---|---|---|---|
+| CASE-P2-R41-UNIFIED-LOAD-001 | 公共入口编译完整模型 | AC-001/002/003 | 不适用：Java API | 集成 | AUTOMATED |
+| CASE-P2-R41-SOURCE-GRAPH-002 | 多 system-file 与确定性解析 | AC-003/004 | 不适用：配置编译 | 单元/集成 | AUTOMATED |
+| CASE-P2-R41-ATOMIC-COMPAT-003 | 失败原子性及 XML/YAML 兼容 | AC-002/004/009 | 不适用：配置加载 | 集成 | AUTOMATED |
+| CASE-P2-R41-SIMPLE-EXECUTE-004 | 简单 Rule、缺失定义与事务收尾 | AC-005/006/007 | 不适用：Java API | 单元/集成/MySQL | AUTOMATED |
+| CASE-P2-R41-JAVA8-RETIRE-005 | Java 8、退役目录和全量回归 | AC-008 | 不适用：构建门禁 | 静态/回归 | AUTOMATED |
+
+## 3. Case 详情
+
+<!-- TEST-CASE: CASE-P2-R41-UNIFIED-LOAD-001 -->
+<a id="CASE-P2-R41-UNIFIED-LOAD-001"></a>
+## CASE-P2-R41-UNIFIED-LOAD-001 公共入口编译完整模型
+
+### 关联事实
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-001/002/003/008；AC-001/002/003 | [需求验收](requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
+| 设计/契约 | DESIGN-P2-R40；BP-P2-R40-006 | [统一加载设计](../COMPILER/COMPILER_design.md#5-核心流程状态与失败路径) |
+| 页面/操作 | 不适用：ConfigUtil Java API | [接口映射](../COMPILER/COMPILER_design.md#111-接口变化) |
+
+### 前置条件和具体输入
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| 根配置 | `classpath:mix/orm-config.xml` | ConfigUtil | 包含 Data、View、System、Business、Connection |
+| System | user/order/payment/common | systems.xml | RuleView 身份为 `(system,name)` |
+| Business | order-payment | business XML | 含 Directory、Action、Produce 静态定义 |
+
+### 执行步骤
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 注册数据源类型并加载根配置 | ConfigUtil | 调用方不接触 ConfigInfo |
+| 2 | 读取 compiledModelSet | DataUtil.getEngineContext | 编译结果整体安装 |
+| 3 | 查询 System、RuleView、Information、Business、Directory、Action、Produce | typed registries | 强类型 Key 均存在 |
+
+### 预期输出与验证方式
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| SourceManifest | 包含 systems、rule、business 文件 | sourceId 断言 | 声明文件均被发现 |
+| Registry | 4 System 和完整静态模型 | `find(key).isPresent()` | 无裸名称推断 |
+| 业务 API | 无 ConfigInfo 参数/返回值 | 代码审查 | 仅公共门面加载 |
+
+### 禁止副作用与清理
+- 不得直接调用 CompilerBootstrap 或 XML Parser 代替业务入口。
+- 恢复线程 ContextClassLoader；无数据库写入。
+
+### 测试数据与自动化映射
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| `dec-demo/src/test/resources/mix/**`；独立 ConfigInfo | ClassLoader finally 恢复 | `MixTest#loadsSystemsFileFromTestResources`；`ConfigUtilCompatibilityTest#configInfoInstancesDoNotShareDefinitions` | `./mvnw -q -pl dec-demo -am -Dtest=dec.demo.mix.MixTest,dec.demo.config.ConfigUtilCompatibilityTest -Dsurefire.failIfNoSpecifiedTests=false test` | AUTOMATED |
+
+<!-- TEST-CASE: CASE-P2-R41-SOURCE-GRAPH-002 -->
+<a id="CASE-P2-R41-SOURCE-GRAPH-002"></a>
+## CASE-P2-R41-SOURCE-GRAPH-002 多 system-file 与确定性解析
+
+### 关联事实
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-003/004；AC-003/004 | [需求验收](requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
+| 设计/契约 | DESIGN-P2-R40 Source Graph | [失败路径](../COMPILER/COMPILER_design.md#52-关键失败路径) |
+| 页面/操作 | 不适用：配置编译 | [数据流](../COMPILER/COMPILER_design.md#5-核心流程状态与失败路径) |
+
+### 前置条件和具体输入
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| 多文件根配置 | `orm-config-multi-system.xml` | ConfigUtil | 声明 systems.xml 与 extra-systems.xml |
+| 顺序变体 | forward/reversed/shuffled | InMemoryProvider | 仅改变枚举或声明顺序 |
+| 边界变体 | 重复 system-file、重复 System、前向引用 | fixtures | 重复拒绝；合法前向引用成功 |
+
+### 执行步骤
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 通过 ConfigUtil 加载两个 system-file | public entry | 两个 source 均进入 manifest |
+| 2 | 以不同顺序解析同一图 | MixSourceResolver | manifest、edges、diagnostics 稳定 |
+| 3 | 输入重复与前向引用 | Compiler | 重复报错；合法引用解析 |
+
+### 预期输出与验证方式
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| Registry | 5 个 System，含 audit | exact size/key | 多 system-file 生效 |
+| 顺序变体 | 图和诊断相等 | equals + edge key | 顺序不改变语义 |
+| 重复/前向引用 | 重复失败、合法引用成功 | DiagnosticCode/registry | 不吞异常 |
+
+### 禁止副作用与清理
+- 不得按最后出现定义覆盖重复项；失败图不得发布。
+- 进程内 fixture，无外部资源。
+
+### 测试数据与自动化映射
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| multi-system XML + InMemoryProvider | 无需脚本 | `MixTest#loadsMultipleSystemFilesThroughPublicConfigEntry`；`MixSourceResolverContractTest#resolvesMultipleSystemFilesIndependentlyOfDeclarationOrder`；`SystemCompilationContractTest#duplicateSystemDiagnosticIsSourceOrderIndependent` | `./mvnw -q -pl dec-core-compiler,dec-demo -am -Dtest=MixSourceResolverContractTest,SystemCompilationContractTest,dec.demo.mix.MixTest -Dsurefire.failIfNoSpecifiedTests=false test` | AUTOMATED |
+
+<!-- TEST-CASE: CASE-P2-R41-ATOMIC-COMPAT-003 -->
+<a id="CASE-P2-R41-ATOMIC-COMPAT-003"></a>
+## CASE-P2-R41-ATOMIC-COMPAT-003 失败原子性及 XML/YAML 兼容
+
+### 关联事实
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-004/005/011；AC-002/004/009 | [YAML 边界](requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
+| 设计/契约 | DESIGN-P2-R40；UNSUPPORTED_P8 | [状态设计](../COMPILER/COMPILER_design.md#53-状态与步骤) |
+| 页面/操作 | 不适用：配置加载 | [接口映射](../COMPILER/COMPILER_design.md#72-接口映射) |
+
+### 前置条件和具体输入
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| 已安装基线 | 有效 mix XML | ConfigUtil | 保存 ConfigInfo 与 EngineContext 身份 |
+| 编译失败 | 重复 system-file XML | ConfigUtil | install 前失败 |
+| 解析失败 | malformed XML/YAML | ConfigUtil | parse 期间失败 |
+| 兼容输入 | 无 system-file 的旧 XML/YAML | ConfigUtil | 完整解析后替换 ConfigInfo |
+| P8 输入 | 含 System/Business 的现代 YAML | ConfigUtil | P2 明确拒绝 |
+
+### 执行步骤
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 安装有效 XML 并保存对象引用 | ConfigManager/DataUtil | 基线可读 |
+| 2 | 加载重复声明 XML | ConfigUtil | 抛 XMLParseException |
+| 3 | 加载畸形 XML/YAML | ConfigUtil | 抛解析异常且旧对象身份不变 |
+| 4 | 加载旧 XML、旧 YAML、现代 YAML | ConfigUtil | 旧格式成功；现代 YAML 指向 P8 |
+
+### 预期输出与验证方式
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| 失败后当前配置 | 两个对象均为原引用 | `assertSame` | 无半新半旧状态 |
+| 畸形 XML/YAML | 已安装 ConfigInfo 仍为原引用 | `assertThrows` + `assertSame` | 候选半成品未安装 |
+| 旧 XML/YAML | View 可由 DataUtil 创建 | 字段断言 | 不暴露 ConfigInfo |
+| 现代 YAML | cause 提及 P8，当前对象不变 | exception + assertSame | 不静默降级 |
+
+### 禁止副作用与清理
+- 编译失败和现代 YAML 拒绝均不得替换当前配置。
+- 每个测试重新安装已知基线；无数据库写入。
+
+### 测试数据与自动化映射
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| duplicate/malformed XML、malformed/legacy/modern YAML | 无需脚本 | `MixTest#failedCompilationKeepsInstalledConfigAndEngineContext`；`ConfigUtilCompatibilityTest#malformedXmlKeepsTheInstalledConfiguration`、`#malformedYamlKeepsTheInstalledConfiguration`、`#loadsLegacyConfigurationWithoutSystemDeclarations`、`#loadsLegacyYamlThroughTheUnifiedFacade`、`#rejectsModernYamlBeforeReplacingTheInstalledConfiguration` | `./mvnw -q -pl dec-demo -am -Dtest=dec.demo.mix.MixTest,dec.demo.config.ConfigUtilCompatibilityTest -Dsurefire.failIfNoSpecifiedTests=false test` | AUTOMATED |
+
+<!-- TEST-CASE: CASE-P2-R41-SIMPLE-EXECUTE-004 -->
+<a id="CASE-P2-R41-SIMPLE-EXECUTE-004"></a>
+## CASE-P2-R41-SIMPLE-EXECUTE-004 简单 Rule、缺失定义与事务收尾
+
+### 关联事实
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-006/007/009/010；AC-005/006/007 | [简单执行](requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
+| 设计/契约 | DataUtil -> ModelLoader -> ModelContainer.execute | [目标结构](../COMPILER/COMPILER_design.md#4-目标方案与职责边界) |
+| 页面/操作 | 不适用：业务 Java API | [兼容设计](../COMPILER/COMPILER_design.md#7-接口交互与兼容策略) |
+
+### 前置条件和具体输入
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| 成功 Rule | save-Order、back-Order | ModelLoader | OrderInfo + con1/con2 |
+| 缺失定义 | unknown Rule/View/Connection | 公共 API | 必须明确抛错 |
+| 事务分支 | 成功、规则失败、执行异常、提交异常、监听器异常、连接关闭异常 | recording Connection | commit/rollback/close 可观察 |
+
+### 执行步骤
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 创建 OrderInfo 并加载简单名称 Rule | DataUtil/ModelLoader | 不传 EngineContext/runtime 身份 |
+| 2 | 执行成功与缺失定义场景 | ModelContainer | 成功产生效果；缺失定义失败 |
+| 3 | 注入 commit、结束监听器和 close 异常并记录调用次数 | ModelContainer.execute | 所有连接仍完成必要收尾，异常可观察 |
+
+### 预期输出与验证方式
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| 成功业务数据 | Rule 修改和数据库记录正确 | ModelData + SQL | 简单调用兼容 |
+| 缺失定义 | 异常包含缺失名称 | assertThrows/message | 不返回 null-success |
+| 事务资源 | success=commit+close；failure=rollback+close | recording connection | 无连接泄漏 |
+| 清理失败 | 首个异常可见，后续异常作为 suppressed 保留 | message/suppressed + 调用次数 | 监听器或单连接失败不跳过其余 close |
+
+### 禁止副作用与清理
+- 不重新引入 Scope、Session、Handle、Capability 或 owner identity API。
+- MySQL case 清表并关闭数据源；recording fixture 在 finally 关闭。
+
+### 测试数据与自动化映射
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| DemoLoadTests/MySQL fixture；内存 recording connection | reset tables + datasource close；内存连接由测试方法结束释放 | `RuleTests#orderRulesWriteExpectedRowsToBothDatabases`；`DirectModelDataContainerDemoTest#directModelDataAndContainerExecution`；`ModelContainerLifecycleTest#missingViewRuleAndConnectionReportTheirNames`、`#successfulExecutionCommitsAndClosesOnce`、`#failedRuleRollsBackAndClosesOnce`、`#executionExceptionRollsBackAndClosesOnce`、`#commitExceptionStillRollsBackAndClosesOnce`、`#endListenerExceptionDoesNotSkipConnectionClose`、`#closeExceptionIsVisibleAfterAllConnectionsAreVisited` | `./mvnw -q -pl dec-core-model -am -Dtest=dec.core.model.container.ModelContainerLifecycleTest -Dsurefire.failIfNoSpecifiedTests=false test`；`./mvnw -q -pl dec-demo -Pmysql-it -Dtest=dec.demo.model.RuleTests,dec.demo.model.DirectModelDataContainerDemoTest test` | AUTOMATED：事务与清理异常分支均精确验证 rollback/close 次数和异常可见性 |
+
+<!-- TEST-CASE: CASE-P2-R41-JAVA8-RETIRE-005 -->
+<a id="CASE-P2-R41-JAVA8-RETIRE-005"></a>
+## CASE-P2-R41-JAVA8-RETIRE-005 Java 8、退役目录和全量回归
+
+### 关联事实
+<!-- TEST-CASE-TRACE -->
+| 对象 | 稳定引用 | 来源文档 |
+|---|---|---|
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-001/006；AC-008 | [兼容要求](requirement.md#105-兼容与历史数据) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
+| 设计/契约 | DESIGN-P2-R40 退役边界 | [影响范围](../COMPILER/COMPILER_design.md#3-影响范围) |
+| 页面/操作 | 不适用：构建门禁 | [验证计划](../COMPILER/COMPILER_design.md#13-验证计划) |
+
+### 前置条件和具体输入
+<!-- TEST-CASE-INPUT -->
+| 输入项 | 输入值 | 输入方式 | 来源/约束 |
+|---|---|---|---|
+| 编译目标 | maven.compiler.release=8 | 根 POM | class major=52 |
+| 退役目录 | context/runtime、model/runtime、starter/access | 文件扫描 | 目录与生产引用不存在 |
+| 回归范围 | 全 Maven reactor | Maven Wrapper | 不跳过测试 |
+
+### 执行步骤
+<!-- TEST-CASE-STEPS -->
+| 序号 | 操作 | 页面/接口 | 预期中间结果 |
+|---:|---|---|---|
+| 1 | 执行全量测试 | `./mvnw test` | reactor 退出码 0 |
+| 2 | 检查代表 class | javap | major=52 |
+| 3 | 扫描退役目录和旧类型名 | rg/find | 无生产残留 |
+
+### 预期输出与验证方式
+<!-- TEST-CASE-OUTPUT -->
+| 输出位置 | 预期输出 | 验证方式 | 通过标准 |
+|---|---|---|---|
+| Maven | 已发现测试 0 failure/error | Surefire 汇总 | skipped 单独登记 |
+| bytecode | major version 52 | javap | Java 8 兼容 |
+| source tree | 三目录不存在且无旧 import | filesystem/rg | 退役事实稳定 |
+
+### 禁止副作用与清理
+- 不使用 `-DskipTests`，不删除测试降低总数。
+- 测试 fixture 自行 teardown；无额外脚本。
+
+### 测试数据与自动化映射
+<!-- TEST-CASE-AUTOMATION -->
+| 测试数据初始化 | 清理脚本 | 自动化测试文件与方法 | 执行命令 | 状态/不自动化理由 |
+|---|---|---|---|---|
+| 全仓 fixture | 各测试 teardown | `dec-core-*/src/test/**`、`dec-demo/src/test/**` | `./mvnw -q test`；`javap -verbose dec-core-starter/target/classes/dec/core/starter/common/ConfigUtil.class`；退役目录 `test ! -d` | AUTOMATED |
+
+### 3.1 覆盖矩阵
+
+| 验收 | 覆盖 Case | 当前结论 |
+|---|---|---|
+| AC-001/002/003 | UNIFIED-LOAD、SOURCE-GRAPH | 已自动化 |
+| AC-004 | SOURCE-GRAPH、ATOMIC-COMPAT | 已自动化 |
+| AC-005/006/007 | SIMPLE-EXECUTE | 已自动化；简单调用、缺失定义和事务精确计数均有测试 |
+| AC-008 | JAVA8-RETIRE | 已自动化 |
+| AC-009 | ATOMIC-COMPAT | 已自动化；现代 YAML 完整编译属于 P8 |
+
+## 4. 完成门禁
+
+- [x] 绑定 REQAN-P2-R04 与 DESIGN-P2-R40。
+- [x] 旧 ProtectedAccess/Guard 测试不再作为当前 P2 验收。
+- [x] 每个 Case 有输入、输出、验证、清理和命令。
+- [x] 多 system-file 与失败保持旧配置已通过公共入口自动化。
+- [x] XML/YAML P2/P8 边界已有正反向用例。
+- [x] 缺失定义及 commit/rollback/close 精确计数已由 `ModelContainerLifecycleTest` 自动化验证。
+- [x] TESTDESIGN-P2-R41 已达到独立 Review 输入完整度；本项不代替 Reviewer 结论。

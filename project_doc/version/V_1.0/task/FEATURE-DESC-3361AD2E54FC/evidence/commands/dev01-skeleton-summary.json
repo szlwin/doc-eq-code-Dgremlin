@@ -1,0 +1,8 @@
+{
+  "revision": "DEV-P2-DEV01-SKEL-R01@6250d4a5ee9f",
+  "task": "TASK-P2-DEV-01-SYSTEM-RULEVIEW-SKELETON",
+  "production_boundary": "SymbolTableBuilder.duplicateConflictSources -> freezeDuplicateConflictSources",
+  "concrete_implemented": false,
+  "behavioral_test_cases": 14,
+  "pre_fix_red_evidence_id": "EVD-000241"
+}

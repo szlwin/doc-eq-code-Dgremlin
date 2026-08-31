@@ -1,0 +1,45 @@
+{
+  "artifact_expired": false,
+  "artifact_id": 9348948914,
+  "artifact_name": "p2-task8-development-stage-validation-v2",
+  "artifact_sha256": "2bff57f64c3cff2d26b3410134d2b65957133fd91d324caadb58c781f4f2f0b7",
+  "canonical_executable_source_diff_from_task6": [
+    "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java"
+  ],
+  "canonical_head": "fbe16820eb84080af1e774736e7aaf787c1db8a0",
+  "canonical_lifecycle_test_git_blob": "8b3200201546d4fd333cca768b049ab5036176e6",
+  "canonical_parent": "e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e",
+  "canonical_tree": "0da4a1f727db32d4ce3d3602a73548745db5f2e5",
+  "lifecycle_test_path": "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java",
+  "runner_base_parent": "e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e",
+  "runner_base_sha": "4b019bb0bb386b2a1faab927f3b2c88dee14a810",
+  "runner_conclusion": "success",
+  "runner_head_only_code_change": "dec-core-starter/src/test/java/dec/core/starter/access/SingleEngineContextRuntimeLifecycleTest.java",
+  "runner_head_sha": "b93e7f0659618c5dfac4777a029631e706164cdb",
+  "runner_lifecycle_test_git_blob": "8b3200201546d4fd333cca768b049ab5036176e6",
+  "runner_pr": 59,
+  "runner_workflow_name": "P2 task8 development stage validation v2",
+  "runner_workflow_run_id": 32205252873,
+  "schema_version": 1,
+  "source_equivalence": {
+    "reason": "Both current canonical source and the successful Task8 runner are Task6 e5f12c9 plus the exact lifecycle test Git blob 8b320020; current additional changes are project_doc evidence only. No src/main drift exists after Task6 in either executable source.",
+    "status": "PROVEN"
+  },
+  "task6_base": "e5f12c9cc202f3e2a4257a1a7d6b79ee7882348e",
+  "task_id": "TASK-P2-DEV-P2-REGRESSION-CLOSURE",
+  "validation_summary": {
+    "database_counts": {
+      "order_detail_info": 1,
+      "order_info": 1,
+      "pay_detail_info": 1,
+      "pay_info": 1,
+      "product_info": 1,
+      "user_info": 1
+    },
+    "lifecycle_tests": "3/3 passed",
+    "mysql_business_integration": "3/3 passed",
+    "r06_command_12": "PASSED",
+    "r06_commands_02_to_11": "BUILD SUCCESS",
+    "security_remediation_tests": "4/4 passed"
+  }
+}

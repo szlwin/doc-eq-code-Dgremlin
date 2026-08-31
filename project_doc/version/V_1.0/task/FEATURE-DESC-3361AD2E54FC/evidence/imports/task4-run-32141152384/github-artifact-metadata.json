@@ -1,0 +1,15 @@
+{
+  "repository": "szlwin/doc-eq-code-Dgremlin",
+  "temporaryPr": 46,
+  "workflowRunId": 32141152384,
+  "workflowName": "P2 temporary task4 authority closure validation",
+  "artifactId": 9325931146,
+  "artifactName": "p2-task4-authority-closure-validation",
+  "artifactDigest": "sha256:f9292bf8fd0784573c1c6ef52374363d59e05510c3aa7f88ff9ff4b337c1c6d5",
+  "baseCheckpoint": "ee4c77a5e3aeb1b5f081d79eef21627c2c092481",
+  "patchSha256": "544155ef6a5bb0ff2de59531ca5832f26a79d03e835e20070d2d91ee09beb802",
+  "result": "PASSED",
+  "productionCompile": "PASSED",
+  "modelRegression": {"tests": 6, "failures": 0, "errors": 0, "skipped": 0},
+  "starterRegression": {"tests": 34, "failures": 0, "errors": 0, "skipped": 0}
+}

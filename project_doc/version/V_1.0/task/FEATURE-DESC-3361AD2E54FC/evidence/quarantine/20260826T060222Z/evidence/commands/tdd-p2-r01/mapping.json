@@ -1,0 +1,355 @@
+{
+  "test_design": "TESTDESIGN-P2-R32",
+  "implementation_plan": "TP-FEATURE-DESC-3361AD2E54FC-R05@b71685a8d84a",
+  "classes": {
+    "DAG": {
+      "module": "dec-core-compiler",
+      "class": "P2RevisionDependencyDagContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2RevisionDependencyDagContractTest.java",
+      "cases": [
+        "CASE-P2-TD-REVISION-DAG-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.SystemKey"
+      ]
+    },
+    "SYSTEM": {
+      "module": "dec-core-compiler",
+      "class": "SystemCompilationContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/system/SystemCompilationContractTest.java",
+      "cases": [
+        "CASE-P2-TD-SYSTEM-DETERMINISM-001",
+        "CASE-P2-TD-SYSTEM-DUPLICATE-001",
+        "CASE-P2-TD-SYSTEM-FORWARD-REF-001",
+        "CASE-P2-TD-SYSTEM-OWNERSHIP-SNAPSHOT-001",
+        "CASE-P2-TD-SYSTEM-VERSION-IDENTITY-001",
+        "CASE-P2-TD-BM-CANONICAL-PAIR-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.SystemKey",
+        "dec.core.context.model.TypedDefinitionRegistries"
+      ]
+    },
+    "RULEVIEW": {
+      "module": "dec-core-compiler",
+      "class": "RuleViewCompilationContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/ruleview/RuleViewCompilationContractTest.java",
+      "cases": [
+        "CASE-P2-TD-RULEVIEW-SYSTEM-REQUIRED-001",
+        "CASE-P2-TD-RULEVIEW-SAME-SYSTEM-DUPLICATE-001",
+        "CASE-P2-TD-RULEVIEW-CROSS-SYSTEM-ISOLATION-001",
+        "CASE-P2-TD-RULEVIEW-VIEW-RESOLUTION-001",
+        "CASE-P2-TD-RULEKEY-CONTRACT-001",
+        "CASE-P2-TD-RULEVIEW-COMPOSITE-LOOKUP-001",
+        "CASE-P2-TD-KEY-SOURCE-COMPAT-001",
+        "CASE-P2-TD-BARE-NAME-COMPATIBILITY-BOUNDARY-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.RuleViewKey"
+      ]
+    },
+    "TARGET": {
+      "module": "dec-core-compiler",
+      "class": "TargetKeyModelPathContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/model/access/TargetKeyModelPathContractTest.java",
+      "cases": [
+        "CASE-P2-TD-TARGETKEY-SOURCE-MAPPING-001",
+        "CASE-P2-TD-TARGET-PATH-ORTHOGONALITY-001",
+        "CASE-P2-TD-MODEL-PATH-UNKNOWN-001",
+        "CASE-P2-TD-WILDCARD-FINITE-EXPANSION-001",
+        "CASE-P2-TD-MODEL-PATH-CROSS-CONSUMER-EQUIVALENCE-001",
+        "CASE-P2-TD-P1-PATH-OPERATION-MIGRATION-001",
+        "CASE-P2-TD-NESTED-OBJECT-PATH-001",
+        "CASE-P2-TD-DEEP-NESTED-OBJECT-PATH-001",
+        "CASE-P2-TD-NON-COMPOSITE-INTERMEDIATE-001",
+        "CASE-P2-TD-NESTED-COLLECTION-PATH-001",
+        "CASE-P2-TD-TARGET-MAIN-PATH-ISOLATION-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.TargetKey",
+        "dec.core.context.model.ModelPath"
+      ]
+    },
+    "POLICY": {
+      "module": "dec-core-compiler",
+      "class": "ModelAccessPolicyContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/model/access/ModelAccessPolicyContractTest.java",
+      "cases": [
+        "CASE-P2-TD-PARENT-PATH-NO-AUTH-FALLBACK-001",
+        "CASE-P2-TD-ACCESS-READ-WRITE-MATRIX-001",
+        "CASE-P2-TD-NO-EXECUTE-CONTRACT-001",
+        "CASE-P2-TD-STATIC-DENY-001",
+        "CASE-P2-TD-POLICY-CLASSIFICATION-TRUTH-TABLE-001",
+        "CASE-P2-TD-RUNTIME-PLAN-EXACT-BINDING-001",
+        "CASE-P2-TD-RUNTIME-BINDING-PROOF-001",
+        "CASE-P2-TD-RUNTIME-PLAN-MISMATCH-001",
+        "CASE-P2-TD-POLICY-INDEX-PUBLICATION-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.ModelAccessRuleKey",
+        "dec.core.context.model.AccessOperation"
+      ]
+    },
+    "API_CTX": {
+      "module": "dec-core-context",
+      "class": "ProtectedAccessContextApiContractTest",
+      "source": "dec-core-context/src/test/java/dec/core/context/runtime/ProtectedAccessContextApiContractTest.java",
+      "cases": [
+        "CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001",
+        "CASE-P2-TD-CONTEXT-API-SELF-CONTAINED-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.CompiledViewMaterializationIndex",
+        "dec.core.context.runtime.RuntimeFactValue"
+      ]
+    },
+    "API_COMPILER": {
+      "module": "dec-core-compiler",
+      "class": "P2CompilerContextConstructibilityContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/contract/P2CompilerContextConstructibilityContractTest.java",
+      "cases": [
+        "CASE-P2-TD-COMPILER-CONTEXT-CONSTRUCTIBILITY-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.CompiledViewMaterializationIndex",
+        "dec.core.context.model.TargetKey"
+      ]
+    },
+    "API_MODEL": {
+      "module": "dec-core-model",
+      "class": "ProtectedAccessModelApiContractTest",
+      "source": "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedAccessModelApiContractTest.java",
+      "cases": [
+        "CASE-P2-TD-MODEL-API-SELF-CONTAINED-001",
+        "CASE-P2-TD-SESSION-FAILURE-ALGEBRA-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelExecutionRoot",
+        "dec.core.model.runtime.RuntimeModelLoadRequest"
+      ]
+    },
+    "API_STARTER": {
+      "module": "dec-core-starter",
+      "class": "ProtectedAccessStarterApiContractTest",
+      "source": "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessStarterApiContractTest.java",
+      "cases": [
+        "CASE-P2-TD-STARTER-API-SELF-CONTAINED-001",
+        "CASE-P2-TD-CALLER-STARTER-CONSTRUCTIBILITY-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.ModelAccessRuleKey",
+        "dec.core.context.model.TargetKey"
+      ]
+    },
+    "MATERIALIZE": {
+      "module": "dec-core-model",
+      "class": "RuntimeModelMaterializationIntegrationTest",
+      "source": "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeModelMaterializationIntegrationTest.java",
+      "cases": [
+        "CASE-P2-TD-PRODUCTION-LOAD-REQUEST-001",
+        "CASE-P2-TD-PRODUCTION-LOAD-PLAN-MISMATCH-001",
+        "CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001",
+        "CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001",
+        "CASE-P2-TD-TRUSTED-MATERIALIZATION-INPUT-001",
+        "CASE-P2-TD-TRUSTED-MATERIALIZATION-EXACT-VIEW-001",
+        "CASE-P2-TD-COMPILED-VIEW-MATERIALIZATION-PLAN-001",
+        "CASE-P2-TD-PRODUCTION-OBJECT-WRITEBACK-001",
+        "CASE-P2-TD-R26-FRESH-SNAPSHOT-SEAM-ABSENT-001",
+        "CASE-P2-TD-TRUSTED-FRAME-PRECONDITION-FAILURE-MATRIX-001",
+        "CASE-P2-TD-MODEL-EXECUTION-ROOT-LOAD-001",
+        "CASE-P2-TD-MODEL-SCOPE-PRODUCER-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.CompiledViewMaterializationPlan",
+        "dec.core.model.runtime.RuntimeModelExecutionRoot"
+      ]
+    },
+    "VALUE": {
+      "module": "dec-core-context",
+      "class": "RuntimeFactValueContractTest",
+      "source": "dec-core-context/src/test/java/dec/core/context/runtime/RuntimeFactValueContractTest.java",
+      "cases": [
+        "CASE-P2-TD-RUNTIME-FACT-VALUE-DOMAIN-001",
+        "CASE-P2-TD-RUNTIME-FACT-VALUE-DEEP-IMMUTABILITY-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.runtime.RuntimeFactValue"
+      ]
+    },
+    "ID": {
+      "module": "dec-core-context",
+      "class": "OpaqueRuntimeIdContractTest",
+      "source": "dec-core-context/src/test/java/dec/core/context/runtime/OpaqueRuntimeIdContractTest.java",
+      "cases": [
+        "CASE-P2-TD-OPAQUE-RUNTIME-ID-VALUE-CONTRACT-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelHandle"
+      ]
+    },
+    "INTENT": {
+      "module": "dec-core-starter",
+      "class": "ProtectedWriteIntentResolutionTest",
+      "source": "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedWriteIntentResolutionTest.java",
+      "cases": [
+        "CASE-P2-TD-WRITE-INTENT-NOT-FOUND-001",
+        "CASE-P2-TD-WRITE-INTENT-AMBIGUOUS-001",
+        "CASE-P2-TD-WRITE-INTENT-FREEZE-STABILITY-001",
+        "CASE-P2-TD-WRITE-AUTHORITY-MODEL-ACCESS-RULEKEY-001",
+        "CASE-P2-TD-WRITE-SINGLE-PATH-AUTHORITY-001",
+        "CASE-P2-TD-TYPED-RUNTIME-CONTEXT-001",
+        "CASE-P2-TD-MUTATION-STAMP-OBJECT-BINDING-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.AccessOperation",
+        "dec.core.context.model.ModelAccessRuleKey"
+      ]
+    },
+    "ADAPTER": {
+      "module": "dec-core-starter",
+      "class": "ProtectedRuntimeModelAdapterIntegrationTest",
+      "source": "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedRuntimeModelAdapterIntegrationTest.java",
+      "cases": [
+        "CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001",
+        "CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001",
+        "CASE-P2-TD-REAL-READ-OPERATION-001",
+        "CASE-P2-TD-REAL-WRITE-OPERATION-001",
+        "CASE-P2-TD-PRODUCTION-MODEL-ADAPTER-REACHABILITY-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelAccessScope",
+        "dec.core.context.model.TargetKey"
+      ]
+    },
+    "LOCATOR": {
+      "module": "dec-core-model",
+      "class": "RuntimeObjectLocatorIntegrationTest",
+      "source": "dec-core-model/src/test/java/dec/core/model/runtime/RuntimeObjectLocatorIntegrationTest.java",
+      "cases": [
+        "CASE-P2-TD-RUNTIME-OBJECT-LOCATOR-SCOPE-001",
+        "CASE-P2-TD-RUNTIME-OBJECT-NOT-FOUND-STALE-001",
+        "CASE-P2-TD-RUNTIME-TARGET-SELECTION-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelSession",
+        "dec.core.model.runtime.RuntimeModelHandle"
+      ]
+    },
+    "TXN": {
+      "module": "dec-core-model",
+      "class": "ProtectedWriteTransactionIntegrationTest",
+      "source": "dec-core-model/src/test/java/dec/core/model/runtime/ProtectedWriteTransactionIntegrationTest.java",
+      "cases": [
+        "CASE-P2-TD-RUNTIME-WRITE-ROLLBACK-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelAccessScope",
+        "dec.core.model.runtime.RuntimeModelSession"
+      ]
+    },
+    "COMPOSE": {
+      "module": "dec-core-starter",
+      "class": "ProtectedAccessProductionCompositionTest",
+      "source": "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessProductionCompositionTest.java",
+      "cases": [
+        "CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001",
+        "CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001",
+        "CASE-P2-TD-PRODUCTION-SEAM-NO-LEGAL-BYPASS-001",
+        "CASE-P2-TD-AC007-PRODUCTION-COMPOSITION-001",
+        "CASE-P2-TD-AC007-RULE-CONSUMER-INTEGRATION-001",
+        "CASE-P2-TD-AC007-CHANGE-CONSUMER-INTEGRATION-001",
+        "CASE-P2-TD-AC007-CUSTOM-ACTION-CONSUMER-INTEGRATION-001",
+        "CASE-P2-TD-AC007-CONSUMER-PARITY-001",
+        "CASE-P2-TD-AC007-REPRESENTATIVE-CONSUMER-STRUCTURE-001",
+        "CASE-P2-TD-AC007-REAL-PRODUCTION-REACHABILITY-001",
+        "CASE-P2-TD-COMPOSITION-RUNTIME-CONTEXT-MATCH-001",
+        "CASE-P2-TD-PRODUCTION-RUNTIME-REGISTRATION-BINDING-001",
+        "CASE-P2-TD-PRODUCTION-FRAME-HANDOFF-001",
+        "CASE-P2-TD-PRODUCTION-SESSION-HANDOFF-001",
+        "CASE-P2-TD-RUNTIME-SCOPE-PROVENANCE-001",
+        "CASE-P2-TD-COMPOSITION-FAILURE-ALGEBRA-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelAccessScope",
+        "dec.core.context.model.ModelAccessRuleKey"
+      ]
+    },
+    "CONC": {
+      "module": "dec-core-starter",
+      "class": "ProtectedAccessConcurrencyTest",
+      "source": "dec-core-starter/src/test/java/dec/core/starter/access/ProtectedAccessConcurrencyTest.java",
+      "cases": [
+        "CASE-P2-TD-CAPABILITY-CONCURRENT-CONSUME-001",
+        "CASE-P2-TD-DIFFERENT-CAPABILITY-CONCURRENCY-001",
+        "CASE-P2-TD-CROSS-SESSION-MODELDATA-OWNERSHIP-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelSession",
+        "dec.core.context.model.ModelAccessRuleKey"
+      ]
+    },
+    "DEP": {
+      "module": "dec-core-starter",
+      "class": "ProtectedAccessDependencyDirectionTest",
+      "source": "dec-core-starter/src/test/java/dec/core/starter/architecture/ProtectedAccessDependencyDirectionTest.java",
+      "cases": [
+        "CASE-P2-TD-DOWNSTREAM-DEPENDENCY-DIRECTION-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.ModelAccessRuleKey"
+      ]
+    },
+    "PUB": {
+      "module": "dec-core-compiler",
+      "class": "AtomicPublicationContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/publication/AtomicPublicationContractTest.java",
+      "cases": [
+        "CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001",
+        "CASE-P2-TD-ATOMIC-PUBLICATION-001",
+        "CASE-P2-TD-CONTEXT-ISOLATION-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.CompiledViewMaterializationIndex",
+        "dec.core.context.model.ModelAccessRuleKey"
+      ]
+    },
+    "DIAG": {
+      "module": "dec-core-compiler",
+      "class": "P2DiagnosticDeterminismTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/diagnostic/P2DiagnosticDeterminismTest.java",
+      "cases": [
+        "CASE-P2-TD-DIAGNOSTIC-DETERMINISM-001",
+        "CASE-P2-TD-RUNTIME-DENIAL-DIAGNOSTIC-DETERMINISM-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.ModelAccessRuleKey"
+      ]
+    },
+    "FIXTURE": {
+      "module": "dec-demo",
+      "class": "P2RealFixtureIntegrationTest",
+      "source": "dec-demo/src/test/java/dec/demo/p2/P2RealFixtureIntegrationTest.java",
+      "cases": [
+        "CASE-P2-TD-DYNAMIC-CLASSIFIER-REAL-001",
+        "CASE-P2-TD-SOURCE-TO-READ-WRITE-OPERATION-001"
+      ],
+      "required_contracts": [
+        "dec.core.model.runtime.RuntimeModelExecutionRoot",
+        "dec.core.context.model.TargetKey"
+      ]
+    },
+    "COMPAT": {
+      "module": "dec-core-compiler",
+      "class": "P2DeclarationCompatibilityContractTest",
+      "source": "dec-core-compiler/src/test/java/dec/core/compiler/compat/P2DeclarationCompatibilityContractTest.java",
+      "cases": [
+        "CASE-P2-TD-DECLARATION-BOUNDARY-001"
+      ],
+      "required_contracts": [
+        "dec.core.context.model.RuleViewKey",
+        "dec.core.context.model.SystemKey"
+      ]
+    }
+  },
+  "revision": "TDD-P2-R01@3f282bb4e1f6"
+}

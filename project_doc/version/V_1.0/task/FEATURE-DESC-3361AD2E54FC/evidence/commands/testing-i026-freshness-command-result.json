@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "kind": "command_result",
+  "command": "P0 #1832 Testing freshness: core-verify attempt 2 + mysql-it attempt 3",
+  "exit_code": 0,
+  "executed_at": "2026-08-26T01:00:00+08:00",
+  "revision": "TP-FEATURE-DESC-3361AD2E54FC-R03@121eac16a9d5",
+  "result": "PASSED",
+  "execution_mode": "CURRENT_REVISION_EVIDENCE_RECONCILIATION",
+  "source_refs": [
+    "EVD-000662",
+    "EVD-000663",
+    "../../../../../doc/test"
+  ],
+  "commands": [
+    {
+      "command": "./mvnw --batch-mode --no-transfer-progress clean verify",
+      "source_evidence_id": "EVD-000662",
+      "exit_code": 0,
+      "result": "PASSED",
+      "note": "Current R03-bound command Evidence; no production or test source mutation."
+    },
+    {
+      "command": "./mvnw --batch-mode --no-transfer-progress -Pmysql-it verify",
+      "source_evidence_id": "EVD-000663",
+      "exit_code": 0,
+      "result": "PASSED",
+      "note": "Prior successful execution recorded in doc/test and confirmed by the user; registered as immutable log evidence rather than rerun."
+    }
+  ],
+  "claim_boundary": "This record reconciles the declared Testing freshness gate to the fixed R03 revision. The mysql-it execution is historical evidence from doc/test, not a newly executed command in this turn.",
+  "output": "clean verify PASSED via EVD-000662; -Pmysql-it verify PASSED in user-confirmed doc/test snapshot EVD-000663; no production or test source changes.",
+  "output_digest": "a347908588bba7b5b2b1659832e69fd26ffb391d3d9cfeb34b9d15f9b8d9885b"
+}

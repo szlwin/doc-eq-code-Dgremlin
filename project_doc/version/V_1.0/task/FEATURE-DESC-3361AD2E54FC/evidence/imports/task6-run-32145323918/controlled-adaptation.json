@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "TESTDESIGN-P2-R37_CONTROLLED_HARNESS_ADAPTATION",
+  "revision": "DEV-P2-R37-RED-GREEN-R01@aa99a6bd4081",
+  "productionRevision": "DEV-P2-R37-AUTHORITY-R01@544155ef6a5b",
+  "productionCommit": "8b2faf836fe15f80df8ddb8895c35dbc53326d94",
+  "reason": "Design-authorized task4 closure makes the production raw operation-port unreachable while preserving a compatibility-only legacy test seam; the frozen RED source therefore must adapt to the production-mode binding rather than require the removed raw reachability to remain executable.",
+  "oldFrozenSources": {
+    "fixtureSha256": "30d4721b117eb3325ea7e3a0727709c6b4660703e7772a6bbf008b6d68d8700d",
+    "testSha256": "00fb67f1fcdb072c52cf9dcd44d76793c7308125f4d039097daf3c048b92437b"
+  },
+  "newSources": {
+    "testSha256": "da285e13f39f065a772ce0dba5fca7b61369c3724ab7c9f94ea4bcb5a1c1c03c",
+    "greenFixtureSha256": "21b3b62792eb842de2a85c4aca9760efb20334b5fecc6598defedc0d45a877e2"
+  },
+  "patchSha256": "aa99a6bd4081e7aedd05eee8ba9eed0cd540c2e60afe0b48aaf7d7df76d8cf7d",
+  "stableCaseIds": [
+    "CASE-P2-TD-R34-RAW-MODEL-PORT-PUBLIC-SEAM-001",
+    "CASE-P2-TD-R34-READONLY-RAW-WRITE-BYPASS-001",
+    "CASE-P2-TD-R34-PROOFLESS-READ-ACCESS-NOT-AUTHORITY-001",
+    "CASE-P2-TD-R34-PROOFLESS-WRITE-ACCESS-NOT-AUTHORITY-001"
+  ],
+  "semanticOracleUnchanged": true,
+  "greenSummary": {
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "writeZeroSideEffectOracle": {
+    "receipt": "NULL",
+    "effectCount": "UNCHANGED",
+    "value": "UNCHANGED",
+    "mutationVersion": "UNCHANGED"
+  },
+  "prooflessAuthorityOracle": "transport may be constructible but cannot reach MODEL effect without Guard-minted authorization",
+  "frozenRedFixtureUnchanged": true
+}

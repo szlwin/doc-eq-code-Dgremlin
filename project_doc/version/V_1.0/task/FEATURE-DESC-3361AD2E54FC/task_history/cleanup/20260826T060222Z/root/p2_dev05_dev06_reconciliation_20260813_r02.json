@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "audit_id": "P2-DEV05-DEV06-RECONCILIATION-20260813-R02",
+  "supersedes": "P2-DEV05-DEV06-RECONCILIATION-20260813-R01",
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "branch": "feature/p2-design-testdesign-20260808",
+  "audit_status": "NEEDS_CHANGES",
+  "correction_reason": "R01 did not distinguish helper code that exists from exact-oracle helper code actually invoked by the registered TestClass. R02 makes executed-evidence accounting explicit.",
+  "sequence_audit": {
+    "result": "PASSED",
+    "finding": "DEV-05 was not skipped; DEV-05 skeleton/concrete revisions precede DEV-06 skeleton/concrete revisions.",
+    "ordered_revisions": [
+      "DEV-P2-DEV05-SKEL-R01@8a418be96a124457336eab76884ee0a7adcef6d2",
+      "DEV-P2-DEV05-R01@28859b64004899f251a72806d76898cd5f83c9ad",
+      "DEV-P2-DEV05-R02@e143df3cd55fc390e02bf082dab55c5ae1386e32",
+      "DEV-P2-DEV06-SKEL-R01@5526d9af0edb1f1c6a163cba972521f1fe56cd44",
+      "DEV-P2-DEV06-R01@e4af61d235f144ab40cb5b60d9ccea48b0604a57"
+    ]
+  },
+  "remediation_revisions": {
+    "DEV-P2-DEV05-R03": {
+      "production_src_main_changed": false,
+      "executed_exact_improvements": [
+        "RuntimeModelMaterializationIntegrationTest no longer uses Class.forName-only observation; its 12 registered cases invoke real production-load behavior for success, plan mismatch/missing materialization, same ModelData identity, container/scope and closed-root paths."
+      ],
+      "present_but_not_yet_bound_to_exact_cases": [
+        "caller-supplied ModelData rejection helper",
+        "compiled-field-only materialization helper",
+        "production ModelData-injection-seam absence helper"
+      ]
+    },
+    "DEV-P2-DEV06-R02": {
+      "production_src_main_changed": false,
+      "executed_exact_improvements": [
+        "RuntimeObjectLocatorIntegrationTest now executes exact sealed-session/object/binding/ownership assertions.",
+        "ProtectedWriteTransactionIntegrationTest now executes mutation-stamp, rollback, receipt/version and stale-write assertions."
+      ]
+    }
+  },
+  "verified_ci": {
+    "source_head": "9367b1bb6b27773aa30af540870fe8dcce2b63b1",
+    "p0_run_id": 31715688842,
+    "core_verify_job_id": 94499714249,
+    "results": {
+      "dec-core-context": "36/36 GREEN",
+      "dec-core-compiler": "563/563 GREEN",
+      "dec-core-model": "24/24 GREEN",
+      "dec-core-starter": "24 RED of 47; downstream DEV-07/DEV-08 pre-development contracts"
+    },
+    "evidence_limit": "The 24 executed MODEL tests do not execute the three DEV-05 helper methods listed as present_but_not_yet_bound_to_exact_cases."
+  },
+  "blocking_findings": [
+    {
+      "severity": "P1",
+      "scope": ["DEV-05", "DEV-06"],
+      "description": "ProtectedAccessModelApiContractTest remains Class.forName-only for CASE-P2-TD-MODEL-API-SELF-CONTAINED-001 and CASE-P2-TD-SESSION-FAILURE-ALGEBRA-001.",
+      "required_change": "Bind this exact TestClass to concrete MODEL API/session behavior and execute the plan-specified scoped command."
+    },
+    {
+      "severity": "P1",
+      "scope": ["DEV-05"],
+      "description": "Three dedicated semantic helpers exist but are not bound to their exact RuntimeModelMaterializationIntegrationTest cases because the attempted mapping update was blocked by the connected tool safety layer.",
+      "required_change": "Bind the affected exact cases to dedicated helpers (or equivalent direct assertions) and rerun DEV-05 exact validation."
+    }
+  ],
+  "formal_review_gate": "BLOCKED_NOT_FINALIZED",
+  "canonical_machine_state_rewritten": false,
+  "development_overall": "PARTIAL / IN_PROGRESS",
+  "dev07_allowed": false,
+  "next_action": [
+    "Complete the two P1 exact-oracle bindings in a normal writable repository development path.",
+    "Run exact DEV-05 and DEV-06 scoped validation commands.",
+    "Perform same-revision SpecCompliance, EngineeringStandards and Architecture reviews.",
+    "Only after all required PASSED reviews synchronize canonical task-state/attempt/evidence lineage and enter DEV-07."
+  ]
+}

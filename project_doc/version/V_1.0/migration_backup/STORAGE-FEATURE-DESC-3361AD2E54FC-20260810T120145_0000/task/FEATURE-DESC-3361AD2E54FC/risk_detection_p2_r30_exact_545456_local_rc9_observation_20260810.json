@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "target_id": "FEATURE-DESC-3361AD2E54FC",
+  "observation_type": "LOCAL_RC9_RISK_SCAN_NON_REPOSITORY_EVIDENCE",
+  "review_contract": "common-develop 2.44 RC9",
+  "candidate_revision": "DESIGN-P2-R30 / TESTDESIGN-P2-R31 / P2-IMPACT-R29",
+  "candidate_git_revision": "54545677040fdb2fe3539423fd6ef5a0a56d6a9a",
+  "local_scan": {
+    "status": "SCANNED",
+    "validator_status": "PASSED",
+    "input_digest": "55a43391a518fc2e320c1ef4e16986f5a7fbd999cae9ad8d80e0d0788ff0e5c7",
+    "scanned_at": "2026-08-10T04:54:20+00:00",
+    "scanned_by_agent": "ProjectManagerAgent",
+    "input_file_count": 10,
+    "detection_count": 28,
+    "active_risk_types": ["architecture_change","concurrency","data_migration","impact_analysis","security"],
+    "required_reviewers": ["ArchitectureReviewAgent","ConcurrencyReviewAgent","DataMigrationReviewAgent","ImpactAnalysisReviewAgent","SecurityReviewAgent"],
+    "detection_ids_by_risk": {
+      "architecture_change": ["DET-1936E84565B8","DET-28A4BC93314D","DET-30C52FB6A6DA","DET-425E96B2573F","DET-4FD6EBF42560","DET-7B8B2B11D396","DET-85AD388D1B5A","DET-B0FD0B6E8D2F","DET-CD3F34E74C0E"],
+      "concurrency": ["DET-18B83C1BF8A6","DET-3E25C1E410FA","DET-5FA484776C1D","DET-E19138C3F693","DET-FCE5808518FD"],
+      "data_migration": ["DET-8B1D4E449BAB"],
+      "impact_analysis": ["DET-732BAE9CD138","DET-73A923F3E039","DET-8A7281A9F6CD","DET-AE66006D85A3"],
+      "security": ["DET-1713258AE481","DET-18BEAE564C54","DET-2004F49F9F7D","DET-74F1A23EC66E","DET-BD978284C917","DET-C13D76D009AD","DET-CEECE5367C64","DET-DDA0C93F1912","DET-F0F3FC8EA344"]
+    }
+  },
+  "local_evidence": {
+    "id_range": "EVD-000001..EVD-000010",
+    "count": 10,
+    "namespace": "isolated scan workspace only",
+    "repository_authority": false
+  },
+  "repository_evidence_status": "NOT_REGISTERED",
+  "repository_risk_detection_status": "NOT_SCANNED",
+  "closure_eligible": false,
+  "fnd_p2_rev_005_status": "OPEN",
+  "reason": "The exact RC9 scanner/validator executed successfully, but its EVD-000001..EVD-000010 belong only to the isolated audit registry. The repository canonical evidence_index.json already owns EVD-000001..EVD-000115. The current connector-only runtime cannot safely append/reindex that compact historical registry transactionally, so local IDs MUST NOT be treated as repository Evidence and canonical risk_detection.json intentionally remains NOT_SCANNED.",
+  "required_next_action": "In a safely mounted repository working tree, rerun RC9 risk_detect scan/add/validate against exact revision 54545677040fdb2fe3539423fd6ef5a0a56d6a9a and the same ten changed files so canonical EVD-000116+ records are registered; then execute the five triggered exact-revision specialist Reviews or valid waivers before lifecycle closure."
+}

@@ -81,17 +81,20 @@ class SourceDeclarationExactPathReworkTest {
     }
 
     /**
-     * systems 根下非 system 路径中的 rule-file 必须忽略，并以不完整结构失败。
+     * systems 根下非 system 路径中的 rule-file 必须忽略，不能访问伪声明目标。
      */
     @Test
-    void rejectsRuleFilesOutsideFrozenSystemPath() {
+    void ignoresRuleFilesOutsideFrozenSystemPath() {
         SourceTestFixture.InMemoryProvider provider = providerWithSystems(
                 wrongSystemPathXml());
 
         SourceGraphResolutionResult result = resolve(provider);
 
-        assertPolicyFailure(result);
-        assertEquals(4, provider.accessCount());
+        assertEquals(SourceGraphResolutionStatus.RESOLVED, result.status());
+        assertTrue(result.graph().isPresent());
+        assertEquals(7, result.graph().get().manifest().sources().size());
+        assertEquals(4, result.graph().get().edges().size());
+        assertEquals(5, provider.accessCount());
     }
 
     /**

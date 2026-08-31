@@ -25,32 +25,59 @@ public class ConfigFileParser implements FileParser<ConfigInfo>{
 	private final static Logger log = LoggerFactory.getLogger(ConfigFileParser.class);
 	
 	public ConfigInfo parse(String filePath) throws XMLParseException{
-		
+		ConfigManager manager = ConfigManager.getInstance();
+		ConfigInfo candidate = manager.getOrCreateLoadingConfigInfo();
+		try {
+			ConfigInfo parsed = parseInto(candidate, filePath);
+			return manager.install(parsed);
+		} finally {
+			manager.clearLoadingConfigInfo();
+		}
+	}
+
+	/**
+	 * 判断根配置是否声明了由 Compiler 负责的 System 或 Business 文件。
+	 * 旧配置没有这些节点时继续使用原有 ConfigInfo 加载链路。
+	 */
+	public boolean requiresCompiler(String filePath) throws XMLParseException {
+		try {
+			Element root = readDocument(filePath).getRootElement();
+			return root.element("system-file-info") != null
+					|| root.element("business-file-info") != null;
+		} catch (Exception e) {
+			if (e instanceof XMLParseException) {
+				throw (XMLParseException) e;
+			}
+			throw new XMLParseException(e);
+		}
+	}
+
+	/** 把模型、View 和 Rule 等内容解析到指定候选配置。 */
+	public ConfigInfo parseInto(final ConfigInfo candidate, final String filePath)
+			throws XMLParseException {
+		try {
+			return ConfigManager.getInstance().withConfigInfo(
+					candidate,
+					new ConfigManager.ConfigOperation<ConfigInfo>() {
+						@Override
+						public ConfigInfo execute() throws Exception {
+							return parseCurrent(candidate, filePath);
+						}
+					});
+		} catch (XMLParseException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new XMLParseException(e);
+		}
+	}
+
+	private ConfigInfo parseCurrent(ConfigInfo configInfo, String filePath)
+			throws XMLParseException {
 		log.info("------Dec init Start------");
-		
-		ConfigInfo configInfo = ConfigManager.getInstance().getConfigInfo();
-		//ConfigManager.getInstance().setConfigInfo(configInfo);
 		try {
 			
 			
-			SAXReader saxReader = new SAXReader();
-			Document doc = null;
-
-			
-			if(filePath.startsWith("classpath:")){
-				filePath = filePath.substring("classpath:".length());
-				
-				InputStream fileStream 											
-					= ConfigFileParser.class
-					.getClassLoader()
-					.getResourceAsStream(filePath);
-				 
-				 doc = saxReader.read(fileStream); 
-				 
-			}else{
-				
-				doc = saxReader.read(new File(filePath)); 
-			}
+			Document doc = readDocument(filePath);
 			
 			log.info("Load the "+filePath+" Start");
 			
@@ -80,6 +107,26 @@ public class ConfigFileParser implements FileParser<ConfigInfo>{
 		}
 		log.info("------Dec init End------");
 		return configInfo;
+	}
+
+	/** 统一读取 classpath 或文件系统中的根配置文档。 */
+	private Document readDocument(String filePath) throws Exception {
+		SAXReader saxReader = new SAXReader();
+		if (filePath.startsWith("classpath:")) {
+			String resource = filePath.substring("classpath:".length());
+			InputStream fileStream = ConfigFileParser.class
+					.getClassLoader()
+					.getResourceAsStream(resource);
+			if (fileStream == null) {
+				throw new XMLParseException("配置资源不存在: " + filePath);
+			}
+			try {
+				return saxReader.read(fileStream);
+			} finally {
+				fileStream.close();
+			}
+		}
+		return saxReader.read(new File(filePath));
 	}
 	
 	@SuppressWarnings("rawtypes")
