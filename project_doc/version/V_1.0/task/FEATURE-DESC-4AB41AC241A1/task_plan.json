@@ -228,6 +228,50 @@
       "supersedes_iteration_id": "",
       "revision_reason": "设计阶段通过后登记测试设计阶段任务。",
       "risk_triggers": []
+    },
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-IMPLEMENTATION-PLAN",
+      "title": "制定 P3 Information Engine 实施计划",
+      "objective": "将 TESTDESIGN-P3-R01 和 DESIGN-P3-R02 转换为三个串行、可独立验证的开发任务，冻结文件、接口、测试、依赖和 checkpoint 门禁。",
+      "phase": "implementation_plan",
+      "depends_on": ["TASK-P3-INFORMATION-ENGINE-TEST-DESIGN"],
+      "owner_agent": "ImplementationPlanAgent",
+      "reviewer_agents": ["PlanReviewAgent", "ArchitectureReviewAgent", "TestDesignAgent", "DevelopAgent"],
+      "input_revisions": {
+        "design": "DESIGN-P3-R02",
+        "test_design": "TESTDESIGN-P3-R01"
+      },
+      "allowed_files": [
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/development_task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
+      ],
+      "acceptance_trace_ids": ["TR-P3-INFORMATION-ENGINE-001"],
+      "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-IDENTIFY",
+        "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/task_plan.py validate -g ImplementationPlanAgent --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1"
+      ],
+      "expected_results": [
+        "development_task_plan.json 形成 TP-FEATURE-DESC-4AB41AC241A1-R01@140befd6e37e，三项任务依赖无环且字段完整。",
+        "PlanReviewAgent、ArchitectureReviewAgent、TestDesignAgent 和 DevelopAgent 对同一计划 revision 独立 PASSED。"
+      ],
+      "stop_conditions": [
+        "实现任务需要引入需求未授权的缓存、UNRESOLVED、并发、幂等或独立事务语义。",
+        "计划无法为每项 expected result 提供稳定 Case、命令或实现决策引用。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-IMPLEMENTATION-PLAN",
+      "feature_id": "FEATURE-DESC-4AB41AC241A1",
+      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-IMPLEMENTATION-PLAN-005",
+      "iteration_no": 5,
+      "supersedes_iteration_id": "",
+      "revision_reason": "test_design 通过后登记实施计划阶段任务。",
+      "risk_triggers": []
     }
   ]
 }

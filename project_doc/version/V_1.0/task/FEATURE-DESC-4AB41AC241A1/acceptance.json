@@ -374,6 +374,59 @@
       "verified_by_agent": "TestEvidenceReviewAgent",
       "verified_at": "2026-08-31T21:44:12+08:00",
       "reason": "6 个 Case 覆盖主路径、边界和物化失败，且每项都有具体输入输出与测试接缝。"
+    },
+    {
+      "assertion_id": "ASRT-P3-IMPLPLAN-DEV-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "验证实施计划包含可执行的纵向开发任务、文件范围、命令和失败路径。",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-4AB41AC241A1-R01@140befd6e37e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "DevelopAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P3-INFORMATION-ENGINE-IMPLEMENTATION-PLAN#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000037",
+        "EVD-000039",
+        "EVD-000038",
+        "EVD-000036"
+      ],
+      "verified_by_agent": "DevelopAgent",
+      "verified_at": "2026-08-31T21:55:53+08:00",
+      "reason": "实施计划三项任务可独立实现、验证和回滚，文件与命令均已冻结。"
+    },
+    {
+      "assertion_id": "ASRT-P3-IMPLPLAN-PLAN-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "验证实施计划任务依赖、粒度、追踪和 checkpoint 门禁完整。",
+      "type": "MANUAL_REVIEW",
+      "phase": "implementation_plan",
+      "revision": "TP-FEATURE-DESC-4AB41AC241A1-R01@140befd6e37e",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "PlanReviewAgent",
+        "review_phase": "implementation_plan"
+      },
+      "source_refs": [
+        "TASK-P3-INFORMATION-ENGINE-IMPLEMENTATION-PLAN#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000037",
+        "EVD-000040",
+        "EVD-000036",
+        "EVD-000038",
+        "EVD-000039"
+      ],
+      "verified_by_agent": "PlanReviewAgent",
+      "verified_at": "2026-08-31T21:56:38+08:00",
+      "reason": "实施计划依赖、粒度、追踪和 checkpoint 门禁满足计划契约。"
     }
   ]
 }

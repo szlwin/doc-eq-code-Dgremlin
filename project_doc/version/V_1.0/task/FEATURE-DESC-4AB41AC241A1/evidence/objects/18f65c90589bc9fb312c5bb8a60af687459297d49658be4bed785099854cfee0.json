@@ -1,0 +1,299 @@
+{
+  "schema_version": 1,
+  "implementation_strategy_contract_version": 1,
+  "plan_id": "TP-FEATURE-DESC-4AB41AC241A1",
+  "target_id": "FEATURE-DESC-4AB41AC241A1",
+  "version": "V_1.0",
+  "status": "PASSED",
+  "revision": "TP-FEATURE-DESC-4AB41AC241A1-R01@140befd6e37e",
+  "revision_no": 1,
+  "supersedes_revision": "",
+  "revision_reason": "",
+  "input_revisions": {
+    "requirement_analysis": "REQAN-P3-R01@5b4727fc5db4",
+    "business_model": "BM-P3-R01",
+    "design": "DESIGN-P3-R02",
+    "test_design": "TESTDESIGN-P3-R01"
+  },
+  "work_mode": {
+    "minimal": false,
+    "architecture_review": false
+  },
+  "execution_mode": "SEQUENTIAL",
+  "generated_by_agent": "ImplementationPlanAgent",
+  "required_reviewers": [
+    "PlanReviewAgent",
+    "ArchitectureReviewAgent",
+    "TestDesignAgent",
+    "DevelopAgent"
+  ],
+  "review_round": 1,
+  "created_at": "2026-08-31T13:49:52+00:00",
+  "updated_at": "2026-08-31T13:52:37+00:00",
+  "finalized_at": "2026-08-31T13:52:37+00:00",
+  "tasks": [
+    {
+      "task_id": "TASK-P3-DEV-INFORMATION-COMPILER",
+      "title": "实现 Information 编译事实与依赖 DAG",
+      "goal": "将 mix 的 16 项 Information 编译为不可变定义，生成限定 Key、read-set 和无环依赖拓扑，并在非法配置时拒绝发布。",
+      "implementation": {
+        "owner_module": "dec-core-compiler",
+        "owner_component": "InformationCompiler / CompiledInformationSet",
+        "steps": [
+          "先为 16 项 mix 声明、重复 Key、缺失引用和循环依赖建立失败测试。",
+          "实现 RawInformationSet 到不可变 CompiledInformationSet 的编译、Key 唯一性和 DAG 拓扑校验。",
+          "保留当前已发布集合，在缺失路径、权限或循环配置时返回稳定 INFORMATION_DEFINITION_INVALID 诊断。",
+          "运行编译单元测试、静态检查和模块构建，记录编译结果与诊断 Evidence。"
+        ],
+        "affected_files": [
+          "dec-core-compiler/src/main/java/dec/core/compiler/information/InformationCompiler.java",
+          "dec-core-compiler/src/main/java/dec/core/compiler/information/CompiledInformationSet.java",
+          "dec-core-compiler/src/test/java/dec/core/compiler/information/InformationCompilerTest.java"
+        ],
+        "forbidden_changes": [
+          "不得修改 dec-demo mix XML 或 P2 model-access 解析语法。",
+          "不得在编译集合中保存运行结果、MutationSet 或 reverse-DAG 缓存。"
+        ],
+        "implementation_decision_ref": "IMPL-DEC-P3-003",
+        "strategy": "CREATE",
+        "existing_code_refs": [
+          "dec-core-compiler/.../ModelAccessCompiler.java",
+          "dec-core-compiler/.../DefaultModelAccessSelectorResolver.java"
+        ],
+        "shared_logic_disposition": "EXTRACT_NEW",
+        "shared_logic_owner": "dec-core-compiler InformationCompiler",
+        "compatibility_verifications": [
+          "旧 RuleTests.java 的模型编译链保持通过。",
+          "16 项 mix 声明编译后 Key 集合与输入声明一一对应。"
+        ],
+        "source_doc_refs": [
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-FEATURE-DESC-4AB41AC241A1-001"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-COMPILER-001",
+          "assertion": "16 项 Information 均生成唯一 Key、read-set 和可复用的无环 DAG。"
+        },
+        {
+          "id": "AC-COMPILER-002",
+          "assertion": "缺失引用、非法路径或循环依赖被拒绝并生成 INFORMATION_DEFINITION_INVALID，旧集合保持不变。"
+        }
+      ],
+      "depends_on": [],
+      "owner_agent": "DevelopAgent",
+      "reviewer_agents": [
+        "PlanReviewAgent",
+        "ArchitectureReviewAgent",
+        "TestDesignAgent",
+        "DevelopAgent"
+      ],
+      "validation_commands": [
+        "./mvnw -pl dec-core-compiler -Dtest=InformationCompilerTest test",
+        "./mvnw -pl dec-core-compiler -DskipTests compile"
+      ],
+      "expected_results": [
+        "编译测试 RED 阶段复现当前无统一 Information 编译入口，GREEN 阶段通过 16 项 Key/DAG 断言。",
+        "非法配置只产生稳定编译错误，不替换当前已发布集合。"
+      ],
+      "deliverables": [
+        "InformationCompiler 与 CompiledInformationSet 实现 revision",
+        "编译正向、边界和非法配置测试及 command Evidence"
+      ],
+      "stop_conditions": [
+        "需要修改 P2 XML 语法、model-access 权限或 Information 业务语义。",
+        "无法保持编译集合不可变或出现循环依赖无法诊断。"
+      ],
+      "trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-IDENTIFY"
+      ],
+      "risk_triggers": [],
+      "git_checkpoint_required": true
+    },
+    {
+      "task_id": "TASK-P3-DEV-INFORMATION-EVALUATOR",
+      "title": "实现实时路径解析与 Information 求值",
+      "goal": "按编译 read-set 每次从当前 ModelContext 读取值，完成原子/复合表达式、DAG 求值及冻结的 null、空集合和数据归属语义。",
+      "implementation": {
+        "owner_module": "dec-core-model / dec-core-context",
+        "owner_component": "ModelPathResolver / InformationEngine",
+        "steps": [
+          "为 target-main 基础字段、独立 orderDetail、普通 null、显式 InformationKey=null、every 空集合和非法路径建立失败测试。",
+          "实现 ModelPathResolver 的 target-main 优先规则及 relation Data 独立归属。",
+          "实现 InformationEngine 原子与复合求值；每次 evaluate 都调用 ConfiguredModelReader 重新读取当前值，不维护 MutationSet。",
+          "运行识别单元/集成测试、旧 RuleTests 回归和模块构建。"
+        ],
+        "affected_files": [
+          "dec-core-model/src/main/java/dec/core/model/information/ModelPathResolver.java",
+          "dec-core-context/src/main/java/dec/core/context/information/InformationEngine.java",
+          "dec-core-model/src/test/java/dec/core/model/information/ModelPathResolverTest.java",
+          "dec-core-context/src/test/java/dec/core/context/information/InformationEngineTest.java"
+        ],
+        "forbidden_changes": [
+          "不得引入 UNRESOLVED、运行时缓存、MutationSet 或 reverse-DAG 失效机制。",
+          "不得修改 every 的通用空集合语义；订单明细非空仅作为订单规则。"
+        ],
+        "implementation_decision_ref": "IMPL-DEC-P3-004",
+        "strategy": "CREATE",
+        "existing_code_refs": [
+          "dec-core-model/.../ModelContainer.java",
+          "dec-demo/src/test/java/dec/demo/model/RuleTests.java"
+        ],
+        "shared_logic_disposition": "EXTRACT_NEW",
+        "shared_logic_owner": "dec-core-context InformationEngine",
+        "compatibility_verifications": [
+          "CASE-FEATURE-DESC-4AB41AC241A1-002 至 005 的结果状态、readPaths 和诊断与测试设计一致。",
+          "旧 RuleTests.java 调用链不改变。"
+        ],
+        "source_doc_refs": [
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-FEATURE-DESC-4AB41AC241A1-002"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-EVALUATOR-001",
+          "assertion": "同一 Key 两次 evaluate 读取两次当前值，第二次结果与模型新值一致。"
+        },
+        {
+          "id": "AC-EVALUATOR-002",
+          "assertion": "普通 null、非法路径必须返回 ERROR，显式 InformationKey=null 比较按例外规则返回布尔结果。"
+        },
+        {
+          "id": "AC-EVALUATOR-003",
+          "assertion": "every(emptyCollection)=TRUE，订单 orderDetailList 为空时必须返回订单明细非空错误。"
+        }
+      ],
+      "depends_on": [
+        "TASK-P3-DEV-INFORMATION-COMPILER"
+      ],
+      "owner_agent": "DevelopAgent",
+      "reviewer_agents": [
+        "PlanReviewAgent",
+        "ArchitectureReviewAgent",
+        "TestDesignAgent",
+        "DevelopAgent"
+      ],
+      "validation_commands": [
+        "./mvnw -pl dec-core-model,dec-core-context -Dtest=ModelPathResolverTest,InformationEngineTest test",
+        "./mvnw -pl dec-core-model,dec-core-context -DskipTests compile"
+      ],
+      "expected_results": [
+        "路径与求值测试覆盖 target-main/orderDetail 归属、实时重读、null/非法路径和空集合边界。",
+        "所有正常结果为 TRUE/FALSE，冻结错误输入为 ERROR，未引入 UNRESOLVED 或缓存。"
+      ],
+      "deliverables": [
+        "ModelPathResolver 与 InformationEngine 实现 revision",
+        "路径、表达式和错误语义测试及 Evidence"
+      ],
+      "stop_conditions": [
+        "需要改变 OrderInfo 基础字段或 orderDetail Data 归属。",
+        "发现求值必须依赖 MutationSet、并发或额外事务才能满足需求。"
+      ],
+      "trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-IDENTIFY"
+      ],
+      "risk_triggers": [],
+      "git_checkpoint_required": true
+    },
+    {
+      "task_id": "TASK-P3-DEV-INFORMATION-MATERIALIZER",
+      "title": "实现 change-data 物化与异常传播",
+      "goal": "仅将声明的模型原子 change-data 写入既有 ModelContainer，写后实时重读；写入失败直接抛异常并沿用现有回滚，不继续下游。",
+      "implementation": {
+        "owner_module": "dec-core-model",
+        "owner_component": "InformationMaterializer",
+        "steps": [
+          "为成功写入、写后重读和 writer 抛 PersistenceException 建立集成测试。",
+          "实现 change-data 声明校验、写入值传递和写后 InformationEngine evaluate 编排。",
+          "将异常原样传播给 ModelContainer，验证既有事务回滚和失败分支下游调用次数为零。",
+          "运行物化集成测试、RuleTests 回归、静态检查和全模块构建。"
+        ],
+        "affected_files": [
+          "dec-core-model/src/main/java/dec/core/model/information/InformationMaterializer.java",
+          "dec-core-model/src/test/java/dec/core/model/information/InformationMaterializerTest.java"
+        ],
+        "forbidden_changes": [
+          "不得新建事务、重试、幂等键、并发锁或 MutationSet。",
+          "不得吞掉 PersistenceException 或在物化失败后触发下游重算。"
+        ],
+        "implementation_decision_ref": "IMPL-DEC-P3-001",
+        "strategy": "REUSE",
+        "existing_code_refs": [
+          "dec-core-model/.../ModelContainer.java",
+          "dec-core-model/.../execute/tran/TransactionContainer.java"
+        ],
+        "shared_logic_disposition": "REUSE_SHARED",
+        "shared_logic_owner": "dec-core-model ModelContainer",
+        "compatibility_verifications": [
+          "CASE-FEATURE-DESC-4AB41AC241A1-006 成功和失败分支均可观察。",
+          "现有 ModelContainer 提交、回滚和关闭语义保持不变。"
+        ],
+        "source_doc_refs": [
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-FEATURE-DESC-4AB41AC241A1-006"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-MATERIALIZER-001",
+          "assertion": "成功物化只写声明的 change-data 值，写后重读得到相同值且结果一致。"
+        },
+        {
+          "id": "AC-MATERIALIZER-002",
+          "assertion": "写入异常直接抛出，既有事务恢复写入前值且失败分支不存在下游调用。"
+        }
+      ],
+      "depends_on": [
+        "TASK-P3-DEV-INFORMATION-EVALUATOR"
+      ],
+      "owner_agent": "DevelopAgent",
+      "reviewer_agents": [
+        "PlanReviewAgent",
+        "ArchitectureReviewAgent",
+        "TestDesignAgent",
+        "DevelopAgent"
+      ],
+      "validation_commands": [
+        "./mvnw -pl dec-core-model -Dtest=InformationMaterializerTest test",
+        "./mvnw -pl dec-core-model -DskipTests compile"
+      ],
+      "expected_results": [
+        "物化成功测试断言写入参数、写后 reread 值和下游识别结果一致。",
+        "物化失败测试断言原始异常、回滚后的旧值和零次下游调用。"
+      ],
+      "deliverables": [
+        "InformationMaterializer 实现 revision",
+        "物化成功/失败回滚测试及 command Evidence"
+      ],
+      "stop_conditions": [
+        "现有 ModelContainer 无法提供既定回滚语义且需要修改 P7 事务治理。",
+        "物化失败无法保证异常传播或零下游副作用。"
+      ],
+      "trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+      ],
+      "risk_triggers": [],
+      "git_checkpoint_required": true
+    }
+  ]
+}
