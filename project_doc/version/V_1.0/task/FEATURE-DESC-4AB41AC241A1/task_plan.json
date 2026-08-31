@@ -177,10 +177,10 @@
       "max_attempts": 3,
       "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-DESIGN",
       "feature_id": "FEATURE-DESC-4AB41AC241A1",
-      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-004",
-      "iteration_no": 4,
-      "supersedes_iteration_id": "",
-      "revision_reason": "business_model 阶段通过后补登记当前 design 阶段任务。",
+      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-005",
+      "iteration_no": 5,
+      "supersedes_iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-004",
+      "revision_reason": "设计文档发布后补齐契约矩阵，重开 iteration 以冻结一致的设计 revision。",
       "risk_triggers": []
     }
   ]
