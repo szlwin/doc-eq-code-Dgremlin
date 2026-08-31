@@ -77,6 +77,55 @@
       "verified_by_agent": "TestDesignAgent",
       "verified_at": "2026-08-31T20:45:22+08:00",
       "reason": "需求分析阶段通过。当前不要求已存在测试 Case 或 test_ref，测试实现与执行留待后续 test_design/development/testing 阶段。"
+    },
+    {
+      "assertion_id": "ASRT-P3-BMODEL-R01-BMR-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "BusinessModelReviewAgent 确认 BM-P3-R01 的 Information 对象、聚合、不变量、状态机、服务、策略、事件和业务错误语义闭合且与需求分析一致。",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-P3-R01",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL#expected_results/0"
+      ],
+      "evidence_ids": [
+        "EVD-000016",
+        "EVD-000017",
+        "EVD-000018"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-08-31T20:54:08+08:00",
+      "reason": "BM-P3-R01 通过 BusinessModelReviewAgent 审查。"
+    },
+    {
+      "assertion_id": "ASRT-P3-BMODEL-R01-TD-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "TestDesignAgent 确认 BM-P3-R01 的识别不变量、空值/空集合边界、路径错误、物化失败和实时读取语义具有可执行测试接缝。",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-P3-R01",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "business_model"
+      },
+      "source_refs": [
+        "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL#expected_results/1"
+      ],
+      "evidence_ids": [
+        "EVD-000016",
+        "EVD-000018"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-08-31T20:54:29+08:00",
+      "reason": "BM-P3-R01 的业务规则和状态/错误语义具备可执行测试接缝，TestDesignAgent Review 通过。"
     }
   ]
 }

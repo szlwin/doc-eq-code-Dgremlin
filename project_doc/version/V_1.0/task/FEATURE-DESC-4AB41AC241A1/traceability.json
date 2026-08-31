@@ -26,10 +26,15 @@
       ],
       "cross_module_implementation_required": false,
       "cross_module_implementation_refs": [],
-      "business_model_refs": [],
+      "business_model_refs": [
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml#BM-P3-R01",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md#P3 Information Engine 业务模型"
+      ],
       "design_refs": [],
       "test_case_ids": [],
-      "plan_task_ids": [],
+      "plan_task_ids": [
+        "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL"
+      ],
       "contract_refs": [],
       "implementation_refs": [],
       "verification_evidence_ids": [],

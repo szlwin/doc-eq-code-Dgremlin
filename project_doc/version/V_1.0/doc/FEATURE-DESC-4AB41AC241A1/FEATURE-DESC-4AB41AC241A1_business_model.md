@@ -1,0 +1,33 @@
+# P3 Information Engine 业务模型
+
+- Revision：`BM-P3-R01`
+- Base Revision：`REQAN-P3-R01@5b4727fc5db4`
+
+## 核心术语
+
+`Information` 是可识别、可组合或作为模型表达式原子的业务事实；`InformationKey` 是 System 归属与本地名称组成的稳定身份。模型表达式只访问模型路径，Information 表达式只引用 InformationKey。
+
+## 对象与聚合
+
+- `Information`：按 RuleView 原子、模型表达式原子、复合表达式三类互斥建模。
+- `ModelPath`：记录规范路径和 Data 归属；基础字段先解析 `target-main`，关系字段按自身 Data 解析，`orderDetailList` 属于独立 `orderDetail` Data。
+- `InformationDependency`：记录 InformationKey 依赖边，发布前禁止缺失引用和循环。
+- `IdentificationResult`：绑定本次模型/配置版本，状态只能为 `TRUE`、`FALSE`、`ERROR`。
+
+`Information model` 聚合保护定义、Key、路径和 DAG 不变量；`Information evaluation` 聚合保护识别结果和证据。识别是只读操作；物化沿用现有框架原子化边界。
+
+## 业务不变量
+
+1. Information 类型互斥，复合表达式不得引用模型路径。
+2. 每次判断按 Information 配置重新读取当前值，不维护或消费 MutationSet。
+3. 模型声明路径不存在、普通求值遇到 `null`、权限或表达式失败均为 `ERROR`；显式 `InformationKey = null` 比较是例外。
+4. `every(emptyCollection, ...)` 为 `TRUE`，但订单相关 Information 必须同时满足订单明细非空。
+5. 只有声明 `change-data` 的模型表达式原子可物化；失败抛出异常并返回 `ERROR`，不继续下游。
+
+## 识别与物化状态
+
+识别依次经历 `REQUESTED → EVALUATING → TRUE/FALSE/ERROR`。复合 Information 按无环依赖拓扑求值并短路。物化经历 `PREPARED → COMMITTED`，写入后必须重新读取；任一写入异常进入 `ERROR`，由现有框架回滚。
+
+## 追踪
+
+模型事实、流程和验收统一追踪到 `TR-P3-INFORMATION-ENGINE-001` / `AC-P3-INFORMATION-ENGINE-001`。该 revision 不引入 P2 修订、MutationSet、reverse-DAG 缓存、并发或独立事务语义。

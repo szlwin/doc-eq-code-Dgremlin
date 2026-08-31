@@ -80,6 +80,55 @@
       "supersedes_iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-003",
       "revision_reason": "Skill 修复需求确认阶段错误要求 test_ref 后，补齐需求分析阶段 Task 并继续 P3 生命周期。",
       "risk_triggers": []
+    },
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL",
+      "title": "建立 P3 Information Engine 业务模型",
+      "objective": "基于 REQAN-P3-R01 建立 Information、InformationKey、模型表达式、复合表达式、依赖图、识别结果和 change-data 物化边界的稳定业务模型。",
+      "phase": "business_model",
+      "depends_on": [
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS"
+      ],
+      "owner_agent": "BusinessModelAgent",
+      "reviewer_agents": [
+        "BusinessModelReviewAgent",
+        "DesignReviewAgent",
+        "TestDesignAgent"
+      ],
+      "input_revisions": {
+        "requirement_analysis": "REQAN-P3-R01@5b4727fc5db4"
+      },
+      "allowed_files": [
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
+      ],
+      "acceptance_trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "flow_step_refs": [],
+      "validation_commands": [],
+      "expected_results": [
+        "形成与 REQAN-P3-R01 一致的 Information 业务术语、对象边界、依赖不变量、识别和物化失败语义。",
+        "明确每次按配置实时读取、不维护 MutationSet、普通 null/非法路径 ERROR、every(emptyCollection)=TRUE 且订单明细非空，以及 target-main 与 orderDetail Data 归属规则。",
+        "BusinessModelAgent 及其独立 Reviewer 对同一业务模型 revision 完成 Review。"
+      ],
+      "stop_conditions": [
+        "业务模型引入需求未授权的新语义或修改 P2 事实。",
+        "试图修改生产代码、测试代码或 XML fixture。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-BUSINESS-MODEL",
+      "feature_id": "FEATURE-DESC-4AB41AC241A1",
+      "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-BUSINESS-MODEL-004",
+      "iteration_no": 4,
+      "supersedes_iteration_id": "",
+      "revision_reason": "需求分析阶段通过后补登记当前 business_model 阶段任务。",
+      "risk_triggers": []
     }
   ]
 }
