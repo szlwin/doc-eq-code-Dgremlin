@@ -16,7 +16,7 @@
 | 目标 | 需求文档 |
 | --- | --- |
 | FEATURE-DESC-3361AD2E54FC | [需求正文](doc/FEATURE-DESC-3361AD2E54FC/requirement.md) / [测试设计](doc/FEATURE-DESC-3361AD2E54FC/test_case.md) |
-| FEATURE-DESC-4AB41AC241A1 | [需求正文](doc/FEATURE-DESC-4AB41AC241A1/requirement.md) |
+| FEATURE-DESC-4AB41AC241A1 | [需求正文](doc/FEATURE-DESC-4AB41AC241A1/requirement.md) / [测试设计](doc/FEATURE-DESC-4AB41AC241A1/test_case.md) |
 | P1-COMPILER-CR01 | [需求正文](doc/P1-COMPILER-CR01/requirement.md) |
 | P1-COMPILER-CR02 | [需求正文](doc/P1-COMPILER-CR02/requirement.md) |
 | P1-COMPILER-CR03 | [需求正文](doc/P1-COMPILER-CR03/requirement.md) |
@@ -29,7 +29,7 @@
 | COMPILER | [模块说明](doc/COMPILER/COMPILER_desc.md) / [设计](doc/COMPILER/COMPILER_design.md) / [业务模型事实](doc/COMPILER/COMPILER_business_model.yaml) |
 | DEC_COMPILER | [设计](doc/DEC_COMPILER/DEC_COMPILER_design.md) / [业务模型事实](doc/DEC_COMPILER/DEC_COMPILER_business_model.yaml) |
 | FEATURE-DESC-3361AD2E54FC | 暂无可读文档 |
-| FEATURE-DESC-4AB41AC241A1 | 暂无可读文档 |
+| FEATURE-DESC-4AB41AC241A1 | [设计](doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md) / [业务模型事实](doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml) |
 | MODEL | [模块说明](doc/MODEL/MODEL_desc.md) |
 | P1-COMPILER-CR01 | 暂无可读文档 |
 | P1-COMPILER-CR02 | 暂无可读文档 |
@@ -57,7 +57,9 @@
 
 ## 长任务摘要
 
-暂无。
+| 任务 | 阅读入口 |
+| --- | --- |
+| FEATURE-DESC-4AB41AC241A1 | [大需求实施计划](task/FEATURE-DESC-4AB41AC241A1/development_task_plan.json) |
 
 ## 归档说明
 

@@ -23,15 +23,15 @@ terms:
     definition: 每次判断按 Information 配置重新读取当前模型/事务上下文中的值。
 scenarios:
   - id: SCN-P3-IDENTIFY
-    given: [已发布的 16 个 Information 定义和可读模型上下文]
+    given: ["已发布的 16 个 Information 定义和可读模型上下文"]
     when: 按限定 InformationKey 请求识别
-    then: [先识别原子再按 DAG 计算复合，返回 TRUE/FALSE/ERROR 和证据]
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    then: ["先识别原子再按 DAG 计算复合，返回 TRUE/FALSE/ERROR 和证据"]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: SCN-P3-MATERIALIZE
-    given: [模型表达式原子声明 change-data 且拥有写权限]
+    given: ["模型表达式原子声明 change-data 且拥有写权限"]
     when: 执行物化
-    then: [只写入声明值，写入后重新读取并识别目标及下游]
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    then: ["只写入声明值，写入后重新读取并识别目标及下游"]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 entities:
   - id: ENT-INFORMATION
     name: Information
@@ -40,8 +40,8 @@ entities:
       - {name: key, type: InformationKey, required: true}
       - {name: kind, type: RULE_ATOMIC|MODEL_ATOMIC|COMPOSITE, required: true}
       - {name: ownerSystem, type: SystemKey, required: true}
-    behaviors: [按 kind 执行互斥校验, 只读识别, 受声明约束物化]
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    behaviors: ["按 kind 执行互斥校验", "只读识别", "受声明约束物化"]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: ENT-IDENTIFICATION-RESULT
     name: IdentificationResult
     identity: informationKey+modelVersion+configurationRevision
@@ -49,8 +49,8 @@ entities:
       - {name: state, type: TRUE|FALSE|ERROR, required: true}
       - {name: evidence, type: EvidenceSet, required: true}
       - {name: readPaths, type: List<ModelPath>, required: true}
-    behaviors: [结果绑定本次读取版本, ERROR 不降级为 FALSE]
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    behaviors: ["结果绑定本次读取版本", "ERROR 不降级为 FALSE"]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 valueObjects:
   - id: VO-INFORMATION-KEY
     name: InformationKey
@@ -58,119 +58,119 @@ valueObjects:
     attributes:
       - {name: systemKey, type: SystemKey, required: true}
       - {name: localName, type: String, required: true}
-    behaviors: [限定引用, 大小写和归属稳定]
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    behaviors: ["限定引用", "大小写和归属稳定"]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: VO-MODEL-PATH
     name: ModelPath
     identity: canonicalSegments
     attributes:
       - {name: canonicalSegments, type: List<String>, required: true}
       - {name: dataOwner, type: target-main Data|relation Data, required: true}
-    behaviors: [target-main 基础字段优先, relation Data 独立解析]
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    behaviors: ["target-main 基础字段优先", "relation Data 独立解析"]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: VO-DEPENDENCY-EDGE
     name: InformationDependency
     identity: fromKey+toKey
     attributes:
       - {name: fromKey, type: InformationKey, required: true}
       - {name: toKey, type: InformationKey, required: true}
-    behaviors: [发布前拒绝缺失引用和循环]
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    behaviors: ["发布前拒绝缺失引用和循环"]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 aggregates:
   - id: AGG-INFORMATION-MODEL
     name: Information model
     root: Information
-    members: [InformationKey, ModelPath, InformationDependency]
-    invariantIds: [INV-P3-KIND-EXCLUSIVE, INV-P3-DAG, INV-P3-PATH-RESOLUTION]
+    members: ["InformationKey", "ModelPath", "InformationDependency"]
+    invariantIds: ["INV-P3-KIND-EXCLUSIVE", "INV-P3-DAG", "INV-P3-PATH-RESOLUTION"]
     transactionBoundary: 配置发布时整体校验；运行时只读识别
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: AGG-INFORMATION-EVALUATION
     name: Information evaluation
     root: IdentificationResult
-    members: [InformationKey, IdentificationResult, EvidenceSet]
-    invariantIds: [INV-P3-REALTIME-READ, INV-P3-NULL-ERROR, INV-P3-EVERY-EMPTY]
+    members: ["InformationKey", "IdentificationResult", "EvidenceSet"]
+    invariantIds: ["INV-P3-REALTIME-READ", "INV-P3-NULL-ERROR", "INV-P3-EVERY-EMPTY"]
     transactionBoundary: 识别只读；物化沿用现有框架原子化边界
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 invariants:
   - id: INV-P3-KIND-EXCLUSIVE
     statement: Information 必须且只能属于 RuleView 原子、模型表达式原子或复合表达式之一；复合表达式只引用 InformationKey。
     trigger: compile
     failure: INFORMATION_DEFINITION_INVALID
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: INV-P3-DAG
     statement: Information 依赖图必须无环，引用必须存在且符合 System 归属规则。
     trigger: publish
     failure: INFORMATION_DEPENDENCY_INVALID
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: INV-P3-PATH-RESOLUTION
     statement: 模型路径不存在为 ERROR；target-main 对应基础字段优先，关系字段按自身 Data 归属解析。
     trigger: identify
     failure: INFORMATION_PATH_INVALID
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: INV-P3-REALTIME-READ
     statement: 每次判断按 Information 配置重新读取当前值，不维护或消费 MutationSet。
     trigger: identify
     failure: INFORMATION_READ_FAILED
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: INV-P3-NULL-ERROR
     statement: 普通求值遇到 null 为 ERROR，只有显式 InformationKey = null 比较例外。
     trigger: identify
     failure: INFORMATION_NULL_ERROR
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: INV-P3-EVERY-EMPTY
-    statement: every(emptyCollection, predicate) 为 TRUE；订单相关 Information 还必须满足订单明细非空。
+    statement: every(emptyCollection, predicate) 为 TRUE；订单相关 Information 还必须满足订单明细非空，明细为空时结果为 FALSE 并可附 ORDER_DETAIL_REQUIRED 诊断。
     trigger: identify
     failure: ORDER_DETAIL_REQUIRED
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: INV-P3-MATERIALIZE
     statement: 仅模型表达式原子可物化；只写声明的 change-data 值，失败抛异常并返回 ERROR，不继续下游。
     trigger: materialize
     failure: INFORMATION_MATERIALIZE_FAILED
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 stateMachines:
   - id: SM-P3-IDENTIFICATION
     name: Information identification
     initialState: REQUESTED
-    states: [REQUESTED, EVALUATING, TRUE, FALSE, ERROR]
+    states: ["REQUESTED", "EVALUATING", "TRUE", "FALSE", "ERROR"]
     transitions:
-      - {id: TRANS-P3-EVALUATE, from: REQUESTED, command: evaluate, to: EVALUATING, preconditions: [InformationKey 已发布]}
-      - {id: TRANS-P3-TRUE, from: EVALUATING, command: resultTrue, to: TRUE, preconditions: [所有必需读取满足]}
-      - {id: TRANS-P3-FALSE, from: EVALUATING, command: resultFalse, to: FALSE, preconditions: [条件不满足且无错误]}
-      - {id: TRANS-P3-ERROR, from: EVALUATING, command: resultError, to: ERROR, preconditions: [路径/null/权限/表达式错误]}
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+      - {id: TRANS-P3-EVALUATE, from: REQUESTED, command: evaluate, to: EVALUATING, preconditions: ["InformationKey 已发布"]}
+      - {id: TRANS-P3-TRUE, from: EVALUATING, command: resultTrue, to: TRUE, preconditions: ["所有必需读取满足"]}
+      - {id: TRANS-P3-FALSE, from: EVALUATING, command: resultFalse, to: FALSE, preconditions: ["条件不满足且无错误"]}
+      - {id: TRANS-P3-ERROR, from: EVALUATING, command: resultError, to: ERROR, preconditions: ["路径/null/权限/表达式错误"]}
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: SM-P3-MATERIALIZATION
     name: change-data materialization
     initialState: PREPARED
-    states: [PREPARED, COMMITTED, ERROR]
+    states: ["PREPARED", "COMMITTED", "ERROR"]
     transitions:
-      - {id: TRANS-P3-MATERIALIZE-COMMIT, from: PREPARED, command: writeDeclaredValue, to: COMMITTED, preconditions: [模型表达式原子, 写权限]}
-      - {id: TRANS-P3-MATERIALIZE-ERROR, from: PREPARED, command: fail, to: ERROR, preconditions: [写入异常], failure: INFORMATION_MATERIALIZE_FAILED}
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+      - {id: TRANS-P3-MATERIALIZE-COMMIT, from: PREPARED, command: writeDeclaredValue, to: COMMITTED, preconditions: ["模型表达式原子", "写权限"]}
+      - {id: TRANS-P3-MATERIALIZE-ERROR, from: PREPARED, command: fail, to: ERROR, preconditions: ["写入异常"], failure: INFORMATION_MATERIALIZE_FAILED}
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 services:
   - id: SVC-P3-INFORMATION-EVALUATOR
     name: Information evaluator
     why: 识别需要统一处理三类 Information 和 DAG 拓扑。
     input: InformationKey + current model context
     output: IdentificationResult
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 policies:
   - id: POL-P3-READ-SET
     name: configured read policy
     statement: 只读取当前 Information 及其依赖声明的模型路径，不读取无关字段。
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 events:
   - id: EVT-P3-MATERIALIZED
     name: Information materialized
     meaning: change-data 写入完成并触发按配置重新识别。
-    traceIds: [TR-P3-INFORMATION-ENGINE-001]
+    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 businessErrors:
-  - {id: ERR-P3-DEFINITION-INVALID, condition: 类型混用/缺失引用/循环/越权写入, meaning: 配置或编译错误, retryable: false, stateChanged: false, traceIds: [TR-P3-INFORMATION-ENGINE-001]}
-  - {id: ERR-P3-PATH-INVALID, condition: 模型声明路径不存在, meaning: 路径错误, retryable: false, stateChanged: false, traceIds: [TR-P3-INFORMATION-ENGINE-001]}
-  - {id: ERR-P3-NULL-VALUE, condition: 普通求值读取到 null, meaning: 空值错误, retryable: false, stateChanged: false, traceIds: [TR-P3-INFORMATION-ENGINE-001]}
-  - {id: ERR-P3-MATERIALIZE-FAILED, condition: change-data 写入失败, meaning: 抛异常并由现有回滚机制撤销, retryable: false, stateChanged: false, traceIds: [TR-P3-INFORMATION-ENGINE-001]}
+  - {id: ERR-P3-DEFINITION-INVALID, condition: 类型混用/缺失引用/循环/越权写入, meaning: 配置或编译错误, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
+  - {id: ERR-P3-PATH-INVALID, condition: 模型声明路径不存在, meaning: 路径错误, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
+  - {id: ERR-P3-NULL-VALUE, condition: 普通求值读取到 null, meaning: 空值错误, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
+  - {id: ERR-P3-MATERIALIZE-FAILED, condition: change-data 写入失败, meaning: 抛异常并由现有回滚机制撤销, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
 traceability:
   - traceId: TR-P3-INFORMATION-ENGINE-001
-    requirementRefs: [REQAN-P3-R01@5b4727fc5db4]
-    modelRefs: [BM-P3-R01]
-    acceptanceRefs: [AC-P3-INFORMATION-ENGINE-001]
-    flowRefs: [FLOW-P3-INFORMATION-EVALUATION]
+    requirementRefs: ["REQAN-P3-R01@5b4727fc5db4"]
+    modelRefs: ["BM-P3-R01"]
+    acceptanceRefs: ["AC-P3-INFORMATION-ENGINE-001"]
+    flowRefs: ["FLOW-P3-INFORMATION-EVALUATION"]

@@ -80,7 +80,7 @@
 - `rule-data`/`change-data` 的模型路径必须可由模型表达式编译器解析；`expression` 必须由 Information 表达式编译器解析，二者语法和 AST 不得互用。
 - Information DAG 必须在发布前完成循环、缺失引用、跨 System 归属和非法组合校验；任一错误阻止该配置的 P3 Information 发布。
 - 模型声明路径不存在必须为 `ERROR`；运行时读取到 `null` 默认也为 `ERROR`，唯一例外是显式 Information 空值比较（如 `payment.success = null`），该比较按布尔条件求值。
-- `every(emptyCollection, ...)` 固定为 `TRUE`；订单相关 Information 另加“订单明细集合非空”前置条件，避免空明细订单被识别为已下单/支付中/成功/失败。
+- `every(emptyCollection, ...)` 固定为 `TRUE`；订单相关 Information 另加“订单明细集合非空”前置条件。明细为空时订单 Information 返回 `FALSE`（可附 `ORDER_DETAIL_REQUIRED` 诊断），避免空明细订单被识别为已下单/支付中/成功/失败。
 - `model-access` 的当前解析事实：`read`/`write` 只有携带显式 `<ref view="..." property="..."/>` 才会生成可用 Binding；旧式无 `<ref>` 简写不会形成有效授权，因此 P3 不将其作为兼容输入。`read path="*"` 仍可使用，但必须配合显式 `<ref>`。
 - `ref@property` 解析先区分大小写精确匹配目标 View 的 `target-main`，未命中时才在同一 View 的 property 树中逐段精确查找；`OrderInfo.target-main="order"` 因此优先绑定 `order` 根目标。
 - View 属性取值先按 `target-main` 对应的基础 Data 解析基础字段，例如 `OrderInfo.status` 对应 `order` Data 的 `orderStatus`；关系属性按其自身 `data` 归属解析。`OrderInfo.orderDetailList` 的 `data="orderDetail"`，不视为 `order` 基础 Data 的字段或其从属属性。
@@ -123,7 +123,7 @@
 #### 6.1.5 业务规则
 
 - BR-P3-INFORMATION-ENGINE-001：Information 只能是 RuleView 原子、模型表达式原子或只组合 Information 的复合类型之一；混合配置、缺失引用、循环和越权写入均为配置/编译错误。
-- BR-P3-INFORMATION-ENGINE-002：模型声明路径不存在或运行时普通求值遇到 `null` 返回 `ERROR`；显式 `InformationKey = null` 比较是唯一例外；`every(emptyCollection, ...)` 为 TRUE，但订单相关 Information 必须同时满足明细非空。
+- BR-P3-INFORMATION-ENGINE-002：模型声明路径不存在或运行时普通求值遇到 `null` 返回 `ERROR`；显式 `InformationKey = null` 比较是唯一例外；`every(emptyCollection, ...)` 为 TRUE，但订单相关 Information 必须同时满足明细非空，明细为空时返回 FALSE 并可附 `ORDER_DETAIL_REQUIRED` 诊断。
 - BR-P3-INFORMATION-ENGINE-003：Information 每次判断都按其配置的模型路径和依赖重新读取当前值；读取必须使用当前数据/事务上下文可见的最新值，必要时允许从数据库重新读取，不维护或消费 MutationSet。基础字段先解析到 `target-main` 对应 Data，关系字段再按自身 Data 解析。
 
 #### 6.1.6 输入与输出约束
@@ -152,7 +152,7 @@
 | 场景编号 | 关联功能 | 场景 | 预期结果 | 禁止副作用 |
 |---|---|---|---|---|
 | EX-P3-INFORMATION-ENGINE-001 | P3-INFORMATION-ENGINE-F01 | 声明路径不存在、普通求值遇到 null、复合引用缺失或 Information 形成循环 | 编译或识别返回 `ERROR`，包含路径/Key/来源位置；循环和缺失引用在发布前拒绝 | 不得写模型、更新缓存为 FALSE、继续物化或推进下游流程 |
-| EX-P3-INFORMATION-ENGINE-002 | P3-INFORMATION-ENGINE-F01 | `orderDetailList` 为空但订单状态满足 `status = 1/2/3/4` | `every(emptyCollection, ...)` 虽为 TRUE，但订单相关 Information 仍为 FALSE 或按未满足处理，因为明细非空是额外前置条件 | 不得物化订单状态，不得把空明细订单分类为 ordered/paying/success/error |
+| EX-P3-INFORMATION-ENGINE-002 | P3-INFORMATION-ENGINE-F01 | `orderDetailList` 为空但订单状态满足 `status = 1/2/3/4` | `every(emptyCollection, ...)` 为 TRUE，但订单相关 Information 因明细非空前置条件不满足而返回 FALSE，可附 `ORDER_DETAIL_REQUIRED` 诊断 | 不得物化订单状态，不得把空明细订单分类为 ordered/paying/success/error |
 | EX-P3-INFORMATION-ENGINE-003 | P3-INFORMATION-ENGINE-F01 | 一次判断涉及基础字段与关系字段（如 `OrderInfo.status` 与 `OrderInfo.orderDetailList.status`） | 基础字段先按 `target-main` 对应 Data 解析；关系字段按自身 `data`（`orderDetail`）解析，二者均按本次 Information 配置实时读取 | 不得把关系字段误读为 `order` 基础字段，也不得使用未重新读取的旧值 |
 
 ## 9. 验收标准
