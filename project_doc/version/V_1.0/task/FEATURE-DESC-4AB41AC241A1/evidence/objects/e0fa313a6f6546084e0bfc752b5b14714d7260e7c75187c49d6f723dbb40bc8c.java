@@ -1,0 +1,318 @@
+package dec.core.model.container;
+
+import artoria.beans.BeanUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import dec.core.collections.list.SimpleList;
+import dec.core.datasource.connection.DataConnection;
+import dec.core.datasource.connection.exception.ConectionException;
+import dec.core.datasource.execute.exception.ExecuteException;
+import dec.core.model.connection.DataConnectionFactory;
+import dec.core.model.container.listener.ContainerEvent;
+import dec.core.model.container.listener.ContainerEventEnum;
+import dec.core.model.container.listener.ContainerListener;
+import dec.core.model.execute.rule.RuleContainer;
+import dec.core.model.execute.rule.exception.ExecuteRuleException;
+import javolution.util.FastMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+public class ModelContainer implements Container {
+    private final static Logger log = LoggerFactory.getLogger(ModelContainer.class);
+
+    protected ResultInfo resultInfo = new ResultInfo();
+
+    protected Map<String, DataConnection<?, ?>> conMap = new FastMap<String, DataConnection<?, ?>>();
+
+    protected boolean isAuto = true;
+
+    protected ContainerListener listener;
+
+    //protected ContainerEvent containerEvent;
+
+    public ModelContainer() {
+        resultInfo.setSuccess(true);
+    }
+
+    private List<ModelLoader> list
+            = new SimpleList<ModelLoader>(4, 4);
+
+    @Override
+    public Container addListener(ContainerListener listener) {
+        this.listener = listener;
+        return this;
+    }
+
+    public Container load(ModelLoader modelLoader) {
+		if (modelLoader == null) {
+			throw new IllegalArgumentException("ModelLoader 不能为空");
+		}
+		if (modelLoader.getRuleName() == null || modelLoader.getRuleName().trim().isEmpty()) {
+			throw new IllegalArgumentException("规则名称不能为空");
+		}
+		if (modelLoader.get() == null) {
+			throw new IllegalArgumentException("规则 " + modelLoader.getRuleName() + " 未提供 ModelData");
+		}
+		if (modelLoader.getConName() == null || modelLoader.getConName().trim().isEmpty()) {
+			throw new IllegalArgumentException("规则 " + modelLoader.getRuleName() + " 未指定连接名称");
+		}
+
+        String conName = modelLoader.getConName();
+
+        if (!conMap.containsKey(conName))
+            conMap.put(conName, null);
+
+        if (modelLoader.getRuleConnectionInfo() != null) {
+            Collection<String> conCol = modelLoader.getRuleConnectionInfo().values();
+            conCol.stream().forEach(con -> conMap.put(con, null));
+        }
+        list.add(modelLoader);
+        return this;
+
+    }
+
+    public Container execute() throws ExecuteRuleException {
+		if (list.isEmpty()) {
+			throw new ExecuteRuleException("ModelContainer 尚未加载任何规则");
+		}
+        boolean isOk = true;
+        ResultInfo result = null;
+        int i = 0;
+        ModelLoader modelLoader = null;
+        ExecuteRuleException failure = null;
+        try {
+            begain();
+
+            if (this.resultInfo == null || this.resultInfo.isSuccess()) {
+                for (; i < list.size(); i++) {
+
+                    modelLoader = list.get(i);
+
+                    result = execute(modelLoader);
+
+                    if (!result.isSuccess()) {
+                        log.error("Execute the rule: {}--{}, error:{},{} false!", modelLoader.getRuleName(), result.getRuleName(),
+                                result.getErrorName(), result.getErrorMsg());
+                        break;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            isOk = false;
+			String ruleName = modelLoader == null ? null : modelLoader.getRuleName();
+			String conName = modelLoader == null ? null : modelLoader.getConName();
+            log.error("Execute error,rule:{}", ruleName, e);
+
+			if (e instanceof ExecuteRuleException) {
+				failure = (ExecuteRuleException) e;
+			} else {
+                failure = new ExecuteRuleException(e, ruleName, conName);
+			}
+        } finally {
+            if (result != null) {
+                copy(result);
+            }
+            boolean isSuccess = result != null && result.isSuccess()
+                    && isOk && failure == null;
+            try {
+                end(isSuccess);
+            } catch (ConectionException e) {
+                log.error(e.getMessage(), e);
+                if (failure == null) {
+					String ruleName = modelLoader == null ? null : modelLoader.getRuleName();
+					String conName = modelLoader == null ? null : modelLoader.getConName();
+                    failure = new ExecuteRuleException(e, ruleName, conName);
+                } else {
+                    failure.addSuppressed(e);
+                }
+            }
+        }
+
+        if (failure != null) {
+            throw failure;
+        }
+        return this;
+    }
+
+    protected ResultInfo execute(ModelLoader modelLoader) throws ExecuteException, ExecuteRuleException {
+
+        log.info("Start Execute the view rule: {}", modelLoader.getRuleName());
+
+        String conName = modelLoader.getConnection(modelLoader.getRuleName());
+        if (conName == null) {
+            conName = modelLoader.getConName();
+        }
+        RuleContainer ruleExecute = new RuleContainer(modelLoader, conMap.get(conName));
+
+        ResultInfo resultInfo = ruleExecute.execute();
+
+        if (resultInfo.isSuccess()) {
+            if (modelLoader.get().getOriginData() != null && modelLoader.get().getValues() != null) {
+                Object obj = JSON.toJavaObject((JSON) modelLoader.get().getValues(), modelLoader.get().getOriginData().getClass());
+                BeanUtils.copy(obj, modelLoader.get().getOriginData());
+            }
+        }
+        log.info("End Execute the view rule: {}", modelLoader.getRuleName());
+
+        return resultInfo;
+    }
+
+    public ResultInfo getResult() {
+        return resultInfo;
+    }
+
+    protected void copy(ResultInfo srcInfo) {
+        this.resultInfo = srcInfo;
+    }
+
+
+    protected void begain() throws ConectionException {
+
+        if (listener != null) {
+            ContainerEvent containerEvent = new ContainerEvent();
+            containerEvent.setLoaderList(list);
+            containerEvent.setType(ContainerEventEnum.CONTAINER_START);
+            ResultInfo resultInfo = listener.notify(containerEvent);
+
+            if (!resultInfo.isSuccess()) {
+
+                copy(resultInfo);
+
+                return;
+            }
+
+        }
+
+        Set<String> conNameSet = conMap.keySet();
+        Iterator<String> it = conNameSet.iterator();
+
+        while (it.hasNext()) {
+
+            String conName = it.next();
+
+            DataConnection<?, ?> con = DataConnectionFactory.getInstance().getConnection(conName);
+
+            con.connect();
+            conMap.put(conName, con);
+
+        }
+    }
+
+    protected void end(boolean isSuccess) throws ConectionException {
+        ConectionException failure = null;
+
+        if (isSuccess) {
+            try {
+                commit();
+            } catch (ConectionException e) {
+                failure = appendFailure(failure, e);
+            }
+        }
+
+        if (!isSuccess || failure != null) {
+            try {
+                roolback();
+            } catch (ConectionException e) {
+                failure = appendFailure(failure, e);
+            }
+        }
+
+        try {
+            if (listener != null) {
+                ContainerEvent containerEvent = new ContainerEvent();
+                containerEvent.setLoaderList(list);
+                containerEvent.setType(ContainerEventEnum.CONTAINER_END);
+                containerEvent.setResultInfo(resultInfo);
+                listener.notify(containerEvent);
+            }
+        } catch (RuntimeException e) {
+            failure = appendFailure(failure,
+                    new ConectionException("容器结束监听器执行失败", e));
+        }
+
+        try {
+            close();
+        } catch (ConectionException e) {
+            failure = appendFailure(failure, e);
+        } finally {
+            clear();
+        }
+
+        if (failure != null) {
+            throw failure;
+        }
+    }
+
+    private void commit() throws ConectionException {
+        operator(0);
+    }
+
+    private void close() throws ConectionException {
+        operator(1);
+    }
+
+    private void roolback() throws ConectionException {
+        operator(2);
+    }
+
+    protected void operator(int type) throws ConectionException {
+
+        Collection<DataConnection<?, ?>> conCollection = conMap.values();
+        Iterator<DataConnection<?, ?>> it = conCollection.iterator();
+        ConectionException failure = null;
+
+        while (it.hasNext()) {
+            DataConnection<?, ?> con = it.next();
+
+            if (con == null)
+                continue;
+
+            try {
+                switch (type) {
+                    case 0:
+                        con.commit();
+                        break;
+                    case 1:
+                        con.close();
+                        break;
+                    case 2:
+                        con.rollback();
+                        break;
+                    default:
+                        con.close();
+                }
+            } catch (ConectionException e) {
+                failure = appendFailure(failure, e);
+            } catch (RuntimeException e) {
+                failure = appendFailure(failure,
+                        new ConectionException("连接事务收尾失败", e));
+            }
+        }
+
+        if (failure != null) {
+            throw failure;
+        }
+    }
+
+    /** 保留第一个失败作为主异常，其余失败作为 suppressed，便于定位完整清理过程。 */
+    private ConectionException appendFailure(
+            ConectionException primary,
+            ConectionException next) {
+        if (primary == null) {
+            return next;
+        }
+        primary.addSuppressed(next);
+        return primary;
+    }
+
+    private void clear() {
+        conMap.clear();
+        list.clear();
+        resultInfo = new ResultInfo();
+    }
+
+
+}

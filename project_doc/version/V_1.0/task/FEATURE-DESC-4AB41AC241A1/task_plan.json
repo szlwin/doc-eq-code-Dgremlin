@@ -43,21 +43,35 @@
     {
       "id": "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS",
       "title": "分析 P3 Information Engine 需求与追踪边界",
-      "objective": "在已确认的 P3 需求基础上完成业务规则、验收、异常、流程、影响和稳定追踪关系分析，不提前进入设计或实现。",
+      "objective": "在已确认的 P3 需求基础上完成业务规则、验收、异常、canonical Flow、影响和稳定追踪关系分析，不提前进入设计或实现。",
       "phase": "requirement_analysis",
       "depends_on": ["TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION"],
       "owner_agent": "RequirementAnalysisAgent",
       "reviewer_agents": ["BusinessModelAgent", "TestDesignAgent"],
-      "input_revisions": {"requirement_confirmation": "REQCONF-P3-R04@646001a72756"},
+      "input_revisions": {"requirement_confirmation": "REQCONF-P3-R05@33ea135bffc6"},
       "allowed_files": [
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md",
-        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
-        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
-        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
-        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/handoff.md"
+        "project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/handoff.md",
+        "project_doc/version/V_1.0/doc/MODEL/MODEL_desc.md",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/005-p3-information-evaluation.yaml",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.yaml",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/MODEL_desc_preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_report.md"
       ],
       "acceptance_trace_ids": ["TR-P3-INFORMATION-ENGINE-001"],
-      "flow_step_refs": [],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-COMPILE",
+        "STEP-P3-INFORMATION-EVALUATION-IDENTIFY",
+        "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+      ],
       "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
       "validation_commands": [
         "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/requirement_doc.py validate -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --stage analysis --json",
@@ -66,6 +80,7 @@
       "expected_results": [
         "每个功能、业务规则、跨功能规则和验收标准均有合法追踪引用。",
         "实时读取、普通 null ERROR、显式 Information null 比较、every(emptyCollection)=TRUE、订单明细非空、target-main 与 relation Data 归属及物化失败语义均可观察。",
+        "FLOW-P3-INFORMATION-EVALUATION 可由版本预览解析，覆盖 compile/publish、只读 TRUE/FALSE/ERROR、可选 grammer→update、commit/rollback；成功提交后不执行重评估。",
         "测试 Case/test_ref 明确延期至 test_design/development，不作为本阶段的已执行测试证据。"
       ],
       "stop_conditions": [
@@ -78,7 +93,7 @@
       "iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-004",
       "iteration_no": 4,
       "supersedes_iteration_id": "ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-003",
-      "revision_reason": "Skill 修复需求确认阶段错误要求 test_ref 后，补齐需求分析阶段 Task 并继续 P3 生命周期。",
+      "revision_reason": "用户取消物化成功后的独立只读重评估，并要求补齐 FLOW-P3-INFORMATION-EVALUATION canonical 定义与索引预览。",
       "risk_triggers": []
     },
     {

@@ -9,7 +9,7 @@
 | Base revision | DESIGN-R00@init |
 | Requirement | REQAN-P2-R04 / P2-SYSTEM-RULEVIEW |
 | Business Model | BM-R06（由 BM-R05 项目级基线通过本次 changeset 归档） |
-| Code revision | P2-I008 候选工作树；Development 阶段登记最终 exact revision |
+| Code revision | DEV-P2-SIMPLE-R43@a5ecf75d5169（17 个 P2 实现、测试与 fixture 文件内容清单 SHA-256） |
 | Java compatibility | Java 8 |
 | 状态 | READY，等待 Design I008 独立 Review |
 
@@ -37,7 +37,7 @@ P2 改为两条容易理解的主链路。配置链路统一从 `ConfigUtil.pars
 
 #### 1.2 六个关键结论
 
-1. XML/YAML 都由 ConfigUtil 创建并管理候选 ConfigInfo，公开 API 不暴露该类型。
+1. XML/YAML 都由 ConfigManager 管理线程内候选 ConfigInfo，ConfigUtil 只编排该候选，公开业务 API 不暴露该类型。
 2. 现代 XML 编译成功后同一个候选对象绑定 EngineContext，再由 ConfigManager 整体安装。
 3. 编译或发布失败时当前配置对象不变。
 4. 业务调用固定为 DataUtil -> ModelData -> ModelLoader -> ModelContainer.execute()。
@@ -134,7 +134,7 @@ business code
 #### 5.1 主流程
 
 <!-- DESIGN-FLOW -->
-1. 调用方只调用 `ConfigUtil.parseConfigInfo(path)`；ConfigUtil 串行创建线程内候选 ConfigInfo。
+1. 调用方只调用 `ConfigUtil.parseConfigInfo(path)`；ConfigUtil 串行执行加载，ConfigManager 创建并持有线程内唯一候选 ConfigInfo。
 2. ConfigUtil 根据 `.yaml`/`.yml` 或其他路径选择 YAML/XML Parser，Parser 通过 parseInto 写入候选对象。
 3. 现代 XML 由 CompilerStarter 编译候选对象并请求 Publisher 发布 EngineContext。
 4. 发布成功后，候选对象绑定 Publisher 返回的同一个 EngineContext，ConfigManager.install 通过 volatile ConfigInfo 引用整体切换。
@@ -149,11 +149,11 @@ business code
 |---|---|---|
 | 文件解析失败 | compile 前 | 当前配置不变 |
 | 编译诊断失败 | install 前 | 当前配置不变 |
-| 发布冲突 | install 前 | 当前配置不变 |
 | YAML 声明 System/Business | parse/install 前 | 当前配置不变；错误指向 P8 格式边界 |
 | View/Rule/Connection 缺失 | 数据库副作用前 | 无业务写入 |
 | 规则或 SQL 执行失败 | execute 中 | 回滚并关闭 |
-| close 失败 | 原始失败已保留后 | 记录收尾异常，不伪造成功 |
+| 结束监听器失败 | commit/rollback 后、close 前 | 继续关闭全部连接并返回明确异常 |
+| rollback/close 失败 | 事务收尾中 | 继续处理其余连接；保留首个失败并附加后续异常，不伪造成功 |
 
 #### 5.3 状态与步骤
 
@@ -185,7 +185,7 @@ business code
 
 #### 7.2 事务、并发、幂等与一致性
 
-- ConfigUtil.parseConfigInfo 串行化单次加载，ConfigManager.install 使用单一 volatile 引用，避免半新半旧。
+- ConfigUtil.parseConfigInfo 串行化完整的候选加载与安装，ConfigManager.install 使用单一 volatile 引用，避免半新半旧；P2 不增加 expected Context 或 generation 冲突协议。
 - 同一文件重复加载可生成新 candidate；只有成功 candidate 生效。
 - ModelContainer 维持既有多连接事务收尾，不把配置发布与数据库事务混合。
 - 不建立运行时 owner/generation identity；该风险已由用户授权排除。
@@ -193,14 +193,14 @@ business code
 ### 8. 开发者交接摘要
 
 <!-- DESIGN-NARRATIVE-HANDOFF -->
-Design I008 基于已退役 runtime/access 的简化代码继续收口统一加载。最终代码 revision 在 YAML 门面、P8 拒绝边界和回归验证完成后登记；在此之前不得继续引用 8b362d5d 作为本轮实现基线。
+Design I008 基于已退役 runtime/access 的简化代码继续收口统一加载。当前设计、测试设计和独立 Review 统一绑定 `DEV-P2-SIMPLE-R43@a5ecf75d5169`；不得继续引用 8b362d5d 作为本轮实现基线。
 
 #### 8.1 建议实施顺序
 
 1. ConfigUtil 增加 YAML Parser 分流，公开签名仍不出现 ConfigInfo。
 2. YamlConfigFileParser 增加现代声明检测，检测到 System/Business 时在安装前明确拒绝并指向 P8。
 3. YamlConfigUtil 去除 ConfigInfo 返回值，只保留兼容加载语义。
-4. 完成实现与验证后登记 REQAN-P2-R04、DESIGN-P2-R40 的 exact revision。
+4. 以 `DEV-P2-SIMPLE-R43@a5ecf75d5169` 执行独立 Review 和最终验证。
 
 #### 8.2 开发开始前仍需确认
 
@@ -300,7 +300,7 @@ Design I008 基于已退役 runtime/access 的简化代码继续收口统一加�
 | YamlConfigUtil.parseConfigInfo | REMOVE | 无仓库调用方；旧外部调用方 | 迁移到 ConfigUtil 的同一 path 参数 | 无返回值 | 不再提供暴露 ConfigInfo 的独立门面 | 不适用 | ConfigUtil 统一抛出 XMLParseException 并保留 YAML cause | 无数据库事务 | 外部调用改用 ConfigUtil.parseConfigInfo | [REQAN-P2-R04](../FEATURE-DESC-3361AD2E54FC/requirement.md)；删除 `YamlConfigUtil.java` |
 | YamlConfigFileParser.requiresCompiler | ADD | ConfigUtil/YamlConfigUtil | YAML path | boolean | 检测 System/Business 别名 | 纯读取 | YAMLParseException | 无数据库事务 | additive internal API | [AC-009](../FEATURE-DESC-3361AD2E54FC/requirement.md#ac-p2-system-ruleview-009-yaml-现代声明边界)；`YamlConfigFileParser.java#requiresCompiler` |
 | CompilerStarter.compileAndInstall | ADD | CompilerBootstrap | 增加 candidate | CompilationResult | 成功发布才安装 | 同 candidate 可重编译，新对象整体替换 | 编译 Diagnostic/发布失败 | 无数据库事务 | 旧 compile 保留 | [BM-R06](changes/p2-simple-runtime-model-r06.yaml)；`CompilerStarter.java#compileAndInstall` |
-| ConfigManager.install | ADD | starter | ConfigInfo+EngineContext | installed ConfigInfo | 两者非空；内部安装权限 | 同一对象重复安装结果等价 | NullPointerException/发布冲突上游处理 | synchronized 内存发布 | 内部扩展 | [BM-R06](changes/p2-simple-runtime-model-r06.yaml)；`ConfigManager.java#install` |
+| ConfigManager.install | ADD | starter/parser compatibility | ConfigInfo；或 ConfigInfo+EngineContext | installed ConfigInfo | 参数非空；统一入口串行调用 | 同一对象重复安装结果等价 | NullPointerException | synchronized 内存发布 | 内部扩展 | [BM-R06](changes/p2-simple-runtime-model-r06.yaml)；`ConfigManager.java#install` |
 | ConfigInfo.getEngineContext | ADD | framework | 无参数，读取当前对象 | EngineContext | 必须已绑定；无业务权限 | 纯读取 | IllegalStateException | 无数据库事务 | additive | [BM-R06](changes/p2-simple-runtime-model-r06.yaml)；`ConfigInfo.java#getEngineContext` |
 | ModelLoader.load | MODIFY | 业务代码 | 参数签名不变 | ModelLoader | Rule/View/Connection 定义检查 | 每次生成独立装载任务 | 规则/连接明确异常 | execute 时进入连接事务 | 源码兼容 | [BM-R06](changes/p2-simple-runtime-model-r06.yaml)；`ModelLoader.java#load` |
 
@@ -326,10 +326,10 @@ Design I008 基于已退役 runtime/access 的简化代码继续收口统一加�
 | 原功能/场景 | 当前行为与证据 | 调整后行为 | 受影响入口/调用方 | 数据兼容 | API/UI 兼容 | 回归范围 | 发布/回滚注意事项 |
 |---|---|---|---|---|---|---|---|
 | 全局配置容器 | 旧 ConfigFactory 可形成共享配置 | ConfigInfo 实例内保存 candidate | XML/YAML、ConfigManager | 无持久化数据 | 外部查询入口不变，无 UI | parser/demo | context 与 parser 同 revision |
-| parser 直接写当前配置 | 旧 parse 使用当前 ConfigInfo | parseInto 写指定 candidate | 配置 bootstrap | 配置格式不变 | 旧 parse 委托，无 UI | XML/YAML loading | 失败不得 install |
+| parser 直接写当前配置 | 旧 parse 使用当前 ConfigInfo | parse 使用独立候选并在成功后安装；parseInto 写指定 candidate | 配置 bootstrap | 配置格式不变 | 旧 parse 保留，无 UI | XML/YAML loading | 解析失败不得 install |
 | YAML 独立门面返回 ConfigInfo | YamlConfigUtil 公开返回候选/当前对象 | 删除无仓库调用方的 YamlConfigUtil；ConfigUtil 成为统一 void 入口 | YAML 启动代码 | 旧 YAML 格式不变 | 外部调用迁移到 ConfigUtil；仓库内无迁移点 | YAML loading/API scan | 不建立 starter -> yaml -> starter 循环依赖 |
 | YAML 现代声明 | Compiler SourceDeclarationParser 仅支持 XML StAX | P2 检测后明确拒绝，P8 扩展统一 Source Graph | YAML 配置作者 | 不产生部分配置 | 新能力延期但失败稳定 | negative path | 当前配置和 Context 不变 |
-| 编译与安装分离 | compiler 只返回发布结果 | compileAndInstall 整体安装 | CompilerBootstrap | 无持久化数据 | 旧 compile 保留 | starter/context | 发布冲突保留 old |
+| 编译与安装分离 | compiler 只返回发布结果 | compileAndInstall 整体安装 | CompilerBootstrap | 无持久化数据 | 旧 compile 保留 | starter/context | 解析或编译失败保留 old |
 | runtime 受保护模型 | 三目录包含 Scope/Session/Capability | 直接 ModelData/Container | 业务代码和内部 runtime 调用 | 业务数据不变 | 业务 API 保留；内部 API 删除，无 UI | model/demo/source scan | 以 cab265b6 checkpoint 回滚 |
 | 模糊缺失错误 | 部分入口空值或晚失败 | 明确 View/Rule/Connection | DataUtil/Loader/Container | 无数据迁移 | 异常更明确，无 UI | negative path | 不输出密码 |
 
@@ -371,7 +371,9 @@ Design I008 基于已退役 runtime/access 的简化代码继续收口统一加�
 | 退役目录 | AC-P2-SYSTEM-RULEVIEW-008 | source scan | 三个目录 | find Java 文件 | 0 file | 残留 runtime/access 类 | `find ... -type f` |
 | 代码 revision | 全部验收的实现基线 | Git/Evidence | 最终候选代码 | 登记 exact revision | 文档、代码、测试绑定同一 revision | 工作树未冻结时不得宣称完成 | Development Evidence |
 | XML 现代加载 | AC-P2-SYSTEM-RULEVIEW-003/004 | integration | mix XML | ConfigUtil.parseConfigInfo | System/Business Registry 可读；失败不替换 | duplicate/compile failure | MixTest/Compiler tests |
+| XML/YAML 候选失败 | AC-P2-SYSTEM-RULEVIEW-001/002/004 | integration | malformed XML/YAML | ConfigUtil.parseConfigInfo | 已安装 ConfigInfo 身份不变 | syntax error | ConfigUtilCompatibilityTest |
 | YAML 兼容与边界 | AC-P2-SYSTEM-RULEVIEW-002/009 | integration | legacy/modern YAML | ConfigUtil.parseConfigInfo | legacy 成功；modern 明确失败且 current 不变 | system/business key | ConfigUtil YAML tests |
+| 容器清理失败 | AC-P2-SYSTEM-RULEVIEW-007 | unit | recording connections/listener | ModelContainer.execute | 全部连接均被访问；清理异常可见 | listener/close exception | ModelContainerLifecycleTest |
 
 #### 13.3 开发就绪门禁
 
@@ -380,7 +382,7 @@ Design I008 基于已退役 runtime/access 的简化代码继续收口统一加�
 - [x] 每个实现对象具有 IMPL-DEC 决策和代码蓝图。
 - [x] 表/字段、读写、接口、原功能调整、错误与验证矩阵已完整说明。
 - [x] Business Model changeset 明确基于项目级 canonical BM-R05@4ecb1f8c09f4 生成 BM-R06；版本目录中未归档的 BM-R06～BM-R20 重型候选链不进入新基线。
-- [x] YAML 统一入口与 P8 拒绝边界已按蓝图实现并通过针对性测试；exact code revision 由 Development 阶段登记。
+- [x] YAML 统一入口与 P8 拒绝边界已按蓝图实现并通过针对性测试；exact code revision 为 DEV-P2-SIMPLE-R43@a5ecf75d5169。
 - [x] DESIGN-P2-R40 已达到可独立 Review 状态；本项只声明就绪，不代替 Reviewer 结论。
 
 ## 附录：追踪、决策与未决项
@@ -407,4 +409,4 @@ Design I008 基于已退役 runtime/access 的简化代码继续收口统一加�
 
 ### A.3 未决问题
 
-无业务决策未决问题。实现候选与回归验证已完成，独立 Review 尚未完成，因此 DESIGN-P2-R40 当前仍是 Design I008 候选 revision。
+无业务决策未决问题。实现候选与针对性回归已完成，DESIGN-P2-R40 进入绑定 DEV-P2-SIMPLE-R43@a5ecf75d5169 的独立 Review。

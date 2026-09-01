@@ -46,6 +46,58 @@
       "verified_by_agent": "RequirementAnalysisAgent",
       "verified_at": "2026-09-02T00:43:06+08:00",
       "reason": "独立 Reviewer 检查通过：物化成功以 commit 和 MaterializationResult 结束，不自动或作为流程步骤调用 evaluate，不返回目标/下游重识别结果；失败仍回滚并停止下游；独立 evaluate 的只读实时语义保持不变。未发现阻断需求分析的歧义。"
+    },
+    {
+      "assertion_id": "ASRT-P3-REQAN-R04-BM-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "BusinessModelAgent independently reviews requirement_analysis revision REQAN-P3-R04@aa4bd589d74c against profile requirement_analysis:BusinessModelAgent.",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P3-R04@aa4bd589d74c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelAgent",
+        "review_profile_id": "requirement_analysis:BusinessModelAgent"
+      },
+      "source_refs": [
+        "FEATURE-DESC-4AB41AC241A1#REQAN-P3-R04"
+      ],
+      "evidence_ids": [
+        "EVD-000067",
+        "EVD-000069",
+        "EVD-000070",
+        "EVD-000068",
+        "EVD-000071"
+      ],
+      "verified_by_agent": "BusinessModelAgent",
+      "verified_at": "2026-09-02T02:04:28+08:00",
+      "reason": "guided manual Review passed"
+    },
+    {
+      "assertion_id": "ASRT-P3-REQAN-R04-TD-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "TestDesignAgent independently reviews requirement_analysis revision REQAN-P3-R04@aa4bd589d74c against profile requirement_analysis:TestDesignAgent.",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P3-R04@aa4bd589d74c",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_profile_id": "requirement_analysis:TestDesignAgent"
+      },
+      "source_refs": [
+        "FEATURE-DESC-4AB41AC241A1#REQAN-P3-R04"
+      ],
+      "evidence_ids": [
+        "EVD-000067",
+        "EVD-000068",
+        "EVD-000070"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-09-02T02:04:40+08:00",
+      "reason": "guided manual Review passed"
     }
   ]
 }

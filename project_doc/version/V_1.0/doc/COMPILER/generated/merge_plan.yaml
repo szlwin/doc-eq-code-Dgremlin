@@ -3,20 +3,21 @@ mergeMode: "VERSION_DELTA_ARCHIVE"
 version: "V_1.0"
 module: "COMPILER"
 changeSetIds:
-  - "DICHG-P2-SIMPLE-RUNTIME-R30"
+  - "CHG-V_1.0-COMPILER-P2-SIMPLE-RUNTIME-R06"
   - "FLOW-CHG-P2-SIMPLE-R04"
+  - "FLOW-CHG-P3-INFORMATION-EVALUATION-R05"
 baseRevisions:
-  dependency_impact: "P2-IMPACT-R29"
+  business_model: "BM-R05@4ecb1f8c09f4"
   business_flow__COMPILER: "FLOW-R02@compiler-owned-discovery"
 resultRevisions:
-  dependency_impact: "P2-IMPACT-R30"
-  business_flow__COMPILER: "FLOW-R04@p2-simple-runtime-model"
+  business_model: "BM-R06"
+  business_flow__COMPILER: "FLOW-R05@p3-information-evaluation"
 structuredArtifacts:
   - "business_flow"
-  - "dependency_impact"
+  - "business_model"
 projectFactArtifacts:
   - "business_flow"
-  - "dependency_impact"
+  - "business_model"
 versionDeltaArtifacts: []
 documentArtifacts:
   - "design_topic"
@@ -32,9 +33,9 @@ artifactMerges:
     baseRevision: "DESIGN-R00@init"
     sourceRevision: "DESIGN-P2-R40"
     resultRevision: "DESIGN-P2-R40"
-    sourceDigest: "605aac8b0f1c0c8963059ec6c6c911cf56b6d3765471c0e5f7af223e26fb47e1"
+    sourceDigest: "77ba679c259fed942fbd87acc44dd5fdcffb7aa2960ac1bf3355d7471b9f8503"
     targetDigest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    resultDigest: "4ce3f438335372f0decfe048333e69f4a426b6c88e6ce02520cb5d6b9acc5058"
+    resultDigest: "c678b0fa319e558520079be6e9c64031c35488e2efe9aa841dc614ad7df9039b"
     affectedStableIds:
       - "AC-001"
       - "AC-002"
@@ -105,12 +106,12 @@ artifactMerges:
     sourceRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/MODEL/MODEL_desc.md"
     targetRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/docs/MODEL/MODEL_desc.md"
     mergeMode: "MODULE_DESC_MERGE"
-    sourceRevision: "MODULE_DESC@60a41671639c"
-    resultRevision: "MODULE_DESC@e98edc7ff302"
+    sourceRevision: "MODULE_DESC@885e970ec896"
+    resultRevision: "MODULE_DESC@8cf8fe4d6048"
     status: "READY"
-    sourceDigest: "60a41671639c9ea7a2c3f6ec1ec3ee9db67865a51354db1fd3bbf655052c1de0"
+    sourceDigest: "885e970ec896d206b81bb65597bdd0bcdf3409f353d584a5ade0845e0bb0c832"
     targetDigest: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    resultDigest: "e98edc7ff302bed0be7a688314cd6d213f9fea330d13c88689f73106841d0010"
+    resultDigest: "8cf8fe4d6048d0a112b81615143b6d362a47b8de2d03a19f08ecda5dbecda36c"
     reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
     evidenceRefs:
       - "project_doc/version/V_1.0/doc/COMPILER/generated/MODEL_desc_preview.md"
@@ -133,20 +134,23 @@ businessFlowMerges:
   -
     flowGroup: "COMPILER"
     baseRevision: "FLOW-R02@compiler-owned-discovery"
-    resultRevision: "FLOW-R04@p2-simple-runtime-model"
+    resultRevision: "FLOW-R05@p3-information-evaluation"
     changeSetIds:
       - "FLOW-CHG-P2-SIMPLE-R04"
+      - "FLOW-CHG-P3-INFORMATION-EVALUATION-R05"
     affectedFlowIds:
       - "FLOW-CONFIG-COMPILE"
+      - "FLOW-P3-INFORMATION-EVALUATION"
       - "FLOW-SIMPLE-MODEL-EXECUTE"
     sourceRefs:
       - "version/V_1.0/doc/_flows/COMPILER/changes/004-p2-simple-runtime-model.yaml"
+      - "version/V_1.0/doc/_flows/COMPILER/changes/005-p3-information-evaluation.yaml"
     targetYamlRef: "docs/_flows/COMPILER_flow.yaml"
     targetMarkdownRef: "docs/_flows/COMPILER_flow.md"
     previewYamlRef: "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml"
     previewMarkdownRef: "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md"
-    yamlDigest: "be1deb82368e5f28be1101930d7605e2f0b9c57b4425d807cb4555ed9ba2f466"
-    markdownDigest: "ab972c15756787f1a875d46244f3faab4945eeebddc9dba41530f7bb4843a8f9"
+    yamlDigest: "05994d6a89a95df823603055dd3b0189751b3ad5bd37d7273ddfb34772dde275"
+    markdownDigest: "c3a06bdb0349f0df0e8b6cd78a3fd35027411cc9e98ace47b35af29b92e375aa"
 affectedTraceIds:
   - "TR-P2-001"
   - "TR-P2-002"
@@ -158,24 +162,22 @@ affectedTraceIds:
   - "TR-P2-008"
   - "TR-P2-009"
   - "TR-P2-010"
+  - "TR-P3-INFORMATION-ENGINE-001"
 workMode:
   modelCode: false
   pageDesign: false
   minimal: false
   auto: false
   architectureReview: false
-  gitCheckpoint: false
+  gitCheckpoint: true
   gitPush: false
   reviewOnly: false
-  lightweight: true
-  skippedPhases:
-    - "test_design"
-    - "tdd"
-    - "code_review"
-    - "testing"
+  lightweight: false
+  skippedPhases: []
+  lightweightWaived: false
   workRef: "version/V_1.0/work.md"
-  workDigest: "b9ba27c1816710c5696e85c050fe9c2e691bc0916973d88a45034bbb11599756"
-resultDigest: "a652b8e839f7a72b10409f04de3c0311a9137522cb95df842cfe1e07a0526895"
+  workDigest: "7440999f911481cf0a09d1721c2b924242874f3a45c0b84138dd598c59032b55"
+resultDigest: "5c86e4580ef33b76608280afb2677c326ba6331d9996d72fc33b2c4f60177fcf"
 archiveGate:
   status: "DRAFT"
   gates:
@@ -194,12 +196,12 @@ archiveGate:
       reviewerAgents: []
       reason: ""
     businessModel:
-      status: "NOT_APPLICABLE"
+      status: "PENDING"
       revision: ""
       stageOutcomeRefs: []
       evidenceIds: []
       reviewerAgents: []
-      reason: "本次 merge plan 不包含 business_model 增量。"
+      reason: ""
     design:
       status: "PENDING"
       revision: ""
@@ -208,12 +210,12 @@ archiveGate:
       reviewerAgents: []
       reason: ""
     testDesign:
-      status: "NOT_APPLICABLE"
+      status: "PENDING"
       revision: ""
       stageOutcomeRefs: []
       evidenceIds: []
       reviewerAgents: []
-      reason: "当前版本使用 wk -ws：采用对话式结对开发；除非用户明确要求，不创建 TDD、测试设计、Review、测试代码、测试用例或测试产物。"
+      reason: ""
     implementationPlan:
       status: "PENDING"
       revision: ""
@@ -229,19 +231,19 @@ archiveGate:
       reviewerAgents: []
       reason: ""
     codeReview:
-      status: "NOT_APPLICABLE"
+      status: "PENDING"
       revision: ""
       stageOutcomeRefs: []
       evidenceIds: []
       reviewerAgents: []
-      reason: "当前版本使用 wk -ws：采用对话式结对开发；除非用户明确要求，不创建 TDD、测试设计、Review、测试代码、测试用例或测试产物。"
+      reason: ""
     testing:
-      status: "NOT_APPLICABLE"
+      status: "PENDING"
       revision: ""
       stageOutcomeRefs: []
       evidenceIds: []
       reviewerAgents: []
-      reason: "当前版本使用 wk -ws：采用对话式结对开发；除非用户明确要求，不创建 TDD、测试设计、Review、测试代码、测试用例或测试产物。"
+      reason: ""
     completionVerification:
       status: "PENDING"
       revision: ""
@@ -255,4 +257,4 @@ archiveGate:
   decisionRef: ""
   userConfirmed: false
   notes: "用于 wk -d 将当前版本已确认事实归档；API/DB 只保留版本增量引用，不生成项目级全量文档；不是发布审批。"
-generatedAt: "2026-08-25T16:21:00+08:00"
+generatedAt: "2026-09-02T00:53:29+08:00"

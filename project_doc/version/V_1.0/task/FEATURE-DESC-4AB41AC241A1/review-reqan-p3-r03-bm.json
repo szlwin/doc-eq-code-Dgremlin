@@ -1,0 +1,76 @@
+# 人工 Review 确认单
+
+<!-- manual-review-meta
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P3-REQAN-R03-BM-001",
+  "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+  "reviewer_agent": "BusinessModelAgent",
+  "review_phase": "requirement_analysis",
+  "artifact_revision": "REQAN-P3-R03@5b64d65d7b03",
+  "assertion_phase": "requirement_analysis",
+  "assertion_revision": "REQAN-P3-R03@5b64d65d7b03",
+  "profile_id": "requirement_analysis:BusinessModelAgent",
+  "mode": "MARKDOWN",
+  "drafted_by_agent": "",
+  "context_digest": "bdc83a602216efe4156d00c6403e410a60221e069184b03eb87ead62d59b3da9"
+}
+-->
+
+## 基本信息（系统生成，请勿修改）
+
+- Review：专业 Review
+- Assertion：`ASRT-P3-REQAN-R03-BM-001`
+- Acceptance：`AC-P3-INFORMATION-ENGINE-001`
+- Reviewer：`BusinessModelAgent`
+- Review 产物：`requirement_analysis@REQAN-P3-R03@5b64d65d7b03`
+- 验收产物：`requirement_analysis@REQAN-P3-R03@5b64d65d7b03`
+- 输入模式：`MARKDOWN`
+
+## 检查项
+
+每题只勾选一项；发现未解决问题时选择“否”，证据不足时选择“无法判断”。
+
+### [MRQ-SCOPE] 本次变更的职责、范围和边界是否清楚且一致？
+
+关联 criterion：`RC-ANL-001`、`RC-ANL-003`、`RC-ANL-004`、`RC-BM-001`、`RC-BM-002`、`RC-BM-006`、`RC-ANL-002`、`RC-ANL-005`、`RC-DES-001`、`RC-DES-011`
+
+- [ ] 是
+- [x] 否
+- [ ] 无法判断
+
+说明（选择“否”或“无法判断”时必填）：
+
+> 语义与范围一致，但 Reviewer 执行时 RC-DES-011 缺少绑定 REQAN-P3-R03 的 design_ref/code_ref/config_ref 可行性证据；EVD-000057 仅属于 R02。ISSUE-MR-0017/0018/0019 继续作为下游 Design 风险保留，不能由本阶段关闭。
+
+### [MRQ-OTHER] 其余检查项（分层与边界、跨文档追踪、路径完整）是否均满足？
+
+关联 criterion：`RC-BFLOW-001`、`RC-BFLOW-002`、`RC-BFLOW-003`
+
+- [x] 是
+- [ ] 否
+- [ ] 无法判断
+
+说明（选择“否”或“无法判断”时必填）：
+
+> FLOW-R05 的分层、追踪、主路径、TRUE/FALSE/ERROR、commit/rollback 与失败阻断语义一致，成功物化明确不触发 evaluate 或下游识别。
+
+## 推荐证据
+
+脚本仅列出当前 Review phase/revision 且类型适用的 ACTIVE evidence。
+
+- [x] EVD-000060 | requirement_ref | `evidence/objects/5b64d65d7b0310bf1cec3463b72262be39a4112789d4169224f38887028a7ea6.md`
+- [x] EVD-000062 | model_ref | `evidence/objects/885e970ec896d206b81bb65597bdd0bcdf3409f353d584a5ade0845e0bb0c832.md`
+- [x] EVD-000063 | diagram_ref | `evidence/objects/4435f34b3e6cf8e7fc38aaf29aa3e84d8c8ecb33c86550ea93a042c8195f36ea.md`
+- [x] EVD-000064 | code_ref | `evidence/objects/e0fa313a6f6546084e0bfc752b5b14714d7260e7c75187c49d6f723dbb40bc8c.java`
+- [x] EVD-000061 | flow_ref | `evidence/objects/3153afae180ef32bcc1a274be0bcbac83f122b1e32130a4f2aa4c978cca480f7.yaml`
+
+## 主要结论
+
+> FAIL：Requirement 与 FLOW-R05 语义一致，包括成功提交后不重评估；Reviewer 执行时当前 revision 缺少 RC-DES-011 所需的实现可行性证据，不能批准进入下一阶段。
+
+## 非阻断补充说明
+
+此处只能记录不影响当前结论的范围说明；存在未解决问题时必须在对应检查项选择“否”或“无法判断”。
+
+- requirement.md 变更记录尚未登记 R03；文档状态应与机器 Review gate 保持一致。Review 后补录 EVD-000064 仅供下一 revision 复审，不改变本次结论。

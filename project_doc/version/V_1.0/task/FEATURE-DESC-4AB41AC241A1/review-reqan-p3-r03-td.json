@@ -1,0 +1,74 @@
+# 人工 Review 确认单
+
+<!-- manual-review-meta
+{
+  "schema_version": 1,
+  "assertion_id": "ASRT-P3-REQAN-R03-TD-001",
+  "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+  "reviewer_agent": "TestDesignAgent",
+  "review_phase": "requirement_analysis",
+  "artifact_revision": "REQAN-P3-R03@5b64d65d7b03",
+  "assertion_phase": "requirement_analysis",
+  "assertion_revision": "REQAN-P3-R03@5b64d65d7b03",
+  "profile_id": "requirement_analysis:TestDesignAgent",
+  "mode": "MARKDOWN",
+  "drafted_by_agent": "",
+  "context_digest": "d3b62982351df91b7d2add4d370275b5583eed386e2e52ee2a766bd6f3a1b14b"
+}
+-->
+
+## 基本信息（系统生成，请勿修改）
+
+- Review：专业 Review
+- Assertion：`ASRT-P3-REQAN-R03-TD-001`
+- Acceptance：`AC-P3-INFORMATION-ENGINE-001`
+- Reviewer：`TestDesignAgent`
+- Review 产物：`requirement_analysis@REQAN-P3-R03@5b64d65d7b03`
+- 验收产物：`requirement_analysis@REQAN-P3-R03@5b64d65d7b03`
+- 输入模式：`MARKDOWN`
+
+## 检查项
+
+每题只勾选一项；发现未解决问题时选择“否”，证据不足时选择“无法判断”。
+
+### [MRQ-SCOPE] 本次变更的职责、范围和边界是否清楚且一致？
+
+关联 criterion：`RC-ANL-001`、`RC-ANL-002`、`RC-REQ-003`、`RC-REQ-004`、`RC-ANL-005`
+
+- [ ] 是
+- [x] 否
+- [ ] 无法判断
+
+说明（选择“否”或“无法判断”时必填）：
+
+> RC-REQ-003/004 不满足：AC-P3-INFORMATION-ENGINE-001 未直接断言 grammer -> update -> commit、MaterializationResult 后流程结束且不调用 evaluate/不重识别目标或下游，也未完整断言 evaluate ERROR 抛异常并阻断物化和下游。当前 Evidence 也未以 RC-* criterion 作为 scope。
+
+### [MRQ-OTHER] 其余检查项（路径完整）是否均满足？
+
+关联 criterion：`RC-BFLOW-003`
+
+- [ ] 是
+- [x] 否
+- [ ] 无法判断
+
+说明（选择“否”或“无法判断”时必填）：
+
+> Flow 内容本身完整且 --require-links 校验通过，但 EVD-000061/EVD-000063 未绑定 RC-BFLOW-003 criterion scope，不能形成合格的逐项 PASS Evidence。
+
+## 推荐证据
+
+脚本仅列出当前 Review phase/revision 且类型适用的 ACTIVE evidence。
+
+- [x] EVD-000060 | requirement_ref | `evidence/objects/5b64d65d7b0310bf1cec3463b72262be39a4112789d4169224f38887028a7ea6.md`
+- [x] EVD-000061 | flow_ref | `evidence/objects/3153afae180ef32bcc1a274be0bcbac83f122b1e32130a4f2aa4c978cca480f7.yaml`
+- [x] EVD-000063 | diagram_ref | `evidence/objects/4435f34b3e6cf8e7fc38aaf29aa3e84d8c8ecb33c86550ea93a042c8195f36ea.md`
+
+## 主要结论
+
+> FAIL：Flow 的只读 evaluate、TRUE/FALSE/ERROR、可选物化、commit/rollback 和失败阻断分支正确，并明确排除成功后的重评估；需补齐可观察验收断言及 criterion-scoped Evidence 后复审。
+
+## 非阻断补充说明
+
+此处只能记录不影响当前结论的范围说明；存在未解决问题时必须在对应检查项选择“否”或“无法判断”。
+
+- 无
