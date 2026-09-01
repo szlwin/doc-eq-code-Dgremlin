@@ -15,7 +15,7 @@
 | 主责模块 | dec-core-model、dec-core-context、dec-core-compiler |
 | 协作模块 | dec-context-config-parse-xml、dec-demo、P2 System/RuleView 能力 |
 | 受影响角色 | 配置作者、规则开发者、业务编排者、测试人员、维护人员 |
-| 当前状态 | 需求分析完成 |
+| 当前状态 | 需求确认完成，待重新分析 |
 | 对应变更需求编号 | FEATURE-DESC-4AB41AC241A1 |
 
 ### 1.1 阅读摘要
@@ -24,7 +24,7 @@
 |---|---|
 | 为什么要做 | 当前框架没有 Information 一等事实、依赖图、可区分的识别结果或物化语义；`mix` 只能作为目标示例，无法被统一编译和消费。 |
 | 做到什么算有价值 | `mix` 的 16 个 Information 能按归属、表达式类型和依赖关系一致识别；每次判断都按 Information 配置读取当前模型值，物化结果可验证且错误不会伪装成 FALSE。 |
-| 本次明确不做 | 不处理 P2 文档/治理事实不一致；不实现 Action/Produce、Directory、Query、Transaction/Session 或现代 YAML，也不复活 `dec-expand-declaration`/Consumer runtime。 |
+| 本次明确不做 | 不处理 P2 文档/治理事实不一致；不实现 Action/Produce、Directory、Query、Transaction/Session 或现代 YAML，也不复活 `dec-expand-declaration`/Consumer runtime；`materialize` 成功后不自动或作为流程步骤调用只读 `evaluate`。 |
 | 如何判断完成 | 以第 9 节 `AC-P3-INFORMATION-ENGINE-*` 的可观察结果为准 |
 | 仍需谁做决定 | 业务语义已确认；Information 专项测试在功能实现后由测试设计/开发阶段补充，本阶段不要求已有测试证据。 |
 
@@ -57,7 +57,7 @@
 1. 建立互斥的 RuleView 原子、模型表达式原子和复合 Information 三类业务事实；严格分离只访问模型的 Model Expression 与只访问 Information Key 的 Information Expression。
 2. 为每次识别提供 TRUE/FALSE/ERROR 结果及可审计证据、依赖结果、读路径和模型版本；本框架按数据已准备好的正常前提执行，不引入数据未加载、依赖未解析或动态暂不可判定的 UNRESOLVED 运行态；识别不得隐式修改模型，ERROR 不得降级为 FALSE。
 3. 建立无环 Information 依赖图和稳定的模型路径/依赖描述；每次判断按依赖拓扑读取并计算，不维护 MutationSet 或 reverse-DAG 运行时失效缓存。
-4. 仅允许声明 `change-data` 的模型表达式原子执行受保护物化，收集变更并重新识别目标及其下游；复合 Information 不可直接物化。
+4. 仅允许声明 `change-data` 的模型表达式原子执行受保护物化；成功提交并返回物化结果后流程结束，不自动重识别目标或下游；复合 Information 不可直接物化。
 
 ## 4. 范围
 
@@ -66,13 +66,14 @@
 - P3 Information 的 Raw/Compiled 事实、归属与限定 InformationKey；以 `mix/system/systems.xml` 的 16 个定义为完整 fixture 基线。
 - `system`/`model`/`rule`/`rule-data`/`change-data`/`expression` 的解析与互斥校验；RuleView 原子识别、模型表达式识别和复合短路。
 - 无环 DAG、拓扑顺序、模型路径/依赖描述和稳定图摘要；结果证据、trace、诊断和模型版本。
-- `change-data` 的权限检查、原子修改和目标重识别；每次判断实时按 Information 配置读取模型值，不维护 MutationSet 或增量失效缓存；对 P4/P5 的调用只保留稳定 InformationEngine 事实边界。
+- `change-data` 的权限检查、原子修改、提交/回滚结果；每次判断实时按 Information 配置读取模型值，不维护 MutationSet 或增量失效缓存；对 P4/P5 的调用只保留稳定 InformationEngine 事实边界。
 
 ### 4.2 范围外
 
 - P2 System/RuleView/model-access 的事实修订、治理投影修复或旧任务重写；P3 只消费已发布的 P2 归属和路径权限事实。
 - Action、Produce、Directory 状态机/Back、Query/SQL、事务与 Session、外部服务执行、现代 YAML 对等、数据库迁移以及任何生产代码实现。
 - 独立 Consumer runtime、Producer/Consumer SPI、旧 Directory Change 作为 Information 替代物，以及 `dec-expand-declaration` 的 Adapter 或代码复用。
+- `materialize` 成功提交后的自动重评估、目标重识别或下游 Information 重识别；后续识别只能由调用方另行发起普通只读 `evaluate`，不属于物化流程及其返回结果。
 
 ### 4.3 约束与依赖
 
@@ -118,7 +119,7 @@
 1. 解析并校验 16 个 Information，按三类互斥形式建立限定 Key 和模型路径/依赖描述。
 2. 分别编译 Model Expression 与 Information Expression，构建无环依赖图。
 3. 在每次判断时按 Information 配置实时读取当前模型值，先识别原子 Information，再按依赖拓扑短路计算复合 Information，返回 TRUE/FALSE/ERROR 结果及证据。
-4. 对声明 `change-data` 的模型表达式原子执行受保护物化，写入声明值并重新读取当前模型值识别目标及下游受影响节点。
+4. 对声明 `change-data` 的模型表达式原子执行受保护物化；提交成功后返回变更路径与提交结果并结束，不自动调用 `evaluate` 或识别目标及下游节点。
 
 #### 6.1.5 业务规则
 
@@ -129,13 +130,13 @@
 #### 6.1.6 输入与输出约束
 
 - 输入：限定的 InformationKey、已发布模型上下文和模型版本；表达式不得跨语言引用。每次判断根据 Information 配置重新读取所需模型路径，不接收或维护 MutationSet。
-- 输出：`TRUE/FALSE/ERROR` 之一，附证据、依赖结果、读路径、诊断和模型版本；本框架正常数据前提下不产生 `UNRESOLVED`；物化额外返回变更路径集合及目标重识别结果。
+- 输出：`TRUE/FALSE/ERROR` 之一，附证据、依赖结果、读路径、诊断和模型版本；本框架正常数据前提下不产生 `UNRESOLVED`；物化额外返回变更路径集合及提交结果，不返回目标或下游重识别结果。
 
 #### 6.1.7 状态与物化语义
 
 - 状态：识别结果按本次读取所处的模型/配置版本绑定；不维护跨请求的 MutationSet 或增量失效状态，每次判断重新获取配置声明的值并按 DAG 拓扑计算。
 - 识别：同一模型/配置上下文中只读获取值并返回结果，不产生隐式模型写入。
-- 物化：仅写入声明的 `change-data` 值；写入失败直接返回 `ERROR` 并抛出异常，由现有框架原子化与回滚机制撤销本次写入，不继续下游流程。写入后重新按配置读取并识别，不维护 MutationSet。P3 不新增独立事务、幂等或并发语义。
+- 物化：仅写入声明的 `change-data` 值；写入失败直接返回 `ERROR` 并抛出异常，由现有框架原子化与回滚机制撤销本次写入，不继续下游流程。提交成功后返回物化结果并结束，不自动调用 `evaluate`；P3 不新增独立事务、幂等或并发语义。
 
 #### 6.1.8 异常与禁止副作用
 
@@ -178,7 +179,7 @@ And 复合 Information 不可直接物化，识别不产生隐式模型写入，
 
 ### 10.3 可靠性、一致性与恢复
 
-- 结果必须绑定本次读取的模型/配置版本；物化任一步失败不得部分成功、不得继续流程；写入后必须重新读取，不能继续使用写入前的旧值。
+- 结果必须绑定本次读取的模型/配置版本；物化任一步失败不得部分成功、不得继续流程；成功提交后物化流程结束，不自动重新读取或继续识别。
 
 ### 10.4 审计与可观测性
 
@@ -231,6 +232,7 @@ P3 只接收 P1/P2 已发布的 System、View、RuleView、模型路径和权限
 | DEC-P3-INFORMATION-ENGINE-006 | P3 不维护 MutationSet 或 reverse-DAG 运行时失效缓存；每次判断按 Information 配置在当前数据/事务上下文中重新读取模型值，必要时从数据库再读。 | 避免缓存值与事务内真实数据不一致，且实现更简单。 | 用户本轮确认（2026-08-31） | - |
 | DEC-P3-INFORMATION-ENGINE-007 | 当前 `mix` 采用带显式 `<ref>` 的 `model-access` 写法；旧式无 `<ref>` 简写不在 P3 兼容范围内。`ref@property` 先匹配 `target-main`；`OrderInfo.status` 先归属 `order` 基础 Data，`orderDetailList` 归属独立的 `orderDetail` Data。 | 现有编译器只有显式 ref 才能生成 Binding；关系字段不能误当作主对象基础字段。 | `systems.xml`、`RawDefinitionBuilder`、`ModelAccessCompiler`、`DefaultModelAccessSelectorResolver` 现状核对（2026-08-31） | - |
 | DEC-P3-INFORMATION-ENGINE-008 | Information 专项测试用例和实现后测试证据延后到测试设计/开发阶段；需求确认阶段只冻结业务语义和可观察结果。 | 当前 Information 功能尚未实现，现阶段不存在可验证的 Information 测试功能。 | 用户本轮确认（2026-08-31） | - |
+| DEC-P3-INFORMATION-ENGINE-009 | `materialize` 成功提交后直接返回物化结果并结束；不自动或作为 `FLOW-P3-INFORMATION-EVALUATION` 的步骤执行独立只读重评估，不返回目标或下游重识别结果。 | 用户明确取消原计划第 7 项，避免把提交后的额外读取和下游识别纳入本次实现。 | 用户本轮确认（2026-09-02） | DEC-P3-INFORMATION-ENGINE-005、DEC-P3-INFORMATION-ENGINE-006 中关于物化后重识别的部分 |
 
 ## 13. 追踪关系
 
@@ -248,4 +250,5 @@ P3 只接收 P1/P2 已发布的 System、View、RuleView、模型路径和权限
 | REQCONF-P3-R02 | 2026-08-31 | 需求确认 | 根据用户确认冻结非法路径 ERROR、普通 null ERROR（显式 Information 空值比较除外）及 `every(emptyCollection)=TRUE + 订单明细非空`；补齐功能、异常、验收和追踪内容，提交同 revision 独立 Review。 | RequirementConfirmationAgent |
 | REQCONF-P3-R03 | 2026-08-31 | 需求确认 | 根据用户进一步确认，关闭本框架不会出现的数据未加载/依赖未识别/动态暂不可判定等 UNRESOLVED 运行场景；明确结果为 TRUE/FALSE/ERROR，物化失败抛异常并沿用现有原子回滚，仅定义 change-data 写入值，不新增幂等、并发或独立事务要求；补充 RuleTests.java 与 ModelContainer 现状依据。 | RequirementConfirmationAgent |
 | REQCONF-P3-R04 | 2026-08-31 | 需求确认 | 根据用户确认取消 MutationSet/reverse-DAG 运行时失效，改为每次按 Information 配置实时读取；确认当前无 Information 专项测试，测试用例延后至测试设计/开发阶段；补充 model-access 显式 ref、target-main 优先及 `orderDetailList` 独立 `orderDetail` Data 归属事实，并将其纳入 P3 需求边界。 | RequirementConfirmationAgent |
+| REQCONF-P3-R05 | 2026-09-02 | 需求确认 | 根据用户最新授权取消物化成功后的独立只读重评估：`materialize` 以提交成功并返回变更路径/提交结果为终点，不自动调用 `evaluate`，不返回目标或下游重识别结果；失败回滚和禁止继续下游保持不变。 | RequirementConfirmationAgent |
 | REQAN-P3-R01 | 2026-08-31 | 需求分析 | 在 R04 已确认语义基础上完成第 5～13 节的功能、规则、异常、验收、流程和追踪分析；保留 `TR-P3-INFORMATION-ENGINE-001` 作为需求到规则/验收/流程的唯一追踪项，明确测试 Case/test_ref 延后至 test_design/development。 | RequirementAnalysisAgent |

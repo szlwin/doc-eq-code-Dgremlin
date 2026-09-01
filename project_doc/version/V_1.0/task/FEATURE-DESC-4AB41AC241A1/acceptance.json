@@ -4,150 +4,48 @@
   "version": "V_1.0",
   "assertions": [
     {
-      "assertion_id": "ASRT-P3-REQCONF-R04-RA-001",
+      "assertion_id": "ASRT-P3-REQCONF-R05-001",
       "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "RequirementAnalysisAgent 对 R04 实时读取、显式 Binding/Data 归属和测试延期边界进行独立需求 Review。",
+      "statement": "RequirementAnalysisAgent independently confirms requirement_confirmation revision REQCONF-P3-R05@33ea135bffc6 against profile requirement_confirmation:RequirementAnalysisAgent and evidence EVD-000049.",
       "type": "MANUAL_REVIEW",
       "phase": "requirement_confirmation",
-      "revision": "REQCONF-P3-R04@646001a72756",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "RequirementAnalysisAgent",
-        "review_phase": "requirement_confirmation",
-        "scope": "P3 Information Engine requirement baseline R04"
-      },
-      "source_refs": [
-        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION#expected_results/0",
-        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION#expected_results/1",
-        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION#expected_results/2",
-        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION#expected_results/3"
-      ],
-      "evidence_ids": [
-        "EVD-000010"
-      ],
-      "verified_by_agent": "RequirementAnalysisAgent",
-      "verified_at": "2026-08-31T20:08:38+08:00",
-      "reason": "R04 需求确认通过。当前 Review 仅验证需求语义与可观察验收，不要求尚未实现的 P3 测试 Case/test_ref。"
-    },
-    {
-      "assertion_id": "ASRT-P3-REQAN-R01-BM-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "BusinessModelAgent 对 REQAN-R01 的业务规则、术语、状态和错误语义完成独立需求分析 Review。",
-      "type": "MANUAL_REVIEW",
-      "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R01@5b4727fc5db4",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "BusinessModelAgent",
-        "review_phase": "requirement_analysis",
-        "scope": "P3 Information Engine requirement analysis R01"
-      },
-      "source_refs": [
-        "TR-P3-INFORMATION-ENGINE-001"
-      ],
-      "evidence_ids": [
-        "EVD-000011"
-      ],
-      "verified_by_agent": "BusinessModelAgent",
-      "verified_at": "2026-08-31T20:27:29+08:00",
-      "reason": "BusinessModelAgent Review 通过。当前分析足以进入业务建模，未发现业务语义或对象边界问题。"
-    },
-    {
-      "assertion_id": "ASRT-P3-REQAN-R01-TD-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "TestDesignAgent 对 REQAN-R01 的验收可观察性、测试边界和测试延期范围完成独立需求分析 Review。",
-      "type": "MANUAL_REVIEW",
-      "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R01@5b4727fc5db4",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "TestDesignAgent",
-        "review_phase": "requirement_analysis",
-        "scope": "P3 Information Engine requirement analysis R01"
-      },
-      "source_refs": [
-        "TR-P3-INFORMATION-ENGINE-001"
-      ],
-      "evidence_ids": [
-        "EVD-000011"
-      ],
-      "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-08-31T20:45:22+08:00",
-      "reason": "需求分析阶段通过。当前不要求已存在测试 Case 或 test_ref，测试实现与执行留待后续 test_design/development/testing 阶段。"
-    },
-    {
-      "assertion_id": "ASRT-P3-BMODEL-R01-BMR-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "BusinessModelReviewAgent 确认 BM-P3-R01 的 Information 对象、聚合、不变量、状态机、服务、策略、事件和业务错误语义闭合且与需求分析一致。",
-      "type": "MANUAL_REVIEW",
-      "phase": "business_model",
-      "revision": "BM-P3-R01",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "BusinessModelReviewAgent",
-        "review_phase": "business_model"
-      },
-      "source_refs": [
-        "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL#expected_results/0"
-      ],
-      "evidence_ids": [
-        "EVD-000016",
-        "EVD-000017",
-        "EVD-000018"
-      ],
-      "verified_by_agent": "BusinessModelReviewAgent",
-      "verified_at": "2026-08-31T20:54:08+08:00",
-      "reason": "BM-P3-R01 通过 BusinessModelReviewAgent 审查。"
-    },
-    {
-      "assertion_id": "ASRT-P3-BMODEL-R01-TD-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "TestDesignAgent 确认 BM-P3-R01 的识别不变量、空值/空集合边界、路径错误、物化失败和实时读取语义具有可执行测试接缝。",
-      "type": "MANUAL_REVIEW",
-      "phase": "business_model",
-      "revision": "BM-P3-R01",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "TestDesignAgent",
-        "review_phase": "business_model"
-      },
-      "source_refs": [
-        "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL#expected_results/1"
-      ],
-      "evidence_ids": [
-        "EVD-000016",
-        "EVD-000018"
-      ],
-      "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-08-31T20:54:29+08:00",
-      "reason": "BM-P3-R01 的业务规则和状态/错误语义具备可执行测试接缝，TestDesignAgent Review 通过。"
-    },
-    {
-      "assertion_id": "ASRT-P3-DESIGN-R05-ARCH-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "ArchitectureReviewAgent 对 DESIGN-P3-R05 的模块边界、事务复用、只读 RuleView 和错误语义完成独立架构 Review。",
-      "type": "MANUAL_REVIEW",
-      "phase": "design",
-      "revision": "DESIGN-P3-R05",
+      "revision": "REQCONF-P3-R05@33ea135bffc6",
       "blocking": true,
       "status": "PENDING",
       "parameters": {
-        "reviewer_agent": "ArchitectureReviewAgent",
-        "review_phase": "design",
-        "scope": "P3 Information Engine DESIGN-P3-R05 architecture"
+        "reviewer_agent": "RequirementAnalysisAgent",
+        "review_profile_id": "requirement_confirmation:RequirementAnalysisAgent"
       },
       "source_refs": [
-        "TR-P3-INFORMATION-ENGINE-001"
+        "DEC-P3-INFORMATION-ENGINE-009"
       ],
       "evidence_ids": [],
       "verified_by_agent": "",
       "verified_at": "",
       "reason": ""
+    },
+    {
+      "assertion_id": "ASRT-P3-REQCONF-R05-REQAN-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "P3 物化成功以 commit 和 MaterializationResult 结束，不自动重评估；失败回滚并停止下游，独立 evaluate 保持只读实时。",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_confirmation",
+      "revision": "REQCONF-P3-R05@33ea135bffc6",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "profile_id": "requirement_confirmation:RequirementAnalysisAgent",
+        "reviewer_agent": "RequirementAnalysisAgent"
+      },
+      "source_refs": [
+        "requirement.md#DEC-P3-INFORMATION-ENGINE-009"
+      ],
+      "evidence_ids": [
+        "EVD-000049"
+      ],
+      "verified_by_agent": "RequirementAnalysisAgent",
+      "verified_at": "2026-09-02T00:43:06+08:00",
+      "reason": "独立 Reviewer 检查通过：物化成功以 commit 和 MaterializationResult 结束，不自动或作为流程步骤调用 evaluate，不返回目标/下游重识别结果；失败仍回滚并停止下游；独立 evaluate 的只读实时语义保持不变。未发现阻断需求分析的歧义。"
     }
   ]
 }
