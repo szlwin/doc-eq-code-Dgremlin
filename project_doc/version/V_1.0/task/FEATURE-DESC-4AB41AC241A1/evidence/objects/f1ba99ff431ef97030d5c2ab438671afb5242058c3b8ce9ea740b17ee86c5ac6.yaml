@@ -3,7 +3,7 @@ artifact: business_model
 module:
   code: P3-INFORMATION-ENGINE
   name: Information Engine
-revision: BM-P3-R03
+revision: BM-P3-R02
 baseRevision: REQAN-P3-R04@aa4bd589d74c
 terms:
   - id: TERM-INFORMATION
@@ -97,7 +97,7 @@ aggregates:
     name: Information evaluation
     root: IdentificationResult
     members: ["InformationKey", "IdentificationResult", "MaterializationResult", "EvidenceSet"]
-    invariantIds: ["INV-P3-REALTIME-READ", "INV-P3-NULL-ERROR", "INV-P3-EVALUATE-ERROR", "INV-P3-EVERY-EMPTY", "INV-P3-MATERIALIZE"]
+    invariantIds: ["INV-P3-REALTIME-READ", "INV-P3-NULL-ERROR", "INV-P3-EVERY-EMPTY", "INV-P3-MATERIALIZE"]
     transactionBoundary: 识别只读；物化沿用现有框架原子化边界
     traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 invariants:
@@ -126,11 +126,6 @@ invariants:
     trigger: identify
     failure: INFORMATION_NULL_ERROR
     traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
-  - id: INV-P3-EVALUATE-ERROR
-    statement: 非法路径、普通 null、权限、表达式或只读 RuleView 执行错误必须记录 ERROR 诊断并抛出 InformationEvaluationException，不得降级为 FALSE、进入 materialize 或继续下游。
-    trigger: identify
-    failure: INFORMATION_EVALUATION_FAILED
-    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: INV-P3-EVERY-EMPTY
     statement: every(emptyCollection, predicate) 为 TRUE；订单相关 Information 还必须满足订单明细非空，明细为空时结果为 FALSE 并可附 ORDER_DETAIL_REQUIRED 诊断。
     trigger: identify
@@ -150,7 +145,7 @@ stateMachines:
       - {id: TRANS-P3-EVALUATE, from: REQUESTED, command: evaluate, to: EVALUATING, preconditions: ["InformationKey 已发布"]}
       - {id: TRANS-P3-TRUE, from: EVALUATING, command: resultTrue, to: TRUE, preconditions: ["所有必需读取满足"]}
       - {id: TRANS-P3-FALSE, from: EVALUATING, command: resultFalse, to: FALSE, preconditions: ["条件不满足且无错误"]}
-      - {id: TRANS-P3-ERROR, from: EVALUATING, command: raiseEvaluationError, to: ERROR, preconditions: ["路径/null/权限/表达式/RuleView 错误"], failure: INFORMATION_EVALUATION_FAILED}
+      - {id: TRANS-P3-ERROR, from: EVALUATING, command: resultError, to: ERROR, preconditions: ["路径/null/权限/表达式错误"]}
     traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
   - id: SM-P3-MATERIALIZATION
     name: change-data materialization
@@ -182,10 +177,6 @@ policies:
     name: terminal materialization policy
     statement: commit 和 MaterializationResult 构成物化终点；后续 evaluate 只能由调用方另行发起，不属于物化流程或返回结果。
     traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
-  - id: POL-P3-EVALUATE-ERROR-BLOCKING
-    name: evaluation error blocking policy
-    statement: evaluate ERROR 抛异常并终止当前调用，不得触发 materialize 或任何下游步骤。
-    traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 events:
   - id: EVT-P3-MATERIALIZED
     name: Information materialized
@@ -193,13 +184,12 @@ events:
     traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
 businessErrors:
   - {id: ERR-P3-DEFINITION-INVALID, condition: 类型混用/缺失引用/循环/越权写入, meaning: 配置或编译错误, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
-  - {id: ERR-P3-PATH-INVALID, condition: 模型声明路径不存在, meaning: 记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
-  - {id: ERR-P3-NULL-VALUE, condition: 普通求值读取到 null, meaning: 记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
-  - {id: ERR-P3-EVALUATE-FAILED, condition: 权限、表达式或只读 RuleView 执行失败, meaning: 记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
+  - {id: ERR-P3-PATH-INVALID, condition: 模型声明路径不存在, meaning: 路径错误, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
+  - {id: ERR-P3-NULL-VALUE, condition: 普通求值读取到 null, meaning: 空值错误, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
   - {id: ERR-P3-MATERIALIZE-FAILED, condition: change-data 写入失败, meaning: 抛异常并由现有回滚机制撤销, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
 traceability:
   - traceId: TR-P3-INFORMATION-ENGINE-001
     requirementRefs: ["REQAN-P3-R04@aa4bd589d74c"]
-    modelRefs: ["BM-P3-R03"]
+    modelRefs: ["BM-P3-R02"]
     acceptanceRefs: ["AC-P3-INFORMATION-ENGINE-001"]
     flowRefs: ["FLOW-P3-INFORMATION-EVALUATION"]

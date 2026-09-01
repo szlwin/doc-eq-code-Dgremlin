@@ -99,7 +99,7 @@
     {
       "id": "TASK-P3-INFORMATION-ENGINE-BUSINESS-MODEL",
       "title": "建立 P3 Information Engine 业务模型",
-      "objective": "基于 REQAN-P3-R01 建立 Information、InformationKey、模型表达式、复合表达式、依赖图、识别结果和 change-data 物化边界的稳定业务模型。",
+      "objective": "基于 REQAN-P3-R04 和 FLOW-P3-INFORMATION-EVALUATION 建立 Information、InformationKey、识别结果、MaterializationResult、依赖图和终止/失败边界的稳定业务模型。",
       "phase": "business_model",
       "depends_on": [
         "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS"
@@ -107,17 +107,25 @@
       "owner_agent": "BusinessModelAgent",
       "reviewer_agents": [
         "BusinessModelReviewAgent",
-        "DesignReviewAgent",
         "TestDesignAgent"
       ],
       "input_revisions": {
-        "requirement_analysis": "REQAN-P3-R01@5b4727fc5db4"
+        "requirement_analysis": "REQAN-P3-R04@aa4bd589d74c"
       },
       "allowed_files": [
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml",
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md",
-        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
-        "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
+        "project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml",
+        "project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/005-p3-information-evaluation.yaml",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.yaml",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/MODEL_desc_preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml",
+        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_report.md",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
+        "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
       ],
       "acceptance_trace_ids": [
         "TR-P3-INFORMATION-ENGINE-001"
@@ -128,8 +136,9 @@
       "flow_step_refs": [],
       "validation_commands": [],
       "expected_results": [
-        "形成与 REQAN-P3-R01 一致的 Information 业务术语、对象边界、依赖不变量、识别和物化失败语义。",
+        "形成与 REQAN-P3-R04/FLOW-R06 一致的 Information 业务术语、对象边界、依赖不变量、识别和物化终止/失败语义。",
         "明确每次按配置实时读取、不维护 MutationSet、普通 null/非法路径 ERROR、every(emptyCollection)=TRUE 且订单明细非空，以及 target-main 与 orderDetail Data 归属规则。",
+        "成功物化以 commit 和 MaterializationResult 结束且不调用 evaluate；evaluate ERROR 抛异常并阻断物化和下游。",
         "BusinessModelAgent 及其独立 Reviewer 对同一业务模型 revision 完成 Review。"
       ],
       "stop_conditions": [

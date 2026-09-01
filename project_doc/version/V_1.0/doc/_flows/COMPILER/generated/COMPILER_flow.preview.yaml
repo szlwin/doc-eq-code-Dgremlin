@@ -4,7 +4,7 @@ flowGroup:
   code: "COMPILER"
   name: "Configuration compilation, model execution and information evaluation"
   description: ""
-revision: "FLOW-R05@p3-information-evaluation"
+revision: "FLOW-R06@p3-information-evaluation"
 baseRevision: "FLOW-R04@p2-simple-runtime-model"
 flows:
   -
@@ -418,7 +418,7 @@ flows:
         condition: "a business condition is not satisfied and no evaluation error occurs"
         differences:
           - "STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns FALSE"
-          - "FALSE is never used to represent an invalid path, ordinary null, expression error or RuleView error"
+          - "FALSE is never used to represent an invalid path, ordinary null, permission error, expression error or RuleView error"
         ruleRefs:
           - "BR-P3-INFORMATION-ENGINE-002"
       -
@@ -443,7 +443,7 @@ flows:
       -
         id: "FAIL-P3-INFORMATION-EVALUATE"
         atStep: "STEP-P3-INFORMATION-EVALUATION-IDENTIFY"
-        condition: "an invalid path, ordinary null, expression failure or read-only RuleView failure occurs"
+        condition: "an invalid path, ordinary null, permission failure, expression failure or read-only RuleView failure occurs"
         result: "record ERROR and throw InformationEvaluationException instead of returning FALSE"
         compensation: "no write occurred; do not materialize or continue downstream"
         blocking: true
@@ -465,7 +465,8 @@ flows:
       - "successful materialization commits and returns MaterializationResult without post-commit reevaluation"
       - "failed materialization rolls back, throws and does not continue downstream"
     businessModelRefs:
-      - "AGG-P3-INFORMATION"
+      - "AGG-INFORMATION-MODEL"
+      - "AGG-INFORMATION-EVALUATION"
       - "INV-P3-REALTIME-READ"
       - "INV-P3-MATERIALIZE"
       - "SM-P3-IDENTIFICATION"
@@ -479,4 +480,4 @@ flows:
       - "CASE-P3-MATERIALIZE-001"
     status: "PROPOSED"
     createdVersion: "V_1.0"
-    lastChangedVersion: "FLOW-R05"
+    lastChangedVersion: "FLOW-R06"
