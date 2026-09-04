@@ -399,7 +399,6 @@ flows:
         ownerModule: "MODEL"
         featureRef: "P3-INFORMATION-ENGINE-F01"
         preconditions:
-          - "the last Action for the Directory has completed successfully"
           - "the Directory ChangeInfo mapping, registered RuleViewInfo, change-data and exact write permission are present"
         postconditions:
           - "the already registered and mapped RuleViewInfo executes grammer before update"

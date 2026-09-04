@@ -4,16 +4,16 @@
   "plan_id": "TP-FEATURE-DESC-4AB41AC241A1",
   "target_id": "FEATURE-DESC-4AB41AC241A1",
   "version": "V_1.0",
-  "status": "PASSED",
-  "revision": "TP-FEATURE-DESC-4AB41AC241A1-R01@140befd6e37e",
-  "revision_no": 1,
-  "supersedes_revision": "",
-  "revision_reason": "",
+  "status": "PENDING",
+  "revision": "TP-FEATURE-DESC-4AB41AC241A1-R02@ace67dc853bc",
+  "revision_no": 2,
+  "supersedes_revision": "TP-FEATURE-DESC-4AB41AC241A1-R01@140befd6e37e",
+  "revision_reason": "同步 REQAN-P3-R05、BM-P3-R04、DESIGN-P3-R08、TESTDESIGN-P3-R03；拆分 P3/P4/P5 边界，补齐 ChangeInfo 编译期 RuleViewInfo 生成/注册/映射，删除物化后独立重读/重评估要求。",
   "input_revisions": {
-    "requirement_analysis": "REQAN-P3-R01@5b4727fc5db4",
-    "business_model": "BM-P3-R01",
-    "design": "DESIGN-P3-R02",
-    "test_design": "TESTDESIGN-P3-R01"
+    "requirement_analysis": "REQAN-P3-R05",
+    "business_model": "BM-P3-R04",
+    "design": "DESIGN-P3-R08",
+    "test_design": "TESTDESIGN-P3-R03"
   },
   "work_mode": {
     "minimal": false,
@@ -68,7 +68,7 @@
         ],
         "source_doc_refs": [
           "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
-          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-FEATURE-DESC-4AB41AC241A1-001"
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-P3-MIX-001"
         ]
       },
       "acceptance_criteria": [
@@ -149,12 +149,12 @@
         "shared_logic_disposition": "EXTRACT_NEW",
         "shared_logic_owner": "dec-core-context InformationEngine",
         "compatibility_verifications": [
-          "CASE-FEATURE-DESC-4AB41AC241A1-002 至 005 的结果状态、readPaths 和诊断与测试设计一致。",
+          "CASE-P3-MIX-001 的结果状态、readPaths 和诊断与测试设计一致。",
           "旧 RuleTests.java 调用链不改变。"
         ],
         "source_doc_refs": [
           "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
-          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-FEATURE-DESC-4AB41AC241A1-002"
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-P3-MIX-001"
         ]
       },
       "acceptance_criteria": [
@@ -212,14 +212,14 @@
     {
       "task_id": "TASK-P3-DEV-INFORMATION-MATERIALIZER",
       "title": "实现 change-data 物化与异常传播",
-      "goal": "仅将声明的模型原子 change-data 写入既有 ModelContainer，写后实时重读；写入失败直接抛异常并沿用现有回滚，不继续下游。",
+      "goal": "消费编译期已生成并注册的 ChangeInfo RuleViewInfo，将声明的模型原子 change-data 写入既有 ModelContainer；提交成功即返回，不执行独立重评估。",
       "implementation": {
         "owner_module": "dec-core-model",
         "owner_component": "InformationMaterializer",
         "steps": [
-          "为成功写入、写后重读和 writer 抛 PersistenceException 建立集成测试。",
-          "实现 change-data 声明校验、写入值传递和写后 InformationEngine evaluate 编排。",
-          "将异常原样传播给 ModelContainer，验证既有事务回滚和失败分支下游调用次数为零。",
+          "为编译期已注册 RuleViewInfo、grammer/update 顺序、共享 ModelLoader.value 和 writer 抛 PersistenceException 建立集成测试。",
+          "实现 ChangeInfo RuleViewInfo 的消费、change-data 声明校验和写入值传递；成功提交后直接返回 MaterializationResult。",
+          "将异常原样传播给 ModelContainer，验证既有事务回滚、evaluate 调用次数为零和失败分支下游调用次数为零。",
           "运行物化集成测试、RuleTests 回归、静态检查和全模块构建。"
         ],
         "affected_files": [
@@ -239,22 +239,22 @@
         "shared_logic_disposition": "REUSE_SHARED",
         "shared_logic_owner": "dec-core-model ModelContainer",
         "compatibility_verifications": [
-          "CASE-FEATURE-DESC-4AB41AC241A1-006 成功和失败分支均可观察。",
+          "CASE-P3-ERROR-001 与 CASE-P3-DIRECTORY-001 的成功和失败分支均可观察。",
           "现有 ModelContainer 提交、回滚和关闭语义保持不变。"
         ],
         "source_doc_refs": [
           "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
-          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-FEATURE-DESC-4AB41AC241A1-006"
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-P3-DIRECTORY-001"
         ]
       },
       "acceptance_criteria": [
         {
           "id": "AC-MATERIALIZER-001",
-          "assertion": "成功物化只写声明的 change-data 值，写后重读得到相同值且结果一致。"
+          "assertion": "测试能够观察到已注册 RuleViewInfo 按 grammer → update → commit 执行并返回仅含变更路径和提交结果的 MaterializationResult。"
         },
         {
           "id": "AC-MATERIALIZER-002",
-          "assertion": "写入异常直接抛出，既有事务恢复写入前值且失败分支不存在下游调用。"
+          "assertion": "写入异常直接抛出，既有事务恢复写入前值且失败分支不存在 evaluate 或下游调用。"
         }
       ],
       "depends_on": [
@@ -272,8 +272,8 @@
         "./mvnw -pl dec-core-model -DskipTests compile"
       ],
       "expected_results": [
-        "物化成功测试断言写入参数、写后 reread 值和下游识别结果一致。",
-        "物化失败测试断言原始异常、回滚后的旧值和零次下游调用。"
+          "物化成功测试断言已注册 RuleViewInfo、规则顺序、写入参数、commit 和 MaterializationResult；不执行 reread/evaluate。",
+          "物化失败测试断言原始异常、回滚后的旧值和零次 evaluate/下游调用。"
       ],
       "deliverables": [
         "InformationMaterializer 实现 revision",
@@ -282,6 +282,187 @@
       "stop_conditions": [
         "现有 ModelContainer 无法提供既定回滚语义且需要修改 P7 事务治理。",
         "物化失败无法保证异常传播或零下游副作用。"
+      ],
+      "trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+      ],
+      "risk_triggers": [],
+      "git_checkpoint_required": true
+    },
+    {
+      "task_id": "TASK-P3-DEV-CHANGE-INFO",
+      "title": "实现 ChangeInfo RuleView 编译期生成与注册映射",
+      "goal": "在解析 Directory 的 ChangeInfo 时保存 information-ref，编译阶段生成唯一的 ## RuleViewInfo、注册到 ConfigInfo 并回填映射，供 P5 运行阶段直接复用。",
+      "implementation": {
+        "owner_module": "dec-context-config-parse-xml / dec-core-compiler / dec-core-context",
+        "owner_component": "ChangeInfo、DirectoryInfo、RuleParser、ConfigInfo",
+        "steps": [
+          "为 order-business.xml 的 change-info information-ref、名称生成、ViewData 绑定和 grammer/update 顺序建立测试。",
+          "扩展 ChangeInfo 保存 information-ref 与生成的 RuleViewInfo 映射；解析 Directory 时依据 business-config、directory 和 information-ref 生成 ## 名称。",
+          "参考 RuleParser 构造两条 RuleDefineInfo，调用 ConfigInfo.addRuleViewInfo() 注册，并确保同一编译批次只生成一次。",
+          "验证编译失败不安装候选 ConfigInfo，运行阶段按 ChangeInfo 映射直接取得对象。"
+        ],
+        "affected_files": [
+          "dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/rule/RuleParser.java",
+          "dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/directory/DirectoryParser.java",
+          "dec-core-context/src/main/java/dec/core/context/config/model/directory/ChangeInfo.java",
+          "dec-core-context/src/main/java/dec/core/context/config/model/config/ConfigInfo.java",
+          "dec-context-config-parse-xml/src/test/java/dec/context/parse/xml/ChangeInfoParserTest.java"
+        ],
+        "forbidden_changes": [
+          "不得在最后一个 Action 后或每次运行时生成 RuleViewInfo。",
+          "不得改变 directory@information-ref 的识别条件语义，不实现 P4 Action/Produce 或 P5 Directory 状态机。",
+          "不考虑多目录、多 ChangeInfo、并发隔离和数据库连接选择。"
+        ],
+        "implementation_decision_ref": "IMPL-DEC-P3-005",
+        "strategy": "MODIFY",
+        "existing_code_refs": [
+          "dec-context-config-parse-xml/.../RuleParser.java",
+          "dec-core-context/.../ConfigInfo.java",
+          "dec-core-context/.../DirectoryInfo.java"
+        ],
+        "shared_logic_disposition": "REUSE_SHARED",
+        "shared_logic_owner": "dec-context-config-parse-xml RuleParser / dec-core-context ConfigInfo",
+        "compatibility_verifications": [
+          "旧 RuleView 解析和 ConfigInfo.getRuleViewInfo(name) 行为保持不变。",
+          "ChangeInfo 映射对象与 ConfigInfo 注册对象为同一实例，名称为 ##order-payment.paying.order.paying。"
+        ],
+        "source_doc_refs": [
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-P3-CHANGE-INFO-001"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-CHANGE-INFO-001",
+          "assertion": "编译 order-business.xml 后能够查询到 ChangeInfo 的 order.paying 映射，且 ConfigInfo 返回同一实例的 ##order-payment.paying.order.paying RuleViewInfo。"
+        },
+        {
+          "id": "AC-CHANGE-INFO-002",
+          "assertion": "ChangeInfo RuleViewInfo 恰有 grammer、update 两条有序规则并绑定 OrderInfo，且生成发生在编译阶段而非 Action 执行阶段。"
+        }
+      ],
+      "depends_on": [
+        "TASK-P3-DEV-INFORMATION-COMPILER"
+      ],
+      "owner_agent": "DevelopAgent",
+      "reviewer_agents": [
+        "PlanReviewAgent",
+        "ArchitectureReviewAgent",
+        "TestDesignAgent",
+        "DevelopAgent"
+      ],
+      "validation_commands": [
+        "./mvnw -pl dec-context-config-parse-xml,dec-core-context -Dtest=ChangeInfoParserTest test",
+        "./mvnw -pl dec-context-config-parse-xml,dec-core-context -DskipTests compile"
+      ],
+      "expected_results": [
+        "编译阶段生成一次 ## RuleViewInfo 并注册到候选 ConfigInfo，ChangeInfo 映射指向同一对象。",
+        "重复解析或运行时调用不会重复生成；既有 RuleView 解析回归通过。"
+      ],
+      "deliverables": [
+        "ChangeInfo information-ref 与 RuleViewInfo 映射实现",
+        "ConfigInfo 注册、规则构造和解析回归测试 Evidence"
+      ],
+      "stop_conditions": [
+        "需要改变已确认的 XML 语义或 P2 RuleView 归属。",
+        "无法保证编译期生成一次、ConfigInfo 注册和 ChangeInfo 映射一致。"
+      ],
+      "trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "flow_step_refs": [
+        "STEP-P3-INFORMATION-EVALUATION-COMPILE"
+      ],
+      "risk_triggers": [],
+      "git_checkpoint_required": true
+    },
+    {
+      "task_id": "TASK-P4-P5-DEV-DIRECTORY-CHANGE-INFO",
+      "title": "接入 P4 Action 与 P5 Directory 的 ChangeInfo 编排边界",
+      "goal": "由 P5 按 DirectoryInfo.actions 顺序执行多个 P4 Action ModelLoader，最后一个 Action 成功后追加 ChangeInfo RuleView loader 并统一交给 ModelContainer.execute。",
+      "implementation": {
+        "owner_module": "P4 Action/Produce + P5 Directory execution",
+        "owner_component": "DirectoryContainer / DirectoryChangeInfoHook",
+        "steps": [
+          "登记 P4 Action 的 system-ref、ref-rule、Produce 和有序 ActionExecutionResult 作为 P5 输入。",
+          "实现 P5 按 DirectoryInfo.actions 顺序加载多个 Action ModelLoader，确认只有最后一个 Action 成功后才读取 ChangeInfo 映射。",
+          "追加已注册 RuleViewInfo 的 loader，与 Action loader 一起调用 ModelContainer.execute()；失败时不追加、不写入、不继续下游。",
+          "覆盖 startPay fixture 的成功/失败顺序和 MaterializationResult 终点；不在 P3 本轮实现。"
+        ],
+        "affected_files": [
+          "后续 P4 Action/Produce 实现文件",
+          "后续 P5 DirectoryContainer 实现文件",
+          "后续 P5 DirectoryChangeInfoHook 实现文件",
+          "dec-demo/src/test/resources/mix/business/order-business.xml"
+        ],
+        "forbidden_changes": [
+          "本 P3 设计阶段不修改生产代码；后续实现不得重新生成 ChangeInfo RuleViewInfo。",
+          "不得在最后 Action 前执行 ChangeInfo，不调用物化后的 evaluate。",
+          "不扩展 P3 的并发、连接选择或独立事务语义。"
+        ],
+        "implementation_decision_ref": "IMPL-DEC-P3-005",
+        "strategy": "COMPATIBLE_EXTEND",
+        "existing_code_refs": [
+          "dec-core-model/.../ModelContainer.java",
+          "dec-demo/src/test/java/dec/demo/model/RuleTests.java",
+          "dec-demo/src/test/resources/mix/business/order-business.xml"
+        ],
+        "shared_logic_disposition": "REUSE_SHARED",
+        "shared_logic_owner": "dec-core-model ModelContainer",
+        "compatibility_verifications": [
+          "旧 RuleTests 的 ModelContainer.load(...).execute() 调用链保持通过。",
+          "Action 失败不触发 ChangeInfo loader；成功只 commit 一次且 evaluate 调用次数为 0。"
+        ],
+        "source_doc_refs": [
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions",
+          "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md#CASE-P3-DIRECTORY-001"
+        ]
+      },
+      "acceptance_criteria": [
+        {
+          "id": "AC-DIRECTORY-CHANGE-INFO-001",
+          "assertion": "测试能够观察到所有 Action loader 完成且最后一个 Action 成功后，P5 才追加已注册 ChangeInfo RuleView loader，并按 grammer → update → commit 完成物化。"
+        },
+        {
+          "id": "AC-DIRECTORY-CHANGE-INFO-002",
+          "assertion": "任一 Action 失败时不执行 ChangeInfo 物化、不写目标模型、不调用 evaluate 且不继续下游。"
+        }
+      ],
+      "depends_on": [
+        "TASK-P3-DEV-CHANGE-INFO"
+      ],
+      "owner_agent": "DevelopAgent",
+      "reviewer_agents": [
+        "PlanReviewAgent",
+        "ArchitectureReviewAgent",
+        "TestDesignAgent",
+        "DevelopAgent"
+      ],
+      "validation_commands": [
+        "./mvnw -pl dec-core-model,dec-core-context -Dtest=DirectoryChangeInfoHookTest test",
+        "./mvnw -pl dec-core-model,dec-core-context -DskipTests compile"
+      ],
+      "expected_results": [
+        "Action loaders 按声明顺序执行，ChangeInfo loader 只在最后 Action 成功后追加。",
+        "成功路径提交一次并返回 MaterializationResult；失败路径回滚并阻断下游。"
+      ],
+      "deliverables": [
+        "P4/P5 ChangeInfo 调用接缝实现（后续阶段）",
+        "startPay 成功/失败顺序测试及 command Evidence（后续阶段）"
+      ],
+      "stop_conditions": [
+        "需要改变 P3 已注册 RuleViewInfo 或 ModelContainer 事务边界。",
+        "P4 Action 结果无法提供有序成功/失败事实，或最后 Action 边界无法可靠判断。"
       ],
       "trace_ids": [
         "TR-P3-INFORMATION-ENGINE-001"

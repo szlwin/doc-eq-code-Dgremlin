@@ -1,7 +1,7 @@
 <!-- generated-by: common-develop/business_flow.py -->
 # Configuration compilation, model execution and information evaluation（COMPILER）
 
-- Revision：`FLOW-R06@p3-information-evaluation`
+- Revision：`FLOW-R08@p3-information-evaluation`
 - Base Revision：`FLOW-R04@p2-simple-runtime-model`
 - 层级：L0 端到端场景、L1 业务阶段、L2 关键子流程
 
@@ -148,8 +148,8 @@
 - 父流程：`无`
 - 主责模块：`MODEL`
 - 参与模块：[COMPILER](../../../../../../docs/COMPILER/COMPILER_desc.md), [CONTEXT](../../../../../../docs/CONTEXT/CONTEXT_desc.md), [MODEL](../../../../../../docs/MODEL/MODEL_desc.md), [XML](../../../../../../docs/XML/XML_desc.md), [DEMO](../../../../../../docs/DEMO/DEMO_desc.md)
-- 目标：Compile and publish immutable Information facts, evaluate them without writes, and optionally materialize one declared change-data value atomically.
-- 触发：A configuration load publishes P3 Information facts, or a caller requests evaluate or materialize for a published InformationKey.
+- 目标：Compile and publish immutable Information facts, generate and register each change-info RuleViewInfo once, map it to its Directory ChangeInfo, let P5 reuse it after the last successful Action, evaluate without writes, and materialize one declared change-data value atomically.
+- 触发：A configuration load publishes P3 Information facts and ChangeInfo mappings, or P5 completes the last Action of a Directory.
 - 状态：`PROPOSED`
 
 ### 需求、功能与追踪
@@ -158,7 +158,7 @@
 |---|---|
 | 需求 | [P3-INFORMATION-ENGINE](../../../FEATURE-DESC-4AB41AC241A1/requirement.md) |
 | 功能 | [P3-INFORMATION-ENGINE-F01](../../../../../../docs/MODEL/MODEL_desc.md)（MODEL） |
-| 规则 | BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, CR-P3-INFORMATION-ENGINE-001 |
+| 规则 | BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, CR-P3-INFORMATION-ENGINE-001 |
 | 验收 | AC-P3-INFORMATION-ENGINE-001 |
 | 追踪 | TR-P3-INFORMATION-ENGINE-001 |
 
@@ -181,7 +181,7 @@
 |---|---|---|---|
 | FVAR-P3-INFORMATION-EVALUATION-TRUE | Satisfied evaluation | all required read-only conditions are satisfied | STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns TRUE；materialize is not implied by a TRUE result |
 | FVAR-P3-INFORMATION-EVALUATION-FALSE | Normally unsatisfied evaluation | a business condition is not satisfied and no evaluation error occurs | STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns FALSE；FALSE is never used to represent an invalid path, ordinary null, permission error, expression error or RuleView error |
-| FVAR-P3-INFORMATION-EVALUATION-MATERIALIZE | Explicit optional materialization | the caller explicitly invokes materialize for an eligible model-expression atomic Information | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE executes grammer then update in one existing ModelContainer transaction；the success boundary is commit plus MaterializationResult with no post-commit reevaluation |
+| FVAR-P3-INFORMATION-EVALUATION-MATERIALIZE | Explicit optional materialization | the caller explicitly invokes materialize for an eligible model-expression atomic Information | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE reuses the registered RuleViewInfo mapped from ChangeInfo and executes grammer then update in one existing ModelContainer transaction；the success boundary is commit plus MaterializationResult with no post-commit reevaluation |
 
 ### 失败、回退与补偿
 
@@ -203,5 +203,5 @@
 
 - 业务模型：AGG-INFORMATION-MODEL, AGG-INFORMATION-EVALUATION, INV-P3-REALTIME-READ, INV-P3-MATERIALIZE, SM-P3-IDENTIFICATION, SM-P3-MATERIALIZATION
 - 影响分析：待补充
-- 技术设计：DESIGN-P3-R06
-- 测试 Case：CASE-P3-MIX-001, CASE-P3-ERROR-001, CASE-P3-MATERIALIZE-001
+- 技术设计：DESIGN-P3-R08
+- 测试 Case：CASE-P3-MIX-001, CASE-P3-ERROR-001, CASE-P3-CHANGE-INFO-001, CASE-P3-DIRECTORY-001

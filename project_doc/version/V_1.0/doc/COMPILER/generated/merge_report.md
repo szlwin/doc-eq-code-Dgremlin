@@ -2,9 +2,9 @@
 
 - 版本：V_1.0
 - 模块：COMPILER
-- 当前 Agent：ProjectManagerAgent
+- 当前 Agent：IncrementalArchiveAgent
 - 基线 revisions：{'business_model': 'BM-R05@4ecb1f8c09f4', 'business_flow__COMPILER': 'FLOW-R02@compiler-owned-discovery'}
-- 结果 revisions：{'business_model': 'BM-R06', 'business_flow__COMPILER': 'FLOW-R05@p3-information-evaluation'}
+- 结果 revisions：{'business_model': 'BM-R06', 'business_flow__COMPILER': 'FLOW-R08@p3-information-evaluation'}
 - 工作模式：model_code=false page_design=false minimal=false auto=false architecture_review=false git_checkpoint=true git_push=false lightweight=false
 - 归档门禁：请在同一 merge_plan.yaml 的 archiveGate 中补充证据和授权结论
 
@@ -49,7 +49,7 @@
 
 ## 业务流程事实合并
 
-- COMPILER：FLOW-R02@compiler-owned-discovery -> FLOW-R05@p3-information-evaluation
+- COMPILER：FLOW-R02@compiler-owned-discovery -> FLOW-R08@p3-information-evaluation
 
 ## Markdown 事实合并
 

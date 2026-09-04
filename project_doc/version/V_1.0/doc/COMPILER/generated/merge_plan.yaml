@@ -5,13 +5,13 @@ module: "COMPILER"
 changeSetIds:
   - "CHG-V_1.0-COMPILER-P2-SIMPLE-RUNTIME-R06"
   - "FLOW-CHG-P2-SIMPLE-R04"
-  - "FLOW-CHG-P3-INFORMATION-EVALUATION-R05"
+  - "FLOW-CHG-P3-INFORMATION-EVALUATION-R08"
 baseRevisions:
   business_model: "BM-R05@4ecb1f8c09f4"
   business_flow__COMPILER: "FLOW-R02@compiler-owned-discovery"
 resultRevisions:
   business_model: "BM-R06"
-  business_flow__COMPILER: "FLOW-R05@p3-information-evaluation"
+  business_flow__COMPILER: "FLOW-R08@p3-information-evaluation"
 structuredArtifacts:
   - "business_flow"
   - "business_model"
@@ -86,7 +86,7 @@ artifactMerges:
       - "TR-P2-011"
     status: "READY"
     evidenceRefs:
-      - "project_doc/version/V_1.0/doc/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md"
+      - "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md"
   -
     artifactType: "module_desc"
     sourceRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/COMPILER/COMPILER_desc.md"
@@ -100,7 +100,7 @@ artifactMerges:
     resultDigest: "be6abcc9915a858c30ec08b4e877b27736bc47ca24f21784eb76aeacc92e58aa"
     reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
     evidenceRefs:
-      - "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_desc_preview.md"
+      - "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_desc_preview.md"
   -
     artifactType: "module_desc"
     sourceRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/MODEL/MODEL_desc.md"
@@ -114,7 +114,7 @@ artifactMerges:
     resultDigest: "8cf8fe4d6048d0a112b81615143b6d362a47b8de2d03a19f08ecda5dbecda36c"
     reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
     evidenceRefs:
-      - "project_doc/version/V_1.0/doc/COMPILER/generated/MODEL_desc_preview.md"
+      - "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/COMPILER/generated/MODEL_desc_preview.md"
   -
     artifactType: "requirement_list"
     sourceRef: "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/requirement_list.md"
@@ -128,16 +128,16 @@ artifactMerges:
     resultDigest: "0da2e90aaa49fe85acdc80de7cd9f98900db23c8ae8be01fdafdff67d041d9f5"
     reason: "当前格式 Markdown 事实由 wk -d 确定性合并"
     evidenceRefs:
-      - "project_doc/version/V_1.0/doc/COMPILER/generated/requirement_list_preview.md"
+      - "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/doc/COMPILER/generated/requirement_list_preview.md"
 conflictDecisions: []
 businessFlowMerges:
   -
     flowGroup: "COMPILER"
     baseRevision: "FLOW-R02@compiler-owned-discovery"
-    resultRevision: "FLOW-R05@p3-information-evaluation"
+    resultRevision: "FLOW-R08@p3-information-evaluation"
     changeSetIds:
       - "FLOW-CHG-P2-SIMPLE-R04"
-      - "FLOW-CHG-P3-INFORMATION-EVALUATION-R05"
+      - "FLOW-CHG-P3-INFORMATION-EVALUATION-R08"
     affectedFlowIds:
       - "FLOW-CONFIG-COMPILE"
       - "FLOW-P3-INFORMATION-EVALUATION"
@@ -149,8 +149,8 @@ businessFlowMerges:
     targetMarkdownRef: "docs/_flows/COMPILER_flow.md"
     previewYamlRef: "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml"
     previewMarkdownRef: "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md"
-    yamlDigest: "05994d6a89a95df823603055dd3b0189751b3ad5bd37d7273ddfb34772dde275"
-    markdownDigest: "c3a06bdb0349f0df0e8b6cd78a3fd35027411cc9e98ace47b35af29b92e375aa"
+    yamlDigest: "1b2c47b78f9c6a2cd3762d591f5e87d772f75a04fbfd9d79227b26e4b07af751"
+    markdownDigest: "5566db620b8119a0c40c664049466d6adc8f755bb88e3820e518f331ca637c41"
 affectedTraceIds:
   - "TR-P2-001"
   - "TR-P2-002"
@@ -177,7 +177,7 @@ workMode:
   lightweightWaived: false
   workRef: "version/V_1.0/work.md"
   workDigest: "7440999f911481cf0a09d1721c2b924242874f3a45c0b84138dd598c59032b55"
-resultDigest: "5c86e4580ef33b76608280afb2677c326ba6331d9996d72fc33b2c4f60177fcf"
+resultDigest: "936acd2e4c46d6052027827cf9b5ea1cb7ab189b01eade7d337125dffd7a173f"
 archiveGate:
   status: "DRAFT"
   gates:
@@ -257,4 +257,4 @@ archiveGate:
   decisionRef: ""
   userConfirmed: false
   notes: "用于 wk -d 将当前版本已确认事实归档；API/DB 只保留版本增量引用，不生成项目级全量文档；不是发布审批。"
-generatedAt: "2026-09-02T00:53:29+08:00"
+generatedAt: "2026-09-04T20:21:42+08:00"

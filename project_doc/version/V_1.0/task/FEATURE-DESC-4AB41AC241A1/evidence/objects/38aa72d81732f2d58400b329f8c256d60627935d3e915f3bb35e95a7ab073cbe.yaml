@@ -7,12 +7,12 @@ changeSet:
   flowGroup: COMPILER
   flowGroupName: Configuration compilation, model execution and information evaluation
   reason: Define change-info as a compile-time generated and ConfigInfo-registered RuleViewInfo mapped to DirectoryInfo.ChangeInfo, with P5 after-last-action reuse and no post-commit reevaluation.
-  baseRevision: FLOW-R04@p2-simple-runtime-model
+  baseRevision: FLOW-R06@p3-information-evaluation
   resultRevision: FLOW-R08@p3-information-evaluation
   affectedTraceIds:
     - TR-P3-INFORMATION-ENGINE-001
 operations:
-  - operation: add
+  - operation: update
     targetId: FLOW-P3-INFORMATION-EVALUATION
     reason: Provide canonical end-to-end evidence for P3 ordering, branches, transaction outcome and blocking failures.
     after:

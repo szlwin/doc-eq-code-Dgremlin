@@ -4,7 +4,7 @@ module:
   code: P3-INFORMATION-ENGINE
   name: Information Engine
 revision: BM-P3-R04
-baseRevision: REQAN-P3-R05@5b4727fc5db4
+baseRevision: REQAN-P3-R05
 terms:
   - id: TERM-INFORMATION
     name: Information
