@@ -27,6 +27,59 @@
       "verified_by_agent": "RequirementAnalysisAgent",
       "verified_at": "2026-09-04T22:37:09+08:00",
       "reason": "PASSED：canonical requirement.md 明确将 ChangeInfo/RuleViewInfo 及映射归 Directory，P3 仅输出 Information 与可消费的物化目标事实；非法目标、类型/change-data、路径/权限、规则或映射均在配置编译期拒绝且不发布；Directory 顺序执行中的 Action 与 change-data 共享可回滚事务，任一失败整体回滚并中断；成功仅在最后一个 Action 后执行 grammer→update→commit，返回 MaterializationResult 后结束且 evaluate 调用次数为 0。RC-REQ-001～RC-REQ-005 均满足。"
+    },
+    {
+      "assertion_id": "ASRT-P3-REQAN-R06-BM-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "BusinessModelAgent 独立确认 REQAN-P3-R06 的业务语义、Directory/Information 聚合边界、流程输入及实现可行性足以进入业务建模。",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P3-R06@9fc86a92c2c0",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelAgent",
+        "review_phase": "requirement_analysis",
+        "scope": "P3 Information Engine requirement analysis R06 business-model readiness",
+        "profile_id": "requirement_analysis:BusinessModelAgent"
+      },
+      "source_refs": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "evidence_ids": [
+        "EVD-000117",
+        "EVD-000118",
+        "EVD-000119"
+      ],
+      "verified_by_agent": "BusinessModelAgent",
+      "verified_at": "2026-09-04T23:00:36+08:00",
+      "reason": "REV-000046 PASSED：requirement_analysis:BusinessModelAgent 全部 13 个 criterion 已通过，且无 Finding/Issue。"
+    },
+    {
+      "assertion_id": "ASRT-P3-REQAN-R06-TD-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "TestDesignAgent 独立确认 REQAN-P3-R06 的规则、失败路径、事务回滚及成功终止结果可观察且足以进入测试设计。",
+      "type": "MANUAL_REVIEW",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P3-R06@9fc86a92c2c0",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "requirement_analysis",
+        "scope": "P3 Information Engine requirement analysis R06 test-design readiness",
+        "profile_id": "requirement_analysis:TestDesignAgent"
+      },
+      "source_refs": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "evidence_ids": [
+        "EVD-000117",
+        "EVD-000118"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-09-04T23:09:18+08:00",
+      "reason": "PASSED。六项 criterion 均满足：ChangeInfo/RuleViewInfo 的创建、注册、映射、不变量和生命周期明确归 Directory，P3 仅发布 Information 与物化目标事实；非法 target/type/change-data/path/permission/rule/mapping 在编译期拒绝且不发布；Directory 顺序 Action 与 change-data 共享事务，任一失败整体回滚并中断且无部分结果；成功仅在最后一个 Action 后执行 grammer → update → commit → MaterializationResult 并结束，evaluate 调用次数为 0；正常、边界、失败与禁止副作用均可观察，足以供后续 test_design 建 Case。本 Review 不要求、未创建也未执行测试 Case，未修改 test_case.md、测试代码或 XML。"
     }
   ]
 }
