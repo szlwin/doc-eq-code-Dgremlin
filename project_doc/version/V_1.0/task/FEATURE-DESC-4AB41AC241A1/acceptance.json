@@ -4,85 +4,29 @@
   "version": "V_1.0",
   "assertions": [
     {
-      "assertion_id": "ASRT-P3-REQCONF-R06-001",
+      "assertion_id": "ASRT-P3-REQCONF-R07-001",
       "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "REQCONF-P3-R06 的目标、对象、范围边界、可观察验收、失败语义和关键决策均已闭合",
+      "statement": "RequirementAnalysisAgent 独立确认 REQCONF-P3-R07 的目标、Directory 边界、编译期拒绝、共享事务回滚和成功终止语义清晰、可观察且无未授权歧义。",
       "type": "MANUAL_REVIEW",
       "phase": "requirement_confirmation",
-      "revision": "REQCONF-P3-R06@bec34356b59b",
+      "revision": "REQCONF-P3-R07@9fc86a92c2c0",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
         "reviewer_agent": "RequirementAnalysisAgent",
-        "review_phase": "requirement_confirmation"
+        "review_phase": "requirement_confirmation",
+        "scope": "P3 Information Engine requirement confirmation R07",
+        "profile_id": "requirement_confirmation:RequirementAnalysisAgent"
       },
       "source_refs": [
-        "requirement.md#AC-P3-INFORMATION-ENGINE-001"
+        "TR-P3-INFORMATION-ENGINE-001"
       ],
       "evidence_ids": [
-        "EVD-000097"
+        "EVD-000113"
       ],
       "verified_by_agent": "RequirementAnalysisAgent",
-      "verified_at": "2026-09-04T17:25:00+08:00",
-      "reason": "PASSED：`REQCONF-P3-R06` 的目标、对象、范围边界、可观察验收、失败语义和关键决策均已闭合。此次 Review 仅覆盖 `requirement_confirmation` 当前 revision；未执行下游 phase，未修改需求正文、业务模型、生产代码、测试代码或 XML。"
-    },
-    {
-      "assertion_id": "ASRT-P3-REQAN-R05-BM-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "BusinessModelAgent independently reviews requirement_analysis revision REQAN-P3-R05@5b4727fc5db4 against profile requirement_analysis:BusinessModelAgent.",
-      "type": "MANUAL_REVIEW",
-      "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R05@5b4727fc5db4",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "BusinessModelAgent",
-        "review_profile_id": "requirement_analysis:BusinessModelAgent"
-      },
-      "source_refs": [
-        "FEATURE-DESC-4AB41AC241A1#REQAN-P3-R05"
-      ],
-      "evidence_ids": [
-        "EVD-000099",
-        "EVD-000100",
-        "EVD-000101",
-        "EVD-000102",
-        "EVD-000103",
-        "EVD-000104",
-        "EVD-000105",
-        "EVD-000106",
-        "EVD-000107",
-        "EVD-000108"
-      ],
-      "verified_by_agent": "BusinessModelAgent",
-      "verified_at": "2026-09-04T18:32:23+08:00",
-      "reason": "**PASSED**。REQAN-P3-R05 的需求分析、业务模型 BM-P3-R04 与 FLOW-R08 事实在同一 revision 下形成完整追踪；13 项 profile criterion 均满足，未发现需要创建的新 finding。"
-    },
-    {
-      "assertion_id": "ASRT-P3-REQAN-R05-TD-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "TestDesignAgent independently reviews requirement_analysis revision REQAN-P3-R05@5b4727fc5db4 against profile requirement_analysis:TestDesignAgent.",
-      "type": "MANUAL_REVIEW",
-      "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R05@5b4727fc5db4",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "TestDesignAgent",
-        "review_profile_id": "requirement_analysis:TestDesignAgent"
-      },
-      "source_refs": [
-        "FEATURE-DESC-4AB41AC241A1#REQAN-P3-R05"
-      ],
-      "evidence_ids": [
-        "EVD-000101",
-        "EVD-000106",
-        "EVD-000103",
-        "EVD-000107"
-      ],
-      "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-09-04T20:36:23+08:00",
-      "reason": "PASSED。全部 requirement_analysis:TestDesignAgent criterion 均满足；版本级 Flow changeset/preview 已形成可观察的主路径、关键变体、阻塞失败、回退/补偿边界。项目级 canonical Flow 尚未归档属于后续 `wk -d` 责任，不是本阶段缺陷。验证命令：`python3 /Users/shazhoulin/.codex/skills/common-develop/scripts/business_flow.py validate -g TestDesignAgent --doc-root project_doc --file project_doc/version/V_1.0/doc/_flows/COMPILER/changes/005-p3-information-evaluation.yaml`；`python3 /Users/shazhoulin/.codex/skills/common-develop/scripts/business_flow.py validate -g TestDesignAgent --doc-root project_doc --file project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml`；`python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/requirement_doc.py validate -g TestDesignAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --stage analysis --json`。"
+      "verified_at": "2026-09-04T22:37:09+08:00",
+      "reason": "PASSED：canonical requirement.md 明确将 ChangeInfo/RuleViewInfo 及映射归 Directory，P3 仅输出 Information 与可消费的物化目标事实；非法目标、类型/change-data、路径/权限、规则或映射均在配置编译期拒绝且不发布；Directory 顺序执行中的 Action 与 change-data 共享可回滚事务，任一失败整体回滚并中断；成功仅在最后一个 Action 后执行 grammer→update→commit，返回 MaterializationResult 后结束且 evaluate 调用次数为 0。RC-REQ-001～RC-REQ-005 均满足。"
     }
   ]
 }

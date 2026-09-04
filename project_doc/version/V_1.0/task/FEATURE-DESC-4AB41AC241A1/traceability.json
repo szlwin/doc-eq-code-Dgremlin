@@ -4,7 +4,7 @@
   "items": [
     {
       "id": "TR-P3-INFORMATION-ENGINE-001",
-      "description": "Information Engine 需求基线: BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, CR-P3-INFORMATION-ENGINE-001 -> AC-P3-INFORMATION-ENGINE-001",
+      "description": "Information Engine 需求基线: BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, BR-P3-INFORMATION-ENGINE-005, CR-P3-INFORMATION-ENGINE-001 -> AC-P3-INFORMATION-ENGINE-001",
       "status": "COVERED",
       "acceptance_criteria": [
         "AC-P3-INFORMATION-ENGINE-001"
@@ -15,6 +15,7 @@
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#BR-P3-INFORMATION-ENGINE-002",
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#BR-P3-INFORMATION-ENGINE-003",
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#BR-P3-INFORMATION-ENGINE-004",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#BR-P3-INFORMATION-ENGINE-005",
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#CR-P3-INFORMATION-ENGINE-001",
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#AC-P3-INFORMATION-ENGINE-001",
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#TR-P3-INFORMATION-ENGINE-001"
@@ -51,12 +52,12 @@
       "contract_refs": [],
       "implementation_refs": [],
       "verification_evidence_ids": [
-        "EVD-000097"
+        "EVD-000113"
       ],
       "verified_by_agents": [
         "RequirementAnalysisAgent"
       ],
-      "notes": "业务追踪已覆盖；Information 专项测试 Case 与 Evidence 按 DEC-P3-INFORMATION-ENGINE-008 延后至测试设计/开发阶段，不在需求确认阶段虚构验证证据。\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation.\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation.\nTrace revalidated by RequirementAnalysisAgent using EVD-000097 and REV-000038 at REQCONF-P3-R06@bec34356b59b; 独立需求确认 Review 已重新确认当前 Trace"
+      "notes": "业务追踪已覆盖；Information 专项测试 Case 与 Evidence 按 DEC-P3-INFORMATION-ENGINE-008 延后至测试设计/开发阶段，不在需求确认阶段虚构验证证据。\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation.\nREQCONF-P3-R06 的 EVD-000097/REV-000038 仅保留为历史审计事实；当前 REQCONF-P3-R07 必须重新完成独立 Review 后再恢复 COVERED。\nTrace revalidated by RequirementAnalysisAgent using EVD-000113 and REV-000045 at REQCONF-P3-R07@9fc86a92c2c0; REQCONF-P3-R07 已由 RequirementAnalysisAgent 独立 Review 通过，重新确认 Directory ownership、编译期拒绝、共享事务回滚与成功终止语义。"
     }
   ]
 }
