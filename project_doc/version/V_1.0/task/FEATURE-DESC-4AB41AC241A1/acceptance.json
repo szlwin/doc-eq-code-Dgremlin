@@ -80,6 +80,58 @@
       "verified_by_agent": "TestDesignAgent",
       "verified_at": "2026-09-04T23:09:18+08:00",
       "reason": "PASSED。六项 criterion 均满足：ChangeInfo/RuleViewInfo 的创建、注册、映射、不变量和生命周期明确归 Directory，P3 仅发布 Information 与物化目标事实；非法 target/type/change-data/path/permission/rule/mapping 在编译期拒绝且不发布；Directory 顺序 Action 与 change-data 共享事务，任一失败整体回滚并中断且无部分结果；成功仅在最后一个 Action 后执行 grammer → update → commit → MaterializationResult 并结束，evaluate 调用次数为 0；正常、边界、失败与禁止副作用均可观察，足以供后续 test_design 建 Case。本 Review 不要求、未创建也未执行测试 Case，未修改 test_case.md、测试代码或 XML。"
+    },
+    {
+      "assertion_id": "ASRT-P3-BMODEL-R05-BMR-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "BusinessModelReviewAgent 独立确认 BM-P3-R05 与已确认需求一致，P3 Information 聚合边界、Directory 所有权、编译守卫、识别不变量和下游执行契约完整且无未授权语义。",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-P3-R05",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "BusinessModelReviewAgent",
+        "review_phase": "business_model",
+        "scope": "P3 Information Engine BM-P3-R05 semantic alignment and business-model integrity",
+        "profile_id": "business_model:BusinessModelReviewAgent"
+      },
+      "source_refs": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "evidence_ids": [
+        "EVD-000121"
+      ],
+      "verified_by_agent": "BusinessModelReviewAgent",
+      "verified_at": "2026-09-04T23:31:28+08:00",
+      "reason": "REV-000048 已按 business_model:BusinessModelReviewAgent 全部 22 项 criteria 提交 PASSED；BM-P3-R05 当前 revision Evidence EVD-000120～124 有效且无 Finding。"
+    },
+    {
+      "assertion_id": "ASRT-P3-BMODEL-R05-TD-001",
+      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
+      "statement": "TestDesignAgent 独立确认 BM-P3-R05 的不变量、识别状态、错误和 Directory 物化边界足以支持后续测试设计，且不要求本阶段已有测试 Case。",
+      "type": "MANUAL_REVIEW",
+      "phase": "business_model",
+      "revision": "BM-P3-R05",
+      "blocking": true,
+      "status": "VERIFIED",
+      "parameters": {
+        "reviewer_agent": "TestDesignAgent",
+        "review_phase": "business_model",
+        "scope": "P3 Information Engine BM-P3-R05 verification readiness",
+        "profile_id": "business_model:TestDesignAgent"
+      },
+      "source_refs": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "evidence_ids": [
+        "EVD-000121",
+        "EVD-000123",
+        "EVD-000122"
+      ],
+      "verified_by_agent": "TestDesignAgent",
+      "verified_at": "2026-09-04T23:35:59+08:00",
+      "reason": "REV-000049 independently passed all five business_model:TestDesignAgent criteria for BM-P3-R05 with no findings."
     }
   ]
 }
