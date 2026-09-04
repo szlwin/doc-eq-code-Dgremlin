@@ -15,7 +15,7 @@
 | 主责模块 | dec-core-model、dec-core-context、dec-core-compiler |
 | 协作模块 | dec-context-config-parse-xml、dec-demo、P2 System/RuleView 能力 |
 | 受影响角色 | 配置作者、规则开发者、业务编排者、测试人员、维护人员 |
-| 当前状态 | 需求分析返修完成，待独立 Review |
+| 当前状态 | 需求分析修订中，待独立 Requirement Review |
 | 对应变更需求编号 | FEATURE-DESC-4AB41AC241A1 |
 
 ### 1.1 阅读摘要
@@ -24,7 +24,7 @@
 |---|---|
 | 为什么要做 | 当前框架没有 Information 一等事实、依赖图、可区分的识别结果或物化语义；`mix` 只能作为目标示例，无法被统一编译和消费。 |
 | 做到什么算有价值 | `mix` 的 16 个 Information 能按归属、表达式类型和依赖关系一致识别；每次判断都按 Information 配置读取当前模型值，物化结果可验证且错误不会伪装成 FALSE。 |
-| 本次明确不做 | 不处理 P2 文档/治理事实不一致；不实现 Action/Produce、Directory、Query、Transaction/Session 或现代 YAML，也不复活 `dec-expand-declaration`/Consumer runtime；`materialize` 成功后不自动或作为流程步骤调用只读 `evaluate`。 |
+| 本次明确不做 | 不处理 P2 文档/治理事实不一致；P3 不实现 P4 Action/Produce 或 P5 Directory 执行器本身，但冻结其消费边界；不实现 Query、Transaction/Session 或现代 YAML，也不复活 `dec-expand-declaration`/Consumer runtime；`materialize` 成功后不自动或作为流程步骤调用只读 `evaluate`。 |
 | 如何判断完成 | 以第 9 节 `AC-P3-INFORMATION-ENGINE-*` 的可观察结果为准 |
 | 仍需谁做决定 | 业务语义已确认；Information 专项测试在功能实现后由测试设计/开发阶段补充，本阶段不要求已有测试证据。 |
 
@@ -41,7 +41,7 @@
 - payment：`paymentInfo`、`hasResult`、`success`、`error` 为 RuleView 原子；`completed` 为 `success OR error` 复合（5）。
 - common：`paySuccess` 为 `payment.success AND order.paySuccessStatus`，`payError` 为 `payment.error AND order.payErrorStatus`，均为跨 System 复合（2）。
 
-样例同时给出关键引用事实：`rule-ref` 必须解析到所属 System 的 RuleView；`rule-data/change-data` 只读写其 `model-ref` 指向的模型路径；`expression` 只引用 Information Key；`common` 不直接拥有模型、View 或 RuleView。
+样例同时给出关键引用事实：`rule-ref` 必须解析到所属 System 的 RuleView；`rule-data/change-data` 只读写其 `model-ref` 指向的模型路径；`expression` 只引用 Information Key；`common` 不直接拥有模型、View 或 RuleView。目录条件与变更目标是两个独立语义：`directory@information-ref` 表示目录识别条件，`change-info@information-ref` 表示目录执行完成后需要物化的 Information；例如 `success` 目录条件为 `common.paySuccess`，其变更目标可为 `order.paySuccessStatus`。
 
 现有执行链证据（仅用于界定 P3 接入边界）：`dec-demo/src/test/java/dec/demo/model/RuleTests.java` 展示先加载 `save-Order`/`back-Order` 规则，再调用 `ModelContainer.execute()` 并断言结果；`dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java` 与 `dec-core-model/src/main/java/dec/core/model/execute/tran/TransactionContainer.java` 已负责规则执行、成功提交、异常回滚、结果回写和资源清理。因此 P3 物化只规定 `change-data` 写入值及失败时抛出的 `ERROR`，直接复用现有执行链。
 
@@ -51,6 +51,7 @@
 
 1. 缺少统一的 Information 解析、编译和识别契约，RuleView 判断、模型表达式判断和跨 System 组合无法被同一调用方可靠消费。
 2. 旧 Change 语义与目标 `change-data` 不等价；Information 判断还需要明确从配置路径读取模型值的规则，避免把旧缓存或推测值当成当前结果。
+3. `change-info` 缺少稳定的编译期物化定义，导致最后一个 Action 成功后无法确定应执行的目标、规则顺序和既有事务接入方式。
 
 ## 3. 需求目标
 
@@ -58,6 +59,7 @@
 2. 为每次识别提供 TRUE/FALSE/ERROR 结果及可审计证据、依赖结果、读路径和模型版本；本框架按数据已准备好的正常前提执行，不引入数据未加载、依赖未解析或动态暂不可判定的 UNRESOLVED 运行态；识别不得隐式修改模型，ERROR 不得降级为 FALSE。
 3. 建立无环 Information 依赖图和稳定的模型路径/依赖描述；每次判断按依赖拓扑读取并计算，不维护 MutationSet 或 reverse-DAG 运行时失效缓存。
 4. 仅允许声明 `change-data` 的模型表达式原子执行受保护物化；成功提交并返回物化结果后流程结束，不自动重识别目标或下游；复合 Information 不可直接物化。
+5. 明确 `change-info` 的编译期生成、注册、映射和调用边界：P3 生成并注册 RuleViewInfo，P4 提供 Action 结果，P5 在最后一个 Action 成功后编排调用已生成的 RuleViewInfo。
 
 ## 4. 范围
 
@@ -67,11 +69,13 @@
 - `system`/`model`/`rule`/`rule-data`/`change-data`/`expression` 的解析与互斥校验；RuleView 原子识别、模型表达式识别和复合短路。
 - 无环 DAG、拓扑顺序、模型路径/依赖描述和稳定图摘要；结果证据、trace、诊断和模型版本。
 - `change-data` 的权限检查、原子修改、提交/回滚结果；每次判断实时按 Information 配置读取模型值，不维护 MutationSet 或增量失效缓存；对 P4/P5 的调用只保留稳定 InformationEngine 事实边界。
+- `change-info@information-ref` 的目标 Information、编译期 RuleViewInfo 生成与 `ChangeInfo` 映射；RuleViewInfo 使用 `##` 前缀的稳定名称，并按 `grammer → update` 形成物化规则。
+- P3/P4/P5 的交接事实：P3 不拥有 Action/Directory 状态机，P4 只产出有序 Action 结果，P5 负责按 `DirectoryInfo.actions` 顺序执行并在最后一个 Action 成功后追加 ChangeInfo RuleView loader。
 
 ### 4.2 范围外
 
 - P2 System/RuleView/model-access 的事实修订、治理投影修复或旧任务重写；P3 只消费已发布的 P2 归属和路径权限事实。
-- Action、Produce、Directory 状态机/Back、Query/SQL、事务与 Session、外部服务执行、现代 YAML 对等、数据库迁移以及任何生产代码实现。
+- Action、Produce、Directory 状态机/Back、Query/SQL、事务与 Session、外部服务执行、现代 YAML 对等、数据库迁移以及任何生产代码实现；其中 P4/P5 的 Action/Directory 消费顺序仅作为下游接口约束，不在 P3 实现。
 - 独立 Consumer runtime、Producer/Consumer SPI、旧 Directory Change 作为 Information 替代物，以及 `dec-expand-declaration` 的 Adapter 或代码复用。
 - `materialize` 成功提交后的自动重评估、目标重识别或下游 Information 重识别；后续识别只能由调用方另行发起普通只读 `evaluate`，不属于物化流程及其返回结果。
 
@@ -87,6 +91,7 @@
 - View 属性取值先按 `target-main` 对应的基础 Data 解析基础字段，例如 `OrderInfo.status` 对应 `order` Data 的 `orderStatus`；关系属性按其自身 `data` 归属解析。`OrderInfo.orderDetailList` 的 `data="orderDetail"`，不视为 `order` 基础 Data 的字段或其从属属性。
 - 物化沿用当前框架已有的原子化与异常回滚机制；P3 只定义应写入的值和失败结果，不新增事务承载、幂等或并发控制要求。
 - Java 8 与现有 `mix` XML fixture 是工程约束；需求确认阶段不得修改生产代码、测试代码或 P2 事实文件。
+- `change-info` 的 RuleViewInfo 在 XML 编译完成时生成一次并通过当前 `ConfigInfo.addRuleViewInfo()` 注册；运行阶段复用该对象，不重新生成临时 RuleViewInfo。
 
 ## 5. 功能列表
 
@@ -117,15 +122,16 @@
 #### 6.1.4 正常流程
 
 1. 解析并校验 16 个 Information，按三类互斥形式建立限定 Key 和模型路径/依赖描述。
-2. 分别编译 Model Expression 与 Information Expression，构建无环依赖图。
+2. 分别编译 Model Expression 与 Information Expression，构建无环依赖图；解析每个 Directory 的 `ChangeInfo`，为其 `information-ref` 目标生成并注册一个带 `##` 前缀的 RuleViewInfo 映射。
 3. 在每次判断时按 Information 配置实时读取当前模型值，先识别原子 Information，再按依赖拓扑短路计算复合 Information，返回 TRUE/FALSE/ERROR 结果及证据。
-4. 对声明 `change-data` 的模型表达式原子执行受保护物化；提交成功后返回变更路径与提交结果并结束，不自动调用 `evaluate` 或识别目标及下游节点。
+4. P4/P5 在目录执行中按既定 Action 顺序消费 P3 已发布的 ChangeInfo RuleView；最后一个 Action 成功后追加该 RuleView 的 loader，执行 `grammer → update` 并由既有容器提交。提交成功后返回变更路径与提交结果并结束，不自动调用 `evaluate` 或识别目标及下游节点。
 
 #### 6.1.5 业务规则
 
 - BR-P3-INFORMATION-ENGINE-001：Information 只能是 RuleView 原子、模型表达式原子或只组合 Information 的复合类型之一；混合配置、缺失引用、循环和越权写入均为配置/编译错误。
 - BR-P3-INFORMATION-ENGINE-002：模型声明路径不存在或运行时普通求值遇到 `null` 返回 `ERROR`；显式 `InformationKey = null` 比较是唯一例外；`every(emptyCollection, ...)` 为 TRUE，但订单相关 Information 必须同时满足明细非空，明细为空时返回 FALSE 并可附 `ORDER_DETAIL_REQUIRED` 诊断。
 - BR-P3-INFORMATION-ENGINE-003：Information 每次判断都按其配置的模型路径和依赖重新读取当前值；读取必须使用当前数据/事务上下文可见的最新值，必要时允许从数据库重新读取，不维护或消费 MutationSet。基础字段先解析到 `target-main` 对应 Data，关系字段再按自身 Data 解析。
+- BR-P3-INFORMATION-ENGINE-004：`change-info@information-ref` 表示目录执行完成后的物化目标。编译阶段为每个 ChangeInfo 生成一次带 `##` 前缀的 RuleViewInfo，名称为 `##` + `business-config.name` + `.` + `directory.name` + `.` + `change-info.information-ref`，以 `grammer → update` 规则注册到 ConfigInfo，并将映射保存于 ChangeInfo；P4/P5 只消费该映射，最后一个 Action 成功后执行，不在运行时重新生成。
 
 #### 6.1.6 输入与输出约束
 
@@ -155,6 +161,7 @@
 | EX-P3-INFORMATION-ENGINE-001 | P3-INFORMATION-ENGINE-F01 | 声明路径不存在、普通求值遇到 null、复合引用缺失或 Information 形成循环 | 编译或识别返回 `ERROR`，包含路径/Key/来源位置；循环和缺失引用在发布前拒绝 | 不得写模型、更新缓存为 FALSE、继续物化或推进下游流程 |
 | EX-P3-INFORMATION-ENGINE-002 | P3-INFORMATION-ENGINE-F01 | `orderDetailList` 为空但订单状态满足 `status = 1/2/3/4` | `every(emptyCollection, ...)` 为 TRUE，但订单相关 Information 因明细非空前置条件不满足而返回 FALSE，可附 `ORDER_DETAIL_REQUIRED` 诊断 | 不得物化订单状态，不得把空明细订单分类为 ordered/paying/success/error |
 | EX-P3-INFORMATION-ENGINE-003 | P3-INFORMATION-ENGINE-F01 | 一次判断涉及基础字段与关系字段（如 `OrderInfo.status` 与 `OrderInfo.orderDetailList.status`） | 基础字段先按 `target-main` 对应 Data 解析；关系字段按自身 `data`（`orderDetail`）解析，二者均按本次 Information 配置实时读取 | 不得把关系字段误读为 `order` 基础字段，也不得使用未重新读取的旧值 |
+| EX-P3-INFORMATION-ENGINE-004 | P3-INFORMATION-ENGINE-F01 | Directory 包含 `<change-info information-ref="..."/>`，且最后一个 Action 成功 | 使用编译期已注册并映射到该 Directory 的 `##...` RuleViewInfo，按 `grammer → update` 物化；Action 失败则不触发 | 不得在最后 Action 前执行、运行时重复生成或把目标条件与目录条件混为一谈 |
 
 ## 9. 验收标准
 
@@ -164,9 +171,9 @@
 
 Given `mix` 的 4 个 System 和 16 个 Information 已被完整发现，且模型、View、RuleView 引用可解析  
 When 编译并识别全部 Information，再分别执行合法 `change-data` 物化、模型路径变更和错误配置场景  
-Then 7 个 RuleView 原子、4 个模型表达式原子、5 个复合 Information 的 Key、模型路径/依赖描述、DAG 和 TRUE/FALSE/ERROR 结果均可观察；空集合与订单明细非空规则、null/非法路径 ERROR 规则一致生效  
+Then 7 个 RuleView 原子、4 个模型表达式原子、5 个复合 Information 的 Key、模型路径/依赖描述、DAG 和 TRUE/FALSE/ERROR 结果均可观察；空集合与订单明细非空规则、null/非法路径 ERROR 规则一致生效；每个 `change-info` 都有一个编译期生成、注册并映射到 Directory 的 `##` RuleViewInfo  
 And 合法物化按 `grammer → update → commit` 顺序执行，两条规则共享同一 `ModelLoader.value`；提交成功后返回仅包含变更路径和提交结果的 `MaterializationResult` 并结束，`evaluate` 调用次数为 0，不重新识别目标或下游，也不返回目标/下游识别字段  
-And 复合 Information 不可直接物化，识别不产生隐式模型写入，错误不得转为 FALSE；每次判断按配置重新读取当前值，基础字段与 `orderDetailList` 等关系字段分别解析；`evaluate` 遇到非法路径、普通 null、表达式或 RuleView 错误时返回 ERROR 诊断并抛异常，不进入物化或下游；物化失败抛出异常并由现有回滚机制撤销写入，且不继续下游。
+And 复合 Information 不可直接物化，识别不产生隐式模型写入，错误不得转为 FALSE；每次判断按配置重新读取当前值，基础字段与 `orderDetailList` 等关系字段分别解析；P5 按 Action 顺序执行，最后一个 Action 成功后才追加 ChangeInfo RuleView loader；`evaluate` 遇到非法路径、普通 null、表达式或 RuleView 错误时返回 ERROR 诊断并抛异常，不进入物化或下游；物化失败抛出异常并由现有回滚机制撤销写入，且不继续下游。
 
 ## 10. 非功能要求
 
@@ -234,6 +241,8 @@ P3 只接收 P1/P2 已发布的 System、View、RuleView、模型路径和权限
 | DEC-P3-INFORMATION-ENGINE-007 | 当前 `mix` 采用带显式 `<ref>` 的 `model-access` 写法；旧式无 `<ref>` 简写不在 P3 兼容范围内。`ref@property` 先匹配 `target-main`；`OrderInfo.status` 先归属 `order` 基础 Data，`orderDetailList` 归属独立的 `orderDetail` Data。 | 现有编译器只有显式 ref 才能生成 Binding；关系字段不能误当作主对象基础字段。 | `systems.xml`、`RawDefinitionBuilder`、`ModelAccessCompiler`、`DefaultModelAccessSelectorResolver` 现状核对（2026-08-31） | - |
 | DEC-P3-INFORMATION-ENGINE-008 | Information 专项测试用例和实现后测试证据延后到测试设计/开发阶段；需求确认阶段只冻结业务语义和可观察结果。 | 当前 Information 功能尚未实现，现阶段不存在可验证的 Information 测试功能。 | 用户本轮确认（2026-08-31） | - |
 | DEC-P3-INFORMATION-ENGINE-009 | `materialize` 成功提交后直接返回物化结果并结束；不自动或作为 `FLOW-P3-INFORMATION-EVALUATION` 的步骤执行独立只读重评估，不返回目标或下游重识别结果。 | 用户明确取消原计划第 7 项，避免把提交后的额外读取和下游识别纳入本次实现。 | 用户本轮确认（2026-09-02） | DEC-P3-INFORMATION-ENGINE-005、DEC-P3-INFORMATION-ENGINE-006 中关于物化后重识别的部分 |
+| DEC-P3-INFORMATION-ENGINE-010 | `change-info@information-ref` 是物化目标；解析 Directory 时创建 `ChangeInfo` 与 RuleViewInfo 的映射，编译阶段只生成一次名称为 `##` + `business-config.name` + `.` + `directory.name` + `.` + `change-info.information-ref` 的 RuleViewInfo，并通过 `ConfigInfo.addRuleViewInfo()` 注册；运行阶段直接复用。 | 使最后一个 Action 后的目标、规则顺序和执行入口稳定可追踪，消除临时 RuleViewInfo 的生命周期问题。 | 用户确认（2026-09-02） | R07 中“不全局注册”的运行时表述 |
+| DEC-P3-INFORMATION-ENGINE-011 | P3 负责 ChangeInfo 语义、编译期 RuleViewInfo 生成/注册/映射；P4 负责 Action、system-ref、ref-rule、Produce；P5 负责 Directory Action 顺序编排，并在最后一个 Action 成功后追加 ChangeInfo RuleView loader。 | 明确跨阶段交接，避免 P3 提前实现 Action/Directory，同时保证 P3 物化事实可被后续阶段消费。 | 用户确认（2026-09-02） | - |
 
 ## 13. 追踪关系
 
@@ -241,7 +250,7 @@ P3 只接收 P1/P2 已发布的 System、View、RuleView、模型路径和权限
 
 | 追踪编号 | 功能编号 | 业务规则/跨功能规则 | 验收标准 | 关联流程 | 影响分析 | 后续业务模型 | 后续设计 | 测试 Case | 状态 |
 |---|---|---|---|---|---|---|---|---|---|
-| TR-P3-INFORMATION-ENGINE-001 | P3-INFORMATION-ENGINE-F01 | BR-P3-INFORMATION-ENGINE-001、BR-P3-INFORMATION-ENGINE-002、BR-P3-INFORMATION-ENGINE-003、CR-P3-INFORMATION-ENGINE-001 | AC-P3-INFORMATION-ENGINE-001 | FLOW-P3-INFORMATION-EVALUATION | P4/P5 消费 InformationEngine；P2 权限事实为前置 | P3 Information 事实模型 | P3 Information 编译/识别/物化设计 | 测试设计阶段补充 `CASE-P3-MIX-001`、`CASE-P3-ERROR-001` | COVERED |
+| TR-P3-INFORMATION-ENGINE-001 | P3-INFORMATION-ENGINE-F01 | BR-P3-INFORMATION-ENGINE-001、BR-P3-INFORMATION-ENGINE-002、BR-P3-INFORMATION-ENGINE-003、BR-P3-INFORMATION-ENGINE-004、CR-P3-INFORMATION-ENGINE-001 | AC-P3-INFORMATION-ENGINE-001 | FLOW-P3-INFORMATION-EVALUATION | P4/P5 消费 InformationEngine 与 ChangeInfo 映射；P2 权限事实为前置 | P3 Information 事实模型 | P3 Information 编译/识别/物化设计 | 测试设计阶段补充 `CASE-P3-MIX-001`、`CASE-P3-ERROR-001`、`CASE-P3-CHANGE-INFO-001` | COVERED |
 
 ## 14. 变更记录
 
@@ -256,3 +265,4 @@ P3 只接收 P1/P2 已发布的 System、View、RuleView、模型路径和权限
 | REQAN-P3-R02 | 2026-09-02 | 需求分析 | 同步 R05 决策并补齐 `FLOW-P3-INFORMATION-EVALUATION` 版本 changeset：流程覆盖编译发布、只读 TRUE/FALSE/ERROR 识别、可选 `grammer → update` 物化、commit/rollback 与失败后禁止下游；成功提交后不增加重评估步骤。 | RequirementAnalysisAgent |
 | REQAN-P3-R03 | 2026-09-02 | 需求分析 | 保持 R02 业务语义不变，将 requirement-analysis task 的允许文件范围归一化为仓库相对路径，并为同一 Flow、Requirement、模型与预览重新绑定当前 revision Evidence。 | RequirementAnalysisAgent |
 | REQAN-P3-R04 | 2026-09-02 | 需求分析 | 修复 REV-000028/REV-000029：将 `grammer → update → commit → MaterializationResult → 结束`、禁止自动 evaluate/目标及下游重识别、evaluate ERROR 抛异常并阻断物化/下游写成直接可观察验收断言；补齐 criterion-scoped 与实现可行性 Evidence。 | RequirementAnalysisAgent |
+| REQAN-P3-R05 | 2026-09-02 | 需求分析 | 根据用户确认补齐 `change-info@information-ref` 目标语义、编译期 RuleViewInfo 生成/ConfigInfo 注册/ChangeInfo 映射及 P3/P4/P5 阶段边界；明确最后一个 Action 成功后复用已生成 RuleView，成功提交后不执行独立重评估。 | RequirementAnalysisAgent |

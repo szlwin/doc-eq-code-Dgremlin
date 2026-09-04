@@ -4,155 +4,27 @@
   "version": "V_1.0",
   "assertions": [
     {
-      "assertion_id": "ASRT-P3-REQCONF-R05-001",
+      "assertion_id": "ASRT-P3-REQCONF-R06-001",
       "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "RequirementAnalysisAgent independently confirms requirement_confirmation revision REQCONF-P3-R05@33ea135bffc6 against profile requirement_confirmation:RequirementAnalysisAgent and evidence EVD-000049.",
+      "statement": "REQCONF-P3-R06 的目标、对象、范围边界、可观察验收、失败语义和关键决策均已闭合",
       "type": "MANUAL_REVIEW",
       "phase": "requirement_confirmation",
-      "revision": "REQCONF-P3-R05@33ea135bffc6",
+      "revision": "REQCONF-P3-R06@bec34356b59b",
       "blocking": true,
-      "status": "PENDING",
+      "status": "VERIFIED",
       "parameters": {
         "reviewer_agent": "RequirementAnalysisAgent",
-        "review_profile_id": "requirement_confirmation:RequirementAnalysisAgent"
+        "review_phase": "requirement_confirmation"
       },
       "source_refs": [
-        "DEC-P3-INFORMATION-ENGINE-009"
-      ],
-      "evidence_ids": [],
-      "verified_by_agent": "",
-      "verified_at": "",
-      "reason": ""
-    },
-    {
-      "assertion_id": "ASRT-P3-REQCONF-R05-REQAN-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "P3 物化成功以 commit 和 MaterializationResult 结束，不自动重评估；失败回滚并停止下游，独立 evaluate 保持只读实时。",
-      "type": "MANUAL_REVIEW",
-      "phase": "requirement_confirmation",
-      "revision": "REQCONF-P3-R05@33ea135bffc6",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "profile_id": "requirement_confirmation:RequirementAnalysisAgent",
-        "reviewer_agent": "RequirementAnalysisAgent"
-      },
-      "source_refs": [
-        "requirement.md#DEC-P3-INFORMATION-ENGINE-009"
+        "requirement.md#AC-P3-INFORMATION-ENGINE-001"
       ],
       "evidence_ids": [
-        "EVD-000049"
+        "EVD-000097"
       ],
       "verified_by_agent": "RequirementAnalysisAgent",
-      "verified_at": "2026-09-02T00:43:06+08:00",
-      "reason": "独立 Reviewer 检查通过：物化成功以 commit 和 MaterializationResult 结束，不自动或作为流程步骤调用 evaluate，不返回目标/下游重识别结果；失败仍回滚并停止下游；独立 evaluate 的只读实时语义保持不变。未发现阻断需求分析的歧义。"
-    },
-    {
-      "assertion_id": "ASRT-P3-REQAN-R04-BM-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "BusinessModelAgent independently reviews requirement_analysis revision REQAN-P3-R04@aa4bd589d74c against profile requirement_analysis:BusinessModelAgent.",
-      "type": "MANUAL_REVIEW",
-      "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R04@aa4bd589d74c",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "BusinessModelAgent",
-        "review_profile_id": "requirement_analysis:BusinessModelAgent"
-      },
-      "source_refs": [
-        "FEATURE-DESC-4AB41AC241A1#REQAN-P3-R04"
-      ],
-      "evidence_ids": [
-        "EVD-000067",
-        "EVD-000069",
-        "EVD-000070",
-        "EVD-000068",
-        "EVD-000071"
-      ],
-      "verified_by_agent": "BusinessModelAgent",
-      "verified_at": "2026-09-02T02:04:28+08:00",
-      "reason": "guided manual Review passed"
-    },
-    {
-      "assertion_id": "ASRT-P3-REQAN-R04-TD-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "TestDesignAgent independently reviews requirement_analysis revision REQAN-P3-R04@aa4bd589d74c against profile requirement_analysis:TestDesignAgent.",
-      "type": "MANUAL_REVIEW",
-      "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R04@aa4bd589d74c",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "TestDesignAgent",
-        "review_profile_id": "requirement_analysis:TestDesignAgent"
-      },
-      "source_refs": [
-        "FEATURE-DESC-4AB41AC241A1#REQAN-P3-R04"
-      ],
-      "evidence_ids": [
-        "EVD-000067",
-        "EVD-000068",
-        "EVD-000070"
-      ],
-      "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-09-02T02:04:40+08:00",
-      "reason": "guided manual Review passed"
-    },
-    {
-      "assertion_id": "ASRT-P3-BMODEL-R03-BMR-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "BusinessModelReviewAgent independently reviews business_model revision BM-P3-R03 against profile business_model:BusinessModelReviewAgent.",
-      "type": "MANUAL_REVIEW",
-      "phase": "business_model",
-      "revision": "BM-P3-R03",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "BusinessModelReviewAgent",
-        "review_profile_id": "business_model:BusinessModelReviewAgent"
-      },
-      "source_refs": [
-        "FEATURE-DESC-4AB41AC241A1#BM-P3-R03"
-      ],
-      "evidence_ids": [
-        "EVD-000079",
-        "EVD-000081",
-        "EVD-000085",
-        "EVD-000083",
-        "EVD-000080",
-        "EVD-000082",
-        "EVD-000084"
-      ],
-      "verified_by_agent": "BusinessModelReviewAgent",
-      "verified_at": "2026-09-02T02:58:16+08:00",
-      "reason": "**PASS**。22 项 profile criterion 全部 PASSED：`RC-REQ-001`～`RC-REQ-005`、`RC-ANL-001`、`RC-BM-001`～`RC-BM-008`、`RC-BFLOW-002`、`RC-BFLOW-004`、`RC-DES-001`、`RC-DES-002`、`RC-DES-005`、`RC-DES-008`、`RC-DES-010`、`RC-DES-011`。P0/P1：无；lower findings：无。`ISSUE-MR-0023` 的修复可验证：FLOW-R06 已引用 R03 实际存在的两个聚合及相关不变量/状态机，未解析 businessModelRefs 为 0，因此该 issue 可由有权限的流程验证/关闭。成功物化严格止于 commit + MaterializationResult，不存在自动/流程步骤 evaluate、目标或下游重识别，也不返回识别结果。"
-    },
-    {
-      "assertion_id": "ASRT-P3-BMODEL-R03-TD-001",
-      "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "TestDesignAgent independently reviews business_model revision BM-P3-R03 against profile business_model:TestDesignAgent.",
-      "type": "MANUAL_REVIEW",
-      "phase": "business_model",
-      "revision": "BM-P3-R03",
-      "blocking": true,
-      "status": "VERIFIED",
-      "parameters": {
-        "reviewer_agent": "TestDesignAgent",
-        "review_profile_id": "business_model:TestDesignAgent"
-      },
-      "source_refs": [
-        "FEATURE-DESC-4AB41AC241A1#BM-P3-R03"
-      ],
-      "evidence_ids": [
-        "EVD-000079",
-        "EVD-000083",
-        "EVD-000081",
-        "EVD-000082"
-      ],
-      "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-09-02T02:58:28+08:00",
-      "reason": "`PASSED`。全部 Profile criterion 均通过：`RC-BM-003`、`RC-BM-004`、`RC-BM-005`、`RC-BM-006`、`RC-BFLOW-003`。`ISSUE-MR-0024` 已验证修复：evaluate 保持只读；TRUE/FALSE 仅表示正常结果；非法路径、普通 null、权限、表达式和只读 RuleView 失败均记录 ERROR、抛出 `InformationEvaluationException` 并阻断 materialize/下游；materialize 按 `grammer -> update -> commit` 且共享同一 `ModelLoader.value`；成功返回 `MaterializationResult` 后结束，不重评估或识别目标/下游；失败回滚、抛异常并阻断下游。P0：无；P1：无。"
+      "verified_at": "2026-09-04T17:25:00+08:00",
+      "reason": "PASSED：`REQCONF-P3-R06` 的目标、对象、范围边界、可观察验收、失败语义和关键决策均已闭合。此次 Review 仅覆盖 `requirement_confirmation` 当前 revision；未执行下游 phase，未修改需求正文、业务模型、生产代码、测试代码或 XML。"
     }
   ]
 }
