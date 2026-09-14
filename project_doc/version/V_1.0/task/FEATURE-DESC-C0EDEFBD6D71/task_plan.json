@@ -1,0 +1,46 @@
+{
+  "tasks": [
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION",
+      "title": "确认 P3 Information Engine 需求基线",
+      "objective": "以既有 requirement.md 为唯一需求基线，确认 P3 Information Engine 的目标、范围、验收语义、约束、失败语义和未决事项可审查；不新增或修改需求内容。",
+      "phase": "requirement_confirmation",
+      "depends_on": [],
+      "owner_agent": "RequirementConfirmationAgent",
+      "reviewer_agents": [
+        "RequirementAnalysisAgent"
+      ],
+      "input_revisions": {},
+      "allowed_files": [
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md",
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/traceability.json",
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/acceptance.json",
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/handoff.md"
+      ],
+      "acceptance_trace_ids": [],
+      "flow_step_refs": [],
+      "flow_refs": [],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop-opt/scripts/requirement_doc.py validate -g RequirementConfirmationAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md --stage confirmation --json"
+      ],
+      "expected_results": [
+        "既有 P3 Information Engine 需求文档保持不变，并可作为本任务唯一当前需求基线。",
+        "目标、范围排除、可观察验收、失败语义、依赖和未决事项均已确认，不提前进入需求分析或实现。",
+        "RequirementAnalysisAgent 将对同一需求 revision 执行独立 Review。"
+      ],
+      "stop_conditions": [
+        "需求范围或验收语义仍存在未授权歧义。",
+        "试图新增或修改 requirement.md、生产代码、测试代码、XML fixture 或 P2 事实。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION",
+      "feature_id": "FEATURE-DESC-C0EDEFBD6D71",
+      "iteration_id": "ITER-FEATURE-DESC-C0EDEFBD6D71-REQUIREMENT-CONFIRMATION-001",
+      "iteration_no": 1,
+      "supersedes_iteration_id": "",
+      "revision_reason": "基于既有 P3 Information Engine 需求文档重新建立需求确认任务基线，不修改需求内容。",
+      "risk_triggers": []
+    }
+  ]
+}

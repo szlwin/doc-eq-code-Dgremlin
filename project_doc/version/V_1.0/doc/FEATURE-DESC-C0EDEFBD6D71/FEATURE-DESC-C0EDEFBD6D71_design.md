@@ -1,0 +1,419 @@
+# P3 Information Engine 技术设计
+
+> 迁移来源：`FEATURE-DESC-4AB41AC241A1` 的已完成设计正文
+> Design revision：待新任务 design 阶段生成
+> Base revision：待新任务 business_model 阶段生成
+> Design topic：`DESIGN-P3-INFORMATION-ENGINE`
+> Requirement：待新任务 requirement_analysis 阶段生成
+> Business Flow：`FLOW-P3-INFORMATION-EVALUATION`，revision 待新任务生成
+> Module：`P3-INFORMATION-ENGINE`
+> Implementation strategy contract：`1`
+> 状态：MIGRATED_SEED
+
+## 第一部分：设计正文
+
+### 1. 一页设计摘要
+
+<!-- DESIGN-NARRATIVE-SUMMARY -->
+
+本设计把 P3 Information Engine 限定为配置编译、实时识别和物化目标事实输出三条边界。编译阶段将 `mix` 的三类 Information 与同一 Compilation Session 中已冻结的 P2 exact binding 合成为不可变 `CompiledInformationSet`，并仅为 Directory 输出 `MaterializationTargetFact`；P3 不创建、持有或注册 `ChangeInfo`、RuleViewInfo 及其映射。后续 Directory 解析阶段消费该目标事实，创建并校验 ChangeInfo 与 RuleViewInfo 映射、生成并注册带 `##` 前缀的 RuleViewInfo，并只向调用方提供当前 Directory 对应的有序 `Action` 列表。每个 `Action` 的 `refRule` 是执行接缝：调用方将它传给 `ModelLoader.load(refRule, modelData, connection)`，既有执行链再通过 `ConfigInfo.getRuleViewInfo(refRule)` 获取 RuleViewInfo。Directory 是信息与映射 Owner，不参与规则执行。
+
+本 revision 按用户确认收敛失败语义：普通非法模型路径、普通 `null`、非法表达式、缺失引用、权限拒绝和只读 RuleView 执行失败均产生可定位的 `ERROR` 并抛出异常；只有正常条件不满足才返回 `FALSE`，显式 `InformationKey = null` 比较仍是例外。`evaluate` 只读；P3 不提供物化 API。后续执行调用方从 Directory 取得有序 Action，读取每项的 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)` 并依次装入同一个 `ModelContainer`，所有 Loader 装载完成后仅调用一次 `execute()`；执行链通过 `ConfigInfo.getRuleViewInfo(refRule)` 获取 RuleViewInfo。Loader 顺序执行、首个失败时停止剩余 Loader、连接管理、commit/rollback/close/clear 及失败异常边界全部归 `ModelContainer`；Directory 不执行 Action、规则或事务操作，也不读取 `ModelContainer.getResult()`。成功终点是 `ModelContainer.execute()` 提交后正常返回，不新增结果对象，也不调用 `evaluate` 或重新识别目标/下游 Information。
+
+#### 1.1 改造前后对照
+
+| 关注点 | 当前情况 | 调整后 | 带来的价值 |
+|---|---|---|---|
+| Information 事实 | XML 已有声明，编译器已有部分表达式/Deferred 基础但缺少完整闭环 | 编译为不可变 Information 定义和 Key | P4/P5 可稳定消费 |
+| 求值 | 规则、模型字段和复合引用没有统一入口 | 原子先求值，复合按 DAG 拓扑短路 | 结果语义一致 |
+| 数据读取 | 可能依赖旧值或调用方缓存 | 每次按配置重新读取当前值 | 与事务内真实数据一致 |
+| 物化 | Change 语义未形成跨阶段契约 | P3 只输出包含目标 Information、`change-data`、路径/权限和规则约束的 `MaterializationTargetFact`；Directory 后续生成、注册 ChangeInfo/RuleViewInfo 映射并按业务顺序提供 Action，执行调用方按 `Action.refRule` 为每项装载一个 ModelLoader 到同一 ModelContainer 后只执行一次 | Directory 只供数，ModelContainer 独占执行和事务，禁止 P3 越界或每步自提交 |
+
+#### 1.2 六个关键结论
+
+| 读者最关心的问题 | 当前结论 |
+|---|---|
+| 本次改变什么 | 增加 Information 编译、识别、依赖和物化契约 |
+| 保持什么不变 | P2 归属/权限、现有 ModelContainer 事务、XML fixture 不变 |
+| 主流程如何工作 | parse → compile Information + `MaterializationTargetFact` → publish；后续 Directory parse/build 映射并返回有序 Action；调用方逐项读取 `Action.refRule`，以该值调用 `ModelLoader.load(...)`，对同一 ModelContainer 多次装载，最后只 `execute()` 一次；RuleViewInfo 由既有 ConfigInfo 查找链解析 |
+| 失败时留下什么事实 | 普通求值错误为 `ERROR` 诊断并抛异常；正常不满足才是 `FALSE`；任一 Loader 的规则、持久化或提交失败均由 ModelContainer 停止后续 Loader、统一回滚并通过既有异常边界中断调用 |
+| 最关键的技术决策 | `InformationEngine` 无状态实时读取；Directory 只拥有信息、映射和顺序，ModelContainer 独占规则执行与技术事务，不暴露事务句柄 |
+| 如何证明设计完成 | 设计 Review 覆盖 BR/AC/TR、接口、失败路径和测试接缝 |
+
+### 2. 背景、现状与设计目标
+
+<!-- DESIGN-NARRATIVE-CURRENT -->
+
+当前 `mix` 已声明 16 个 Information；`dec-core-compiler/src/main/java/dec/core/compiler/information/InformationCompiler.java` 已提供部分表达式/Deferred 编译骨架，但尚未形成 16 项 Information 的模型表达式、DAG、识别和物化目标事实闭环。`dec-demo/src/test/resources/mix/business/order-business.xml` 已明确 `paying` 目录包含 Action `startPay`，其后配置 `<change-info information-ref="order.paying"/>`；对应 Information 在 `systems.xml` 中声明了 `change-data`。P2 已提供 System、View、RuleView 和 model-access Binding；`dec.core.context.config.model.directory.DirectoryInfo` 已持有有序 `List<Action> actions`，`dec.core.context.config.model.directory.Action` 已持有字符串 `refRule`，`ModelLoader.load(String, ModelData, String)` 和 `ConfigInfo.getRuleViewInfo(String)` 已提供执行接缝。本 revision 明确 P3 只编译并发布 Information 与 MaterializationTargetFact；Directory 后续拥有 ChangeInfo/RuleViewInfo 映射、Action 顺序和信息生命周期，但不拥有执行生命周期，也不修改 XML 语法。
+
+#### 2.1 当前实现证据
+
+| 能力/入口 | 当前锚点 | 本次处置 |
+|---|---|---|
+| Directory Action 供数 | `dec-core-context/src/main/java/dec/core/context/config/model/directory/DirectoryInfo.java:23-52`、`dec-core-context/src/main/java/dec/core/context/config/model/directory/Action.java:12-28` | REUSE；DirectoryInfo.actions 的列表顺序是 Action 顺序，Action.refRule 是调用方传给 ModelLoader 的规则名；不引入新的对象绑定或结果契约 |
+| RuleViewInfo 查找 | `dec-core-context/src/main/java/dec/core/context/config/model/config/ConfigInfo.java:178-196` | REUSE；沿既有字符串 `refRule` 调用 `ConfigInfo.getRuleViewInfo(refRule)`，ConfigInfo 既有逻辑作为查找事实 |
+| 多 RuleViewInfo 装载 | `dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java:39-74`、`ModelLoader.java:38-66` | REUSE；每个 RuleViewInfo 由一个 ModelLoader 持有，同一 ModelContainer 可按 `load(...)` 调用顺序累积多个 Loader |
+| 规则执行与回滚 | `dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java:48-137,204-315`、`dec-core-model/src/main/java/dec/core/model/execute/rule/RuleContainer.java:48-64,105-138` | COMPATIBLE_EXTEND；复用既有加载、execute、rollback、close、clear 和异常处理，不新增事务入口或异常框架；设计只记录其既有调用边界 |
+| model-access Binding | `dec-core-compiler/src/main/java/dec/core/compiler/modelaccess/ModelAccessPolicyCompiler.java`、`.../DefaultModelAccessSelectorResolver.java` | REUSE，编译期消费显式 ref 和 target-main 优先规则；runtime 不重复解析 |
+| mix fixture | `dec-demo/src/main/resources/mix/system/systems.xml` | REUSE，作为 16 Information 基线 |
+| 旧 RuleTests 调用链 | `dec-demo/src/test/java/dec/demo/model/RuleTests.java` | 仅作为执行链参考，不作为 P3 测试证据 |
+
+#### 2.2 设计目标与非目标
+
+- 目标：形成不可变编译事实、同 Session 发布闭包、实时 read-set、DAG 求值、编译期 exact path/binding、结果诊断和供 Directory 消费的 MaterializationTargetFact。
+- 非目标：不重新定义 Action/Produce/Directory/Query 的业务语义；P3 不实现 P4 Action/Produce 或 P5 Directory 执行器，不创建/注册/映射 ChangeInfo 或 RuleViewInfo，不拥有物化状态。不把当前 `DirectoryAction(ModelData)` 固定为事务扩展点；该过渡接口可在后续阶段调整或删除。本轮不新增结果对象、物化方法、事务句柄、幂等或并发机制，不修订 P2 文档或 XML。
+- 必须保持：普通 null 和非法路径为 `ERROR` 并抛异常；显式 `InformationKey = null` 比较为例外；`every(emptyCollection)=TRUE` 但订单明细必须非空。
+
+### 3. 影响范围与明确边界
+
+| 范围 | 是否变化 | 说明 |
+|---|---|---|
+| dec-core-compiler | 是 | 增加 Information 编译及 MaterializationTargetFact 输出；不生成或注册 ChangeInfo/RuleViewInfo |
+| dec-core-context | 是 | 承载中立的 `CompiledInformationSet`、MaterializationTargetFact、`CompiledModelSet` 和 `EngineContext` 发布聚合，不依赖 model 或 Directory |
+| dec-core-model | 是 | 承载 `InformationEngine` runtime 实现，消费已发布 Information；不承载 Directory 物化编排 |
+| dec-context-config-parse-xml | 兼容扩展 | 读取 Directory 与 Action 的原始配置，保留 `Action.refRule`；读取 `change-info@information-ref` 供 Directory 解析阶段消费；不改变 XML 语法 |
+| P4 Action/Produce | 下游输入 | 提供按 Directory 消费的有序 Action/Produce 结果，不在 P3 实现 |
+| P5/Directory | 下游信息 Owner | 拥有 Directory、ChangeInfo/RuleViewInfo 映射、不变量和 Action 顺序；只向调用方提供有序 Action 信息，不创建 ModelLoader、不触发 execute、不参与事务，不在 P3 实现 |
+| 数据库表/字段 | 否 | 只读取/写入既有模型路径 |
+| API | 新增内部契约 | 不承诺外部 HTTP/API；面向 P4/P5 的稳定 Java 只读边界 |
+| 测试 | 后续阶段 | 本阶段只定义测试接缝，不创建测试 Case |
+
+范围外还包括 P2 model-access 兼容修订、现代 YAML、Consumer runtime、独立 Session/Transaction、独立 RuleView 隔离器、幂等和并发控制；P3 不修改 ModelLoader/ViewListener 或当前 DirectoryAction，不新增 `MaterializationResult`。为保证失败可观察，后续实现仅在 ModelContainer 内把 unsuccessful ResultInfo 转为既有 `ExecuteRuleException`，不新增返回类型或外部事务接口。
+
+### 4. 目标方案与职责边界
+
+<!-- DESIGN-NARRATIVE-TARGET -->
+
+```text
+Raw XML declarations
+        -> ReferencePass
+        -> ModelAccessPass (P2 exact CompiledTargetBinding + policy)
+        -> InformationPass (InformationCompiler MODIFY)
+             -> CompiledInformationSet + MaterializationTargetFact
+        -> Deferred/Semantic/Digest passes
+        -> CompiledModelSetBuilder
+             [CompiledInformationSet + MaterializationTargetFact + exact policy + all P1/P2 facts]
+        -> CandidateContextPublicationPass
+             -> one EngineContext / one atomic published CompiledModelSet
+        -> InformationEngine.evaluate(key, ModelContext)
+             -> compiler-frozen exact binding/read-set
+             -> read-only RuleView binding
+             -> boolean evaluator
+        -> Directory parse/compile (后续阶段)
+             -> ChangeInfo + RuleViewInfo mapping/invariants
+             -> ordered Action list for the Directory
+        -> execution caller (后续阶段)
+             -> for each Action: read refRule and call ModelLoader.load(refRule, modelData, connection)
+             -> same ModelContainer.load(loader) repeatedly
+             -> after all loads: ModelContainer.execute() exactly once
+        -> ModelContainer (唯一执行与技术事务 Owner)
+             -> begin/connect all required connections
+             -> execute loaded RuleViewInfo in load order
+             -> first unsuccessful result/exception stops remaining loaders
+             -> commit on all success; otherwise rollback; close/clear
+```
+
+| 组件 | 调整后职责 | 不应承担的职责 |
+|---|---|---|
+| `InformationCompiler` | MODIFY 既有编译入口；三类输入分流、类型互斥、Key、编译期 exact binding/read-set、DAG、Information 目标类型/change-data/path/permission 校验，并输出 MaterializationTargetFact | 生成/注册/映射 ChangeInfo 或 RuleViewInfo；运行时读写模型；重复解析 selector |
+| `CompiledInformationSet` | 保存不可变 Information、编译期 exact binding/read-set、依赖拓扑、canonical semantic form 和 MaterializationTargetFact 索引 | 保存 Directory 的 ChangeInfo 映射；缓存运行结果；重新解析路径 |
+| `InformationEngine` | 按 Key 消费已发布集合，实时读取并返回 TRUE/FALSE；只执行编译期通过的只读 RuleView | 修改模型、维护 MutationSet、解析 selector、拥有 P2 binding |
+| `DirectoryChangeInfoCompiler`（后续 P5） | 消费 MaterializationTargetFact，在 Directory 解析阶段创建并校验 ChangeInfo、RuleViewInfo 映射、不变量和生命周期；按 Directory 业务顺序提供 Action 信息 | 将映射归入 Information model；创建 ModelLoader、调用 execute、判断执行结果或管理事务 |
+| 执行调用方（后续阶段） | 从 Directory 取得有序 Action；从每个 Action 读取 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)` 形成 Loader，按序装入同一 ModelContainer，全部装载后调用一次 `execute()` | 解释或执行规则；读取 `getResult()`；调用 commit/rollback/close；把执行职责放回 Directory |
+| `ModelContainer` | 唯一执行与技术事务 Owner；一次 execute 内遍历全部 Loader，首个失败停止剩余 Loader，统一 commit/rollback/close/clear，并通过既有异常边界传播失败 | Information DAG 编译、Directory 映射或 RuleViewInfo 业务排序；暴露事务句柄或要求 Directory 读取 ResultInfo |
+| `dec-core-context` | 中立 immutable published aggregates 与 `EngineContext` | 依赖 `dec-core-model` 或执行 RuleView |
+| `dec-core-model` | runtime Information engine，并复用既有 ModelContainer/ModelLoader/ViewListener 执行能力 | 重建 compiler/policy/path facts或新增 P3 物化入口 |
+
+### 5. 核心流程、状态与失败路径
+
+<!-- DESIGN-NARRATIVE-FLOW -->
+
+主流程严格区分 P3 编译、P3 识别、后续 Directory 供数与 ModelContainer 执行：P3 编译失败不替换当前集合；编译成功只发布 Information 和 MaterializationTargetFact。Directory 解析阶段再校验 `change-info` 目标及映射，生成/注册 RuleViewInfo，并按 Directory 业务顺序提供 Action 列表。执行调用方从每个 Action 读取 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)`，按 Action 顺序将多个 Loader 装入同一个 ModelContainer，全部装载后只调用一次 `execute()`；既有执行链再通过 `ConfigInfo.getRuleViewInfo(refRule)` 获取 RuleViewInfo。`ModelContainer` 是唯一执行与技术事务 Owner：一次 execute 中建立所需连接、按 Loader 顺序执行各 RuleViewInfo，任一规则结果 unsuccessful 或抛异常时立即停止剩余 Loader并统一 rollback，全部成功才 commit，最后 close/clear。失败在 clear 前转换或保留为既有 `ExecuteRuleException`，外层不读取 `getResult()`。成功终点是 `ModelContainer.execute()` 提交后正常返回，没有新增结果对象，也不调用 `evaluate`。P3 不拥有执行入口、ChangeInfo 或 RuleViewInfo 映射。
+
+#### 5.1 主流程
+
+```text
+discover raw definitions
+  -> ReferencePass resolves symbols
+  -> ModelAccessPass freezes P2 exact binding/policy
+  -> InformationPass (same CompilationSession) builds InformationKey + read-set + DAG
+     and emits MaterializationTargetFact for eligible model atoms
+  -> Deferred/Semantic/Digest binds all P3 facts and Information semantic form
+  -> CompiledModelSetBuilder freezes CompiledInformationSet + target facts + policy + digest
+  -> CandidateContextPublicationPass atomically publishes one EngineContext
+  -> evaluate(key): consume exact binding -> read -> read-only RuleView/check -> TRUE/FALSE
+  -> later Directory parse/compile: consume target fact, validate and build ChangeInfo/RuleViewInfo mapping
+  -> Directory returns the corresponding ordered Action list; no execution
+  -> execution caller reads each Action.refRule and calls ModelLoader.load(refRule, modelData, connection)
+  -> same ModelContainer.load(loader1), load(loader2), ...
+  -> invoke ModelContainer.execute() exactly once after all loaders are loaded
+  -> ModelContainer begin/connect all required connections
+  -> execute loaders in load order
+     -> resolve refRule through ConfigInfo.getRuleViewInfo(refRule)
+     -> unsuccessful ResultInfo or exception: stop remaining loaders -> rollback
+  -> all loaders successful: commit
+  -> close/clear -> normal end or existing ExecuteRuleException; no evaluate and no new result object
+```
+
+#### 5.1.1 三类 Information 编译契约
+
+`RawDefinitionSet` 是解析层输出的不可变候选快照；P3 在 InformationCompiler 内将其中的 Information 定义投影为编译候选。每个定义包含
+`InformationKey(system, name)`、`sourceLocation`、`viewRef`、`kind`、表达式文本、
+`ruleRef`、模型 `readPaths`、`changeData` 和依赖 Key 列表，并带有
+`configurationRevision`。P3 对模型原子中声明的 `change-data` 生成不可变 `MaterializationTargetFact`，只包含目标 Information、声明值、规范写路径、精确写权限和物化规则约束；该事实不包含 ChangeInfo、RuleViewInfo 实例或 Directory 映射。Directory 解析阶段消费目标事实与 `<change-info information-ref="...">`，建立 `ChangeInfoKey(businessScopeKey, directoryKey, informationKey)`，校验目标引用、类型、规则和唯一映射，并生成名称为 `##` + `business-config.name` + `.` + `directory.name` + `.` + `change-info.information-ref` 的两步 RuleViewInfo，通过 `ConfigInfo.addRuleViewInfo()` 注册一次。Directory 对外提供其既有有序 Action 列表；每个 Action 的 `refRule` 是规则名，执行调用方必须将其传给 `ModelLoader.load(refRule, modelData, connection)`。Loader/RuleContainer 再沿既有 `DataUtil.getRuleViewInfo(refRule)` → `ConfigInfo.getRuleViewInfo(refRule)` 链取得已注册 RuleViewInfo。P3 只负责自身 Information/目标事实的编译守卫；Directory 负责映射及其不变量，任何编译期配置错误都拒绝发布候选配置。
+
+| 类型 | 输入识别 | 编译与绑定 | 运行时语义 | 失败码 |
+|---|---|---|---|---|
+| `rule-ref`（RuleView 原子） | `view-ref` + `rule-ref`，无 model expression | 在 InformationPass 消费同一 Session 的 P2 exact binding；只读校验通过后记录 RuleView 身份、来源位置和绑定；含 `insert/update/delete/grammer` 的 RuleView 拒绝作为 evaluate binding | 运行时仅执行 `check/checkData/checkDataPattern/checkPattern/get/query` 白名单；检查不满足为 `FALSE`，非法路径/null/执行异常为 `ERROR` 并抛异常 | `INFORMATION_RULE_REF_INVALID`、`INFORMATION_READ_ONLY_VIOLATION` |
+| `rule-data`（模型表达式原子） | `view-ref` + `rule-data`，可选 `change-data` | 在 InformationPass 消费 P2 exact `CompiledTargetBinding`，冻结 canonical read/write path、Data Owner 和 AST；校验 `change-data` 类型、路径及权限，并输出 `MaterializationTargetFact`；不生成 ChangeInfo/RuleViewInfo | 每次按已冻结 read-set 读取当前上下文；物化目标事实由 Directory 消费 | `INFORMATION_MODEL_EXPRESSION_INVALID`、`INFORMATION_PATH_INVALID`、`INFORMATION_WRITE_FORBIDDEN` |
+| `expression`（复合 Information） | 仅 `expression` 文本 | 使用 Information Expression 编译器解析限定 InformationKey，禁止模型路径和 `change-data`；建立依赖边并校验缺失引用、跨 System 归属和循环 | 按固定 DAG 顺序求值；任何被访问节点的 `ERROR` 直接向调用方抛出，不得变成 `FALSE`；复合节点不可直接物化 | `INFORMATION_EXPRESSION_INVALID`、`INFORMATION_DEPENDENCY_INVALID`、`INFORMATION_MATERIALIZE_FORBIDDEN` |
+
+`RawDefinitionSet` 的 P3 发布边界是全量候选原子替换：候选中任一 Information 类型、引用、路径、权限、DAG 或 MaterializationTargetFact 校验失败，InformationCompiler 返回包含 `sourceLocation`、Key、路径和失败码的诊断，不产生新的 `CompiledInformationSet`。Directory 后续发布边界只负责 `change-info` 目标、RuleViewInfo 映射不变量及 Action 的确定顺序：引用缺失、重复映射、无法生成 RuleViewInfo、Action 缺少 `refRule` 或顺序不确定时拒绝 Directory 候选配置。DirectoryParser 不校验“单 Loader、单连接、单 execute、Action 禁止 DB/事务”等执行计划，因为这些不属于 Directory 信息模型；执行调用方负责按 Action 逐项调用 `ModelLoader.load(refRule, modelData, connection)`，多个 Loader、一个最终 execute 以及连接与事务语义由 ModelContainer 的调用契约和实现负责。只有 P3 Pass 成功且同一 Session 的所有必需事实通过 Semantic/Digest 后，才允许 `CompiledModelSetBuilder` 构造候选。
+
+#### 5.1.2 同 Session 编译与发布闭包
+
+| 顺序 | Pass/边界 | 本阶段冻结事实 | 失败时的原子行为 |
+|---:|---|---|---|
+| 1 | `ReferencePass` | symbols 与强类型 references | 不进入后续 Pass，不替换已发布 Context |
+| 2 | `ModelAccessPass` | `ModelAccessCompilation`、`CompiledTargetBinding`、`ModelAccessPolicyIndex` | P2 binding/policy 任一失败，Information 不编译、不发布 |
+| 3 | `InformationPass` | `CompiledInformationSet`：所有 Key、RuleView binding、model read/write path、Data Owner、DAG、MaterializationTargetFact | 任一 Information 或目标事实错误，候选集合丢弃 |
+| 4 | `DeferredPass`/`SemanticPass` | 现有 Deferred、Definition Registry、SourceManifest 与 P3 semantic form | 任一失败，候选集合丢弃 |
+| 5 | `DigestPass` + `CompiledModelSetBuilder` | 同一 Session 的 source/semantic digest、Information canonical form、target facts、P2 policy 与全部 P3 aggregates | digest/provenance 不匹配，禁止构造 candidate |
+| 6 | `CandidateContextPublicationPass` | 一个完整 `CompiledModelSet` 和由其唯一构造的 `EngineContext` | publisher/CAS 失败，旧 Context 保持不变 |
+
+目标 P3 Pass 顺序为 `SourceGraph → Structural → Symbols → References → ModelAccess → Information → Deferred → Semantic → Digest → CandidateContextPublication`。`InformationPass` 不再早于 ModelAccessPass；`CompiledModelSetBuilder` 的生产构造必须同时接收 `CompiledInformationSet`、`MaterializationTargetFactIndex`、`ModelAccessPolicyIndex` 和 digest-bound input，`CompiledModelSet` 必须持有前两者，`EngineContext` 只能从该完整集合构造。最终 semantic digest 纳入 `CompiledInformationSet.canonicalForm()` 与 target-fact canonical form；Directory 映射 digest 在其自身解析/发布边界计算，不回写为 P3 聚合事实。
+
+#### 5.2 关键失败路径
+
+```text
+compile error (missing ref/cycle/path/permission)
+  -> reject candidate; current compiled set unchanged
+evaluate error (invalid path/null/expression)
+  -> ERROR diagnostic + InformationEvaluationException; no model write
+ModelContainer execution failure
+  -> P3 exposes no execution operation
+  -> Directory only supplies the ordered Action list
+  -> caller passes each Action.refRule to ModelLoader.load(...)
+  -> ModelContainer receives multiple loaders and executes once
+  -> each loader resolves its RuleViewInfo through ConfigInfo.getRuleViewInfo(refRule)
+  -> unsuccessful ResultInfo or exception stops remaining loaders
+  -> ModelContainer rolls back, closes and clears, then crosses the existing exception boundary
+```
+
+#### 5.3 状态与步骤
+
+| 状态/步骤 | 前置条件 | 动作 | 成功结果 | 失败/恢复 |
+|---|---|---|---|---|
+| `RAW` | XML/P2 facts 可发现 | 读取声明 | Raw definitions | 解析错误，拒绝发布 |
+| `COMPILED` | Key/ref/path/DAG/target-fact 合法 | 生成不可变集合及 MaterializationTargetFact | 可识别且可供 Directory 解析阶段消费 | 任一 P3 校验失败，保留旧集合 |
+| `EVALUATING` | Key 已发布 | 按 frozen read-set 重读并求值 | `TRUE`/`FALSE` | 正常条件不满足为 `FALSE`；普通 null/非法路径/权限/表达式或 RuleView 执行异常为 `ERROR` 并抛 `InformationEvaluationException` |
+| `MODEL_CONTAINER_EXECUTING` | 不属于 P3 状态机；Directory 已提供有序 Action，调用方已按 `Action.refRule` 完成多 Loader 装载 | ModelContainer 一次 execute：begin 后按 load 顺序逐个执行由 refRule 解析出的 RuleViewInfo | 全部 Loader 成功后 commit 并正常结束；不新增结果对象，不调用 evaluate | 任一 ResultInfo unsuccessful 或异常时停止剩余 Loader并 rollback；失败通过既有 ExecuteRuleException 边界中断；最后 close/clear |
+
+### 6. 数据与持久化方案
+
+<!-- DESIGN-NARRATIVE-DATA -->
+
+P3 不新增表或持久化结构。`CompiledInformationSet`、exact binding、read-set、DAG、`MaterializationTargetFact` 和结果诊断为同一发布 Context 的内存事实；模型值由当前 `ModelContext` 按已冻结路径读取。ChangeInfo、RuleViewInfo 映射和有序 Action 信息不属于 P3 的持久化或运行时状态，由后续 Directory 阶段消费目标事实并在自身边界内承载；具体规则执行和事务状态仅由 ModelContainer 承载。
+
+1. 读取：只读取当前 Key 及依赖声明的模型路径。
+2. 校验：编译 revision、P2 exact Binding、Data Owner 和路径来源必须与 `CompiledInformationSet` 匹配；runtime 不再调用 selector/resolver。
+3. 目标事实：P3 对合法模型原子输出 `MaterializationTargetFact`，不生成、注册或映射 ChangeInfo/RuleViewInfo。
+4. 内存变更：P3 运行时只读；不维护 MutationSet，不持有物化状态。
+5. 装载：执行调用方从 Directory 取得有序 Action，从每个 Action 读取 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)`，并按序将 Loader 装入同一个 ModelContainer；Directory 不创建或持有 Loader。
+6. 保存：每个 Loader 的规则名来自 Action 的 `refRule`，既有 RuleContainer 通过 `DataUtil.getRuleViewInfo(refRule)` → `ConfigInfo.getRuleViewInfo(refRule)` 获取 RuleViewInfo；全部 Loader 都成功时才由 ModelContainer commit，不新增返回对象，不自动重读或重新识别。
+7. 副作用：P3 识别入口只接受编译期只读 binding，不调用 Directory 或 ModelContainer 执行；含写规则的 RuleView 对 evaluate 在 P3 编译期拒绝。Directory 编译期只负责 ChangeInfo/RuleViewInfo 映射及 Action 确定顺序，不编译执行计划。
+8. 提交：Directory 只提供信息；连接、Loader 遍历、失败判断、commit、rollback、close 和 clear 均由同一个 ModelContainer 在唯一 execute 调用内执行。
+9. 失败：P3 编译或求值错误记录 `ERROR` 并抛异常；任一 Loader 的规则结果 unsuccessful 或抛异常时，ModelContainer 停止剩余 Loader并 rollback。失败在 clear 前形成或保留既有 `ExecuteRuleException`，外层不依赖清理后的 ResultInfo；不重试、不静默吞错。
+
+### 7. 接口、交互与兼容策略
+
+<!-- DESIGN-NARRATIVE-COMPATIBILITY -->
+
+调用方只依赖 `InformationEngine.evaluate` 和 P3 发布的 `MaterializationTargetFact`；P2 Binding、既有模型执行设施和 mix XML 保持兼容。P3 不提供物化入口。后续 Directory 解析 `order-business.xml` 的 `paying` 目录，使用目标事实创建并校验 `ChangeInfo`/RuleViewInfo 映射，并提供该 Directory 对应的有序 Action 列表。执行调用方沿用 `new ModelContainer()`、对每个 Action 读取 `refRule` 并调用 `new ModelLoader().load(refRule, modelData, connection)`、一次 `execute()` 的既有方式；Loader 的规则查找沿用 `DataUtil.getRuleViewInfo(refRule)` → `ConfigInfo.getRuleViewInfo(refRule)`，不需要 `SimpleViewListener` 或 DirectoryAction 参与本流程。
+
+内部接口建议如下，具体类名可在开发阶段按现有包结构落位：
+
+```java
+interface InformationEngine {
+  IdentificationResult evaluate(InformationKey key, ModelContext context);
+}
+interface ConfiguredModelReader {
+  ModelValue read(CompiledModelPath path, ModelContext context);
+}
+interface InformationCompiler {
+  // 保留既有兼容入口；P3 production path 使用带 exact binding 的 MODIFY 入口
+  InformationCompilationResult compile(RawDefinitionSet raw, SymbolTable symbols);
+  InformationCompilationResult compile(
+      RawDefinitionSet raw, SymbolTable symbols,
+      ModelAccessCompilation bindings);
+}
+```
+
+`InformationCompiler` 的现有两参数入口不删除；它只负责兼容调用，P3 production path 必须走带 `ModelAccessCompilation` 的 MODIFY 入口，并以该对象提供的 exact binding 生成 `CompiledInformationSet` 和 `MaterializationTargetFact`。P3 只校验目标 Information 类型、`change-data` 类型、规范路径和写权限；它不读取或生成 Directory 的 ChangeInfo/RuleViewInfo 映射。后续 Directory 解析阶段校验 `change-info` 目标引用和唯一映射，以 `##` + `business-config.name` + `.` + `directory.name` + `.` + `change-info.information-ref` 命名并通过 `ConfigInfo.addRuleViewInfo()` 注册，并向调用方提供确定顺序的 Action 列表。Directory 不新增执行方法或结果契约，不创建 ModelLoader，不调用 ModelContainer。执行调用方对每个 Action 读取 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)`；Loader 的规则查找沿用 `DataUtil.getRuleViewInfo(refRule)` → `ConfigInfo.getRuleViewInfo(refRule)`。`evaluate` 对正常求值返回 `IdentificationResult(TRUE|FALSE)`；普通非法路径/null、表达式异常或只读 RuleView 执行异常返回 `ERROR` 诊断并抛 `InformationEvaluationException`。复合节点按固定 DAG 顺序求值，复合 Information 不可作为物化目标。P2 的显式 `<ref>` Binding、target-main 优先和 `orderDetail` 独立归属只作为 InformationCompiler 的输入事实，不在 P3 runtime 重新解析。
+
+现有 `orm-rule.xml` 的执行证据表明每个 RuleViewInfo 可按自身声明顺序运行规则；`ModelContainer.load(...)` 的列表和 `execute()` 的循环证明同一容器可顺序执行多个 ModelLoader。后续执行调用方复用该调用形态；P3 只发布供 Directory 校验和构造映射所需的 MaterializationTargetFact，不构造 RuleViewInfo，不新增事务入口。
+
+#### 7.1 页面业务行为
+
+不适用：本需求没有页面或 UI 行为。
+
+#### 7.2 事务、并发、幂等与一致性
+
+##### 7.2.1 ModelContainer 多次装载、单次执行接缝
+
+现有调用链已经提供正确的结构边界：Directory 只返回与当前 Directory 对应的有序 Action 信息；执行调用方为每个 Action 读取 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)` 形成一个 Loader，并按 Directory 给出的顺序对同一个 `ModelContainer` 调用多次 `load(loader)`。所有 Loader 装载完成后，调用方只调用一次 `ModelContainer.execute()`。Directory 不创建 Loader、不附加 Listener、不调用 execute，也不持有 ModelContainer。
+
+`ModelContainer.load(...)` 把每个 Loader 追加到内部列表并汇总其连接名；`execute()` 建立所需连接后按列表顺序逐个创建 `RuleContainer`，由 Loader 的规则名通过 `DataUtil.getRuleViewInfo(refRule)` → `ConfigInfo.getRuleViewInfo(refRule)` 获取对应 RuleViewInfo。若某个 RuleViewInfo 返回 unsuccessful `ResultInfo`，ModelContainer 必须立即停止剩余 Loader；若规则或连接操作抛异常，同样进入失败路径。全部 Loader 成功才 commit，否则统一 rollback，随后 close/clear。为避免 `clear()` 重置 `resultInfo` 后外层无法判断失败，ModelContainer 必须在 clear 前保存失败并在收尾后通过已有 `ExecuteRuleException` 抛出；成功才正常返回。此处不新增 `MaterializationResult`、不新增结果查询方法，调用方和 Directory 均不得在 execute 后依赖 `getResult()`。
+
+Directory 是 ChangeInfo/RuleViewInfo 映射、归属和顺序的 Owner；ModelContainer 是 RuleViewInfo 执行、失败判断和连接/commit/rollback/close/clear 的唯一 Owner。执行调用方只完成“信息转 Loader、按序 load、一次 execute”的适配，不解释规则结果或管理事务。当前 `DirectoryAction(ModelData)` 和 Listener 不是这条流程的组成部分，本设计不要求修改或保留它们，后续可以独立调整或删除。
+
+##### 7.2.2 事务与失败矩阵
+
+| 执行点 | 允许行为 | 成功后下一步 | 失败结果 | ModelContainer 收尾 |
+|---|---|---|---|---|
+| Directory 查询 | 返回当前 Directory 对应的有序 Action 信息；每个 Action 必须有 `refRule` | 执行调用方消费该列表 | 缺失引用、重复映射、缺失 `refRule` 或顺序不确定属于配置错误，不进入执行 | 不建立事务 |
+| Loader 装载 | 调用方读取每个 Action 的 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)`，并按序调用同一 ModelContainer 的 `load(...)` | 全部装载后调用一次 `execute()` | Loader 缺规则名、ModelData 或连接名时由 `load(...)` 立即拒绝 | 尚未 execute，不提交 |
+| `begin/connect` | ModelContainer 获取全部 Loader 声明的连接 | 按 load 顺序执行首个 Loader | 连接失败，不执行任何 RuleViewInfo | rollback 已建立连接，close/clear 一次，抛 ExecuteRuleException |
+| 单个 Loader/RuleViewInfo | ModelContainer 内部创建 RuleContainer 并执行该 RuleViewInfo 的规则 | successful 时进入下一个 Loader | unsuccessful ResultInfo 或异常；后续 Loader 不再执行 | commit 0 次，rollback 一次执行周期，close/clear 一次，抛 ExecuteRuleException |
+| `commit` | 全部 Loader successful 后，ModelContainer 对已建立连接执行既有 commit 逻辑 | 正常结束 | commit 异常成为主失败并尝试 rollback | commit 尝试一次执行周期，rollback 尝试一次执行周期，close/clear 一次 |
+| 成功结束 | 不再调用 evaluate，不产生新的结果对象 | `execute()` 正常返回既有调用方 | 不适用 | 每个已建立连接按既有逻辑 commit，rollback 0 次，close/clear 一次 |
+
+编译期拒绝与运行时回滚是两层不同保证。P3 编译期拒绝非法 Information 类型、`change-data` 类型、规范路径和写权限；Directory 配置编译期拒绝缺失/重复映射、无法生成 RuleViewInfo、缺失 `Action.refRule` 或顺序不确定。Loader 数量、连接数量和执行步骤不是 Directory 配置编译不变量：调用契约固定为“零个列表非法；一个或多个 Action 按顺序读取 refRule 并分别 load；全部装载后 execute 一次”。运行时的 Loader 校验、连接失败、规则 unsuccessful/异常、持久化异常和 commit 异常统一由 ModelContainer 停止、回滚、清理并通过既有异常边界传播。
+
+| 关注点 | 设计选择 | 生效边界 |
+|---|---|---|
+| 事务 | 单个 ModelContainer、一个或多个 ModelLoader、单次 execute | ModelContainer 独占执行和 begin/commit/rollback/close/clear；Directory 不接触事务；多连接沿用现有逐连接收尾语义，不宣称分布式原子事务 |
+| 并发 | 已发布目标事实和 Directory 的有序 Action 信息只读共享；每次调用创建自己的 ModelContainer、ModelLoader 和 ModelData | 不共享可变 loader/value；不使用全局临时 RuleView 名称，避免跨请求碰撞 |
+| 幂等 | 不新增 P3 语义 | 不在 Information Engine 内维护 |
+| 一致性 | P3 保证 Information 与目标事实原子发布；Directory 保证映射和 Action 顺序；ModelContainer 保证顺序执行、失败停止和事务收尾 | 不维护 MutationSet；成功后正常结束，不重读、不重识别、不返回新对象 |
+
+##### 7.2.3 第三个问题：物化状态转换的守卫条件不完整
+
+这里的问题不是“是否要回滚”本身，而是原设计没有把配置阶段、装载阶段、执行阶段和收尾阶段的失败守卫连成一条可观察的状态转换，导致失败可能被当成普通返回、后续 Loader 可能继续执行，或者 `clear()` 后根因丢失。调整后的契约如下。
+
+1. 配置错误必须在运行前截断。Information 的类型、引用、`change-data`、目标路径和写权限，Directory 的 ChangeInfo/RuleViewInfo 映射、Action 顺序以及每个 `Action.refRule`，都必须在配置编译/解析阶段校验。任一校验失败时拒绝候选配置，不注册不完整的 RuleViewInfo，不向执行调用方提供 Action，不建立事务，也不产生模型写入。
+2. 装载错误必须在 `execute()` 前截断。执行调用方按 Directory 返回顺序读取 Action，并为每个 Action 调用 `ModelLoader.load(refRule, modelData, connection)`；规则名、ModelData 或连接信息缺失时，`load()` 直接失败，后续不调用 `execute()`。这一步不由 Directory 创建 Loader 或管理事务。
+3. 执行错误必须在首个失败点截断。`ModelContainer.execute()` 只调用一次，在同一容器中按 Loader 装载顺序执行。每个 Loader 的规则查找沿 `DataUtil.getRuleViewInfo(refRule)` → `ConfigInfo.getRuleViewInfo(refRule)` 完成；若 RuleViewInfo 返回 unsuccessful `ResultInfo`，或规则执行、连接、持久化抛出异常，当前 Loader 是失败点，后续 Loader 调用次数必须为 0。
+4. 失败收尾必须先保留根因再清理。失败路径固定为“记录失败 Loader/refRule 和 RuleViewInfo 规则名 → 对已建立连接执行 rollback → close → clear → 通过既有 `ExecuteRuleException` 边界抛出”。调用方和 Directory 不得在 `clear()` 后通过 `getResult()` 判断成败，也不得把失败转成 FALSE、成功返回或继续下游。
+5. 成功守卫必须晚于全部副作用。只有所有 Loader 成功且既有 commit 逻辑成功后，`execute()` 才正常返回；正常返回不创建 `MaterializationResult`，不新增结果对象，不调用 `evaluate`，也不重新识别目标或下游 Information。任何 Action 或 change-data 相关规则失败都不能到达该成功终点。
+
+失败观察契约还需要在后续实现和测试中逐项验证：失败异常应保留首个失败的 `refRule`、Rule 名、`errorCode`、`errorName` 和 `errorMsg`；执行失败为主异常，rollback/close 等收尾异常不得覆盖根因，应作为 suppressed 异常保留。若 commit 阶段失败，commit 异常作为主异常，并记录已尝试的 commit、rollback 和 close 结果。对于多个物理连接，只要求每个已建立连接按既有规则收到对应的 commit 或 rollback 及 close，不把逐连接收尾表述为跨连接分布式原子性。
+
+可用于测试和日志的最小事件序列为：`LOAD(index, refRule)` → `EXECUTE_START` → `CONNECT(connection)` → `RULE_START(index, refRule)` → `RULE_RESULT(index, success/error)` → `EXECUTE_STOP(firstFailureIndex)` → `COMMIT(connection)` 或 `ROLLBACK(connection)` → `CLOSE(connection)` → `CLEAR` → `EXCEPTION(primary + suppressed)`。该序列的目的，是证明“配置错误编译期拒绝、一次 execute、按 Action 顺序、首失败阻断、所有已建立连接收尾、异常跨越 clear 可观察”，而不是新增运行时事件 API。
+
+### 8. 开发者交接摘要
+
+<!-- DESIGN-NARRATIVE-HANDOFF -->
+
+先在同一 CompilationSession 调整 ModelAccess → Information 的 Pass 顺序，修改既有 `InformationCompiler`，把 `CompiledInformationSet` 与 `MaterializationTargetFact` 纳入 `CompiledModelSetBuilder`/`CompiledModelSet`/`EngineContext` 的原子发布闭包；随后实现只读 binding 的 `InformationEngine`。P4/P5 消费 P3 输出；后续 Directory 阶段负责解析 ChangeInfo、生成/注册 RuleViewInfo、维护映射及确定顺序，并只提供有序 Action 信息。执行调用方从每个 Action 读取 `refRule`，调用 `ModelLoader.load(refRule, modelData, connection)`，对同一个 ModelContainer 多次 load 后只 execute 一次；RuleViewInfo 沿既有 `DataUtil.getRuleViewInfo(refRule)` → `ConfigInfo.getRuleViewInfo(refRule)` 查找。ModelContainer 负责顺序执行、失败停止和事务收尾，并把 unsuccessful ResultInfo 转为既有异常边界。普通非法路径/null、权限、表达式和 RuleView 执行异常必须保留来源位置、Key、路径和诊断并以 `ERROR` 抛出；P3 不添加缓存、runtime resolver、MutationSet、ChangeInfo 映射、事务入口或结果对象。测试设计阶段应覆盖 16 个 Information、目标事实输出和编译拒绝、TRUE/FALSE/ERROR、空集合、非法路径、基础/关系 Data 归属；后续 Directory/ModelContainer 验证应覆盖 Action/refRule 到 Loader 的接缝、有序多 Loader、首失败阻断、统一 commit/rollback、close/clear、异常传播和 evaluate 调用次数 0。
+
+#### 8.1 实施策略决策摘要
+
+本节只保留实施策略索引；`IMPL-DEC-P3-001`～`IMPL-DEC-P3-005` 的完整定义、代码证据、兼容性和验证要求以第 9 节 `DESIGN-IMPLEMENTATION-DECISIONS` 为唯一事实源，避免同一稳定 ID 在两处出现内容差异。
+
+| 决策 ID | 对象 | 策略 | 完整定义 |
+|---|---|---|---|
+| IMPL-DEC-P3-001 | ModelContainer 多 Loader 执行与事务 | COMPATIBLE_EXTEND | 见第 9 节 |
+| IMPL-DEC-P3-002 | model-access Binding | REUSE | 见第 9 节 |
+| IMPL-DEC-P3-003 | Information 编译事实 | MODIFY | 见第 9 节 |
+| IMPL-DEC-P3-004 | 实时识别入口 | CREATE | 见第 9 节 |
+| IMPL-DEC-P3-005 | Directory 映射与供数边界 | MODIFY | 见第 9 节；P3 仅输出目标事实 |
+
+#### 8.2 开发开始前仍需确认
+
+- 无新增业务决策；类名和包路径在设计 Review 通过后由开发阶段按现有模块结构确定。
+
+## 第二部分：开发实施明细
+
+### 9. 需求映射与总变更清单
+<!-- DESIGN-CHANGE-INVENTORY -->
+| 变更对象 | 变更类型 | 当前事实与证据 | 目标变化 | 作用 | Owner | 兼容要求 |
+|---|---|---|---|---|---|---|
+| CompiledInformationSet | ADD | 当前无统一 Information 编译集合 | 保存不可变 Key/read-set/DAG | 统一配置事实 | dec-core-compiler | 不改变 P2 Binding |
+| InformationEngine | ADD | 当前无统一识别入口 | 提供 boolean 识别与诊断 | 统一求值 | dec-core-model | 不维护缓存、不解析路径 |
+| MaterializationTargetFact | ADD | 当前无 P3 对 Directory 的目标事实契约 | 输出目标 Information、change-data、路径/权限和规则约束 | Directory 消费事实 | dec-core-compiler/context | immutable；不包含 ChangeInfo/RuleViewInfo 映射 |
+| CompiledModelSet / EngineContext | MODIFY | 当前发布闭包只含 P2 runtime aggregates | 同 Session 携带 `CompiledInformationSet`、`MaterializationTargetFactIndex` 与最终 digest | 原子消费边界 | dec-core-context | 不改变旧 modelSet 别名 |
+| Directory ChangeInfo/RuleViewInfo mapping | MODIFY | 由后续 Directory 解析阶段拥有 | 创建、校验、生成、注册并按 Directory 维护唯一映射 | Directory 物化接入 | P5/Directory | 不由 P3 实现或拥有 |
+| RuleViewInfo execution assembly | MODIFY | 既有 ModelContainer 已支持累积多个 ModelLoader、一次 execute 顺序执行并统一事务收尾，但 unsuccessful ResultInfo 在 clear 后不可由调用方可靠观察 | 调用方按 Directory 顺序读取 Action.refRule，调用 `ModelLoader.load(refRule, modelData, connection)`，创建多个 Loader 并装入同一 ModelContainer；一次 execute；失败在容器内停止并通过既有 ExecuteRuleException 传播 | 闭合 Action/refRule → Loader → RuleViewInfo 的执行接缝 | dec-core-model；Directory 仅供数 | 实施策略为 COMPATIBLE_EXTEND；不新增结果对象/getter；不依赖 Listener/DirectoryAction；保持 execute 方法签名 |
+| 待生成的业务模型 revision | REBASE | 当前任务 business_model 阶段尚未发布新 revision | 作为新设计输入 | 需求承接 | P3 | 复用业务语义，不继承旧 revision 状态 |
+
+<!-- DESIGN-IMPLEMENTATION-DECISIONS -->
+| 决策 ID | 对象 | 策略 | 现有候选与代码证据 | REUSE 不适用理由 | COMPATIBLE_EXTEND 不适用理由 | MODIFY 不适用理由 | 公共逻辑处理 | 公共逻辑 Owner | 兼容、调用方与验证 | 关联蓝图 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| IMPL-DEC-P3-001 | ModelContainer 多 Loader 执行与技术事务 | COMPATIBLE_EXTEND | `ModelContainer.java:39-74` 已按 load 顺序累积 Loader/连接；`:76-137` 已遍历 Loader、首个 unsuccessful 时 break；`:172-247` 统一 commit/rollback/close/clear；但 `clear()` 会重置 resultInfo，unsuccessful 路径当前可正常返回 | 既有主体逻辑可复用，但原样 REUSE 无法让调用方通过 execute 的正常/异常边界区分回滚失败 | 保持 `Container execute() throws ExecuteRuleException` 签名和调用方式，只在内部把 unsuccessful ResultInfo 保存为既有 ExecuteRuleException 后再收尾/抛出 | 不适用：选择 COMPATIBLE_EXTEND，不新增类型或平行执行器 | REUSE_SHARED | dec-core-model | 单 Loader 调用兼容；新增多 Loader 顺序、首失败停止、统一回滚、异常在 clear 后仍可观察的验证 | BP-P3-005 |
+| IMPL-DEC-P3-002 | model-access Binding | REUSE | `ModelAccessCompiler.java` | P2 已发布完整 Binding | P3 不增加授权入口 | 不修改 P2 解析 | REUSE_SHARED | dec-core-compiler | 显式 ref 兼容；路径测试 | BP-P3-002 |
+| IMPL-DEC-P3-003 | Information 编译集合 | MODIFY | `dec-core-compiler/src/main/java/dec/core/compiler/information/InformationCompiler.java`（已有骨架） | 现有骨架未覆盖三类输入、P2 exact binding 和发布集合 | 保留现有 Deferred 编译调用方并兼容扩展 | 不删除现有编译入口；回归既有 Deferred 调用方与编译失败路径 | REUSE_SHARED | dec-core-compiler | 保留既有调用方；新增绑定/DAG/发布闭包回归测试 | BP-P3-001 |
+| IMPL-DEC-P3-004 | 实时识别入口 | CREATE | proposed `dec-core-model/.../InformationEngine.java` | 当前没有统一识别入口 | 没有兼容接口可扩展 | 不存在可修改的 P3 组件 | EXTRACT_NEW | dec-core-model | 新增 TRUE/FALSE/ERROR 契约；只读 RuleView 复用测试 | BP-P3-003 |
+| IMPL-DEC-P3-005 | Directory 映射、顺序与供数 | MODIFY | `dec-context-config-parse-xml/.../directory/DirectoryParser.java` 已解析 Directory、Action 和 change，但尚未消费 MaterializationTargetFact、生成/注册 RuleViewInfo 或提供确定顺序的 Action 信息 | 现有 DirectoryParser 只读取配置，直接 REUSE 无法建立目标事实、映射、不变量和有序供数 | 该行为属于既有 Directory 解析主路径，不应新增平行解析入口；在原解析流程兼容修改 | 不适用：选择 MODIFY 既有 Directory 解析；执行留在 ModelContainer | REUSE_SHARED | P5/Directory 信息边界；执行与事务归 dec-core-model | 兼容：保持 XML 和既有 Directory 查询语义；调用方读取有序 Action.refRule 并调用 ModelLoader.load，Directory 不创建 Loader、不调用 execute、不读取结果；验证：目标事实消费、生成/注册、映射、顺序、refRule 及 Directory 零执行行为 | BP-P3-004/BP-P3-005 |
+
+### 10. 表、字段与数据读写明细
+<!-- DESIGN-TABLE-CHANGES -->
+| 表/存储对象 | 变更类型 | 作用与 Owner | 新增/修改内容 | 迁移/回填 | DB 增量与实现锚点 |
+|---|---|---|---|---|---|
+| 既有 ModelData | UNCHANGED | 模型值承载；dec-core-model | 不新增字段 | 不适用（无 DB 变化） | DB-N/A；`ModelContainer.java` |
+<!-- DESIGN-FIELD-CHANGES -->
+| 表 | 字段 | 变更类型 | 业务语义与作用 | 值来源 | 创建时写入 | 更新条件 | 是否可变 |
+|---|---|---|---|---|---|---|---|
+| 既有 ModelData | change-data 目标路径 | UNCHANGED | MaterializationTargetFact 声明的模型值 | Directory 提供的 RuleViewInfo 对应 ModelLoader/RuleContainer | 既有模型写入 | Directory 映射合法且目标事实有效时 | 是 |
+<!-- DESIGN-DATA-ACCESS -->
+| 业务动作 | 触发入口 | 表/聚合 | 操作 | 字段 | 查询/更新条件 | 读取一致性/锁 | 写入时机与保存方式 | 事务 | 失败后的事实 | Trace |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 识别 Information | `evaluate` | Information evaluation | READ | compiler-frozen read-set | 当前 Key 和依赖路径 | 当前上下文值 | 不写入 P3 执行 | 不适用：识别只读 | 正常不满足为 `FALSE`；非法路径/null/执行异常为 `ERROR` + exception | TR-P3-INFORMATION-ENGINE-001 |
+| change-data 写入（后续执行） | Action.refRule → 多次 `ModelContainer.load(...)` 后一次 `execute()` | ModelData | WRITE | MaterializationTargetFact 对应 RuleViewInfo 的规则目标 | Directory 映射、Action.refRule 和顺序已通过编译校验；每个 Loader 通过既有参数校验 | 同一调用独立 ModelContainer/Loader/ModelData；连接语义沿用 ModelContainer | ModelContainer 按 Action/Loader 顺序执行，全部成功才提交 | 单个 ModelContainer 是唯一执行与事务 Owner | 任一 Loader/规则/持久化/commit 失败均停止剩余 Loader；ModelContainer rollback、close、clear并抛既有异常 | TR-P3-INFORMATION-ENGINE-001 |
+
+### 11. 接口与字段映射明细
+<!-- DESIGN-API-CHANGES -->
+| 接口/方法 | 类型 | 调用方 | 请求变化 | 响应变化 | 校验与权限 | 幂等 | 错误码 | 事务边界 | 兼容策略 | API 增量与实现锚点 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `InformationCompiler.compile` | 内部新增 | 配置编排 | RawInformationSet + P2 bindings | CompiledInformationSet/诊断 | 编译校验 | 不适用：无副作用 | `INFORMATION_DEFINITION_INVALID` | 不适用：内存编译 | 不影响旧入口 | API-N/A；`InformationCompiler` |
+| `InformationEngine.evaluate` | 内部新增 | P4/P5 | InformationKey + ModelContext | TRUE/FALSE + diagnostics/read evidence；路径/null/权限/表达式/RuleView 错误记录 ERROR 并抛异常 | compiler-frozen read-only binding/read-set | 不适用：无 P3 写入 | `INFORMATION_PATH_INVALID` 等 `ERROR` 诊断 | 不适用：只读识别入口 | 新增识别边界；编译期拒绝写规则 | API-N/A；`InformationEngine` |
+| `ModelContainer.load` / `execute`（既有） | MODIFY | 后续执行调用方 | 每个有序 Action 的 `refRule` 传给 `ModelLoader.load(refRule, modelData, connection)`，形成一个 Loader；同一容器多次 load 后 execute 一次；RuleViewInfo 沿 ConfigInfo 查找 | 无新增响应类型；全部成功正常返回；unsuccessful/异常在统一收尾后抛既有 ExecuteRuleException | `load(...)` 校验规则名、ModelData、连接名；Directory 校验映射、refRule 和顺序 | 不新增 P3 语义 | 不依赖清理后的 ResultInfo；失败统一跨越既有异常边界 | 单个 ModelContainer 独占规则执行和事务 | 实施策略为 COMPATIBLE_EXTEND；单 Loader 调用兼容；不新增 Directory 执行方法；不要求 Listener/DirectoryAction | API-N/A；`dec-core-model/src/main/java/dec/core/model/container/ModelContainer.java`、`ModelLoader.java`、`execute/rule/RuleContainer.java`、`DataUtil.java`、`ConfigInfo.java` |
+
+### 12. 行为调整与代码改动
+<!-- DESIGN-BEHAVIOR-ADJUSTMENTS -->
+| 功能/场景 | 当前行为与证据 | 调整后行为 | 受影响入口/调用方 | 数据策略 | API/UI 策略 | 回归范围 |
+|---|---|---|---|---|---|---|
+| Information 识别 | 无统一入口 | evaluate 消费 exact read-only binding、实时读取并返回 TRUE/FALSE；错误抛 ERROR 异常 | 新增 P3 调用方 | 不缓存/不重解析 | 内部 API；无 UI | 编译/识别测试 |
+| change-data 执行 | P3 输出目标事实，Directory 尚未实现映射/有序供数 | Directory 消费目标事实并维护 ChangeInfo/RuleViewInfo 映射与 Action 顺序；调用方读取每个 Action.refRule 并创建多个 Loader；ModelContainer 一次 execute 统一执行和提交/回滚 | P5/Directory 供数方、后续执行调用方、dec-core-model | 多 Loader、单次 execute；失败结果在容器内转为既有异常，外层不读取 getResult | 兼容扩展既有内部入口；无新增返回对象或 UI | 后续 Directory/ModelContainer 阶段验证 |
+<!-- DESIGN-CODE-BLUEPRINT -->
+| 蓝图 ID | 顺序 | 仓库/模块 | 文件、类或配置 | 变更类型 | 方法/符号 | 决策 ID | 具体改动 | 作用 | 公共逻辑 Owner | 来源文档 | 对应测试 | 依赖 |
+|---|---:|---|---|---|---|---|---|---|---|---|---|---|
+| BP-P3-001 | 1 | dec-core-compiler | existing `InformationCompiler.java` | MODIFY | `compile` | IMPL-DEC-P3-003 | 消费 ModelAccess exact binding，生成 Key/read-set/DAG/CompiledInformationSet 和 MaterializationTargetFact；保留既有 Deferred 调用方，不生成 ChangeInfo/RuleViewInfo | 编译事实 | dec-core-compiler | `project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md#核心术语与所有权` | 编译/发布闭包测试 | P2 ModelAccessPass |
+| BP-P3-002 | 2 | dec-core-compiler/context | existing `StandardCompilerPasses.java`, `CompiledModelSetBuilder.java`, `CompiledModelSet.java`, `EngineContext.java` | MODIFY | pass order / builder / aggregate | IMPL-DEC-P3-003 | ModelAccess → Information；同 Session 携带 Information、target facts、policy、digest；一次构造/发布 | 原子 Context 闭包 | dec-core-compiler + dec-core-context | `project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md#对象与聚合` | 顺序/digest/identity 测试 | BP-P3-001 |
+| BP-P3-003 | 3 | dec-core-model | proposed `InformationEngine.java` | ADD | `evaluate` | IMPL-DEC-P3-004 | 消费 `CompiledInformationSet` exact read-only binding；仅执行 check/checkData/checkDataPattern/checkPattern/get/query；正常不满足为 FALSE，非法路径/null/权限/表达式/RuleView 执行异常抛 ERROR | 识别入口 | dec-core-model | `project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md#P3-业务不变量` | TRUE/FALSE/ERROR 与只读 RuleView 测试 | BP-P3-001/BP-P3-002 |
+| BP-P3-004 | 4 | dec-context-config-parse-xml / P5 Directory | existing `dec-context-config-parse-xml/src/main/java/dec/context/parse/xml/parse/directory/DirectoryParser.java` | MODIFY | `parse` / `parseChange` / registration handoff / ordered Action access | IMPL-DEC-P3-005 | 在既有 Directory 解析路径消费目标事实；编译期校验目标、唯一映射、每个 Action 的 refRule 和确定顺序；生成并注册 RuleViewInfo，并只提供当前 Directory 对应的有序 Action 信息 | Directory 映射、顺序与供数 | P5/Directory | `project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md#状态与下游执行契约`、`project_doc/version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml#/operations/0/after/steps/2` | 后续验证非法映射/refRule 拒绝、注册和返回顺序；断言 Directory 不执行 | BP-P3-002 |
+| BP-P3-005 | 5 | 后续执行调用方 + dec-core-model | existing `dec-core-model/src/main/java/dec/core/model/container/ModelLoader.java`、`ModelContainer.java`、`execute/rule/RuleContainer.java`、`DataUtil.java` | MODIFY | existing `ModelLoader.load` / `ModelContainer.load` / `ModelContainer.execute` / `ConfigInfo.getRuleViewInfo` lookup chain | IMPL-DEC-P3-001/IMPL-DEC-P3-005 | 按 COMPATIBLE_EXTEND 策略：调用方从每个 Action 读取 refRule 并调用 `ModelLoader.load(refRule, modelData, connection)`，按序装入同一 ModelContainer，全部 load 后 execute 一次；ModelContainer 按序执行，首个 unsuccessful/异常停止剩余 Loader，RuleContainer 沿 DataUtil → ConfigInfo 获取 RuleViewInfo，统一回滚并在 clear 后抛既有 ExecuteRuleException；全部成功才提交 | 可实施 Action/refRule → 多 Loader → RuleViewInfo 执行接缝 | ModelContainer 执行与技术事务；Directory 仅供数 | `project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md#状态与下游执行契约`、`project_doc/version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml#/operations/0/after/steps/2` | 后续验证 N 次 load/一次 execute、顺序、refRule 传递、ConfigInfo 查找、首失败阻断、统一 commit/rollback/close/clear、异常可观察、evaluate 0 次 | BP-P3-004 |
+
+### 13. 异常、安全、观测与验证明细
+<!-- DESIGN-VERIFICATION -->
+| 验证项 | 对应需求/风险 | 测试层级 | 前置数据 | 操作 | 失败注入/边界 | 可观察结果 | 自动化命令或证据入口 |
+|---|---|---|---|---|---|---|---|
+| 编译/DAG/发布闭包 | BR-P3-INFORMATION-ENGINE-001/TR-P3-INFORMATION-ENGINE-001 | 单元/集成 | 16 Information + P2 exact bindings | compile/publish | 缺失/循环/混合/越权、pass 顺序、旧 Context 保持 | 同 Session 的 `CompiledInformationSet`、policy、digest 共同进入一个 `CompiledModelSet`/`EngineContext`，失败不发布 | test_design 阶段 |
+| 实时读取 | BR-P3-INFORMATION-ENGINE-003/TR-P3-INFORMATION-ENGINE-001 | 集成 | 同一 Key 两次改变模型值 | evaluate | 验证第二次读新值、runtime 不解析 path | 第二次结果反映新值且带实际 readPaths/evidence | test_design 阶段 |
+| null/空集合/路径/组合 | BR-P3-INFORMATION-ENGINE-002/TR-P3-INFORMATION-ENGINE-001 | 单元 | null、empty、非法路径、组合节点 | evaluate | 只读 RuleView 写规则、非法路径/null/权限、订单明细前置 | `every(emptyCollection)=TRUE`；订单明细前置不满足为 FALSE；非法路径/null/权限/表达式/RuleView 异常为 ERROR + exception | test_design 阶段 |
+| 物化目标事实输出 | AC-P3-INFORMATION-ENGINE-001/TR-P3-INFORMATION-ENGINE-001 | 单元/集成 | 含合法 `change-data` 的模型原子 | compile/publish | 类型、change-data、路径或权限任一点非法 | P3 输出不可变 MaterializationTargetFact；非法配置不发布；不包含 ChangeInfo/RuleViewInfo 映射 | test_design 阶段 |
+| Directory 供数与 ModelContainer 单次执行（后续阶段） | AC-P3-INFORMATION-ENGINE-001/TR-P3-INFORMATION-ENGINE-001 | 集成 | Directory 映射、目标事实和多个有序 Action | 获取 Action 列表；逐项读取 refRule 并调用 ModelLoader.load；对同一容器 load N 次后 execute 一次 | 空列表、缺失 refRule、Loader 参数非法、任一 RuleViewInfo unsuccessful/异常、持久化/commit 异常 | Directory 方法只返回信息；ModelContainer 按 Action/load 顺序执行，首失败阻断后续 Loader；ConfigInfo 按 refRule 提供 RuleViewInfo；成功统一 commit，失败统一 rollback并抛既有异常；close/clear 各一次；evaluate 0 次；无新增结果对象 | 后续 Directory/test_design 阶段；本轮不创建或执行测试 |
+
+### 14. 测试接缝
+
+- `InformationCompiler`：输入 Raw definitions 和同 Session 的 ModelAccessCompilation，输出不可变集合，可独立断言 Key、exact binding、DAG、change-info plan 单次生成和路径诊断；不新增同名 compiler 文件。
+- `ConfiguredModelReader`：以真实 ModelContext 或受控 reader 提供当前值，验证每次调用重新读取。
+- `InformationEngine`：通过编译期只读 RuleView binding 和受控模型 reader，断言 TRUE/FALSE、ERROR exception 和 readPaths；含 insert/update/delete/grammer 的 RuleView 必须在编译期拒绝。
+- `MaterializationTargetFact`：断言 InformationCompiler 仅对合法模型原子输出不可变目标事实，包含目标、change-data、规范路径/权限和规则约束，不包含 ChangeInfo/RuleViewInfo 映射；类型、路径或权限错误在配置编译期拒绝发布。
+- Directory 配置编译接缝（后续阶段）：使用 `order-business.xml` 的 `order.paying`/`startPay` fixture，断言目标、唯一映射、RuleViewInfo 注册、Action 的 `refRule` 和确定顺序；非法映射或缺失 refRule 在运行前拒绝，并断言 Directory 不创建 Loader、不调用 execute。
+- Directory/ModelContainer 执行接缝（后续阶段）：从 Directory 取得多个有序 Action，逐项把 `Action.refRule` 传入 `ModelLoader.load(...)`，按序调用同一 ModelContainer 的 `load(...)`，全部装载后仅 `execute()` 一次。断言执行顺序等于 Action/load 顺序，RuleViewInfo 来自 `ConfigInfo.getRuleViewInfo(refRule)`；首个 unsuccessful ResultInfo 或异常立即阻断剩余 Loader，统一 rollback/close/clear，并在 clear 后仍通过既有 ExecuteRuleException 可观察；全部成功才统一 commit。本轮只记录接缝，不创建或执行测试。
+
+### 15. 兼容、迁移与回滚
+
+不涉及数据库迁移、外部 API 或 XML 迁移。编译失败保留上一份完整 `EngineContext`（其中的 `CompiledInformationSet`、P2 policy 和 digest 不拆分替换）；设计或实现回滚只需移除新增 P3 组件，不改变 P2 Binding、ModelContainer 的既有事务语义。旧 `RuleTests.java` 继续保持原有调用语义。
+
+### 16. 追踪与验证
+
+本文件是新任务的设计内容基线，保留 `FLOW-P3-INFORMATION-EVALUATION` 的主路径、变体、失败路径及实现接缝。它不继承旧任务的 requirement、business model、Flow 或 design revision，也不继承任何 Review 结论。进入 design 阶段后，DesignAgent 必须绑定当前任务已发布的 requirement analysis、business model 与 Flow revision，重新生成设计 revision 和追踪证据，再交由独立 Reviewer 审查。
+
+## 迁移说明
+
+- 本文件只迁移可复用的设计正文和实现接缝。
+- 旧任务的 Review remediation、Issue 对照、Evidence 和通过状态均未迁移。
+- 文中指向当前 Target ID 的业务模型路径将在新任务 business_model 阶段生成对应文档后生效。
+- 新任务进入 design 阶段时，必须以当时已发布的需求、业务模型和 Flow revision 重建顶部 revision 绑定与追踪证据。

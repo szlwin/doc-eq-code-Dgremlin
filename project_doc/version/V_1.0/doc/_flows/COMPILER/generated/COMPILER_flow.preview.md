@@ -1,8 +1,8 @@
 <!-- generated-by: common-develop/business_flow.py -->
 # Configuration compilation, model execution and information evaluation（COMPILER）
 
-- Revision：`FLOW-R09@p3-information-evaluation`
-- Base Revision：`FLOW-R04@p2-simple-runtime-model`
+- Revision：`FLOW-R10@p3-information-rebaseline`
+- Base Revision：`FLOW-R09@p3-information-evaluation`
 - 层级：L0 端到端场景、L1 业务阶段、L2 关键子流程
 
 ## 流程目录
@@ -156,7 +156,7 @@
 
 | 类型 | 引用 |
 |---|---|
-| 需求 | [P3-INFORMATION-ENGINE](../../../FEATURE-DESC-4AB41AC241A1/requirement.md) |
+| 需求 | [P3-INFORMATION-ENGINE](../../../FEATURE-DESC-C0EDEFBD6D71/requirement.md) |
 | 功能 | [P3-INFORMATION-ENGINE-F01](../../../../../../docs/MODEL/MODEL_desc.md)（MODEL） |
 | 规则 | BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, BR-P3-INFORMATION-ENGINE-005, CR-P3-INFORMATION-ENGINE-001 |
 | 验收 | AC-P3-INFORMATION-ENGINE-001 |
@@ -203,6 +203,6 @@
 ### 下游映射
 
 - 业务模型：AGG-INFORMATION-MODEL, AGG-INFORMATION-EVALUATION, INV-P3-TARGET-FACT-COMPILE, INV-P3-REALTIME-READ, SM-P3-IDENTIFICATION, POL-P3-DIRECTORY-OWNERSHIP, POL-P3-COMPILE-REJECTION, POL-DIRECTORY-SHARED-ROLLBACK, POL-DIRECTORY-MATERIALIZE-TERMINAL
-- 影响分析：待补充
-- 技术设计：DESIGN-P3-R13
+- 影响分析：IMP-P3-INFORMATION-001, CMI-P3-INFORMATION-001
+- 技术设计：待补充
 - 测试 Case：CASE-P3-MIX-001, CASE-P3-ERROR-001, CASE-P3-CHANGE-INFO-001, CASE-P3-DIRECTORY-001

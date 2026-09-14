@@ -4,8 +4,8 @@ flowGroup:
   code: "COMPILER"
   name: "Configuration compilation, model execution and information evaluation"
   description: ""
-revision: "FLOW-R09@p3-information-evaluation"
-baseRevision: "FLOW-R04@p2-simple-runtime-model"
+revision: "FLOW-R10@p3-information-rebaseline"
+baseRevision: "FLOW-R09@p3-information-evaluation"
 flows:
   -
     id: "FLOW-CONFIG-COMPILE"
@@ -345,7 +345,7 @@ flows:
     requirementRefs:
       -
         id: "P3-INFORMATION-ENGINE"
-        documentRef: "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md"
+        documentRef: "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
     featureRefs:
       -
         id: "P3-INFORMATION-ENGINE-F01"
@@ -481,9 +481,10 @@ flows:
       - "POL-P3-COMPILE-REJECTION"
       - "POL-DIRECTORY-SHARED-ROLLBACK"
       - "POL-DIRECTORY-MATERIALIZE-TERMINAL"
-    dependencyImpactRefs: []
-    designRefs:
-      - "DESIGN-P3-R13"
+    dependencyImpactRefs:
+      - "IMP-P3-INFORMATION-001"
+      - "CMI-P3-INFORMATION-001"
+    designRefs: []
     testCaseIds:
       - "CASE-P3-MIX-001"
       - "CASE-P3-ERROR-001"
@@ -491,4 +492,4 @@ flows:
       - "CASE-P3-DIRECTORY-001"
     status: "PROPOSED"
     createdVersion: "V_1.0"
-    lastChangedVersion: "FLOW-R08"
+    lastChangedVersion: "V_1.0"

@@ -1,10 +1,10 @@
 schemaVersion: 1
 artifact: "business_model"
 module:
-  code: "MODEL"
-  name: "MODEL"
-revision: "BM-P3-R01@information-rebaseline"
-baseRevision: "BM-R00@init"
+  code: "P3-INFORMATION-ENGINE"
+  name: "Information Engine"
+revision: "BM-P3-SEED-R01"
+baseRevision: "BASELINE-P3-R01"
 terms:
   -
     id: "TERM-INFORMATION"

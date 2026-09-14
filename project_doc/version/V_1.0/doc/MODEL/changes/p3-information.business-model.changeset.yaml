@@ -1,0 +1,759 @@
+schemaVersion: 1
+changeSet:
+  id: "CHG-V_1.0-MODEL-P3-INFORMATION-REBASELINE"
+  version: "V_1.0"
+  module: "MODEL"
+  featureCode: "P3-INFORMATION-ENGINE"
+  reason: "Create a version-local P3 business-model candidate for clean task FEATURE-DESC-C0EDEFBD6D71; no old task revision or review state is inherited."
+  baseRevisions:
+    business_model: "BM-R00@init"
+  resultRevisions:
+    business_model: "BM-P3-R01@information-rebaseline"
+  affectedTraceIds:
+    - "TR-P3-INFORMATION-ENGINE-001"
+operations:
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-INFORMATION"
+    after:
+      id: "TERM-INFORMATION"
+      name: "Information"
+      definition: "可被限定 Key 识别、组合或作为模型表达式原子的业务事实。"
+    reason: "Seed TERM-INFORMATION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-INFORMATION-KEY"
+    after:
+      id: "TERM-INFORMATION-KEY"
+      name: "InformationKey"
+      definition: "System 归属与本地名称组成的稳定 Information 身份。"
+    reason: "Seed TERM-INFORMATION-KEY from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-MODEL-EXPRESSION"
+    after:
+      id: "TERM-MODEL-EXPRESSION"
+      name: "Model Expression"
+      definition: "只读取模型路径，并可通过 change-data 声明物化目标值的原子 Information。"
+    reason: "Seed TERM-MODEL-EXPRESSION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-INFORMATION-EXPRESSION"
+    after:
+      id: "TERM-INFORMATION-EXPRESSION"
+      name: "Information Expression"
+      definition: "只引用 InformationKey 的复合 Information 表达式。"
+    reason: "Seed TERM-INFORMATION-EXPRESSION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-REALTIME-READ"
+    after:
+      id: "TERM-REALTIME-READ"
+      name: "实时读取"
+      definition: "每次判断按 Information 配置重新读取当前模型或事务上下文中的值。"
+    reason: "Seed TERM-REALTIME-READ from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-MATERIALIZATION-TARGET-FACT"
+    after:
+      id: "TERM-MATERIALIZATION-TARGET-FACT"
+      name: "MaterializationTargetFact"
+      definition: "P3 编译并发布的不可变目标事实，只描述目标 Information、change-data、路径、权限和规则约束，供 Directory 解析使用，不包含 ChangeInfo 或 RuleViewInfo 映射。"
+    reason: "Seed TERM-MATERIALIZATION-TARGET-FACT from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-DIRECTORY-MATERIALIZATION-OWNERSHIP"
+    after:
+      id: "TERM-DIRECTORY-MATERIALIZATION-OWNERSHIP"
+      name: "Directory materialization ownership"
+      definition: "Directory 拥有 ChangeInfo、ChangeInfo 持有的 RuleViewInfo 映射，以及对象生成、注册、不变量、执行顺序和生命周期；这些事实与 Information model 无关。"
+    reason: "Seed TERM-DIRECTORY-MATERIALIZATION-OWNERSHIP from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "terms"
+    operation: "add"
+    targetId: "TERM-DIRECTORY-ACTION-REF-RULE"
+    after:
+      id: "TERM-DIRECTORY-ACTION-REF-RULE"
+      name: "Directory Action refRule handoff"
+      definition: "Directory 按声明顺序提供 Action；Action.refRule 是 ModelLoader.load 的规则名输入，既有执行链再通过 ConfigInfo.getRuleViewInfo(refRule) 获取对应 RuleViewInfo。Directory 不创建 Loader、不执行规则或事务。"
+    reason: "Seed TERM-DIRECTORY-ACTION-REF-RULE from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "scenarios"
+    operation: "add"
+    targetId: "SCN-P3-IDENTIFY"
+    after:
+      id: "SCN-P3-IDENTIFY"
+      given:
+        - "已发布的 16 个 Information 定义和可读模型上下文"
+      when: "按限定 InformationKey 请求识别"
+      then:
+        - "先识别原子再按 DAG 计算复合，返回 TRUE/FALSE/ERROR 和证据"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed SCN-P3-IDENTIFY from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "scenarios"
+    operation: "add"
+    targetId: "SCN-P3-PUBLISH-MATERIALIZATION-TARGET"
+    after:
+      id: "SCN-P3-PUBLISH-MATERIALIZATION-TARGET"
+      given:
+        - "模型表达式原子声明 change-data，且目标 Information、路径和精确写权限合法"
+      when: "P3 编译配置候选"
+      then:
+        - "发布不含 ChangeInfo/RuleViewInfo 映射的 MaterializationTargetFact，供 Directory 解析阶段消费"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed SCN-P3-PUBLISH-MATERIALIZATION-TARGET from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "scenarios"
+    operation: "add"
+    targetId: "SCN-DIRECTORY-MATERIALIZE"
+    after:
+      id: "SCN-DIRECTORY-MATERIALIZE"
+      given:
+        - "Directory 已在编译期完成合法 ChangeInfo/RuleViewInfo 生成、注册和映射，并打开共享回滚边界"
+      when: "Directory 按顺序提供带 refRule 的 Action，调用方将每个 refRule 装载为 ModelLoader，并在同一 ModelContainer 上完成一次 execute"
+      then:
+        - "RuleViewInfo 沿 DataUtil → ConfigInfo.getRuleViewInfo(refRule) 获取；全部 Loader 成功后按 grammer → update → commit 正常返回；任一步失败则停止后续 Loader、整体回滚并中断；成功路径不调用 evaluate"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed SCN-DIRECTORY-MATERIALIZE from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "entities"
+    operation: "add"
+    targetId: "ENT-INFORMATION"
+    after:
+      id: "ENT-INFORMATION"
+      name: "Information"
+      identity: "InformationKey"
+      attributes:
+        -
+          name: "key"
+          type: "InformationKey"
+          required: true
+        -
+          name: "kind"
+          type: "RULE_ATOMIC|MODEL_ATOMIC|COMPOSITE"
+          required: true
+        -
+          name: "ownerSystem"
+          type: "SystemKey"
+          required: true
+      behaviors:
+        - "按 kind 执行互斥校验"
+        - "只读识别"
+        - "为合法模型表达式原子发布物化目标事实"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ENT-INFORMATION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "entities"
+    operation: "add"
+    targetId: "ENT-IDENTIFICATION-RESULT"
+    after:
+      id: "ENT-IDENTIFICATION-RESULT"
+      name: "IdentificationResult"
+      identity: "informationKey+modelVersion+configurationRevision"
+      attributes:
+        -
+          name: "state"
+          type: "TRUE|FALSE|ERROR"
+          required: true
+        -
+          name: "evidence"
+          type: "EvidenceSet"
+          required: true
+        -
+          name: "readPaths"
+          type: "List<ModelPath>"
+          required: true
+      behaviors:
+        - "结果绑定本次读取版本"
+        - "ERROR 不降级为 FALSE"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ENT-IDENTIFICATION-RESULT from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "valueObjects"
+    operation: "add"
+    targetId: "VO-INFORMATION-KEY"
+    after:
+      id: "VO-INFORMATION-KEY"
+      name: "InformationKey"
+      identity: "systemKey+localName"
+      attributes:
+        -
+          name: "systemKey"
+          type: "SystemKey"
+          required: true
+        -
+          name: "localName"
+          type: "String"
+          required: true
+      behaviors:
+        - "限定引用"
+        - "大小写和归属稳定"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed VO-INFORMATION-KEY from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "valueObjects"
+    operation: "add"
+    targetId: "VO-MODEL-PATH"
+    after:
+      id: "VO-MODEL-PATH"
+      name: "ModelPath"
+      identity: "canonicalSegments"
+      attributes:
+        -
+          name: "canonicalSegments"
+          type: "List<String>"
+          required: true
+        -
+          name: "dataOwner"
+          type: "target-main Data|relation Data"
+          required: true
+      behaviors:
+        - "target-main 基础字段优先"
+        - "relation Data 独立解析"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed VO-MODEL-PATH from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "valueObjects"
+    operation: "add"
+    targetId: "VO-DEPENDENCY-EDGE"
+    after:
+      id: "VO-DEPENDENCY-EDGE"
+      name: "InformationDependency"
+      identity: "fromKey+toKey"
+      attributes:
+        -
+          name: "fromKey"
+          type: "InformationKey"
+          required: true
+        -
+          name: "toKey"
+          type: "InformationKey"
+          required: true
+      behaviors:
+        - "发布前拒绝缺失引用和循环"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed VO-DEPENDENCY-EDGE from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "valueObjects"
+    operation: "add"
+    targetId: "VO-MATERIALIZATION-TARGET-FACT"
+    after:
+      id: "VO-MATERIALIZATION-TARGET-FACT"
+      name: "MaterializationTargetFact"
+      identity: "informationKey+writePath"
+      attributes:
+        -
+          name: "informationKey"
+          type: "InformationKey"
+          required: true
+        -
+          name: "changeData"
+          type: "DeclaredValue"
+          required: true
+        -
+          name: "writePath"
+          type: "ModelPath"
+          required: true
+        -
+          name: "writePermission"
+          type: "ExactPermission"
+          required: true
+        -
+          name: "ruleConstraints"
+          type: "MaterializationRuleConstraints"
+          required: true
+      behaviors:
+        - "配置编译期完成目标事实校验"
+        - "作为 Directory 的只读编译输入"
+        - "不持有 ChangeInfo 或 RuleViewInfo"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed VO-MATERIALIZATION-TARGET-FACT from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "aggregates"
+    operation: "add"
+    targetId: "AGG-INFORMATION-MODEL"
+    after:
+      id: "AGG-INFORMATION-MODEL"
+      name: "Information model"
+      root: "ENT-INFORMATION"
+      members:
+        - "VO-INFORMATION-KEY"
+        - "VO-MODEL-PATH"
+        - "VO-DEPENDENCY-EDGE"
+        - "VO-MATERIALIZATION-TARGET-FACT"
+      invariantIds:
+        - "INV-P3-KIND-EXCLUSIVE"
+        - "INV-P3-DAG"
+        - "INV-P3-TARGET-FACT-COMPILE"
+      transactionBoundary: "配置发布时整体校验并原子发布 Information 与 MaterializationTargetFact；不包含 Directory 映射"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed AGG-INFORMATION-MODEL from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "aggregates"
+    operation: "add"
+    targetId: "AGG-INFORMATION-EVALUATION"
+    after:
+      id: "AGG-INFORMATION-EVALUATION"
+      name: "Information evaluation"
+      root: "ENT-IDENTIFICATION-RESULT"
+      members:
+        - "VO-INFORMATION-KEY"
+        - "ENT-IDENTIFICATION-RESULT"
+      invariantIds:
+        - "INV-P3-PATH-RESOLUTION"
+        - "INV-P3-REALTIME-READ"
+        - "INV-P3-NULL-ERROR"
+        - "INV-P3-EVALUATE-ERROR"
+        - "INV-P3-EVERY-EMPTY"
+      transactionBoundary: "识别只读；不拥有 Directory 物化事务"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed AGG-INFORMATION-EVALUATION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-KIND-EXCLUSIVE"
+    after:
+      id: "INV-P3-KIND-EXCLUSIVE"
+      statement: "Information 必须且只能属于 RuleView 原子、模型表达式原子或复合表达式之一；复合表达式只引用 InformationKey。"
+      trigger: "compile"
+      failure: "INFORMATION_DEFINITION_INVALID"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-KIND-EXCLUSIVE from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-DAG"
+    after:
+      id: "INV-P3-DAG"
+      statement: "Information 依赖图必须无环，引用必须存在且符合 System 归属规则。"
+      trigger: "publish"
+      failure: "INFORMATION_DEPENDENCY_INVALID"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-DAG from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-TARGET-FACT-COMPILE"
+    after:
+      id: "INV-P3-TARGET-FACT-COMPILE"
+      statement: "只有声明 change-data 的模型表达式原子可产生 MaterializationTargetFact；目标 Information、change-data、规范写路径和精确写权限必须完整且合法，否则候选配置不得发布。"
+      trigger: "compile"
+      failure: "INFORMATION_MATERIALIZATION_TARGET_INVALID"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-TARGET-FACT-COMPILE from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-PATH-RESOLUTION"
+    after:
+      id: "INV-P3-PATH-RESOLUTION"
+      statement: "模型路径不存在为 ERROR；target-main 对应基础字段优先，关系字段按自身 Data 归属解析。"
+      trigger: "identify"
+      failure: "INFORMATION_PATH_INVALID"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-PATH-RESOLUTION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-REALTIME-READ"
+    after:
+      id: "INV-P3-REALTIME-READ"
+      statement: "每次判断按 Information 配置重新读取当前值，不维护或消费 MutationSet。"
+      trigger: "identify"
+      failure: "INFORMATION_READ_FAILED"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-REALTIME-READ from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-NULL-ERROR"
+    after:
+      id: "INV-P3-NULL-ERROR"
+      statement: "普通求值遇到 null 为 ERROR，只有显式 InformationKey = null 比较例外。"
+      trigger: "identify"
+      failure: "INFORMATION_NULL_ERROR"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-NULL-ERROR from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-EVALUATE-ERROR"
+    after:
+      id: "INV-P3-EVALUATE-ERROR"
+      statement: "非法路径、普通 null、权限、表达式或只读 RuleView 执行错误必须记录 ERROR 诊断并抛出 InformationEvaluationException，不得降级为 FALSE、进入 Directory 物化或继续下游。"
+      trigger: "identify"
+      failure: "INFORMATION_EVALUATION_FAILED"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-EVALUATE-ERROR from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "invariants"
+    operation: "add"
+    targetId: "INV-P3-EVERY-EMPTY"
+    after:
+      id: "INV-P3-EVERY-EMPTY"
+      statement: "every(emptyCollection, predicate) 为 TRUE；订单相关 Information 还必须满足订单明细非空，明细为空时结果为 FALSE 并可附 ORDER_DETAIL_REQUIRED 诊断。"
+      trigger: "identify"
+      failure: "ORDER_DETAIL_REQUIRED"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed INV-P3-EVERY-EMPTY from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "stateMachines"
+    operation: "add"
+    targetId: "SM-P3-IDENTIFICATION"
+    after:
+      id: "SM-P3-IDENTIFICATION"
+      name: "Information identification"
+      initialState: "REQUESTED"
+      states:
+        - "REQUESTED"
+        - "EVALUATING"
+        - "TRUE"
+        - "FALSE"
+        - "ERROR"
+      transitions:
+        -
+          id: "TRANS-P3-EVALUATE"
+          from: "REQUESTED"
+          command: "evaluate"
+          to: "EVALUATING"
+          preconditions:
+            - "InformationKey 已发布"
+          failure: "INFORMATION_NOT_PUBLISHED"
+        -
+          id: "TRANS-P3-TRUE"
+          from: "EVALUATING"
+          command: "resultTrue"
+          to: "TRUE"
+          preconditions:
+            - "所有必需读取满足"
+          failure: "REQUIRED_CONDITION_NOT_SATISFIED"
+        -
+          id: "TRANS-P3-FALSE"
+          from: "EVALUATING"
+          command: "resultFalse"
+          to: "FALSE"
+          preconditions:
+            - "条件不满足且无错误"
+          failure: "EVALUATION_ERROR_PRESENT"
+        -
+          id: "TRANS-P3-ERROR"
+          from: "EVALUATING"
+          command: "raiseEvaluationError"
+          to: "ERROR"
+          preconditions:
+            - "路径/null/权限/表达式/RuleView 错误"
+          failure: "INFORMATION_EVALUATION_FAILED"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed SM-P3-IDENTIFICATION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "services"
+    operation: "add"
+    targetId: "SVC-P3-INFORMATION-EVALUATOR"
+    after:
+      id: "SVC-P3-INFORMATION-EVALUATOR"
+      name: "Information evaluator"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "识别需要统一处理三类 Information 和 DAG 拓扑。"
+      inputs:
+        - "InformationKey + current model context"
+      outputs:
+        - "IdentificationResult"
+    reason: "Seed SVC-P3-INFORMATION-EVALUATOR from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "services"
+    operation: "add"
+    targetId: "SVC-P3-TARGET-FACT-COMPILER"
+    after:
+      id: "SVC-P3-TARGET-FACT-COMPILER"
+      name: "Materialization target fact compiler"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "P3 必须在不拥有 Directory 映射的前提下，向 Directory 提供完整且合法的物化目标事实。"
+      inputs:
+        - "model-atomic Information + change-data + path + permission + rule constraints"
+      outputs:
+        - "MaterializationTargetFact"
+    reason: "Seed SVC-P3-TARGET-FACT-COMPILER from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "policies"
+    operation: "add"
+    targetId: "POL-P3-READ-SET"
+    after:
+      id: "POL-P3-READ-SET"
+      name: "configured read policy"
+      statement: "只读取当前 Information 及其依赖声明的模型路径，不读取无关字段。"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "只读取当前 Information 及其依赖声明的模型路径，不读取无关字段。"
+      inputs:
+        - "P3 Information and downstream boundary facts"
+      outputs:
+        - "Enforced policy decision"
+    reason: "Seed POL-P3-READ-SET from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "policies"
+    operation: "add"
+    targetId: "POL-P3-DIRECTORY-OWNERSHIP"
+    after:
+      id: "POL-P3-DIRECTORY-OWNERSHIP"
+      name: "Directory ownership policy"
+      statement: "ChangeInfo、ChangeInfo 持有的 RuleViewInfo 映射，以及映射的生成、注册、不变量和生命周期统一归 Directory；P3 只发布 MaterializationTargetFact。"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "ChangeInfo、ChangeInfo 持有的 RuleViewInfo 映射，以及映射的生成、注册、不变量和生命周期统一归 Directory；P3 只发布 MaterializationTargetFact。"
+      inputs:
+        - "P3 Information and downstream boundary facts"
+      outputs:
+        - "Enforced policy decision"
+    reason: "Seed POL-P3-DIRECTORY-OWNERSHIP from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "policies"
+    operation: "add"
+    targetId: "POL-P3-COMPILE-REJECTION"
+    after:
+      id: "POL-P3-COMPILE-REJECTION"
+      name: "configuration compile rejection policy"
+      statement: "P3 拒绝非法目标引用、Information 类型、change-data、路径或权限；Directory 解析拒绝非法 RuleViewInfo 规则或 ChangeInfo 映射；任一错误均阻止候选配置发布。"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "P3 拒绝非法目标引用、Information 类型、change-data、路径或权限；Directory 解析拒绝非法 RuleViewInfo 规则或 ChangeInfo 映射；任一错误均阻止候选配置发布。"
+      inputs:
+        - "P3 Information and downstream boundary facts"
+      outputs:
+        - "Enforced policy decision"
+    reason: "Seed POL-P3-COMPILE-REJECTION from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "policies"
+    operation: "add"
+    targetId: "POL-DIRECTORY-SHARED-ROLLBACK"
+    after:
+      id: "POL-DIRECTORY-SHARED-ROLLBACK"
+      name: "ModelContainer shared rollback contract"
+      statement: "Directory 只提供按顺序排列的 Action；调用方按 Action.refRule 装载多个 ModelLoader 到同一 ModelContainer。全部 Action 与 change-data 物化共享一个由 ModelContainer 承载的可回滚事务；任一 Action、grammer、update、持久化或 commit 失败都停止后续 Loader、整体回滚并中断，不继续下游。"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "Directory 只提供按顺序排列的 Action；调用方按 Action.refRule 装载多个 ModelLoader 到同一 ModelContainer。全部 Action 与 change-data 物化共享一个由 ModelContainer 承载的可回滚事务；任一 Action、grammer、update、持久化或 commit 失败都停止后续 Loader、整体回滚并中断，不继续下游。"
+      inputs:
+        - "P3 Information and downstream boundary facts"
+      outputs:
+        - "Enforced policy decision"
+    reason: "Seed POL-DIRECTORY-SHARED-ROLLBACK from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "policies"
+    operation: "add"
+    targetId: "POL-DIRECTORY-MATERIALIZE-TERMINAL"
+    after:
+      id: "POL-DIRECTORY-MATERIALIZE-TERMINAL"
+      name: "ModelContainer terminal materialization contract"
+      statement: "只有全部 Loader 成功后才执行 grammer → update → commit；ModelContainer.execute() 正常返回后结束，不新增任何物化结果对象，evaluate 调用次数为 0，不识别或返回目标及下游结果。"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "只有全部 Loader 成功后才执行 grammer → update → commit；ModelContainer.execute() 正常返回后结束，不新增任何物化结果对象，evaluate 调用次数为 0，不识别或返回目标及下游结果。"
+      inputs:
+        - "P3 Information and downstream boundary facts"
+      outputs:
+        - "Enforced policy decision"
+    reason: "Seed POL-DIRECTORY-MATERIALIZE-TERMINAL from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "events"
+    operation: "add"
+    targetId: "EVT-P3-MATERIALIZATION-TARGET-PUBLISHED"
+    after:
+      id: "EVT-P3-MATERIALIZATION-TARGET-PUBLISHED"
+      name: "Materialization target fact published"
+      meaning: "合法 MaterializationTargetFact 已随 Information 事实原子发布，可由 Directory 解析消费；该事件不创建 ChangeInfo 或 RuleViewInfo 映射。"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      reason: "合法 MaterializationTargetFact 已随 Information 事实原子发布，可由 Directory 解析消费；该事件不创建 ChangeInfo 或 RuleViewInfo 映射。"
+      inputs:
+        - "Validated P3 compilation candidate"
+      outputs:
+        - "Published MaterializationTargetFact event"
+    reason: "Seed EVT-P3-MATERIALIZATION-TARGET-PUBLISHED from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "businessErrors"
+    operation: "add"
+    targetId: "ERR-P3-DEFINITION-INVALID"
+    after:
+      id: "ERR-P3-DEFINITION-INVALID"
+      owner: "P3"
+      condition: "类型混用/缺失引用/循环"
+      meaning: "配置编译失败且候选不发布"
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ERR-P3-DEFINITION-INVALID from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "businessErrors"
+    operation: "add"
+    targetId: "ERR-P3-TARGET-FACT-INVALID"
+    after:
+      id: "ERR-P3-TARGET-FACT-INVALID"
+      owner: "P3"
+      condition: "目标引用/Information 类型/change-data/路径/权限非法"
+      meaning: "配置编译失败且候选不发布"
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ERR-P3-TARGET-FACT-INVALID from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "businessErrors"
+    operation: "add"
+    targetId: "ERR-P3-PATH-INVALID"
+    after:
+      id: "ERR-P3-PATH-INVALID"
+      owner: "P3"
+      condition: "模型声明路径不存在"
+      meaning: "记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游"
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ERR-P3-PATH-INVALID from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "businessErrors"
+    operation: "add"
+    targetId: "ERR-P3-NULL-VALUE"
+    after:
+      id: "ERR-P3-NULL-VALUE"
+      owner: "P3"
+      condition: "普通求值读取到 null"
+      meaning: "记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游"
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ERR-P3-NULL-VALUE from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "businessErrors"
+    operation: "add"
+    targetId: "ERR-P3-EVALUATE-FAILED"
+    after:
+      id: "ERR-P3-EVALUATE-FAILED"
+      owner: "P3"
+      condition: "权限、表达式或只读 RuleView 执行失败"
+      meaning: "记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游"
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ERR-P3-EVALUATE-FAILED from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "businessErrors"
+    operation: "add"
+    targetId: "ERR-DIRECTORY-MAPPING-INVALID"
+    after:
+      id: "ERR-DIRECTORY-MAPPING-INVALID"
+      owner: "Directory"
+      condition: "RuleViewInfo 规则或 ChangeInfo 映射非法"
+      meaning: "Directory 配置编译失败且候选不发布"
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ERR-DIRECTORY-MAPPING-INVALID from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "businessErrors"
+    operation: "add"
+    targetId: "ERR-DIRECTORY-EXECUTION-FAILED"
+    after:
+      id: "ERR-DIRECTORY-EXECUTION-FAILED"
+      owner: "ModelContainer"
+      condition: "Action.refRule 装载或任一 Action/grammer/update/持久化/commit 失败"
+      meaning: "停止后续 Loader，已建立连接逐一回滚、关闭和清理，并通过既有异常边界中断，不继续下游"
+      retryable: false
+      stateChanged: false
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+    reason: "Seed ERR-DIRECTORY-EXECUTION-FAILED from clean task FEATURE-DESC-C0EDEFBD6D71."
+  -
+    artifact: "business_model"
+    collection: "traceability"
+    operation: "add"
+    targetId: "TR-P3-INFORMATION-ENGINE-001"
+    after:
+      traceId: "TR-P3-INFORMATION-ENGINE-001"
+      requirementRefs:
+        - "P3-INFORMATION-ENGINE"
+      modelRefs:
+        - "AGG-INFORMATION-MODEL"
+        - "AGG-INFORMATION-EVALUATION"
+      acceptanceRefs:
+        - "AC-P3-INFORMATION-ENGINE-001"
+      flowRefs:
+        - "FLOW-P3-INFORMATION-EVALUATION"
+    reason: "Seed TR-P3-INFORMATION-ENGINE-001 from clean task FEATURE-DESC-C0EDEFBD6D71."

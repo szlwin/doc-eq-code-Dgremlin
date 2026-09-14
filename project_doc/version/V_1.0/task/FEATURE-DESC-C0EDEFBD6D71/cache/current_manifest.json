@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "kind": "CURRENT_MANIFEST",
+  "authority": "DERIVED",
+  "sourceInputDigest": "b1427c7a5e376d1532718e7b9c3fcc644e126ea23ba5f2a095dca4e018834278",
+  "taskDir": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71",
+  "state": {
+    "taskStatus": "BLOCKED",
+    "currentPhase": "requirement_confirmation",
+    "currentRound": "REQUIREMENT_CONFIRMATION-I003",
+    "currentAgent": "RequirementConfirmationAgent",
+    "nextAgent": "ProjectManagerAgent",
+    "nextAction": "修复工作流对版本级 work_record 事件 ID 的全局唯一性策略，或提供迁移工具为当前任务生成目标专属任务 ID 并同步历史引用后，重新执行需求确认。",
+    "eventSeq": 21,
+    "eventDigest": "0438dd63f91aa7527e132337b12857f2edfe3b383a46fecaa1f63df89c7e88a6",
+    "storageMode": "EVENT_LEDGER_V3"
+  },
+  "activeRevisions": {
+    "business_model": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-BUSINESS-MODEL-003",
+      "iterationNo": 3
+    },
+    "code_review": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-CODE-REVIEW-003",
+      "iterationNo": 3
+    },
+    "completion_verification": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-COMPLETION-VERIFICATION-003",
+      "iterationNo": 3
+    },
+    "design": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-DESIGN-003",
+      "iterationNo": 3
+    },
+    "development": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-DEVELOPMENT-003",
+      "iterationNo": 3
+    },
+    "implementation_plan": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-IMPLEMENTATION-PLAN-003",
+      "iterationNo": 3
+    },
+    "requirement_analysis": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-REQUIREMENT-ANALYSIS-003",
+      "iterationNo": 3
+    },
+    "requirement_confirmation": {
+      "revision": "",
+      "status": "IN_PROGRESS",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-REQUIREMENT-CONFIRMATION-003",
+      "iterationNo": 3
+    },
+    "test_design": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-TEST-DESIGN-003",
+      "iterationNo": 3
+    },
+    "testing": {
+      "revision": "",
+      "status": "STALE",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-TESTING-003",
+      "iterationNo": 3
+    }
+  },
+  "workPolicy": {
+    "effectiveMode": "standard",
+    "lightweightActive": false,
+    "lightweightClosed": false,
+    "minimal": false,
+    "skippedPhases": [],
+    "retroactiveReviewTestRequired": null,
+    "explicitReopenRequired": false,
+    "requested": {
+      "tdd": "requested",
+      "test_design": "requested",
+      "review": "requested",
+      "testing": "requested"
+    },
+    "workRef": "version/V_1.0/work.md",
+    "workDigest": "7440999f911481cf0a09d1721c2b924242874f3a45c0b84138dd598c59032b55"
+  },
+  "blockers": {
+    "openIssueIds": [],
+    "openCriticalIssueIds": [],
+    "validationErrors": [],
+    "validationWarnings": []
+  },
+  "traceabilitySummary": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/traceability.json",
+    "authority": "CANONICAL",
+    "readMode": "SUMMARY_DEFAULT_FULL_ON_DEMAND",
+    "status": "PASSED",
+    "sourceDigest": "3d49915c13f2efc95cb3990619de7b282ccbdda10a0e2d34d0f3219cdebacaab",
+    "total": 0,
+    "byStatus": {},
+    "coveredIds": [],
+    "gapIds": [],
+    "staleIds": [],
+    "blockingIds": [],
+    "acceptanceIds": [],
+    "verificationEvidenceIds": [],
+    "queryCommands": {
+      "trace": "python3 scripts/wk.py context -g {CURRENT_AGENT} --task-dir {TASK_DIR} --trace-id {TRACE_ID}",
+      "acceptance": "python3 scripts/wk.py context -g {CURRENT_AGENT} --task-dir {TASK_DIR} --acceptance-id {ACCEPTANCE_ID}"
+    }
+  },
+  "recoveryPolicy": {
+    "sourceOfTruth": [
+      "task_events.jsonl reducer",
+      "canonical Evidence Registry",
+      "canonical Review Registry",
+      "exact artifact revision"
+    ],
+    "defaultReadSet": [
+      "wk status",
+      "wk next --explain",
+      "wk context",
+      "current revision documents only"
+    ],
+    "conditionalReadSet": [
+      "cache/current_manifest.json"
+    ],
+    "indirectReadSet": [
+      "cache/current_impact.json via wk next"
+    ],
+    "cacheCompatibilityRule": "Reject incompatible derived cache and rebuild from canonical events.",
+    "historyRequiresExplicitRead": true,
+    "ignoredForState": [
+      "README.md",
+      "chat memory"
+    ],
+    "onDemandOnly": [
+      "traceability.json",
+      "evidence/registry.jsonl",
+      "historical files"
+    ]
+  },
+  "derivedImpact": {
+    "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/cache/current_impact.json",
+    "present": false,
+    "fresh": false,
+    "authority": "DERIVED"
+  },
+  "freshness": {
+    "sourceEventSeq": 21,
+    "sourceEventDigest": "0438dd63f91aa7527e132337b12857f2edfe3b383a46fecaa1f63df89c7e88a6",
+    "generatedBy": "scripts/current_manifest.py"
+  }
+}

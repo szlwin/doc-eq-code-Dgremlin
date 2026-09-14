@@ -1,0 +1,871 @@
+schemaVersion: 1
+artifact: "dependency_impact"
+scope:
+  project: "doc-eq-code"
+  version: "V_1.0"
+  module: "COMPILER"
+  targetIds:
+    - "FEATURE-DESC-3361AD2E54FC"
+    - "FLOW-CONFIG-COMPILE"
+    - "FLOW-PROTECTED-ACCESS-EXECUTE"
+revision: "P3-IMPACT-R02"
+baseRevision: "P3-IMPACT-R01"
+nodes:
+  -
+    id: "FLOW-CONFIG-COMPILE"
+    type: "PROCESS"
+    name: "P2 compile/publication"
+    module: "COMPILER"
+    refs:
+      - "FLOW-R11@p2-system-ruleview-protected-access"
+    traceIds:
+      - "TR-P2-005"
+      - "TR-P2-008"
+  -
+    id: "FLOW-PROTECTED-ACCESS-EXECUTE"
+    type: "PROCESS"
+    name: "P2 protected READ/WRITE"
+    module: "STARTER"
+    refs:
+      - "FLOW-R11@p2-system-ruleview-protected-access"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-007"
+      - "TR-P2-009"
+  -
+    id: "CTX"
+    type: "MODULE"
+    name: "dec-core-context"
+    module: "CONTEXT"
+    refs:
+      - "DESIGN-P2-R30#context-publication-aggregate"
+    traceIds:
+      - "TR-P2-005"
+      - "TR-P2-006"
+      - "TR-P2-008"
+  -
+    id: "COMP"
+    type: "MODULE"
+    name: "dec-core-compiler"
+    module: "COMPILER"
+    refs:
+      - "DESIGN-P2-R30#context-publication-aggregate"
+    traceIds:
+      - "TR-P2-005"
+      - "TR-P2-008"
+  -
+    id: "MODEL"
+    type: "MODULE"
+    name: "dec-core-model"
+    module: "MODEL"
+    refs:
+      - "DESIGN-P2-R30#model-production-load-request"
+      - "DESIGN-P2-R30#model-effect-provider"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-007"
+      - "TR-P2-009"
+  -
+    id: "STARTER"
+    type: "MODULE"
+    name: "dec-core-starter"
+    module: "STARTER"
+    refs:
+      - "DESIGN-P2-R30#starter-protected-composition"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-007"
+  -
+    id: "LOAD_REQ"
+    type: "DATA_OBJECT"
+    name: "RuntimeModelLoadRequest"
+    module: "MODEL"
+    refs:
+      - "DESIGN-P2-R30#model-production-load-request"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-009"
+  -
+    id: "EFFECT"
+    type: "DATA_OBJECT"
+    name: "RuntimeModelEffectProvider"
+    module: "MODEL"
+    refs:
+      - "DESIGN-P2-R30#model-effect-provider"
+    traceIds:
+      - "TR-P2-007"
+      - "TR-P2-009"
+  -
+    id: "TEST"
+    type: "TEST_CASE"
+    name: "TestDesign R31"
+    module: "COMPILER"
+    refs:
+      - "TESTDESIGN-P2-R31"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-007"
+      - "TR-P2-009"
+  -
+    id: "FLOW-P3-INFORMATION-EVALUATION"
+    type: "PROCESS"
+    name: "Information facts and Directory execution handoff"
+    module: "MODEL"
+    refs:
+      - "version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml#/changeSet/resultRevision"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "FEATURE-DESC-C0EDEFBD6D71"
+    type: "FEATURE"
+    name: "P3 Information Engine Rebaseline"
+    module: "MODEL"
+    refs:
+      - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "XML"
+    type: "MODULE"
+    name: "dec-context-config-parse-xml"
+    module: "XML"
+    refs:
+      - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "DEMO"
+    type: "MODULE"
+    name: "dec-demo"
+    module: "DEMO"
+    refs:
+      - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "P2-BINDING"
+    type: "DATA_OBJECT"
+    name: "P2 exact System RuleView and model-access bindings"
+    module: "COMPILER"
+    refs:
+      - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "P4-ACTION"
+    type: "PROCESS"
+    name: "P4 Action and refRule handoff"
+    module: "MODEL"
+    refs:
+      - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "P5-DIRECTORY"
+    type: "PROCESS"
+    name: "P5 Directory mapping and Action ordering"
+    module: "MODEL"
+    refs:
+      - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "DIRECTORY"
+    type: "DATA_OBJECT"
+    name: "Directory mapping aggregate"
+    module: "MODEL"
+    refs:
+      - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+relationships:
+  -
+    id: "REL-P2-R29-1"
+    from: "COMP"
+    to: "CTX"
+    type: "DEPENDS_ON"
+    direction: "DIRECTED"
+    rationale: "Compiler publishes exact policy/binding plus typed materialization aggregate."
+    conditions: []
+    traceIds:
+      - "TR-P2-005"
+      - "TR-P2-008"
+  -
+    id: "REL-P2-R29-2"
+    from: "MODEL"
+    to: "CTX"
+    type: "DEPENDS_ON"
+    direction: "DIRECTED"
+    rationale: "MODEL validates direct load requests only against captured immutable Context/materialization."
+    conditions: []
+    traceIds:
+      - "TR-P2-006"
+  -
+    id: "REL-P2-R29-3"
+    from: "MODEL"
+    to: "LOAD_REQ"
+    type: "IMPLEMENTED_BY"
+    direction: "DIRECTED"
+    rationale: "MODEL production lifecycle uses RuntimeModelLoadRequest as non-authoritative production input data."
+    conditions: []
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-009"
+  -
+    id: "REL-P2-R29-4"
+    from: "MODEL"
+    to: "EFFECT"
+    type: "IMPLEMENTED_BY"
+    direction: "DIRECTED"
+    rationale: "MODEL owns same-scope effect provider and actual operation port."
+    conditions: []
+    traceIds:
+      - "TR-P2-007"
+      - "TR-P2-009"
+  -
+    id: "REL-P2-R29-5"
+    from: "STARTER"
+    to: "MODEL"
+    type: "DEPENDS_ON"
+    direction: "DIRECTED"
+    rationale: "STARTER consumes trusted scope/effect provider; it does not own production model loading authority."
+    conditions:
+      - "FLOW-R11 protected access only"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-007"
+  -
+    id: "REL-P2-R29-6"
+    from: "TEST"
+    to: "LOAD_REQ"
+    type: "VERIFIED_BY"
+    direction: "DIRECTED"
+    rationale: "R31 proves exact direct-load validation, MODEL production boundary and same-ModelData identity."
+    conditions: []
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-009"
+  -
+    id: "REL-P3-R02-TARGET-FLOW"
+    from: "FEATURE-DESC-C0EDEFBD6D71"
+    to: "FLOW-P3-INFORMATION-EVALUATION"
+    type: "REFINES"
+    direction: "DIRECTED"
+    rationale: "The clean task owns the rebaselined P3 requirement while the stable Flow ID preserves business meaning."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-FLOW-XML"
+    from: "FLOW-P3-INFORMATION-EVALUATION"
+    to: "XML"
+    type: "CONSUMES_FROM"
+    direction: "DIRECTED"
+    rationale: "P3 compilation consumes Information, Directory and Action declaration facts parsed from XML."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-FLOW-P2"
+    from: "FLOW-P3-INFORMATION-EVALUATION"
+    to: "P2-BINDING"
+    type: "DEPENDS_ON"
+    direction: "DIRECTED"
+    rationale: "P3 compilation requires published System, RuleView and exact model-access bindings from P2."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-FLOW-COMP"
+    from: "FLOW-P3-INFORMATION-EVALUATION"
+    to: "COMP"
+    type: "IMPLEMENTED_BY"
+    direction: "DIRECTED"
+    rationale: "Compiler validates and freezes Information, DAG and materialization target facts."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-FLOW-CTX"
+    from: "FLOW-P3-INFORMATION-EVALUATION"
+    to: "CTX"
+    type: "IMPLEMENTED_BY"
+    direction: "DIRECTED"
+    rationale: "Context publishes the compiled candidate and exposes the existing ConfigInfo lookup."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-FLOW-MODEL"
+    from: "FLOW-P3-INFORMATION-EVALUATION"
+    to: "MODEL"
+    type: "IMPLEMENTED_BY"
+    direction: "DIRECTED"
+    rationale: "MODEL owns read-only evaluation and ModelContainer execution and cleanup."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-P4-DIRECTORY"
+    from: "P4-ACTION"
+    to: "DIRECTORY"
+    type: "PROVIDES_TO"
+    direction: "DIRECTED"
+    rationale: "P4 provides Action and refRule facts consumed by Directory ordering."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-P5-DIRECTORY"
+    from: "P5-DIRECTORY"
+    to: "DIRECTORY"
+    type: "OWNS"
+    direction: "DIRECTED"
+    rationale: "P5 owns ChangeInfo and RuleViewInfo mapping plus ordered Action information."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-DIRECTORY-MODEL"
+    from: "DIRECTORY"
+    to: "MODEL"
+    type: "PROVIDES_TO"
+    direction: "DIRECTED"
+    rationale: "Directory provides ordered Action.refRule values; MODEL executes them in one ModelContainer."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+  -
+    id: "REL-P3-R02-FLOW-DEMO"
+    from: "FLOW-P3-INFORMATION-EVALUATION"
+    to: "DEMO"
+    type: "VERIFIED_BY"
+    direction: "DIRECTED"
+    rationale: "The DEMO mix fixture supplies the declared 16-Information integration baseline."
+    conditions: []
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    status: "ACTIVE"
+impactPolicies:
+  -
+    id: "IMP-P2-CONTEXT-PUBLICATION-R29"
+    sourceRef: "FLOW-CONFIG-COMPILE"
+    sourceAction: "publish exact policy/binding/materialization aggregate"
+    targetRefs:
+      - "COMP"
+      - "CTX"
+    policy: "REJECT_OPERATION"
+    conditions:
+      - "dynamic target lacks exactly one materialization descriptor"
+      - "candidate aggregate/digest incomplete"
+    consistency: "ATOMIC"
+    transactionBoundary: "one CompiledModelSet / EngineContext candidate"
+    idempotency: "same semantic inputs produce equal aggregate/digest"
+    failureHandling: "compile/publication ERROR; previous Context remains visible"
+    compensation: "discard unpublished candidate"
+    traceIds:
+      - "TR-P2-005"
+      - "TR-P2-008"
+    testCaseIds:
+      - "CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001"
+      - "CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001"
+      - "CASE-P2-TD-ATOMIC-PUBLICATION-001"
+  -
+    id: "IMP-P2-DIRECT-LOAD-R29"
+    sourceRef: "FLOW-PROTECTED-ACCESS-EXECUTE"
+    sourceAction: "MODEL production lifecycle establishes trusted frame from RuntimeModelLoadRequest before FLOW STEP-01"
+    targetRefs:
+      - "MODEL"
+      - "CTX"
+      - "LOAD_REQ"
+    policy: "REJECT_OPERATION"
+    conditions:
+      - "root closed"
+      - "plan absent from captured Context"
+      - "materialization descriptor missing"
+      - "origin not materializable"
+      - "production Container load rejected"
+    consistency: "ATOMIC"
+    transactionBoundary: "one RuntimeModelExecutionRoot.load(request)"
+    idempotency: "each successful load freezes exactly the same created/loaded ModelData into one trusted handle"
+    failureHandling: "stable RuntimeModelLoadFailure; no handle/scope reaches STARTER"
+    compensation: "discard unexposed association"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-009"
+    testCaseIds:
+      - "CASE-P2-TD-PRODUCTION-LOAD-REQUEST-001"
+      - "CASE-P2-TD-PRODUCTION-LOAD-PLAN-MISMATCH-001"
+      - "CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001"
+      - "CASE-P2-TD-PRODUCTION-CONTAINER-TRUST-BOUNDARY-001"
+  -
+    id: "IMP-P2-EFFECT-BINDING-R29"
+    sourceRef: "FLOW-PROTECTED-ACCESS-EXECUTE"
+    sourceAction: "bind MODEL effect port to same sealed scope/session then execute only after Guard ALLOW"
+    targetRefs:
+      - "STARTER"
+      - "MODEL"
+      - "EFFECT"
+    policy: "REJECT_OPERATION"
+    conditions:
+      - "scope/session mismatch"
+      - "session unsealed/closed"
+      - "resolved object not registered in bound session"
+      - "Guard DENY"
+      - "MODEL operation failure"
+    consistency: "ATOMIC"
+    transactionBoundary: "one protected invocation/capability"
+    idempotency: "one-shot capability; one bound operation attempt after ALLOW"
+    failureHandling: "stable composition/operation denial; no unauthorized effect or success receipt"
+    compensation: "close failed partial composition/session; no fallback provider"
+    traceIds:
+      - "TR-P2-007"
+      - "TR-P2-009"
+    testCaseIds:
+      - "CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001"
+      - "CASE-P2-TD-MODEL-EFFECT-SAME-HANDLE-001"
+      - "CASE-P2-TD-OPERATION-PORT-NOT-CALLER-INJECTABLE-001"
+      - "CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001"
+  -
+    id: "IMP-P3-INFORMATION-001"
+    sourceRef: "FLOW-P3-INFORMATION-EVALUATION"
+    sourceAction: "Compile Information and target facts; hand ordered Action.refRule values to the existing execution chain."
+    targetRefs:
+      - "XML"
+      - "COMP"
+      - "CTX"
+      - "MODEL"
+      - "P2-BINDING"
+      - "P4-ACTION"
+      - "P5-DIRECTORY"
+      - "DIRECTORY"
+      - "DEMO"
+    policy: "REJECT_OPERATION"
+    conditions:
+      - "Invalid Information or target facts"
+      - "Invalid Directory mapping or rule reference"
+      - "Loader or execution failure"
+    consistency: "ATOMIC"
+    transactionBoundary: "Compilation publishes one candidate atomically; runtime reuses ModelContainer and does not promise distributed atomicity across physical connections."
+    idempotency: "No new idempotency contract; compile each mapping once and reuse the registered rule."
+    failureHandling: "Reject invalid configuration before publication; on execution failure stop later loaders and preserve the original error through rollback/close/clear."
+    compensation: "Discard invalid candidates; reuse existing connection rollback. No external compensation is introduced."
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    testCaseIds:
+      - "CASE-P3-MIX-001"
+      - "CASE-P3-ERROR-001"
+      - "CASE-P3-CHANGE-INFO-001"
+      - "CASE-P3-DIRECTORY-001"
+    status: "ACTIVE"
+crossModuleImplementations:
+  -
+    id: "CMI-P2-COMPILE-005"
+    name: "CompiledModelSet aggregate publication with typed materialization index"
+    trigger: "FLOW-CONFIG-COMPILE"
+    participants:
+      -
+        id: "CMPART-P2-COMPILE-R29-1"
+        module: "dec-core-compiler"
+        responsibility: "resolve exact target/materialization and coordinate atomic publication"
+      -
+        id: "CMPART-P2-COMPILE-R29-2"
+        module: "dec-core-context"
+        responsibility: "own immutable CompiledModelSet aggregate and EngineContext projection"
+    steps:
+      -
+        id: "CMSTEP-P2-COMPILE-R29-01"
+        order: 1
+        from: "CMPART-P2-COMPILE-R29-1"
+        to: "CMPART-P2-COMPILE-R29-2"
+        interactionType: "SYNC_API"
+        action: "construct complete CompiledViewMaterializationIndex and validate every dynamic target"
+        preconditions:
+          - "FLOW-R11 compile target resolved"
+        postconditions:
+          - "complete typed index or compile ERROR"
+        idempotency: "deterministic"
+        failureHandling: "publication=0"
+        compensation: "none"
+        traceIds:
+          - "TR-P2-005"
+          - "TR-P2-006"
+      -
+        id: "CMSTEP-P2-COMPILE-R29-02"
+        order: 2
+        from: "CMPART-P2-COMPILE-R29-1"
+        to: "CMPART-P2-COMPILE-R29-2"
+        interactionType: "COMMAND"
+        action: "construct/publish one CompiledModelSet including index in equality/hash/digest"
+        preconditions:
+          - "candidate complete"
+        postconditions:
+          - "new complete Context or old unchanged"
+        idempotency: "deterministic"
+        failureHandling: "retain old Context"
+        compensation: "none"
+        traceIds:
+          - "TR-P2-008"
+    successCriteria:
+      - "typed index aggregate-owned"
+      - "no runtime materialization repair"
+      - "atomic Context publication"
+    failurePaths:
+      -
+        id: "CMFAIL-P2-COMPILE-R29-01"
+        atStep: "CMSTEP-P2-COMPILE-R29-01"
+        condition: "required descriptor absent/duplicate"
+        result: "compile ERROR; publication=0"
+        compensationSteps: []
+        manualRecovery: "fix configuration and submit fresh candidate"
+        traceIds:
+          - "TR-P2-005"
+    traceIds:
+      - "TR-P2-005"
+      - "TR-P2-006"
+      - "TR-P2-008"
+    testCaseIds:
+      - "CASE-P2-TD-CONTEXT-MATERIALIZATION-INDEX-AGGREGATE-001"
+      - "CASE-P2-TD-MATERIALIZATION-PUBLICATION-CLOSURE-001"
+    businessFlowRef: "FLOW-CONFIG-COMPILE"
+    businessStepRefs:
+      - "STEP-P2-COMPILE-02"
+      - "STEP-P2-COMPILE-03"
+      - "STEP-P2-COMPILE-04"
+  -
+    id: "CMI-P2-PROTECTED-ACCESS-009"
+    name: "Direct MODEL load request plus bound same-target effect under FLOW-R11"
+    trigger: "FLOW-PROTECTED-ACCESS-EXECUTE"
+    participants:
+      -
+        id: "CMPART-P2-ACCESS-R29-1"
+        module: "dec-core-model"
+        responsibility: "trusted production lifecycle forms request, validates captured Context, creates production Container/ModelData/Handle/Scope/Session/EffectProvider and owns actual effect"
+      -
+        id: "CMPART-P2-ACCESS-R29-2"
+        module: "dec-core-starter"
+        responsibility: "consume trusted scope, register/seal, bind effect provider, resolve/capability/Guard and invoke bound effect only after ALLOW"
+      -
+        id: "CMPART-P2-ACCESS-R29-3"
+        module: "dec-core-context"
+        responsibility: "provide immutable binding/policy/materialization/result contracts"
+    steps:
+      -
+        id: "CMSTEP-P2-ACCESS-R29-00"
+        order: 1
+        from: "CMPART-P2-ACCESS-R29-1"
+        to: "CMPART-P2-ACCESS-R29-1"
+        interactionType: "COMMAND"
+        action: "MODEL production lifecycle constructs RuntimeModelLoadRequest from exact selected plan + real origin + explicit routing; root validates captured Context, selects exact materialization, creates ModelData, uses existing 3-arg ModelLoader and MODEL-owned production Container, then freezes the same ModelData into trusted handle"
+        preconditions:
+          - "active root"
+          - "captured Context"
+          - "MODEL production lifecycle"
+        postconditions:
+          - "trusted frame precondition available or stable load failure"
+        idempotency: "deterministic validation per request; no permission is granted by request possession"
+        failureHandling: "load failure; handle/scope/STARTER/Guard/effect=0"
+        compensation: "discard unexposed association"
+        traceIds:
+          - "TR-P2-006"
+          - "TR-P2-009"
+      -
+        id: "CMSTEP-P2-ACCESS-R29-01"
+        order: 2
+        from: "CMPART-P2-ACCESS-R29-1"
+        to: "CMPART-P2-ACCESS-R29-2"
+        interactionType: "SYNC_API"
+        action: "provide active MODEL-minted scope/frame; STARTER validates every handle plan/provenance against captured Context"
+        preconditions:
+          - "FLOW trusted-frame precondition established"
+        postconditions:
+          - "FLOW STEP-01 success or stable composition failure"
+        idempotency: "same active scope facts"
+        failureHandling: "fail closed"
+        compensation: "none"
+        traceIds:
+          - "TR-P2-006"
+      -
+        id: "CMSTEP-P2-ACCESS-R29-02"
+        order: 3
+        from: "CMPART-P2-ACCESS-R29-2"
+        to: "CMPART-P2-ACCESS-R29-1"
+        interactionType: "SYNC_API"
+        action: "begin session, register exact frame handles, seal once, bind scope.effectProvider to that same sealed session, retain operation port privately"
+        preconditions:
+          - "STEP-01 success"
+        postconditions:
+          - "sealed session + same-scope effect port or no composition"
+        idempotency: "duplicate registration/binding never widens authority"
+        failureHandling: "stable session/effect code; capability/Guard/effect=0"
+        compensation: "close partial session"
+        traceIds:
+          - "TR-P2-006"
+          - "TR-P2-009"
+      -
+        id: "CMSTEP-P2-ACCESS-R29-03"
+        order: 4
+        from: "CMPART-P2-ACCESS-R29-2"
+        to: "CMPART-P2-ACCESS-R29-1"
+        interactionType: "QUERY"
+        action: "resolve exact plan to exactly one object registered in that sealed session"
+        preconditions:
+          - "composition/effect binding complete"
+        postconditions:
+          - "one target or 0/N denial"
+        idempotency: "deterministic"
+        failureHandling: "NOT_FOUND/AMBIGUOUS/PROVENANCE_MISMATCH"
+        compensation: "none"
+        traceIds:
+          - "TR-P2-006"
+      -
+        id: "CMSTEP-P2-ACCESS-R29-04"
+        order: 5
+        from: "CMPART-P2-ACCESS-R29-2"
+        to: "CMPART-P2-ACCESS-R29-2"
+        interactionType: "COMMAND"
+        action: "freeze READ access or WRITE intent+stamp and one-shot capability for exact target/path/version"
+        preconditions:
+          - "one target"
+        postconditions:
+          - "immutable access/capability"
+        idempotency: "one capability identity"
+        failureHandling: "intent 0/N fails closed"
+        compensation: "none"
+        traceIds:
+          - "TR-P2-007"
+      -
+        id: "CMSTEP-P2-ACCESS-R29-05"
+        order: 6
+        from: "CMPART-P2-ACCESS-R29-2"
+        to: "CMPART-P2-ACCESS-R29-3"
+        interactionType: "QUERY"
+        action: "Guard exact ModelAccessRuleKey for frozen target/proof"
+        preconditions:
+          - "resolved access immutable"
+        postconditions:
+          - "ALLOW same target or DENY before effect"
+        idempotency: "deterministic"
+        failureHandling: "DENY; effect=0"
+        compensation: "none"
+        traceIds:
+          - "TR-P2-007"
+      -
+        id: "CMSTEP-P2-ACCESS-R29-06"
+        order: 7
+        from: "CMPART-P2-ACCESS-R29-2"
+        to: "CMPART-P2-ACCESS-R29-1"
+        interactionType: "SYNC_API"
+        action: "after ALLOW invoke private bound RuntimeModelOperationPort; recheck same sealed session/runtimeObjectId/registered handle before actual READ/WRITE"
+        preconditions:
+          - "Guard ALLOW"
+          - "capability consumed"
+          - "bound effect port"
+        postconditions:
+          - "value/receipt for same handle or stable denial/failure"
+        idempotency: "one-shot capability"
+        failureHandling: "scope/object/write mismatch fails closed; no fabricated success"
+        compensation: "existing MODEL operation failure semantics"
+        traceIds:
+          - "TR-P2-007"
+          - "TR-P2-009"
+    successCriteria:
+      - "RuntimeModelLoadRequest is data not permission authority"
+      - "plan validated against captured Context"
+      - "production Container MODEL-owned"
+      - "same created/loaded ModelData reaches Handle/Session/effect"
+      - "Guard precedes actual effect"
+      - "same STEP-03 object used at STEP-06"
+      - "business consumers have no MODEL load/effect bypass"
+    failurePaths:
+      -
+        id: "CMFAIL-P2-ACCESS-R29-01"
+        atStep: "CMSTEP-P2-ACCESS-R29-00"
+        condition: "root closed/plan invalid/descriptor missing/origin incompatible/container load rejected"
+        result: "stable RuntimeModelLoadFailure; handle/scope/STARTER/Guard/effect=0"
+        compensationSteps: []
+        manualRecovery: "form a valid request in active MODEL production lifecycle"
+        traceIds:
+          - "TR-P2-006"
+          - "TR-P2-009"
+      -
+        id: "CMFAIL-P2-ACCESS-R29-02"
+        atStep: "CMSTEP-P2-ACCESS-R29-02"
+        condition: "session/effect provider cannot bind same scope/session"
+        result: "no composition; capability/Guard/effect=0"
+        compensationSteps:
+          - "close partial session"
+        manualRecovery: "fresh active scope/session"
+        traceIds:
+          - "TR-P2-006"
+          - "TR-P2-009"
+      -
+        id: "CMFAIL-P2-ACCESS-R29-03"
+        atStep: "CMSTEP-P2-ACCESS-R29-06"
+        condition: "resolved object/session mismatches bound effect or MODEL operation fails"
+        result: "stable denial/failure; no unauthorized success"
+        compensationSteps: []
+        manualRecovery: "fresh valid intent when allowed"
+        traceIds:
+          - "TR-P2-007"
+          - "TR-P2-009"
+    traceIds:
+      - "TR-P2-006"
+      - "TR-P2-007"
+      - "TR-P2-009"
+    testCaseIds:
+      - "CASE-P2-TD-PRODUCTION-LOAD-REQUEST-001"
+      - "CASE-P2-TD-PRODUCTION-LOAD-PLAN-MISMATCH-001"
+      - "CASE-P2-TD-PRODUCTION-MODELDATA-IDENTITY-001"
+      - "CASE-P2-TD-MODEL-EFFECT-PROVIDER-BINDING-001"
+      - "CASE-P2-TD-RUNTIME-TARGET-SUBSTITUTION-001"
+    businessFlowRef: "FLOW-PROTECTED-ACCESS-EXECUTE"
+    businessStepRefs:
+      - "STEP-P2-ACCESS-01"
+      - "STEP-P2-ACCESS-02"
+      - "STEP-P2-ACCESS-03"
+      - "STEP-P2-ACCESS-04"
+      - "STEP-P2-ACCESS-05"
+      - "STEP-P2-ACCESS-06"
+  -
+    id: "CMI-P3-INFORMATION-001"
+    name: "P3 compilation and Directory to ModelContainer handoff"
+    trigger: "Configuration compilation or explicit execution of a Directory's ordered Actions."
+    businessFlowRef: "FLOW-P3-INFORMATION-EVALUATION"
+    businessStepRefs:
+      - "STEP-P3-INFORMATION-EVALUATION-COMPILE"
+      - "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+    participants:
+      -
+        id: "CMPART-P3-XML"
+        module: "XML"
+        responsibility: "Parse XML declarations and preserve source and declaration order facts."
+      -
+        id: "CMPART-P3-COMPILER"
+        module: "COMPILER"
+        responsibility: "Validate and compile Information and materialization target facts."
+      -
+        id: "CMPART-P3-CONTEXT"
+        module: "CONTEXT"
+        responsibility: "Publish the candidate and provide the existing ConfigInfo rule lookup."
+      -
+        id: "CMPART-P3-DIRECTORY"
+        module: "MODEL"
+        responsibility: "Own ChangeInfo/RuleViewInfo mapping, invariant checks and ordered Action information."
+      -
+        id: "CMPART-P3-MODEL"
+        module: "MODEL"
+        responsibility: "Provide read-only Information evaluation and existing ModelLoader/ModelContainer execution and cleanup."
+      -
+        id: "CMPART-P3-P2"
+        module: "COMPILER"
+        responsibility: "Provide the published P2 System, RuleView and exact model-access binding prerequisite."
+      -
+        id: "CMPART-P3-P4"
+        module: "MODEL"
+        responsibility: "Supply Action, system-ref, ref-rule and Produce facts at the downstream boundary."
+      -
+        id: "CMPART-P3-DEMO"
+        module: "DEMO"
+        responsibility: "Provide the mix fixture and integration evidence for the declared P3 behavior."
+    steps:
+      -
+        id: "CMSTEP-P3-COMPILE"
+        order: 1
+        from: "CMPART-P3-XML"
+        to: "CMPART-P3-COMPILER"
+        interactionType: "SYNC_API"
+        action: "Parse and validate the three Information kinds and eligible target facts against the existing P2 bindings."
+        preconditions:
+          - "Configuration sources and P2 bindings are available"
+        postconditions:
+          - "One valid immutable candidate or compilation failure"
+        idempotency: "Deterministic compilation of the same declarations."
+        failureHandling: "Reject invalid definitions and retain the previously published configuration."
+        compensation: "Discard the candidate."
+        traceIds:
+          - "TR-P3-INFORMATION-ENGINE-001"
+      -
+        id: "CMSTEP-P3-PUBLISH"
+        order: 2
+        from: "CMPART-P3-COMPILER"
+        to: "CMPART-P3-CONTEXT"
+        interactionType: "SYNC_API"
+        action: "Publish validated Information and MaterializationTargetFact with the existing EngineContext/ConfigInfo boundary."
+        preconditions:
+          - "Candidate validation succeeded"
+        postconditions:
+          - "Directory can consume target facts; P3 owns no ChangeInfo/RuleViewInfo mapping"
+        idempotency: "No duplicate rule registration by the P3 evaluator."
+        failureHandling: "Keep the previously published context on failure."
+        compensation: "Discard unpublished facts."
+        traceIds:
+          - "TR-P3-INFORMATION-ENGINE-001"
+      -
+        id: "CMSTEP-P3-EXECUTE"
+        order: 3
+        from: "CMPART-P3-DIRECTORY"
+        to: "CMPART-P3-MODEL"
+        interactionType: "SYNC_API"
+        action: "The caller loads each ordered Action.refRule into ModelLoader; the existing ConfigInfo lookup resolves the rule and one ModelContainer.execute handles all loaders."
+        preconditions:
+          - "Directory mapping and ordered Actions passed configuration validation"
+        postconditions:
+          - "Success returns normally without a new materialization result object or evaluate call"
+        idempotency: "Existing behavior; no new retry guarantee."
+        failureHandling: "Stop later loaders, roll back established connections, close and clear while retaining the primary exception and suppressed cleanup errors."
+        compensation: "Existing connection rollback only; no distributed transaction guarantee."
+        traceIds:
+          - "TR-P3-INFORMATION-ENGINE-001"
+    successCriteria:
+      - "Ownership and references bind to clean task FEATURE-DESC-C0EDEFBD6D71 and FLOW-R10"
+      - "P3 publishes facts only"
+      - "Directory owns mappings and Action order"
+      - "ModelContainer owns execution and transactions"
+    failurePaths:
+      -
+        id: "CMFAIL-P3-COMPILE"
+        atStep: "CMSTEP-P3-COMPILE"
+        condition: "Invalid definition or binding"
+        result: "Candidate rejected and prior configuration retained"
+        compensationSteps:
+          - "Discard candidate"
+        manualRecovery: "Correct configuration and recompile"
+        traceIds:
+          - "TR-P3-INFORMATION-ENGINE-001"
+      -
+        id: "CMFAIL-P3-EXECUTE"
+        atStep: "CMSTEP-P3-EXECUTE"
+        condition: "Loader or rule execution fails"
+        result: "Stop subsequent execution and propagate the preserved failure"
+        compensationSteps:
+          - "Rollback established connections"
+          - "Close and clear"
+        manualRecovery: "Diagnose the first failing refRule before retry"
+        traceIds:
+          - "TR-P3-INFORMATION-ENGINE-001"
+    traceIds:
+      - "TR-P3-INFORMATION-ENGINE-001"
+    testCaseIds:
+      - "CASE-P3-MIX-001"
+      - "CASE-P3-ERROR-001"
+      - "CASE-P3-CHANGE-INFO-001"
+      - "CASE-P3-DIRECTORY-001"
+    status: "ACTIVE"

@@ -1,0 +1,171 @@
+schemaVersion: 1
+artifact: business_flow_changeset
+changeSet:
+  id: FLOW-CHG-P3-INFORMATION-EVALUATION-R10-REBASELINE
+  version: V_1.0
+  module: COMPILER
+  flowGroup: COMPILER
+  flowGroupName: Configuration compilation, model execution and information evaluation
+  reason: Rebind the stable P3 Information flow to the clean task FEATURE-DESC-C0EDEFBD6D71 while preserving the confirmed behavior and treating all previous lifecycle revisions as history.
+  baseRevision: FLOW-R09@p3-information-evaluation
+  resultRevision: FLOW-R10@p3-information-rebaseline
+  affectedTraceIds:
+    - TR-P3-INFORMATION-ENGINE-001
+operations:
+  - operation: update
+    targetId: FLOW-P3-INFORMATION-EVALUATION
+    reason: Provide canonical end-to-end evidence for P3 ordering, branches, transaction outcome and blocking failures.
+    after:
+      id: FLOW-P3-INFORMATION-EVALUATION
+      name: P3 Information compilation, evaluation and materialization
+      level: L1
+      type: MAIN
+      ownerModule: MODEL
+      participantModules:
+        - COMPILER
+        - CONTEXT
+        - MODEL
+        - XML
+        - DEMO
+      goal: Compile and publish immutable Information facts and Directory-consumable materialization target facts; let Directory parsing own ChangeInfo/RuleViewInfo creation, registration, mapping, Action order and invariant checks; let the execution caller pass each Action.refRule to ModelLoader.load, let ModelContainer execute all loaded rules once with shared rollback, and let evaluate remain read-only without a new result object.
+      trigger: A configuration load validates and publishes P3 Information facts and Directory-consumable target facts, or an execution caller loads the ordered Actions of a Directory into one ModelContainer.
+      requirementRefs:
+        - id: P3-INFORMATION-ENGINE
+          documentRef: version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md
+      featureRefs:
+        - id: P3-INFORMATION-ENGINE-F01
+          module: MODEL
+      ruleRefs:
+        - BR-P3-INFORMATION-ENGINE-001
+        - BR-P3-INFORMATION-ENGINE-002
+        - BR-P3-INFORMATION-ENGINE-003
+        - BR-P3-INFORMATION-ENGINE-004
+        - BR-P3-INFORMATION-ENGINE-005
+        - CR-P3-INFORMATION-ENGINE-001
+      acceptanceRefs:
+        - AC-P3-INFORMATION-ENGINE-001
+      traceIds:
+        - TR-P3-INFORMATION-ENGINE-001
+      preconditions:
+        - P1 and P2 published exact System, View, RuleView and model-access binding facts
+        - mix Information definitions have stable source locations
+      steps:
+        - id: STEP-P3-INFORMATION-EVALUATION-COMPILE
+          order: 1
+          name: Compile and publish Information facts
+          ownerModule: MODEL
+          featureRef: P3-INFORMATION-ENGINE-F01
+          preconditions:
+            - all P3 Information definitions and P2 exact bindings belong to one Compilation Session
+          postconditions:
+            - the three exclusive Information kinds and their read or write bindings are frozen in the compiled Information facts
+            - P3 publishes each valid change-info target Information, change-data, path, permission and materialization-rule fact for Directory consumption
+            - Directory parsing validates the target reference, target Information type/change-data declaration, path/permission, RuleViewInfo rules, Action.refRule and ChangeInfo mapping legality; it creates, registers and maps each valid RuleViewInfo once and exposes the ordered Action list
+            - a cycle, missing reference, invalid path, illegal expression, permission error or invalid Directory target/mapping rejects the complete candidate
+            - a valid CompiledInformationSet is published atomically with the same EngineContext
+          notes: MODEL owns the Information facts and target-fact contract; COMPILER compiles those facts; Directory/P5 owns Directory, ChangeInfo/RuleViewInfo mapping and Action ordering. P4 supplies Action/Produce results. The execution caller passes Action.refRule to ModelLoader; ModelContainer owns rule execution and technical transaction handling. This changeset does not implement those downstream stages.
+        - id: STEP-P3-INFORMATION-EVALUATION-IDENTIFY
+          order: 2
+          name: Evaluate Information without writes
+          ownerModule: MODEL
+          featureRef: P3-INFORMATION-ENGINE-F01
+          preconditions:
+            - the requested InformationKey and exact read-only binding are published
+          postconditions:
+            - a satisfied condition returns TRUE with read evidence
+            - a normally unsatisfied condition returns FALSE with read evidence
+            - evaluate performs no model write and consumes no MutationSet or runtime path resolver
+        - id: STEP-P3-INFORMATION-EVALUATION-MATERIALIZE
+          order: 3
+          name: Execute ordered Action rules and declared change-data
+          ownerModule: MODEL
+          featureRef: P3-INFORMATION-ENGINE-F01
+          preconditions:
+            - Directory has a legal ChangeInfo to RuleViewInfo mapping, declared change-data, exact write permission and ordered Actions with refRule
+            - the execution caller passes each Action.refRule to ModelLoader.load(refRule, modelData, connection) and loads all resulting loaders into one ModelContainer
+          postconditions:
+            - ModelContainer resolves each refRule through DataUtil to ConfigInfo.getRuleViewInfo(refRule) and executes loaders in Action/load order
+            - all Directory Actions and change-data materialization participate in one shared ModelContainer rollback boundary
+            - after all loaders succeed, grammer precedes update and commit; ModelContainer.execute() normally returns and ends the flow without a new result object
+            - success does not invoke evaluate or identify target or downstream Information
+      variants:
+        - id: FVAR-P3-INFORMATION-EVALUATION-TRUE
+          name: Satisfied evaluation
+          condition: all required read-only conditions are satisfied
+          differences:
+            - STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns TRUE
+            - loading or executing Actions is not implied by a TRUE result
+          ruleRefs:
+            - BR-P3-INFORMATION-ENGINE-003
+        - id: FVAR-P3-INFORMATION-EVALUATION-FALSE
+          name: Normally unsatisfied evaluation
+          condition: a business condition is not satisfied and no evaluation error occurs
+          differences:
+            - STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns FALSE
+            - FALSE is never used to represent an invalid path, ordinary null, permission error, expression error or RuleView error
+          ruleRefs:
+            - BR-P3-INFORMATION-ENGINE-002
+        - id: FVAR-P3-INFORMATION-EVALUATION-MATERIALIZE
+          name: Downstream Action execution
+          condition: the caller loads the Directory-provided ordered Actions into one ModelContainer
+          differences:
+            - STEP-P3-INFORMATION-EVALUATION-MATERIALIZE passes each Action.refRule to ModelLoader.load and reuses the ConfigInfo RuleViewInfo lookup within the shared ModelContainer rollback boundary
+            - the success boundary is commit plus normal ModelContainer.execute() return with no post-commit reevaluation or new result object
+          ruleRefs:
+            - BR-P3-INFORMATION-ENGINE-001
+            - BR-P3-INFORMATION-ENGINE-004
+            - BR-P3-INFORMATION-ENGINE-005
+      failurePaths:
+        - id: FAIL-P3-INFORMATION-COMPILE
+          atStep: STEP-P3-INFORMATION-EVALUATION-COMPILE
+          condition: Information kind, reference, DAG, path, expression, permission, change-info target, target type/change-data, RuleViewInfo rule or Directory mapping validation fails
+          result: the candidate reports a located ERROR and is not published
+          compensation: discard the candidate and keep previously published Information facts and Directory mappings unchanged
+          blocking: true
+          acceptanceRefs:
+            - AC-P3-INFORMATION-ENGINE-001
+        - id: FAIL-P3-INFORMATION-EVALUATE
+          atStep: STEP-P3-INFORMATION-EVALUATION-IDENTIFY
+          condition: an invalid path, ordinary null, permission failure, expression failure or read-only RuleView failure occurs
+          result: record ERROR and throw InformationEvaluationException instead of returning FALSE
+          compensation: no write occurred; do not materialize or continue downstream
+          blocking: true
+          acceptanceRefs:
+            - AC-P3-INFORMATION-ENGINE-001
+        - id: FAIL-P3-INFORMATION-MATERIALIZE
+          atStep: STEP-P3-INFORMATION-EVALUATION-MATERIALIZE
+          condition: Action.refRule loading, any Action/rule, grammer, update, persistence or commit fails
+          result: ModelContainer records the first failed loader/refRule, stops later loaders, rolls back the shared transaction, closes and clears resources, throws through the existing exception boundary and no downstream step runs
+          compensation: restore the pre-execution model state through the shared rollback boundary; no external compensation is defined in this scope
+          blocking: true
+          acceptanceRefs:
+            - AC-P3-INFORMATION-ENGINE-001
+      successCriteria:
+        - CompiledInformationSet is published atomically with its exact P2 bindings and EngineContext
+        - read-only evaluate distinguishes TRUE and FALSE from ERROR plus exception
+        - Directory supplies ordered Action/refRule information; the execution caller creates one ModelLoader per Action and loads them into one ModelContainer
+        - ModelContainer resolves RuleViewInfo through ConfigInfo by refRule, preserves Action/load order, and performs grammer before update
+        - successful execution commits and normally returns from execute() without post-commit reevaluation or a new result object
+        - failed execution rolls back, closes, clears, throws and does not continue downstream
+      businessModelRefs:
+        - AGG-INFORMATION-MODEL
+        - AGG-INFORMATION-EVALUATION
+        - INV-P3-TARGET-FACT-COMPILE
+        - INV-P3-REALTIME-READ
+        - SM-P3-IDENTIFICATION
+        - POL-P3-DIRECTORY-OWNERSHIP
+        - POL-P3-COMPILE-REJECTION
+        - POL-DIRECTORY-SHARED-ROLLBACK
+        - POL-DIRECTORY-MATERIALIZE-TERMINAL
+      dependencyImpactRefs:
+        - IMP-P3-INFORMATION-001
+        - CMI-P3-INFORMATION-001
+      designRefs: []
+      testCaseIds:
+        - CASE-P3-MIX-001
+        - CASE-P3-ERROR-001
+        - CASE-P3-CHANGE-INFO-001
+        - CASE-P3-DIRECTORY-001
+      status: PROPOSED
+      createdVersion: V_1.0
+      lastChangedVersion: V_1.0
