@@ -3,8 +3,8 @@ artifact: business_model
 module:
   code: P3-INFORMATION-ENGINE
   name: Information Engine
-revision: BM-P3-R06
-baseRevision: REQAN-P3-R08
+revision: BM-P3-R05
+baseRevision: REQAN-P3-R06@9fc86a92c2c0
 terms:
   - id: TERM-INFORMATION
     name: Information
@@ -217,7 +217,7 @@ businessErrors:
   - {id: ERR-DIRECTORY-EXECUTION-FAILED, owner: ModelContainer, condition: Action.refRule 装载或任一 Action/grammer/update/持久化/commit 失败, meaning: 停止后续 Loader，已建立连接逐一回滚、关闭和清理，并通过既有异常边界中断，不继续下游, retryable: false, stateChanged: false, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
 traceability:
   - traceId: TR-P3-INFORMATION-ENGINE-001
-    requirementRefs: ["REQAN-P3-R08"]
-    modelRefs: ["BM-P3-R06"]
+    requirementRefs: ["REQAN-P3-R06@9fc86a92c2c0"]
+    modelRefs: ["BM-P3-R05"]
     acceptanceRefs: ["AC-P3-INFORMATION-ENGINE-001"]
-    flowRefs: ["FLOW-R09@p3-information-evaluation"]
+    flowRefs: ["FLOW-R08@p3-information-evaluation"]

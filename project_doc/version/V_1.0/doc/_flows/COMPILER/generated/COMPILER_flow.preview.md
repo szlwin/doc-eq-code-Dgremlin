@@ -1,7 +1,7 @@
 <!-- generated-by: common-develop/business_flow.py -->
 # Configuration compilation, model execution and information evaluation（COMPILER）
 
-- Revision：`FLOW-R08@p3-information-evaluation`
+- Revision：`FLOW-R09@p3-information-evaluation`
 - Base Revision：`FLOW-R04@p2-simple-runtime-model`
 - 层级：L0 端到端场景、L1 业务阶段、L2 关键子流程
 
@@ -148,8 +148,8 @@
 - 父流程：`无`
 - 主责模块：`MODEL`
 - 参与模块：[COMPILER](../../../../../../docs/COMPILER/COMPILER_desc.md), [CONTEXT](../../../../../../docs/CONTEXT/CONTEXT_desc.md), [MODEL](../../../../../../docs/MODEL/MODEL_desc.md), [XML](../../../../../../docs/XML/XML_desc.md), [DEMO](../../../../../../docs/DEMO/DEMO_desc.md)
-- 目标：Compile and publish immutable Information facts, generate and register each change-info RuleViewInfo once, map it to its Directory ChangeInfo, let P5 reuse it after the last successful Action, evaluate without writes, and materialize one declared change-data value atomically.
-- 触发：A configuration load publishes P3 Information facts and ChangeInfo mappings, or P5 completes the last Action of a Directory.
+- 目标：Compile and publish immutable Information facts and Directory-consumable materialization target facts; let Directory parsing own ChangeInfo/RuleViewInfo creation, registration, mapping, Action order and invariant checks; let the execution caller pass each Action.refRule to ModelLoader.load, let ModelContainer execute all loaded rules once with shared rollback, and let evaluate remain read-only without a new result object.
+- 触发：A configuration load validates and publishes P3 Information facts and Directory-consumable target facts, or an execution caller loads the ordered Actions of a Directory into one ModelContainer.
 - 状态：`PROPOSED`
 
 ### 需求、功能与追踪
@@ -158,7 +158,7 @@
 |---|---|
 | 需求 | [P3-INFORMATION-ENGINE](../../../FEATURE-DESC-4AB41AC241A1/requirement.md) |
 | 功能 | [P3-INFORMATION-ENGINE-F01](../../../../../../docs/MODEL/MODEL_desc.md)（MODEL） |
-| 规则 | BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, CR-P3-INFORMATION-ENGINE-001 |
+| 规则 | BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, BR-P3-INFORMATION-ENGINE-005, CR-P3-INFORMATION-ENGINE-001 |
 | 验收 | AC-P3-INFORMATION-ENGINE-001 |
 | 追踪 | TR-P3-INFORMATION-ENGINE-001 |
 
@@ -173,35 +173,36 @@
 |---|---|---|---|---|---|
 | 1 | STEP-P3-INFORMATION-EVALUATION-COMPILE | Compile and publish Information facts | MODEL | P3-INFORMATION-ENGINE-F01 | 无 |
 | 2 | STEP-P3-INFORMATION-EVALUATION-IDENTIFY | Evaluate Information without writes | MODEL | P3-INFORMATION-ENGINE-F01 | 无 |
-| 3 | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE | Optionally materialize declared change-data | MODEL | P3-INFORMATION-ENGINE-F01 | 无 |
+| 3 | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE | Execute ordered Action rules and declared change-data | MODEL | P3-INFORMATION-ENGINE-F01 | 无 |
 
 ### 变体
 
 | 变体编号 | 名称 | 适用条件 | 关键差异 |
 |---|---|---|---|
-| FVAR-P3-INFORMATION-EVALUATION-TRUE | Satisfied evaluation | all required read-only conditions are satisfied | STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns TRUE；materialize is not implied by a TRUE result |
+| FVAR-P3-INFORMATION-EVALUATION-TRUE | Satisfied evaluation | all required read-only conditions are satisfied | STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns TRUE；loading or executing Actions is not implied by a TRUE result |
 | FVAR-P3-INFORMATION-EVALUATION-FALSE | Normally unsatisfied evaluation | a business condition is not satisfied and no evaluation error occurs | STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns FALSE；FALSE is never used to represent an invalid path, ordinary null, permission error, expression error or RuleView error |
-| FVAR-P3-INFORMATION-EVALUATION-MATERIALIZE | Explicit optional materialization | the caller explicitly invokes materialize for an eligible model-expression atomic Information | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE reuses the registered RuleViewInfo mapped from ChangeInfo and executes grammer then update in one existing ModelContainer transaction；the success boundary is commit plus MaterializationResult with no post-commit reevaluation |
+| FVAR-P3-INFORMATION-EVALUATION-MATERIALIZE | Downstream Action execution | the caller loads the Directory-provided ordered Actions into one ModelContainer | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE passes each Action.refRule to ModelLoader.load and reuses the ConfigInfo RuleViewInfo lookup within the shared ModelContainer rollback boundary；the success boundary is commit plus normal ModelContainer.execute() return with no post-commit reevaluation or new result object |
 
 ### 失败、回退与补偿
 
 | 路径编号 | 发生步骤 | 条件 | 结果 | 后续流程 | 补偿 | 阻塞 |
 |---|---|---|---|---|---|---|
-| FAIL-P3-INFORMATION-COMPILE | STEP-P3-INFORMATION-EVALUATION-COMPILE | Information kind, reference, DAG, path, expression or permission validation fails | the candidate reports a located ERROR and is not published | 无 | discard the candidate and keep the previously published EngineContext unchanged | true |
+| FAIL-P3-INFORMATION-COMPILE | STEP-P3-INFORMATION-EVALUATION-COMPILE | Information kind, reference, DAG, path, expression, permission, change-info target, target type/change-data, RuleViewInfo rule or Directory mapping validation fails | the candidate reports a located ERROR and is not published | 无 | discard the candidate and keep previously published Information facts and Directory mappings unchanged | true |
 | FAIL-P3-INFORMATION-EVALUATE | STEP-P3-INFORMATION-EVALUATION-IDENTIFY | an invalid path, ordinary null, permission failure, expression failure or read-only RuleView failure occurs | record ERROR and throw InformationEvaluationException instead of returning FALSE | 无 | no write occurred; do not materialize or continue downstream | true |
-| FAIL-P3-INFORMATION-MATERIALIZE | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE | grammer, update, persistence or commit fails | ModelContainer rolls back, InformationMaterializationException is thrown and no downstream step runs | 无 | restore the pre-materialization model state through the existing rollback and cleanup lifecycle | true |
+| FAIL-P3-INFORMATION-MATERIALIZE | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE | Action.refRule loading, any Action/rule, grammer, update, persistence or commit fails | ModelContainer records the first failed loader/refRule, stops later loaders, rolls back the shared transaction, closes and clears resources, throws through the existing exception boundary and no downstream step runs | 无 | restore the pre-execution model state through the shared rollback boundary; no external compensation is defined in this scope | true |
 
 ### 成功标准
 
 - CompiledInformationSet is published atomically with its exact P2 bindings and EngineContext
 - read-only evaluate distinguishes TRUE and FALSE from ERROR plus exception
-- optional materialize preserves grammer to update order and shared ModelLoader.value
-- successful materialization commits and returns MaterializationResult without post-commit reevaluation
-- failed materialization rolls back, throws and does not continue downstream
+- Directory supplies ordered Action/refRule information; the execution caller creates one ModelLoader per Action and loads them into one ModelContainer
+- ModelContainer resolves RuleViewInfo through ConfigInfo by refRule, preserves Action/load order, and performs grammer before update
+- successful execution commits and normally returns from execute() without post-commit reevaluation or a new result object
+- failed execution rolls back, closes, clears, throws and does not continue downstream
 
 ### 下游映射
 
-- 业务模型：AGG-INFORMATION-MODEL, AGG-INFORMATION-EVALUATION, INV-P3-REALTIME-READ, INV-P3-MATERIALIZE, SM-P3-IDENTIFICATION, SM-P3-MATERIALIZATION
+- 业务模型：AGG-INFORMATION-MODEL, AGG-INFORMATION-EVALUATION, INV-P3-TARGET-FACT-COMPILE, INV-P3-REALTIME-READ, SM-P3-IDENTIFICATION, POL-P3-DIRECTORY-OWNERSHIP, POL-P3-COMPILE-REJECTION, POL-DIRECTORY-SHARED-ROLLBACK, POL-DIRECTORY-MATERIALIZE-TERMINAL
 - 影响分析：待补充
-- 技术设计：DESIGN-P3-R08
+- 技术设计：DESIGN-P3-R13
 - 测试 Case：CASE-P3-MIX-001, CASE-P3-ERROR-001, CASE-P3-CHANGE-INFO-001, CASE-P3-DIRECTORY-001

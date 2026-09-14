@@ -4,7 +4,7 @@ flowGroup:
   code: "COMPILER"
   name: "Configuration compilation, model execution and information evaluation"
   description: ""
-revision: "FLOW-R09@p3-information-evaluation"
+revision: "FLOW-R08@p3-information-evaluation"
 baseRevision: "FLOW-R04@p2-simple-runtime-model"
 flows:
   -
@@ -340,8 +340,8 @@ flows:
       - "MODEL"
       - "XML"
       - "DEMO"
-    goal: "Compile and publish immutable Information facts and Directory-consumable materialization target facts; let Directory parsing own ChangeInfo/RuleViewInfo creation, registration, mapping, Action order and invariant checks; let the execution caller pass each Action.refRule to ModelLoader.load, let ModelContainer execute all loaded rules once with shared rollback, and let evaluate remain read-only without a new result object."
-    trigger: "A configuration load validates and publishes P3 Information facts and Directory-consumable target facts, or an execution caller loads the ordered Actions of a Directory into one ModelContainer."
+    goal: "Compile and publish immutable Information facts, generate and register each change-info RuleViewInfo once, map it to its Directory ChangeInfo, let P5 reuse it after the last successful Action, evaluate without writes, and materialize one declared change-data value atomically."
+    trigger: "A configuration load publishes P3 Information facts and ChangeInfo mappings, or P5 completes the last Action of a Directory."
     requirementRefs:
       -
         id: "P3-INFORMATION-ENGINE"
@@ -355,7 +355,6 @@ flows:
       - "BR-P3-INFORMATION-ENGINE-002"
       - "BR-P3-INFORMATION-ENGINE-003"
       - "BR-P3-INFORMATION-ENGINE-004"
-      - "BR-P3-INFORMATION-ENGINE-005"
       - "CR-P3-INFORMATION-ENGINE-001"
     acceptanceRefs:
       - "AC-P3-INFORMATION-ENGINE-001"
@@ -374,12 +373,13 @@ flows:
         preconditions:
           - "all P3 Information definitions and P2 exact bindings belong to one Compilation Session"
         postconditions:
-          - "the three exclusive Information kinds and their read or write bindings are frozen in the compiled Information facts"
-          - "P3 publishes each valid change-info target Information, change-data, path, permission and materialization-rule fact for Directory consumption"
-          - "Directory parsing validates the target reference, target Information type/change-data declaration, path/permission, RuleViewInfo rules, Action.refRule and ChangeInfo mapping legality; it creates, registers and maps each valid RuleViewInfo once and exposes the ordered Action list"
-          - "a cycle, missing reference, invalid path, illegal expression, permission error or invalid Directory target/mapping rejects the complete candidate"
+          - "the three exclusive Information kinds and their read or write bindings are frozen in CompiledInformationSet"
+          - "each valid change-info is compiled once into an immutable RuleViewInfo named ## + business-config.name + . + directory.name + . + information-ref"
+          - "the RuleViewInfo is registered through ConfigInfo.addRuleViewInfo() and mapped from ChangeInfo/DirectoryInfo"
+          - "P3 publishes the mapping for P4/P5 consumption; P4 supplies Action/Produce results and P5 owns Directory ordering"
+          - "a cycle, missing reference, invalid path, illegal expression or permission error rejects the complete candidate"
           - "a valid CompiledInformationSet is published atomically with the same EngineContext"
-        notes: "MODEL owns the Information facts and target-fact contract; COMPILER compiles those facts; Directory/P5 owns Directory, ChangeInfo/RuleViewInfo mapping and Action ordering. P4 supplies Action/Produce results. The execution caller passes Action.refRule to ModelLoader; ModelContainer owns rule execution and technical transaction handling. This changeset does not implement those downstream stages."
+        notes: "MODEL owns the end-to-end P3 feature; COMPILER performs the compilation and publication work mapped by Design."
       -
         id: "STEP-P3-INFORMATION-EVALUATION-IDENTIFY"
         order: 2
@@ -395,16 +395,16 @@ flows:
       -
         id: "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
         order: 3
-        name: "Execute ordered Action rules and declared change-data"
+        name: "Optionally materialize declared change-data"
         ownerModule: "MODEL"
         featureRef: "P3-INFORMATION-ENGINE-F01"
         preconditions:
-          - "Directory has a legal ChangeInfo to RuleViewInfo mapping, declared change-data, exact write permission and ordered Actions with refRule"
-          - "the execution caller passes each Action.refRule to ModelLoader.load(refRule, modelData, connection) and loads all resulting loaders into one ModelContainer"
+          - "the last Action for the Directory has completed successfully"
+          - "the Directory ChangeInfo mapping, registered RuleViewInfo, change-data and exact write permission are present"
         postconditions:
-          - "ModelContainer resolves each refRule through DataUtil to ConfigInfo.getRuleViewInfo(refRule) and executes loaders in Action/load order"
-          - "all Directory Actions and change-data materialization participate in one shared ModelContainer rollback boundary"
-          - "after all loaders succeed, grammer precedes update and commit; ModelContainer.execute() normally returns and ends the flow without a new result object"
+          - "the already registered and mapped RuleViewInfo executes grammer before update"
+          - "grammer and update share the same ModelLoader.value"
+          - "success commits once, returns MaterializationResult and ends the flow"
           - "success does not invoke evaluate or identify target or downstream Information"
     variants:
       -
@@ -413,7 +413,7 @@ flows:
         condition: "all required read-only conditions are satisfied"
         differences:
           - "STEP-P3-INFORMATION-EVALUATION-IDENTIFY returns TRUE"
-          - "loading or executing Actions is not implied by a TRUE result"
+          - "materialize is not implied by a TRUE result"
         ruleRefs:
           - "BR-P3-INFORMATION-ENGINE-003"
       -
@@ -427,22 +427,20 @@ flows:
           - "BR-P3-INFORMATION-ENGINE-002"
       -
         id: "FVAR-P3-INFORMATION-EVALUATION-MATERIALIZE"
-        name: "Downstream Action execution"
-        condition: "the caller loads the Directory-provided ordered Actions into one ModelContainer"
+        name: "Explicit optional materialization"
+        condition: "the caller explicitly invokes materialize for an eligible model-expression atomic Information"
         differences:
-          - "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE passes each Action.refRule to ModelLoader.load and reuses the ConfigInfo RuleViewInfo lookup within the shared ModelContainer rollback boundary"
-          - "the success boundary is commit plus normal ModelContainer.execute() return with no post-commit reevaluation or new result object"
+          - "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE reuses the registered RuleViewInfo mapped from ChangeInfo and executes grammer then update in one existing ModelContainer transaction"
+          - "the success boundary is commit plus MaterializationResult with no post-commit reevaluation"
         ruleRefs:
           - "BR-P3-INFORMATION-ENGINE-001"
-          - "BR-P3-INFORMATION-ENGINE-004"
-          - "BR-P3-INFORMATION-ENGINE-005"
     failurePaths:
       -
         id: "FAIL-P3-INFORMATION-COMPILE"
         atStep: "STEP-P3-INFORMATION-EVALUATION-COMPILE"
-        condition: "Information kind, reference, DAG, path, expression, permission, change-info target, target type/change-data, RuleViewInfo rule or Directory mapping validation fails"
+        condition: "Information kind, reference, DAG, path, expression or permission validation fails"
         result: "the candidate reports a located ERROR and is not published"
-        compensation: "discard the candidate and keep previously published Information facts and Directory mappings unchanged"
+        compensation: "discard the candidate and keep the previously published EngineContext unchanged"
         blocking: true
         acceptanceRefs:
           - "AC-P3-INFORMATION-ENGINE-001"
@@ -458,32 +456,28 @@ flows:
       -
         id: "FAIL-P3-INFORMATION-MATERIALIZE"
         atStep: "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
-        condition: "Action.refRule loading, any Action/rule, grammer, update, persistence or commit fails"
-        result: "ModelContainer records the first failed loader/refRule, stops later loaders, rolls back the shared transaction, closes and clears resources, throws through the existing exception boundary and no downstream step runs"
-        compensation: "restore the pre-execution model state through the shared rollback boundary; no external compensation is defined in this scope"
+        condition: "grammer, update, persistence or commit fails"
+        result: "ModelContainer rolls back, InformationMaterializationException is thrown and no downstream step runs"
+        compensation: "restore the pre-materialization model state through the existing rollback and cleanup lifecycle"
         blocking: true
         acceptanceRefs:
           - "AC-P3-INFORMATION-ENGINE-001"
     successCriteria:
       - "CompiledInformationSet is published atomically with its exact P2 bindings and EngineContext"
       - "read-only evaluate distinguishes TRUE and FALSE from ERROR plus exception"
-      - "Directory supplies ordered Action/refRule information; the execution caller creates one ModelLoader per Action and loads them into one ModelContainer"
-      - "ModelContainer resolves RuleViewInfo through ConfigInfo by refRule, preserves Action/load order, and performs grammer before update"
-      - "successful execution commits and normally returns from execute() without post-commit reevaluation or a new result object"
-      - "failed execution rolls back, closes, clears, throws and does not continue downstream"
+      - "optional materialize preserves grammer to update order and shared ModelLoader.value"
+      - "successful materialization commits and returns MaterializationResult without post-commit reevaluation"
+      - "failed materialization rolls back, throws and does not continue downstream"
     businessModelRefs:
       - "AGG-INFORMATION-MODEL"
       - "AGG-INFORMATION-EVALUATION"
-      - "INV-P3-TARGET-FACT-COMPILE"
       - "INV-P3-REALTIME-READ"
+      - "INV-P3-MATERIALIZE"
       - "SM-P3-IDENTIFICATION"
-      - "POL-P3-DIRECTORY-OWNERSHIP"
-      - "POL-P3-COMPILE-REJECTION"
-      - "POL-DIRECTORY-SHARED-ROLLBACK"
-      - "POL-DIRECTORY-MATERIALIZE-TERMINAL"
+      - "SM-P3-MATERIALIZATION"
     dependencyImpactRefs: []
     designRefs:
-      - "DESIGN-P3-R13"
+      - "DESIGN-P3-R08"
     testCaseIds:
       - "CASE-P3-MIX-001"
       - "CASE-P3-ERROR-001"

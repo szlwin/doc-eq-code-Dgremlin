@@ -4151,6 +4151,318 @@
 | 测试与验证 | 登记 Evidence 8 项；命令 Evidence 3 项 |
 | 问题与阻塞 | 无 |
 
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I024-A001","event_id":"EVENT-ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I024-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000129"],"execution_mode":"git_checkpoint","input_revision":"BM-P3-R05","issue_ids":["ISSUE-MR-0025"],"iteration_id":"ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-024","iteration_no":24,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md"],"next_action":"停止于 Design 阶段；等待用户明确授权后再执行独立 Review。","next_agent":"ProjectManagerAgent","output_revision":"DESIGN-P3-R09","phase":"design","record_id":"WR-20260905-001204-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED","render_digest":"4ac0cefac548c5168a0121f684575c646d65fa31bc16eec5ac3fe7daa1dda537","schema_version":4,"scope":"设计 P3 Information Engine 技术方案","source":"long_task.py finish-attempt","state_change":"TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED","status":"PASSED","summary":"完成 DESIGN-P3-R09：基于 BM-P3-R05 收敛 P3 与 Directory 边界。P3 仅发布 Information 与 MaterializationTargetFact；ChangeInfo/RuleViewInfo 映射、生成、注册、不变量和生命周期归 Directory；配置错误编译期拒绝；Directory 后续按 Action 顺序共享回滚，任一步失败整体回滚并中断，成功以 grammer → update → commit → MaterializationResult 结束且不调用 evaluate。","target_id":"FEATURE-DESC-4AB41AC241A1","task_id":"TASK-P3-INFORMATION-ENGINE-DESIGN","task_type":"design","timestamp":"2026-09-05T00:12:04+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 1 项","version":"V_1.0"} -->
+## WR-20260905-001204-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-09-05T00:12:04+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-4AB41AC241A1 |
+| 范围 | 设计 P3 Information Engine 技术方案 |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成 DESIGN-P3-R09：基于 BM-P3-R05 收敛 P3 与 Directory 边界。P3 仅发布 Information 与 MaterializationTargetFact；ChangeInfo/RuleViewInfo 映射、生成、注册、不变量和生命周期归 Directory；配置错误编译期拒绝；Directory 后续按 Action 顺序共享回滚，任一步失败整体回滚并中断，成功以 grammer → update → commit → MaterializationResult 结束且不调用 evaluate。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED |
+| Task | TASK-P3-INFORMATION-ENGINE-DESIGN |
+| Attempt | ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I024-A001 |
+| Iteration | ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-024 / 24 |
+| 输入 Revision | BM-P3-R05 |
+| 输出 Revision | DESIGN-P3-R09 |
+| StageOutcome | 无 |
+| Evidence | EVD-000129 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0025 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 停止于 Design 阶段；等待用户明确授权后再执行独立 Review。 |
+
+### 变更摘要
+
+- 完成 DESIGN-P3-R09：基于 BM-P3-R05 收敛 P3 与 Directory 边界。P3 仅发布 Information 与 MaterializationTargetFact；ChangeInfo/RuleViewInfo 映射、生成、注册、不变量和生命周期归 Directory；配置错误编译期拒绝；Directory 后续按 Action 顺序共享回滚，任一步失败整体回滚并中断，成功以 grammer → update → commit → MaterializationResult 结束且不调用 evaluate。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 1 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I025-A001","event_id":"EVENT-ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I025-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000132"],"execution_mode":"git_checkpoint","input_revision":"BM-P3-R05","issue_ids":["ISSUE-MR-0032"],"iteration_id":"ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-025","iteration_no":25,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md"],"next_action":"由 ArchitectureReviewAgent 仅 Review ISSUE-MR-0032 对应失败 criterion；Review 一次后停止。","next_agent":"ArchitectureReviewAgent","output_revision":"DESIGN-P3-R10","phase":"design","record_id":"WR-20260908-221259-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED","render_digest":"3c52f2962dcabb255b945cde1754273e23f1a4f74fe8ebb8f7c4f679a4394b43","schema_version":4,"scope":"设计 P3 Information Engine 技术方案","source":"long_task.py finish-attempt","state_change":"TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED","status":"PASSED","summary":"完成 DESIGN-P3-R10：Directory 是业务编排/映射 Owner，ModelContainer 是唯一技术事务 Owner；单 Loader + Listener 风格有序 Action 回调 + 单次 execute 闭合共享事务，Action 不接触数据库/事务；删除 MaterializationResult 及新增执行方法。ready 校验通过。","target_id":"FEATURE-DESC-4AB41AC241A1","task_id":"TASK-P3-INFORMATION-ENGINE-DESIGN","task_type":"design","timestamp":"2026-09-08T22:12:59+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 0 项","version":"V_1.0"} -->
+## WR-20260908-221259-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-09-08T22:12:59+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-4AB41AC241A1 |
+| 范围 | 设计 P3 Information Engine 技术方案 |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成 DESIGN-P3-R10：Directory 是业务编排/映射 Owner，ModelContainer 是唯一技术事务 Owner；单 Loader + Listener 风格有序 Action 回调 + 单次 execute 闭合共享事务，Action 不接触数据库/事务；删除 MaterializationResult 及新增执行方法。ready 校验通过。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED |
+| Task | TASK-P3-INFORMATION-ENGINE-DESIGN |
+| Attempt | ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I025-A001 |
+| Iteration | ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-025 / 25 |
+| 输入 Revision | BM-P3-R05 |
+| 输出 Revision | DESIGN-P3-R10 |
+| StageOutcome | 无 |
+| Evidence | EVD-000132 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0032 |
+| Git 检查点 | 无 |
+| 下一 Agent | ArchitectureReviewAgent |
+| 后续事项 | 由 ArchitectureReviewAgent 仅 Review ISSUE-MR-0032 对应失败 criterion；Review 一次后停止。 |
+
+### 变更摘要
+
+- 完成 DESIGN-P3-R10：Directory 是业务编排/映射 Owner，ModelContainer 是唯一技术事务 Owner；单 Loader + Listener 风格有序 Action 回调 + 单次 execute 闭合共享事务，Action 不接触数据库/事务；删除 MaterializationResult 及新增执行方法。ready 校验通过。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 0 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I026-A001","event_id":"EVENT-ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I026-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000135"],"execution_mode":"git_checkpoint","input_revision":"40586240fafd43e8db1b788045651a60dc0c2d5d9ca5c627a76d7496f9aed2ea","issue_ids":["ISSUE-MR-0032","ISSUE-MR-0033"],"iteration_id":"ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-026","iteration_no":26,"modified_files_summary":["version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md"],"next_action":"停止；等待用户显式请求独立ArchitectureReviewAgent审查DESIGN-P3-R11，不自动执行后续任务。","next_agent":"ArchitectureReviewAgent","output_revision":"DESIGN-P3-R11","phase":"design","record_id":"WR-20260908-225916-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED","render_digest":"c8281b4e055c9537253532f7d0937ebe1ffbf28a4b1eb1b234e054b825fac69d","schema_version":4,"scope":"设计 P3 Information Engine 技术方案","source":"long_task.py finish-attempt","state_change":"TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED","status":"PASSED","summary":"完成 DESIGN-P3-R11：Directory仅负责ChangeInfo/RuleViewInfo映射、顺序和供数；执行调用方将多个RuleViewInfo分别装入同一ModelContainer，全部load后execute一次；ModelContainer负责顺序执行、首失败停止、统一事务收尾及既有ExecuteRuleException传播；删除Directory Listener/Action执行职责和getResult依赖。ready校验通过。","target_id":"FEATURE-DESC-4AB41AC241A1","task_id":"TASK-P3-INFORMATION-ENGINE-DESIGN","task_type":"design","timestamp":"2026-09-08T22:59:16+08:00","validation_summary":"登记 Evidence 1 项；命令 Evidence 0 项","version":"V_1.0"} -->
+## WR-20260908-225916-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-09-08T22:59:16+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-4AB41AC241A1 |
+| 范围 | 设计 P3 Information Engine 技术方案 |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成 DESIGN-P3-R11：Directory仅负责ChangeInfo/RuleViewInfo映射、顺序和供数；执行调用方将多个RuleViewInfo分别装入同一ModelContainer，全部load后execute一次；ModelContainer负责顺序执行、首失败停止、统一事务收尾及既有ExecuteRuleException传播；删除Directory Listener/Action执行职责和getResult依赖。ready校验通过。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED |
+| Task | TASK-P3-INFORMATION-ENGINE-DESIGN |
+| Attempt | ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I026-A001 |
+| Iteration | ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-026 / 26 |
+| 输入 Revision | 40586240fafd43e8db1b788045651a60dc0c2d5d9ca5c627a76d7496f9aed2ea |
+| 输出 Revision | DESIGN-P3-R11 |
+| StageOutcome | 无 |
+| Evidence | EVD-000135 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0032、ISSUE-MR-0033 |
+| Git 检查点 | 无 |
+| 下一 Agent | ArchitectureReviewAgent |
+| 后续事项 | 停止；等待用户显式请求独立ArchitectureReviewAgent审查DESIGN-P3-R11，不自动执行后续任务。 |
+
+### 变更摘要
+
+- 完成 DESIGN-P3-R11：Directory仅负责ChangeInfo/RuleViewInfo映射、顺序和供数；执行调用方将多个RuleViewInfo分别装入同一ModelContainer，全部load后execute一次；ModelContainer负责顺序执行、首失败停止、统一事务收尾及既有ExecuteRuleException传播；删除Directory Listener/Action执行职责和getResult依赖。ready校验通过。
+
+### 文件变更摘要
+
+- `version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md`
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 1 项；命令 Evidence 0 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"DesignAgent","attempt_id":"ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I027-A001","event_id":"EVENT-ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I027-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000149","EVD-000150"],"execution_mode":"git_checkpoint","input_revision":"40586240fafd43e8db1b788045651a60dc0c2d5d9ca5c627a76d7496f9aed2ea","issue_ids":["ISSUE-MR-0034"],"iteration_id":"ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-027","iteration_no":27,"next_action":"由 ProjectManagerAgent 发布 DESIGN-P3-R12","next_agent":"ProjectManagerAgent","output_revision":"DESIGN-P3-R12","phase":"design","record_id":"WR-20260909-112024-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED","render_digest":"8f878186feeeea313a8b33e8bacf7b1c347ca9f0d594e87360ed875c0d64fe92","schema_version":4,"scope":"设计 P3 Information Engine 技术方案","source":"long_task.py finish-attempt","state_change":"TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED","status":"PASSED","summary":"完成 P3 Information Engine 设计，冻结 DESIGN-P3-R12。","target_id":"FEATURE-DESC-4AB41AC241A1","task_id":"TASK-P3-INFORMATION-ENGINE-DESIGN","task_type":"design","timestamp":"2026-09-09T11:20:24+08:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 0 项","version":"V_1.0"} -->
+## WR-20260909-112024-TASK-P3-INFORMATION-ENGINE-DESIGN-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-09-09T11:20:24+08:00 |
+| 执行 Agent | DesignAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-4AB41AC241A1 |
+| 范围 | 设计 P3 Information Engine 技术方案 |
+| 阶段 | design |
+| 任务类型 | design |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成 P3 Information Engine 设计，冻结 DESIGN-P3-R12。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P3-INFORMATION-ENGINE-DESIGN: RUNNING → PASSED |
+| Task | TASK-P3-INFORMATION-ENGINE-DESIGN |
+| Attempt | ATTEMPT-TASK-P3-INFORMATION-ENGINE-DESIGN-I027-A001 |
+| Iteration | ITER-FEATURE-DESC-4AB41AC241A1-DESIGN-027 / 27 |
+| 输入 Revision | 40586240fafd43e8db1b788045651a60dc0c2d5d9ca5c627a76d7496f9aed2ea |
+| 输出 Revision | DESIGN-P3-R12 |
+| StageOutcome | 无 |
+| Evidence | EVD-000149、EVD-000150 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0034 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 由 ProjectManagerAgent 发布 DESIGN-P3-R12 |
+
+### 变更摘要
+
+- 完成 P3 Information Engine 设计，冻结 DESIGN-P3-R12。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 0 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-I016-A001","event_id":"EVENT-ATTEMPT-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-I016-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000151","EVD-000152"],"execution_mode":"git_checkpoint","input_revision":"2474373b6dffea38a2ef9d6e186bed2e6674857222631a6f14dbc0b4793d89f2","issue_ids":["ISSUE-MR-0034","ISSUE-MR-0035","ISSUE-MR-0036","ISSUE-MR-0037","ISSUE-MR-0038"],"iteration_id":"ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-016","iteration_no":16,"next_action":"由 ProjectManagerAgent 根据当前阶段门禁决定是否发布分析 revision；本次不自动执行后续任务。","next_agent":"ProjectManagerAgent","output_revision":"REQAN-P3-R07","phase":"requirement_analysis","record_id":"WR-20260909-130256-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-PASSED","render_digest":"0da15f892349b1c7f8426af576844d68e8ac6a21a72a5459a48ce02174baf371","schema_version":4,"scope":"分析 P3 Information Engine 需求与追踪边界","source":"long_task.py finish-attempt","state_change":"TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS: RUNNING → PASSED","status":"PASSED","summary":"完成 REQAN-P3-R07 需求分析修订；按已确认的 DirectoryInfo.actions/Action.refRule/ConfigInfo 及 ModelContainer 既有执行边界校验需求文档与追踪关系。","target_id":"FEATURE-DESC-4AB41AC241A1","task_id":"TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS","task_type":"requirement_analysis","timestamp":"2026-09-09T13:02:56+08:00","validation_summary":"登记 Evidence 2 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260909-130256-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-09-09T13:02:56+08:00 |
+| 执行 Agent | RequirementAnalysisAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-4AB41AC241A1 |
+| 范围 | 分析 P3 Information Engine 需求与追踪边界 |
+| 阶段 | requirement_analysis |
+| 任务类型 | requirement_analysis |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 完成 REQAN-P3-R07 需求分析修订；按已确认的 DirectoryInfo.actions/Action.refRule/ConfigInfo 及 ModelContainer 既有执行边界校验需求文档与追踪关系。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS: RUNNING → PASSED |
+| Task | TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS |
+| Attempt | ATTEMPT-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-I016-A001 |
+| Iteration | ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-016 / 16 |
+| 输入 Revision | 2474373b6dffea38a2ef9d6e186bed2e6674857222631a6f14dbc0b4793d89f2 |
+| 输出 Revision | REQAN-P3-R07 |
+| StageOutcome | 无 |
+| Evidence | EVD-000151、EVD-000152 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0034、ISSUE-MR-0035、ISSUE-MR-0036、ISSUE-MR-0037、ISSUE-MR-0038 |
+| Git 检查点 | 无 |
+| 下一 Agent | ProjectManagerAgent |
+| 后续事项 | 由 ProjectManagerAgent 根据当前阶段门禁决定是否发布分析 revision；本次不自动执行后续任务。 |
+
+### 变更摘要
+
+- 完成 REQAN-P3-R07 需求分析修订；按已确认的 DirectoryInfo.actions/Action.refRule/ConfigInfo 及 ModelContainer 既有执行边界校验需求文档与追踪关系。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 2 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
+<!-- work-record-meta: {"agent":"RequirementAnalysisAgent","attempt_id":"ATTEMPT-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-I017-A001","event_id":"EVENT-ATTEMPT-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-I017-A001-PASSED","event_type":"TASK_ATTEMPT_COMPLETED","evidence_ids":["EVD-000158","EVD-000159","EVD-000161","EVD-000162"],"execution_mode":"git_checkpoint","input_revision":"2474373b6dffea38a2ef9d6e186bed2e6674857222631a6f14dbc0b4793d89f2","issue_ids":["ISSUE-MR-0034","ISSUE-MR-0035","ISSUE-MR-0036","ISSUE-MR-0037","ISSUE-MR-0038","ISSUE-MR-0039","ISSUE-MR-0040"],"iteration_id":"ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-017","iteration_no":17,"next_action":"独立复核新 revision；旧 ISSUE-MR-0039/0040 保持待复核，不自动推进后续阶段。","next_agent":"BusinessModelAgent","output_revision":"REQAN-P3-R08","phase":"requirement_analysis","record_id":"WR-20260909-140724-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-PASSED","render_digest":"22990c93f06705d075dea560975f359b014643beecb203fd39efb8787921e7e3","schema_version":4,"scope":"分析 P3 Information Engine 需求与追踪边界","source":"long_task.py finish-attempt","state_change":"TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS: RUNNING → PASSED","status":"PASSED","summary":"修复跨模块影响、追踪引用、模型候选 BM-P3-R06 与 FLOW-R09 预览；新候选 REQAN-P3-R08 保留旧 Review/Evidence 为历史。","target_id":"FEATURE-DESC-4AB41AC241A1","task_id":"TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS","task_type":"requirement_analysis","timestamp":"2026-09-09T14:07:24+08:00","validation_summary":"登记 Evidence 4 项；命令 Evidence 2 项","version":"V_1.0"} -->
+## WR-20260909-140724-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-PASSED
+
+### 基本信息
+
+| 字段 | 内容 |
+|---|---|
+| 时间 | 2026-09-09T14:07:24+08:00 |
+| 执行 Agent | RequirementAnalysisAgent |
+| 命令或来源 | long_task.py finish-attempt |
+| 版本 | V_1.0 |
+| 目标 | FEATURE-DESC-4AB41AC241A1 |
+| 范围 | 分析 P3 Information Engine 需求与追踪边界 |
+| 阶段 | requirement_analysis |
+| 任务类型 | requirement_analysis |
+| 事件类型 | TASK_ATTEMPT_COMPLETED |
+| 执行模式 | git_checkpoint |
+
+### 执行结果与追踪
+
+| 字段 | 内容 |
+|---|---|
+| 本次结论 | 修复跨模块影响、追踪引用、模型候选 BM-P3-R06 与 FLOW-R09 预览；新候选 REQAN-P3-R08 保留旧 Review/Evidence 为历史。 |
+| 状态 | PASSED |
+| 状态变更 | TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS: RUNNING → PASSED |
+| Task | TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS |
+| Attempt | ATTEMPT-TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS-I017-A001 |
+| Iteration | ITER-FEATURE-DESC-4AB41AC241A1-REQUIREMENT-ANALYSIS-017 / 17 |
+| 输入 Revision | 2474373b6dffea38a2ef9d6e186bed2e6674857222631a6f14dbc0b4793d89f2 |
+| 输出 Revision | REQAN-P3-R08 |
+| StageOutcome | 无 |
+| Evidence | EVD-000158、EVD-000159、EVD-000161、EVD-000162 |
+| Review | 无 |
+| 开放问题 | ISSUE-MR-0034、ISSUE-MR-0035、ISSUE-MR-0036、ISSUE-MR-0037、ISSUE-MR-0038、ISSUE-MR-0039、ISSUE-MR-0040 |
+| Git 检查点 | 无 |
+| 下一 Agent | BusinessModelAgent |
+| 后续事项 | 独立复核新 revision；旧 ISSUE-MR-0039/0040 保持待复核，不自动推进后续阶段。 |
+
+### 变更摘要
+
+- 修复跨模块影响、追踪引用、模型候选 BM-P3-R06 与 FLOW-R09 预览；新候选 REQAN-P3-R08 保留旧 Review/Evidence 为历史。
+
+### SQL、验证与阻塞
+
+| 项目 | 内容 |
+|---|---|
+| SQL 变更 | 无 / 未登记 |
+| 测试与验证 | 登记 Evidence 4 项；命令 Evidence 2 项 |
+| 问题与阻塞 | 无 |
+
 <!-- work-record-events-end -->
 
 ## 使用规则

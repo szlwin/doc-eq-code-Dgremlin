@@ -218,6 +218,6 @@ businessErrors:
 traceability:
   - traceId: TR-P3-INFORMATION-ENGINE-001
     requirementRefs: ["REQAN-P3-R08"]
-    modelRefs: ["BM-P3-R06"]
+    modelRefs: ["BM-P3-R05"]
     acceptanceRefs: ["AC-P3-INFORMATION-ENGINE-001"]
-    flowRefs: ["FLOW-R09@p3-information-evaluation"]
+    flowRefs: ["FLOW-R08@p3-information-evaluation"]

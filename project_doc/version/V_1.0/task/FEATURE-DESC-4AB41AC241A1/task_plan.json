@@ -75,7 +75,7 @@
       "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
       "validation_commands": [
         "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/requirement_doc.py validate -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --stage analysis --json",
-        "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/requirement_doc.py sync-traceability -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1 --json"
+        "python3 /Users/shazhoulin/work/zhu/code/codex-env/skills/common-develop/skills/common-develop/scripts/requirement_doc.py sync-traceability -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1 --json"
       ],
       "expected_results": [
         "每个功能、业务规则、跨功能规则和验收标准均有合法追踪引用。",

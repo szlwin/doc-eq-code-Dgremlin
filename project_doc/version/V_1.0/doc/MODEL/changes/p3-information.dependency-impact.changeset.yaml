@@ -1,0 +1,98 @@
+schemaVersion: 1
+artifact: dependency_impact_changeset
+changeSet:
+  id: DICHG-P3-INFORMATION-R01
+  version: V_1.0
+  module: MODEL
+  reason: Register the REQAN-P3-R08 cross-module boundaries without implementing downstream P4/P5 or changing P2.
+  baseRevision: P2-IMPACT-R29
+  resultRevision: P3-IMPACT-R01
+operations:
+  - operation: add
+    collection: nodes
+    targetId: FLOW-P3-INFORMATION-EVALUATION
+    reason: Bind the P3 impact to the existing business flow.
+    after:
+      id: FLOW-P3-INFORMATION-EVALUATION
+      type: PROCESS
+      name: Information facts and Directory execution handoff
+      module: MODEL
+      refs: ["version/V_1.0/doc/_flows/COMPILER/changes/005-p3-information-evaluation.yaml#/changeSet/resultRevision"]
+      traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
+  - operation: add
+    collection: impactPolicies
+    targetId: IMP-P3-INFORMATION-001
+    reason: Make compiler/context/model/XML/Directory impact explicit for independent Review.
+    after:
+      id: IMP-P3-INFORMATION-001
+      sourceRef: FLOW-P3-INFORMATION-EVALUATION
+      sourceAction: Compile Information and target facts; hand ordered Action.refRule values to the existing execution chain.
+      targetRefs: ["COMP", "CTX", "MODEL"]
+      policy: REJECT_OPERATION
+      conditions: ["Invalid Information or target facts", "Invalid Directory mapping or rule reference", "Loader or execution failure"]
+      consistency: ATOMIC
+      transactionBoundary: Compilation publishes one candidate atomically; runtime reuses ModelContainer and does not promise distributed atomicity across physical connections.
+      idempotency: No new idempotency contract; compile each mapping once and reuse the registered rule.
+      failureHandling: Reject invalid configuration before publication; on execution failure stop later loaders and preserve the original error through rollback/close/clear.
+      compensation: Discard invalid candidates; reuse existing connection rollback. No external compensation is introduced.
+      traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
+      testCaseIds: []
+  - operation: add
+    collection: crossModuleImplementations
+    targetId: CMI-P3-INFORMATION-001
+    reason: Record the agreed collaboration contract as analysis input; downstream implementation and tests remain pending.
+    after:
+      id: CMI-P3-INFORMATION-001
+      name: P3 compilation and Directory to ModelContainer handoff
+      trigger: Configuration compilation or explicit execution of a Directory's ordered Actions.
+      businessFlowRef: FLOW-P3-INFORMATION-EVALUATION
+      businessStepRefs: ["STEP-P3-INFORMATION-EVALUATION-COMPILE", "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"]
+      participants:
+        - {id: CMPART-P3-XML, module: XML, responsibility: Parse XML declarations and preserve source/order facts.}
+        - {id: CMPART-P3-COMPILER, module: COMPILER, responsibility: Validate and compile Information and materialization target facts.}
+        - {id: CMPART-P3-CONTEXT, module: CONTEXT, responsibility: Publish the candidate and provide the existing ConfigInfo rule lookup.}
+        - {id: CMPART-P3-DIRECTORY, module: MODEL, responsibility: Downstream P4/P5 owns Directory mapping and Action ordering; not implemented in this P3 repair.}
+        - {id: CMPART-P3-MODEL, module: MODEL, responsibility: Read-only Information evaluation and existing ModelLoader/ModelContainer execution and cleanup.}
+      steps:
+        - id: CMSTEP-P3-COMPILE
+          order: 1
+          from: CMPART-P3-XML
+          to: CMPART-P3-COMPILER
+          interactionType: SYNC_API
+          action: Parse and validate the three Information kinds and eligible target facts against the existing P2 bindings.
+          preconditions: ["Configuration sources and P2 bindings are available"]
+          postconditions: ["One valid immutable candidate or compilation failure"]
+          idempotency: Deterministic compilation of the same declarations.
+          failureHandling: Reject invalid definitions and retain the previously published configuration.
+          compensation: Discard the candidate.
+          traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
+        - id: CMSTEP-P3-PUBLISH
+          order: 2
+          from: CMPART-P3-COMPILER
+          to: CMPART-P3-CONTEXT
+          interactionType: SYNC_API
+          action: Publish validated Information and MaterializationTargetFact with the existing EngineContext/ConfigInfo boundary.
+          preconditions: ["Candidate validation succeeded"]
+          postconditions: ["Directory can consume target facts; P3 owns no ChangeInfo/RuleViewInfo mapping"]
+          idempotency: No duplicate rule registration by the P3 evaluator.
+          failureHandling: Keep the previously published context on failure.
+          compensation: Discard unpublished facts.
+          traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
+        - id: CMSTEP-P3-EXECUTE
+          order: 3
+          from: CMPART-P3-DIRECTORY
+          to: CMPART-P3-MODEL
+          interactionType: SYNC_API
+          action: The caller loads each ordered Action.refRule into ModelLoader; the existing ConfigInfo lookup resolves the rule and one ModelContainer.execute handles all loaders.
+          preconditions: ["Directory mapping and ordered Actions passed configuration validation"]
+          postconditions: ["Success returns normally without a new materialization result object or evaluate call"]
+          idempotency: Existing behavior; no new retry guarantee.
+          failureHandling: Stop later loaders, roll back established connections, close and clear while retaining the primary exception and suppressed cleanup errors.
+          compensation: Existing connection rollback only; no distributed transaction guarantee.
+          traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
+      successCriteria: ["Ownership follows REQAN-P3-R08 and FLOW-R09", "P3 publishes facts only", "Directory owns mappings and Action order", "ModelContainer owns execution and transactions"]
+      failurePaths:
+        - {id: CMFAIL-P3-COMPILE, atStep: CMSTEP-P3-COMPILE, condition: Invalid definition or binding, result: Candidate rejected and prior configuration retained, compensationSteps: ["Discard candidate"], manualRecovery: Correct configuration and recompile, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
+        - {id: CMFAIL-P3-EXECUTE, atStep: CMSTEP-P3-EXECUTE, condition: Loader or rule execution fails, result: Stop subsequent execution and propagate the preserved failure, compensationSteps: ["Rollback established connections", "Close and clear"], manualRecovery: Diagnose the first failing refRule before retry, traceIds: ["TR-P3-INFORMATION-ENGINE-001"]}
+      traceIds: ["TR-P3-INFORMATION-ENGINE-001"]
+      testCaseIds: []

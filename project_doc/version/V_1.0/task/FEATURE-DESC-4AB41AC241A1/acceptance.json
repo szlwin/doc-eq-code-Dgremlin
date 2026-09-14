@@ -29,109 +29,129 @@
       "reason": "PASSED：canonical requirement.md 明确将 ChangeInfo/RuleViewInfo 及映射归 Directory，P3 仅输出 Information 与可消费的物化目标事实；非法目标、类型/change-data、路径/权限、规则或映射均在配置编译期拒绝且不发布；Directory 顺序执行中的 Action 与 change-data 共享可回滚事务，任一失败整体回滚并中断；成功仅在最后一个 Action 后执行 grammer→update→commit，返回 MaterializationResult 后结束且 evaluate 调用次数为 0。RC-REQ-001～RC-REQ-005 均满足。"
     },
     {
-      "assertion_id": "ASRT-P3-REQAN-R06-BM-001",
+      "assertion_id": "ASRT-REVIEW-468C650E628973100A2986C0",
       "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "BusinessModelAgent 独立确认 REQAN-P3-R06 的业务语义、Directory/Information 聚合边界、流程输入及实现可行性足以进入业务建模。",
+      "statement": "BusinessModelAgent independently verifies requirement_analysis@REQAN-P3-R08 against the complete requirement_analysis:BusinessModelAgent Review profile.",
       "type": "MANUAL_REVIEW",
       "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R06@9fc86a92c2c0",
+      "revision": "REQAN-P3-R08",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
         "reviewer_agent": "BusinessModelAgent",
         "review_phase": "requirement_analysis",
-        "scope": "P3 Information Engine requirement analysis R06 business-model readiness",
-        "profile_id": "requirement_analysis:BusinessModelAgent"
+        "scope": "requirement_analysis@REQAN-P3-R08",
+        "profile_id": "requirement_analysis:BusinessModelAgent",
+        "review_binding_id": "REVIEW-BINDING-4735152A8982B3AD03C5A3BB"
       },
       "source_refs": [
-        "TR-P3-INFORMATION-ENGINE-001"
+        "TR-P3-INFORMATION-ENGINE-001",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/0",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/1",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/2",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/3"
       ],
       "evidence_ids": [
-        "EVD-000117",
-        "EVD-000118",
-        "EVD-000119"
+        "EVD-000158",
+        "EVD-000162",
+        "EVD-000161",
+        "EVD-000159",
+        "EVD-000167"
       ],
       "verified_by_agent": "BusinessModelAgent",
-      "verified_at": "2026-09-04T23:00:36+08:00",
-      "reason": "REV-000046 PASSED：requirement_analysis:BusinessModelAgent 全部 13 个 criterion 已通过，且无 Finding/Issue。"
+      "verified_at": "2026-09-14T14:18:43+08:00",
+      "reason": "PASSED：REQAN-P3-R08 的需求分析已统一业务语义、对象边界、跨模块影响、Flow 输入及当前实现可行性证据，13 个 BusinessModelAgent criterion 均满足。"
     },
     {
-      "assertion_id": "ASRT-P3-REQAN-R06-TD-001",
+      "assertion_id": "ASRT-REVIEW-D96FD9F5A59D1241BEFAEB63",
       "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "TestDesignAgent 独立确认 REQAN-P3-R06 的规则、失败路径、事务回滚及成功终止结果可观察且足以进入测试设计。",
+      "statement": "TestDesignAgent independently verifies requirement_analysis@REQAN-P3-R08 against the complete requirement_analysis:TestDesignAgent Review profile.",
       "type": "MANUAL_REVIEW",
       "phase": "requirement_analysis",
-      "revision": "REQAN-P3-R06@9fc86a92c2c0",
+      "revision": "REQAN-P3-R08",
       "blocking": true,
       "status": "VERIFIED",
       "parameters": {
         "reviewer_agent": "TestDesignAgent",
         "review_phase": "requirement_analysis",
-        "scope": "P3 Information Engine requirement analysis R06 test-design readiness",
-        "profile_id": "requirement_analysis:TestDesignAgent"
+        "scope": "requirement_analysis@REQAN-P3-R08",
+        "profile_id": "requirement_analysis:TestDesignAgent",
+        "review_binding_id": "REVIEW-BINDING-F9F7233421C999260B6C3CEA"
       },
       "source_refs": [
-        "TR-P3-INFORMATION-ENGINE-001"
+        "TR-P3-INFORMATION-ENGINE-001",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/0",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/1",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/2",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/3"
       ],
       "evidence_ids": [
-        "EVD-000117",
-        "EVD-000118"
+        "EVD-000158",
+        "EVD-000161",
+        "EVD-000159"
       ],
       "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-09-04T23:09:18+08:00",
-      "reason": "PASSED。六项 criterion 均满足：ChangeInfo/RuleViewInfo 的创建、注册、映射、不变量和生命周期明确归 Directory，P3 仅发布 Information 与物化目标事实；非法 target/type/change-data/path/permission/rule/mapping 在编译期拒绝且不发布；Directory 顺序 Action 与 change-data 共享事务，任一失败整体回滚并中断且无部分结果；成功仅在最后一个 Action 后执行 grammer → update → commit → MaterializationResult 并结束，evaluate 调用次数为 0；正常、边界、失败与禁止副作用均可观察，足以供后续 test_design 建 Case。本 Review 不要求、未创建也未执行测试 Case，未修改 test_case.md、测试代码或 XML。"
+      "verified_at": "2026-09-14T14:48:38+08:00",
+      "reason": "PASSED：REQAN-P3-R08 的原子规则、横切边界、可观察验收、失败与禁止副作用及 FLOW-R09 主/变体/失败路径均完整，足以供后续测试设计建立 Case。"
     },
     {
-      "assertion_id": "ASRT-P3-BMODEL-R05-BMR-001",
+      "assertion_id": "ASRT-REVIEW-C44CBA3DD1BC598736B05229",
       "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "BusinessModelReviewAgent 独立确认 BM-P3-R05 与已确认需求一致，P3 Information 聚合边界、Directory 所有权、编译守卫、识别不变量和下游执行契约完整且无未授权语义。",
+      "statement": "ImpactAnalysisReviewAgent independently verifies requirement_analysis@REQAN-P3-R08 against the complete requirement_analysis:ImpactAnalysisReviewAgent Review profile.",
       "type": "MANUAL_REVIEW",
-      "phase": "business_model",
-      "revision": "BM-P3-R05",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P3-R08",
       "blocking": true,
-      "status": "VERIFIED",
+      "status": "FAILED",
       "parameters": {
-        "reviewer_agent": "BusinessModelReviewAgent",
-        "review_phase": "business_model",
-        "scope": "P3 Information Engine BM-P3-R05 semantic alignment and business-model integrity",
-        "profile_id": "business_model:BusinessModelReviewAgent"
+        "reviewer_agent": "ImpactAnalysisReviewAgent",
+        "review_phase": "requirement_analysis",
+        "scope": "requirement_analysis@REQAN-P3-R08",
+        "profile_id": "requirement_analysis:ImpactAnalysisReviewAgent",
+        "review_binding_id": "REVIEW-BINDING-28F50314C408D76623CE340F"
       },
       "source_refs": [
-        "TR-P3-INFORMATION-ENGINE-001"
+        "TR-P3-INFORMATION-ENGINE-001",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/0",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/1",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/2",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/3"
       ],
       "evidence_ids": [
-        "EVD-000121"
+        "EVD-000162",
+        "EVD-000158"
       ],
-      "verified_by_agent": "BusinessModelReviewAgent",
-      "verified_at": "2026-09-04T23:31:28+08:00",
-      "reason": "REV-000048 已按 business_model:BusinessModelReviewAgent 全部 22 项 criteria 提交 PASSED；BM-P3-R05 当前 revision Evidence EVD-000120～124 有效且无 Finding。"
+      "verified_by_agent": "ImpactAnalysisReviewAgent",
+      "verified_at": "2026-09-14T15:54:09+08:00",
+      "reason": "NEEDS_CHANGES：REQAN-P3-R08 已声明影响与跨模块事实，但 IMP-P3-INFORMATION-001 尚未完整覆盖参与节点、历史/在途边界、当前 revision 失效传播、Case 映射及可回查传播路径。"
     },
     {
-      "assertion_id": "ASRT-P3-BMODEL-R05-TD-001",
+      "assertion_id": "ASRT-REVIEW-304F074D907D6CB2F9AB18B0",
       "acceptance_id": "AC-P3-INFORMATION-ENGINE-001",
-      "statement": "TestDesignAgent 独立确认 BM-P3-R05 的不变量、识别状态、错误和 Directory 物化边界足以支持后续测试设计，且不要求本阶段已有测试 Case。",
+      "statement": "CrossModuleIntegrationReviewAgent independently verifies requirement_analysis@REQAN-P3-R08 against the complete requirement_analysis:CrossModuleIntegrationReviewAgent Review profile.",
       "type": "MANUAL_REVIEW",
-      "phase": "business_model",
-      "revision": "BM-P3-R05",
+      "phase": "requirement_analysis",
+      "revision": "REQAN-P3-R08",
       "blocking": true,
-      "status": "VERIFIED",
+      "status": "PENDING",
       "parameters": {
-        "reviewer_agent": "TestDesignAgent",
-        "review_phase": "business_model",
-        "scope": "P3 Information Engine BM-P3-R05 verification readiness",
-        "profile_id": "business_model:TestDesignAgent"
+        "reviewer_agent": "CrossModuleIntegrationReviewAgent",
+        "review_phase": "requirement_analysis",
+        "scope": "requirement_analysis@REQAN-P3-R08",
+        "profile_id": "requirement_analysis:CrossModuleIntegrationReviewAgent",
+        "review_binding_id": "REVIEW-BINDING-4C0A0FF2F451CE37C3754AAB"
       },
       "source_refs": [
-        "TR-P3-INFORMATION-ENGINE-001"
+        "TR-P3-INFORMATION-ENGINE-001",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/0",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/1",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/2",
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS#expected_results/3"
       ],
-      "evidence_ids": [
-        "EVD-000121",
-        "EVD-000123",
-        "EVD-000122"
-      ],
-      "verified_by_agent": "TestDesignAgent",
-      "verified_at": "2026-09-04T23:35:59+08:00",
-      "reason": "REV-000049 independently passed all five business_model:TestDesignAgent criteria for BM-P3-R05 with no findings."
+      "evidence_ids": [],
+      "verified_by_agent": "",
+      "verified_at": "",
+      "reason": ""
     }
   ]
 }

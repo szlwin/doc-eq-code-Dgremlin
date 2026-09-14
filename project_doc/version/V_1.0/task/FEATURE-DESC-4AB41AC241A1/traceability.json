@@ -20,21 +20,24 @@
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#AC-P3-INFORMATION-ENGINE-001",
         "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md#TR-P3-INFORMATION-ENGINE-001"
       ],
-      "impact_required": false,
-      "dependency_impact_refs": [],
+      "impact_required": true,
+      "dependency_impact_refs": [
+        "version/V_1.0/doc/MODEL/changes/p3-information.dependency-impact.changeset.yaml#IMP-P3-INFORMATION-001"
+      ],
       "business_flow_required": true,
       "business_flow_refs": [
         "FLOW-P3-INFORMATION-EVALUATION"
       ],
-      "cross_module_implementation_required": false,
-      "cross_module_implementation_refs": [],
+      "cross_module_implementation_required": true,
+      "cross_module_implementation_refs": [
+        "version/V_1.0/doc/MODEL/changes/p3-information.dependency-impact.changeset.yaml#CMI-P3-INFORMATION-001"
+      ],
       "business_model_refs": [
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml#BM-P3-R04",
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md#P3 Information Engine 业务模型"
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml#/revision",
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md#p3-information-engine-业务模型"
       ],
       "design_refs": [
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#P3 Information Engine 技术设计",
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#implementation-strategy-decisions"
+        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md#p3-information-engine-技术设计"
       ],
       "test_case_ids": [
         "CASE-P3-MIX-001",
@@ -52,12 +55,18 @@
       "contract_refs": [],
       "implementation_refs": [],
       "verification_evidence_ids": [
-        "EVD-000113"
+        "EVD-000113",
+        "EVD-000158",
+        "EVD-000159",
+        "EVD-000161",
+        "EVD-000162"
       ],
       "verified_by_agents": [
-        "RequirementAnalysisAgent"
+        "RequirementAnalysisAgent",
+        "BusinessModelAgent"
       ],
-      "notes": "业务追踪已覆盖；Information 专项测试 Case 与 Evidence 按 DEC-P3-INFORMATION-ENGINE-008 延后至测试设计/开发阶段，不在需求确认阶段虚构验证证据。\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation.\nREQCONF-P3-R06 的 EVD-000097/REV-000038 仅保留为历史审计事实；当前 REQCONF-P3-R07 必须重新完成独立 Review 后再恢复 COVERED。\nTrace revalidated by RequirementAnalysisAgent using EVD-000113 and REV-000045 at REQCONF-P3-R07@9fc86a92c2c0; REQCONF-P3-R07 已由 RequirementAnalysisAgent 独立 Review 通过，重新确认 Directory ownership、编译期拒绝、共享事务回滚与成功终止语义。"
+      "notes": "业务追踪已覆盖；Information 专项测试 Case 与 Evidence 按 DEC-P3-INFORMATION-ENGINE-008 延后至测试设计/开发阶段，不在需求确认阶段虚构验证证据。\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation.\nREQCONF-P3-R06 的 EVD-000097/REV-000038 仅保留为历史审计事实；当前 REQCONF-P3-R07 必须重新完成独立 Review 后再恢复 COVERED。\nTrace revalidated by RequirementAnalysisAgent using EVD-000113 and REV-000045 at REQCONF-P3-R07@9fc86a92c2c0; REQCONF-P3-R07 已由 RequirementAnalysisAgent 独立 Review 通过，重新确认 Directory ownership、编译期拒绝、共享事务回滚与成功终止语义。\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation.\nRequirement source synchronized from version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md; downstream references require revalidation.\nTrace revalidated by BusinessModelAgent using EVD-000158, EVD-000159, EVD-000161, EVD-000162 and REV-000058 at REQAN-P3-R08; REQAN-P3-R08 current requirement, BM-P3-R06 model, FLOW-R09, and impact/cross-module changeset evidence were independently reviewed and aligned; implementation feasibility is separately supported by EVD-000167.",
+      "requirement_source_digest": "9503a91264ec21d9143dce6fa0b1089eca9c97c90578f503846ed5614da1fda4"
     }
   ]
 }
