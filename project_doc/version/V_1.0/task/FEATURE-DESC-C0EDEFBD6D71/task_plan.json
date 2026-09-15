@@ -18,9 +18,13 @@
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/acceptance.json",
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/handoff.md"
       ],
-      "acceptance_trace_ids": [],
+      "acceptance_trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
       "flow_step_refs": [],
-      "flow_refs": [],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
       "validation_commands": [
         "python3 /Users/shazhoulin/.agents/skills/common-develop-opt/scripts/requirement_doc.py validate -g RequirementConfirmationAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md --stage confirmation --json"
       ],

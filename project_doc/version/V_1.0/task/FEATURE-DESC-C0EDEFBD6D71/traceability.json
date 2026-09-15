@@ -1,4 +1,43 @@
 {
   "schema_version": 1,
-  "items": []
+  "target_id": "FEATURE-DESC-C0EDEFBD6D71",
+  "items": [
+    {
+      "id": "TR-P3-INFORMATION-ENGINE-001",
+      "description": "Information Engine 需求基线: BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, BR-P3-INFORMATION-ENGINE-005, CR-P3-INFORMATION-ENGINE-001 -> AC-P3-INFORMATION-ENGINE-001",
+      "status": "PENDING",
+      "acceptance_criteria": [
+        "AC-P3-INFORMATION-ENGINE-001"
+      ],
+      "requirement_refs": [
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#P3-INFORMATION-ENGINE-F01",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#BR-P3-INFORMATION-ENGINE-001",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#BR-P3-INFORMATION-ENGINE-002",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#BR-P3-INFORMATION-ENGINE-003",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#BR-P3-INFORMATION-ENGINE-004",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#BR-P3-INFORMATION-ENGINE-005",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#CR-P3-INFORMATION-ENGINE-001",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#AC-P3-INFORMATION-ENGINE-001",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md#TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "requirement_source_digest": "57ac4d60296799e0460d8dcf5654cbe7728507b0b4ba572c251f962ad597bfc2",
+      "impact_required": true,
+      "dependency_impact_refs": [],
+      "business_flow_required": true,
+      "business_flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "cross_module_implementation_required": true,
+      "cross_module_implementation_refs": [],
+      "business_model_refs": [],
+      "design_refs": [],
+      "test_case_ids": [],
+      "plan_task_ids": [],
+      "contract_refs": [],
+      "implementation_refs": [],
+      "verification_evidence_ids": [],
+      "verified_by_agents": [],
+      "notes": "Synced from version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md by requirement_doc.py"
+    }
+  ]
 }
