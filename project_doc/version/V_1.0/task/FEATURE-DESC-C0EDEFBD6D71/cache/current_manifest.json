@@ -2,61 +2,61 @@
   "schemaVersion": 1,
   "kind": "CURRENT_MANIFEST",
   "authority": "DERIVED",
-  "sourceInputDigest": "24068f27ee3b1aa8a688853c42b9c1791f799f217e55d4494aaeb5950098c674",
+  "sourceInputDigest": "abf3038ca830c247516e96f16136170d1801b2039ac4c1989ca3a3e31aeafc6d",
   "taskDir": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71",
   "state": {
     "taskStatus": "PARTIAL",
-    "currentPhase": "requirement_confirmation",
-    "currentRound": "REQUIREMENT_CONFIRMATION-I006",
+    "currentPhase": "business_model",
+    "currentRound": "BUSINESS_MODEL-I007",
     "currentAgent": "ProjectManagerAgent",
-    "nextAgent": "ProjectManagerAgent",
-    "nextAction": "运行 advance-phase 推进 requirement_confirmation 的下一阶段",
-    "eventSeq": 62,
-    "eventDigest": "e207ecd3c9087f6b14fc24888d552dfbda72a1c11c7a5c8d6a21ece0c47519fb",
+    "nextAgent": "BusinessModelAgent",
+    "nextAction": "开始 business_model 阶段",
+    "eventSeq": 91,
+    "eventDigest": "9f45878d1c1ce6dacf9fcbb08cb5bdc9ddbfab15705f8bde615dd14e4742d41a",
     "storageMode": "EVENT_LEDGER_V3"
   },
   "activeRevisions": {
     "business_model": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-BUSINESS-MODEL-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-BUSINESS-MODEL-007",
+      "iterationNo": 7
     },
     "code_review": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-CODE-REVIEW-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-CODE-REVIEW-007",
+      "iterationNo": 7
     },
     "completion_verification": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-COMPLETION-VERIFICATION-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-COMPLETION-VERIFICATION-007",
+      "iterationNo": 7
     },
     "design": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-DESIGN-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-DESIGN-007",
+      "iterationNo": 7
     },
     "development": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-DEVELOPMENT-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-DEVELOPMENT-007",
+      "iterationNo": 7
     },
     "implementation_plan": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-IMPLEMENTATION-PLAN-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-IMPLEMENTATION-PLAN-007",
+      "iterationNo": 7
     },
     "requirement_analysis": {
-      "revision": "",
-      "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-REQUIREMENT-ANALYSIS-006",
-      "iterationNo": 6
+      "revision": "REQAN-P3-R02",
+      "status": "PASSED",
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-REQUIREMENT-ANALYSIS-007",
+      "iterationNo": 7
     },
     "requirement_confirmation": {
       "revision": "REQCONF-P3-R03",
@@ -67,14 +67,14 @@
     "test_design": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-TEST-DESIGN-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-TEST-DESIGN-007",
+      "iterationNo": 7
     },
     "testing": {
       "revision": "",
       "status": "STALE",
-      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-TESTING-006",
-      "iterationNo": 6
+      "iterationId": "ITER-FEATURE-DESC-C0EDEFBD6D71-TESTING-007",
+      "iterationNo": 7
     }
   },
   "workPolicy": {
@@ -105,7 +105,7 @@
     "authority": "CANONICAL",
     "readMode": "SUMMARY_DEFAULT_FULL_ON_DEMAND",
     "status": "PASSED",
-    "sourceDigest": "6e9c7775fc7329976cca19096ec4164272cb8f05d4a5d85811110e88f9b2da26",
+    "sourceDigest": "53b4a009d0a4188abf553838e9780bd6b8957481a76e260fd4b0b8a325b7b271",
     "total": 1,
     "byStatus": {
       "PENDING": 1
@@ -156,13 +156,21 @@
   },
   "derivedImpact": {
     "path": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/cache/current_impact.json",
-    "present": false,
+    "present": true,
     "fresh": false,
-    "authority": "DERIVED"
+    "authority": "DERIVED",
+    "status": "PASSED",
+    "phase": "requirement_analysis",
+    "revision": "REQAN-P3-R01-AM01@553d6201fb84fa7972fa94ea48107daade55f4ce65abfb958f0abd8fe7beede1",
+    "revalidationRequired": true,
+    "reasonCodes": [
+      "CRITERION_REVALIDATION_REQUIRED",
+      "IMPACT_UNKNOWN_CONSERVATIVE"
+    ]
   },
   "freshness": {
-    "sourceEventSeq": 62,
-    "sourceEventDigest": "e207ecd3c9087f6b14fc24888d552dfbda72a1c11c7a5c8d6a21ece0c47519fb",
+    "sourceEventSeq": 91,
+    "sourceEventDigest": "9f45878d1c1ce6dacf9fcbb08cb5bdc9ddbfab15705f8bde615dd14e4742d41a",
     "generatedBy": "scripts/current_manifest.py"
   }
 }

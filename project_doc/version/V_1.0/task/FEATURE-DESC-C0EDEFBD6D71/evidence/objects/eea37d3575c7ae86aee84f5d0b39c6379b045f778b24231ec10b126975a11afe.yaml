@@ -1,0 +1,437 @@
+schemaVersion: 1
+artifact: "dependency_impact_changeset"
+changeSet:
+  id: "DICHG-P3-INFORMATION-R02-REBASELINE"
+  version: "V_1.0"
+  module: "MODEL"
+  reason: "Rebind P3 dependency and cross-module impact to clean task FEATURE-DESC-C0EDEFBD6D71, expanding the declared XML, P2, P4, P5, Directory and DEMO boundaries."
+  baseRevision: "P3-IMPACT-R01"
+  resultRevision: "P3-IMPACT-R02"
+operations:
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "FEATURE-DESC-C0EDEFBD6D71"
+    reason: "Register the clean P3 task as the root of the rebaselined impact path."
+    after:
+      id: "FEATURE-DESC-C0EDEFBD6D71"
+      type: "FEATURE"
+      name: "P3 Information Engine Rebaseline"
+      module: "MODEL"
+      refs:
+        - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "XML"
+    reason: "Register XML parsing as an explicit P3 impact boundary."
+    after:
+      id: "XML"
+      type: "MODULE"
+      name: "dec-context-config-parse-xml"
+      module: "XML"
+      refs:
+        - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "DEMO"
+    reason: "Register the mix fixture and integration evidence boundary."
+    after:
+      id: "DEMO"
+      type: "MODULE"
+      name: "dec-demo"
+      module: "DEMO"
+      refs:
+        - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "P2-BINDING"
+    reason: "Register the P2 exact binding prerequisite consumed by P3."
+    after:
+      id: "P2-BINDING"
+      type: "DATA_OBJECT"
+      name: "P2 exact System RuleView and model-access bindings"
+      module: "COMPILER"
+      refs:
+        - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "P4-ACTION"
+    reason: "Register the downstream P4 Action and refRule handoff boundary."
+    after:
+      id: "P4-ACTION"
+      type: "PROCESS"
+      name: "P4 Action and refRule handoff"
+      module: "MODEL"
+      refs:
+        - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "P5-DIRECTORY"
+    reason: "Register the downstream P5 Directory ownership boundary."
+    after:
+      id: "P5-DIRECTORY"
+      type: "PROCESS"
+      name: "P5 Directory mapping and Action ordering"
+      module: "MODEL"
+      refs:
+        - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "nodes"
+    targetId: "DIRECTORY"
+    reason: "Register Directory as the ChangeInfo and RuleViewInfo mapping component."
+    after:
+      id: "DIRECTORY"
+      type: "DATA_OBJECT"
+      name: "Directory mapping aggregate"
+      module: "MODEL"
+      refs:
+        - "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-TARGET-FLOW"
+    reason: "Connect the clean task to its stable P3 business flow."
+    after:
+      id: "REL-P3-R02-TARGET-FLOW"
+      from: "FEATURE-DESC-C0EDEFBD6D71"
+      to: "FLOW-P3-INFORMATION-EVALUATION"
+      type: "REFINES"
+      direction: "DIRECTED"
+      rationale: "The clean task owns the rebaselined P3 requirement while the stable Flow ID preserves business meaning."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-FLOW-XML"
+    reason: "Record XML declarations as Flow input."
+    after:
+      id: "REL-P3-R02-FLOW-XML"
+      from: "FLOW-P3-INFORMATION-EVALUATION"
+      to: "XML"
+      type: "CONSUMES_FROM"
+      direction: "DIRECTED"
+      rationale: "P3 compilation consumes Information, Directory and Action declaration facts parsed from XML."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-FLOW-P2"
+    reason: "Record the P2 exact binding prerequisite."
+    after:
+      id: "REL-P3-R02-FLOW-P2"
+      from: "FLOW-P3-INFORMATION-EVALUATION"
+      to: "P2-BINDING"
+      type: "DEPENDS_ON"
+      direction: "DIRECTED"
+      rationale: "P3 compilation requires published System, RuleView and exact model-access bindings from P2."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-FLOW-COMP"
+    reason: "Record compiler implementation responsibility."
+    after:
+      id: "REL-P3-R02-FLOW-COMP"
+      from: "FLOW-P3-INFORMATION-EVALUATION"
+      to: "COMP"
+      type: "IMPLEMENTED_BY"
+      direction: "DIRECTED"
+      rationale: "Compiler validates and freezes Information, DAG and materialization target facts."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-FLOW-CTX"
+    reason: "Record context publication responsibility."
+    after:
+      id: "REL-P3-R02-FLOW-CTX"
+      from: "FLOW-P3-INFORMATION-EVALUATION"
+      to: "CTX"
+      type: "IMPLEMENTED_BY"
+      direction: "DIRECTED"
+      rationale: "Context publishes the compiled candidate and exposes the existing ConfigInfo lookup."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-FLOW-MODEL"
+    reason: "Record model evaluation and execution responsibility."
+    after:
+      id: "REL-P3-R02-FLOW-MODEL"
+      from: "FLOW-P3-INFORMATION-EVALUATION"
+      to: "MODEL"
+      type: "IMPLEMENTED_BY"
+      direction: "DIRECTED"
+      rationale: "MODEL owns read-only evaluation and ModelContainer execution and cleanup."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-P4-DIRECTORY"
+    reason: "Record P4 Action handoff to Directory."
+    after:
+      id: "REL-P3-R02-P4-DIRECTORY"
+      from: "P4-ACTION"
+      to: "DIRECTORY"
+      type: "PROVIDES_TO"
+      direction: "DIRECTED"
+      rationale: "P4 provides Action and refRule facts consumed by Directory ordering."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-P5-DIRECTORY"
+    reason: "Record P5 ownership of the Directory aggregate."
+    after:
+      id: "REL-P3-R02-P5-DIRECTORY"
+      from: "P5-DIRECTORY"
+      to: "DIRECTORY"
+      type: "OWNS"
+      direction: "DIRECTED"
+      rationale: "P5 owns ChangeInfo and RuleViewInfo mapping plus ordered Action information."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-DIRECTORY-MODEL"
+    reason: "Record ordered Action handoff to ModelContainer."
+    after:
+      id: "REL-P3-R02-DIRECTORY-MODEL"
+      from: "DIRECTORY"
+      to: "MODEL"
+      type: "PROVIDES_TO"
+      direction: "DIRECTED"
+      rationale: "Directory provides ordered Action.refRule values; MODEL executes them in one ModelContainer."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "add"
+    collection: "relationships"
+    targetId: "REL-P3-R02-FLOW-DEMO"
+    reason: "Record the mix fixture as the integration verification boundary."
+    after:
+      id: "REL-P3-R02-FLOW-DEMO"
+      from: "FLOW-P3-INFORMATION-EVALUATION"
+      to: "DEMO"
+      type: "VERIFIED_BY"
+      direction: "DIRECTED"
+      rationale: "The DEMO mix fixture supplies the declared 16-Information integration baseline."
+      conditions: []
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "update"
+    collection: "nodes"
+    targetId: "FLOW-P3-INFORMATION-EVALUATION"
+    reason: "Rebind FLOW-P3-INFORMATION-EVALUATION to clean task FEATURE-DESC-C0EDEFBD6D71 without inheriting old review state."
+    after:
+      id: "FLOW-P3-INFORMATION-EVALUATION"
+      type: "PROCESS"
+      name: "Information facts and Directory execution handoff"
+      module: "MODEL"
+      refs:
+        - "version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml#/changeSet/resultRevision"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+  -
+    operation: "update"
+    collection: "impactPolicies"
+    targetId: "IMP-P3-INFORMATION-001"
+    reason: "Rebind IMP-P3-INFORMATION-001 to clean task FEATURE-DESC-C0EDEFBD6D71 without inheriting old review state."
+    after:
+      id: "IMP-P3-INFORMATION-001"
+      sourceRef: "FLOW-P3-INFORMATION-EVALUATION"
+      sourceAction: "Compile Information and target facts; hand ordered Action.refRule values to the existing execution chain."
+      targetRefs:
+        - "XML"
+        - "COMP"
+        - "CTX"
+        - "MODEL"
+        - "P2-BINDING"
+        - "P4-ACTION"
+        - "P5-DIRECTORY"
+        - "DIRECTORY"
+        - "DEMO"
+      policy: "REJECT_OPERATION"
+      conditions:
+        - "Invalid Information or target facts"
+        - "Invalid Directory mapping or rule reference"
+        - "Loader or execution failure"
+      consistency: "ATOMIC"
+      transactionBoundary: "Compilation publishes one candidate atomically; runtime reuses ModelContainer and does not promise distributed atomicity across physical connections."
+      idempotency: "No new idempotency contract; compile each mapping once and reuse the registered rule."
+      failureHandling: "Reject invalid configuration before publication; on execution failure stop later loaders and preserve the original error through rollback/close/clear."
+      compensation: "Discard invalid candidates; reuse existing connection rollback. No external compensation is introduced."
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      testCaseIds:
+        - "CASE-P3-MIX-001"
+        - "CASE-P3-ERROR-001"
+        - "CASE-P3-CHANGE-INFO-001"
+        - "CASE-P3-DIRECTORY-001"
+  -
+    operation: "update"
+    collection: "crossModuleImplementations"
+    targetId: "CMI-P3-INFORMATION-001"
+    reason: "Rebind CMI-P3-INFORMATION-001 to clean task FEATURE-DESC-C0EDEFBD6D71 without inheriting old review state."
+    after:
+      id: "CMI-P3-INFORMATION-001"
+      name: "P3 compilation and Directory to ModelContainer handoff"
+      trigger: "Configuration compilation or explicit execution of a Directory's ordered Actions."
+      businessFlowRef: "FLOW-P3-INFORMATION-EVALUATION"
+      businessStepRefs:
+        - "STEP-P3-INFORMATION-EVALUATION-COMPILE"
+        - "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
+      participants:
+        -
+          id: "CMPART-P3-XML"
+          module: "XML"
+          responsibility: "Parse XML declarations and preserve source and declaration order facts."
+        -
+          id: "CMPART-P3-P2"
+          module: "COMPILER"
+          responsibility: "Provide the published P2 System, RuleView and exact model-access binding prerequisite."
+        -
+          id: "CMPART-P3-COMPILER"
+          module: "COMPILER"
+          responsibility: "Validate and compile Information and materialization target facts."
+        -
+          id: "CMPART-P3-CONTEXT"
+          module: "CONTEXT"
+          responsibility: "Publish the candidate and provide the existing ConfigInfo rule lookup."
+        -
+          id: "CMPART-P3-P4"
+          module: "MODEL"
+          responsibility: "Supply Action, system-ref, ref-rule and Produce facts at the downstream boundary."
+        -
+          id: "CMPART-P3-DIRECTORY"
+          module: "MODEL"
+          responsibility: "Own ChangeInfo/RuleViewInfo mapping, invariant checks and ordered Action information."
+        -
+          id: "CMPART-P3-MODEL"
+          module: "MODEL"
+          responsibility: "Provide read-only Information evaluation and existing ModelLoader/ModelContainer execution and cleanup."
+        -
+          id: "CMPART-P3-DEMO"
+          module: "DEMO"
+          responsibility: "Provide the mix fixture and integration evidence for the declared P3 behavior."
+      steps:
+        -
+          id: "CMSTEP-P3-COMPILE"
+          order: 1
+          from: "CMPART-P3-XML"
+          to: "CMPART-P3-COMPILER"
+          interactionType: "SYNC_API"
+          action: "Parse and validate the three Information kinds and eligible target facts against the existing P2 bindings."
+          preconditions:
+            - "Configuration sources and P2 bindings are available"
+          postconditions:
+            - "One valid immutable candidate or compilation failure"
+          idempotency: "Deterministic compilation of the same declarations."
+          failureHandling: "Reject invalid definitions and retain the previously published configuration."
+          compensation: "Discard the candidate."
+          traceIds:
+            - "TR-P3-INFORMATION-ENGINE-001"
+        -
+          id: "CMSTEP-P3-PUBLISH"
+          order: 2
+          from: "CMPART-P3-COMPILER"
+          to: "CMPART-P3-CONTEXT"
+          interactionType: "SYNC_API"
+          action: "Publish validated Information and MaterializationTargetFact with the existing EngineContext/ConfigInfo boundary."
+          preconditions:
+            - "Candidate validation succeeded"
+          postconditions:
+            - "Directory can consume target facts; P3 owns no ChangeInfo/RuleViewInfo mapping"
+          idempotency: "No duplicate rule registration by the P3 evaluator."
+          failureHandling: "Keep the previously published context on failure."
+          compensation: "Discard unpublished facts."
+          traceIds:
+            - "TR-P3-INFORMATION-ENGINE-001"
+        -
+          id: "CMSTEP-P3-EXECUTE"
+          order: 3
+          from: "CMPART-P3-DIRECTORY"
+          to: "CMPART-P3-MODEL"
+          interactionType: "SYNC_API"
+          action: "The caller loads each ordered Action.refRule into ModelLoader; the existing ConfigInfo lookup resolves the rule and one ModelContainer.execute handles all loaders."
+          preconditions:
+            - "Directory mapping and ordered Actions passed configuration validation"
+          postconditions:
+            - "Success returns normally without a new materialization result object or evaluate call"
+          idempotency: "Existing behavior; no new retry guarantee."
+          failureHandling: "Stop later loaders, roll back established connections, close and clear while retaining the primary exception and suppressed cleanup errors."
+          compensation: "Existing connection rollback only; no distributed transaction guarantee."
+          traceIds:
+            - "TR-P3-INFORMATION-ENGINE-001"
+      successCriteria:
+        - "Ownership and references bind to clean task FEATURE-DESC-C0EDEFBD6D71 and FLOW-R10"
+        - "P3 publishes facts only"
+        - "Directory owns mappings and Action order"
+        - "ModelContainer owns execution and transactions"
+      failurePaths:
+        -
+          id: "CMFAIL-P3-COMPILE"
+          atStep: "CMSTEP-P3-COMPILE"
+          condition: "Invalid definition or binding"
+          result: "Candidate rejected and prior configuration retained"
+          compensationSteps:
+            - "Discard candidate"
+          manualRecovery: "Correct configuration and recompile"
+          traceIds:
+            - "TR-P3-INFORMATION-ENGINE-001"
+        -
+          id: "CMFAIL-P3-EXECUTE"
+          atStep: "CMSTEP-P3-EXECUTE"
+          condition: "Loader or rule execution fails"
+          result: "Stop subsequent execution and propagate the preserved failure"
+          compensationSteps:
+            - "Rollback established connections"
+            - "Close and clear"
+          manualRecovery: "Diagnose the first failing refRule before retry"
+          traceIds:
+            - "TR-P3-INFORMATION-ENGINE-001"
+      traceIds:
+        - "TR-P3-INFORMATION-ENGINE-001"
+      testCaseIds:
+        - "CASE-P3-MIX-001"
+        - "CASE-P3-ERROR-001"
+        - "CASE-P3-CHANGE-INFO-001"
+        - "CASE-P3-DIRECTORY-001"

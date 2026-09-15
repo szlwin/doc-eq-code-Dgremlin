@@ -103,7 +103,7 @@ operations:
         - "已发布的 16 个 Information 定义和可读模型上下文"
       when: "按限定 InformationKey 请求识别"
       then:
-        - "先识别原子再按 DAG 计算复合；正常仅返回 TRUE/FALSE 和证据，求值错误直接抛既有异常"
+        - "先识别原子再按 DAG 计算复合，返回 TRUE/FALSE/ERROR 和证据"
       traceIds:
         - "TR-P3-INFORMATION-ENGINE-001"
     reason: "Seed SCN-P3-IDENTIFY from clean task FEATURE-DESC-C0EDEFBD6D71."
@@ -178,7 +178,7 @@ operations:
       attributes:
         -
           name: "state"
-          type: "TRUE|FALSE"
+          type: "TRUE|FALSE|ERROR"
           required: true
         -
           name: "evidence"
@@ -190,7 +190,7 @@ operations:
           required: true
       behaviors:
         - "结果绑定本次读取版本"
-        - "求值错误不降级为 FALSE，而是直接抛既有异常"
+        - "ERROR 不降级为 FALSE"
       traceIds:
         - "TR-P3-INFORMATION-ENGINE-001"
     reason: "Seed ENT-IDENTIFICATION-RESULT from clean task FEATURE-DESC-C0EDEFBD6D71."
@@ -392,7 +392,7 @@ operations:
     targetId: "INV-P3-PATH-RESOLUTION"
     after:
       id: "INV-P3-PATH-RESOLUTION"
-      statement: "模型路径不存在时抛既有异常；target-main 对应基础字段优先，关系字段按自身 Data 归属解析。"
+      statement: "模型路径不存在为 ERROR；target-main 对应基础字段优先，关系字段按自身 Data 归属解析。"
       trigger: "identify"
       failure: "INFORMATION_PATH_INVALID"
       traceIds:
@@ -418,7 +418,7 @@ operations:
     targetId: "INV-P3-NULL-ERROR"
     after:
       id: "INV-P3-NULL-ERROR"
-      statement: "普通求值遇到 null 时抛既有异常，只有显式 InformationKey = null 比较例外。"
+      statement: "普通求值遇到 null 为 ERROR，只有显式 InformationKey = null 比较例外。"
       trigger: "identify"
       failure: "INFORMATION_NULL_ERROR"
       traceIds:
@@ -431,7 +431,7 @@ operations:
     targetId: "INV-P3-EVALUATE-ERROR"
     after:
       id: "INV-P3-EVALUATE-ERROR"
-      statement: "非法路径、普通 null、权限、表达式或只读 RuleView 执行错误必须抛出携带现有诊断的 InformationEvaluationException；不返回结果，不得降级为 FALSE、进入 Directory 物化或继续下游。"
+      statement: "非法路径、普通 null、权限、表达式或只读 RuleView 执行错误必须记录 ERROR 诊断并抛出 InformationEvaluationException，不得降级为 FALSE、进入 Directory 物化或继续下游。"
       trigger: "identify"
       failure: "INFORMATION_EVALUATION_FAILED"
       traceIds:
@@ -464,6 +464,7 @@ operations:
         - "EVALUATING"
         - "TRUE"
         - "FALSE"
+        - "ERROR"
       transitions:
         -
           id: "TRANS-P3-EVALUATE"
@@ -489,6 +490,14 @@ operations:
           preconditions:
             - "条件不满足且无错误"
           failure: "EVALUATION_ERROR_PRESENT"
+        -
+          id: "TRANS-P3-ERROR"
+          from: "EVALUATING"
+          command: "raiseEvaluationError"
+          to: "ERROR"
+          preconditions:
+            - "路径/null/权限/表达式/RuleView 错误"
+          failure: "INFORMATION_EVALUATION_FAILED"
       traceIds:
         - "TR-P3-INFORMATION-ENGINE-001"
     reason: "Seed SM-P3-IDENTIFICATION from clean task FEATURE-DESC-C0EDEFBD6D71."
@@ -665,7 +674,7 @@ operations:
       id: "ERR-P3-PATH-INVALID"
       owner: "P3"
       condition: "模型声明路径不存在"
-      meaning: "抛携带现有诊断的 InformationEvaluationException，不返回结果，禁止物化和下游"
+      meaning: "记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游"
       retryable: false
       stateChanged: false
       traceIds:
@@ -680,7 +689,7 @@ operations:
       id: "ERR-P3-NULL-VALUE"
       owner: "P3"
       condition: "普通求值读取到 null"
-      meaning: "抛携带现有诊断的 InformationEvaluationException，不返回结果，禁止物化和下游"
+      meaning: "记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游"
       retryable: false
       stateChanged: false
       traceIds:
@@ -695,7 +704,7 @@ operations:
       id: "ERR-P3-EVALUATE-FAILED"
       owner: "P3"
       condition: "权限、表达式或只读 RuleView 执行失败"
-      meaning: "抛携带现有诊断的 InformationEvaluationException，不返回结果，禁止物化和下游"
+      meaning: "记录 ERROR 并抛 InformationEvaluationException，禁止物化和下游"
       retryable: false
       stateChanged: false
       traceIds:

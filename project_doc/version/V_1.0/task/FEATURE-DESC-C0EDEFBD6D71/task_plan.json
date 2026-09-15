@@ -45,6 +45,66 @@
       "supersedes_iteration_id": "",
       "revision_reason": "基于既有 P3 Information Engine 需求文档重新建立需求确认任务基线，不修改需求内容。",
       "risk_triggers": []
+    },
+    {
+      "id": "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS",
+      "title": "记录 P3 Information Engine 需求分析结论",
+      "objective": "基于已确认且已完成分析的 P3 Information Engine 需求基线，登记可验证的规则、异常、影响边界与追踪结论；不得修改 requirement.md，且不提前进入设计或实现。",
+      "phase": "requirement_analysis",
+      "depends_on": [
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION"
+      ],
+      "owner_agent": "RequirementAnalysisAgent",
+      "reviewer_agents": [
+        "BusinessModelAgent",
+        "TestDesignAgent"
+      ],
+      "input_revisions": {
+        "requirement_confirmation": "REQCONF-P3-R03"
+      },
+      "allowed_files": [
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/task_plan.json",
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/traceability.json",
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/acceptance.json",
+        "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/handoff.md",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md",
+        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.yaml",
+        "version/V_1.0/doc/MODEL/changes/p3-information.business-model.changeset.yaml",
+        "version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml",
+        "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+        "project_doc/version/V_1.0/doc/MODEL/changes/p3-information.business-model.changeset.yaml",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md"
+      ],
+      "acceptance_trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_step_refs": [],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
+      "validation_commands": [
+        "python3 /Users/shazhoulin/.agents/skills/common-develop-opt/scripts/requirement_doc.py validate -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md --stage analysis --json"
+      ],
+      "expected_results": [
+        "既有需求基线通过 analysis 校验，且 requirement.md 保持不变。",
+        "需求规则、异常、影响边界与 TR-P3-INFORMATION-ENGINE-001 的分析输入可由后续业务模型和测试设计复用。",
+        "BusinessModelAgent 与 TestDesignAgent 对同一分析 revision 完成独立 Review。"
+      ],
+      "stop_conditions": [
+        "分析校验发现新的未授权需求歧义或跨模块影响。",
+        "试图修改 requirement.md、生产代码、测试代码或 XML fixture。"
+      ],
+      "max_attempts": 3,
+      "logical_task_id": "LOGICAL-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS",
+      "feature_id": "FEATURE-DESC-C0EDEFBD6D71",
+      "iteration_id": "ITER-FEATURE-DESC-C0EDEFBD6D71-REQUIREMENT-ANALYSIS-007",
+      "iteration_no": 7,
+      "supersedes_iteration_id": "ITER-FEATURE-DESC-C0EDEFBD6D71-REQUIREMENT-ANALYSIS-006",
+      "revision_reason": "修复 P1 Review 发现的 evaluate 返回契约：业务模型与 Flow 仅允许 TRUE/FALSE 正常结果，错误仅通过既有异常暴露；不修改 requirement.md。",
+      "risk_triggers": []
     }
   ]
 }

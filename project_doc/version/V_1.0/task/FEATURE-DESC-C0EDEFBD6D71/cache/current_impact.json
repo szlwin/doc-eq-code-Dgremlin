@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "authority": "DERIVED",
+  "kind": "incremental_revalidation_plan",
+  "taskDir": "project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71",
+  "phase": "requirement_analysis",
+  "provenance": {
+    "schemaVersion": 1,
+    "authority": "DERIVED",
+    "baseRevision": "REQAN-P3-R01",
+    "revision": "REQAN-P3-R01-AM01@553d6201fb84fa7972fa94ea48107daade55f4ce65abfb958f0abd8fe7beede1",
+    "changeClass": "SEMANTIC_AUTHORITY",
+    "changedScopes": [
+      "evaluation-result-contract"
+    ],
+    "changedPaths": [
+      "project_doc/version/V_1.0/doc/MODEL/changes/p3-information.business-model.changeset.yaml",
+      "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml"
+    ],
+    "semanticArtifactChanged": "TRUE",
+    "productionChanged": "FALSE",
+    "processOnly": false,
+    "warnings": []
+  },
+  "graphImpact": null,
+  "requiredRiskTemplates": [],
+  "affectedScope": {
+    "taskIds": [
+      "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-ANALYSIS"
+    ],
+    "traceIds": [
+      "TR-P3-INFORMATION-ENGINE-001"
+    ],
+    "acceptanceIds": [
+      "AC-P3-INFORMATION-ENGINE-001"
+    ]
+  },
+  "adapter": {
+    "used": false,
+    "confidence": "NONE",
+    "affectedScopes": [],
+    "affectedArtifacts": [],
+    "notes": []
+  },
+  "fallbackPolicy": "CONSERVATIVE_FULL_PROFILE",
+  "minimumRevalidation": {
+    "reviews": [
+      {
+        "profileId": "requirement_analysis:BusinessModelAgent",
+        "criterionIds": [
+          "RC-ANL-001",
+          "RC-ANL-003",
+          "RC-ANL-004",
+          "RC-BM-001",
+          "RC-BM-002",
+          "RC-BM-006",
+          "RC-BFLOW-001",
+          "RC-BFLOW-002",
+          "RC-BFLOW-003",
+          "RC-ANL-002",
+          "RC-ANL-005",
+          "RC-DES-001",
+          "RC-DES-011"
+        ]
+      },
+      {
+        "profileId": "requirement_analysis:TestDesignAgent",
+        "criterionIds": [
+          "RC-ANL-001",
+          "RC-ANL-002",
+          "RC-REQ-003",
+          "RC-REQ-004",
+          "RC-BFLOW-003",
+          "RC-ANL-005"
+        ]
+      }
+    ],
+    "validationCapabilities": [],
+    "acceptanceDisposition": "RECHECK_AFFECTED_ASSERTIONS"
+  },
+  "unaffected": {
+    "reviewCriteria": []
+  },
+  "reusePolicy": {
+    "reviewResultReuseAcrossExactRevision": false,
+    "criterionEvidenceIdReuseAcrossExactRevision": false,
+    "unaffectedEvidenceSourceReuse": "CONDITIONAL_RECAPTURE_OR_REBIND",
+    "conditions": [
+      "source content/digest and criterion scope remain unchanged",
+      "the source is recaptured or deterministically rebound as current-revision Evidence before it supports the criterion",
+      "current Evidence remains ACTIVE and satisfies the criterion Evidence Policy",
+      "Reviewer still emits a new independent Review Result when the exact review revision changes"
+    ]
+  },
+  "revalidationRequired": true,
+  "reasonCodes": [
+    "CRITERION_REVALIDATION_REQUIRED",
+    "IMPACT_UNKNOWN_CONSERVATIVE"
+  ],
+  "capabilityResolution": {
+    "status": "NOT_EVALUATED",
+    "required": []
+  },
+  "warnings": [
+    "impact is absent or insufficiently confident; all selected Review criteria require revalidation"
+  ],
+  "blockers": [],
+  "status": "PASSED",
+  "derivedOutputPath": "project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/cache/current_impact.json"
+}

@@ -119,7 +119,7 @@ operations:
         - id: FAIL-P3-INFORMATION-COMPILE
           atStep: STEP-P3-INFORMATION-EVALUATION-COMPILE
           condition: Information kind, reference, DAG, path, expression, permission, change-info target, target type/change-data, RuleViewInfo rule or Directory mapping validation fails
-          result: the candidate is rejected and is not published
+          result: the candidate reports a located ERROR and is not published
           compensation: discard the candidate and keep previously published Information facts and Directory mappings unchanged
           blocking: true
           acceptanceRefs:
@@ -127,7 +127,7 @@ operations:
         - id: FAIL-P3-INFORMATION-EVALUATE
           atStep: STEP-P3-INFORMATION-EVALUATION-IDENTIFY
           condition: an invalid path, ordinary null, permission failure, expression failure or read-only RuleView failure occurs
-          result: throw the existing InformationEvaluationException with diagnostics; return no identification result instead of returning FALSE
+          result: record ERROR and throw InformationEvaluationException instead of returning FALSE
           compensation: no write occurred; do not materialize or continue downstream
           blocking: true
           acceptanceRefs:
@@ -142,7 +142,7 @@ operations:
             - AC-P3-INFORMATION-ENGINE-001
       successCriteria:
         - CompiledInformationSet is published atomically with its exact P2 bindings and EngineContext
-        - read-only evaluate normally returns only TRUE or FALSE; an evaluation error throws the existing exception and returns no identification result
+        - read-only evaluate distinguishes TRUE and FALSE from ERROR plus exception
         - Directory supplies ordered Action/refRule information; the execution caller creates one ModelLoader per Action and loads them into one ModelContainer
         - ModelContainer resolves RuleViewInfo through ConfigInfo by refRule, preserves Action/load order, and performs grammer before update
         - successful execution commits and normally returns from execute() without post-commit reevaluation or a new result object
