@@ -17,7 +17,7 @@
 - 层级/类型：`L0` / `MAIN`
 - 父流程：`无`
 - 主责模块：`COMPILER`
-- 参与模块：[CONTEXT](../CONTEXT/CONTEXT_desc.md), [COMPILER](../COMPILER/COMPILER_desc.md), [XML](../XML/XML_desc.md), [YAML](../YAML/YAML_desc.md), [STARTER](../STARTER/STARTER_desc.md), [DEMO](../DEMO/DEMO_desc.md)
+- 参与模块：[CONTEXT](../module/CONTEXT/CONTEXT_desc.md), [COMPILER](../module/COMPILER/COMPILER_desc.md), [XML](../module/XML/XML_desc.md), [YAML](../module/YAML/YAML_desc.md), [STARTER](../module/STARTER/STARTER_desc.md), [DEMO](../module/DEMO/DEMO_desc.md)
 - 目标：把 XML/YAML 文档集合确定性编译为可发布的不可变 EngineContext，失败时保持既有 Context 不变。
 - 触发：starter 或测试调用者提交根 SourceReference、编译请求和显式发布请求。
 - 状态：`ACTIVE`
@@ -26,8 +26,8 @@
 
 | 类型 | 引用 |
 |---|---|
-| 需求 | [P1-COMPILER](../../version/V_1.0/doc/P1-COMPILER-F01/requirement.md) |
-| 功能 | [P1-COMPILER-F01](../COMPILER/COMPILER_desc.md)（COMPILER） |
+| 需求 | [P1-COMPILER](../../version/V_1.0/requirement/P1-COMPILER-F01/requirement.md) |
+| 功能 | [P1-COMPILER-F01](../module/COMPILER/COMPILER_desc.md)（COMPILER） |
 | 规则 | BR-P1-004, BR-P1-006, BR-P1-011 |
 | 验收 | AC-P1-COMPILER-001, AC-P1-COMPILER-002, AC-P1-COMPILER-003, AC-P1-COMPILER-004 |
 | 追踪 | TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004 |

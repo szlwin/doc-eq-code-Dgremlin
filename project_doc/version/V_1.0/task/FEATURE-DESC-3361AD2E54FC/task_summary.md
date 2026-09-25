@@ -2,7 +2,7 @@
 <!-- task-summary-source: seq=571 digest=28ae94ecf3fb3740c338f4044fbc03a3f9783093fbaf4730336a6c36dbe541f8 -->
 # FEATURE-DESC-3361AD2E54FC 任务摘要
 
-> 文档导航：[版本摘要](../../version_summary.md) · [任务计划](task_plan.md) · [追踪关系](traceability.md)
+> 文档导航：[版本摘要](../../version_summary.md) · [任务计划](./task_plan.md) · [追踪关系](./traceability.md)
 >
 > 本文件是可删除重建的人类阅读投影，不是任务状态、Review、Evidence 或 revision authority。
 
@@ -58,4 +58,4 @@ P2：System 与 RuleView 归属。目标：System 成为一等编译实体；Rul
 
 ## 审计入口
 
-- [Runtime 事件](task_events.jsonl) · [Current Manifest](cache/current_manifest.json) · [Current Context](cache/current_context.md) · [Evidence 索引](evidence/evidence_index.json) · [Review 索引](evidence/reviews.jsonl) · [Acceptance Assertions](acceptance_assertions.json)
+- [Runtime 事件](./task_events.jsonl) · [Current Manifest](./cache/current_manifest.json) · [Current Context](./cache/current_context.md) · [Evidence 索引](./evidence/evidence_index.json) · [Review 索引](./evidence/reviews.jsonl) · [Acceptance Assertions](./acceptance_assertions.json)

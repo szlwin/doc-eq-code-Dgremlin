@@ -37,9 +37,9 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | AC-P3-INFORMATION-ENGINE-001、BR-P3-INFORMATION-ENGINE-001～003 | [需求文档](requirement.md#AC-P3-INFORMATION-ENGINE-001) |
-| 设计/契约 | DESIGN-P3-R08、IMPL-DEC-P3-003、BP-P3-001～003 | [关联设计](FEATURE-DESC-4AB41AC241A1_design.md#实施策略决策) |
-| 流程/步骤 | FLOW-P3-INFORMATION-EVALUATION、STEP-P3-INFORMATION-EVALUATION-COMPILE、STEP-P3-INFORMATION-EVALUATION-IDENTIFY | [Flow](../../_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
+| 需求/验收 | AC-P3-INFORMATION-ENGINE-001、BR-P3-INFORMATION-ENGINE-001～003 | [需求文档](./requirement.md#ac-p3-information-engine-001-information-engine-需求基线) |
+| 设计/契约 | DESIGN-P3-R08、IMPL-DEC-P3-003、BP-P3-001～003 | [关联设计](./FEATURE-DESC-4AB41AC241A1_design.md#8-1-实施策略决策摘要) |
+| 流程/步骤 | FLOW-P3-INFORMATION-EVALUATION、STEP-P3-INFORMATION-EVALUATION-COMPILE、STEP-P3-INFORMATION-EVALUATION-IDENTIFY | [Flow](../../module/_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
 
 ### 前置条件和具体输入
 
@@ -90,9 +90,9 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | AC-P3-INFORMATION-ENGINE-001、EX-P3-INFORMATION-ENGINE-001～003 | [需求文档](requirement.md#AC-P3-INFORMATION-ENGINE-001) |
-| 设计/契约 | DESIGN-P3-R08、IMPL-DEC-P3-001、IMPL-DEC-P3-004 | [关联设计](FEATURE-DESC-4AB41AC241A1_design.md#需求映射与总变更清单) |
-| 流程/步骤 | FAIL-P3-INFORMATION-COMPILE、FAIL-P3-INFORMATION-EVALUATE、FAIL-P3-INFORMATION-MATERIALIZE | [Flow](../../_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
+| 需求/验收 | AC-P3-INFORMATION-ENGINE-001、EX-P3-INFORMATION-ENGINE-001～003 | [需求文档](./requirement.md#ac-p3-information-engine-001-information-engine-需求基线) |
+| 设计/契约 | DESIGN-P3-R08、IMPL-DEC-P3-001、IMPL-DEC-P3-004 | [关联设计](./FEATURE-DESC-4AB41AC241A1_design.md#9-需求映射与总变更清单) |
+| 流程/步骤 | FAIL-P3-INFORMATION-COMPILE、FAIL-P3-INFORMATION-EVALUATE、FAIL-P3-INFORMATION-MATERIALIZE | [Flow](../../module/_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
 
 ### 前置条件和具体输入
 
@@ -143,9 +143,9 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | BR-P3-INFORMATION-ENGINE-004、DEC-P3-INFORMATION-ENGINE-010 | [需求文档](requirement.md#BR-P3-INFORMATION-ENGINE-004) |
-| 设计/契约 | DESIGN-P3-R08、IMPL-DEC-P3-005、BP-P3-005 | [关联设计](FEATURE-DESC-4AB41AC241A1_design.md#需求映射与总变更清单) |
-| 流程/步骤 | STEP-P3-INFORMATION-EVALUATION-COMPILE | [Flow](../../_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
+| 需求/验收 | BR-P3-INFORMATION-ENGINE-004、DEC-P3-INFORMATION-ENGINE-010 | [需求文档](./requirement.md) |
+| 设计/契约 | DESIGN-P3-R08、IMPL-DEC-P3-005、BP-P3-005 | [关联设计](./FEATURE-DESC-4AB41AC241A1_design.md#9-需求映射与总变更清单) |
+| 流程/步骤 | STEP-P3-INFORMATION-EVALUATION-COMPILE | [Flow](../../module/_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
 
 ### 前置条件和具体输入
 
@@ -196,9 +196,9 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | BR-P3-INFORMATION-ENGINE-004、DEC-P3-INFORMATION-ENGINE-011 | [需求文档](requirement.md#AC-P3-INFORMATION-ENGINE-001) |
-| 设计/契约 | DESIGN-P3-R08、BP-P3-005 | [关联设计](FEATURE-DESC-4AB41AC241A1_design.md#行为调整与代码改动) |
-| 流程/步骤 | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE | [Flow](../../_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
+| 需求/验收 | BR-P3-INFORMATION-ENGINE-004、DEC-P3-INFORMATION-ENGINE-011 | [需求文档](./requirement.md#ac-p3-information-engine-001-information-engine-需求基线) |
+| 设计/契约 | DESIGN-P3-R08、BP-P3-005 | [关联设计](./FEATURE-DESC-4AB41AC241A1_design.md#12-行为调整与代码改动) |
+| 流程/步骤 | STEP-P3-INFORMATION-EVALUATION-MATERIALIZE | [Flow](../../module/_flows/COMPILER/generated/COMPILER_flow.preview.md#flow-p3-information-evaluation) |
 
 ### 前置条件和具体输入
 

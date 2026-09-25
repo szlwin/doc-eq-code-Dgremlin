@@ -12,7 +12,7 @@
       ],
       "input_revisions": {},
       "allowed_files": [
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md",
+        "version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/requirement.md",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
@@ -45,34 +45,45 @@
       "title": "分析 P3 Information Engine 需求与追踪边界",
       "objective": "在已确认的 P3 需求基础上完成业务规则、验收、异常、canonical Flow、影响和稳定追踪关系分析，不提前进入设计或实现。",
       "phase": "requirement_analysis",
-      "depends_on": ["TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION"],
+      "depends_on": [
+        "TASK-P3-INFORMATION-ENGINE-REQUIREMENT-CONFIRMATION"
+      ],
       "owner_agent": "RequirementAnalysisAgent",
-      "reviewer_agents": ["BusinessModelAgent", "TestDesignAgent"],
-      "input_revisions": {"requirement_confirmation": "REQCONF-P3-R06@bec34356b59b"},
+      "reviewer_agents": [
+        "BusinessModelAgent",
+        "TestDesignAgent"
+      ],
+      "input_revisions": {
+        "requirement_confirmation": "REQCONF-P3-R06@bec34356b59b"
+      },
       "allowed_files": [
-        "project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md",
+        "project_doc/version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/requirement.md",
         "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
         "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
         "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
         "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/handoff.md",
-        "project_doc/version/V_1.0/doc/MODEL/MODEL_desc.md",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/005-p3-information-evaluation.yaml",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.yaml",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/MODEL_desc_preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_report.md"
+        "project_doc/version/V_1.0/module/MODEL/MODEL_desc.md",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/changes/005-p3-information-evaluation.yaml",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/COMPILER_business_model_preview.yaml",
+        "project_doc/version/V_1.0/module/COMPILER/generated/COMPILER_business_model_preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/MODEL_desc_preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/merge_plan.yaml",
+        "project_doc/version/V_1.0/module/COMPILER/generated/merge_report.md"
       ],
-      "acceptance_trace_ids": ["TR-P3-INFORMATION-ENGINE-001"],
+      "acceptance_trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
       "flow_step_refs": [
         "STEP-P3-INFORMATION-EVALUATION-COMPILE",
         "STEP-P3-INFORMATION-EVALUATION-IDENTIFY",
         "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
       ],
-      "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
       "validation_commands": [
         "python3 /Users/shazhoulin/.agents/skills/common-develop/scripts/requirement_doc.py validate -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --stage analysis --json",
         "python3 /Users/shazhoulin/work/zhu/code/codex-env/skills/common-develop/skills/common-develop/scripts/requirement_doc.py sync-traceability -g RequirementAnalysisAgent --file project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/requirement.md --task-dir project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1 --json"
@@ -113,17 +124,17 @@
         "requirement_analysis": "REQAN-P3-R05@5b4727fc5db4"
       },
       "allowed_files": [
-        "project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml",
-        "project_doc/version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/005-p3-information-evaluation.yaml",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.yaml",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/COMPILER_business_model_preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/MODEL_desc_preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_plan.yaml",
-        "project_doc/version/V_1.0/doc/COMPILER/generated/merge_report.md",
+        "project_doc/version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.yaml",
+        "project_doc/version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_business_model.md",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/changes/005-p3-information-evaluation.yaml",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/COMPILER_business_model_preview.yaml",
+        "project_doc/version/V_1.0/module/COMPILER/generated/COMPILER_business_model_preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/MODEL_desc_preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/design-compiler-p2-simple-runtime.snapshot.preview.md",
+        "project_doc/version/V_1.0/module/COMPILER/generated/merge_plan.yaml",
+        "project_doc/version/V_1.0/module/COMPILER/generated/merge_report.md",
         "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
         "project_doc/version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
       ],
@@ -172,9 +183,9 @@
         "business_model": "BM-P3-R04"
       },
       "allowed_files": [
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md",
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_api_contract.md",
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_test_seams.md",
+        "version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_design.md",
+        "version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_api_contract.md",
+        "version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/FEATURE-DESC-4AB41AC241A1_test_seams.md",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
       ],
@@ -212,23 +223,32 @@
       "title": "设计 P3 Information Engine 测试矩阵",
       "objective": "基于 REQAN-P3-R05、BM-P3-R04 和 DESIGN-P3-R08 建立 Information Engine 的可执行测试 Case、验收断言与追踪关系，不实现测试代码。",
       "phase": "test_design",
-      "depends_on": ["TASK-P3-INFORMATION-ENGINE-DESIGN"],
+      "depends_on": [
+        "TASK-P3-INFORMATION-ENGINE-DESIGN"
+      ],
       "owner_agent": "TestDesignAgent",
-      "reviewer_agents": ["TestEvidenceReviewAgent", "RequirementReviewAgent"],
+      "reviewer_agents": [
+        "TestEvidenceReviewAgent",
+        "RequirementReviewAgent"
+      ],
       "input_revisions": {
         "requirement_analysis": "REQAN-P3-R05@5b4727fc5db4",
         "business_model": "BM-P3-R04",
         "design": "DESIGN-P3-R08"
       },
       "allowed_files": [
-        "version/V_1.0/doc/FEATURE-DESC-4AB41AC241A1/test_case.md",
+        "version/V_1.0/requirement/FEATURE-DESC-4AB41AC241A1/test_case.md",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/task_plan.json",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/handoff.md"
       ],
-      "acceptance_trace_ids": ["TR-P3-INFORMATION-ENGINE-001"],
-      "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
+      "acceptance_trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
       "flow_step_refs": [
         "STEP-P3-INFORMATION-EVALUATION-IDENTIFY",
         "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"
@@ -260,9 +280,16 @@
       "title": "制定 P3 Information Engine 实施计划",
       "objective": "将 TESTDESIGN-P3-R03 和 DESIGN-P3-R08 转换为三个串行、可独立验证的开发任务，冻结文件、接口、测试、依赖和 checkpoint 门禁。",
       "phase": "implementation_plan",
-      "depends_on": ["TASK-P3-INFORMATION-ENGINE-TEST-DESIGN"],
+      "depends_on": [
+        "TASK-P3-INFORMATION-ENGINE-TEST-DESIGN"
+      ],
       "owner_agent": "ImplementationPlanAgent",
-      "reviewer_agents": ["PlanReviewAgent", "ArchitectureReviewAgent", "TestDesignAgent", "DevelopAgent"],
+      "reviewer_agents": [
+        "PlanReviewAgent",
+        "ArchitectureReviewAgent",
+        "TestDesignAgent",
+        "DevelopAgent"
+      ],
       "input_revisions": {
         "design": "DESIGN-P3-R08",
         "test_design": "TESTDESIGN-P3-R03"
@@ -273,8 +300,12 @@
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/acceptance.json",
         "version/V_1.0/task/FEATURE-DESC-4AB41AC241A1/traceability.json"
       ],
-      "acceptance_trace_ids": ["TR-P3-INFORMATION-ENGINE-001"],
-      "flow_refs": ["FLOW-P3-INFORMATION-EVALUATION"],
+      "acceptance_trace_ids": [
+        "TR-P3-INFORMATION-ENGINE-001"
+      ],
+      "flow_refs": [
+        "FLOW-P3-INFORMATION-EVALUATION"
+      ],
       "flow_step_refs": [
         "STEP-P3-INFORMATION-EVALUATION-IDENTIFY",
         "STEP-P3-INFORMATION-EVALUATION-MATERIALIZE"

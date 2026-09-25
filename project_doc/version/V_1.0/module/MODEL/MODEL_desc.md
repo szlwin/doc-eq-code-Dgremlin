@@ -1,9 +1,9 @@
-<!-- managed-by: common-develop/wk-d -->
+<!-- template: common-develop/module-desc-v2 -->
 # MODEL 模块说明
 
-> 本文件由版本级模块描述通过 `wk -d` 合并，是模块能力、功能、业务信息、规则、依赖和文档索引的当前事实源。
+> 版本级文件记录本版本新增或调整的模块事实；`wk -d` 会自动发现同目录补充文档并维护“文档引用”。
 
-> 文档导航：[项目文档首页](../README.md) · [项目需求列表](../requirement_list.md) · [最后合并版本摘要](../../version/V_1.0/version_summary.md)
+> 文档导航：[项目文档首页](../../../../docs/README.md) · [版本摘要](../../version_summary.md) · [本版本需求列表](../../requirement_list.md)
 
 ## 模块信息
 
@@ -63,11 +63,11 @@
 
 ## 文档引用
 
-- 项目文档首页：[打开](../README.md)
-- 需求列表：[打开](../requirement_list.md)
-- 最后合并版本摘要：[打开](../../version/V_1.0/version_summary.md)
-- 业务模型阅读版：`MODEL_business_model.md`（存在时由项目首页提供可点击入口）
-- API/DB 增量历史：`../../archive_manifest.yaml`
+- 项目文档首页：[打开](../../../../docs/README.md)
+- 版本摘要：[打开](../../version_summary.md)
+- 需求列表：[打开](../../requirement_list.md)
+- 业务模型：[打开](../../../../docs/module/MODEL/MODEL_business_model.yaml)
+- API/DB 版本增量：[打开目录](./changes)
 - API/DB 当前实现：代码、OpenAPI、DDL、Migration 或项目声明的等价来源
-- 本版本设计：`../../version/V_1.0/doc/MODEL/MODEL_design.md`（存在时由项目首页和版本摘要提供可点击入口）
-- 依赖关系：`../_relations/dependency_graph.md`（存在时由项目首页提供可点击入口）
+- 模块设计：待创建（设计事实以 `changes/` 增量与 `generated/` 预览为准）
+- 依赖关系：[项目关联事实](../../../../docs/_relations/dependency_impact.yaml)

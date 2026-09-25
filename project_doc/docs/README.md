@@ -12,13 +12,13 @@
 
 | 模块 | 文档 |
 | --- | --- |
-| COMPILER | [模块说明](COMPILER/COMPILER_desc.md) / [当前设计](COMPILER/COMPILER_design.md) / [业务模型](COMPILER/COMPILER_business_model.md) |
-| CONTEXT | [模块说明](CONTEXT/CONTEXT_desc.md) |
-| DEMO | [模块说明](DEMO/DEMO_desc.md) |
+| COMPILER | [模块说明](module/COMPILER/COMPILER_desc.md) / [当前设计](module/COMPILER/COMPILER_design.md) / [业务模型](module/COMPILER/COMPILER_business_model.md) |
+| CONTEXT | [模块说明](module/CONTEXT/CONTEXT_desc.md) |
+| DEMO | [模块说明](module/DEMO/DEMO_desc.md) |
 | MODEL | 暂无可读文档 |
-| STARTER | [模块说明](STARTER/STARTER_desc.md) |
-| XML | [模块说明](XML/XML_desc.md) |
-| YAML | [模块说明](YAML/YAML_desc.md) |
+| STARTER | [模块说明](module/STARTER/STARTER_desc.md) |
+| XML | [模块说明](module/XML/XML_desc.md) |
+| YAML | [模块说明](module/YAML/YAML_desc.md) |
 
 ## 业务流程与关联影响
 
@@ -30,7 +30,7 @@
 
 | 版本 | 文档 |
 | --- | --- |
-| V_1.0 | [版本摘要](../version/V_1.0/version_summary.md) / [需求列表](../version/V_1.0/requirement_list.md) |
+| V_1.0 | [版本摘要](../version/V_1.0/version_summary.md) |
 
 ## 阅读说明
 

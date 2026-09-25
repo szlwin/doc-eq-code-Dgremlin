@@ -3,7 +3,7 @@
 
 > 本文件由版本级模块描述通过 `wk -d` 合并，是模块能力、功能、业务信息、规则、依赖和文档索引的当前事实源。
 
-> 文档导航：[项目文档首页](../README.md) · [项目需求列表](../requirement_list.md) · [最后合并版本摘要](../../version/V_1.0/version_summary.md)
+> 文档导航：[项目文档首页](../../../../../docs/README.md) · [项目需求列表](../../../../../docs/requirement_list.md) · [最后合并版本摘要](../../../version_summary.md)
 
 ## 模块信息
 
@@ -53,13 +53,13 @@
 
 | 流程编号 | 流程名称 | 模块角色 | 关联功能 | 流程层级 | 状态 | 流程文档 |
 | --- | --- | --- | --- | --- | --- | --- |
-| FLOW-CONFIG-COMPILE | 配置编译与上下文发布 | OWNER | P1-COMPILER-F01 | L0 | ACTIVE | [FLOW-CONFIG-COMPILE](../_flows/COMPILER_flow.md#flow-config-compile) |
+| FLOW-CONFIG-COMPILE | 配置编译与上下文发布 | OWNER | P1-COMPILER-F01 | L0 | ACTIVE | [FLOW-CONFIG-COMPILE](../../../../../docs/_flows/COMPILER_flow.md#flow-config-compile) |
 
 ## 文档引用
 
-- 项目文档首页：[打开](../README.md)
-- 需求列表：[打开](../requirement_list.md)
-- 最后合并版本摘要：[打开](../../version/V_1.0/version_summary.md)
+- 项目文档首页：[打开](../../../../../docs/README.md)
+- 需求列表：[打开](../../../../../docs/requirement_list.md)
+- 最后合并版本摘要：[打开](../../../version_summary.md)
 - 业务模型阅读版：`COMPILER_business_model.md`（存在时由项目首页提供可点击入口）
 - API/DB 增量历史：`../../archive_manifest.yaml`
 - API/DB 当前实现：代码、OpenAPI、DDL、Migration 或项目声明的等价来源
@@ -72,13 +72,13 @@
 - 模块设计：`COMPILER_design.md`
 - 依赖关系：`../_relations/dependency_impact.yaml`
 - 需求列表：`../../requirement_list.md`
-- 补充文档（V_1.0，自动）：[COMPILER_api_contract.md](../../version/V_1.0/doc/COMPILER/COMPILER_api_contract.md)
-- 补充文档（V_1.0，自动）：[COMPILER_api_contract_security_authority_overlay_r32.md](../../version/V_1.0/doc/COMPILER/COMPILER_api_contract_security_authority_overlay_r32.md)
-- 补充文档（V_1.0，自动）：[COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md](../../version/V_1.0/doc/COMPILER/COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md)
-- 补充文档（V_1.0，自动）：[COMPILER_api_contract_write_value_overlay_r31.md](../../version/V_1.0/doc/COMPILER/COMPILER_api_contract_write_value_overlay_r31.md)
-- 补充文档（V_1.0，自动）：[COMPILER_architecture.md](../../version/V_1.0/doc/COMPILER/COMPILER_architecture.md)
-- 补充文档（V_1.0，自动）：[COMPILER_design_security_authority_overlay_r32.md](../../version/V_1.0/doc/COMPILER/COMPILER_design_security_authority_overlay_r32.md)
-- 补充文档（V_1.0，自动）：[COMPILER_design_security_authority_single_runtime_context_overlay_r33.md](../../version/V_1.0/doc/COMPILER/COMPILER_design_security_authority_single_runtime_context_overlay_r33.md)
-- 补充文档（V_1.0，自动）：[COMPILER_design_write_value_overlay_r31.md](../../version/V_1.0/doc/COMPILER/COMPILER_design_write_value_overlay_r31.md)
-- 补充文档（V_1.0，自动）：[COMPILER_test_seams.md](../../version/V_1.0/doc/COMPILER/COMPILER_test_seams.md)
-- 补充文档（V_1.0，自动）：[COMPILER_test_seams_security_authority_overlay_r32.md](../../version/V_1.0/doc/COMPILER/COMPILER_test_seams_security_authority_overlay_r32.md)
+- 补充文档（V_1.0，自动）：[COMPILER_api_contract.md](../COMPILER_api_contract.md)
+- 补充文档（V_1.0，自动）：[COMPILER_api_contract_security_authority_overlay_r32.md](../COMPILER_api_contract_security_authority_overlay_r32.md)
+- 补充文档（V_1.0，自动）：[COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md](../COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md)
+- 补充文档（V_1.0，自动）：[COMPILER_api_contract_write_value_overlay_r31.md](../COMPILER_api_contract_write_value_overlay_r31.md)
+- 补充文档（V_1.0，自动）：[COMPILER_architecture.md](../COMPILER_architecture.md)
+- 补充文档（V_1.0，自动）：[COMPILER_design_security_authority_overlay_r32.md](../COMPILER_design_security_authority_overlay_r32.md)
+- 补充文档（V_1.0，自动）：[COMPILER_design_security_authority_single_runtime_context_overlay_r33.md](../COMPILER_design_security_authority_single_runtime_context_overlay_r33.md)
+- 补充文档（V_1.0，自动）：[COMPILER_design_write_value_overlay_r31.md](../COMPILER_design_write_value_overlay_r31.md)
+- 补充文档（V_1.0，自动）：[COMPILER_test_seams.md](../COMPILER_test_seams.md)
+- 补充文档（V_1.0，自动）：[COMPILER_test_seams_security_authority_overlay_r32.md](../COMPILER_test_seams_security_authority_overlay_r32.md)

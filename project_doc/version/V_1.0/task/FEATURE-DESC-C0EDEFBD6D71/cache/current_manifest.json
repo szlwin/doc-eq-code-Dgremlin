@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "kind": "CURRENT_MANIFEST",
   "authority": "DERIVED",
-  "sourceInputDigest": "abf3038ca830c247516e96f16136170d1801b2039ac4c1989ca3a3e31aeafc6d",
+  "sourceInputDigest": "e665b129f716ff78da5bd5602e4584db362ec7fd430eba58d98cc284a97cb5c6",
   "taskDir": "/Users/shazhoulin/mac_new/pub_work/doc-eq-code-Dgremlin/project_doc/version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71",
   "state": {
     "taskStatus": "PARTIAL",
@@ -12,7 +12,7 @@
     "nextAgent": "BusinessModelAgent",
     "nextAction": "开始 business_model 阶段",
     "eventSeq": 91,
-    "eventDigest": "9f45878d1c1ce6dacf9fcbb08cb5bdc9ddbfab15705f8bde615dd14e4742d41a",
+    "eventDigest": "ef509556e7a67dfbac3a86e9ab11559fe0215323b5602eae31483e8fd820f311",
     "storageMode": "EVENT_LEDGER_V3"
   },
   "activeRevisions": {
@@ -137,10 +137,10 @@
       "current revision documents only"
     ],
     "conditionalReadSet": [
-      "cache/current_manifest.json"
+      "wk status/next/context"
     ],
     "indirectReadSet": [
-      "cache/current_impact.json via wk next"
+      "wk next --impact-plan"
     ],
     "cacheCompatibilityRule": "Reject incompatible derived cache and rebuild from canonical events.",
     "historyRequiresExplicitRead": true,
@@ -149,9 +149,10 @@
       "chat memory"
     ],
     "onDemandOnly": [
-      "traceability.json",
-      "evidence/registry.jsonl",
-      "historical files"
+      "wk context --trace-id/--acceptance-id",
+      "evidence.py query/show",
+      "manual_review.py show",
+      "historical files via explicit audit"
     ]
   },
   "derivedImpact": {
@@ -170,7 +171,7 @@
   },
   "freshness": {
     "sourceEventSeq": 91,
-    "sourceEventDigest": "9f45878d1c1ce6dacf9fcbb08cb5bdc9ddbfab15705f8bde615dd14e4742d41a",
+    "sourceEventDigest": "ef509556e7a67dfbac3a86e9ab11559fe0215323b5602eae31483e8fd820f311",
     "generatedBy": "scripts/current_manifest.py"
   }
 }

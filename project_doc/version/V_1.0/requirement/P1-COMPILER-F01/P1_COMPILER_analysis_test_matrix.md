@@ -1,6 +1,6 @@
 # P1-COMPILER-F01 测试矩阵
 
-> Revision：`TESTDESIGN-R01@ba7779cf089b`。本矩阵由 `TestDesignAgent` 基于 `DESIGN-R05@0b37a9b4dd48` 冻结；详细 Given/When/Then、禁止副作用、RED 合同和命令见 [test_case.md](test_case.md)。
+> Revision：`TESTDESIGN-R01@ba7779cf089b`。本矩阵由 `TestDesignAgent` 基于 `DESIGN-R05@0b37a9b4dd48` 冻结；详细 Given/When/Then、禁止副作用、RED 合同和命令见 [test_case.md](./test_case.md)。
 
 | Case | TR | AC | 类型 | 主要 oracle | 失败 code |
 |---|---|---|---|---|---|

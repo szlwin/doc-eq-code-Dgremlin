@@ -57,10 +57,10 @@
 - 项目文档首页：[打开](../../../../docs/README.md)
 - 版本摘要：[打开](../../version_summary.md)
 - 需求列表：[打开](../../requirement_list.md)
-- 业务模型：[打开](COMPILER_business_model.yaml)
-- API/DB 版本增量：[打开目录](changes/)
+- 业务模型：[打开](./COMPILER_business_model.yaml)
+- API/DB 版本增量：[打开目录](./changes)
 - API/DB 当前实现：代码、OpenAPI、DDL、Migration 或项目声明的等价来源
-- 模块设计：[打开](COMPILER_design.md)
+- 模块设计：[打开](./COMPILER_design.md)
 - 依赖关系：[项目关联事实](../../../../docs/_relations/dependency_impact.yaml)
 - 需求列表：`../../requirement_list.md`
 - 业务模型：`COMPILER_business_model.yaml`
@@ -68,13 +68,13 @@
 - DB 契约：`COMPILER_db.yaml`
 - 模块设计：`COMPILER_design.md`
 - 依赖关系：`../_relations/dependency_impact.yaml`
-- 补充文档（自动）：[COMPILER_api_contract.md](COMPILER_api_contract.md)
-- 补充文档（自动）：[COMPILER_api_contract_security_authority_overlay_r32.md](COMPILER_api_contract_security_authority_overlay_r32.md)
-- 补充文档（自动）：[COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md](COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md)
-- 补充文档（自动）：[COMPILER_api_contract_write_value_overlay_r31.md](COMPILER_api_contract_write_value_overlay_r31.md)
-- 补充文档（自动）：[COMPILER_architecture.md](COMPILER_architecture.md)
-- 补充文档（自动）：[COMPILER_design_security_authority_overlay_r32.md](COMPILER_design_security_authority_overlay_r32.md)
-- 补充文档（自动）：[COMPILER_design_security_authority_single_runtime_context_overlay_r33.md](COMPILER_design_security_authority_single_runtime_context_overlay_r33.md)
-- 补充文档（自动）：[COMPILER_design_write_value_overlay_r31.md](COMPILER_design_write_value_overlay_r31.md)
-- 补充文档（自动）：[COMPILER_test_seams.md](COMPILER_test_seams.md)
-- 补充文档（自动）：[COMPILER_test_seams_security_authority_overlay_r32.md](COMPILER_test_seams_security_authority_overlay_r32.md)
+- 补充文档（自动）：[COMPILER_api_contract.md](./COMPILER_api_contract.md)
+- 补充文档（自动）：[COMPILER_api_contract_security_authority_overlay_r32.md](./COMPILER_api_contract_security_authority_overlay_r32.md)
+- 补充文档（自动）：[COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md](./COMPILER_api_contract_security_authority_single_runtime_context_overlay_r33.md)
+- 补充文档（自动）：[COMPILER_api_contract_write_value_overlay_r31.md](./COMPILER_api_contract_write_value_overlay_r31.md)
+- 补充文档（自动）：[COMPILER_architecture.md](./COMPILER_architecture.md)
+- 补充文档（自动）：[COMPILER_design_security_authority_overlay_r32.md](./COMPILER_design_security_authority_overlay_r32.md)
+- 补充文档（自动）：[COMPILER_design_security_authority_single_runtime_context_overlay_r33.md](./COMPILER_design_security_authority_single_runtime_context_overlay_r33.md)
+- 补充文档（自动）：[COMPILER_design_write_value_overlay_r31.md](./COMPILER_design_write_value_overlay_r31.md)
+- 补充文档（自动）：[COMPILER_test_seams.md](./COMPILER_test_seams.md)
+- 补充文档（自动）：[COMPILER_test_seams_security_authority_overlay_r32.md](./COMPILER_test_seams_security_authority_overlay_r32.md)

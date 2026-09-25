@@ -19,7 +19,7 @@
 - 层级/类型：`L0` / `MAIN`
 - 父流程：`无`
 - 主责模块：`COMPILER`
-- 参与模块：[CONTEXT](../../../../../../docs/CONTEXT/CONTEXT_desc.md), [COMPILER](../../../../../../docs/COMPILER/COMPILER_desc.md), [XML](../../../../../../docs/XML/XML_desc.md), [YAML](../../../../../../docs/YAML/YAML_desc.md), [STARTER](../../../../../../docs/STARTER/STARTER_desc.md)
+- 参与模块：[CONTEXT](../../../../../../docs/module/CONTEXT/CONTEXT_desc.md), [COMPILER](../../../../../../docs/module/COMPILER/COMPILER_desc.md), [XML](../../../../../../docs/module/XML/XML_desc.md), [YAML](../../../../../../docs/module/YAML/YAML_desc.md), [STARTER](../../../../../../docs/module/STARTER/STARTER_desc.md)
 - 目标：Parse XML or YAML into an isolated ConfigInfo, compile an immutable EngineContext and install both as one current object; failures keep the previous installed configuration.
 - 触发：starter receives a configuration source to load.
 - 状态：`PROPOSED`
@@ -28,10 +28,10 @@
 
 | 类型 | 引用 |
 |---|---|
-| 需求 | [P1-COMPILER](../../../P1-COMPILER-F01/requirement.md) |
-| 需求 | [P2-SYSTEM-RULEVIEW](../../../FEATURE-DESC-3361AD2E54FC/requirement.md) |
-| 功能 | [P1-COMPILER-F01](../../../../../../docs/COMPILER/COMPILER_desc.md)（COMPILER） |
-| 功能 | [P2-SYSTEM-RULEVIEW-F01](../../../../../../docs/COMPILER/COMPILER_desc.md)（COMPILER） |
+| 需求 | [P1-COMPILER](../../../../requirement/P1-COMPILER-F01/requirement.md) |
+| 需求 | [P2-SYSTEM-RULEVIEW](../../../../requirement/FEATURE-DESC-3361AD2E54FC/requirement.md) |
+| 功能 | [P1-COMPILER-F01](../../../../../../docs/module/COMPILER/COMPILER_desc.md)（COMPILER） |
+| 功能 | [P2-SYSTEM-RULEVIEW-F01](../../../../../../docs/module/COMPILER/COMPILER_desc.md)（COMPILER） |
 | 规则 | BR-P1-004, BR-P1-006, BR-P1-011, BR-P2-SYSTEM-RULEVIEW-001, BR-P2-SYSTEM-RULEVIEW-002, BR-P2-SYSTEM-RULEVIEW-003, BR-P2-SYSTEM-RULEVIEW-004, BR-P2-SYSTEM-RULEVIEW-005 |
 | 验收 | AC-P1-COMPILER-001, AC-P1-COMPILER-002, AC-P1-COMPILER-003, AC-P1-COMPILER-004, AC-P2-SYSTEM-RULEVIEW-001, AC-P2-SYSTEM-RULEVIEW-002, AC-P2-SYSTEM-RULEVIEW-003, AC-P2-SYSTEM-RULEVIEW-004 |
 | 追踪 | TR-P1-COMPILER-001, TR-P1-COMPILER-002, TR-P1-COMPILER-003, TR-P1-COMPILER-004, TR-P2-001, TR-P2-002, TR-P2-003, TR-P2-004, TR-P2-009 |
@@ -89,7 +89,7 @@
 - 层级/类型：`L1` / `MAIN`
 - 父流程：`无`
 - 主责模块：`MODEL`
-- 参与模块：[COMPILER](../../../../../../docs/COMPILER/COMPILER_desc.md), [CONTEXT](../../../../../../docs/CONTEXT/CONTEXT_desc.md), [MODEL](../../../../../../docs/MODEL/MODEL_desc.md), [DEMO](../../../../../../docs/DEMO/DEMO_desc.md)
+- 参与模块：[COMPILER](../../../../../../docs/module/COMPILER/COMPILER_desc.md), [CONTEXT](../../../../../../docs/module/CONTEXT/CONTEXT_desc.md), [MODEL](../../../MODEL/MODEL_desc.md), [DEMO](../../../../../../docs/module/DEMO/DEMO_desc.md)
 - 目标：Create business ModelData, load a named rule and execute it with clear definition failures and reliable connection cleanup.
 - 触发：business code calls DataUtil, ModelLoader and ModelContainer.
 - 状态：`PROPOSED`
@@ -98,8 +98,8 @@
 
 | 类型 | 引用 |
 |---|---|
-| 需求 | [P2-SYSTEM-RULEVIEW](../../../FEATURE-DESC-3361AD2E54FC/requirement.md) |
-| 功能 | [P2-SYSTEM-RULEVIEW-F03](../../../../../../docs/MODEL/MODEL_desc.md)（MODEL） |
+| 需求 | [P2-SYSTEM-RULEVIEW](../../../../requirement/FEATURE-DESC-3361AD2E54FC/requirement.md) |
+| 功能 | [P2-SYSTEM-RULEVIEW-F03](../../../MODEL/MODEL_desc.md)（MODEL） |
 | 规则 | BR-P2-SYSTEM-RULEVIEW-006, BR-P2-SYSTEM-RULEVIEW-007, BR-P2-SYSTEM-RULEVIEW-008, BR-P2-SYSTEM-RULEVIEW-009, BR-P2-SYSTEM-RULEVIEW-010 |
 | 验收 | AC-P2-SYSTEM-RULEVIEW-005, AC-P2-SYSTEM-RULEVIEW-006, AC-P2-SYSTEM-RULEVIEW-007, AC-P2-SYSTEM-RULEVIEW-008 |
 | 追踪 | TR-P2-005, TR-P2-006, TR-P2-007, TR-P2-008, TR-P2-010 |
@@ -147,7 +147,7 @@
 - 层级/类型：`L1` / `MAIN`
 - 父流程：`无`
 - 主责模块：`MODEL`
-- 参与模块：[COMPILER](../../../../../../docs/COMPILER/COMPILER_desc.md), [CONTEXT](../../../../../../docs/CONTEXT/CONTEXT_desc.md), [MODEL](../../../../../../docs/MODEL/MODEL_desc.md), [XML](../../../../../../docs/XML/XML_desc.md), [DEMO](../../../../../../docs/DEMO/DEMO_desc.md)
+- 参与模块：[COMPILER](../../../../../../docs/module/COMPILER/COMPILER_desc.md), [CONTEXT](../../../../../../docs/module/CONTEXT/CONTEXT_desc.md), [MODEL](../../../MODEL/MODEL_desc.md), [XML](../../../../../../docs/module/XML/XML_desc.md), [DEMO](../../../../../../docs/module/DEMO/DEMO_desc.md)
 - 目标：Compile and publish immutable Information facts and Directory-consumable materialization target facts; let Directory parsing own ChangeInfo/RuleViewInfo creation, registration, mapping, Action order and invariant checks; let the execution caller pass each Action.refRule to ModelLoader.load, let ModelContainer execute all loaded rules once with shared rollback, and let evaluate remain read-only without a new result object.
 - 触发：A configuration load validates and publishes P3 Information facts and Directory-consumable target facts, or an execution caller loads the ordered Actions of a Directory into one ModelContainer.
 - 状态：`PROPOSED`
@@ -156,8 +156,8 @@
 
 | 类型 | 引用 |
 |---|---|
-| 需求 | [P3-INFORMATION-ENGINE](../../../FEATURE-DESC-C0EDEFBD6D71/requirement.md) |
-| 功能 | [P3-INFORMATION-ENGINE-F01](../../../../../../docs/MODEL/MODEL_desc.md)（MODEL） |
+| 需求 | [P3-INFORMATION-ENGINE](../../../../requirement/FEATURE-DESC-C0EDEFBD6D71/requirement.md) |
+| 功能 | [P3-INFORMATION-ENGINE-F01](../../../MODEL/MODEL_desc.md)（MODEL） |
 | 规则 | BR-P3-INFORMATION-ENGINE-001, BR-P3-INFORMATION-ENGINE-002, BR-P3-INFORMATION-ENGINE-003, BR-P3-INFORMATION-ENGINE-004, BR-P3-INFORMATION-ENGINE-005, CR-P3-INFORMATION-ENGINE-001 |
 | 验收 | AC-P3-INFORMATION-ENGINE-001 |
 | 追踪 | TR-P3-INFORMATION-ENGINE-001 |

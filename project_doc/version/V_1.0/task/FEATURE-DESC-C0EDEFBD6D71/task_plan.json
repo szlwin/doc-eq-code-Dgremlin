@@ -12,7 +12,7 @@
       ],
       "input_revisions": {},
       "allowed_files": [
-        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/requirement.md",
+        "version/V_1.0/requirement/FEATURE-DESC-C0EDEFBD6D71/requirement.md",
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/task_plan.json",
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/traceability.json",
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/acceptance.json",
@@ -67,16 +67,16 @@
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/traceability.json",
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/acceptance.json",
         "version/V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/handoff.md",
-        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md",
-        "version/V_1.0/doc/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.yaml",
-        "version/V_1.0/doc/MODEL/changes/p3-information.business-model.changeset.yaml",
-        "version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml",
-        "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
-        "version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md",
-        "project_doc/version/V_1.0/doc/MODEL/changes/p3-information.business-model.changeset.yaml",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
-        "project_doc/version/V_1.0/doc/_flows/COMPILER/generated/COMPILER_flow.preview.md"
+        "version/V_1.0/requirement/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.md",
+        "version/V_1.0/requirement/FEATURE-DESC-C0EDEFBD6D71/FEATURE-DESC-C0EDEFBD6D71_business_model.yaml",
+        "version/V_1.0/module/MODEL/changes/p3-information.business-model.changeset.yaml",
+        "version/V_1.0/module/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml",
+        "version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.md",
+        "project_doc/version/V_1.0/module/MODEL/changes/p3-information.business-model.changeset.yaml",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/changes/006-p3-information-rebaseline.yaml",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.yaml",
+        "project_doc/version/V_1.0/module/_flows/COMPILER/generated/COMPILER_flow.preview.md"
       ],
       "acceptance_trace_ids": [
         "TR-P3-INFORMATION-ENGINE-001"

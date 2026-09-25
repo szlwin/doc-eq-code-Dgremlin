@@ -8,7 +8,7 @@
 > Implementation revision：`DEV-P2-SIMPLE-R43@a5ecf75d5169`
 > 状态：测试设计完成
 
-> 文档导航：[项目文档首页](../../../../docs/README.md) · [版本摘要](../../version_summary.md) · [需求文档](requirement.md) · [关联设计](../COMPILER/COMPILER_design.md) · 页面设计不适用（Java 配置与执行框架，无 UI）
+> 文档导航：[项目文档首页](../../../../docs/README.md) · [版本摘要](../../version_summary.md) · [需求文档](./requirement.md) · [关联设计](../../module/COMPILER/COMPILER_design.md) · 页面设计不适用（Java 配置与执行框架，无 UI）
 
 ## 1. 测试范围与环境
 
@@ -38,10 +38,10 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-001/002/003/008；AC-001/002/003 | [需求验收](requirement.md#9-验收标准) |
-| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
-| 设计/契约 | DESIGN-P2-R40；BP-P2-R40-006 | [统一加载设计](../COMPILER/COMPILER_design.md#5-核心流程状态与失败路径) |
-| 页面/操作 | 不适用：ConfigUtil Java API | [接口映射](../COMPILER/COMPILER_design.md#111-接口变化) |
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-001/002/003/008；AC-001/002/003 | [需求验收](./requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](./requirement.md) |
+| 设计/契约 | DESIGN-P2-R40；BP-P2-R40-006 | [统一加载设计](../../module/COMPILER/COMPILER_design.md#5-核心流程-状态与失败路径) |
+| 页面/操作 | 不适用：ConfigUtil Java API | [接口映射](../../module/COMPILER/COMPILER_design.md#11-1-接口变化) |
 
 ### 前置条件和具体输入
 <!-- TEST-CASE-INPUT -->
@@ -85,10 +85,10 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-003/004；AC-003/004 | [需求验收](requirement.md#9-验收标准) |
-| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
-| 设计/契约 | DESIGN-P2-R40 Source Graph | [失败路径](../COMPILER/COMPILER_design.md#52-关键失败路径) |
-| 页面/操作 | 不适用：配置编译 | [数据流](../COMPILER/COMPILER_design.md#5-核心流程状态与失败路径) |
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-003/004；AC-003/004 | [需求验收](./requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](./requirement.md) |
+| 设计/契约 | DESIGN-P2-R40 Source Graph | [失败路径](../../module/COMPILER/COMPILER_design.md#5-2-关键失败路径) |
+| 页面/操作 | 不适用：配置编译 | [数据流](../../module/COMPILER/COMPILER_design.md#5-核心流程-状态与失败路径) |
 
 ### 前置条件和具体输入
 <!-- TEST-CASE-INPUT -->
@@ -132,10 +132,10 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-004/005/011；AC-002/004/009 | [YAML 边界](requirement.md#9-验收标准) |
-| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
-| 设计/契约 | DESIGN-P2-R40；UNSUPPORTED_P8 | [状态设计](../COMPILER/COMPILER_design.md#53-状态与步骤) |
-| 页面/操作 | 不适用：配置加载 | [接口映射](../COMPILER/COMPILER_design.md#72-接口映射) |
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-004/005/011；AC-002/004/009 | [YAML 边界](./requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](./requirement.md) |
+| 设计/契约 | DESIGN-P2-R40；UNSUPPORTED_P8 | [状态设计](../../module/COMPILER/COMPILER_design.md#5-3-状态与步骤) |
+| 页面/操作 | 不适用：配置加载 | [接口映射](../../module/COMPILER/COMPILER_design.md) |
 
 ### 前置条件和具体输入
 <!-- TEST-CASE-INPUT -->
@@ -183,10 +183,10 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-006/007/009/010；AC-005/006/007 | [简单执行](requirement.md#9-验收标准) |
-| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
-| 设计/契约 | DataUtil -> ModelLoader -> ModelContainer.execute | [目标结构](../COMPILER/COMPILER_design.md#4-目标方案与职责边界) |
-| 页面/操作 | 不适用：业务 Java API | [兼容设计](../COMPILER/COMPILER_design.md#7-接口交互与兼容策略) |
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-006/007/009/010；AC-005/006/007 | [简单执行](./requirement.md#9-验收标准) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](./requirement.md) |
+| 设计/契约 | DataUtil -> ModelLoader -> ModelContainer.execute | [目标结构](../../module/COMPILER/COMPILER_design.md#4-目标方案与职责边界) |
+| 页面/操作 | 不适用：业务 Java API | [兼容设计](../../module/COMPILER/COMPILER_design.md#7-接口-交互与兼容策略) |
 
 ### 前置条件和具体输入
 <!-- TEST-CASE-INPUT -->
@@ -231,10 +231,10 @@
 <!-- TEST-CASE-TRACE -->
 | 对象 | 稳定引用 | 来源文档 |
 |---|---|---|
-| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-001/006；AC-008 | [兼容要求](requirement.md#105-兼容与历史数据) |
-| 当前 Requirement | REQAN-P2-R04 | [requirement.md](requirement.md) |
-| 设计/契约 | DESIGN-P2-R40 退役边界 | [影响范围](../COMPILER/COMPILER_design.md#3-影响范围) |
-| 页面/操作 | 不适用：构建门禁 | [验证计划](../COMPILER/COMPILER_design.md#13-验证计划) |
+| 需求/验收 | FEATURE-DESC-3361AD2E54FC；BR-001/006；AC-008 | [兼容要求](./requirement.md#10-5-兼容与历史数据) |
+| 当前 Requirement | REQAN-P2-R04 | [requirement.md](./requirement.md) |
+| 设计/契约 | DESIGN-P2-R40 退役边界 | [影响范围](../../module/COMPILER/COMPILER_design.md#3-影响范围与明确边界) |
+| 页面/操作 | 不适用：构建门禁 | [验证计划](../../module/COMPILER/COMPILER_design.md#13-2-验证计划) |
 
 ### 前置条件和具体输入
 <!-- TEST-CASE-INPUT -->
