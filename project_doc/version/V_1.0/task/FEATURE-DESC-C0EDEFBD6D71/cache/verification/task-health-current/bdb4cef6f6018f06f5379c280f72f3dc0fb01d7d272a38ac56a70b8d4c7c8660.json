@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "validatorVersion": "1.0",
+  "profile": "task-health",
+  "evidenceScope": "current",
+  "targetId": "FEATURE-DESC-C0EDEFBD6D71",
+  "version": "V_1.0",
+  "currentPhase": "business_model",
+  "taskStatus": "PARTIAL",
+  "overall": "PASSED",
+  "inputDigest": "bdb4cef6f6018f06f5379c280f72f3dc0fb01d7d272a38ac56a70b8d4c7c8660",
+  "inputDigests": {
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/acceptance.json": "2235838c621dbb1221f2c2407d2ec2212f8bf332f1284fe7cfcf359b04ae6db2",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/objects/0ba980408d248d635480756550118338df01a2ddea0afe5084217c51f3b500ff.md": "0ba980408d248d635480756550118338df01a2ddea0afe5084217c51f3b500ff",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/objects/53b4a009d0a4188abf553838e9780bd6b8957481a76e260fd4b0b8a325b7b271.json": "53b4a009d0a4188abf553838e9780bd6b8957481a76e260fd4b0b8a325b7b271",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/objects/553d6201fb84fa7972fa94ea48107daade55f4ce65abfb958f0abd8fe7beede1.md": "553d6201fb84fa7972fa94ea48107daade55f4ce65abfb958f0abd8fe7beede1",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/objects/7dc359ccaa6270ff2f227015d0f9612b4e38f19377ef715f873dc7de903378a2.yaml": "7dc359ccaa6270ff2f227015d0f9612b4e38f19377ef715f873dc7de903378a2",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/objects/a20eceb7b6fe7893ff6fc84eee3c9d1d18843f31f8575e3abd26586b031df0b0.yaml": "a20eceb7b6fe7893ff6fc84eee3c9d1d18843f31f8575e3abd26586b031df0b0",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/objects/ebe5ca461293bdb34cfcc6d6b213affe9673c8d0a177199bd64810b8cec49eae.md": "ebe5ca461293bdb34cfcc6d6b213affe9673c8d0a177199bd64810b8cec49eae",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/registry.jsonl": "fcea838b39bfd59cc90d6fd29dca347fced3be69fbccda82e15e88be42c42c3d",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/reviews.jsonl": "b1a1d63f7a452ad4e27e80382fecf54ec8d14d2561aa4d00b7fac45daa62cc5c",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/runs/REQAN-P3-R02/EXEC-20260915T053214857754Z-de5582676227.json": "343c0de20916fab3f1bc808872587049cb87238233f73f31632df496e0165a76",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/runs/REQAN-P3-R02/EXEC-20260915T053308184792Z-142711a93089.json": "c795d4b89e66dbabdc5d7fb633225ae4d7b4eb08093a130e7b19f21b3ab75fa8",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/runs/REQAN-P3-R02/EXEC-20260915T053623934568Z-6a0a671f7db8.json": "5faa3ddc154d74e9d0e196d520389211e45494165631e243b3156b19a4533dd3",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/evidence/runs/REQCONF-P3-R03/EXEC-20260915T042053904957Z-a59d267725bc.json": "46afa36415672f9373158210f7feef1496ae07593109aa86a444f7ec02b4d8af",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/git_checkpoints.yaml": "ef6191b3a3ca76a62be283006ea6ae50390add1b10661c50d46a319df7b3b5bf",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/request_intake.json": "50db0760da81119d5e2b28342582c643339a44862dc0c06c110b930a1080aa48",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/review-reqan-p3-r01-td.md": "6bfb8472408bd24f56fdb195e8c42a94736bf23c88d240f57a1458f0083b70eb",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/review-reqan-p3-r02-impact.md": "126837b46f4c8950bee1a169278d06cfad55b4ef87c3d8d1afdc99a5c35bd284",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/review-reqan-p3-r02-td.md": "eef9e628b4585138a421bf1a8acc7e3b1fbf8044bc279025b7d055929254e3c8",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/reviews/business-model-REQAN-P3-R01.md": "87c8d66888d060218cdc945aa736d06610b607ed730d475d44ad1b94cbe4c738",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/risk.json": "983d43fd257f9d90dbe7f1347c7d6df133fdc705fd94de91106e2edac3ff942b",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/task.json": "68b61213f56df38d21baf8b45ab94e7a47776b008eea9f6284c2bb00ee65c245",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/task_events.jsonl": "40afcfc0db368a511dcfc58326a731abacc25bb3d2057bb0b06df945d0bedb27",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/task_plan.json": "259c9ecf6a9bc7e3aff9e7e7aa2c47343419db9da54d3d84f29194655fa63968",
+    "V_1.0/task/FEATURE-DESC-C0EDEFBD6D71/traceability.json": "53b4a009d0a4188abf553838e9780bd6b8957481a76e260fd4b0b8a325b7b271",
+    "V_1.0/work.md": "7440999f911481cf0a09d1721c2b924242874f3a45c0b84138dd598c59032b55",
+    "V_1.0/work_record.md": "c46c3d3fe09f75608231a46022c1860d60065803bccca4483bbd7bd70f1a2a17",
+    "__document_layout__": "2f5978e20ab80dc23fbdeccf47d03809caaa7050f1c551ae20673f65a1fcd959"
+  },
+  "verifiedAt": "2026-09-15T10:20:18.563254+00:00",
+  "checks": [
+    {
+      "id": "DOCUMENT_LAYOUT",
+      "status": "PASSED",
+      "errorCount": 0,
+      "findings": [],
+      "errors": []
+    },
+    {
+      "id": "TASK_STATE",
+      "status": "PASSED",
+      "errorCount": 0,
+      "currentPhase": "business_model",
+      "taskStatus": "PARTIAL",
+      "errors": []
+    },
+    {
+      "id": "EVIDENCE_INTEGRITY",
+      "status": "PASSED",
+      "errorCount": 0,
+      "count": 27,
+      "errors": []
+    },
+    {
+      "id": "REVIEW_REGISTRY",
+      "status": "PASSED",
+      "errorCount": 0,
+      "count": 8,
+      "errors": []
+    },
+    {
+      "id": "ACCEPTANCE",
+      "status": "PASSED",
+      "errorCount": 0,
+      "count": 5,
+      "verifiedCount": 5,
+      "errors": []
+    },
+    {
+      "id": "RISK_REPORT",
+      "status": "PASSED",
+      "errorCount": 0,
+      "findingCount": 0,
+      "errors": []
+    },
+    {
+      "id": "TRACEABILITY",
+      "status": "PASSED",
+      "errorCount": 0,
+      "count": 1,
+      "errors": []
+    },
+    {
+      "id": "OPEN_ISSUES",
+      "status": "PASSED",
+      "errorCount": 0,
+      "openCount": 0,
+      "criticalCount": 0,
+      "errors": []
+    },
+    {
+      "id": "LONG_TASK",
+      "status": "PASSED",
+      "errorCount": 0,
+      "warningCount": 0,
+      "errors": []
+    },
+    {
+      "id": "PHASE_GATE",
+      "status": "PASSED",
+      "errorCount": 0,
+      "allowed": false,
+      "nextPhase": "design",
+      "nextAgent": "DesignAgent",
+      "errors": []
+    }
+  ],
+  "warnings": [],
+  "errors": [],
+  "diagnostics": [],
+  "next": {
+    "allowed": false,
+    "phase": "design",
+    "agent": "DesignAgent",
+    "blockingReasons": []
+  },
+  "counts": {
+    "evidence": 27,
+    "reviews": 8,
+    "acceptanceAssertions": 5,
+    "traceability": 1,
+    "openIssues": 0,
+    "criticalIssues": 0
+  }
+}
